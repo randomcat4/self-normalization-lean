@@ -1,0 +1,7 @@
+# True conditioned sample and paid clock bridge v28
+
+Integrates authorbf6ba73b at final unchanged LF source SHAced48edd68d62919d066dd1bd964374a166bd5ccb47c309849ccbe6009f1fe65. Zero definitions/three exact frozen theorems. Independent declaration and complete source/proof review CORRECT/LEAN_FULLY_CHECKED, no gaps. Historical CRLF source9f00 is explicitly superseded after author final target/audit rerun; only line endings changed and accepted prior sources remain untouched.
+
+The original sample produces actual positive fixed cutoff-event mass, conditional iid law with unchanged coordinates, both real bad-clock probabilities with paid cube/tail constants, and raw final-clock probability for every x>=0 via the independent small-x Chebyshev branch. Empty samples, nonzero conditional mean and original normalization remain explicit. This does not prove adapted noise, Fourier comparison/inversion, full smoothing/desmoothing sandwich or C1/C2 roots.
+
+Author target and all21 module constants passed; independent reviewer verified actual source/14dependency closure/types/logs and321 total imported constants including21target. Root then passed one integrated server build,846public names,107actual modules and full transitive audits. receipt-v28.json binds exact counts, source set/hashes, pins and raw-log hashes. Archive-only report line endings are mapped in archive-format-v28.json; originals preserved. No local Lean.
