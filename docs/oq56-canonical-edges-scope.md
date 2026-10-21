@@ -1,0 +1,11 @@
+# Erased canonical edge moments and the actual positive AA pair condition
+
+CORRECT / LEAN_FULLY_CHECKED for10 public theorems and1 definition in2 new modules, with a combined33-project-source closure.
+
+Under the actual full-observation erased finite product, off-diagonal residual edges have genuine L2 and mean0. Every two-edge product is genuinely L1. Its mixed expectation is exactly one background residual square moment when the unordered endpoint pairs agree, including reversal, and0 otherwise. All four shared-endpoint orientations use honest AE canonical rows after genuine triple L1 and ordinary product Fubini; disjoint endpoint blocks use full grouped coordinate independence. No fourth moment or positive variance is assumed.
+
+The literal single-pair AA event restricts category1 at both endpoints, leaving both real noises and all other categories unrestricted. Its original probability is exactlyP_j²>0 for every j. The genuine normalized conditional pair law, after paired erasure, is the FULL same beta_j.prod beta_j. This follows from the product of actual normalized single-A restrictions and ordinary product-map transport, not merely marginals. The full masked kernel equals the erased full kernel minus((N_j:real)-4)*T_j AE under that condition. The real cast precedes subtraction; absolute continuity transfers only the AE predicate.
+
+Each immutable catalog received a never-author ORIGINALp50/p52 source-to-statement review BEFORE code, then a separate never-author actual target once/no-o and fresh exact full-source-prefix gate without a targetolean import. Every complete type/body, actual private/generated/imported-lazy canonical axiom scope, loaded project/official scope, entire closure and pinned source/object integrity was checked. Only propext,Classical.choice,Quot.sound occur. All Lean ran remotely. No accepted predecessor target was rebuilt or rechecked.
+
+Stacked on protected PR88, feat/oq56-erased-mixture,195fd5c4ed3da115f5c6348f702b958f499f8242. Root owns integration imports/manifests/pins/cache/full gates/merge; the lane never merges. Future51/70/71 are excluded. No finite edge/row-sum count, sample statistic/trueR/Studentizer/tail/real coding, critical Markov/exponential lower bound or infinite expectation is claimed. Fullp52/p53/OQ6/RS2 remainOPEN; originalp35 remains separatelyCLOSED.
