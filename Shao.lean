@@ -34,3 +34,6 @@ import Shao.Probability.RetainedMoments
 import Shao.Probability.RetainedSample
 import Shao.Probability.RetainedVariance
 import Shao.Probability.LindleyTelescoping
+import Shao.OQ4.AveragedResidual
+import Shao.OQ4.KilledKernel
+import Shao.OQ4.KilledIteration
