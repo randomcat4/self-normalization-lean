@@ -40,3 +40,5 @@ import Shao.OQ4.KilledIteration
 import Shao.Probability.LindleySignedBlock
 import Shao.Probability.RetainedComparison
 import Shao.OQ5.P35.ConditionalStatistics
+import Shao.Probability.QuadraticCharacteristic
+import Shao.Probability.GaussianTail
