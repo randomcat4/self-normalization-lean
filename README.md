@@ -21,3 +21,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## Probability milestone
 
 49 additional public theorems establish path/event measurability, the finite iid product law and fixed-permutation probability invariance. The library now contains 132 public theorems; the kernel audit covers 168 theorem declarations including generated declarations. See [scope](docs/scope-v2.md), [independent review](docs/review-v2.md), [verification receipt](verification/receipt-v2.json), and [whole-corpus roadmap](docs/whole-corpus-plan.md). No complete root probability theorem is claimed.
+
+## OQ5 p35 finite algebra milestone
+
+11 further public theorems prove the unordered-pair double counting, centered-row studentizer identity and exact target-category cancellation, for arbitrary deterministic vectors with n>=3. Target sets may be empty, singleton or full. The complete library has 143 public theorems and 223 audited theorem declarations including generated declarations. See [scope](docs/oq5-row-scope.md), [independent review](docs/oq5-row-review.md) and [receipt](verification/receipt-v3.json). The fixed-law counterexample and all four root groups remain open.
