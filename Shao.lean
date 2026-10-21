@@ -76,3 +76,5 @@ import Shao.OQ3.FiniteStageRate
 import Shao.Probability.SourceClockBridge
 import Shao.OQ4.ReflectedSurvival
 import Shao.OQ4.SpitzerKernelBounds
+import Shao.OQ5.P45.BalancedBlock
+import Shao.OQ5.P50.CanonicalEdges
