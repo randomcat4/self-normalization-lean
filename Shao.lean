@@ -72,3 +72,4 @@ import Shao.OQ4.LaplaceGenerating
 import Shao.OQ4.FiniteSurvivalLaplace
 import Shao.Probability.QuadraticCharacteristicOddPower
 import Shao.OQ3.FiniteStageMeasure
+import Shao.OQ3.FiniteStageRate
