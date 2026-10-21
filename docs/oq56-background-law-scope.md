@@ -1,0 +1,11 @@
+# Actual erased background law, masked kernel deletion and conditional iid prefix
+
+CORRECT / LEAN_FULLY_CHECKED for four exact source-bound prerequisite modules:18 public theorems and2 definitions. The actual one-observation erasure retains G and the entire categorical complement, defines its genuine pushforward law and derives selected-category independence, all-state conditional erasure preservation, zero-condition identity and absolute continuity. The root law stays fixed before every exponent and sample size.
+
+Finite one-layer deletion preserves the exact source absolute-convergence set in both directions. The genuine residual and full-kernel subtraction formulas hold pointwise on that set and almost everywhere under the original pair law. The source mask remains unchanged elsewhere. On the actual sample law, unconditioned and genuinely fixed-position-conditioned erased prefixes have the exact common finite-product law, actual marginals and full mutual independence, including the empty prefix.
+
+Each exact catalog received a never-author ORIGINALp50/p52 semantic review before implementation. Each independent final gate checks the actual target without -o, a fresh exact complete source-byte prefix without importing the target olean, every full public type/body, actual private/generated canonical Name axioms, semantic loaded dependencies, complete project source closure and immutable pins/oleans. Only propext,Classical.choice,Quot.sound occur. All Lean ran remotely under pinned Lean4.36.0-rc1/Mathlib807d3836; no accepted predecessor target was rebuilt or rechecked. Sources are immutable after clean gates.
+
+Exactly4newLeanmodules+3docs,20publicdeclarations, combined26-source closure. Stacked on protected PR77 feat/oq56-layer-events/2979dfcd5f729bca81faa807416b08c49e5eaa14. Root owns shared imports/manifests, actual integrated ownership audit, pins/cache/full integration gate/merge. Lane never merges. Unit51 and future63/64/65 are excluded.
+
+Population background canonicality/L2/variance/noise, unordered-position mixing, arbitrary canonical finite-sample moments, actual statistics/trueR/Studentizer/tails, critical endpoint and real coding remain separate. Full p52/p53/OQ6/RS2 stay OPEN; original p35 is separately CLOSED.
