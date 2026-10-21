@@ -1,0 +1,13 @@
+# OQ4 finite iid path law and conditional finite D8
+
+Source: shao@35d4580, `oq4/b01/proof01.md` Section 1 (killed survival law) and Section 8 (D2-D8), SHA256 `7c51246eb02a0d694a366ce3ab5a3a9cca03723160c1291bce29dd817f68bc38`.
+
+KilledPathLaw identifies every actual killed-kernel power row with the unnormalized pushforward of the finite iid product law restricted to closed survival. It includes every real h and starting point and the empty sample: no extra time-zero killing is imposed. It proves bounded Borel test integrability on both sides, the exact integral and mass identities, transfer through the shared finite-iid joint-law theorem, and equality with the common closedStrip event for zero start and nonnegative h. Endpoints, atoms, zero width and zero paths are retained.
+
+KernelAbsorption connects the actual normalized kernel sequences to the certified non-circular scalar recursion. Under complete moment/threshold assumptions and explicit R3/R4 block inputs it derives the initial segment, initial cosine value and both delayed inequalities, uses positivity when enlarging coefficients, and proves the frozen finite D8 bounds. It does not assume the uniform bound it seeks. N=m and zero coefficients are covered; the free cosine coefficient is not called a killed eigenvalue.
+
+The two modules contain 19 explicit public theorems and 39 actual module-owned constants, including helpers generated under imported names. Statement-only semantic review, independent anonymous mathematics and independent final formal checks passed on the pinned server. Their exact sources already passed author and independent target checks. The lead verifies the imported artifacts, public names, all module-owned constants regardless of namespace and every imported Shao.OQ4 constant, then checks both modules together. This avoids redundant target recompilation. Only propext, Classical.choice and Quot.sound are allowed; actual hashes and counts are in the unit and combined verification receipts. Full logs remain on the server.
+
+Finite iid survival representation is now covered. Actual S/AC, unconditional O0/R3/R4, B1, Brownian inputs, long-time K/Kv, the 4/pi prefactor, energy denominator E1-E6 and OQ4 remain OPEN. The next module targets the reverse-block occupation mechanism with S/AC explicitly retained as inputs.
+
+The exact feature base is cf80754a59d5afc514cf12965bfc209eeec3163c, a conflict-free merge of PR #17 at e4904c1e4772d9ecc64521022596855b0f484cba with accepted main2ab51d56176a2c801a93987ee00f2dd6433575f9. Common root imports, manifests, expected lists and locks are identical to that accepted main; no manual lane edits were made. Frozen mathematical hashes stayed unchanged.
