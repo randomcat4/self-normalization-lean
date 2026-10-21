@@ -49,3 +49,15 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## Actual p35 construction and rare events
 
 81 additional public theorems cover the genuine iid construction, moments, L2 residual operator and rare-event lower bound. Shared coverage is now 379 public and 572 audited theorem declarations. See [scope and independent evidence](docs/integration-v9.md) and [server receipt](verification/receipt-v9.json). Full roots remain open.
+
+## Retained moments and finite Duhamel identity
+
+29 additional public theorems supply genuine retained-sample centered moments, sample-size and Lyapunov bounds, and the actual finite-product Lindley/Duhamel identity. Shared coverage is 408 public and 628 audited theorem declarations. See [scope and independent evidence](docs/integration-v10.md) and [server receipt](verification/receipt-v10.json). Final probability comparisons remain open.
+
+## Killed-kernel iteration and conditional residual payment
+
+34 additional public theorems construct the genuine killed kernel and finite powers, and prove the conditional averaged residual estimate. Shared coverage is now 442 public and 677 audited theorem declarations. See [scope and independent evidence](docs/integration-v11.md) and [server receipt](verification/receipt-v11.json). Full roots remain open.
+
+## Localized signed blocks and retained-path comparison
+
+7 additional public theorems supply history-localized signed-block payment and actual transformed retained-path laws and weak-crossing comparison. Shared coverage is 449 public and 689 audited theorem declarations. See [scope and independent evidence](docs/integration-v12.md) and [server receipt](verification/receipt-v12.json). Final probability comparisons remain open.
