@@ -55,3 +55,4 @@ import Shao.Probability.FiniteIIDMoments
 import Shao.Probability.QuadraticCharacteristicPower
 import Shao.Probability.LowFrequencyDamping
 import Shao.Probability.ClockControl
+import Shao.OQ5.P35.Counterexample
