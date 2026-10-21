@@ -27,3 +27,5 @@ import Shao.Probability.RetentionEvent
 import Shao.Probability.TruncationRegularity
 import Shao.OQ4.KilledCosine
 import Shao.OQ4.OccupationPayment
+import Shao.OQ5.P35.Construction
+import Shao.OQ5.P35.ResidualRare
