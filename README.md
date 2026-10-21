@@ -25,3 +25,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## OQ5 p35 finite algebra milestone
 
 11 further public theorems prove the unordered-pair double counting, centered-row studentizer identity and exact target-category cancellation, for arbitrary deterministic vectors with n>=3. Target sets may be empty, singleton or full. The complete library has 143 public theorems and 223 audited theorem declarations including generated declarations. See [scope](docs/oq5-row-scope.md), [independent review](docs/oq5-row-review.md) and [receipt](verification/receipt-v3.json). The fixed-law counterexample and all four root groups remain open.
+
+## Shared deletion, survival and Lindley milestone
+
+43 additional public theorems establish ordered sample compression, the source weak crossing deletion implication, closed-wall survival and coordinate bounds, the actual Lindley recursion, and its finite-iid joint law with the true square-sum energy. There are now 186 public theorems and 295 audited theorem declarations including generated ones. See [scope](docs/scope-v4.md), [independent review](docs/review-v4.md) and [server receipt](verification/receipt-v4.json). All complete root groups remain open.
