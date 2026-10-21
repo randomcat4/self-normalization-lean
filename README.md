@@ -41,3 +41,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## Conditioning and truncation milestone
 
 43 additional public theorems establish genuine fixed-pattern conditional iid laws, exact retained-set events, and the original truncation budget with integral estimates, continuity, strict growth and its normalized limit. The library has 287 public theorems and 443 audited theorem declarations. See [scope and independent reviews](docs/integration-v7.md) and [server receipt](verification/receipt-v7.json). Full root theorems remain formally unclosed.
+
+## OQ4 one-step and occupation milestone
+
+11 additional public theorems establish global trigonometric third-moment bounds, exact one-step killed-cosine/overshoot estimates and finite-layer integral payment. The shared library covers 298 public theorems and 463 audited theorem declarations. See [scope and reviews](docs/integration-v8.md) and [server receipt](verification/receipt-v8.json). The O0 mass bound and complete OQ4 root remain formally unclosed.
