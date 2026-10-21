@@ -4,9 +4,9 @@ import Lean
 open Lean Elab Command in
 run_cmd do
   let env ← getEnv
-  let mut count := 0
+  let mut count : Nat := 0
   for (name, info) in env.constants.toList do
-    if `Shao.isPrefixOf name && info.isTheorem then
+    if (`Shao).isPrefixOf name && info.isTheorem then
       let axioms ← Lean.collectAxioms name
       for ax in axioms do
         unless [`propext, `Classical.choice, `Quot.sound].contains ax do
