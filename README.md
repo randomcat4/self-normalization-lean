@@ -45,3 +45,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## OQ4 one-step and occupation milestone
 
 11 additional public theorems establish global trigonometric third-moment bounds, exact one-step killed-cosine/overshoot estimates and finite-layer integral payment. The shared library covers 298 public theorems and 463 audited theorem declarations. See [scope and reviews](docs/integration-v8.md) and [server receipt](verification/receipt-v8.json). The O0 mass bound and complete OQ4 root remain formally unclosed.
+
+## Actual p35 construction and rare events
+
+81 additional public theorems cover the genuine iid construction, moments, L2 residual operator and rare-event lower bound. Shared coverage is now 379 public and 572 audited theorem declarations. See [scope and independent evidence](docs/integration-v9.md) and [server receipt](verification/receipt-v9.json). Full roots remain open.
