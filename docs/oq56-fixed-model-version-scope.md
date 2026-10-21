@@ -1,0 +1,11 @@
+# The actual fixed p52 model and its deterministic kernel version
+
+The source fixes one observation law before every exponent and sample size. This milestone connects the actual coefficient family and full product law, proves the finite-layer law facts needed by the future moment argument, and constructs the required everywhere-real Borel kernel version.
+
+`LayeredKernelVersion` uses every actual fixed layer on the full observation space. It defines the exact absolute-summability set, the series on that set and residual zero on its complement. It proves the set and residual measurable, both symmetric, and the full kernel `G+G′+r` measurable and symmetric everywhere. This deterministic construction does not establish almost-sure convergence.
+
+`LayeredPairLaw` proves the actual law of category pairs under two independent complete observations: every finite joint law, full mutual independence and the entire paired-sequence law. It separately proves genuine integrability of finite products of arbitrary real finite-state observables and factors their actual expectations. The statement includes the empty finite set and retains all parameter probability conditions. No infinite moment bound is assumed.
+
+`FixedLayerModel` specializes the actual observation law to the single source cubic coefficient family. It proves actual normalization, exact noise/category marginals, independence of G from the entire categorical sequence, interval support, genuine every-observation row integrability/zero mean, individual layer L2 and full mutual independence of the real layer terms under independent copies. There is no eta, lambda or sample-size argument to the law.
+
+The exact catalogs have26 public theorems and5 definitions across3 modules. Infinite-series a.e. convergence, atom-cost bounds/summability, infinite moments, canonicality/projection, real-encoded specialization, iid sample statistics, positive Studentizer, tails and endpoint divergence remain separate obligations. Fullp52/p53/OQ6/RS2 remain OPEN; originalp35 is CLOSED. Root owns shared imports/manifests/pins/cache/integrated ownership audit/full gate/merge. The lane publishes only owned code and documentation; accepted source bytes remain immutable.
