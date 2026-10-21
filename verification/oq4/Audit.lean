@@ -12,7 +12,14 @@ run_cmd do
     `Shao.OQ4.sum_integral_overshootCell_le,
     `Shao.OQ4.summable_integral_overshootCell,
     `Shao.OQ4.tsum_integral_overshootCell_le,
-    `Shao.OQ4.delayed_recurrence_bound]
+    `Shao.OQ4.delayed_recurrence_bound,
+    `Shao.OQ4.path_variance_scaling,
+    `Shao.OQ4.standardized_moments,
+    `Shao.OQ4.standardized_third_moment_bound,
+    `Shao.OQ4.sqrt_variance_parameters,
+    `Shao.OQ4.sqrt_variance_standardization,
+    `Shao.OQ4.normalized_scale_ratios,
+    `Shao.OQ4.sqrt_variance_scale_ratios]
   for name in expected do
     match env.find? name with
     | some info => unless info.isTheorem do throwError "Not a theorem: {name}"
