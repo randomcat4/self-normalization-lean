@@ -25,3 +25,31 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## OQ5 p35 finite algebra milestone
 
 11 further public theorems prove the unordered-pair double counting, centered-row studentizer identity and exact target-category cancellation, for arbitrary deterministic vectors with n>=3. Target sets may be empty, singleton or full. The complete library has 143 public theorems and 223 audited theorem declarations including generated declarations. See [scope](docs/oq5-row-scope.md), [independent review](docs/oq5-row-review.md) and [receipt](verification/receipt-v3.json). The fixed-law counterexample and all four root groups remain open.
+
+## Shared deletion, survival and Lindley milestone
+
+43 additional public theorems establish ordered sample compression, the source weak crossing deletion implication, closed-wall survival and coordinate bounds, the actual Lindley recursion, and its finite-iid joint law with the true square-sum energy. There are now 186 public theorems and 295 audited theorem declarations including generated ones. See [scope](docs/scope-v4.md), [independent review](docs/review-v4.md) and [server receipt](verification/receipt-v4.json). All complete root groups remain open.
+
+## OQ4 foundation milestone
+
+15 additional public theorems cover finite recurrence, overshoot sums and moments, and variance scaling. The integrated library has 201 public theorems and 327 audited theorem declarations. See [scope and review](docs/integration-v5.md) and [server receipt](verification/receipt-v5.json). K/Kv and the complete OQ4 root remain formally unclosed.
+
+## OQ5 fixed-law milestone
+
+43 additional public theorems construct the fixed probability law, Borel observation encoding and exact feature moments. The integrated library has 244 public theorems and 395 audited theorem declarations. See [scope and review](docs/integration-v6.md) and [server receipt](verification/receipt-v6.json). The full counterexample remains formally unclosed.
+
+## Conditioning and truncation milestone
+
+43 additional public theorems establish genuine fixed-pattern conditional iid laws, exact retained-set events, and the original truncation budget with integral estimates, continuity, strict growth and its normalized limit. The library has 287 public theorems and 443 audited theorem declarations. See [scope and independent reviews](docs/integration-v7.md) and [server receipt](verification/receipt-v7.json). Full root theorems remain formally unclosed.
+
+## OQ4 one-step and occupation milestone
+
+11 additional public theorems establish global trigonometric third-moment bounds, exact one-step killed-cosine/overshoot estimates and finite-layer integral payment. The shared library covers 298 public theorems and 463 audited theorem declarations. See [scope and reviews](docs/integration-v8.md) and [server receipt](verification/receipt-v8.json). The O0 mass bound and complete OQ4 root remain formally unclosed.
+
+## Actual p35 construction and rare events
+
+81 additional public theorems cover the genuine iid construction, moments, L2 residual operator and rare-event lower bound. Shared coverage is now 379 public and 572 audited theorem declarations. See [scope and independent evidence](docs/integration-v9.md) and [server receipt](verification/receipt-v9.json). Full roots remain open.
+
+## Retained moments and finite Duhamel identity
+
+29 additional public theorems supply genuine retained-sample centered moments, sample-size and Lyapunov bounds, and the actual finite-product Lindley/Duhamel identity. Shared coverage is 408 public and 628 audited theorem declarations. See [scope and independent evidence](docs/integration-v10.md) and [server receipt](verification/receipt-v10.json). Final probability comparisons remain open.
