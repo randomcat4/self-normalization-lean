@@ -25,3 +25,5 @@ import Shao.OQ4.Foundations
 import Shao.OQ5.P35.FixedLaw
 import Shao.Probability.RetentionEvent
 import Shao.Probability.TruncationRegularity
+import Shao.OQ4.KilledCosine
+import Shao.OQ4.OccupationPayment
