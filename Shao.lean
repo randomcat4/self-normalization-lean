@@ -62,3 +62,7 @@ import Shao.OQ3.InverseTilt
 import Shao.OQ4.IntervalConcentration
 import Shao.OQ4.LaplaceTail
 import Shao.Probability.SourceTruncationBridge
+import Shao.OQ3.ResonanceArithmetic
+import Shao.OQ3.JointNonlattice
+import Shao.OQ3.ResonantLimit
+import Shao.OQ3.PositiveRate
