@@ -45,3 +45,9 @@ import Shao.Probability.GaussianTail
 import Shao.OQ3.FiniteConstraints
 import Shao.OQ3.SourceStarter
 import Shao.OQ3.SummableAtoms
+import Shao.OQ4.KernelRecurrence
+import Shao.OQ4.CosinePowers
+import Shao.OQ4.KilledPathLaw
+import Shao.OQ4.KernelAbsorption
+import Shao.OQ4.BoundaryOccupation
+import Shao.OQ4.KilledBlockBounds
