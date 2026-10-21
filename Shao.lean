@@ -6,3 +6,6 @@ import Shao.Checks.Boundaries
 import Shao.Probability.MeasurablePath
 import Shao.Probability.FiniteIID
 import Shao.Probability.ExchangeableEvents
+
+import Shao.OQ5.P35.RowIdentity
+import Shao.OQ5.P35.TargetCancellation
