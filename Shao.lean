@@ -70,3 +70,4 @@ import Shao.OQ5.P50.ThreeStateLayer
 import Shao.OQ6.FiniteRows
 import Shao.OQ4.LaplaceGenerating
 import Shao.OQ4.FiniteSurvivalLaplace
+import Shao.Probability.QuadraticCharacteristicOddPower
