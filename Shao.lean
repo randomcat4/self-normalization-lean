@@ -1,1 +1,5 @@
-/- C1/C2 shared foundation library. Modules are introduced on the feature branch. -/
+import Shao.Basic.FinitePath
+import Shao.Basic.Events
+import Shao.C1.Normalization
+import Shao.C2.TwoSided
+import Shao.Checks.Boundaries
