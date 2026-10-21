@@ -37,3 +37,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## OQ5 fixed-law milestone
 
 43 additional public theorems construct the fixed probability law, Borel observation encoding and exact feature moments. The integrated library has 244 public theorems and 395 audited theorem declarations. See [scope and review](docs/integration-v6.md) and [server receipt](verification/receipt-v6.json). The full counterexample remains formally unclosed.
+
+## Conditioning and truncation milestone
+
+43 additional public theorems establish genuine fixed-pattern conditional iid laws, exact retained-set events, and the original truncation budget with integral estimates, continuity, strict growth and its normalized limit. The library has 287 public theorems and 443 audited theorem declarations. See [scope and independent reviews](docs/integration-v7.md) and [server receipt](verification/receipt-v7.json). Full root theorems remain formally unclosed.
