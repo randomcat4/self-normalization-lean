@@ -49,3 +49,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## Actual p35 construction and rare events
 
 81 additional public theorems cover the genuine iid construction, moments, L2 residual operator and rare-event lower bound. Shared coverage is now 379 public and 572 audited theorem declarations. See [scope and independent evidence](docs/integration-v9.md) and [server receipt](verification/receipt-v9.json). Full roots remain open.
+
+## Retained moments and finite Duhamel identity
+
+29 additional public theorems supply genuine retained-sample centered moments, sample-size and Lyapunov bounds, and the actual finite-product Lindley/Duhamel identity. Shared coverage is 408 public and 628 audited theorem declarations. See [scope and independent evidence](docs/integration-v10.md) and [server receipt](verification/receipt-v10.json). Final probability comparisons remain open.
