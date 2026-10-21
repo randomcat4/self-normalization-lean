@@ -22,3 +22,4 @@ import Shao.Basic.ClosedSurvival
 
 import Shao.Probability.LindleyLaw
 import Shao.OQ4.Foundations
+import Shao.OQ5.P35.FixedLaw

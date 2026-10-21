@@ -33,3 +33,7 @@ All computations, dependency caches and raw logs stay on the server. The reposit
 ## OQ4 foundation milestone
 
 15 additional public theorems cover finite recurrence, overshoot sums and moments, and variance scaling. The integrated library has 201 public theorems and 327 audited theorem declarations. See [scope and review](docs/integration-v5.md) and [server receipt](verification/receipt-v5.json). K/Kv and the complete OQ4 root remain formally unclosed.
+
+## OQ5 fixed-law milestone
+
+43 additional public theorems construct the fixed probability law, Borel observation encoding and exact feature moments. The integrated library has 244 public theorems and 395 audited theorem declarations. See [scope and review](docs/integration-v6.md) and [server receipt](verification/receipt-v6.json). The full counterexample remains formally unclosed.
