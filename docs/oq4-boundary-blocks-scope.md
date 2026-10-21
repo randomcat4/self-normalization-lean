@@ -1,0 +1,13 @@
+# OQ4 boundary occupation and actual block estimates from explicit S/AC
+
+Source: shao@35d4580, `oq4/b01/proof01.md` Sections 5-8 (O0/R3/R4/D8), SHA256 `7c51246eb02a0d694a366ce3ab5a3a9cca03723160c1291bce29dd817f68bc38`.
+
+BoundaryOccupation proves the actual killed endpoint layer bound from unconditioned first-block interval concentration and last-block one-sided survival. It transports the real kernel row through the certified iid path law, fixes the complete last block, pays the first-block moving interval and uses measure-preserving reversal. The upper terminal strip requires reversed lower survival; the lower strip requires upper survival. Closed endpoints, atoms and overlap are retained. It proves the safe constants 6/m and 12/h^2 with all probability inputs explicit.
+
+KilledBlockBounds packages exactly the actual all-time interval and two-sided one-sided survival hypotheses. It derives the actual h^2-block layer bound, integrable averaged residual R3 and survival R4, including the closed-domain cosine chord bound. It then supplies these proved block estimates to KernelAbsorption: the final finite D8 theorem contains S/AC hypotheses rather than R3/R4 hypotheses. Its constants retain M, Cq and Cs explicitly.
+
+The two modules contain 20 public theorems and 64 module-owned constants. These include a generated helper under the imported common name Shao.closedUpper, which is covered by module-ownership auditing. Isolated statement review, independent mathematics/final formal review, and designated-server author/independent target checks passed at exact frozen hashes. The lead checks imported artifacts individually and together, public names, every new module-owned constant regardless of namespace, and all imported Shao.OQ4 constants. No redundant target recompilation is performed. Only propext, Classical.choice and Quot.sound are allowed. Unit and combined receipts record actual counts and hashes; complete logs stay on the server.
+
+The actual S/AC estimates remain explicit inputs. Thus unconditional S/AC/O0/R3/R4, energy-marked O1/O2, B1, Brownian inputs, long-time K/Kv, 4/pi, E1-E6 and OQ4 remain OPEN. Source-style constants depending only on M are justified only once Cq and Cs are supplied as fixed numerical constants.
+
+The exact feature base is PR #20 at 610fa8d0185592115d067915ba7eba31b42d27cc, whose ancestry contains the conflict-free accepted-main2ab51d56176a2c801a93987ee00f2dd6433575f9 merge. No manual lane edits to common definitions, root imports, manifests, audit scripts or locks. All previously frozen mathematical hashes remain unchanged; unreviewed continuation modules are excluded.
