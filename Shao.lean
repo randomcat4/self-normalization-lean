@@ -42,3 +42,6 @@ import Shao.Probability.RetainedComparison
 import Shao.OQ5.P35.ConditionalStatistics
 import Shao.Probability.QuadraticCharacteristic
 import Shao.Probability.GaussianTail
+import Shao.OQ3.FiniteConstraints
+import Shao.OQ3.SourceStarter
+import Shao.OQ3.SummableAtoms
