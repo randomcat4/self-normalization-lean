@@ -5,11 +5,11 @@ root=Path(__file__).resolve().parents[1]
 names=[]
 for path in sorted((root/'Shao').rglob('*.lean')):
     text=path.read_text()
-    # Project declaration headers are at column zero. Remove block comments first.
+    # Declaration headers may have leading whitespace. Remove block comments first.
     text=re.sub(r'/\-.*?\-/', '', text, flags=re.S)
     scopes=[]
     for line in text.splitlines():
-        line=line.split('--',1)[0].rstrip()
+        line=line.split('--',1)[0].strip()
         match=re.fullmatch(r'namespace (\S+)',line)
         if match:
             scopes.append(('namespace',match[1]));continue
