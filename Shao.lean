@@ -21,6 +21,7 @@ import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
+import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.FarEnergyExponentialCover
@@ -61,6 +62,7 @@ import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCanonicalRate
 import Shao.OQ3.SourceCanonicalSaddle
 import Shao.OQ3.SourceCoefficientDiagonal
+import Shao.OQ3.SourceCounterexampleRoot
 import Shao.OQ3.SourceEnergyGeometry
 import Shao.OQ3.SourceFarWeightedTail
 import Shao.OQ3.SourceFixedLawCounterexample
@@ -71,6 +73,7 @@ import Shao.OQ3.SourceGeometricScale
 import Shao.OQ3.SourceGlobalExponentialTests
 import Shao.OQ3.SourceLogPartitionDerivatives
 import Shao.OQ3.SourceRemainderNotBigO
+import Shao.OQ3.SourceSmoothMeanMap
 import Shao.OQ3.SourceStarter
 import Shao.OQ3.SourceTransferBudgets
 import Shao.OQ3.StageCurvedLayerLimit
@@ -118,6 +121,7 @@ import Shao.OQ4.OvershootSum
 import Shao.OQ4.RademacherAllModes
 import Shao.OQ4.RademacherCosine
 import Shao.OQ4.RademacherCriticalPhase
+import Shao.OQ4.RademacherCubeRootRates
 import Shao.OQ4.RademacherFiniteBasis
 import Shao.OQ4.RademacherFiniteS1
 import Shao.OQ4.RademacherIteration
