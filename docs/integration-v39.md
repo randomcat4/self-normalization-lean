@@ -1,0 +1,9 @@
+# v39: actual canonical source law, standard remainder negation, S5, and p53 mass
+
+Five exact frozen author heads are assembled without modifying their production source bytes. OQ3 binds the same actual source law to the complete-domain EReal Legendre minimum and actual Hessian/scale, and proves the standard inverse-square-root remainder is not Big-O for one law. OQ4 assembles the actual weak-lattice Rademacher S5 critical probability phases. OQ56 normalizes the p53 sparse masses and proves tail-cost limits.
+
+Six new modules add 44 public theorems; the whole-library owned count increases by 221, including late-generated dependency equations. Server sequential changed-source compilation and full public/module and owned/private/generated transitive axiom audits pass: 277 production modules, 1875 public theorems, 3180 namespace theorems including generated declarations, 5470 module-owned constants. All 271 baseline source files and 1048 baseline objects retain exact hashes. Allowed axioms are propext, Classical.choice and Quot.sound. Lean and mathlib pins remain unchanged.
+
+Independent source-to-statement and full Lean proof reviews are recorded separately for OQ3, OQ4 and OQ56. No original research root is newly closed: same-law whole-root assembly and neighborhood regularity for OQ3, strict/finer lattice and general OQ4, actual label law and remaining p53 construction, and C1/C2 derivatives/high-frequency/inversion/desmoothing remain outside this batch.
+
+Root Lean ran only on the assigned server, sequentially on CPU10-13. External CPU0-9/80GiB workload and active lane worktrees were untouched. Author commits and source hashes are preserved; raw logs stay on the server. Only publication review text line endings and final blank lines are normalized, with both hashes recorded.

@@ -1,0 +1,2771 @@
+{
+  "schema": "shao.integration-v39.oq56-independent-review.v1",
+  "status": "CORRECT",
+  "critical_gaps": [],
+  "reviewer_context": "/root/v39_oq56_accept",
+  "reviewed_at_utc": "2026-10-22T21:54:21.170399+00:00",
+  "pull_request": 157,
+  "pull_request_url": "https://github.com/randomcat4/shao-lean/pull/157",
+  "head": "f66852c2a18f009cef4859e82a5cf41e7ce48b83",
+  "parent": "63f82bd7ea2a0fba92a4ad217c4ad27bfa3ead00",
+  "tree": "6e6f1d319ec59e6f27aab7e1f85b72d750d404fa",
+  "scope": "Exact unit98 SparseMass and unit99 SparseMassLimits: mass normalization, full-tail cost bounds, four numerical limits. No P53/OQ6/RS2 root closure.",
+  "sourceSHA": {
+    "Shao/OQ5/P53/SparseMass.lean": "93518d87f30ed5f78dd62ff142d7e6aad95241a0906f4fa89ea9344f39f0444a",
+    "Shao/OQ5/P53/SparseMassLimits.lean": "ee34c3ca8f40697f433eba8a647057976e889c4baec9b1e22413f6006810c1af"
+  },
+  "counts": {
+    "new_modules": 2,
+    "public_theorems": 21,
+    "public_definitions": 3,
+    "authored_private_theorems": 10,
+    "generated_new_owned": 17,
+    "new_owned_total": 51,
+    "source_materialized_with_imported_lazy": 52,
+    "imported97_lazy": 1
+  },
+  "modules": [
+    {
+      "unit": 98,
+      "module": "Shao.OQ5.P53.SparseMass",
+      "path": "Shao/OQ5/P53/SparseMass.lean",
+      "source_sha256": "93518d87f30ed5f78dd62ff142d7e6aad95241a0906f4fa89ea9344f39f0444a",
+      "source_bytes": 13608,
+      "public_theorems": 17,
+      "public_definitions": 3,
+      "authored_private_theorems": 8,
+      "new_owned": 44,
+      "generated_new_owned": 16,
+      "source_materialized": 45,
+      "imported_lazy": 1,
+      "late_additions": 0,
+      "raw_records": 124,
+      "raw_dependency_queries": 34,
+      "raw_source_late_full_types_matched": 90,
+      "canonical_manifest_sha256": "ea6595ac2c12cc82132a246f5e59f68e2323da464d7b24d748523e7366d5741a",
+      "canonical_manifest_remote": "work/oq56/fresh-review98/canonical-manifest.json",
+      "imports": [
+        "Shao.OQ5.P53.SparseSelection",
+        "Mathlib.Analysis.SpecificLimits.Basic"
+      ]
+    },
+    {
+      "unit": 99,
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "path": "Shao/OQ5/P53/SparseMassLimits.lean",
+      "source_sha256": "ee34c3ca8f40697f433eba8a647057976e889c4baec9b1e22413f6006810c1af",
+      "source_bytes": 5745,
+      "public_theorems": 4,
+      "public_definitions": 0,
+      "authored_private_theorems": 2,
+      "new_owned": 7,
+      "generated_new_owned": 1,
+      "source_materialized": 7,
+      "imported_lazy": 0,
+      "late_additions": 0,
+      "raw_records": 65,
+      "raw_dependency_queries": 51,
+      "raw_source_late_full_types_matched": 14,
+      "canonical_manifest_sha256": "0b261fef55f50e3ec8882e0221af489a96d8c6ae76f812b68fe33a2c02bea579",
+      "canonical_manifest_remote": "work/oq56/fresh-review99/canonical-manifest.json",
+      "imports": [
+        "Shao.OQ5.P53.SparseMass",
+        "Mathlib.Algebra.Order.Ring.Pow",
+        "Mathlib.Topology.MetricSpace.Pseudo.Lemmas"
+      ]
+    }
+  ],
+  "public_declarations": [
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseLabelMass",
+      "kind": "def",
+      "line": 20,
+      "contract": "def sparseLabelMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) : ℝ :=\n  if j = 0 then 1 - ∑' k : ℕ, sparsePositiveMass α x N k\n  else sparsePositiveMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseHighMass",
+      "kind": "def",
+      "line": 24,
+      "contract": "def sparseHighMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) : ℝ :=\n  ∑' k : ℕ, sparsePositiveMass α x N (j + k)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePriorMass",
+      "kind": "def",
+      "line": 27,
+      "contract": "def sparsePriorMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) : ℝ :=\n  ∑ k ∈ Finset.range j, sparseLabelMass α x N k"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePositiveMass_nonneg",
+      "kind": "theorem",
+      "line": 65,
+      "contract": "theorem sparsePositiveMass_nonneg (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) : 0 ≤ sparsePositiveMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePositiveMass_pos",
+      "kind": "theorem",
+      "line": 72,
+      "contract": "theorem sparsePositiveMass_pos (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) (hj : 1 ≤ j) : 0 < sparsePositiveMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePositiveMass_le_dyadic",
+      "kind": "theorem",
+      "line": 78,
+      "contract": "theorem sparsePositiveMass_le_dyadic (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) (hj : 1 ≤ j) :\n    sparsePositiveMass α x N j ≤ sparseDyadic (j + 2)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.summable_sparsePositiveMass",
+      "kind": "theorem",
+      "line": 92,
+      "contract": "theorem summable_sparsePositiveMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) :\n    Summable (sparsePositiveMass α x N)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePositiveMass_tsum_bounds",
+      "kind": "theorem",
+      "line": 104,
+      "contract": "theorem sparsePositiveMass_tsum_bounds (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) :\n    0 ≤ (∑' j : ℕ, sparsePositiveMass α x N j) ∧\n    (∑' j : ℕ, sparsePositiveMass α x N j) ≤ 1 / 4"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseLabelMass_nonneg",
+      "kind": "theorem",
+      "line": 124,
+      "contract": "theorem sparseLabelMass_nonneg (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) : 0 ≤ sparseLabelMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.hasSum_sparseLabelMass",
+      "kind": "theorem",
+      "line": 133,
+      "contract": "theorem hasSum_sparseLabelMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) :\n    HasSum (sparseLabelMass α x N) 1"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseLabelMass_zero_ge",
+      "kind": "theorem",
+      "line": 152,
+      "contract": "theorem sparseLabelMass_zero_ge (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) :\n    (3 / 4 : ℝ) ≤ sparseLabelMass α x N 0"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseLabelMass_eq_positiveMass",
+      "kind": "theorem",
+      "line": 157,
+      "contract": "theorem sparseLabelMass_eq_positiveMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) (hj : 1 ≤ j) :\n    sparseLabelMass α x N j = sparsePositiveMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.summable_sparsePositiveMass_tail",
+      "kind": "theorem",
+      "line": 162,
+      "contract": "theorem summable_sparsePositiveMass_tail (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) : Summable (fun k : ℕ => sparsePositiveMass α x N (j + k))"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseHighMass_bounds",
+      "kind": "theorem",
+      "line": 167,
+      "contract": "theorem sparseHighMass_bounds (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) : 0 ≤ sparseHighMass α x N j ∧ sparseHighMass α x N j ≤ 1 / 4"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseHighMass_succ",
+      "kind": "theorem",
+      "line": 183,
+      "contract": "theorem sparseHighMass_succ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) :\n    sparseHighMass α x N j = sparsePositiveMass α x N j + sparseHighMass α x N (j + 1)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePriorMass_zero",
+      "kind": "theorem",
+      "line": 198,
+      "contract": "theorem sparsePriorMass_zero (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) : sparsePriorMass α x N 0 = 0"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass",
+      "kind": "theorem",
+      "line": 201,
+      "contract": "theorem sparsePriorMass_eq_one_sub_highMass (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) (hj : 1 ≤ j) : sparsePriorMass α x N j = 1 - sparseHighMass α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparsePriorMass_bounds",
+      "kind": "theorem",
+      "line": 216,
+      "contract": "theorem sparsePriorMass_bounds (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (j : ℕ) (hj : 1 ≤ j) :\n    (3 / 4 : ℝ) ≤ sparsePriorMass α x N j ∧ sparsePriorMass α x N j < 1"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseHighMass_future_cost",
+      "kind": "theorem",
+      "line": 275,
+      "contract": "theorem sparseHighMass_future_cost (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N)\n    (j : ℕ) (hj : 1 ≤ j) :\n    (N j : ℝ) * sparseHighMass α x N (j + 1) ≤ sparseDyadic j / (N j : ℝ)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.sparseHighMass_total_cost",
+      "kind": "theorem",
+      "line": 297,
+      "contract": "theorem sparseHighMass_total_cost (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N)\n    (j : ℕ) (hj : 1 ≤ j) :\n    (N j : ℝ) * sparseHighMass α x N j ≤\n      sparseDyadic j + sparseDyadic j / (N j : ℝ)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.tendsto_sparseHighMass_zero",
+      "kind": "theorem",
+      "line": 36,
+      "contract": "theorem tendsto_sparseHighMass_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Tendsto (fun j : ℕ => sparseHighMass α x N j) atTop (nhds 0)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.tendsto_sparsePriorMass_one",
+      "kind": "theorem",
+      "line": 60,
+      "contract": "theorem tendsto_sparsePriorMass_one :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Tendsto (fun j : ℕ => sparsePriorMass α x N j) atTop (nhds 1)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.tendsto_sparseHighMass_cost_zero",
+      "kind": "theorem",
+      "line": 66,
+      "contract": "theorem tendsto_sparseHighMass_cost_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (_ : SparseSelectionCore α x N),\n  Tendsto (fun j : ℕ => (N j : ℝ) * sparseHighMass α x N j)\n    atTop (nhds 0)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.tendsto_sparsePriorMass_background_power_one",
+      "kind": "theorem",
+      "line": 92,
+      "contract": "theorem tendsto_sparsePriorMass_background_power_one :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (_ : SparseSelectionCore α x N),\n  Tendsto (fun j : ℕ => (sparsePriorMass α x N j) ^ (2 * (N j - 2)))\n    atTop (nhds 1)"
+    }
+  ],
+  "authored_private_declarations": [
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_dyadic_pos",
+      "kind": "theorem",
+      "line": 30,
+      "contract": "private theorem mass_dyadic_pos (j : ℕ) : 0 < sparseDyadic j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_levelAmplitude_nonneg",
+      "kind": "theorem",
+      "line": 33,
+      "contract": "private theorem mass_levelAmplitude_nonneg (α : ℝ) (x : ℕ → ℝ)\n    (N : ℕ → ℕ) (j : ℕ) : 0 ≤ sparseLevelAmplitude α x N j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_dyadic_future_hasSum",
+      "kind": "theorem",
+      "line": 42,
+      "contract": "private theorem mass_dyadic_future_hasSum (j : ℕ) :\n    HasSum (fun k : ℕ => sparseDyadic (j + 1 + k)) (sparseDyadic j)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_positive_majorant_hasSum",
+      "kind": "theorem",
+      "line": 52,
+      "contract": "private theorem mass_positive_majorant_hasSum :\n    HasSum (fun k : ℕ => sparseDyadic (k + 3)) (1 / 4 : ℝ)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_core_step_bounds",
+      "kind": "theorem",
+      "line": 227,
+      "contract": "private theorem mass_core_step_bounds (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N) (m : ℕ) :\n    4 ≤ N (m + 1) ∧\n    (N (m + 1) : ℝ) * sparsePositiveMass α x N (m + 1) ≤ sparseDyadic (m + 1) ∧\n    sparsePositiveMass α x N (m + 1) ≤ sparseDyadic (m + 1) / (N m : ℝ) ^ 2"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_core_index_pos",
+      "kind": "theorem",
+      "line": 237,
+      "contract": "private theorem mass_core_index_pos (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N) (j : ℕ) (hj : 1 ≤ j) : 0 < (N j : ℝ)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_core_current_cost",
+      "kind": "theorem",
+      "line": 246,
+      "contract": "private theorem mass_core_current_cost (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N) (j : ℕ) (hj : 1 ≤ j) :\n    (N j : ℝ) * sparsePositiveMass α x N j ≤ sparseDyadic j"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMass",
+      "name": "Shao.OQ5.P53.mass_core_future_term",
+      "kind": "theorem",
+      "line": 253,
+      "contract": "private theorem mass_core_future_term (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N) (j : ℕ) (hj : 1 ≤ j) (k : ℕ) :\n    (N j : ℝ) * sparsePositiveMass α x N (j + 1 + k) ≤\n      sparseDyadic (j + 1 + k) / (N j : ℝ)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.limits_dyadic_tendsto_zero",
+      "kind": "theorem",
+      "line": 22,
+      "contract": "private theorem limits_dyadic_tendsto_zero :\n    Tendsto sparseDyadic atTop (nhds 0)"
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseMassLimits",
+      "name": "Shao.OQ5.P53.limits_core_index_one_le",
+      "kind": "theorem",
+      "line": 29,
+      "contract": "private theorem limits_core_index_one_le (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (hN : SparseSelectionCore α x N) (j : ℕ) : 1 ≤ (N j : ℝ)"
+    }
+  ],
+  "all_source_materialized_declarations": [
+    {
+      "ordinal": 1,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_index_pos",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_index_pos"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ)\n  (x : ℕ → ℝ) (N : ℕ → ℕ), Shao.OQ5.P53.SparseSelectionCore α x N → ∀ (j : ℕ), 1 ≤ j → 0 < ↑(N j)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_index_pos",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 2,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_tsum_bounds",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_tsum_bounds"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  0 ≤ ∑' (j : ℕ), Shao.OQ5.P53.sparsePositiveMass α x N j ∧ ∑' (j : ℕ), Shao.OQ5.P53.sparsePositiveMass α x N j ≤ 1 / 4",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_tsum_bounds",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 3,
+      "name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass_eq_one_sub_highMass"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ),\n  1 ≤ j → ∀ (k : ℕ), ¬1 ≤ k + j → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 4,
+      "name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass._proof_1_2",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass_eq_one_sub_highMass"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_2"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j k : ℕ), ¬k + j = j + k → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass._proof_1_2",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 5,
+      "name": "Shao.OQ5.P53.sparseHighMass_succ._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_succ"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j i : ℕ), ¬j + (i + 1) = j + 1 + i → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_succ._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 6,
+      "name": "Shao.OQ5.P53.sparseLabelMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass"
+        }
+      ],
+      "isTheorem": false,
+      "actual_loaded_type": "ℝ → (ℕ → ℝ) → (ℕ → ℕ) → ℕ → ℝ",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 7,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_positive_majorant_hasSum",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_positive_majorant_hasSum"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "HasSum\n  (fun k => Shao.OQ5.P53.sparseDyadic (k + 3)) (1 / 4)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_positive_majorant_hasSum",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 8,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_positive_majorant_hasSum._proof_1_2",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_positive_majorant_hasSum"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_2"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (k : ℕ), ¬2 + 1 + k = k + 3 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_positive_majorant_hasSum._proof_1_2",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 9,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_future_term._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_future_term"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (j k : ℕ), ¬j ≤ j + k → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_future_term._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 10,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_levelAmplitude_nonneg",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_levelAmplitude_nonneg"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 0 ≤ Shao.OQ5.P53.sparseLevelAmplitude α x N j",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_levelAmplitude_nonneg",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 11,
+      "name": "Shao.OQ5.P53.sparseLabelMass_zero_ge",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass_zero_ge"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  3 / 4 ≤ Shao.OQ5.P53.sparseLabelMass α x N 0",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass_zero_ge",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 12,
+      "name": "Shao.OQ5.P53.summable_sparsePositiveMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "summable_sparsePositiveMass"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Summable (Shao.OQ5.P53.sparsePositiveMass α x N)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.summable_sparsePositiveMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 13,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_pos",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_pos"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  1 ≤ j → 0 < Shao.OQ5.P53.sparsePositiveMass α x N j",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_pos",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 14,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_future_term",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_future_term"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    ∀ (j : ℕ),\n      1 ≤ j →\n        ∀ (k : ℕ),\n          ↑(N j) * Shao.OQ5.P53.sparsePositiveMass α x N (j + 1 + k) ≤ Shao.OQ5.P53.sparseDyadic (j + 1 + k) / ↑(N j)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_future_term",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 15,
+      "name": "Shao.OQ5.P53.sparseLabelMass_eq_positiveMass._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass_eq_positiveMass"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ), 1 ≤ j → j = 0 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass_eq_positiveMass._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 16,
+      "name": "Shao.OQ5.P53.sparseLabelMass.eq_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass"
+        },
+        {
+          "kind": "str",
+          "value": "eq_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  Shao.OQ5.P53.sparseLabelMass α x N j =\n    if j = 0 then 1 - ∑' (k : ℕ), Shao.OQ5.P53.sparsePositiveMass α x N k else Shao.OQ5.P53.sparsePositiveMass α x N j",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass.eq_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 17,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_le_dyadic",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_le_dyadic"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  1 ≤ j → Shao.OQ5.P53.sparsePositiveMass α x N j ≤ Shao.OQ5.P53.sparseDyadic (j + 2)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_le_dyadic",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 18,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_dyadic_future_hasSum",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_dyadic_future_hasSum"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (j : ℕ), HasSum (fun k => Shao.OQ5.P53.sparseDyadic (j + 1 + k)) (Shao.OQ5.P53.sparseDyadic j)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_dyadic_future_hasSum",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 19,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_dyadic_pos",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_dyadic_pos"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ),\n  0 < Shao.OQ5.P53.sparseDyadic j",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_dyadic_pos",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 20,
+      "name": "Shao.OQ5.P53.sparseHighMass_bounds",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_bounds"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 ≤ Shao.OQ5.P53.sparseHighMass α x N j ∧ Shao.OQ5.P53.sparseHighMass α x N j ≤ 1 / 4",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_bounds",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 21,
+      "name": "Shao.OQ5.P53.hasSum_sparseLabelMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "hasSum_sparseLabelMass"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  HasSum (Shao.OQ5.P53.sparseLabelMass α x N) 1",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.hasSum_sparseLabelMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 22,
+      "name": "Shao.OQ5.P53.sparseLabelMass_nonneg",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass_nonneg"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 ≤ Shao.OQ5.P53.sparseLabelMass α x N j",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass_nonneg",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 23,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_index_pos._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_index_pos"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "1 ≤\n    0 →\n  False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_index_pos._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 24,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_tsum_bounds._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_tsum_bounds"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (k : ℕ), ¬1 ≤ k + 1 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_tsum_bounds._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 25,
+      "name": "Shao.OQ5.P53.sparsePriorMass_bounds",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass_bounds"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  1 ≤ j → 3 / 4 ≤ Shao.OQ5.P53.sparsePriorMass α x N j ∧ Shao.OQ5.P53.sparsePriorMass α x N j < 1",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass_bounds",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 26,
+      "name": "Shao.OQ5.P53.sparsePriorMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass"
+        }
+      ],
+      "isTheorem": false,
+      "actual_loaded_type": "ℝ → (ℕ → ℝ) → (ℕ → ℕ) → ℕ → ℝ",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 27,
+      "name": "Shao.OQ5.P53.sparsePriorMass.eq_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass"
+        },
+        {
+          "kind": "str",
+          "value": "eq_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  Shao.OQ5.P53.sparsePriorMass α x N j = ∑ k ∈ Finset.range j, Shao.OQ5.P53.sparseLabelMass α x N k",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass.eq_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 28,
+      "name": "Shao.OQ5.P53.sparseHighMass_bounds._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_bounds"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j k : ℕ), ¬k + j = j + k → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_bounds._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 29,
+      "name": "Shao.OQ5.P53.summable_sparsePositiveMass._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "summable_sparsePositiveMass"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (k : ℕ), ¬1 ≤ k + 1 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.summable_sparsePositiveMass._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 30,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_pos._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_pos"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ), 1 ≤ j → j = 0 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_pos._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 31,
+      "name": "Shao.OQ5.P53.sparseHighMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass"
+        }
+      ],
+      "isTheorem": false,
+      "actual_loaded_type": "ℝ → (ℕ → ℝ) → (ℕ → ℕ) → ℕ → ℝ",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 32,
+      "name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass_eq_one_sub_highMass"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  1 ≤ j → Shao.OQ5.P53.sparsePriorMass α x N j = 1 - Shao.OQ5.P53.sparseHighMass α x N j",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass_eq_one_sub_highMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 33,
+      "name": "Shao.OQ5.P53.summable_sparsePositiveMass_tail",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "summable_sparsePositiveMass_tail"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  Summable fun k => Shao.OQ5.P53.sparsePositiveMass α x N (j + k)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.summable_sparsePositiveMass_tail",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 34,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_current_cost",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_current_cost"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    ∀ (j : ℕ), 1 ≤ j → ↑(N j) * Shao.OQ5.P53.sparsePositiveMass α x N j ≤ Shao.OQ5.P53.sparseDyadic j",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_current_cost",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 35,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_current_cost._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_current_cost"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "1 ≤\n    0 →\n  False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_current_cost._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 36,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_step_bounds",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_step_bounds"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    ∀ (m : ℕ),\n      4 ≤ N (m + 1) ∧\n        ↑(N (m + 1)) * Shao.OQ5.P53.sparsePositiveMass α x N (m + 1) ≤ Shao.OQ5.P53.sparseDyadic (m + 1) ∧\n          Shao.OQ5.P53.sparsePositiveMass α x N (m + 1) ≤ Shao.OQ5.P53.sparseDyadic (m + 1) / ↑(N m) ^ 2",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_step_bounds",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 37,
+      "name": "Shao.OQ5.P53.sparseLabelMass_eq_positiveMass",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseLabelMass_eq_positiveMass"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  1 ≤ j → Shao.OQ5.P53.sparseLabelMass α x N j = Shao.OQ5.P53.sparsePositiveMass α x N j",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseLabelMass_eq_positiveMass",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 38,
+      "name": "Shao.OQ5.P53.sparseHighMass_total_cost",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_total_cost"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    ∀ (j : ℕ),\n      1 ≤ j →\n        ↑(N j) * Shao.OQ5.P53.sparseHighMass α x N j ≤\n          Shao.OQ5.P53.sparseDyadic j + Shao.OQ5.P53.sparseDyadic j / ↑(N j)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_total_cost",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 39,
+      "name": "_private.work.oq56.«fresh-review98».ExactSourceAudit.0.Shao.OQ5.P53.mass_core_future_term._proof_1_2",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review98"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "mass_core_future_term"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_2"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (j k : ℕ), ¬j + k + 1 = j + 1 + k → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "_private.Shao.OQ5.P53.SparseMass.0.Shao.OQ5.P53.mass_core_future_term._proof_1_2",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 40,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_nonneg",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_nonneg"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 ≤ Shao.OQ5.P53.sparsePositiveMass α x N j",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_nonneg",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 41,
+      "name": "Shao.OQ5.P53.sparseHighMass_future_cost",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_future_cost"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    ∀ (j : ℕ), 1 ≤ j → ↑(N j) * Shao.OQ5.P53.sparseHighMass α x N (j + 1) ≤ Shao.OQ5.P53.sparseDyadic j / ↑(N j)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_future_cost",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 42,
+      "name": "Shao.OQ5.P53.sparsePriorMass_zero",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePriorMass_zero"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.sparsePriorMass α x N 0 = 0",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePriorMass_zero",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 43,
+      "name": "Shao.OQ5.P53.sparsePositiveMass_le_dyadic._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparsePositiveMass_le_dyadic"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ), 1 ≤ j → j = 0 → False",
+      "classification": "source_derived_generated_declaration",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparsePositiveMass_le_dyadic._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 44,
+      "name": "Shao.OQ5.P53.sparseDyadic.eq_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseDyadic"
+        },
+        {
+          "kind": "str",
+          "value": "eq_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (j : ℕ), Shao.OQ5.P53.sparseDyadic j = (2 ^ j)⁻¹",
+      "classification": "imported97_derived_lazy_definition_equation",
+      "mathematical_owner": "accepted97",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseDyadic.eq_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 45,
+      "name": "Shao.OQ5.P53.sparseHighMass_succ",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "sparseHighMass_succ"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  Shao.OQ5.P53.sparseHighMass α x N j =\n    Shao.OQ5.P53.sparsePositiveMass α x N j + Shao.OQ5.P53.sparseHighMass α x N (j + 1)",
+      "classification": "explicit_public_definition_or_theorem",
+      "mathematical_owner": "new98",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 98,
+      "production_name": "Shao.OQ5.P53.sparseHighMass_succ",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 1,
+      "name": "_private.work.oq56.«fresh-review99».ExactSourceAudit.0.Shao.OQ5.P53.limits_core_index_one_le",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review99"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "limits_core_index_one_le"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ), Shao.OQ5.P53.SparseSelectionCore α x N → ∀ (j : ℕ), 1 ≤ ↑(N j)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "_private.Shao.OQ5.P53.SparseMassLimits.0.Shao.OQ5.P53.limits_core_index_one_le",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 2,
+      "name": "Shao.OQ5.P53.tendsto_sparseHighMass_cost_zero",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "tendsto_sparseHighMass_cost_zero"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N → Tendsto (fun j => ↑(N j) * Shao.OQ5.P53.sparseHighMass α x N j) atTop (𝓝 0)",
+      "classification": "explicit_public_theorem",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "Shao.OQ5.P53.tendsto_sparseHighMass_cost_zero",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 3,
+      "name": "_private.work.oq56.«fresh-review99».ExactSourceAudit.0.Shao.OQ5.P53.limits_core_index_one_le._proof_1_1",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review99"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "limits_core_index_one_le"
+        },
+        {
+          "kind": "str",
+          "value": "_proof_1_1"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀\n  (N : ℕ → ℕ) (j : ℕ), 2 ^ j ≤ N j → 0 < 2 ^ j → ¬1 ≤ N j → False",
+      "classification": "source_private_helper_derived_arithmetic_proof",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "_private.Shao.OQ5.P53.SparseMassLimits.0.Shao.OQ5.P53.limits_core_index_one_le._proof_1_1",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 4,
+      "name": "Shao.OQ5.P53.tendsto_sparseHighMass_zero",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "tendsto_sparseHighMass_zero"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Tendsto (fun j => Shao.OQ5.P53.sparseHighMass α x N j) atTop (𝓝 0)",
+      "classification": "explicit_public_theorem",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "Shao.OQ5.P53.tendsto_sparseHighMass_zero",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 5,
+      "name": "Shao.OQ5.P53.tendsto_sparsePriorMass_one",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "tendsto_sparsePriorMass_one"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Tendsto (fun j => Shao.OQ5.P53.sparsePriorMass α x N j) atTop (𝓝 1)",
+      "classification": "explicit_public_theorem",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "Shao.OQ5.P53.tendsto_sparsePriorMass_one",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 6,
+      "name": "_private.work.oq56.«fresh-review99».ExactSourceAudit.0.Shao.OQ5.P53.limits_dyadic_tendsto_zero",
+      "components": [
+        {
+          "kind": "str",
+          "value": "_private"
+        },
+        {
+          "kind": "str",
+          "value": "work"
+        },
+        {
+          "kind": "str",
+          "value": "oq56"
+        },
+        {
+          "kind": "str",
+          "value": "fresh-review99"
+        },
+        {
+          "kind": "str",
+          "value": "ExactSourceAudit"
+        },
+        {
+          "kind": "num",
+          "value": "0"
+        },
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "limits_dyadic_tendsto_zero"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "Tendsto\n  Shao.OQ5.P53.sparseDyadic atTop (𝓝 0)",
+      "classification": "source_authored_private_helper",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "_private.Shao.OQ5.P53.SparseMassLimits.0.Shao.OQ5.P53.limits_dyadic_tendsto_zero",
+      "production_owned_audit_presence_verified": true
+    },
+    {
+      "ordinal": 7,
+      "name": "Shao.OQ5.P53.tendsto_sparsePriorMass_background_power_one",
+      "components": [
+        {
+          "kind": "str",
+          "value": "Shao"
+        },
+        {
+          "kind": "str",
+          "value": "OQ5"
+        },
+        {
+          "kind": "str",
+          "value": "P53"
+        },
+        {
+          "kind": "str",
+          "value": "tendsto_sparsePriorMass_background_power_one"
+        }
+      ],
+      "isTheorem": true,
+      "actual_loaded_type": "∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ),\n  Shao.OQ5.P53.SparseSelectionCore α x N →\n    Tendsto (fun j => Shao.OQ5.P53.sparsePriorMass α x N j ^ (2 * (N j - 2))) atTop (𝓝 1)",
+      "classification": "explicit_public_theorem",
+      "mathematical_owner": "new99",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "unit": 99,
+      "production_name": "Shao.OQ5.P53.tendsto_sparsePriorMass_background_power_one",
+      "production_owned_audit_presence_verified": true
+    }
+  ],
+  "frozen_public_contracts_literal_match": {
+    "count": 24,
+    "status": "PASS",
+    "remote_git_blob_verified": true,
+    "includes_definition_bodies": true
+  },
+  "original_sources": [
+    {
+      "path": "C:/game/shao/current/oq56/inputs02/p53.md",
+      "sha256": "0bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561",
+      "bytes": 5686,
+      "read_scope": "full"
+    },
+    {
+      "path": "C:/game/shao/current/oq56/inputs02/p45.md",
+      "sha256": "0b799637356615cfb18a9fef016c11d682aeefde314106e0b56eb46a853c09ca",
+      "bytes": 10799,
+      "read_scope": "section 1 complete, plus construction context through line 110"
+    },
+    {
+      "path": "C:/game/shao/current/oq56/scope01.md",
+      "sha256": "5c8653d566857492d8c4f3da43ddd8f2b84a33f107132d3e61322735c2143052",
+      "bytes": 8682,
+      "read_scope": "full"
+    }
+  ],
+  "dependencies": [
+    {
+      "module": "Shao.OQ5.P53.SparseScales",
+      "source_sha256": "22d4f7f1972a3cbc5fedfc2efa0cadbf91616d4e1d113cbb90ef753a830b7888",
+      "new_in_this_pr": false,
+      "bytes_unchanged_from_parent": true,
+      "bearing": "Original p53 scales; actual decay used to build selection steps."
+    },
+    {
+      "module": "Shao.OQ5.P53.SparseSelection",
+      "source_sha256": "17d134c1a8c02b07f5a5e3c3047742048775dbf36c5c1eba47f120a09622d282",
+      "new_in_this_pr": false,
+      "bytes_unchanged_from_parent": true,
+      "bearing": "Literal pi_j, zero-level conventions, constructed exists_sparseSelectionCore, strictMono N. Core contains finite step inequalities, not the sought tail limit."
+    },
+    {
+      "module": "Mathlib",
+      "commit": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "bearing": "Geometric HasSum, nonnegative comparison, finite update, prefix/tail decomposition, HasSum partial sums, Bernoulli, natural powers and squeeze. All side conditions checked."
+    }
+  ],
+  "independent_mathematical_checks": [
+    "pi_0=0 and residual m_0=1-sum(pi) are distinct. For j>=1, pi_j=2^(-j-2)*exp(-t_j^alpha) and 0<pi_j<=2^(-j-2).",
+    "Summability is proved before interpreting tsum as mass. Geometric majorant sums to 1/4; update at zero yields HasSum m 1, not just a totalized tsum equality.",
+    "H_j includes all l>=j. b_j sums actual m_l over l<j. b_0=0; b_j=1-H_j and 3/4<=b_j<1 require j>=1.",
+    "For l=j+1+k, N_j<=N_(j+k) and pi_l<=w_l/N_(j+k)^2 imply N_j*pi_l<=w_l/N_j. Infinite sum gives N_j*H_(j+1)<=w_j/N_j; adding current cost gives N_j*H_j<=w_j+w_j/N_j.",
+    "The exact same supplied N and Core are used throughout. Its existence is constructed from the original supercritical/subsqrt hypotheses in accepted SparseSelection, with no monotonicity hypothesis on x.",
+    "H_j->0 follows from genuine summability; b_j->1 from HasSum m 1.",
+    "N_j>=2^j>=1 gives 0<=N_j*H_j<=2*w_j eventually; w_j->0.",
+    "With natural k_j=2*(N_j-2), 0<=1-b_j^k_j<=k_j*H_j<=2*N_j*H_j->0 by Bernoulli and 0<=b_j<=1. No logarithm, real exponent, silently changed subtraction, or assumed background power limit is used.",
+    "All 24 public frozen headers/definition bodies are literal matches to the frozen Git blob. Complete 447 source lines and all private proofs were reviewed.",
+    "All 52 actual source-stage types/components were reviewed; generated equations are literal definitions and all arithmetic generated implications were independently checked. 51 new-owned names map to the root production owned audit."
+  ],
+  "historical_machine_evidence": {
+    "unit98": {
+      "target_receipt_sha256": "d32e59f5fa9ff942d3e568c93f76f6444d2a3a932d595e8d29d40cf82b3c922b",
+      "prefix_receipt_sha256": "5652d65edce8afb16186062c8049e88a86c35dc302fd79e6abf6eb6ef5ca7f9f",
+      "target_seconds": 4.279214411973953,
+      "prefix_seconds": 5.6690332014113665,
+      "target_exit_code": 0,
+      "prefix_exit_code": 0,
+      "source_prefix_exact_bytes": 13608,
+      "raw_reconstructed_records": 124,
+      "raw_unique_structured_names": 79
+    },
+    "unit99": {
+      "target_receipt_sha256": "621d68b6744189813c7338413e6a178042ab528fb126e26f7a0b137e48ce1ef4",
+      "prefix_receipt_sha256": "8bed94dfa1812be2be447cac128d06cccb5208b34cc2b4f8581768e919ac92f4",
+      "target_seconds": 3.971882402896881,
+      "prefix_seconds": 6.092004081234336,
+      "target_exit_code": 0,
+      "prefix_exit_code": 0,
+      "source_prefix_exact_bytes": 5745,
+      "raw_reconstructed_records": 65,
+      "raw_unique_structured_names": 58
+    },
+    "source_prefix_vs_frozen_git_blob": "PASS both exact byte prefixes; contract full source and current source also equal",
+    "raw_reconstruction": "PASS all canonical JSON fields; all 104 SOURCE/LATE complete types exactly occur in raw output; all 189 records use allowed axioms",
+    "source_review_compiler_runs_this_context": 0,
+    "failure_history_preserved": "Author98 initial deprecation warnings and Author99 v1 compile failure are retained; unit99 v2 anonymous proof binder names were explicitly refrozen. No repeated Lean by this reviewer."
+  },
+  "root_unified_gate": {
+    "status": "PASS",
+    "source": "C:/game/shao lean/coordination/integration-v39/gate-result.json",
+    "remote_source": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/result.json",
+    "sha256": "a74870ea363ebb14763aaf1d336d1e0794a887ebe98b41c9b77e4659ab7ecc66",
+    "bytes": 36693,
+    "local_remote_bytes_hash_equal": true,
+    "all_seven_log_hashes_verified": true,
+    "frozen_oq56_source_sha_match": true,
+    "production_modules": 277,
+    "public_source_theorems": 1875,
+    "namespace_theorems_including_generated": 3180,
+    "module_owned_constants": 5470,
+    "baseline_unchanged_sources": 271,
+    "baseline_unchanged_objects": 1048,
+    "cpu_affinity_list": [
+      10,
+      11,
+      12,
+      13
+    ],
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "commands": [
+      {
+        "label": "versions",
+        "command": [
+          "bash",
+          "-c",
+          "lean --version && lake --version"
+        ],
+        "exit_code": 0,
+        "seconds": 0.186,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/versions.log",
+        "log_sha256": "536cba2c7dd8207e60abac5286091646f77f2e3606013a519cd64cb28c03f1c6"
+      },
+      {
+        "label": "manifest",
+        "command": [
+          "python3",
+          "scripts/public_theorems.py",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.221,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/manifest.log",
+        "log_sha256": "38be30285dbd9747195d208bcf11c9414575f857df84f43d25eb999207114cbd"
+      },
+      {
+        "label": "build",
+        "command": [
+          "python3",
+          "scripts/IntegrationBuild.py"
+        ],
+        "exit_code": 0,
+        "seconds": 39.84,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/build.log",
+        "log_sha256": "ec78488a6f299785c42323e823f29ad53ae733a2113b5c81a13495217fb6998b"
+      },
+      {
+        "label": "theorem-audit",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-M",
+          "8192",
+          "-j",
+          "4",
+          "-DautoImplicit=false",
+          "scripts/Audit.lean"
+        ],
+        "exit_code": 0,
+        "seconds": 14.639,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/theorem-audit.log",
+        "log_sha256": "40f92e1545945e34aafd847594f4d3285d10a877138bea9b827daa7d7588265f"
+      },
+      {
+        "label": "all-declarations",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-M",
+          "8192",
+          "-j",
+          "4",
+          "-DautoImplicit=false",
+          "scripts/OwnedAudit.lean"
+        ],
+        "exit_code": 0,
+        "seconds": 5.747,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/all-declarations.log",
+        "log_sha256": "6b027efaad78628a63550ae6fd28169042a85dffed0ca7335d77a37e680678b7"
+      },
+      {
+        "label": "module-coverage",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-M",
+          "8192",
+          "-j",
+          "4",
+          "-DautoImplicit=false",
+          "scripts/ModuleCoverage.lean"
+        ],
+        "exit_code": 0,
+        "seconds": 5.028,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/module-coverage.log",
+        "log_sha256": "7ea7fea43a254d12a3eff0baa8870462502c69fad67533f7a122c7ebad10799e"
+      },
+      {
+        "label": "diff-check",
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.024,
+        "log_path": "/root/rivermind-data/shao-lean-20261021/logs/integration-v39/diff-check.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "new_owned_name_mapping": {
+      "SparseMass": "44/44",
+      "SparseMassLimits": "7/7"
+    },
+    "reviewer_reran_Lean": false,
+    "package_view_warning": "module-coverage.log contains the existing mathlib repository local-changes warning. Mathlib is a symlink source view; the 10 directly relevant official owner/import files were independently byte-compared to the pinned Git commit and all match. No Lean proof diagnostic or project source mismatch."
+  },
+  "static_scan": {
+    "prohibited_code_tokens": [],
+    "diff_check_exit_code": 0,
+    "UTF8_LF_no_BOM": true
+  },
+  "limitations": [
+    "This PR has no actual label probability measure or iid construction; it proves numerical weights and limits for the original p53 construction.",
+    "All polynomial moments, exponential budgets, actual conditional background distribution and moments, positive rank-one operator, every-n Studentizer positivity, event probability and final tail/ratio remain future P53 work.",
+    "P53, OQ6 and RS2 remain OPEN. Previously closed p35 and P52 are not newly certified or counted here.",
+    "No novelty, priority, critical constant, every-heavy-tailed-law failure, alpha=1 necessity, or general nonlinear-kernel classification is certified.",
+    "This reviewer ran no Lean, modified no author or server file, and performed no merge. Kernel/build/whole-library axiom coverage is the root unified gate with exact source binding."
+  ],
+  "review_process_note": "Read-only parser schema probing initially treated dependency records like source records; optional source-only fields were corrected, then the raw reconstruction passed. These were reviewer JSON-reading errors, with no proof changes or Lean runs.",
+  "owned_output_paths": [
+    "coordination/integration-v39/oq56-review.md",
+    "coordination/integration-v39/oq56-review.json"
+  ]
+}
