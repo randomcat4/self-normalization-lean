@@ -1,0 +1,11 @@
+# v40: original fixed-law OQ3 counterexample and source-bearing continuations
+
+The four frozen author heads PR159/161/162/163 are assembled with unchanged production source bytes and preserved histories. PR161 supplies one actual probability law and fixed x0, canonical complete-domain EReal rate and full positive-energy tail-domain unique minimizer, actual gradient/Hessian/positive covariance and corrected vCorr, the real finite-product self-normalized tail event, strictly increasing scaled-remainder witnesses and standard non-Big-O. Independent original-source root review accepts the complete OQ3 A contract with its corrected vCorr convention.
+
+PR159 supplies the compact tilted uniform weak-Cramer transfer with the same positive domination constant and precise m-squared-c/2 gap. PR163 supplies actual bounded-source tilted means, true all-parameter gradient identity and smoothness (C-infinity, not analytic omega). PR162 proves deterministic fine cube-root remainder bounds from the original OQ4 source.
+
+Four new production modules add seven public theorems. The server gate passes for 281 modules, 1882 public theorems, 3190 namespace theorems including generated declarations, and 5507 owned constants. All 277 prior sources and 1054 prior objects retain exact hashes. All owned/private/generated transitive axioms use only propext, Classical.choice and Quot.sound; Lean/mathlib pins are unchanged. Three fresh independent reviews separately examine the original OQ3 A root, the OQ3 continuations and the OQ4 rate node.
+
+Only original OQ3 A is newly closed. B/C/D, varying-x uniformity, mean inverse and standardized WC continuation, strict/general OQ4 and original 116 sensitivity, p53/OQ6/RS2, and C1/C2 derivatives/high-frequency/inversion/desmoothing remain open. General-rho KL, exact zeta and optional superpolynomial resonance are not claimed. This is a formalization scope judgment, not historical novelty certification.
+
+All Lean ran only on the designated server, sequentially on root CPU10-13. External CPU0-9/80GiB workload and active lane worktrees were untouched. Raw machine logs remain on the server. Only new publication copies of independent reviews are normalized; original author evidence and source bytes are retained.
