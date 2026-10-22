@@ -1,0 +1,75 @@
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.EReal.Basic
+import Mathlib.Order.CompleteLattice.Basic
+
+namespace Shao.Probability
+open MeasureTheory
+noncomputable section
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+def bivariateMGFDomain (μ : Measure Ω) (W : Ω → ℝ × ℝ) : Set (ℝ × ℝ) :=
+  {θ | Integrable
+    (fun ω => Real.exp (θ.1 * (W ω).1 + θ.2 * (W ω).2)) μ}
+
+def bivariateLogMGF (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (θ : bivariateMGFDomain μ W) : ℝ :=
+  Real.log (∫ ω, Real.exp
+    ((θ : ℝ × ℝ).1 * (W ω).1 + (θ : ℝ × ℝ).2 * (W ω).2) ∂μ)
+
+def bivariateLegendreRate (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (z : ℝ × ℝ) : EReal :=
+  ⨆ θ : bivariateMGFDomain μ W,
+    (((θ : ℝ × ℝ).1 * z.1 + (θ : ℝ × ℝ).2 * z.2 -
+      bivariateLogMGF μ W θ : ℝ) : EReal)
+
+end Shao.Probability
+
+theorem bivariateLogMGF_spec
+    (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (θ : bivariateMGFDomain μ W) :
+    (0 < (∫ ω, Real.exp
+      ((θ : ℝ × ℝ).1 * (W ω).1 + (θ : ℝ × ℝ).2 * (W ω).2) ∂μ)) ∧
+    Real.exp (bivariateLogMGF μ W θ) =
+      (∫ ω, Real.exp
+        ((θ : ℝ × ℝ).1 * (W ω).1 + (θ : ℝ × ℝ).2 * (W ω).2) ∂μ)
+
+theorem bivariateLegendreRate_test_le
+    (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (z : ℝ × ℝ) (θ : bivariateMGFDomain μ W) :
+    (((θ : ℝ × ℝ).1 * z.1 + (θ : ℝ × ℝ).2 * z.2 -
+      bivariateLogMGF μ W θ : ℝ) : EReal) ≤
+      bivariateLegendreRate μ W z
+
+theorem bivariateLegendreRate_eq_of_attained_bound
+    (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (z₀ : ℝ × ℝ) (L : ℝ)
+    (hupper : ∀ θ : bivariateMGFDomain μ W,
+      (θ : ℝ × ℝ).1 * z₀.1 + (θ : ℝ × ℝ).2 * z₀.2 -
+        bivariateLogMGF μ W θ ≤ L)
+    (θ₀ : bivariateMGFDomain μ W)
+    (hattain :
+      (θ₀ : ℝ × ℝ).1 * z₀.1 + (θ₀ : ℝ × ℝ).2 * z₀.2 -
+        bivariateLogMGF μ W θ₀ = L) :
+    bivariateLegendreRate μ W z₀ = (L : EReal)
+
+theorem bivariateLegendreRate_unique_minimizer_of_tests
+    (μ : Measure Ω) [NeZero μ] (W : Ω → ℝ × ℝ)
+    (D : Set (ℝ × ℝ)) (z₀ : ℝ × ℝ) (L : ℝ)
+    (hz₀ : z₀ ∈ D)
+    (hupper : ∀ θ : bivariateMGFDomain μ W,
+      (θ : ℝ × ℝ).1 * z₀.1 + (θ : ℝ × ℝ).2 * z₀.2 -
+        bivariateLogMGF μ W θ ≤ L)
+    (θ₀ : bivariateMGFDomain μ W)
+    (hattain :
+      (θ₀ : ℝ × ℝ).1 * z₀.1 + (θ₀ : ℝ × ℝ).2 * z₀.2 -
+        bivariateLogMGF μ W θ₀ = L)
+    (hsep : ∀ z ∈ D, z ≠ z₀ →
+      ∃ θ : bivariateMGFDomain μ W,
+        L < (θ : ℝ × ℝ).1 * z.1 + (θ : ℝ × ℝ).2 * z.2 -
+          bivariateLogMGF μ W θ) :
+    bivariateLegendreRate μ W z₀ = (L : EReal) ∧
+      (∀ z ∈ D,
+        bivariateLegendreRate μ W z₀ ≤ bivariateLegendreRate μ W z ∧
+        (bivariateLegendreRate μ W z = bivariateLegendreRate μ W z₀ ↔ z = z₀))
