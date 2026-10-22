@@ -1,0 +1,11 @@
+# v41: actual full-noise derivatives and p53 sparse label law
+
+The actual quadratic full-noise characteristic function now has first and second real-u derivatives at every real frequency pair, including both axes and the origin. Both derivatives are identified with integrals under the actual full-noise law. Their global norm bounds are (67/3)*gamma and (70/3)*h*gamma. The two public statements were frozen after independent source review and implemented without extra centering, differentiability or target-bound assumptions; a fresh separate reviewer accepted every proof and actual server evidence. This closes precisely supplement highderivatives(b).
+
+Frozen PR165 constructs the actual p53 sparse single-label probability law, including residual zero mass, singleton and prefix/high-tail identities, genuine L1 and integral formulas, and four set-mass limits. Its source and 14 public contracts were independently reviewed against the original p53/p45 scope and existing exact-source/type/axiom evidence. Positive Ici identities retain the necessary j>=1 condition.
+
+The two modules add 15 public theorems. The server integrated gate passes for 283 production modules, 1897 public theorems, 3209 namespace theorems including generated declarations and 5544 module-owned constants. All281 baseline sources and1058 baseline objects are unchanged. Every owned/private/generated transitive axiom is within propext, Classical.choice and Quot.sound. Lean/mathlib pins are unchanged. Original author commits, histories and source hashes are retained. Only new evidence publication copies are normalized to LF; original artifacts remain archived.
+
+C1/C2 cone/high-frequency estimates, actual product derivative consumers, inversion and desmoothing remain open. P53/OQ6/RS2 and other existing open roots remain open. Original OQ3 A was closed in v40 and is not recounted. No novelty claim is made.
+
+All Lean ran on the designated server, sequentially on root CPU10-13 with -j4/-M8192. External CPU0-9/80GiB workload and lane worktrees were untouched. Raw machine logs remain on the server. The author pre-Lean runner failure and read-only cache-path enumeration incident are disclosed in its receipt; neither altered source/cache or caused a repeated successful Lean run. Shared Mathlib worktree cleanliness is not asserted.
