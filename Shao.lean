@@ -43,6 +43,7 @@ import Shao.OQ3.NegativeLayerGeometricTail
 import Shao.OQ3.NormalLayerConditionalLaw
 import Shao.OQ3.NormalLayerFourier
 import Shao.OQ3.NormalLayerMassBound
+import Shao.OQ3.NormalLayerWeakConvergence
 import Shao.OQ3.NormalTangentDomination
 import Shao.OQ3.NormalTangentGaussian
 import Shao.OQ3.NormalTangentMoments
@@ -68,6 +69,7 @@ import Shao.OQ3.StageCurvedLayerLimit
 import Shao.OQ3.StageLayerDecomposition
 import Shao.OQ3.StageLayerSeriesLimit
 import Shao.OQ3.StagePhaseReturns
+import Shao.OQ3.StageSourceAsymptotic
 import Shao.OQ3.StageSourceNegativeTail
 import Shao.OQ3.StageSourceWitness
 import Shao.OQ3.SummableAtoms
@@ -107,11 +109,14 @@ import Shao.OQ4.OvershootMoment
 import Shao.OQ4.OvershootSum
 import Shao.OQ4.RademacherAllModes
 import Shao.OQ4.RademacherCosine
+import Shao.OQ4.RademacherCriticalPhase
 import Shao.OQ4.RademacherFiniteBasis
 import Shao.OQ4.RademacherFiniteS1
 import Shao.OQ4.RademacherIteration
 import Shao.OQ4.RademacherLatticeShift
+import Shao.OQ4.RademacherS2Assembly
 import Shao.OQ4.RademacherScalarBounds
+import Shao.OQ4.RademacherScaleAssembly
 import Shao.OQ4.RademacherSpectralPairing
 import Shao.OQ4.RademacherSpectralTail
 import Shao.OQ4.ReflectedSurvival
@@ -218,6 +223,8 @@ import Shao.OQ5.P52.FixedLayerTailScales
 import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
+import Shao.OQ5.P53.SparseScales
+import Shao.OQ5.P53.SparseSelection
 import Shao.OQ6.FiniteRows
 import Shao.Probability.BrownianFirstTerm
 import Shao.Probability.BrownianGridBridge
