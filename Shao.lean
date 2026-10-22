@@ -10,6 +10,7 @@ import Shao.C1.Normalization
 import Shao.C2.TwoSided
 import Shao.Checks.Boundaries
 import Shao.OQ3.AdaptiveTailBudget
+import Shao.OQ3.AffineWeakCramer
 import Shao.OQ3.AtomProjection
 import Shao.OQ3.AtomicMeasure
 import Shao.OQ3.AtomicProductControl
