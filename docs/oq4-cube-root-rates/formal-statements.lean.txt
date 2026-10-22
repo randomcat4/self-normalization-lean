@@ -1,0 +1,85 @@
+/-
+FROZEN_STATEMENTS_V1; DECLARATIONS_ONLY; NOT_A_COMPILABLE_IMPLEMENTATION.
+Expected module: Shao/OQ4/RademacherCubeRootRates.lean
+Frozen target: frozen-rademacher-cube-root-rates-v1.md, R1 and R2.
+Original source: spectrum01.md, line 96 and lines 97--98.
+
+The definitions below are transparent output predicates, with the actual errors
+written in full. All root, height, belowCubeIndex and nearestIndex occurrences
+refer to the opened Shao.OQ4.RademacherCriticalPhase namespace. In particular,
+root n is its Real.rpow (n : ℝ) ((1 : ℝ) / 3), not a free root function.
+No CP definition or finite-prefix value is replaced. Finite estimates assert
+only the domain k ≥ 2; the output tail threshold is exactly 2.
+
+Each public theorem has a complete head followed by an empty proof comment.
+BEGIN_PUBLIC_HEAD / END_PUBLIC_HEAD markers delimit heads without an assignment.
+No proof, implementation, probability statement or general-c rate is supplied.
+Raw-leaf increment: 0. Spectrum and general OQ4 root closures: none.
+-/
+import Shao.OQ4.RademacherCriticalPhase
+
+noncomputable section
+
+namespace Shao.OQ4.RademacherCubeRootRates
+
+open Shao.OQ4.RademacherCriticalPhase
+
+/-- Exact positive-constant tail meaning of the R1 O(k⁻⁵) remainder. -/
+def BelowCubeBigO (C : ℝ) (k₀ : ℕ) : Prop :=
+  0 < C ∧
+  ∀ k : ℕ, k₀ ≤ k →
+    |root (belowCubeIndex k) -
+      ((k : ℝ) - 1 / (3 * (k : ℝ) ^ 2))| ≤ C / (k : ℝ) ^ 5
+
+/-- Exact positive-constant tail meaning of the R2 O(k⁻²) remainder. -/
+def NearestCubeBigO (α C : ℝ) (k₀ : ℕ) : Prop :=
+  0 < C ∧
+  ∀ k : ℕ, k₀ ≤ k →
+    |root (nearestIndex 1 α k) - ((k : ℝ) + α)| ≤ C / (k : ℝ) ^ 2
+
+/- BEGIN_PUBLIC_HEAD below_cube_finite -/
+theorem below_cube_finite {k : ℕ} (hk : 2 ≤ k) :
+    (belowCubeIndex k : ℝ) = (k : ℝ) ^ 3 - 1 ∧
+    1 ≤ belowCubeIndex k ∧
+    0 ≤ root (belowCubeIndex k) ∧
+    root (belowCubeIndex k) ^ 3 = (k : ℝ) ^ 3 - 1 ∧
+    height 1 (belowCubeIndex k) = root (belowCubeIndex k) ∧
+    |root (belowCubeIndex k) -
+      ((k : ℝ) - 1 / (3 * (k : ℝ) ^ 2))| ≤ 1 / (k : ℝ) ^ 5
+/- END_PUBLIC_HEAD below_cube_finite -/
+/- PROOF_PLACEHOLDER: empty. -/
+
+/- BEGIN_PUBLIC_HEAD below_cube_bigO -/
+theorem below_cube_bigO :
+    ∃ C : ℝ, ∃ k₀ : ℕ,
+      C = 1 ∧ k₀ = 2 ∧ 0 < C ∧ BelowCubeBigO C k₀
+/- END_PUBLIC_HEAD below_cube_bigO -/
+/- PROOF_PLACEHOLDER: empty. -/
+
+/- BEGIN_PUBLIC_HEAD nearest_cube_finite -/
+theorem nearest_cube_finite {α : ℝ} (hα0 : 0 < α) (hα1 : α < 1)
+    {k : ℕ} (hk : 2 ≤ k) :
+    nearestIndex 1 α k = Nat.floor (((k : ℝ) + α) ^ 3 + (1 : ℝ) / 2) ∧
+    0 < (k : ℝ) + α ∧
+    1 ≤ nearestIndex 1 α k ∧
+    0 ≤ root (nearestIndex 1 α k) ∧
+    root (nearestIndex 1 α k) ^ 3 = (nearestIndex 1 α k : ℝ) ∧
+    height 1 (nearestIndex 1 α k) = root (nearestIndex 1 α k) ∧
+    -(1 / 2 : ℝ) < (nearestIndex 1 α k : ℝ) - ((k : ℝ) + α) ^ 3 ∧
+    (nearestIndex 1 α k : ℝ) - ((k : ℝ) + α) ^ 3 ≤ (1 : ℝ) / 2 ∧
+    |(nearestIndex 1 α k : ℝ) - ((k : ℝ) + α) ^ 3| ≤ (1 : ℝ) / 2 ∧
+    (∀ l : ℕ, ((k : ℝ) + α) ^ 3 = (l : ℝ) + (1 : ℝ) / 2 →
+      nearestIndex 1 α k = l + 1) ∧
+    |root (nearestIndex 1 α k) - ((k : ℝ) + α)| ≤
+      1 / (2 * (k : ℝ) ^ 2)
+/- END_PUBLIC_HEAD nearest_cube_finite -/
+/- PROOF_PLACEHOLDER: empty. -/
+
+/- BEGIN_PUBLIC_HEAD nearest_cube_bigO -/
+theorem nearest_cube_bigO {α : ℝ} (hα0 : 0 < α) (hα1 : α < 1) :
+    ∃ C : ℝ, ∃ k₀ : ℕ,
+      C = (1 : ℝ) / 2 ∧ k₀ = 2 ∧ 0 < C ∧ NearestCubeBigO α C k₀
+/- END_PUBLIC_HEAD nearest_cube_bigO -/
+/- PROOF_PLACEHOLDER: empty. -/
+
+end Shao.OQ4.RademacherCubeRootRates
