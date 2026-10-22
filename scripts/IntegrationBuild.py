@@ -1,6 +1,6 @@
 import pathlib,subprocess,json,hashlib,time,os
-w=pathlib.Path.cwd();r=pathlib.Path('/root/rivermind-data/shao-lean-20261021');logdir=r/'logs/integration-v34/sequential';logdir.mkdir(parents=True,exist_ok=True)
-base='69e4e9e0177e75294ebac5eb28d5304dcc74c4cc'
+w=pathlib.Path.cwd();r=pathlib.Path('/root/rivermind-data/shao-lean-20261021');logdir=r/'logs/integration-v35/sequential';logdir.mkdir(parents=True,exist_ok=True)
+base='911ac36576fb26f6294c92d6c4da5744abd9e3b7'
 changed=subprocess.check_output(['git','diff','--name-only',base,'HEAD','--','Shao'],text=True).splitlines()
 mods={p[:-5].replace('/','.') : p for p in changed if p.endswith('.lean')}
 order=[];active=set();done=set()
