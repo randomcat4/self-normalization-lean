@@ -219,6 +219,7 @@ import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
 import Shao.OQ6.FiniteRows
+import Shao.Probability.BrownianSup
 import Shao.Probability.ClockControl
 import Shao.Probability.ConditionalIID
 import Shao.Probability.ExchangeableEvents
@@ -233,7 +234,9 @@ import Shao.Probability.MeasurablePath
 import Shao.Probability.QuadraticCharacteristic
 import Shao.Probability.QuadraticCharacteristicOddPower
 import Shao.Probability.QuadraticCharacteristicPower
+import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
+import Shao.Probability.QuadraticFullNoise
 import Shao.Probability.RetainedComparison
 import Shao.Probability.RetainedMoments
 import Shao.Probability.RetainedSample
@@ -241,6 +244,8 @@ import Shao.Probability.RetainedVariance
 import Shao.Probability.RetentionEvent
 import Shao.Probability.SourceClockBridge
 import Shao.Probability.SourceFourierScale
+import Shao.Probability.SourceFullNoiseBridge
+import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.TruncationIntegrals
 import Shao.Probability.TruncationRegularity
