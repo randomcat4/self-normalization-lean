@@ -61,8 +61,10 @@ import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCoefficientDiagonal
 import Shao.OQ3.SourceEnergyGeometry
 import Shao.OQ3.SourceFarWeightedTail
+import Shao.OQ3.SourceFixedLawRemainder
 import Shao.OQ3.SourceGaussianBoundaryProfile
 import Shao.OQ3.SourceGaussianLatticeGap
+import Shao.OQ3.SourceGlobalExponentialTests
 import Shao.OQ3.SourceStarter
 import Shao.OQ3.SourceTransferBudgets
 import Shao.OQ3.StageCurvedLayerLimit
@@ -115,6 +117,7 @@ import Shao.OQ4.RademacherFiniteS1
 import Shao.OQ4.RademacherIteration
 import Shao.OQ4.RademacherLatticeShift
 import Shao.OQ4.RademacherS2Assembly
+import Shao.OQ4.RademacherS3Assembly
 import Shao.OQ4.RademacherScalarBounds
 import Shao.OQ4.RademacherScaleAssembly
 import Shao.OQ4.RademacherSpectralPairing
