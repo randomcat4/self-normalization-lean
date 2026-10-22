@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "node": "c12-xi-derivatives",
+  "status": "FROZEN_IMPLEMENTATION_AUTHORIZED",
+  "frozen_at": "2026-10-22T23:32:59.879Z",
+  "baseline": "dc1604d8e9c88781166a0c797f45b84ff013673a",
+  "production_file": "Shao/Probability/QuadraticFullNoiseDerivatives.lean",
+  "proposal_sha256": "46bfabdcdfc54701b3303c8ae1cc9e8ae6297794807af8dd201a4018d5581795",
+  "source_map_sha256": "3a7af71ae90ad61a3d5ee37ba3ee28de89160c73e167a14486a5fd5aa42020b9",
+  "statement_review_sha256": "fca53e9e4f47d4f60c3474609e164c47195a7c3dcfb369e319e0687f4da4bca0",
+  "header": "import Shao.Probability.QuadraticFullNoise\n\nset_option autoImplicit false\n\nnamespace Shao.Probability\n\nopen MeasureTheory ProbabilityTheory\n",
+  "declarations": [
+    {
+      "text": "theorem quadraticFullNoiseChar_derivatives\n    (ν : Measure ℝ) [IsProbabilityMeasure ν]\n    (h3 : Integrable (fun a : ℝ => |a| ^ 3) ν)\n    (hV : 0 < variance (id : ℝ → ℝ) ν)\n    (h : ℝ) (hh : 0 < h)\n    (hs : ∀ᵐ a : ℝ ∂ν, |a| ≤ h)\n    (hgamma : (∫ a : ℝ, |a| ^ 3 ∂ν) /\n      variance (id : ℝ → ℝ) ν ≤ 2 * h)\n    (u0 v0 : ℝ) :\n    let d1 : ℂ := ∫ z : ℝ × ℝ,\n      Complex.I * (z.1 : ℂ) *\n        Complex.exp (((u0 * z.1 + v0 * z.2 : ℝ) : ℂ) * Complex.I)\n      ∂quadraticFullNoiseLaw ν\n    let d2 : ℂ := ∫ z : ℝ × ℝ,\n      -((z.1 ^ 2 : ℝ) : ℂ) *\n        Complex.exp (((u0 * z.1 + v0 * z.2 : ℝ) : ℂ) * Complex.I)\n      ∂quadraticFullNoiseLaw ν\n    HasDerivAt (fun u : ℝ => quadraticFullNoiseChar ν u v0) d1 u0 ∧\n    HasDerivAt\n      (fun u : ℝ => deriv (fun r : ℝ => quadraticFullNoiseChar ν r v0) u)\n      d2 u0 ∧\n    deriv (fun u : ℝ => quadraticFullNoiseChar ν u v0) u0 = d1 ∧\n    deriv\n      (fun u : ℝ => deriv (fun r : ℝ => quadraticFullNoiseChar ν r v0) u) u0 = d2\n",
+      "sha256": "aecfe0491042bf5322b18ff10304b33d85bb9714f3dbd55dd5cc288d872db54c"
+    },
+    {
+      "text": "theorem quadraticFullNoiseChar_derivative_bounds\n    (ν : Measure ℝ) [IsProbabilityMeasure ν]\n    (h3 : Integrable (fun a : ℝ => |a| ^ 3) ν)\n    (hV : 0 < variance (id : ℝ → ℝ) ν)\n    (h : ℝ) (hh : 0 < h)\n    (hs : ∀ᵐ a : ℝ ∂ν, |a| ≤ h)\n    (hgamma : (∫ a : ℝ, |a| ^ 3 ∂ν) /\n      variance (id : ℝ → ℝ) ν ≤ 2 * h)\n    (u0 v0 : ℝ) :\n    let gamma := (∫ a : ℝ, |a| ^ 3 ∂ν) / variance (id : ℝ → ℝ) ν\n    ‖deriv (fun u : ℝ => quadraticFullNoiseChar ν u v0) u0‖ ≤\n      (67 / 3 : ℝ) * gamma ∧\n    ‖deriv\n      (fun u : ℝ => deriv (fun r : ℝ => quadraticFullNoiseChar ν r v0) u) u0‖ ≤\n      (70 / 3 : ℝ) * h * gamma\n",
+      "sha256": "8baaf861356f752e4a97d573feeb82abdd894a56e104e7365729f852ce2d5b4d"
+    }
+  ],
+  "public_theorems": 2,
+  "public_definitions": 0,
+  "server_worktree": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-xi-derivatives-v41",
+  "root_cpu": "10-13",
+  "max_lean_memory_mib": 8192,
+  "lean_threads": 4
+}

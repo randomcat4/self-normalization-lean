@@ -238,6 +238,7 @@ import Shao.OQ5.P52.FixedLayerTailScales
 import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
+import Shao.OQ5.P53.SparseLabelLaw
 import Shao.OQ5.P53.SparseMass
 import Shao.OQ5.P53.SparseMassLimits
 import Shao.OQ5.P53.SparseScales
@@ -265,6 +266,7 @@ import Shao.Probability.QuadraticCharacteristicPower
 import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
 import Shao.Probability.QuadraticFullNoise
+import Shao.Probability.QuadraticFullNoiseDerivatives
 import Shao.Probability.RademacherGrid
 import Shao.Probability.RetainedComparison
 import Shao.Probability.RetainedMoments
