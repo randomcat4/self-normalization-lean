@@ -58,6 +58,8 @@ import Shao.OQ3.ResonantLimit
 import Shao.OQ3.SampleBoundary
 import Shao.OQ3.SampleChangeOfMeasure
 import Shao.OQ3.SourceBinaryEntropyGap
+import Shao.OQ3.SourceCanonicalRate
+import Shao.OQ3.SourceCanonicalSaddle
 import Shao.OQ3.SourceCoefficientDiagonal
 import Shao.OQ3.SourceEnergyGeometry
 import Shao.OQ3.SourceFarWeightedTail
@@ -68,6 +70,7 @@ import Shao.OQ3.SourceGaussianLatticeGap
 import Shao.OQ3.SourceGeometricScale
 import Shao.OQ3.SourceGlobalExponentialTests
 import Shao.OQ3.SourceLogPartitionDerivatives
+import Shao.OQ3.SourceRemainderNotBigO
 import Shao.OQ3.SourceStarter
 import Shao.OQ3.SourceTransferBudgets
 import Shao.OQ3.StageCurvedLayerLimit
@@ -122,6 +125,7 @@ import Shao.OQ4.RademacherLatticeShift
 import Shao.OQ4.RademacherS2Assembly
 import Shao.OQ4.RademacherS3Assembly
 import Shao.OQ4.RademacherS4Assembly
+import Shao.OQ4.RademacherS5Assembly
 import Shao.OQ4.RademacherScalarBounds
 import Shao.OQ4.RademacherScaleAssembly
 import Shao.OQ4.RademacherSpectralPairing
@@ -230,6 +234,8 @@ import Shao.OQ5.P52.FixedLayerTailScales
 import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
+import Shao.OQ5.P53.SparseMass
+import Shao.OQ5.P53.SparseMassLimits
 import Shao.OQ5.P53.SparseScales
 import Shao.OQ5.P53.SparseSelection
 import Shao.OQ6.FiniteRows
