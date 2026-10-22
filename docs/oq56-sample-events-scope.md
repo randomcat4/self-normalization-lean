@@ -1,0 +1,11 @@
+# Actual fixed iid sample, rare event and fixed-position conditional law
+
+CORRECT / LEAN_FULLY_CHECKED for three exact frozen prerequisite modules:20 public theorems and6 definitions. The genuine infinite E-valued sample law is fixed before every eta, lambda and sample size. Full mutual independence, exact whole-observation marginals and every finite-prefix product law hold, including the empty prefix.
+
+On this same original sample law, the actual selected-layer count/position events have their exact categorical/binomial probabilities. The two-A/all-other0 event at the actual N_j has positive probability for every layer. For arbitrary fixed target positions, positivity is derived before conditional normalization. The entire E-valued conditional prefix has the product of the actual state1/state0 conditional whole-observation marginals.
+
+This is a supporting source milestone for original p50/p52. Background erasure and its preserved law, unordered-position mixing, conditional kernel moments, statistics/trueR positivity/Studentizer/tails, the critical endpoint and real coding remain separate. Full p52/p53/OQ6/RS2 stay OPEN; original p35 is separately CLOSED.
+
+The PR is stacked on frozen PR73, feat/oq56-canonical-projection/d95c3a5963dfcc74c2b666e6534c1f2f0b05fb36. Exactly3 new Lean modules and3 docs are included. Unit51 and generic/actual background continuation59/60 are excluded. Root owns shared imports/manifests, integrated ownership audit, full integration gate and merge; the lane does not merge.
+
+Every catalog received an independent ORIGINAL-source semantic review before implementation. Never-author final actual-target and exact-source-prefix checks audit all complete public types, loaded definition bodies, every actual canonical private/generated name and semantic dependencies. Only propext, Classical.choice and Quot.sound occur. All Lean runs were remote under Lean4.36.0-rc1/Mathlib807d3836; accepted predecessor targets were not rebuilt/rechecked. The combined project source closure is exactly15 files:56/57/58, actual43 eight-file closure and ROOT ConditionalIID four-file closure. Units44–55 and P35 RareEvents are not dependencies. All accepted source bytes remain immutable.
