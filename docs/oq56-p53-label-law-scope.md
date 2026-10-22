@@ -1,0 +1,9 @@
+# Fixed sparse label probability law
+
+The module `Shao.OQ5.P53.SparseLabelLaw` constructs one probability measure on natural-number labels for fixed real α and complete deterministic sequences x and N. Its literal body is the countable sum of Dirac measures weighted by `ENNReal.ofReal (sparseLabelMass α x N j)`. The zero label carries the residual mass, while positive labels carry the sparse exponential masses. The law is fixed before sampling and contains no sample-size, moment-order or exponential-budget parameter.
+
+Thirteen public theorems establish probability, exact singleton and finite-prefix masses, positive-level complete tail masses, genuine weighted-norm integrability and the integral formula, and four limits for actual set probabilities. One public definition is counted separately. Probability and the mass identities require no selection hypothesis except `1 ≤ j` for the tail identities. The tail-cost and growing background-power limits consume the same `SparseSelectionCore α x N`; the other two limits hold for arbitrary α, x and N.
+
+The `Ici 0` mass is one, so it is deliberately excluded from the tail identity. The `Iio 0` mass is zero. The integral theorem retains its actual `Integrable` premise, and the integrability criterion uses the full weighted norm sum, including the residual zero atom. The background exponent remains the natural number `2 * (N j - 2)`.
+
+This pays the fixed single-label measure obligation from original p53 §§3–4. It does not yet construct independent B/C labels, signs and continuous noise, the complete iid observation law, coefficient moments or exponential expectations, a real encoding, an actual rank-one integral operator, conditional sample statistics, the balanced-event probability, or the final tail conclusions. P53, OQ6 and RS2 remain open.
