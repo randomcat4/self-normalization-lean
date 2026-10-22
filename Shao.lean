@@ -61,10 +61,13 @@ import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCoefficientDiagonal
 import Shao.OQ3.SourceEnergyGeometry
 import Shao.OQ3.SourceFarWeightedTail
+import Shao.OQ3.SourceFixedLawCounterexample
 import Shao.OQ3.SourceFixedLawRemainder
 import Shao.OQ3.SourceGaussianBoundaryProfile
 import Shao.OQ3.SourceGaussianLatticeGap
+import Shao.OQ3.SourceGeometricScale
 import Shao.OQ3.SourceGlobalExponentialTests
+import Shao.OQ3.SourceLogPartitionDerivatives
 import Shao.OQ3.SourceStarter
 import Shao.OQ3.SourceTransferBudgets
 import Shao.OQ3.StageCurvedLayerLimit
@@ -118,6 +121,7 @@ import Shao.OQ4.RademacherIteration
 import Shao.OQ4.RademacherLatticeShift
 import Shao.OQ4.RademacherS2Assembly
 import Shao.OQ4.RademacherS3Assembly
+import Shao.OQ4.RademacherS4Assembly
 import Shao.OQ4.RademacherScalarBounds
 import Shao.OQ4.RademacherScaleAssembly
 import Shao.OQ4.RademacherSpectralPairing
@@ -229,6 +233,7 @@ import Shao.OQ5.P52.LayeredKernelVersion
 import Shao.OQ5.P53.SparseScales
 import Shao.OQ5.P53.SparseSelection
 import Shao.OQ6.FiniteRows
+import Shao.Probability.BivariateLegendre
 import Shao.Probability.BrownianFirstTerm
 import Shao.Probability.BrownianGridBridge
 import Shao.Probability.BrownianSpectralEnvelope
