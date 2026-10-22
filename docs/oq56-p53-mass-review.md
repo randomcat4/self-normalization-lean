@@ -1,0 +1,21 @@
+# P53 稀疏质量与极限：独立验证
+
+本批两个模块包含21条公开定理、3个定义。SparseMass 的17条定理支付真实无限质量归一化、有限前缀/完整尾质量和同一子列的尾费用；SparseMassLimits 的4条定理支付两个一般质量极限和两个同一Core下的成本/背景幂极限。完整声明见相邻 frozen 文档。
+
+|模块|source SHA256 / bytes|olean SHA256 / bytes|
+|---|---|---|
+|SparseMass|93518d87f30ed5f78dd62ff142d7e6aad95241a0906f4fa89ea9344f39f0444a /13608|31dc47973c93a37f4505b18c68218321b4c8b639eb6fe512479288d5f381c9ee /512648|
+|SparseMassLimits|ee34c3ca8f40697f433eba8a647057976e889c4baec9b1e22413f6006810c1af /5745|d27d8cfdddbb053dcfbb9bdd493bbfdc3cf88a67e6cc7ec325b1793781ff11aa /307080|
+
+两个never-author独立FINAL都以原停止目标恰一次no-o、完整源码字节前缀恰一次检查；两组均无诊断，独立附录失败或修复为0。SparseMass耗时4.279214411973953秒/5.6690332014113665秒；SparseMassLimits耗时3.971882402896881秒/6.092004081234336秒。所有成功源码、对象、EOF与compiler永久封存，heavy已释放。
+
+SparseMass实际SOURCE盘点45声明，其中44归属新98：20公开、8作者private、16生成声明；另1为已接受97导入时延迟生成的方程，同样完整审计。SparseMassLimits实际SOURCE盘点7声明：4公开、2作者private、1算术证明；late盘点没有新增。每个实际有序Lean.Name组件、完整类型及传递公理均查询；只有propext、Classical.choice、Quot.sound，部分依赖无需公理。私有/生成/导入声明不计入公开定理数。
+
+失败历史保留：98首次作者编译exit0但有4条if_neg弃用警告，经四处证明局部替换后第二次EMPTY；99旧v1首次作者编译exit1，含dyadic展开错误与两个冻结forall绑定名警告。99正式v2将后两proof绑定名改匿名，重新冻结/SOURCE后唯一作者编译EMPTY；没有伪称raw类型不变，也没有恢复旧HOLD授权。两个模块已知Lean调用合计8，含上述作者历史和每模块两次独立检查；未用成功重放补证据。
+
+98独立报告SHA256：8aee8fb033d7076efe60a8e57e6ace944fa0ebfd6d236a88e263c4115781b00c；lead FINAL接受f60384856207d1d01300580bcd70baca6e3a31d4f6e9df047b24838f00a444fc。
+99独立报告SHA256：464700d6cebe2e4ac8d2efcf8aeea9dd83969b680b227ceeb10cb209a51514aa；lead FINAL接受9f7e6603a4f061c9a1241c295ab831b9056c875653f7f41af453b88576bcbcad。完整source/type/body/canonical/integrity/provenance与原始日志均保存在专属服务端工作区，记录其各自原纳秒字符串；后加证据没有回填旧时间。
+
+当前基线为根v38 main63f82bd7ea2a0fba92a4ad217c4ad27bfa3ead00，最终tree433377aee492752840f9396896bd00f668634442，固定Mathlib807d3836b165983210ee2ecf3cd28f239436949c、Lean4.36.0-rc1。从v37新建续作分支后正常ff-only吸收，旧53个OQ56引用不变；86受保护tracked目标blob与接受身份一致，436项针对性size/ns前后相同，旧1724完整SHA/归属沿原seal继承，没有重盘旧库或重跑已接受编译门。98/99实际source/object、旧73缺LF及pins保留。打包只复用这些已完成证据。
+
+此批提供质量与数值极限；P53/OQ6/RS2的实际概率律、矩、条件统计量及最终尾仍待后续证明。根集成和合并由主集成线程负责。
