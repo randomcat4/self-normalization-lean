@@ -1,0 +1,11 @@
+# SourceFourierScale author checkpoint
+
+2026-10-22: AUTHOR_GATES_PASS / INDEPENDENT_PROOF_REVIEW_PENDING. Frozen scope SHA256 `5d0afce4726be7a211e934a6bc3ff72e68fc2e622bc091b1e67ad4abff1773ef`; declaration review SHA256 `cf3a3a7b298d19ab7549d93f0d9f823c3e4c577987c74859da2a3ee3cb9e41c9`. Exactly zero definitions and two public theorems; no premise/signature change.
+
+Isolated server worktree `/root/rivermind-data/shao-lean-20261021/workspaces/source-fourier-scale`, branch `author/source-fourier-scale`, base accepted v28 integration ancestor `dfd521e6ed80b37c7e0b4280395daf1f7c1ec881`, final author commit `3fb0ba0ede60a785bc7ad448756140df868c20f1` (only the new source). Accepted SourceTruncationBridge SHA05321c22… and SourceClockBridge SHAced48edd… preserved byte-for-byte, as are all nine imported project sources and root integration/pin files. Reused v28 project artifacts/shared read-only packages. No children, local Lean, cache fetch or root-file edit.
+
+Frozen implementation: `drafts/c12/SourceFourierScale.lean` and remote `Shao/Probability/SourceFourierScale.lean`, identical SHA256 `5f31eb92eff8ded33b91f55a59a16de4e58cdd7a9e0514d082a2c4932f5feff0`,10314bytes/221LF lines. Both exact frozen signatures pass mechanical comparison; zero definitions/two public/two private helpers. No source edits after target success.
+
+Actual target check02 exit0/5.363s, empty log. Actual module-owner audit01 exit0/5.367s, all7 target constants(2public+2private+3generated) and169 imported project constants(inclusive) transitively whitelist-only. Source and frozen SHA stable. Server raw artifacts under `work/source-fourier-scale/`; final.json SHA `54b7ff9ac6518bbaecf4cbb159912fd5c7925a15a69dee57c68855046212ff0e`, metadata SHA `b4eb2813ead973061106da267316d3d84c9ec7f4cb9f95ceff8b3b7a9dc25e9b`. Full author delivery is `SourceFourierScale-author-receipt.md`; local source-check JSON SHA `cff7aff05dfebf5eb6c1d4dc8b928e422beaa23bdee4e4b3a4df3442934cb402`.
+
+Proof integrates nonnegative cubic factorization for actual raw Lyapunov, then uses accepted variance/cutoff/budget scaling. Actual Nat future length derives only from hT and positive gamma. No independent proof verdict/self-review/merge has occurred. Next: deliver frozen source/commit/receipts to root for never-author full proof review and root integration. C1/C2 remain OPEN.
