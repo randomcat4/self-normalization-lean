@@ -1,0 +1,67 @@
+{
+  "unit": 120,
+  "module": "Shao.OQ5.P53.SparseConditionalBackgroundMoments",
+  "namespace": "Shao.OQ5.P53",
+  "imports": [
+    "Shao.OQ5.P53.SparseConditionalLaw",
+    "Shao.OQ5.P35.FiniteIIDMoments"
+  ],
+  "local_notation": {
+    "SparseObs": "((ℝ × (ℕ × Bool)) × (ℕ × Bool))"
+  },
+  "open": [
+    "MeasureTheory"
+  ],
+  "open_scoped": [
+    "BigOperators"
+  ],
+  "full_raw_definitions": {
+    "sparseBalancedPatternMeasure": "def sparseBalancedPatternMeasure (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ)\n    (n j : ℕ) (i k : Fin n) (b : Bool) : Measure (Fin n → SparseObs) :=\n  ProbabilityTheory.cond (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N))\n    (sparseBalancedPairPattern j i k b)"
+  },
+  "full_raw_contracts": {
+    "sparseBalancedPatternMeasure_probability": "theorem sparseBalancedPatternMeasure_probability :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  IsProbabilityMeasure (sparseBalancedPatternMeasure α x N n j i k b)",
+    "memLp_sparseBalancedBackgroundG_two": "theorem memLp_sparseBalancedBackgroundG_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j → i < k →\n  MemLp (fun ω : Fin n → SparseObs =>\n    Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationG α x N (ω l))) 2 (sparseBalancedPatternMeasure α x N n j i k b)",
+    "integral_sparseBalancedBackgroundG_zero": "theorem integral_sparseBalancedBackgroundG_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationG α x N (ω l))\n    ∂sparseBalancedPatternMeasure α x N n j i k b) = 0",
+    "integral_sparseBalancedBackgroundG_sq": "theorem integral_sparseBalancedBackgroundG_sq :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, (Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationG α x N (ω l))) ^ 2\n    ∂sparseBalancedPatternMeasure α x N n j i k b) =\n    ((n - 2 : ℕ) : ℝ) * (∫ z, sparsePopulationG α x N z ^ 2 ∂sparseLowObservationMeasure α x N j)",
+    "memLp_sparseBalancedBackgroundZ_two": "theorem memLp_sparseBalancedBackgroundZ_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  MemLp (fun ω : Fin n → SparseObs =>\n    Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationZ α x N (ω l))) 2 (sparseBalancedPatternMeasure α x N n j i k b)",
+    "integral_sparseBalancedBackgroundZ_zero": "theorem integral_sparseBalancedBackgroundZ_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationZ α x N (ω l))\n    ∂sparseBalancedPatternMeasure α x N n j i k b) = 0",
+    "integral_sparseBalancedBackgroundZ_sq": "theorem integral_sparseBalancedBackgroundZ_sq :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, (Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin n))\n      (fun l => sparsePopulationZ α x N (ω l))) ^ 2\n    ∂sparseBalancedPatternMeasure α x N n j i k b) =\n    ((n - 2 : ℕ) : ℝ) * (∫ z, sparsePopulationZ α x N z ^ 2 ∂sparseLowObservationMeasure α x N j)",
+    "memLp_sparseBalancedBackgroundPair_two": "theorem memLp_sparseBalancedBackgroundPair_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  MemLp (fun ω : Fin n → SparseObs => Shao.OQ5.P35.finitePairProductSum\n      (fun l : Fin n => fun ω : Fin n → SparseObs =>\n        Shao.OQ5.P35.backgroundFeature ({i, k} : Finset (Fin n))\n          (fun a => sparsePopulationZ α x N (ω a)) l) ω) 2\n    (sparseBalancedPatternMeasure α x N n j i k b)",
+    "integral_sparseBalancedBackgroundPair_zero": "theorem integral_sparseBalancedBackgroundPair_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, Shao.OQ5.P35.finitePairProductSum\n      (fun l : Fin n => fun ω : Fin n → SparseObs =>\n        Shao.OQ5.P35.backgroundFeature ({i, k} : Finset (Fin n))\n          (fun a => sparsePopulationZ α x N (ω a)) l) ω\n    ∂sparseBalancedPatternMeasure α x N n j i k b) = 0",
+    "integral_sparseBalancedBackgroundPair_sq": "theorem integral_sparseBalancedBackgroundPair_sq :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, (Shao.OQ5.P35.finitePairProductSum\n      (fun l : Fin n => fun ω : Fin n → SparseObs =>\n        Shao.OQ5.P35.backgroundFeature ({i, k} : Finset (Fin n))\n          (fun a => sparsePopulationZ α x N (ω a)) l) ω) ^ 2\n    ∂sparseBalancedPatternMeasure α x N n j i k b) =\n    ((n - 2).choose 2 : ℝ) * (∫ z, sparsePopulationZ α x N z ^ 2 ∂sparseLowObservationMeasure α x N j) ^ 2",
+    "integrable_sparseBalancedBackgroundLeaveOwnSquare": "theorem integrable_sparseBalancedBackgroundLeaveOwnSquare :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  Integrable (fun ω : Fin n → SparseObs => Shao.OQ5.P35.finiteLeaveOwnSquareSum\n      (fun l : Fin n => fun ω : Fin n → SparseObs =>\n        Shao.OQ5.P35.backgroundFeature ({i, k} : Finset (Fin n))\n          (fun a => sparsePopulationZ α x N (ω a)) l) ω)\n    (sparseBalancedPatternMeasure α x N n j i k b)",
+    "integral_sparseBalancedBackgroundLeaveOwnSquare": "theorem integral_sparseBalancedBackgroundLeaveOwnSquare :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  0 < α → 1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, Shao.OQ5.P35.finiteLeaveOwnSquareSum\n      (fun l : Fin n => fun ω : Fin n → SparseObs =>\n        Shao.OQ5.P35.backgroundFeature ({i, k} : Finset (Fin n))\n          (fun a => sparsePopulationZ α x N (ω a)) l) ω\n    ∂sparseBalancedPatternMeasure α x N n j i k b) =\n    ((n - 2 : ℕ) : ℝ) * ((n - 3 : ℕ) : ℝ) * (∫ z, sparsePopulationZ α x N z ^ 2 ∂sparseLowObservationMeasure α x N j) ^ 2",
+    "memLp_sparseBalancedTargetNoiseSum_two": "theorem memLp_sparseBalancedTargetNoiseSum_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  MemLp (fun ω : Fin n → SparseObs => (ω i).1.1 + (ω k).1.1) 2\n    (sparseBalancedPatternMeasure α x N n j i k b)",
+    "integral_sparseBalancedTargetNoiseSum_zero": "theorem integral_sparseBalancedTargetNoiseSum_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, (ω i).1.1 + (ω k).1.1\n    ∂sparseBalancedPatternMeasure α x N n j i k b) = 0",
+    "integral_sparseBalancedTargetNoiseSum_sq": "theorem integral_sparseBalancedTargetNoiseSum_sq :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  (∫ ω : Fin n → SparseObs, ((ω i).1.1 + (ω k).1.1) ^ 2\n    ∂sparseBalancedPatternMeasure α x N n j i k b) = 2 / 3"
+  },
+  "public_definitions": 1,
+  "public_theorem_types": 15,
+  "frozenUTC": "2026-10-23T15:21:56.516Z",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION_WAIT119",
+  "source": {
+    "p53SHA256": "0bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561",
+    "actualP45SHA256": "0b799637356615cfb18a9fef016c11d682aeefde314106e0b56eb46a853c09ca",
+    "scope": "p53section4actualconditionalbackgroundsum/pair/leave-own-square and targetnoise moments needed for numerator and true studentizer estimates"
+  },
+  "depends": [
+    "OQ56.U119",
+    "OQ56.U118",
+    "Shao.OQ5.P35.FiniteIIDMoments"
+  ],
+  "premises": [
+    "Every measure is literal conditional actual finite pi population on actual balanced pattern; full conditional law119 supplies independent coordinates.",
+    "General finite n, sorted target pair i<k so exactly n-2 background coordinates; n=2 background empty and every displayed identity still exact.",
+    "Low G needs0<alpha+Core; low Z needs0<alpha only; targetnoise uniform moments structural withoutalpha/Core.",
+    "Pair products/leave-own-square use only second moments at DISTINCT coordinates; no assumed or derived Z4.",
+    "All integrability/MemLp targets explicit; no conclusions inferred from total integrals without L1/L2.",
+    "Only exact consumed older qualified declaration types/values/hashes/scope, no old proof/check replay."
+  ],
+  "outOfScope": [
+    "Conditional numerator variance or true R²expectation bounds",
+    "Tail/event-mixture transfer and limits",
+    "Original root closure"
+  ],
+  "mainFullOriginalSourcesRead": true,
+  "implementation_authorized": false
+}
