@@ -1,0 +1,11 @@
+# OQ4: actual conditional energy and uniform boundary controls
+
+ConditionalEnergyConcentration proves eventual positivity of the actual closed-strip mass, its fixed-real-parameter conditional energy Laplace ratio tending to one, and conditional deviations of Q-n on the original h² scale tending to zero. It derives the variance and kernel inputs internally from the qualified actual tilted law and unconditional kernel asymptotic. Only the original third absolute moment, zero mean, unit second moment and three height/time scales are assumed.
+
+UniformConditionalEnergy proves these controls uniformly over every radius b in [h/2,C h] for fixed C>=1. Its literal integral is the actual closed-strip cosh excess with the original h² denominator. A selected-radius argument reduces it to the two fixed parameters ±s C²; no convergence of b/h or moving-parameter Laplace premise is assumed. The finite Markov bound, factor4 boundary ratio and uniform original-h² energy concentration are proved for the actual finite-product path events.
+
+All 75 actual new owned types, including 52 generated theorems, and the entire transparent integral value received fresh independent full source-to-statement review. Original successful server kernel checks, same-check objects, transitive axiom audits and consumed source/object/runtime bindings are retained. The only axioms are propext, Classical.choice and Quot.sound. Publication runs no Lean, producer replay, native walk or cache write and changes no frozen mathematical source byte.
+
+Weak walls, atoms, time zero, Fin0 and zero-energy conventions are preserved. No fourth moment or global exponential moment is added. Berry–Esseen and Spitzer remain attributed external inputs inherited through their qualified dependency chains. The accepted FAR unit remains qualified; the center/middle assembly, positive-boundary/window transfer and all original whole OQ4 roots remain OPEN. Merge is reserved for the root coordinator.
+
+Each unit includes its complete proof, exact frozen declarations and scope, API evidence, independent review and semantic coverage, parent acceptance and original source-bound server receipt. The transport map records original and published hashes. Any CRLF normalization applies solely to publication copies of metadata; sealed originals and all mathematical source bytes remain unchanged.

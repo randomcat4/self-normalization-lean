@@ -1,0 +1,146 @@
+-- AUTHOR163 PROPOSAL ONLY: no declaration freeze and no implementation.
+-- Proposed module: Shao/OQ4/ConditionalEnergyConcentration.lean
+-- EXHAUSTIVE TOP-LEVEL INVENTORY: 4 imports, 5 private theorem heads,
+-- 3 public theorem heads; ZERO new def/abbrev/opaque/structure/class/instance,
+-- ZERO notation/macro/axiom declarations and ZERO new top-level literal values.
+-- Imported values are referenced, never redeclared. Proof-local choices are
+-- specified in proof.md; no additional top-level helper is authorized by this list.
+
+import Shao.OQ4.EnergyJointTransport
+import Shao.OQ4.UnconditionalKernelAsymptotic
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.ConditionalEnergyConcentration
+
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped Topology
+
+-- PRIVATE 1: pay the lower moment hypotheses of the qualified transport API.
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧
+      Integrable (fun x : ℝ => x ^ 2) ν
+
+-- PRIVATE 2: a finite-prefix adapter to the literal future161 Kv theorem.
+-- No desired K/Kv limit is a premise. Only actual row moments on a tail are inputs.
+-- Early rows, early variances and early heights are unrestricted.
+private theorem tail_variance_closedStrip_relative_asymptotic
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (ρ : ℕ → Measure ℝ) (v : ℕ → ℝ) (M : ℝ)
+    (hrows : ∀ᶠ j in atTop,
+      IsProbabilityMeasure (ρ j) ∧
+        Integrable (fun x : ℝ => |x| ^ 3) (ρ j) ∧
+        (∫ x : ℝ, x ∂(ρ j)) = 0 ∧
+        (∫ x : ℝ, x ^ 2 ∂(ρ j)) = v j ∧
+        (1 / 2 : ℝ) ≤ v j ∧ v j ≤ 2 ∧
+        (∫ x : ℝ, |x| ^ 3 ∂(ρ j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => ρ j)).real
+        (@Shao.closedStrip (n j) (h j)) /
+          ((4 / Real.pi) *
+            Real.exp (-lambda * v j * (n j : ℝ) / h j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+-- PUBLIC 1: positivity is eventual and concerns the original product law.
+theorem closedStrip_probability_eventually_pos
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    ∀ᶠ j in atTop,
+      0 < (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (h j))
+
+-- PRIVATE 3: the same actual E2 law, not an arbitrary supplied survival limit.
+-- The public caller produces this θ using energyJointTransport_common_bounds.
+private theorem e2_centered_survival_ratio
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (s : ℝ) (θ : ℕ → ℝ)
+    (he2 : ∀ᶠ j in atTop,
+      energyE2Conclusion ν (∫ x : ℝ, |x| ^ 3 ∂ν) |s| (h j) s (θ j)) :
+    Tendsto (fun j =>
+      energyJointCenteredProbability ν (n j) (h j) s (θ j) /
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (1 : ℝ))
+
+-- PUBLIC 2: every fixed real s, with no Laplace/concentration/K premise.
+-- energyJointIntegral is the old transparent actual bounded-strip integral.
+theorem energy_laplace_ratio_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (s : ℝ) :
+    Tendsto (fun j => energyJointIntegral ν (n j) (h j) s /
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (1 : ℝ))
+
+-- PRIVATE 4: a finite pointwise exp-pair bound; no random variables or moments.
+private theorem exp_pair_deviation_bound (ε y : ℝ) (hε : 0 < ε) :
+    0 < Real.exp ε + Real.exp (-ε) - 2 ∧
+      (if ε < |y| then Real.exp ε + Real.exp (-ε) - 2 else 0) ≤
+        Real.exp y + Real.exp (-y) - 2
+
+-- PRIVATE 5: integrate only genuinely integrable bounded-strip functions.
+-- No moment premise and no positive-survival premise are needed for this finite bound.
+private theorem energy_deviation_finite_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (h ε : ℝ) (hh : 1 ≤ h) (hε : 0 < ε) :
+    (Real.exp ε + Real.exp (-ε) - 2) *
+      (Measure.pi (fun _ : Fin n => ν)).real
+        ((@Shao.closedStrip n h) ∩
+          {a : Shao.Path n | ε < |(Shao.energy a - (n : ℝ)) / h ^ 2|}) ≤
+      energyJointIntegral ν n h 1 + energyJointIntegral ν n h (-1) -
+        2 * (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n h)
+
+-- PUBLIC 3: actual joint event; strict deviation, closed survival boundary.
+theorem energy_concentration_ratio_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (ε : ℝ) (hε : 0 < ε) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+        ((@Shao.closedStrip (n j) (h j)) ∩
+          {a : Shao.Path (n j) |
+            ε < |(Shao.energy a - (n j : ℝ)) / h j ^ 2|}) /
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.ConditionalEnergyConcentration
+end
