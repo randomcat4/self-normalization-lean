@@ -1,0 +1,29 @@
+DECL Shao.OQ3.quadratic_form_bounds_of_det_trace
+TYPE ∀ (a b d delta T : ℝ),
+  0 ≤ a →
+    0 ≤ d →
+      0 < delta →
+        delta ≤ a * d - b ^ 2 →
+          0 < T →
+            a + d ≤ T →
+              ∀ (xi eta : ℝ),
+                delta / T * (xi ^ 2 + eta ^ 2) ≤ a * xi ^ 2 + 2 * b * xi * eta + d * eta ^ 2 ∧
+                  a * xi ^ 2 + 2 * b * xi * eta + d * eta ^ 2 ≤ T * (xi ^ 2 + eta ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_covariance_spectral_bounds
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      (∀ p ∈ Theta, 0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det) →
+        have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+        have D := fun p => Shao.OQ3.parabolaCovariance (nu p);
+        ∃ lo hi,
+          0 < lo ∧
+            0 < hi ∧
+              ∀ p ∈ Theta,
+                ∀ (xi eta : ℝ),
+                  lo * (xi ^ 2 + eta ^ 2) ≤ D p 0 0 * xi ^ 2 + 2 * D p 0 1 * xi * eta + D p 1 1 * eta ^ 2 ∧
+                    D p 0 0 * xi ^ 2 + 2 * D p 0 1 * xi * eta + D p 1 1 * eta ^ 2 ≤ hi * (xi ^ 2 + eta ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
