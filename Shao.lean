@@ -310,11 +310,14 @@ import Shao.OQ5.P53.SparsePopulation
 import Shao.OQ5.P53.SparsePopulationKernel
 import Shao.OQ5.P53.SparsePopulationOperator
 import Shao.OQ5.P53.SparsePopulationSymmetry
+import Shao.OQ5.P53.SparsePositiveStudentizer
 import Shao.OQ5.P53.SparseProjectionLaw
 import Shao.OQ5.P53.SparseRealEncoding
 import Shao.OQ5.P53.SparseRealModel
 import Shao.OQ5.P53.SparseRealOperator
 import Shao.OQ5.P53.SparseRealSample
+import Shao.OQ5.P53.SparseRealStatistics
+import Shao.OQ5.P53.SparseSampleStatistics
 import Shao.OQ5.P53.SparseScales
 import Shao.OQ5.P53.SparseSelection
 import Shao.OQ5.P53.SparseSignedAmplitude
@@ -322,6 +325,7 @@ import Shao.OQ5.P53.SparseSignedLabelLaw
 import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ6.FiniteRows
 import Shao.Probability.BivariateLegendre
+import Shao.Probability.BoundedQuadraticTilt
 import Shao.Probability.BrownianFirstTerm
 import Shao.Probability.BrownianGridBridge
 import Shao.Probability.BrownianSpectralEnvelope
@@ -373,6 +377,8 @@ import Shao.Probability.SourceFutureNoiseOddEven
 import Shao.Probability.SourceKernelAmplitudeFamily
 import Shao.Probability.SourceKernelMarkedOutside
 import Shao.Probability.SourceLindleyRegulatorFirstMoment
+import Shao.Probability.SourceLindleyRegulatorFirstMomentSums
+import Shao.Probability.SourceLindleyRegulatorSecondMoment
 import Shao.Probability.SourceLongKernelBounds
 import Shao.Probability.SourceMarkFourierNorms
 import Shao.Probability.SourceOddEvenMarkedIBP
