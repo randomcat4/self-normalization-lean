@@ -1,0 +1,139 @@
+-- PROPOSAL ONLY: exhaustive 11 theorem heads, 8 private and 3 public.
+-- ZERO new def/abbrev/instance/structure values; no theorem proof bodies.
+-- Parent full reading and substantive freeze must precede implementation.
+-- The TerminalNormalizedKernelLimit import is a frozen, still-unqualified producer.
+import Shao.OQ4.VarianceScaling
+import Shao.OQ4.TerminalNormalizedKernelLimit
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Order.Filter.AtTopBot.Tendsto
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.VarianceKernelAsymptotic
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped Topology
+
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧ Integrable (fun x : ℝ => x ^ 2) ν
+
+private theorem common_moment_bound_nonneg
+    (νSeq : ℕ → Measure ℝ) (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M) :
+    0 ≤ M
+
+private theorem sqrt_variance_uniform_bounds
+    (v : ℝ) (hvlower : (1 / 2 : ℝ) ≤ v) (hvupper : v ≤ 2) :
+    0 < Real.sqrt v ∧ (Real.sqrt v) ^ 2 = v ∧
+      (1 / 2 : ℝ) ≤ Real.sqrt v ∧ Real.sqrt v ≤ 2
+
+private theorem mapped_integrable_integral
+    (ν : Measure ℝ) (σ : ℝ) (f : ℝ → ℝ) (hf : Measurable f)
+    (hfi : Integrable (fun x : ℝ => f (x / σ)) ν) :
+    Integrable f (ν.map (fun x : ℝ => x / σ)) ∧
+      (∫ y : ℝ, f y ∂(ν.map (fun x : ℝ => x / σ))) =
+        ∫ x : ℝ, f (x / σ) ∂ν
+
+private theorem standardized_law_moments
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (v M : ℝ)
+    (hvlower : (1 / 2 : ℝ) ≤ v) (hvupper : v ≤ 2)
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = v)
+    (hthird : (∫ x : ℝ, |x| ^ 3 ∂ν) ≤ M) :
+    let σ : ℝ := Real.sqrt v
+    let η : Measure ℝ := ν.map (fun x : ℝ => x / σ)
+    IsProbabilityMeasure η ∧
+      Integrable (fun y : ℝ => y) η ∧
+      Integrable (fun y : ℝ => y ^ 2) η ∧
+      Integrable (fun y : ℝ => |y| ^ 3) η ∧
+      (∫ y : ℝ, y ∂η) = 0 ∧
+      (∫ y : ℝ, y ^ 2 ∂η) = 1 ∧
+      (∫ y : ℝ, |y| ^ 3 ∂η) =
+        (σ⁻¹) ^ 3 * (∫ x : ℝ, |x| ^ 3 ∂ν) ∧
+      (∫ y : ℝ, |y| ^ 3 ∂η) ≤ 8 * M
+
+-- PUBLIC actual finite-product law, including n=0 and every real scalar σ.
+theorem finite_product_standardization_map
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n : ℕ) (σ : ℝ) :
+    (Measure.pi (fun _ : Fin n => ν)).map
+        (fun a : Shao.Path n => σ⁻¹ • a) =
+      Measure.pi (fun _ : Fin n => ν.map (fun x : ℝ => x / σ))
+
+-- PUBLIC exact finite closed-strip probability, no moment/asymptotic premise.
+theorem closedStrip_probability_standardization
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n : ℕ) (σ h : ℝ)
+    (hσ : 0 < σ) (hh : 0 ≤ h) :
+    (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n h) =
+      (Measure.pi (fun _ : Fin n => ν.map (fun x : ℝ => x / σ))).real
+        (@Shao.closedStrip n (h / σ))
+
+private theorem standardized_height_tendsto
+    (vSeq hSeq : ℕ → ℝ)
+    (hvlower : ∀ j, (1 / 2 : ℝ) ≤ vSeq j)
+    (hvupper : ∀ j, vSeq j ≤ 2)
+    (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    (∀ j, 0 < hSeq j / Real.sqrt (vSeq j)) ∧
+      Tendsto (fun j => hSeq j / Real.sqrt (vSeq j)) atTop atTop
+
+private theorem standardized_quadratic_ratio_tendsto
+    (vSeq hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ)
+    (hvlower : ∀ j, (1 / 2 : ℝ) ≤ vSeq j)
+    (hvupper : ∀ j, vSeq j ≤ 2)
+    (hpos : ∀ j, 0 < hSeq j)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop) :
+    Tendsto (fun j => (NSeq j : ℝ) /
+      (hSeq j / Real.sqrt (vSeq j)) ^ 2) atTop atTop
+
+private theorem standardized_cubic_ratio_tendsto
+    (vSeq hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ)
+    (hvlower : ∀ j, (1 / 2 : ℝ) ≤ vSeq j)
+    (hvupper : ∀ j, vSeq j ≤ 2)
+    (hpos : ∀ j, 0 < hSeq j)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => (NSeq j : ℝ) /
+      (hSeq j / Real.sqrt (vSeq j)) ^ 3) atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC conditional Kv for genuinely varying rows/variances and one common M.
+-- Primitive S/AC are LITERALLY on the ACTUAL standardized map and its own beta.
+-- These primitive producers remain UNPAID; no supplied row-K conclusion is a premise.
+theorem varying_row_variance_closedStrip_relative_asymptotic
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (vSeq : ℕ → ℝ)
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = vSeq j)
+    (hvlower : ∀ j, (1 / 2 : ℝ) ≤ vSeq j)
+    (hvupper : ∀ j, vSeq j ≤ 2)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (Cq Cs : ℝ) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs)
+    (hAC : ∀ j,
+      iidIntervalConcentration
+        ((νSeq j).map (fun x : ℝ => x / Real.sqrt (vSeq j)))
+        (∫ y : ℝ, |y| ^ 3
+          ∂((νSeq j).map (fun x : ℝ => x / Real.sqrt (vSeq j)))) Cq)
+    (hS : ∀ j,
+      iidOneSidedSurvival
+        ((νSeq j).map (fun x : ℝ => x / Real.sqrt (vSeq j)))
+        (∫ y : ℝ, |y| ^ 3
+          ∂((νSeq j).map (fun x : ℝ => x / Real.sqrt (vSeq j)))) Cs)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (NSeq j) => νSeq j)).real
+        (@Shao.closedStrip (NSeq j) (hSeq j)) /
+          ((4 / Real.pi) *
+            Real.exp (-lambda * vSeq j * (NSeq j : ℝ) / hSeq j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.VarianceKernelAsymptotic
+end

@@ -1,0 +1,241 @@
+/-
+EXHAUSTIVE DECLARATION / VALUE / IMPORT PROPOSAL v1 — NOT FROZEN.
+This is a text proposal, not Lean source and not a checked file.
+Every theorem below is a complete HEAD; no proof terms have been implemented.
+The parent must freeze every head, every value and the import list before .lean creation.
+Any later added top-level helper/definition/instance or changed import/head/value needs
+a substantive freeze addendum. Local `have` facts inside proofs add no top-level API.
+
+Intended new lane-owned module: Shao/OQ4/RandomDenominatorFarTail.lean.
+No old/shared module, root import, common definition or instance is modified.
+8 new transparent noncomputable definitions; 26 theorem heads (9 private,17 public).
+No opaque values, abbrevs, structures, classes, instances, attributes or options proposed.
+Only existing automatically synthesized product-probability instances are used.
+-/
+
+import Shao.OQ4.EnergyTiltedLaw
+import Shao.Probability.MeasurablePath
+import Shao.Basic.ClosedSurvival
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.Topology.Algebra.InfiniteSum.Real
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+namespace Shao.OQ4.RandomDenominatorFarTail
+
+open MeasureTheory Filter
+open scoped BigOperators Topology
+
+-- TRANSPARENT VALUE 1. Closed coordinate cutoff; includes its endpoint atoms.
+noncomputable def cutoffBox (n : ℕ) (H : ℝ) : Set (Shao.Path n) :=
+  {a | ∀ i, |a i| ≤ 2 * H}
+
+-- TRANSPARENT VALUE 2. The exponential DIFFERENCE is inside the actual box.
+noncomputable def cutoffExcess {n : ℕ} (H s : ℝ) (a : Shao.Path n) : ℝ :=
+  by
+    classical
+    exact if a ∈ cutoffBox n H then Real.exp (s * Shao.energy a / H ^ 2) - 1 else 0
+
+-- TRANSPARENT VALUE 3. Literal closed-prefix event, including zero-energy paths.
+-- Substantive finite bounds assume n≥1. No zero-time denominator identity is asserted.
+noncomputable def randomDenominatorEvent (n : ℕ) (h : ℝ) : Set (Shao.Path n) :=
+  {a | a ∈ Shao.closedStrip (h / Real.sqrt (n : ℝ) * Real.sqrt (Shao.energy a))}
+
+-- TRANSPARENT VALUE 4. Lower endpoint closed, upper endpoint open.
+noncomputable def farLayer (n : ℕ) (h : ℝ) (j : ℕ) : Set (Shao.Path n) :=
+  randomDenominatorEvent n h ∩
+    {a | (2 : ℝ) ^ j * (n : ℝ) ≤ Shao.energy a ∧
+      Shao.energy a < (2 : ℝ) ^ (j + 1) * (n : ℝ)}
+
+-- TRANSPARENT VALUE 5. Actual height, no rounded or deterministic energy replacement.
+noncomputable def farHeight (h : ℝ) (j : ℕ) : ℝ :=
+  Real.sqrt ((2 : ℝ) ^ (j + 1)) * h
+
+-- TRANSPARENT VALUE 6. Depends only on the fixed scalar s.
+noncomputable def farDifferenceConstant (s : ℝ) : ℝ :=
+  Real.exp (4 * s) * s
+
+-- TRANSPARENT VALUE 7. beta must be the ACTUAL cubic moment at every law-facing use.
+noncomputable def farScalarBound (s β : ℝ) (n : ℕ) (h : ℝ) : ℝ :=
+  farDifferenceConstant s * ((n : ℝ) / h ^ 2) *
+    Real.exp (-s * ((n : ℝ) / h ^ 2) / 4 +
+      energyNormalizerErrorConstant s * β * ((n : ℝ) / h ^ 3) / 8)
+
+-- TRANSPARENT VALUE 8. Literal positive denominator, no survival/Brownian premise.
+noncomputable def farMainTerm (n : ℕ) (h : ℝ) : ℝ :=
+  (4 / Real.pi) * Real.exp (-(Real.pi ^ 2 / 8) * ((n : ℝ) / h ^ 2))
+
+-- H01 PRIVATE. Proof: finite intersection of closed coordinate sublevels.
+private theorem measurableSet_cutoffBox (n : ℕ) (H : ℝ) :
+    MeasurableSet (cutoffBox n H)
+
+-- H02 PRIVATE. Proof: measurable if over H01 and continuous genuine energy.
+private theorem measurable_cutoffExcess (n : ℕ) (H s : ℝ) :
+    Measurable (cutoffExcess (n := n) H s)
+
+-- H03 PUBLIC. No moment or probability premise.
+theorem cutoffExcess_nonneg (n : ℕ) (H s : ℝ) (hs : 0 ≤ s) (a : Shao.Path n) :
+    0 ≤ cutoffExcess H s a
+
+-- H04 PUBLIC. Direct pointwise product identity, valid also for the empty product.
+theorem cutoffExcess_eq_products (n : ℕ) (H s : ℝ) (a : Shao.Path n) :
+    cutoffExcess H s a =
+      (∏ i, energyWeight H s (a i)) - (∏ i, energyWeight H 0 (a i))
+
+-- H05 PUBLIC. Actual finite Fubini; no untruncated MGF or private producer access.
+theorem cutoffExcess_integral (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (H s : ℝ) (hH : 0 < H) (hs : 0 ≤ s) :
+    Integrable (cutoffExcess (n := n) H s) (Measure.pi (fun _ : Fin n => ν)) ∧
+      (∫ a, cutoffExcess H s a ∂Measure.pi (fun _ : Fin n => ν)) =
+        energyNormalizer ν H s ^ n - energyNormalizer ν H 0 ^ n
+
+-- H06 PUBLIC. Global cutoff weight difference paid by ACTUAL second moment.
+theorem cutoff_normalizer_difference_bound (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (H s : ℝ) (hH : 0 < H) (hs : 0 ≤ s)
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    0 ≤ energyNormalizer ν H s - energyNormalizer ν H 0 ∧
+      energyNormalizer ν H s - energyNormalizer ν H 0 ≤
+        farDifferenceConstant s / H ^ 2
+
+-- H07 PUBLIC. Uses the qualified raw E1 expansion; centering is unnecessary.
+theorem cutoff_normalizer_first_order_upper (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (H s : ℝ) (hH : 1 ≤ H) (hs : 0 ≤ s)
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hCube : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    energyNormalizer ν H s ≤ 1 + s / H ^ 2 +
+      energyNormalizerErrorConstant s * (∫ x : ℝ, |x| ^ 3 ∂ν) / H ^ 3
+
+-- H08 PRIVATE. Telescoping n≥1; covers a=b=0 and n=1 without division by a.
+private theorem power_difference_bound (a b u : ℝ) (n : ℕ)
+    (hn : 0 < n) (hb : 0 ≤ b) (hba : b ≤ a) (hu : 0 ≤ u) (ha : a ≤ 1 + u) :
+    a ^ n - b ^ n ≤ (n : ℝ) * (a - b) * Real.exp ((n : ℝ) * u)
+
+-- H09 PUBLIC. Generic measurable-event nonnegative difference Markov.
+-- No second/third moment or zero-mean premise needed here.
+theorem cutoff_energy_markov_difference (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (H s q : ℝ) (hH : 0 < H) (hs : 0 < s) (hq : 0 < q)
+    (A : Set (Shao.Path n)) (hA : MeasurableSet A)
+    (hsub : A ⊆ cutoffBox n H ∩ {a | q ≤ Shao.energy a}) :
+    (Measure.pi (fun _ : Fin n => ν)).real A ≤
+      (energyNormalizer ν H s ^ n - energyNormalizer ν H 0 ^ n) /
+        (Real.exp (s * q / H ^ 2) - 1)
+
+-- H10 PUBLIC. Direct finite-prefix measurable closed sublevel construction.
+theorem measurableSet_randomDenominatorEvent (n : ℕ) (h : ℝ) :
+    MeasurableSet (randomDenominatorEvent n h)
+
+-- H11 PUBLIC. Source-to-statement identity only for POSITIVE time.
+theorem randomDenominatorEvent_eq_absMax (n : ℕ) (hn : 0 < n) (h : ℝ) (hh : 0 ≤ h) :
+    randomDenominatorEvent n h =
+      {a | Shao.absMax a hn ≤ h / Real.sqrt (n : ℝ) * Real.sqrt (Shao.energy a)}
+
+-- H12 PUBLIC. Entire genuine zero-energy atom is retained, at every literal h.
+theorem zero_energy_mem_randomDenominatorEvent (n : ℕ) (h : ℝ) (a : Shao.Path n)
+    (hQ : Shao.energy a = 0) : a ∈ randomDenominatorEvent n h
+
+-- H13 PRIVATE. Uses H10 and actual measurable_energy.
+private theorem measurableSet_farLayer (n : ℕ) (h : ℝ) (j : ℕ) :
+    MeasurableSet (farLayer n h j)
+
+-- H14 PUBLIC. Uniform height identities; no unbounded-parameter approximation.
+theorem farHeight_identities (n : ℕ) (h : ℝ) (hh : 0 < h) (j : ℕ) (hj : 1 ≤ j) :
+    0 < farHeight h j ∧
+    farHeight h j ^ 2 = (2 : ℝ) ^ (j + 1) * h ^ 2 ∧
+    2 * h ≤ farHeight h j ∧
+    (2 : ℝ) ^ j * (n : ℝ) / farHeight h j ^ 2 = ((n : ℝ) / h ^ 2) / 2 ∧
+    (n : ℝ) / farHeight h j ^ 2 = ((n : ℝ) / h ^ 2) / (2 : ℝ) ^ (j + 1) ∧
+    (n : ℝ) / farHeight h j ^ 3 ≤ ((n : ℝ) / h ^ 3) / 8
+
+-- H15 PUBLIC. The original closedStrip coordinate bound is used, never copied.
+theorem farLayer_subset_cutoff (n : ℕ) (hn : 0 < n) (h : ℝ) (hh : 0 < h)
+    (j : ℕ) (hj : 1 ≤ j) :
+    farLayer n h j ⊆ cutoffBox n (farHeight h j) ∩
+      {a | (2 : ℝ) ^ j * (n : ℝ) ≤ Shao.energy a}
+
+-- H16 PUBLIC. Exact source finite bound and its indispensable numerator difference.
+theorem farLayer_markov_difference (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h s : ℝ) (hh : 0 < h) (hs : 0 < s)
+    (j : ℕ) (hj : 1 ≤ j) :
+    (Measure.pi (fun _ : Fin n => ν)).real (farLayer n h j) ≤
+      (energyNormalizer ν (farHeight h j) s ^ n -
+        energyNormalizer ν (farHeight h j) 0 ^ n) /
+      (Real.exp (s * ((2 : ℝ) ^ j * (n : ℝ)) / farHeight h j ^ 2) - 1)
+
+-- H17 PUBLIC. SAME hypotheses/threshold for every j≥1.
+theorem farLayer_bound (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h s : ℝ) (hh : 1 ≤ h) (hs : 0 < s)
+    (ht : Real.log 2 ≤ s * ((n : ℝ) / h ^ 2) / 2)
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hCube : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) (j : ℕ) (hj : 1 ≤ j) :
+    (Measure.pi (fun _ : Fin n => ν)).real (farLayer n h j) ≤
+      2 * farScalarBound s (∫ x : ℝ, |x| ^ 3 ∂ν) n h / (2 : ℝ) ^ (j + 1)
+
+-- H18 PUBLIC. Atomic dyadic cover is exact; k indexes j=k+1.
+theorem dyadic_energy_cover (n : ℕ) (hn : 0 < n) (h : ℝ) :
+    randomDenominatorEvent n h ∩ {a | 2 * (n : ℝ) ≤ Shao.energy a} =
+      ⋃ k : ℕ, farLayer n h (k + 1)
+
+-- H19 PRIVATE. Explicit nonnegative geometric numerical majorant.
+private theorem shifted_geometric_summable :
+    Summable (fun k : ℕ => (1 : ℝ) / (2 : ℝ) ^ (k + 2))
+
+-- H20 PRIVATE. Sum is1/2, since the first original layer is j=1.
+private theorem shifted_geometric_tsum :
+    (∑' k : ℕ, (1 : ℝ) / (2 : ℝ) ^ (k + 2)) = 1 / 2
+
+-- H21 PRIVATE. Actual layer probabilities, rather than only formal majorants.
+private theorem farLayer_real_summable (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h s : ℝ) (hh : 1 ≤ h) (hs : 0 < s)
+    (ht : Real.log 2 ≤ s * ((n : ℝ) / h ^ 2) / 2)
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hCube : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Summable (fun k : ℕ =>
+      (Measure.pi (fun _ : Fin n => ν)).real (farLayer n h (k + 1)))
+
+-- H22 PUBLIC. Absolute countable union, with the complete geometric payment.
+theorem far_tail_bound (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h s : ℝ) (hh : 1 ≤ h) (hs : 0 < s)
+    (ht : Real.log 2 ≤ s * ((n : ℝ) / h ^ 2) / 2)
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hCube : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    (Measure.pi (fun _ : Fin n => ν)).real
+        (randomDenominatorEvent n h ∩ {a | 2 * (n : ℝ) ≤ Shao.energy a}) ≤
+      farScalarBound s (∫ x : ℝ, |x| ^ 3 ∂ν) n h
+
+-- H23 PUBLIC. Positive literal denominator, no desired-probability positivity input.
+theorem farMainTerm_pos (n : ℕ) (h : ℝ) : 0 < farMainTerm n h
+
+-- H24 PRIVATE. Elementary e^(δt)≥δ²t²/4 gives4/(δ²t) majorant.
+private theorem time_mul_exp_neg_tendsto (t : ℕ → ℝ) (δ : ℝ) (hδ : 0 < δ)
+    (ht : Tendsto t atTop atTop) :
+    Tendsto (fun k => t k * Real.exp (-δ * t k)) atTop (𝓝 0)
+
+-- H25 PRIVATE. Provides actual finite-positive-time and common scalar threshold.
+private theorem eventual_finite_conditions (n : ℕ → ℕ) (h : ℕ → ℝ) (s : ℝ)
+    (hs : 0 < s) (hh : Tendsto h atTop atTop)
+    (ht : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop) :
+    ∀ᶠ k in atTop, 0 < n k ∧ 1 ≤ h k ∧
+      Real.log 2 ≤ s * ((n k : ℝ) / h k ^ 2) / 2
+
+-- H26 PUBLIC. Complete actual far probability / literal main term limit.
+theorem far_tail_relative_tendsto_zero (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (hSq : Integrable (fun x : ℝ => x ^ 2) ν)
+    (hCube : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (n : ℕ → ℕ) (h : ℕ → ℝ) (s : ℝ) (hs : Real.pi ^ 2 / 2 < s)
+    (hh : Tendsto h atTop atTop)
+    (ht : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hr : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 0)) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (randomDenominatorEvent (n k) (h k) ∩
+            {a | 2 * (n k : ℝ) ≤ Shao.energy a}) /
+        farMainTerm (n k) (h k)) atTop (𝓝 0)
+
+end Shao.OQ4.RandomDenominatorFarTail
