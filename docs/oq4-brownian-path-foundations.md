@@ -1,0 +1,11 @@
+# Actual varying-row Gaussian blocks and polygonal path-law tightness
+
+This change supplies two dependencies in section 7 of the source-bound OQ4 proof. It proves the one-dimensional finite-block Gaussian limit for genuinely varying row laws, including the derived floor-time specialization, and proves tightness of the actual finite-row polygonal path laws in `C(unitInterval, ℝ)`.
+
+`RowBlockGaussianLimit` uses the actual product-law sum divided by the scale. The hypotheses are mean zero, second moment one, integrable absolute third moment with one uniform bound, and the displayed block-length/scale limit. Its characteristic-function comparison is direct and includes zero limiting duration. `PolygonalPathTightness` uses the actual B3 finite ramp sum, with row length covering the fixed horizon, positive scale, zero mean and a uniform absolute-third-moment bound. It constructs explicit dyadic compact sets, controls their complements by Markov bounds and a summable union, and applies Arzelà–Ascoli. It derives tightness instead of taking it as a premise.
+
+Both exact sources passed server kernel checking and all-owned transitive-axiom auditing on pinned Lean 4.36.0-rc1 and mathlib 807d3836b165983210ee2ecf3cd28f239436949c. Fresh independent complete source, statement, proof, actual-type, definition-value and runtime-binding reviews are recorded in the acceptance manifest. All failed rounds are retained; no successful source was rechecked for cleanup. The existing scalar-block object was emitted once only for its concrete frozen FDD consumer; the tightness module has no emitted object at this milestone.
+
+Direct consumers are the actual finite-dimensional Gaussian/polygonal limit and the actual Brownian path-law identification. Finite-dimensional limits, Brownian boundary events, the floor-horizon adapter, stopped cosine identity B4, fixed-time B0/B1 and general OQ4 remain separate obligations. This change claims no original-root closure and no completion percentage. The source attribution to the original Brownian argument is preserved.
+
+Evidence: `repro_outputs/oq4-brownian-path-foundations/acceptance.json`. This branch is stacked on PR190; root alone integrates and merges.
