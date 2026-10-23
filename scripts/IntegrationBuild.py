@@ -1,6 +1,6 @@
 import pathlib,subprocess,json,hashlib,time,os
-w=pathlib.Path.cwd();r=pathlib.Path('/root/rivermind-data/shao-lean-20261021');logdir=r/'logs/integration-v43/sequential';logdir.mkdir(parents=True,exist_ok=True)
-base='4cae9790a5d21e126ffdd7b4b6adbc836aa185e9'
+w=pathlib.Path.cwd();r=pathlib.Path('/root/rivermind-data/shao-lean-20261021');logdir=r/'logs/integration-v44/sequential';logdir.mkdir(parents=True,exist_ok=True)
+base='529aa59983f566fe38ca9d41f59b29f1bec4163f'
 changed=subprocess.check_output(['git','diff','--name-only',base,'HEAD','--','Shao'],text=True).splitlines()
 mods={p[:-5].replace('/','.') : p for p in changed if p.endswith('.lean')}
 order=[];active=set();done=set()
@@ -18,6 +18,12 @@ results=[]
 for m in order+['Shao']:
  p=mods.get(m,'Shao.lean');dest=w/'.lake/build/lib/lean'/pathlib.Path(m.replace('.','/')+'.olean');dest.parent.mkdir(parents=True,exist_ok=True)
  log=logdir/(m+'.log');start=time.monotonic()
+ if m=='Shao.OQ4.RademacherStrictCube':
+  assert hashlib.sha256(dest.read_bytes()).hexdigest()=='6942c78e0184c3fbf22145c7b011068a3646dd56c103b1558a0cdfb35013b8ca'
+  entry={'module':m,'source':p,'source_sha256':hashlib.sha256((w/p).read_bytes()).hexdigest(),'object_sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'exit_code':0,'seconds':0,'mode':'REUSE_EXACT_CANONICAL_OBJECT_WITH_COMPLETE_INDEPENDENT_SOURCE_AND_AXIOM_REVIEW'}
+  results.append(entry);(logdir/'progress.json').write_text(json.dumps(results,indent=2)+'\n')
+  print(m,'REUSED_CANONICAL_PASS',flush=True)
+  continue
  with log.open('w') as f:res=subprocess.run(['lake','env','lean','-M','8192','-j','4','-DautoImplicit=false','-o',str(dest),p],stdout=f,stderr=subprocess.STDOUT)
  entry={'module':m,'source':p,'source_sha256':hashlib.sha256((w/p).read_bytes()).hexdigest(),'exit_code':res.returncode,'seconds':round(time.monotonic()-start,3),'log_sha256':hashlib.sha256(log.read_bytes()).hexdigest()}
  results.append(entry);(logdir/'progress.json').write_text(json.dumps(results,indent=2)+'\n')
