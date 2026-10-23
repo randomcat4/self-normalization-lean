@@ -1,0 +1,50 @@
+DECL Shao.OQ3.standard_gaussian_plane_finite_arc_cover_tube_bound
+TYPE ∀ (m : Nat) (f : Fin m → Real → Prod.{0, 0} Real Real) (K : Fin m → NNReal)
+  (hf :
+    ∀ (i : Fin m),
+      @LipschitzOnWith.{0, 0} Real (Prod.{0, 0} Real Real)
+        (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace))
+        (@Prod.pseudoEMetricSpaceMax.{0, 0} Real Real
+          (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace))
+          (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace)))
+        (K i) (f i)
+        (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (F : Set.{0} (Prod.{0, 0} Real Real))
+  (hcover :
+    @LE.le.{0} (Set.{0} (Prod.{0, 0} Real Real)) (@Set.instLE.{0} (Prod.{0, 0} Real Real)) F
+      (@Set.iUnion.{0, 1} (Prod.{0, 0} Real Real) (Fin m) fun (i : Fin m) =>
+        @Set.image.{0, 0} Real (Prod.{0, 0} Real Real) (f i)
+          (@Set.Icc.{0} Real Real.instPreorder
+            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))))
+  (h : Real)
+  (hh : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) h),
+  @LE.le.{0} Real Real.instLE
+    (@MeasureTheory.Measure.real.{0} (Prod.{0, 0} Real Real)
+      (@Prod.instMeasurableSpace.{0, 0} Real Real Real.measurableSpace Real.measurableSpace)
+      (@MeasureTheory.Measure.prod.{0, 0} Real Real Real.measurableSpace Real.measurableSpace
+        (ProbabilityTheory.gaussianReal (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} NNReal (nat_lit 1) (@One.toOfNat1.{0} NNReal NNReal.instOne)))
+        (ProbabilityTheory.gaussianReal (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} NNReal (nat_lit 1) (@One.toOfNat1.{0} NNReal NNReal.instOne))))
+      (@Metric.cthickening.{0} (Prod.{0, 0} Real Real)
+        (@Prod.pseudoEMetricSpaceMax.{0, 0} Real Real
+          (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace))
+          (@EMetricSpace.toPseudoEMetricSpace.{0} Real (@MetricSpace.toEMetricSpace.{0} Real Real.metricSpace)))
+        h F))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@OfNat.ofNat.{0} Real (nat_lit 64)
+        (@instOfNatAtLeastTwo.{0} Real (nat_lit 64) Real.instNatCast
+          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 63) (instOfNatNat (nat_lit 63)))
+            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 62) (instOfNatNat (nat_lit 62)))))))
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) h
+          (@Finset.sum.{0, 0} (Fin m) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin m) (Fin.fintype m))
+            fun (i : Fin m) => NNReal.toReal (K i)))
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Nat.cast.{0} Real Real.instNatCast m)
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) h
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
