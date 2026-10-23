@@ -1,0 +1,64 @@
+{
+  "unit": 118,
+  "module": "Shao.OQ5.P53.SparseBalancedMass",
+  "namespace": "Shao.OQ5.P53",
+  "imports": [
+    "Shao.OQ5.P53.SparseBalancedEvent",
+    "Shao.OQ5.P53.SparseRealSample"
+  ],
+  "local_notation": {
+    "SparseObs": "((ℝ × (ℕ × Bool)) × (ℕ × Bool))"
+  },
+  "open": [
+    "MeasureTheory"
+  ],
+  "open_scoped": [
+    "BigOperators"
+  ],
+  "full_raw_definitions": {},
+  "full_raw_contracts": {
+    "sparsePopulationMeasure_lowObservation": "theorem sparsePopulationMeasure_lowObservation :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  sparsePopulationMeasure α x N (sparseLowObservation j) =\n    ENNReal.ofReal (sparsePriorMass α x N j ^ 2)",
+    "sparsePopulationMeasure_real_lowObservation": "theorem sparsePopulationMeasure_real_lowObservation :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  (sparsePopulationMeasure α x N).real (sparseLowObservation j) =\n    sparsePriorMass α x N j ^ 2",
+    "sparsePopulationMeasure_targetObservation": "theorem sparsePopulationMeasure_targetObservation :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool),\n  sparsePopulationMeasure α x N (sparseTargetObservation j b) =\n    ENNReal.ofReal (sparseLabelMass α x N j ^ 2 / 4)",
+    "sparsePopulationMeasure_real_targetObservation": "theorem sparsePopulationMeasure_real_targetObservation :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool),\n  (sparsePopulationMeasure α x N).real (sparseTargetObservation j b) =\n    sparseLabelMass α x N j ^ 2 / 4",
+    "sparseBalancedPairPattern_real_mass": "theorem sparseBalancedPairPattern_real_mass :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool), i < k →\n  (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N)).real\n    (sparseBalancedPairPattern j i k b) =\n      sparseLabelMass α x N j ^ 4 * sparsePriorMass α x N j ^ (2 * (n - 2)) / 16",
+    "sparseBalancedPairEvent_real_mass": "theorem sparseBalancedPairEvent_real_mass :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n), i < k →\n  (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N)).real\n    (sparseBalancedPairEvent j i k) =\n      sparseLabelMass α x N j ^ 4 * sparsePriorMass α x N j ^ (2 * (n - 2)) / 8",
+    "sparseBalancedEvent_real_mass": "theorem sparseBalancedEvent_real_mass :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ),\n  (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N)).real\n    (sparseBalancedEvent n j) =\n      (n.choose 2 : ℝ) * sparseLabelMass α x N j ^ 4 *\n        sparsePriorMass α x N j ^ (2 * (n - 2)) / 8",
+    "sparseBalancedPrefixEvent_real_mass": "theorem sparseBalancedPrefixEvent_real_mass :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ),\n  (sparsePopulationSampleMeasure α x N).real (sparseBalancedPrefixEvent n j) =\n    (n.choose 2 : ℝ) * sparseLabelMass α x N j ^ 4 *\n      sparsePriorMass α x N j ^ (2 * (n - 2)) / 8",
+    "sparseBalancedPrefixEvent_positive_level_mass": "theorem sparseBalancedPrefixEvent_positive_level_mass :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ), 1 ≤ j →\n  (sparsePopulationSampleMeasure α x N).real (sparseBalancedPrefixEvent n j) =\n    (n.choose 2 : ℝ) * sparsePositiveMass α x N j ^ 4 *\n      sparsePriorMass α x N j ^ (2 * (n - 2)) / 8",
+    "sparseBalancedPairPattern_real_pos": "theorem sparseBalancedPairPattern_real_pos :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  0 < (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N)).real\n    (sparseBalancedPairPattern j i k b)",
+    "sparseBalancedPrefixEvent_real_pos": "theorem sparseBalancedPrefixEvent_real_pos :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ), 2 ≤ n → 1 ≤ j →\n  0 < (sparsePopulationSampleMeasure α x N).real (sparseBalancedPrefixEvent n j)",
+    "sparseBalancedPairPattern_cond_probability": "theorem sparseBalancedPairPattern_cond_probability :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  IsProbabilityMeasure (ProbabilityTheory.cond\n    (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N))\n      (sparseBalancedPairPattern j i k b))",
+    "sparseBalancedPrefixEvent_cond_probability": "theorem sparseBalancedPrefixEvent_cond_probability :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ), 2 ≤ n → 1 ≤ j →\n  IsProbabilityMeasure (ProbabilityTheory.cond (sparsePopulationSampleMeasure α x N)\n    (sparseBalancedPrefixEvent n j))"
+  },
+  "public_definitions": 0,
+  "public_theorem_types": 13,
+  "frozenUTC": "2026-10-23T13:43:16.321Z",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION_WAIT117",
+  "source": {
+    "p53SHA256": "0bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561",
+    "scope": "actualsection4eq8completefixedpopulationeventmass; positivitybeforeconditionalnormalization"
+  },
+  "depends": [
+    "OQ56.U117",
+    "OQ56.U112",
+    "OQ56.U106",
+    "OQ56.U102",
+    "OQ56.U100",
+    "OQ56.U98"
+  ],
+  "premises": [
+    "Actualnestedproductnoise×signedB×signedC, completefinitepi andfixedinfiniteprefixlaw, neverreplacewithfeaturemarginalproxy.",
+    "Eachorientedtargethasmass(labelMass_j/2)^2; twoorientationsdisjoint gives1/8, orderedpaircountchoose(n,2).",
+    "No noise restriction or A masspenalty. BothbackgroundB,C<j supply q^(2(n-2)).",
+    "Structuralmassformulasunrestrictedα/x/N useactualLabelMassincludingj0; positiveMasssubstitutionONLYj>=1.",
+    "Positiveconditionalmass provedbeforeIsProbabilityMeasure(cond); n>=2/j>=1explicit. n0/1fullunionemptyandchoosezero."
+  ],
+  "outOfScope": [
+    "Conditionalfeaturemomentestimates",
+    "Actualtailboundandlimits",
+    "Rootclosure"
+  ],
+  "mainFullOriginalSourceRead": true,
+  "implementation_authorized": false
+}

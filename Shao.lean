@@ -311,7 +311,10 @@ import Shao.OQ5.P52.FixedLayerTailScales
 import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
+import Shao.OQ5.P53.SparseBalancedEvent
+import Shao.OQ5.P53.SparseBalancedMass
 import Shao.OQ5.P53.SparseCoefficientMoments
+import Shao.OQ5.P53.SparseConditionalLaw
 import Shao.OQ5.P53.SparseLabelLaw
 import Shao.OQ5.P53.SparseMass
 import Shao.OQ5.P53.SparseMassLimits
@@ -399,6 +402,7 @@ import Shao.Probability.SourceShortTimeGrid
 import Shao.Probability.SourceShortTimeKernelBounds
 import Shao.Probability.SourceShortTimeKernelTaylor
 import Shao.Probability.SourceTruncationBridge
+import Shao.Probability.SpitzerFinite
 import Shao.Probability.TiltedLowFrequency
 import Shao.Probability.TruncationIntegrals
 import Shao.Probability.TruncationRegularity
