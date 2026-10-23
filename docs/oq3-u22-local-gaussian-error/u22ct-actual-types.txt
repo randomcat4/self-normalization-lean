@@ -1,0 +1,18 @@
+DECL Shao.OQ3.iid_parabola_fin2_characteristic_factor
+TYPE ∀ (nu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure nu] (n : ℕ),
+  1 ≤ n →
+    ∀ (A : Matrix (Fin 2) (Fin 2) ℝ) (b : Fin 2 → ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+      (∀ (x : ℝ), E ((x, x ^ 2) - (b 0, b 1)) = (A.mulVec (![x, x ^ 2] - b) 0, A.mulVec (![x, x ^ 2] - b) 1)) →
+        ∀ (xi eta : ℝ),
+          have Y := fun x => A.mulVec (![x, x ^ 2] - b);
+          have law := MeasureTheory.Measure.map Y nu;
+          have Phi := fun u v => ∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂law;
+          have Q := MeasureTheory.Measure.pi fun x => nu;
+          have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+          have T := fun z => √↑n • E (M z - (b 0, b 1));
+          have rho := MeasureTheory.Measure.map T Q;
+          MeasureTheory.IsProbabilityMeasure law ∧
+            MeasureTheory.IsProbabilityMeasure rho ∧
+              ∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho = Phi (xi / √↑n) (eta / √↑n) ^ n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
