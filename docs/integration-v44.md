@@ -1,0 +1,5 @@
+# Integration v44
+
+Integrates exact PR172/173 heads with original author history and source bytes preserved. The strict Rademacher perfect-cube event has ratio 1 to the actual Brownian probability, while the corresponding weak event has ratio exp(pi²/4). The compact bounded tilted family now has actual uniform covariance spectra, positive symmetric whitening, standardized moments and same-beta weak Cramer bounds. Original OQ3 C is closed only in the recorded bounded compact-tilt scope. OQ3 B/D and general OQ4 remain open.
+
+The qualified independent full source/statement/proof and all-owned axiom reviews are reused at their exact hashes; root scope/evidence decisions are in docs/integration-v44/. Root reuses the exact canonical PR172 object without target re-elaboration. PR173 and the aggregate root are checked against current accepted imports. Server public/owned axiom and module coverage checks pass, with all 286 prior sources and 1063 prior project objects unchanged. No mathlib rebuild or redundant independent proof review is performed.

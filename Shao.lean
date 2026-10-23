@@ -24,6 +24,7 @@ import Shao.OQ3.CompactTiltCovarianceSpectrum
 import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
+import Shao.OQ3.CompactTiltWhitenedFamily
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
@@ -137,6 +138,7 @@ import Shao.OQ4.RademacherScalarBounds
 import Shao.OQ4.RademacherScaleAssembly
 import Shao.OQ4.RademacherSpectralPairing
 import Shao.OQ4.RademacherSpectralTail
+import Shao.OQ4.RademacherStrictCube
 import Shao.OQ4.ReflectedSurvival
 import Shao.OQ4.SpitzerKernelBounds
 import Shao.OQ4.TruncatedEnergy
