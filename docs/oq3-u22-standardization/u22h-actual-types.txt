@@ -1,0 +1,47 @@
+DECL Shao.OQ3.quadratic_whitening_spectral_data
+TYPE ∀ (D : Matrix (Fin 2) (Fin 2) ℝ),
+  D 1 0 = D 0 1 →
+    ∀ (lo hi : ℝ),
+      0 < lo →
+        0 < hi →
+          (∀ (xi eta : ℝ),
+              lo * (xi ^ 2 + eta ^ 2) ≤ xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧
+                xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤ hi * (xi ^ 2 + eta ^ 2)) →
+            have s := √(D 0 0 * D 1 1 - D 0 1 ^ 2);
+            have t := √(D 0 0 + D 1 1 + 2 * s);
+            have A := ![![(D 1 1 + s) / (s * t), -D 0 1 / (s * t)], ![-D 0 1 / (s * t), (D 0 0 + s) / (s * t)]];
+            0 < s ∧
+              0 < t ∧
+                A.transpose = A ∧
+                  A * D * A = 1 ∧
+                    (∀ (xi eta : ℝ), xi ≠ 0 ∨ eta ≠ 0 → 0 < xi * A.mulVec ![xi, eta] 0 + eta * A.mulVec ![xi, eta] 1) ∧
+                      (∀ (xi eta : ℝ),
+                          1 / √hi * √(xi ^ 2 + eta ^ 2) ≤
+                              √((xi * A 0 0 + eta * A 1 0) ^ 2 + (xi * A 0 1 + eta * A 1 1) ^ 2) ∧
+                            √((xi * A 0 0 + eta * A 1 0) ^ 2 + (xi * A 0 1 + eta * A 1 1) ^ 2) ≤
+                              1 / √lo * √(xi ^ 2 + eta ^ 2)) ∧
+                        ∀ (i j : Fin 2), |A i j| ≤ 1 / √lo
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.QuadraticWhiteningSpectralData.0.Shao.OQ3.open_domain_whitening_algebra
+TYPE ∀ (D : Matrix (Fin 2) (Fin 2) ℝ),
+  D 1 0 = D 0 1 →
+    ∀ (lo hi : ℝ),
+      0 < lo →
+        0 < hi →
+          (∀ (xi eta : ℝ),
+              lo * (xi ^ 2 + eta ^ 2) ≤ xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧
+                xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤ hi * (xi ^ 2 + eta ^ 2)) →
+            have s := √(D 0 0 * D 1 1 - D 0 1 ^ 2);
+            have t := √(D 0 0 + D 1 1 + 2 * s);
+            have A := ![![(D 1 1 + s) / (s * t), -D 0 1 / (s * t)], ![-D 0 1 / (s * t), (D 0 0 + s) / (s * t)]];
+            0 < s ∧
+              0 < t ∧
+                A.transpose = A ∧
+                  A * D * A = 1 ∧
+                    (∀ (xi eta : ℝ), xi ≠ 0 ∨ eta ≠ 0 → 0 < xi * A.mulVec ![xi, eta] 0 + eta * A.mulVec ![xi, eta] 1) ∧
+                      ∀ (xi eta : ℝ),
+                        1 / √hi * √(xi ^ 2 + eta ^ 2) ≤
+                            √((xi * A 0 0 + eta * A 1 0) ^ 2 + (xi * A 0 1 + eta * A 1 1) ^ 2) ∧
+                          √((xi * A 0 0 + eta * A 1 0) ^ 2 + (xi * A 0 1 + eta * A 1 1) ^ 2) ≤
+                            1 / √lo * √(xi ^ 2 + eta ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]

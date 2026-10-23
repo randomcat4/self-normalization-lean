@@ -1,0 +1,56 @@
+DECL _private.Shao.OQ3.OpenDomainRealMoments.0.Shao.OQ3.nonnegative_rpow_le_one_add_nat_power
+TYPE ∀ (x r : ℝ) (n : ℕ), 0 ≤ x → 0 ≤ r → r ≤ ↑n → x.rpow r ≤ 1 + x ^ n
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.compact_open_domain_affine_parabola_real_moments
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (A : ℝ × ℝ → Matrix (Fin 2) (Fin 2) ℝ) (U : ℝ),
+        0 ≤ U →
+          (∀ theta ∈ Theta, ∀ (i j : Fin 2), |A theta i j| ≤ U) →
+            have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+            have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+            have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+            have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+            (∀ theta ∈ Theta, MeasureTheory.IsProbabilityMeasure (laws theta)) ∧
+              ∀ (r : ℝ),
+                0 ≤ r →
+                  ∃ C,
+                    0 < C ∧
+                      ∀ theta ∈ Theta,
+                        MeasureTheory.Integrable (fun y => (√(y 0 ^ 2 + y 1 ^ 2)).rpow r) (laws theta) ∧
+                          0 ≤ ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow r ∂laws theta ∧
+                            ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow r ∂laws theta ≤ C
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.compact_open_domain_whitened_eight_add_delta_moment
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (lo hi delta : ℝ),
+        0 < lo →
+          0 < hi →
+            0 < delta →
+              (∀ p ∈ Theta,
+                  have D := Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2);
+                  ∀ (xi eta : ℝ),
+                    lo * (xi ^ 2 + eta ^ 2) ≤ xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧
+                      xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤ hi * (xi ^ 2 + eta ^ 2)) →
+                have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+                have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+                have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+                have A := fun p =>
+                  ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                    ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+                have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+                have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+                have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+                (∀ p ∈ Theta,
+                    (A p).transpose = A p ∧ A p * D p * A p = 1 ∧ MeasureTheory.IsProbabilityMeasure (laws p)) ∧
+                  ∃ C,
+                    0 < C ∧
+                      ∀ p ∈ Theta,
+                        MeasureTheory.Integrable (fun y => (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta)) (laws p) ∧
+                          0 ≤ ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta) ∂laws p ∧
+                            ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta) ∂laws p ≤ C
+AXIOMS [propext, Classical.choice, Quot.sound]

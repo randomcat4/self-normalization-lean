@@ -1,0 +1,27 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_compact_mean_chart
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ≠ 0 →
+      have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+      have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+      have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+      ∃ e epsilon,
+        0 < epsilon ∧
+          ↑e = means ∧
+            theta ∈ e.source ∧
+              e.source ⊆ Omega ∧
+                Metric.closedBall (means theta) epsilon ⊆ e.target ∧
+                  ContDiffAt ℝ (↑⊤) (↑e.symm) (means theta) ∧
+                    have U := Metric.ball (means theta) epsilon;
+                    have Theta := ↑e.symm '' Metric.closedBall (means theta) epsilon;
+                    IsOpen U ∧
+                      means theta ∈ U ∧
+                        IsCompact Theta ∧
+                          theta ∈ Theta ∧
+                            Theta ⊆ Omega ∧
+                              ContinuousOn (↑e.symm) (Metric.closedBall (means theta) epsilon) ∧
+                                (∀ m ∈ Metric.closedBall (means theta) epsilon,
+                                    ↑e.symm m ∈ Theta ∧ means (↑e.symm m) = m) ∧
+                                  (∀ p ∈ Theta, ↑e.symm (means p) = p) ∧
+                                    means '' Theta = Metric.closedBall (means theta) epsilon ∧ ↑e.symm '' U ⊆ Theta
+AXIOMS [propext, Classical.choice, Quot.sound]
