@@ -1,0 +1,351 @@
+/-
+AUTHOR177 COMPLETE EXHAUSTIVE PROPOSAL ONLY. NOT FROZEN / IMPLEMENTED / CHECKED.
+Proposed file: Shao/OQ4/RandomDenominatorAsymptotic.lean
+Inventory: 16 imports, 1 option, 6 transparent noncomputable definitions,
+24 theorem heads (10 private, 14 public). No additional top-level declaration.
+ZERO abbrev/opaque/structure/class/instance/universe/notation/macro/axiom.
+Proof-local symbols in proof.md add no top-level API. Every value is given in full.
+Every theorem is a complete head; no proof placeholder or implementation follows.
+New helpers/imports/options or changed heads/values require parent freeze amendment.
+-/
+
+import Shao.OQ4.UniformConditionalEnergy
+import Shao.OQ4.RandomDenominatorFarTail
+import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.MeasureTheory.Measure.Real
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.Topology.Algebra.Order.Field
+import Mathlib.Topology.Order.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.RandomDenominatorAsymptotic
+
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open RandomDenominatorFarTail (randomDenominatorEvent farMainTerm)
+open UniformConditionalEnergy (energyCoshExcessIntegral)
+open scoped BigOperators Topology
+
+-- VALUE 1. Signed perturbation: d=-epsilon is the lower center.
+noncomputable def centerHeight (n : ℕ) (h d : ℝ) : ℝ :=
+  h * Real.sqrt (1 + d / ((n : ℝ) / h ^ 2))
+
+-- VALUE 2. All indices1..ceil(t/epsilon), including harmless extra cover.
+noncomputable def middleIndices (n : ℕ) (h ε : ℝ) : Finset ℕ :=
+  Finset.Icc 1 (Nat.ceil (((n : ℝ) / h ^ 2) / ε))
+
+-- VALUE 3. Actual deterministic wall supplied by the energy upper endpoint.
+noncomputable def middleHeight (n : ℕ) (h ε : ℝ) (j : ℕ) : ℝ :=
+  centerHeight n h (((j : ℝ) + 1) * ε)
+
+-- VALUE 4. Actual random-wall event and strict-left/closed-right energy band.
+noncomputable def middleLayer (n : ℕ) (h ε : ℝ) (j : ℕ) : Set (Shao.Path n) :=
+  randomDenominatorEvent n h ∩
+    {a | (n : ℝ) + (j : ℝ) * ε * h ^ 2 < Shao.energy a ∧
+      Shao.energy a ≤ (n : ℝ) + ((j : ℝ) + 1) * ε * h ^ 2}
+
+-- VALUE 5. Exactly the source middle event, without a deterministic surrogate.
+noncomputable def middleEvent (n : ℕ) (h ε : ℝ) : Set (Shao.Path n) :=
+  randomDenominatorEvent n h ∩
+    {a | (n : ℝ) + ε * h ^ 2 < Shao.energy a ∧
+      Shao.energy a < 2 * (n : ℝ)}
+
+-- VALUE 6. Entire numerical geometric payment, no supremum or error sequence.
+noncomputable def middleSumConstant (s ε : ℝ) : ℝ :=
+  8 * Real.exp (lambda * ε) * Real.exp (-(s - lambda) * ε) /
+    ((1 - Real.exp (-s * ε)) ^ 2 *
+      (1 - Real.exp (-(s - lambda) * ε)))
+
+-- H01 PRIVATE. Pays the FAR square-integrability call from original h3 alone.
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧
+      Integrable (fun x : ℝ => x ^ 2) ν
+
+-- H02 PRIVATE. All roots squared only after radicand nonnegativity is paid.
+private theorem centerHeight_identities
+    (n : ℕ) (hn : 0 < n) (h d : ℝ) (hh : 0 < h)
+    (hd : 0 ≤ 1 + d / ((n : ℝ) / h ^ 2)) :
+    0 ≤ centerHeight n h d ∧
+      centerHeight n h d ^ 2 =
+        h ^ 2 * (1 + d / ((n : ℝ) / h ^ 2)) ∧
+      centerHeight n h d =
+        h / Real.sqrt (n : ℝ) * Real.sqrt ((n : ℝ) + d * h ^ 2)
+
+-- H03 PRIVATE. A scalar finite window, valid for either center sign.
+private theorem centerHeight_window
+    (n : ℕ) (hn : 0 < n) (h d : ℝ) (hh : 0 < h)
+    (hd : 2 * |d| ≤ (n : ℝ) / h ^ 2) :
+    h / 2 ≤ centerHeight n h d ∧ centerHeight n h d ≤ 2 * h
+
+-- H04 PUBLIC. Exact weak-energy endpoints and the same literal E throughout.
+theorem center_event_inclusions
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε)
+    (ht : 2 * ε ≤ (n : ℝ) / h ^ 2) :
+    ((@Shao.closedStrip n (centerHeight n h (-ε))) ∩
+      {a : Shao.Path n | (n : ℝ) - ε * h ^ 2 ≤ Shao.energy a}) ⊆
+        randomDenominatorEvent n h ∧
+      (randomDenominatorEvent n h ∩
+        {a : Shao.Path n | Shao.energy a ≤ (n : ℝ) + ε * h ^ 2}) ⊆
+          (@Shao.closedStrip n (centerHeight n h ε))
+
+-- H05 PUBLIC. Strict deviation; no zero-energy path is deleted.
+theorem center_lower_probability_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε)
+    (ht : 2 * ε ≤ (n : ℝ) / h ^ 2) :
+    (Measure.pi (fun _ : Fin n => ν)).real
+        (@Shao.closedStrip n (centerHeight n h (-ε))) -
+      (Measure.pi (fun _ : Fin n => ν)).real
+        ((@Shao.closedStrip n (centerHeight n h (-ε))) ∩
+          {a : Shao.Path n | ε * h ^ 2 < |Shao.energy a - (n : ℝ)|}) ≤
+      (Measure.pi (fun _ : Fin n => ν)).real (randomDenominatorEvent n h)
+
+-- H06 PUBLIC. Center + entire middle + entire FAR, including Q=2n in FAR.
+theorem randomDenominator_probability_upper_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε)
+    (ht : 2 * ε ≤ (n : ℝ) / h ^ 2) :
+    (Measure.pi (fun _ : Fin n => ν)).real (randomDenominatorEvent n h) ≤
+      (Measure.pi (fun _ : Fin n => ν)).real
+          (@Shao.closedStrip n (centerHeight n h ε)) +
+        (Measure.pi (fun _ : Fin n => ν)).real (middleEvent n h ε) +
+        (Measure.pi (fun _ : Fin n => ν)).real
+          (randomDenominatorEvent n h ∩
+            {a : Shao.Path n | 2 * (n : ℝ) ≤ Shao.energy a})
+
+-- H07 PRIVATE. Witness ceil(w)-1; integer w is sent to the preceding layer.
+private theorem ceil_layer_index (w T : ℝ) (hw : 1 < w) (hwT : w < T) :
+    ∃ j ∈ Finset.Icc 1 (Nat.ceil T), (j : ℝ) < w ∧ w ≤ (j : ℝ) + 1
+
+-- H08 PUBLIC. WHOLE middle event, finite at every actual n,h,epsilon.
+theorem middle_event_finite_cover
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε) :
+    middleEvent n h ε ⊆ ⋃ j ∈ middleIndices n h ε, middleLayer n h ε j
+
+-- H09 PUBLIC. One window for every enlarged finite index, no j*epsilon<t guard.
+theorem middleHeight_geometry
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε)
+    (ht : ε ≤ (n : ℝ) / h ^ 2) (j : ℕ) (hj : j ∈ middleIndices n h ε) :
+    h ≤ middleHeight n h ε j ∧ middleHeight n h ε j ≤ 2 * h ∧
+      middleHeight n h ε j ^ 2 =
+        h ^ 2 * (1 + ((j : ℝ) + 1) * ε / ((n : ℝ) / h ^ 2)) ∧
+      (n : ℝ) / h ^ 2 - (n : ℝ) / middleHeight n h ε j ^ 2 ≤
+        ((j : ℝ) + 1) * ε
+
+-- H10 PUBLIC. Finite actual random-wall containment and original h² threshold.
+theorem middleLayer_subset_deviation
+    (n : ℕ) (hn : 0 < n) (h ε : ℝ) (hh : 0 < h) (hε : 0 < ε)
+    (j : ℕ) (hj : 1 ≤ j) :
+    middleLayer n h ε j ⊆
+      (@Shao.closedStrip n (middleHeight n h ε j)) ∩
+        {a : Shao.Path n |
+          (j : ℝ) * ε * h ^ 2 < |Shao.energy a - (n : ℝ)|}
+
+-- H11 PUBLIC. No desired survival/energy limit or survival positivity premise.
+theorem middleLayer_markov_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h ε s : ℝ)
+    (hh : 0 < h) (hε : 0 < ε) (hs : 0 < s) (j : ℕ) (hj : 1 ≤ j) :
+    0 < (Real.exp (s * ((j : ℝ) * ε)) +
+      Real.exp (-(s * ((j : ℝ) * ε)))) / 2 - 1 ∧
+      ((Real.exp (s * ((j : ℝ) * ε)) +
+        Real.exp (-(s * ((j : ℝ) * ε)))) / 2 - 1) *
+          (Measure.pi (fun _ : Fin n => ν)).real (middleLayer n h ε j) ≤
+        energyCoshExcessIntegral ν n (middleHeight n h ε j) h s
+
+-- H12 PRIVATE. Literal positive exp-pair denominator and the complete q^j bound.
+private theorem exp_pair_geometric_majorant
+    (s ε : ℝ) (hs : lambda < s) (hε : 0 < ε) (j : ℕ) (hj : 1 ≤ j) :
+    0 < (Real.exp (s * ((j : ℝ) * ε)) +
+      Real.exp (-(s * ((j : ℝ) * ε)))) / 2 - 1 ∧
+      Real.exp (lambda * (((j : ℝ) + 1) * ε)) /
+          ((Real.exp (s * ((j : ℝ) * ε)) +
+            Real.exp (-(s * ((j : ℝ) * ε)))) / 2 - 1) ≤
+        (2 * Real.exp (lambda * ε) / (1 - Real.exp (-s * ε)) ^ 2) *
+          Real.exp (-(s - lambda) * ε) ^ j
+
+-- H13 PRIVATE. Finite arbitrary positive-index set; no infinite series API.
+private theorem finite_positive_geometric_sum_bound
+    (q : ℝ) (hq : 0 ≤ q) (hq1 : q < 1)
+    (S : Finset ℕ) (hS : ∀ j ∈ S, 1 ≤ j) :
+    (∑ j ∈ S, q ^ j) ≤ q / (1 - q)
+
+-- H14 PUBLIC. Strict positivity pays all finite constant divisions.
+theorem middleSumConstant_pos (s ε : ℝ) (hs : lambda < s) (hε : 0 < ε) :
+    0 < middleSumConstant s ε
+
+-- H15 PUBLIC. Finite local actual controls only; the root theorem supplies them.
+theorem middle_finite_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 0 < n) (h ε s η : ℝ)
+    (hh : 0 < h) (hε : 0 < ε) (hs : lambda < s) (hη : 0 ≤ η)
+    (ht : ε ≤ (n : ℝ) / h ^ 2)
+    (hG : 0 < (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n h))
+    (hcontrols : ∀ j ∈ middleIndices n h ε,
+      0 < (Measure.pi (fun _ : Fin n => ν)).real
+          (@Shao.closedStrip n (middleHeight n h ε j)) ∧
+        energyCoshExcessIntegral ν n (middleHeight n h ε j) h s /
+            (Measure.pi (fun _ : Fin n => ν)).real
+              (@Shao.closedStrip n (middleHeight n h ε j)) ≤ η ∧
+        (Measure.pi (fun _ : Fin n => ν)).real
+              (@Shao.closedStrip n (middleHeight n h ε j)) /
+            (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n h) ≤
+          4 * Real.exp (lambda * (((j : ℝ) + 1) * ε))) :
+    (Measure.pi (fun _ : Fin n => ν)).real (middleEvent n h ε) /
+        (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n h) ≤
+      η * middleSumConstant s ε
+
+-- H16 PRIVATE. Eventual finite signs derived, never added all-index assumptions.
+private theorem eventual_finite_conditions
+    (n : ℕ → ℕ) (h : ℕ → ℝ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ᶠ k in atTop, 0 < n k ∧ 0 < h k ∧ 2 * ε ≤ (n k : ℝ) / h k ^ 2
+
+-- H17 PRIVATE. Calls actual public175 K controls, not its private K adapter.
+private theorem closedStrip_relative_main_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)) / farMainTerm (n k) (h k))
+      atTop (𝓝 (1 : ℝ))
+
+-- H18 PRIVATE. Exact signed exponent difference, not merely a height-ratio limit.
+private theorem centerHeight_tail_geometry
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (d : ℝ) :
+    (∀ᶠ k in atTop, h k / 2 ≤ centerHeight (n k) (h k) d ∧
+      centerHeight (n k) (h k) d ≤ 2 * h k) ∧
+      Tendsto (fun k =>
+        (n k : ℝ) / centerHeight (n k) (h k) d ^ 2 -
+          (n k : ℝ) / h k ^ 2) atTop (𝓝 (-d))
+
+-- H19 PUBLIC. Actual center probability ratio under original law/scales alone.
+theorem center_probability_ratio_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ)))
+    (d : ℝ) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (centerHeight (n k) (h k) d)) /
+        (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)))
+      atTop (𝓝 (Real.exp (lambda * d)))
+
+-- H20 PRIVATE. Original h² deviation and actual lower center, relative to G_h.
+private theorem center_deviation_relative_tendsto_zero
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ)))
+    (ε : ℝ) (hε : 0 < ε) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          ((@Shao.closedStrip (n k) (centerHeight (n k) (h k) (-ε))) ∩
+            {a : Shao.Path (n k) |
+              ε * h k ^ 2 < |Shao.energy a - (n k : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)))
+      atTop (𝓝 (0 : ℝ))
+
+-- H21 PUBLIC. ENTIRE growing finite middle collection, no rate/supremum premise.
+theorem middle_relative_tendsto_zero
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ)))
+    (ε : ℝ) (hε : 0 < ε) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real (middleEvent (n k) (h k) ε) /
+        (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)))
+      atTop (𝓝 (0 : ℝ))
+
+-- H22 PUBLIC. Reuses qualified entire FAR / actual literal main, then actual K.
+theorem far_relative_closedStrip_tendsto_zero
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (randomDenominatorEvent (n k) (h k) ∩
+            {a : Shao.Path (n k) | 2 * (n k : ℝ) ≤ Shao.energy a}) /
+        (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)))
+      atTop (𝓝 (0 : ℝ))
+
+-- H23 PUBLIC ROOT TARGET. Actual random denominator, original law/scales only.
+theorem randomDenominator_relative_closedStrip_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (randomDenominatorEvent (n k) (h k)) /
+        (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (@Shao.closedStrip (n k) (h k)))
+      atTop (𝓝 (1 : ℝ))
+
+-- H24 PUBLIC. Same actual E divided by the exact qualified positive literal main.
+theorem randomDenominator_relative_main_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun k => (n k : ℝ) / h k ^ 2) atTop atTop)
+    (hshort : Tendsto (fun k => (n k : ℝ) / h k ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun k =>
+      (Measure.pi (fun _ : Fin (n k) => ν)).real
+          (randomDenominatorEvent (n k) (h k)) / farMainTerm (n k) (h k))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RandomDenominatorAsymptotic
+end
