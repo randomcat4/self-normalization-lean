@@ -146,6 +146,9 @@ import Shao.OQ4.LaplaceTail
 import Shao.OQ4.OccupationPayment
 import Shao.OQ4.OvershootMoment
 import Shao.OQ4.OvershootSum
+import Shao.OQ4.PolygonalThirdMomentB3
+import Shao.OQ4.RademacherAdjacentLog
+import Shao.OQ4.RademacherAdjacentLogFinite
 import Shao.OQ4.RademacherAllModes
 import Shao.OQ4.RademacherCosine
 import Shao.OQ4.RademacherCriticalPhase
@@ -154,6 +157,7 @@ import Shao.OQ4.RademacherFiniteBasis
 import Shao.OQ4.RademacherFiniteS1
 import Shao.OQ4.RademacherIteration
 import Shao.OQ4.RademacherLatticeShift
+import Shao.OQ4.RademacherRealThresholdBridge
 import Shao.OQ4.RademacherS2Assembly
 import Shao.OQ4.RademacherS3Assembly
 import Shao.OQ4.RademacherS4Assembly
@@ -167,6 +171,7 @@ import Shao.OQ4.ReflectedSurvival
 import Shao.OQ4.SpitzerKernelBounds
 import Shao.OQ4.TruncatedEnergy
 import Shao.OQ4.VarianceScaling
+import Shao.OQ4.WeightedThirdMomentB2
 import Shao.OQ5.P35.BackgroundMoments
 import Shao.OQ5.P35.BinomialBound
 import Shao.OQ5.P35.CategoryTails
@@ -273,6 +278,7 @@ import Shao.OQ5.P53.SparseMass
 import Shao.OQ5.P53.SparseMassLimits
 import Shao.OQ5.P53.SparsePopulation
 import Shao.OQ5.P53.SparsePopulationKernel
+import Shao.OQ5.P53.SparsePopulationOperator
 import Shao.OQ5.P53.SparseProjectionLaw
 import Shao.OQ5.P53.SparseScales
 import Shao.OQ5.P53.SparseSelection
@@ -309,6 +315,9 @@ import Shao.Probability.QuadraticFullNoiseConeDerivatives
 import Shao.Probability.QuadraticFullNoiseDerivatives
 import Shao.Probability.QuadraticFullNoiseGlobalOddEven
 import Shao.Probability.QuadraticFullNoiseHighFrequency
+import Shao.Probability.QuadraticFullNoiseLowDerivatives
+import Shao.Probability.QuadraticFullNoiseMarkedOutside
+import Shao.Probability.QuadraticFullNoiseMarkedRegionFour
 import Shao.Probability.QuadraticFullNoiseOutsideWeights
 import Shao.Probability.QuadraticFullNoiseRegionFour
 import Shao.Probability.RademacherGrid
@@ -323,9 +332,11 @@ import Shao.Probability.SourceFourierTestKernel
 import Shao.Probability.SourceFullNoiseBridge
 import Shao.Probability.SourceFutureNoiseFourier
 import Shao.Probability.SourceFutureNoiseInversion
+import Shao.Probability.SourceFutureNoiseOddEven
 import Shao.Probability.SourceKernelAmplitudeFamily
 import Shao.Probability.SourceKernelMarkedOutside
 import Shao.Probability.SourceMarkFourierNorms
+import Shao.Probability.SourceOddEvenWholeLineIBP
 import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceTruncationBridge
