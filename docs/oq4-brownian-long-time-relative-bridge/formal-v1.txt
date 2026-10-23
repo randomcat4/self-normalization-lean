@@ -1,0 +1,125 @@
+-- PROPOSAL ONLY. Exactly 10 heads: 9 private theorems, 1 public theorem.
+-- Zero new def/abbrev/instance values; no theorem proof bodies.
+-- Not a parent freeze, Lean implementation, or mechanical qualification.
+-- Exact intended imports, including the actual148 module after qualification.
+import Shao.OQ4.KilledBlockBounds
+import Shao.OQ4.BrownianFixedTimeNormalization
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Order.Filter.AtTopBot.Tendsto
+
+noncomputable section
+namespace Shao.OQ4.BrownianLongTimeRelativeBridge
+open MeasureTheory Filter
+open scoped Topology
+
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧ Integrable (fun x : ℝ => x ^ 2) ν
+
+private theorem third_moment_nonneg (ν : Measure ℝ) :
+    0 ≤ ∫ x : ℝ, |x| ^ 3 ∂ν
+
+private theorem bridge_constants_nonnegative
+    (M Cq Cs : ℝ) (hM : 0 ≤ M) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs) :
+    0 ≤ killedResidualConstant M Cq Cs ∧
+      0 < 2 * (1 + (2 * Cs) * Real.exp (Real.pi ^ 2)) * Real.exp (Real.pi ^ 2)
+
+private theorem large_parameters_eventually
+    (M : ℝ) (hSeq : ℕ → ℝ) (hinfty : Tendsto hSeq atTop atTop) :
+    ∀ᶠ j in atTop, 3 ≤ hSeq j ∧ Real.pi * (1 + M) ≤ hSeq j
+
+private theorem floor_le_horizon_eventually
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop) :
+    ∀ᶠ j in atTop, ⌊hSeq j ^ 2⌋₊ ≤ NSeq j
+
+private theorem absorption_coefficient_tendsto_zero
+    (M Cq Cs : ℝ) (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => ((2 * Cs) * Real.exp (Real.pi ^ 2)) *
+        (killedResidualConstant M Cq Cs * Real.exp (Real.pi ^ 2) / hSeq j ^ 3) *
+          (NSeq j : ℝ) +
+        (2 * Cs * M) * Real.exp (Real.pi ^ 2) / hSeq j)
+      atTop (𝓝 (0 : ℝ))
+
+-- The actual finite theorem is called with M equal to the actual third moment.
+-- The all-time primitive probabilities remain explicit inputs.
+private theorem finite_absorption_eventually
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (Cq Cs : ℝ) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs)
+    (hAC : iidIntervalConcentration ν (∫ x : ℝ, |x| ^ 3 ∂ν) Cq)
+    (hS : iidOneSidedSurvival ν (∫ x : ℝ, |x| ^ 3 ∂ν) Cs)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    let R : ℝ := Real.exp (Real.pi ^ 2)
+    let H : ℝ := 2 * (1 + (2 * Cs) * R) * R
+    ∀ᶠ j in atTop,
+      (∀ k : ℕ, k ≤ NSeq j →
+        0 ≤ normalizedKernelMass ν (hSeq j) k 0 ∧
+          normalizedKernelMass ν (hSeq j) k 0 ≤ H) ∧
+      (∀ k : ℕ, ⌊hSeq j ^ 2⌋₊ ≤ k → k ≤ NSeq j →
+        |normalizedKernelCosine ν (hSeq j) k 0 -
+          normalizedKernelCosine ν (hSeq j) ⌊hSeq j ^ 2⌋₊ 0| ≤
+            (killedResidualConstant (∫ x : ℝ, |x| ^ 3 ∂ν) Cq Cs * R * H) *
+              ((NSeq j : ℝ) / hSeq j ^ 3))
+
+-- Definitional rewriting and composition of the actual148 B1 producer.
+-- No supplied Brownian data, desired normalization, or limit premise.
+private theorem fixed_time_normalization_along
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (hSeq : ℕ → ℝ) (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => normalizedKernelCosine ν (hSeq j) ⌊hSeq j ^ 2⌋₊ 0)
+      atTop (𝓝 (1 : ℝ))
+
+private theorem drift_error_tendsto_zero
+    (ν : Measure ℝ) (Cq Cs : ℝ) (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    let R : ℝ := Real.exp (Real.pi ^ 2)
+    let H : ℝ := 2 * (1 + (2 * Cs) * R) * R
+    Tendsto (fun j =>
+      (killedResidualConstant (∫ x : ℝ, |x| ^ 3 ∂ν) Cq Cs * R * H) *
+        ((NSeq j : ℝ) / hSeq j ^ 3)) atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC fixed-law actual D8 bridge, explicitly conditional on actual S/AC.
+-- H is positive and independent of every future terminal Brownian block time T.
+-- This is not a theorem closing S/AC, K, Kv or general OQ4.
+theorem long_time_relative_bridge
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (Cq Cs : ℝ) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs)
+    (hAC : iidIntervalConcentration ν (∫ x : ℝ, |x| ^ 3 ∂ν) Cq)
+    (hS : iidOneSidedSurvival ν (∫ x : ℝ, |x| ^ 3 ∂ν) Cs)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    let R : ℝ := Real.exp (Real.pi ^ 2)
+    let H : ℝ := 2 * (1 + (2 * Cs) * R) * R
+    0 < H ∧
+      (∀ᶠ j in atTop, ∀ k : ℕ, k ≤ NSeq j →
+        0 ≤ normalizedKernelMass ν (hSeq j) k 0 ∧
+          normalizedKernelMass ν (hSeq j) k 0 ≤ H) ∧
+      (∀ ε : ℝ, 0 < ε → ∀ᶠ j in atTop,
+        ∀ k : ℕ, ⌊hSeq j ^ 2⌋₊ ≤ k → k ≤ NSeq j →
+          |normalizedKernelCosine ν (hSeq j) k 0 - 1| < ε)
+
+end Shao.OQ4.BrownianLongTimeRelativeBridge
+end

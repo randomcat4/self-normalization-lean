@@ -1,0 +1,154 @@
+DECL Shao.OQ3.open_domain_physical_window_uniform_gaussian_cells
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                  have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                  have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                  have D := Shao.OQ3.parabolaCovariance (nu theta);
+                  have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                  have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                  have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                  have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                  ∃ L e,
+                    ↑L = row0.prod row1 ∧
+                      ↑e = means ∧
+                        theta ∈ e.source ∧
+                          e.source ⊆ Omega ∧
+                            have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                            have J := fun w => (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - K (↑e.symm w);
+                            have v := (1, 2 * a0 / level ^ 2);
+                            have Lambda1 := 2 * theta.2 / level ^ 2 + (L.symm v).1 + 2 * a0 / level ^ 2 * (L.symm v).2;
+                            0 < -theta.2 ∧
+                              (0 < Lambda1 →
+                                ∃ rho,
+                                  0 < rho ∧
+                                    have U := {w | |w.1 - a0| ≤ rho ∧ |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho};
+                                    have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+                                    let V :=
+                                      {w |
+                                        |w.1 - a0| ≤ rho ∧
+                                          0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+                                    let Theta := ↑e.symm '' V;
+                                    (have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                                      have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+                                      have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+                                      have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+                                      have A := fun p =>
+                                        ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                                          ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+                                      ∃ lo hi,
+                                        0 < lo ∧
+                                          0 < hi ∧
+                                            (∀ p ∈ Theta,
+                                                ∀ (xi eta : ℝ),
+                                                  lo * (xi ^ 2 + eta ^ 2) ≤
+                                                      xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ∧
+                                                    xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ≤
+                                                      hi * (xi ^ 2 + eta ^ 2)) ∧
+                                              ∃ E,
+                                                (∀ (p : ↑Theta),
+                                                    A ↑p * D ↑p * A ↑p = 1 ∧
+                                                      (∀ (w : ℝ × ℝ),
+                                                          (E p) w =
+                                                            (A (↑p) 0 0 * w.1 + A (↑p) 0 1 * w.2,
+                                                              A (↑p) 1 0 * w.1 + A (↑p) 1 1 * w.2)) ∧
+                                                        ‖↑(E p)‖ ≤ 2 * (1 / √lo) ∧ ‖↑(E p).symm‖ ≤ 4 * hi * (1 / √lo)) ∧
+                                                  ∃ M,
+                                                    0 < M ∧
+                                                      (∀ (p : ↑Theta), ‖↑p‖ ≤ M) ∧
+                                                        have U := 1 / √lo;
+                                                        have R0 := 2 * U;
+                                                        have kappa0 := 2 * M * (4 * hi * U);
+                                                        have G0 := R0 * (1 + 2 * (|a0| + rho) / level ^ 2);
+                                                        have Cstar :=
+                                                          Real.exp (kappa0 * R0) *
+                                                            (8 * kappa0 * (R0 + 1) ^ 2 + 768 * (G0 + 1));
+                                                        0 < Cstar ∧
+                                                          ∀ (p : ↑Theta) (n : ℕ),
+                                                            1 ≤ n →
+                                                              ∀ (y : ℝ × ℝ) (aL aR qL qR : ℝ),
+                                                                y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR →
+                                                                  aR - aL ≤ 1 / ↑n →
+                                                                    qR - qL ≤ 1 / ↑n →
+                                                                      have h := 1 / ↑n ^ 3;
+                                                                      have cellA :=
+                                                                        Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+                                                                          {w |
+                                                                            |w.1 - a0| ≤ rho ∧
+                                                                              0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧
+                                                                                w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+                                                                      have stdCell :=
+                                                                        (fun w => √↑n • (E p) (w - y)) '' cellA;
+                                                                      have g := fun v =>
+                                                                        Real.exp
+                                                                          (-√↑n *
+                                                                            ((↑p).1 * ((E p).symm v).1 +
+                                                                              (↑p).2 * ((E p).symm v).2));
+                                                                      have Φ :=
+                                                                        (ProbabilityTheory.gaussianReal 0 1).prod
+                                                                          (ProbabilityTheory.gaussianReal 0 1);
+                                                                      MeasureTheory.Integrable
+                                                                          (Shao.OQ3.openBallOscillation
+                                                                            (stdCell.indicator g) h)
+                                                                          Φ ∧
+                                                                        ∫ (z : ℝ × ℝ),
+                                                                            Shao.OQ3.openBallOscillation
+                                                                              (stdCell.indicator g) h z ∂Φ ≤
+                                                                          Cstar / (↑n ^ 3 * √↑n)) ∧
+                                      IsCompact Theta ∧
+                                        theta ∈ Theta ∧
+                                          Theta ⊆ Omega ∧
+                                            (∀ p ∈ Theta,
+                                                p ∈ e.source ∧
+                                                  means p ∈ V ∧ 0 < (Shao.OQ3.parabolaCovariance (nu p)).det) ∧
+                                              (∀ w ∈ V, ↑e.symm w ∈ Theta) ∧
+                                                V = U ∩ Tail ∧
+                                                  IsCompact V ∧
+                                                    (∀ w ∈ V,
+                                                        0 < w.1 ∧
+                                                          0 < w.2 ∧
+                                                            w ∈ e.target ∧
+                                                              ↑e.symm w ∈ e.source ∧
+                                                                ↑e.symm w ∈ Omega ∧
+                                                                  means (↑e.symm w) = w ∧
+                                                                    0 <
+                                                                        (Shao.OQ3.parabolaCovariance
+                                                                            (nu (↑e.symm w))).det ∧
+                                                                      Shao.Probability.bivariateLegendreRate mu
+                                                                          (fun x => (x, x ^ 2)) w =
+                                                                        ↑(J w)) ∧
+                                                      ∀ (aL aR qL qR : ℝ),
+                                                        have A := Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩ V;
+                                                        have Q := Set.Icc aL aR ×ˢ Set.Icc qL qR;
+                                                        A.Nonempty →
+                                                          ∃ y ∈ closure A,
+                                                            y ∈ Q ∩ V ∧
+                                                              0 < y.1 ∧
+                                                                0 < y.2 ∧
+                                                                  y ∈ e.target ∧
+                                                                    ↑e.symm y ∈ e.source ∧
+                                                                      ↑e.symm y ∈ Omega ∧
+                                                                        means (↑e.symm y) = y ∧
+                                                                          0 <
+                                                                              (Shao.OQ3.parabolaCovariance
+                                                                                  (nu (↑e.symm y))).det ∧
+                                                                            Shao.Probability.bivariateLegendreRate mu
+                                                                                  (fun x => (x, x ^ 2)) y =
+                                                                                ↑(J y) ∧
+                                                                              ∀ w ∈ closure A,
+                                                                                Shao.Probability.bivariateLegendreRate
+                                                                                      mu (fun x => (x, x ^ 2)) y ≤
+                                                                                    Shao.Probability.bivariateLegendreRate
+                                                                                      mu (fun x => (x, x ^ 2)) w ∧
+                                                                                  J y ≤ J w)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
