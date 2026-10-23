@@ -1,0 +1,23 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_smooth_and_strict
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+  have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+  have Z := fun p => ∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu;
+  have K := fun p => Real.log (Z p);
+  have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+  ContDiffOn ℝ (↑⊤) Z Omega ∧
+    ContDiffOn ℝ (↑⊤) K Omega ∧
+      ContDiffOn ℝ (↑⊤) means Omega ∧
+        ∀ theta ∈ Omega,
+          have D := Shao.OQ3.parabolaCovariance (nu theta);
+          have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+          have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+          have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+          have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+          HasStrictFDerivAt means (row0.prod row1) theta
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_weighted_moment_contDiffOn
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ContDiffOn ℝ (↑⊤) (fun p => ∫ (x : ℝ), x ^ k * Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    (interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)))
+AXIOMS [propext, Classical.choice, Quot.sound]

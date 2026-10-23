@@ -1,0 +1,20 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_local_mean_inverse
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ≠ 0 →
+      have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+      have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+      have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+      have D := Shao.OQ3.parabolaCovariance (nu theta);
+      have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+      have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+      have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+      have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+      ∃ L e,
+        ↑L = row0.prod row1 ∧
+          ↑e = means ∧
+            theta ∈ e.source ∧
+              means theta ∈ e.target ∧
+                e.source ⊆ Omega ∧
+                  ContDiffAt ℝ (↑⊤) (↑e.symm) (means theta) ∧ HasStrictFDerivAt (↑e.symm) (↑L.symm) (means theta)
+AXIOMS [propext, Classical.choice, Quot.sound]

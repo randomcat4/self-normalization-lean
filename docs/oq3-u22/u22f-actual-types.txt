@@ -1,0 +1,18 @@
+DECL Shao.OQ3.compact_open_domain_uniform_tilted_moments
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+      (∀ theta ∈ Theta, MeasureTheory.IsProbabilityMeasure (nu theta)) ∧
+        ∀ (k : ℕ),
+          ∃ C,
+            0 < C ∧
+              ∀ theta ∈ Theta,
+                MeasureTheory.Integrable (fun x => |x| ^ k) (nu theta) ∧
+                  0 ≤ ∫ (x : ℝ), |x| ^ k ∂nu theta ∧ ∫ (x : ℝ), |x| ^ k ∂nu theta ≤ C
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_tilted_moment_contDiffOn
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ContDiffOn ℝ (↑⊤) (fun p => ∫ (x : ℝ), x ^ k ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)
+    (interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)))
+AXIOMS [propext, Classical.choice, Quot.sound]

@@ -1,0 +1,49 @@
+DECL _private.Shao.OQ3.QuadraticTiltCumulants.0.Shao.OQ3.quadratic_tilt_projection_interior
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (theta d : ℝ × ℝ),
+  theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+    0 ∈
+      interior
+        (ProbabilityTheory.integrableExpSet (fun x => d.1 * x + d.2 * x ^ 2)
+          (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_quadratic_tilt_directional_cumulants
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+    have means := ![∫ (x : ℝ), x ∂nu, ∫ (x : ℝ), x ^ 2 ∂nu];
+    have D := Shao.OQ3.parabolaCovariance nu;
+    MeasureTheory.IsProbabilityMeasure nu ∧
+      MeasureTheory.MemLp (fun x => x) 2 nu ∧
+        MeasureTheory.MemLp (fun x => x ^ 2) 2 nu ∧
+          ∀ (d : ℝ × ℝ),
+            have F := fun x => d.1 * x + d.2 * x ^ 2;
+            have f := fun t =>
+              Real.log (∫ (x : ℝ), Real.exp ((theta.1 + t * d.1) * x + (theta.2 + t * d.2) * x ^ 2) ∂mu);
+            0 ∈ interior (ProbabilityTheory.integrableExpSet F nu) ∧
+              MeasureTheory.MemLp F 2 nu ∧
+                (∀ (k : ℕ), MeasureTheory.Integrable (fun x => F x ^ k) nu) ∧
+                  HasDerivAt f (d.1 * means 0 + d.2 * means 1) 0 ∧
+                    HasDerivAt (deriv f) (d.1 ^ 2 * D 0 0 + 2 * d.1 * d.2 * D 0 1 + d.2 ^ 2 * D 1 1) 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.QuadraticTiltCumulants.0.Shao.OQ3.quadratic_tilt_variance_eq
+TYPE ∀ (nu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure nu],
+  MeasureTheory.MemLp (fun x => x) 2 nu →
+    MeasureTheory.MemLp (fun x => x ^ 2) 2 nu →
+      ∀ (a b : ℝ),
+        ProbabilityTheory.variance (fun x => a * x + b * x ^ 2) nu =
+          a ^ 2 * Shao.OQ3.parabolaCovariance nu 0 0 + 2 * a * b * Shao.OQ3.parabolaCovariance nu 0 1 +
+            b ^ 2 * Shao.OQ3.parabolaCovariance nu 1 1
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.quadratic_tilt_mgf_identity
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (theta d : ℝ × ℝ),
+  (theta ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+    have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+    have F := fun x => d.1 * x + d.2 * x ^ 2;
+    have Z := fun p => ∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu;
+    MeasureTheory.IsProbabilityMeasure nu ∧
+      0 < Z theta ∧
+        ∀ (t : ℝ),
+          (MeasureTheory.Integrable (fun x => Real.exp (t * F x)) nu ↔
+              (theta.1 + t * d.1, theta.2 + t * d.2) ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) ∧
+            ProbabilityTheory.mgf F nu t = Z (theta.1 + t * d.1, theta.2 + t * d.2) / Z theta
+AXIOMS [propext, Classical.choice, Quot.sound]
