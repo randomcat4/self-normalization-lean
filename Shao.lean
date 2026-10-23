@@ -254,6 +254,7 @@ import Shao.Probability.BrownianFirstTerm
 import Shao.Probability.BrownianGridBridge
 import Shao.Probability.BrownianSpectralEnvelope
 import Shao.Probability.BrownianSup
+import Shao.Probability.CenteredQuadraticCharacteristic
 import Shao.Probability.ClockControl
 import Shao.Probability.ConditionalIID
 import Shao.Probability.ExchangeableEvents
@@ -268,9 +269,11 @@ import Shao.Probability.MeasurablePath
 import Shao.Probability.QuadraticCharacteristic
 import Shao.Probability.QuadraticCharacteristicOddPower
 import Shao.Probability.QuadraticCharacteristicPower
+import Shao.Probability.QuadraticChordConeDerivatives
 import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
 import Shao.Probability.QuadraticFullNoise
+import Shao.Probability.QuadraticFullNoiseConeDerivatives
 import Shao.Probability.QuadraticFullNoiseDerivatives
 import Shao.Probability.RademacherGrid
 import Shao.Probability.RetainedComparison
@@ -281,6 +284,7 @@ import Shao.Probability.RetentionEvent
 import Shao.Probability.SourceClockBridge
 import Shao.Probability.SourceFourierScale
 import Shao.Probability.SourceFullNoiseBridge
+import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.TruncationIntegrals
