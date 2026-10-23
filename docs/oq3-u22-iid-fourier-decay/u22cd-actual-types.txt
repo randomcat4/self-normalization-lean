@@ -1,0 +1,49 @@
+DECL Shao.OQ3.normalized_iid_pair_characteristic_factor
+TYPE ∀ (law : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure law] (n : ℕ),
+  1 ≤ n →
+    ∀ (xi eta : ℝ),
+      have Q := MeasureTheory.Measure.pi fun x => law;
+      have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+      have rho := MeasureTheory.Measure.map S Q;
+      have Phi := fun u v => ∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law;
+      ∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho = Phi (xi / √↑n) (eta / √↑n) ^ n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.iid_parabola_standardized_characteristic_factor
+TYPE ∀ (nu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure nu] (n : ℕ),
+  1 ≤ n →
+    ∀ (y : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (xi eta : ℝ),
+      have Y := fun x => E ((x, x ^ 2) - y);
+      have Q := MeasureTheory.Measure.pi fun x => nu;
+      have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+      have T := fun z => √↑n • E (M z - y);
+      have rho := MeasureTheory.Measure.map T Q;
+      have Phi := fun u v => ∫ (x : ℝ), Complex.exp (↑(u * (Y x).1 + v * (Y x).2) * Complex.I) ∂nu;
+      ∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho = Phi (xi / √↑n) (eta / √↑n) ^ n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.normalized_iid_pair_characteristic_factor._simp_1_1
+TYPE ∀ {ι : Type u_1} {R : Type u_4} [inst : NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R) (a : R),
+  ∑ i ∈ s, a * f i = a * ∑ i ∈ s, f i
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.normalized_iid_pair_weak_cramer_exponential_bound
+TYPE ∀ (law : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure law] (n : ℕ),
+  1 ≤ n →
+    ∀ (beta c R : ℝ),
+      0 ≤ beta →
+        0 < c →
+          0 ≤ R →
+            (∀ (u v : ℝ),
+                R < √(u ^ 2 + v ^ 2) →
+                  ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                    1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+              ∀ (xi eta : ℝ),
+                R < √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) →
+                  have Q := MeasureTheory.Measure.pi fun x => law;
+                  have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                  have rho := MeasureTheory.Measure.map S Q;
+                  ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ ≤
+                    Real.exp (-↑n * c * (√((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2)).rpow (-beta))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

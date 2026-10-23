@@ -1,0 +1,273 @@
+-- PROPOSAL ONLY. Exhaustive proposed heads and literal transparent values.
+-- No theorem proof bodies, implementation, elaboration or acceptance claim.
+-- The lane lead must read and freeze this file and proof.md before implementation.
+-- Unqualified producers 139/143/145 remain external acceptance dependencies.
+import Shao.OQ4.BrownianKilledCosineIdentity
+import Shao.OQ4.RademacherSpectralPairing
+import Shao.OQ4.RademacherScalarBounds
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Analysis.Normed.Group.FunctionSeries
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Algebra.Order.Floor.Ring
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.BrownianTerminalSpectral
+open MeasureTheory ProbabilityTheory Filter Set
+open RademacherFiniteBasis
+open RademacherScalarBounds (H lambda C_rho)
+open RademacherSpectralPairing (alpha beta lowerModes reflect)
+open scoped BigOperators NNReal Topology
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+-- Public literal values: the actual Brownian probability appears in the remainder.
+def spectralTerm (T : ℝ≥0) (u : ℝ) (ell : ℕ) : ℝ :=
+  (4 * (-1 : ℝ) ^ ell / (Real.pi * ((2 * ell + 1 : ℕ) : ℝ))) *
+    Real.exp (-lambda * ((2 * ell + 1 : ℕ) : ℝ) ^ 2 * (T : ℝ)) *
+    Real.cos (((2 * ell + 1 : ℕ) : ℝ) * Real.pi * u / 2)
+
+def spectralSeries (T : ℝ≥0) (u : ℝ) : ℝ :=
+  ∑' ell : ℕ, spectralTerm T u ell
+
+def remainderC : ℝ :=
+  4 / (3 * Real.pi * (1 - Real.exp (-2 * Real.pi ^ 2)))
+
+def terminalRemainder (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω)
+    (T : ℝ≥0) (u : ℝ) : ℝ :=
+  P.real (BrownianSurvivalBoundary.closedSurvival B T u) -
+    (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) * Real.cos (Real.pi * u / 2)
+
+-- Private literal values. Same scale/clamp as 145, whose private constants are inaccessible.
+private def stripRadius (m : ℕ) : ℝ≥0 :=
+  (m : ℝ≥0) / ((m : ℝ≥0) + 1)
+
+private def latticeStart (m : ℕ) (u : ℝ) : ℤ :=
+  max (-(m : ℤ)) (min (m : ℤ) ⌊H m * u⌋)
+
+private def rowLength (T : ℝ≥0) (m : ℕ) : ℕ :=
+  ⌈(T : ℝ) * H m ^ 2⌉₊
+
+private def rawStartTerm (m n : ℕ) (r : ℤ) (ell : ℕ) : ℝ :=
+  (1 / H m) * (-1 : ℝ) ^ ell * RademacherFiniteS1.cotangent (alpha m ell) *
+    Real.cos (beta m ell) ^ n * Real.cos (beta m ell * (r : ℝ))
+
+private def lowTerm (T : ℝ≥0) (u : ℝ) (j ell : ℕ) : ℝ :=
+  if ell ∈ lowerModes (j + 1) then
+    rawStartTerm (j + 1)
+      (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)))
+      (latticeStart (j + 1) u) ell
+  else 0
+
+private def majorant (T : ℝ≥0) (ell : ℕ) : ℝ :=
+  (4 / Real.pi) *
+    Real.exp (-lambda * (T : ℝ) / 2 * ((2 * ell + 1 : ℕ) : ℝ))
+
+-- Finite all-start algebra: even COEFFICIENTS, rather than zero-start vectors, vanish.
+private theorem survivalCoefficient_even_zero (m k : ℕ) :
+    RademacherAllModes.survivalCoefficient m (2 * k) = 0
+
+private theorem vector_odd_start (m ell : ℕ) (r : ℤ) :
+    vector m (2 * ell + 1) r =
+      (-1 : ℝ) ^ ell * Real.cos (beta m ell * (r : ℝ))
+
+private theorem killedMass_odd_start (m : ℕ) (hm : 1 ≤ m) (n : ℕ)
+    (r : ℤ) (hr : r ∈ states m) :
+    killedMass RademacherCosine.law (m : ℝ) n (r : ℝ) =
+      ∑ ell ∈ Finset.range (m + 1), rawStartTerm m n r ell
+
+private theorem finite_mass_split (m : ℕ) (hm : 1 ≤ m) (n : ℕ) (hn : 1 ≤ n)
+    (r : ℤ) (hr : r ∈ states m) :
+    killedMass RademacherCosine.law (m : ℝ) n (r : ℝ) =
+      (∑ ell ∈ lowerModes m, rawStartTerm m n r ell) +
+        ∑ ell ∈ lowerModes m, rawStartTerm m n r (reflect m ell)
+
+-- Actual finite-product attachment and the given-model Brownian limit.
+private theorem latticeStart_bounds (m : ℕ) (u : ℝ) :
+    -(m : ℤ) ≤ latticeStart m u ∧ latticeStart m u ≤ (m : ℤ)
+
+private theorem scaledStart_error (m : ℕ) (hm : 1 ≤ m)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    |(latticeStart m u : ℝ) / H m - u| ≤ 1 / H m
+
+private theorem scale_tendsto :
+    Tendsto (fun j : ℕ => H (j + 1)) atTop atTop
+
+private theorem radius_tendsto :
+    Tendsto (fun j : ℕ => stripRadius (j + 1)) atTop (𝓝 (1 : ℝ≥0))
+
+private theorem start_tendsto (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j : ℕ => (latticeStart (j + 1) u : ℝ) / H (j + 1))
+      atTop (𝓝 u)
+
+private theorem rowLength_horizon (T : ℝ≥0) (m : ℕ) :
+    (T : ℝ) * H m ^ 2 ≤ (rowLength T m : ℝ)
+
+private theorem rademacher_moments :
+    Integrable (fun x : ℝ => |x| ^ 3) RademacherCosine.law ∧
+      (∫ x : ℝ, x ∂RademacherCosine.law) = 0 ∧
+      (∫ x : ℝ, x ^ 2 ∂RademacherCosine.law) = 1 ∧
+      (∫ x : ℝ, |x| ^ 3 ∂RademacherCosine.law) = 1
+
+private theorem discrete_row_mass (T : ℝ≥0) (m : ℕ) (hm : 1 ≤ m) (r : ℤ)
+    (hr : r ∈ states m) :
+    (Measure.pi (fun _ : Fin (rowLength T m) => RademacherCosine.law)).real
+      (PolygonalKilledFunctionalLimit.discreteClosedSurvival (rowLength T m)
+        (PolygonalKilledFunctionalLimit.floorHorizon T (H m))
+        (H m) ((r : ℝ) / H m) (stripRadius m)) =
+      killedMass RademacherCosine.law (m : ℝ)
+        (PolygonalKilledFunctionalLimit.floorHorizon T (H m)) (r : ℝ)
+
+private theorem finite_mass_tendsto_brownian
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j : ℕ => killedMass RademacherCosine.law (j + 1 : ℝ)
+      (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)))
+      (latticeStart (j + 1) u : ℝ)) atTop
+      (𝓝 (P.real (BrownianSurvivalBoundary.closedSurvival B T u)))
+
+-- Scalar estimates are proved here from derivatives, not imported private facts.
+private theorem tan_lower (x : ℝ) (hx : 0 ≤ x) (hxpi : x < Real.pi / 2) :
+    x ≤ Real.tan x
+
+private theorem tan_upper_quarter (x : ℝ) (hx : x ∈ Icc (0 : ℝ) (Real.pi / 4)) :
+    Real.tan x ≤ 2 * x
+
+private theorem log_cos_bounds (x : ℝ) (hx : x ∈ Icc (0 : ℝ) (Real.pi / 4)) :
+    0 ≤ -Real.log (Real.cos x) - x ^ 2 / 2 ∧
+      -Real.log (Real.cos x) - x ^ 2 / 2 ≤ x ^ 4 / 3
+
+private theorem cotangent_bound (x : ℝ) (hx : 0 < x) (hxpi : x ≤ Real.pi / 4) :
+    0 ≤ RademacherFiniteS1.cotangent x ∧
+      RademacherFiniteS1.cotangent x ≤ 1 / x
+
+private theorem cosine_power_bound (x : ℝ) (hx : 0 ≤ x)
+    (hxpi : x < Real.pi / 2) (n : ℕ) :
+    |Real.cos x ^ n| ≤ Real.exp (-(n : ℝ) * x ^ 2 / 2)
+
+private theorem floor_time_error (T : ℝ≥0) (m : ℕ) (hm : 1 ≤ m) :
+    0 ≤ (T : ℝ) -
+      (PolygonalKilledFunctionalLimit.floorHorizon T (H m) : ℝ) / H m ^ 2 ∧
+    (T : ℝ) - (PolygonalKilledFunctionalLimit.floorHorizon T (H m) : ℝ) / H m ^ 2 <
+      1 / H m ^ 2
+
+private theorem floor_time_tendsto (T : ℝ≥0) :
+    Tendsto (fun j : ℕ =>
+      (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)) : ℝ) / H (j + 1) ^ 2)
+      atTop (𝓝 (T : ℝ))
+
+private theorem scaled_time_eventually (T : ℝ≥0) (hT : 0 < T) :
+    ∀ᶠ j : ℕ in atTop,
+      1 ≤ PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)) ∧
+      (T : ℝ) / 2 ≤
+        (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)) : ℝ) / H (j + 1) ^ 2
+
+private theorem coefficient_tendsto (ell : ℕ) :
+    Tendsto (fun j : ℕ => (1 / H (j + 1)) *
+      RademacherFiniteS1.cotangent (alpha (j + 1) ell)) atTop
+      (𝓝 (4 / (Real.pi * ((2 * ell + 1 : ℕ) : ℝ))))
+
+private theorem power_log_error (T : ℝ≥0) (m : ℕ) (hm : 1 ≤ m)
+    (ell : ℕ) (hbeta : beta m ell ≤ Real.pi / 4) :
+    |(PolygonalKilledFunctionalLimit.floorHorizon T (H m) : ℝ) *
+        Real.log (Real.cos (beta m ell)) +
+        lambda * ((2 * ell + 1 : ℕ) : ℝ) ^ 2 * (T : ℝ)| ≤
+      (lambda * ((2 * ell + 1 : ℕ) : ℝ) ^ 2 +
+        (T : ℝ) * C_rho * ((2 * ell + 1 : ℕ) : ℝ) ^ 4) / H m ^ 2
+
+private theorem mode_power_tendsto (T : ℝ≥0) (ell : ℕ) :
+    Tendsto (fun j : ℕ => Real.cos (beta (j + 1) ell) ^
+      PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1))) atTop
+      (𝓝 (Real.exp (-lambda * ((2 * ell + 1 : ℕ) : ℝ) ^ 2 * (T : ℝ))))
+
+private theorem majorant_summable (T : ℝ≥0) (hT : 0 < T) :
+    Summable (majorant T)
+
+private theorem spectralTerm_bound (T : ℝ≥0) (hT : 0 < T) (u : ℝ) (ell : ℕ) :
+    |spectralTerm T u ell| ≤ majorant T ell
+
+private theorem lowTerm_tendsto (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) (ell : ℕ) :
+    Tendsto (fun j : ℕ => lowTerm T u j ell) atTop (𝓝 (spectralTerm T u ell))
+
+private theorem lowTerm_eventually_bound (T : ℝ≥0) (hT : 0 < T) (u : ℝ) :
+    ∀ᶠ j : ℕ in atTop, ∀ ell : ℕ, |lowTerm T u j ell| ≤ majorant T ell
+
+private theorem low_sum_tendsto (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j : ℕ => ∑ ell ∈ lowerModes (j + 1),
+      rawStartTerm (j + 1)
+        (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)))
+        (latticeStart (j + 1) u) ell) atTop (𝓝 (spectralSeries T u))
+
+private theorem high_sum_abs_le (T : ℝ≥0) (hT : 0 < T)
+    (m : ℕ) (hm : 1 ≤ m) (n : ℕ)
+    (htime : (T : ℝ) / 2 ≤ (n : ℝ) / H m ^ 2) (r : ℤ) :
+    |∑ ell ∈ lowerModes m, rawStartTerm m n r (reflect m ell)| ≤
+      (Real.pi / (4 * H m)) * (∑' ell : ℕ, majorant T ell)
+
+private theorem high_sum_tendsto_zero (T : ℝ≥0) (hT : 0 < T) (u : ℝ) :
+    Tendsto (fun j : ℕ => ∑ ell ∈ lowerModes (j + 1),
+      rawStartTerm (j + 1)
+        (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)))
+        (latticeStart (j + 1) u) (reflect (j + 1) ell)) atTop (𝓝 (0 : ℝ))
+
+private theorem finite_mass_tendsto_series (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j : ℕ => killedMass RademacherCosine.law (j + 1 : ℝ)
+      (PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1)))
+      (latticeStart (j + 1) u : ℝ)) atTop (𝓝 (spectralSeries T u))
+
+-- Public convergence and actual all-start expansion, at every positive time.
+theorem spectralTerm_abs_summable (T : ℝ≥0) (hT : 0 < T) (u : ℝ) :
+    Summable (fun ell : ℕ => |spectralTerm T u ell|)
+
+theorem spectral_uniform_absolute_convergence (T : ℝ≥0) (hT : 0 < T) :
+    TendstoUniformly
+      (fun N : ℕ => fun u : ℝ => ∑ ell ∈ Finset.range N, |spectralTerm T u ell|)
+      (fun u : ℝ => ∑' ell : ℕ, |spectralTerm T u ell|) atTop
+
+theorem spectral_uniform_convergence (T : ℝ≥0) (hT : 0 < T) :
+    TendstoUniformly
+      (fun N : ℕ => fun u : ℝ => ∑ ell ∈ Finset.range N, spectralTerm T u ell)
+      (spectralSeries T) atTop
+
+theorem brownian_survival_spectral
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    P.real (BrownianSurvivalBoundary.closedSurvival B T u) = spectralSeries T u
+
+-- Tail algebra, with the explicit same constant for every model, time and start.
+private theorem shifted_tail_identity (T : ℝ≥0) (hT : 0 < T) (u : ℝ) :
+    spectralSeries T u -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) * Real.cos (Real.pi * u / 2) =
+        ∑' k : ℕ, spectralTerm T u (k + 1)
+
+private theorem tail_term_bound (T : ℝ≥0) (hT : 1 ≤ T) (u : ℝ) (k : ℕ) :
+    |spectralTerm T u (k + 1)| ≤
+      (4 / (3 * Real.pi)) * Real.exp (-9 * lambda * (T : ℝ)) *
+        (Real.exp (-2 * Real.pi ^ 2)) ^ k
+
+private theorem series_remainder_bound (T : ℝ≥0) (hT : 1 ≤ T) (u : ℝ) :
+    |spectralSeries T u -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) * Real.cos (Real.pi * u / 2)| ≤
+        remainderC * Real.exp (-9 * lambda * (T : ℝ))
+
+theorem remainderC_pos : 0 < remainderC
+
+theorem brownian_terminal_block
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 1 ≤ T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    P.real (BrownianSurvivalBoundary.closedSurvival B T u) =
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) * Real.cos (Real.pi * u / 2) +
+        terminalRemainder B P T u ∧
+    |terminalRemainder B P T u| ≤ remainderC * Real.exp (-9 * lambda * (T : ℝ))
+
+end Shao.OQ4.BrownianTerminalSpectral
+end

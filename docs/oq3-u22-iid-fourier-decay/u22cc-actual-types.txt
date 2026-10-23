@@ -1,0 +1,52 @@
+DECL Shao.OQ3.iid_quadratic_standardized_rectangular_bounded_test
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2),
+    ∀ (n : ℕ),
+      1 ≤ n →
+        ∀ (y : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (aL aR qL qR M0 R0 S0 : ℝ),
+          0 ≤ M0 →
+            0 ≤ R0 →
+              0 ≤ S0 →
+                ‖theta‖ ≤ M0 →
+                  ‖↑E‖ ≤ R0 →
+                    ‖↑E.symm‖ ≤ S0 →
+                      y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR →
+                        aR - aL ≤ 1 / ↑n →
+                          qR - qL ≤ 1 / ↑n →
+                            ∀ (A : Set (ℝ × ℝ)),
+                              MeasurableSet A →
+                                A ⊆ Set.Ioc aL aR ×ˢ Set.Ioc qL qR →
+                                  have f := fun x => theta.1 * x + theta.2 * x ^ 2;
+                                  have K := Real.log (∫ (x : ℝ), Real.exp (f x) ∂mu);
+                                  have nu := mu.tilted f;
+                                  have P := MeasureTheory.Measure.pi fun x => mu;
+                                  have Q := MeasureTheory.Measure.pi fun x => nu;
+                                  have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                  have F := fun w => √↑n • E (w - y);
+                                  have T := fun z => F (M z);
+                                  have rho := MeasureTheory.Measure.map T Q;
+                                  have B := {v | y + (√↑n)⁻¹ • E.symm v ∈ A};
+                                  have g := fun v =>
+                                    Real.exp (-√↑n * (theta.1 * (E.symm v).1 + theta.2 * (E.symm v).2));
+                                  have C0 := Real.exp (2 * M0 * S0 * R0);
+                                  have Y := fun x => E ((x, x ^ 2) - y);
+                                  have law := MeasureTheory.Measure.map Y nu;
+                                  have QY := MeasureTheory.Measure.pi fun x => law;
+                                  have SN := fun v => (√↑n)⁻¹ • ∑ i, v i;
+                                  MeasureTheory.IsProbabilityMeasure nu ∧
+                                    MeasureTheory.IsProbabilityMeasure P ∧
+                                      MeasureTheory.IsProbabilityMeasure Q ∧
+                                        MeasureTheory.IsProbabilityMeasure law ∧
+                                          MeasureTheory.IsProbabilityMeasure rho ∧
+                                            rho = MeasureTheory.Measure.map SN QY ∧
+                                              0 < C0 ∧
+                                                MeasurableSet B ∧
+                                                  B = F '' A ∧
+                                                    Measurable (B.indicator g) ∧
+                                                      (∀ (v : ℝ × ℝ), |B.indicator g v| ≤ C0) ∧
+                                                        MeasureTheory.Integrable (B.indicator g) rho ∧
+                                                          P.real (M ⁻¹' A) =
+                                                            Real.exp (-↑n * (theta.1 * y.1 + theta.2 * y.2 - K)) *
+                                                              ∫ (v : ℝ × ℝ), B.indicator g v ∂rho
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

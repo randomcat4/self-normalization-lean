@@ -1,0 +1,52 @@
+DECL Shao.OQ3.physical_grid_rate_anchor_weighted_reconstruction
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (n : ℕ),
+  1 ≤ n →
+    ∀ (level a0 rho : ℝ),
+      0 ≤ rho →
+        ∀ (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+          have V := {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+          have Theta := ↑e.symm '' V;
+          have Klog := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+          have J := fun w => (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - Klog (↑e.symm w);
+          have I := Shao.Probability.bivariateLegendreRate mu fun x => (x, x ^ 2);
+          (∀ w ∈ V, ↑e.symm w ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+            (∀ (aL aR qL qR : ℝ),
+                have A := Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩ V;
+                have Q := Set.Icc aL aR ×ˢ Set.Icc qL qR;
+                A.Nonempty → ∃ y ∈ closure A, y ∈ Q ∩ V ∧ I y = ↑(J y) ∧ ∀ w ∈ closure A, I y ≤ I w ∧ J y ≤ J w) →
+              ∀ (E : ↑Theta → (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+                have cell := fun k =>
+                  Set.Ioc (↑k.1 / ↑n) ((↑k.1 + 1) / ↑n) ×ˢ Set.Ioc (↑k.2 / ↑n) ((↑k.2 + 1) / ↑n) ∩ V;
+                have rect := fun k => Set.Icc (↑k.1 / ↑n) ((↑k.1 + 1) / ↑n) ×ˢ Set.Icc (↑k.2 / ↑n) ((↑k.2 + 1) / ↑n);
+                have C := (2 * rho + 2) * ((|a0| + rho) ^ 2 / level ^ 2 + rho + 2);
+                have P := MeasureTheory.Measure.pi fun x => mu;
+                have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                0 < C ∧
+                  ∃ K,
+                    (∀ (k : ℤ × ℤ), k ∈ K ↔ (cell k).Nonempty) ∧
+                      ↑K.card ≤ C * ↑n ^ 2 ∧
+                        ∃ y,
+                          (∀ k ∈ K,
+                              y k ∈ closure (cell k) ∧
+                                y k ∈ rect k ∩ V ∧
+                                  I (y k) = ↑(J (y k)) ∧ ∀ w ∈ closure (cell k), I (y k) ≤ I w ∧ J (y k) ≤ J w) ∧
+                            have tau := fun k => ↑e.symm (y k);
+                            ∃ Ec,
+                              (∀ k ∈ K,
+                                  tau k ∈ Theta ∧
+                                    (tau k ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) ∧
+                                      ∀ (htau : tau k ∈ Theta), Ec k = E ⟨tau k, htau⟩) ∧
+                                have Q := fun k =>
+                                  MeasureTheory.Measure.pi fun x =>
+                                    mu.tilted fun x => (tau k).1 * x + (tau k).2 * x ^ 2;
+                                have F := fun k w => √↑n • (Ec k) (w - y k);
+                                have T := fun k z => F k (M z);
+                                have laws := fun k => MeasureTheory.Measure.map (T k) (Q k);
+                                have B := fun k => F k '' cell k;
+                                have g := fun k v =>
+                                  Real.exp (-√↑n * ((tau k).1 * ((Ec k).symm v).1 + (tau k).2 * ((Ec k).symm v).2));
+                                (∀ k ∈ K, MeasurableSet (B k) ∧ MeasureTheory.Integrable (g k) (laws k)) ∧
+                                  P.real (M ⁻¹' V) =
+                                    ∑ k ∈ K, Real.exp (-↑n * J (y k)) * ∫ (v : ℝ × ℝ) in B k, g k v ∂laws k
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

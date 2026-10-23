@@ -1,0 +1,51 @@
+DECL Shao.OQ3.normalized_iid_pair_weak_cramer_cubic_cutoff_bound
+TYPE ∀ (law : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure law] (n : ℕ),
+  1 ≤ n →
+    ∀ (beta c R : ℝ),
+      0 ≤ beta →
+        beta < 2 / 5 →
+          0 < c →
+            0 ≤ R →
+              (∀ (u v : ℝ),
+                  R < √(u ^ 2 + v ^ 2) →
+                    ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                      1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                ∀ (xi eta : ℝ),
+                  √↑n * R < √(xi ^ 2 + eta ^ 2) →
+                    √(xi ^ 2 + eta ^ 2) ≤ ↑n ^ 3 →
+                      have Q := MeasureTheory.Measure.pi fun x => law;
+                      have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                      have rho := MeasureTheory.Measure.map S Q;
+                      0 < 1 - 5 / 2 * beta ∧
+                        ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ ≤
+                          Real.exp (-c * (↑n).rpow (1 - 5 / 2 * beta))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.normalized_iid_pair_weak_cramer_power_bound
+TYPE ∀ (law : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure law] (n : ℕ),
+  1 ≤ n →
+    ∀ (beta c R : ℝ),
+      0 ≤ beta →
+        0 < c →
+          0 ≤ R →
+            (∀ (u v : ℝ),
+                R < √(u ^ 2 + v ^ 2) →
+                  ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                    1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+              ∀ (xi eta : ℝ),
+                √↑n * R < √(xi ^ 2 + eta ^ 2) →
+                  have Q := MeasureTheory.Measure.pi fun x => law;
+                  have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                  have rho := MeasureTheory.Measure.map S Q;
+                  ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ ≤
+                    Real.exp (-c * (↑n).rpow (1 + beta / 2) * (√(xi ^ 2 + eta ^ 2)).rpow (-beta))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.scaled_iid_pair_frequency_length
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    ∀ (xi eta R : ℝ),
+      √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) = √(xi ^ 2 + eta ^ 2) / √↑n ∧
+        (R < √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) ↔ √↑n * R < √(xi ^ 2 + eta ^ 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

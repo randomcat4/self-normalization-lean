@@ -1,0 +1,121 @@
+-- AUTHOR150 PROPOSAL ONLY: mathematical packet before parent declaration/value freeze.
+-- Exhaustive inventory: 10 owned heads = 1 public definition + 6 private theorems
+-- + 3 public theorems. One literal transparent value; no instances/abbrevs/other helpers.
+-- No theorem proof bodies, implementation, elaboration or acceptance claim.
+import Shao.OQ4.CanonicalBrownian
+import Shao.OQ4.BrownianUniformSurvival
+import Shao.OQ4.BrownianTerminalSpectral
+import Shao.OQ4.KilledIteration
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.BrownianTerminalKernelBlock
+open MeasureTheory ProbabilityTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped NNReal Topology
+
+-- D1 PUBLIC: the actual canonical model, instantiated in the literal all-start supremum.
+def sourceSurvivalError (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (T : ℝ≥0) (h : ℝ) : ℝ :=
+  BrownianUniformSurvival.survivalError CanonicalBrownian.B CanonicalBrownian.law ν T h
+
+-- L1 PRIVATE: no interval nonemptiness is needed for this upper-bound statement.
+private theorem survival_error_image_bddAbove
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (h : ℝ) :
+    BddAbove ((fun z : ℝ =>
+      |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+        BrownianUniformSurvival.brownianSurvival CanonicalBrownian.B
+          CanonicalBrownian.law T (z / h)|) '' Icc (-h) h)
+
+-- L2 PRIVATE: both estimates concern the actual real sSup, not a supplied error.
+private theorem sourceSurvivalError_bounds
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h : ℝ) (hh : 0 ≤ h) :
+    0 ≤ sourceSurvivalError ν T h ∧ sourceSurvivalError ν T h ≤ 1
+
+-- L3 PRIVATE: membership plus boundedness, with no attainment assumption.
+private theorem source_survival_error_le
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h z : ℝ) (hz : |z| ≤ h) :
+    |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+      BrownianUniformSurvival.brownianSurvival CanonicalBrownian.B
+        CanonicalBrownian.law T (z / h)| ≤ sourceSurvivalError ν T h
+
+-- L4 PRIVATE: P0 and the literal B0 error, for all closed-interval physical starts.
+private theorem terminal_row_error
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (hT : 1 ≤ T)
+    (h : ℝ) (hh : 0 < h) (z : ℝ) (hz : |z| ≤ h) :
+    |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+        Real.cos (Real.pi * z / (2 * h))| ≤
+      sourceSurvivalError ν T h +
+        BrownianTerminalSpectral.remainderC * Real.exp (-9 * lambda * (T : ℝ))
+
+-- L5 PRIVATE: the integrated residual is globally measurable and genuinely integrable.
+-- No Brownian survival function is integrated in this module.
+private theorem terminal_residual_regular
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h : ℝ) (n : ℕ) (z : ℝ) :
+    Measurable (fun w : ℝ =>
+      killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) w -
+        (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+          Real.cos (Real.pi * w / (2 * h))) ∧
+    Integrable (fun w : ℝ =>
+      killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) w -
+        (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+          Real.cos (Real.pi * w / (2 * h))) (killedIterKernel ν h n z)
+
+-- L6 PRIVATE: exact semigroup and linearity, valid also at n=0 and floorHorizon=0.
+private theorem terminal_integral_identity
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (h : ℝ) (n : ℕ) :
+    killedMass ν h (n + PolygonalKilledFunctionalLimit.floorHorizon T h) 0 -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+        killedAction ν h n (fun w : ℝ => Real.cos (Real.pi * w / (2 * h))) 0 =
+      ∫ w : ℝ,
+        (killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) w -
+          (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+            Real.cos (Real.pi * w / (2 * h))) ∂killedIterKernel ν h n 0
+
+-- P1 PUBLIC: finite actual-kernel terminal block. No moment condition is used.
+theorem terminal_kernel_block
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (hT : 1 ≤ T)
+    (h : ℝ) (hh : 0 < h) (n : ℕ) :
+    |killedMass ν h (n + PolygonalKilledFunctionalLimit.floorHorizon T h) 0 -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+        killedAction ν h n (fun w : ℝ => Real.cos (Real.pi * w / (2 * h))) 0| ≤
+      (sourceSurvivalError ν T h +
+        BrownianTerminalSpectral.remainderC * Real.exp (-9 * lambda * (T : ℝ))) *
+          killedMass ν h n 0
+
+-- P2 PUBLIC: pure fixed-law B0, with the exact source third/first/second moments.
+theorem tendsto_sourceSurvivalError
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (hT : 0 < T)
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Tendsto (sourceSurvivalError ν T) atTop (𝓝 (0 : ℝ))
+
+-- P3 PUBLIC: H depends on ν,T,ε; it is uniform over every natural n, including 0.
+-- This theorem is an eventual P1 corollary, not the original normalized source P2.
+theorem eventually_terminal_kernel_block
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (hT : 1 ≤ T)
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∃ H : ℝ, 0 < H ∧ ∀ h : ℝ, H ≤ h → ∀ n : ℕ,
+      |killedMass ν h (n + PolygonalKilledFunctionalLimit.floorHorizon T h) 0 -
+        (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+          killedAction ν h n (fun w : ℝ => Real.cos (Real.pi * w / (2 * h))) 0| ≤
+        (ε + BrownianTerminalSpectral.remainderC * Real.exp (-9 * lambda * (T : ℝ))) *
+          killedMass ν h n 0
+
+end Shao.OQ4.BrownianTerminalKernelBlock
+end
