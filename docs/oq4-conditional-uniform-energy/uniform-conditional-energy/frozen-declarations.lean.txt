@@ -1,0 +1,238 @@
+-- AUTHOR175 MATHEMATICAL PROPOSAL ONLY: NOT FROZEN, NOT IMPLEMENTED, NOT CHECKED.
+-- Proposed production file: Shao/OQ4/UniformConditionalEnergy.lean
+-- Proposed module: Shao.OQ4.UniformConditionalEnergy
+-- EXHAUSTIVE source inventory: 8 imports; 1 option; 1 transparent def;
+-- 9 private theorem heads; 5 public theorem heads.
+-- ZERO additional abbrev/opaque/structure/class/instance/notation/macro/axiom.
+-- No new universe variables. All instance binders below use existing instances.
+-- All unlisted helpers must remain proof-local or be submitted for a new freeze.
+
+import Shao.OQ4.EnergyJointTransport
+import Shao.OQ4.UnconditionalKernelAsymptotic
+import Shao.OQ4.ConditionalEnergyConcentration
+import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Order.Filter.AtTopBot.Field
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.UniformConditionalEnergy
+
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped Topology
+
+-- VALUE 1, FULL transparent value. This is the actual finite-product integral.
+-- The exp-pair is exactly cosh(y)-1; no abstract conditional value is substituted.
+noncomputable def energyCoshExcessIntegral
+    (ν : Measure ℝ) (n : ℕ) (b h s : ℝ) : ℝ := by
+  classical
+  exact ∫ a : Shao.Path n,
+    (if a ∈ (@Shao.closedStrip n b) then
+      (Real.exp (s * (Shao.energy a - (n : ℝ)) / h ^ 2) +
+        Real.exp (-(s * (Shao.energy a - (n : ℝ)) / h ^ 2))) / 2 - 1
+    else 0) ∂Measure.pi (fun _ : Fin n => ν)
+
+-- PRIVATE 1: pays nonnegativity, evenness and monotonicity for negative y too.
+private theorem exp_pair_mono_abs
+    (u v : ℝ) (huv : |u| ≤ |v|) :
+    0 ≤ (Real.exp u + Real.exp (-u)) / 2 - 1 ∧
+      (Real.exp u + Real.exp (-u)) / 2 - 1 ≤
+        (Real.exp v + Real.exp (-v)) / 2 - 1
+
+-- PRIVATE 2: the strictly positive finite Markov denominator.
+private theorem exp_pair_strict_pos
+    (u : ℝ) (hu : 0 < u) :
+    0 < (Real.exp u + Real.exp (-u)) / 2 - 1
+
+-- PRIVATE 3: extends the old finite integrability head from 1≤b to 0<b.
+-- This finite fact uses strip coordinate bounds, no moments or exponential MGF.
+private theorem energyPathIntegrand_integrable_pos
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (b u : ℝ) (hb : 0 < b) :
+    Integrable (energyPathIntegrand (n := n) b u)
+      (Measure.pi (fun _ : Fin n => ν))
+
+-- PRIVATE 4: literal cancellation and integral linearity after integrability.
+private theorem energyCoshExcess_integrable_identity
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (b h s : ℝ) (hb : 0 < b) (hh : 0 < h) :
+    Integrable (fun a : Shao.Path n =>
+      if a ∈ (@Shao.closedStrip n b) then
+        (Real.exp (s * (Shao.energy a - (n : ℝ)) / h ^ 2) +
+          Real.exp (-(s * (Shao.energy a - (n : ℝ)) / h ^ 2))) / 2 - 1
+      else 0) (Measure.pi (fun _ : Fin n => ν)) ∧
+      energyCoshExcessIntegral ν n b h s =
+        (energyJointIntegral ν n b (s * (b / h) ^ 2) +
+          energyJointIntegral ν n b (-(s * (b / h) ^ 2))) / 2 -
+          (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n b)
+
+-- PUBLIC 1: nonnegativity is valid even at early zero/nonpositive heights.
+theorem energyCoshExcessIntegral_nonneg
+    (ν : Measure ℝ) (n : ℕ) (b h s : ℝ) :
+    0 ≤ energyCoshExcessIntegral ν n b h s
+
+-- PRIVATE 5: two FIXED Laplace parameters ±s*C² dominate every moving radius.
+private theorem energyCoshExcess_le_fixed
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (b h s C : ℝ)
+    (hb : 0 < b) (hh : 0 < h) (hs : 0 < s)
+    (hC : 1 ≤ C) (hbh : b ≤ C * h) :
+    energyCoshExcessIntegral ν n b h s ≤
+      (energyJointIntegral ν n b (s * C ^ 2) +
+        energyJointIntegral ν n b (-(s * C ^ 2))) / 2 -
+        (Measure.pi (fun _ : Fin n => ν)).real (@Shao.closedStrip n b)
+
+-- PUBLIC 2: finite literal strict-deviation/closed-wall Markov inequality.
+-- No positive-survival premise and no moment premise are introduced.
+theorem energy_deviation_finite_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (b h s ε : ℝ)
+    (hb : 0 < b) (hh : 0 < h) (hs : 0 < s) (hε : 0 < ε) :
+    0 < (Real.exp (s * ε) + Real.exp (-(s * ε))) / 2 - 1 ∧
+      ((Real.exp (s * ε) + Real.exp (-(s * ε))) / 2 - 1) *
+        (Measure.pi (fun _ : Fin n => ν)).real
+          ((@Shao.closedStrip n b) ∩
+            {a : Shao.Path n | ε * h ^ 2 < |Shao.energy a - (n : ℝ)|}) ≤
+        energyCoshExcessIntegral ν n b h s
+
+-- PRIVATE 6: original tail scales survive every eventually selected radius.
+private theorem selected_radius_scales
+    (h : ℕ → ℝ) (n : ℕ → ℕ) (b : ℕ → ℝ)
+    (C : ℝ) (hC : 1 ≤ C)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (hb : ∀ᶠ j in atTop, h j / 2 ≤ b j ∧ b j ≤ C * h j) :
+    Tendsto b atTop atTop ∧
+      Tendsto (fun j => (n j : ℝ) / b j ^ 2) atTop atTop ∧
+      Tendsto (fun j => (n j : ℝ) / b j ^ 3) atTop (𝓝 (0 : ℝ))
+
+-- PRIVATE 7: all-index positive-height K is consumed through a finite-prefix repair.
+-- The actual unconditional K producer is called internally, never assumed.
+private theorem fixed_law_closedStrip_relative_asymptotic
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (h j)) /
+          ((4 / Real.pi) * Real.exp (-lambda * (n j : ℝ) / h j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+-- PRIVATE 8: selected-radius excess uses only the two fixed-parameter E4 heads.
+private theorem selected_radius_energy_ratio_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (b : ℕ → ℝ) (C : ℝ) (hC : 1 ≤ C)
+    (hb : ∀ᶠ j in atTop, h j / 2 ≤ b j ∧ b j ≤ C * h j)
+    (s : ℝ) (hs : 0 < s) :
+    Tendsto (fun j => energyCoshExcessIntegral ν (n j) (b j) (h j) s /
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (b j)))
+      atTop (𝓝 (0 : ℝ))
+
+-- PRIVATE 9: choice at every bad index; no invalid negation of eventuality.
+-- This is a generic logical principle, not a public desired-limit premise.
+private theorem eventually_forall_radius_of_selected
+    (h : ℕ → ℝ) (C : ℝ) (hC : 1 ≤ C)
+    (hpos : ∀ᶠ j in atTop, 0 < h j)
+    (P : ℕ → ℝ → Prop)
+    (hselected : ∀ b : ℕ → ℝ,
+      (∀ᶠ j in atTop, h j / 2 ≤ b j ∧ b j ≤ C * h j) →
+        ∀ᶠ j in atTop, P j (b j)) :
+    ∀ᶠ j in atTop, ∀ b : ℝ,
+      h j / 2 ≤ b → b ≤ C * h j → P j b
+
+-- PUBLIC 3: the source (3) and uniform K relative error, with literal actual objects.
+-- Only original law/moment/tail-scale hypotheses; no desired K/E4 limit premise.
+theorem uniform_closedStrip_energy_controls
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C) (s : ℝ) (hs : 0 < s)
+    (δ : ℝ) (hδ : 0 < δ) :
+    ∀ᶠ j in atTop, ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+      0 < (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) b) ∧
+      |(Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) /
+            ((4 / Real.pi) * Real.exp (-lambda * (n j : ℝ) / b ^ 2)) - 1| < δ ∧
+      0 ≤ energyCoshExcessIntegral ν (n j) b (h j) s /
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) ∧
+      energyCoshExcessIntegral ν (n j) b (h j) s /
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) < δ
+
+-- PUBLIC 4: the one-tail boundary-ratio bound needed by all middle layers.
+theorem uniform_closedStrip_boundary_ratio_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C) :
+    ∀ᶠ j in atTop,
+      0 < (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) (h j)) ∧
+      ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+        0 < (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) ∧
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+            (@Shao.closedStrip (n j) b) /
+          (Measure.pi (fun _ : Fin (n j) => ν)).real
+            (@Shao.closedStrip (n j) (h j)) ≤
+          4 * Real.exp (lambda * ((n j : ℝ) / h j ^ 2 - (n j : ℝ) / b ^ 2))
+
+-- PUBLIC 5: actual joint-energy concentration on the ORIGINAL h² scale.
+theorem uniform_energy_concentration
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C)
+    (ε : ℝ) (hε : 0 < ε) (δ : ℝ) (hδ : 0 < δ) :
+    ∀ᶠ j in atTop, ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+      0 < (Measure.pi (fun _ : Fin (n j) => ν)).real
+        (@Shao.closedStrip (n j) b) ∧
+      0 ≤ (Measure.pi (fun _ : Fin (n j) => ν)).real
+          ((@Shao.closedStrip (n j) b) ∩
+            {a : Shao.Path (n j) |
+              ε * h j ^ 2 < |Shao.energy a - (n j : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) ∧
+      (Measure.pi (fun _ : Fin (n j) => ν)).real
+          ((@Shao.closedStrip (n j) b) ∩
+            {a : Shao.Path (n j) |
+              ε * h j ^ 2 < |Shao.energy a - (n j : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n j) => ν)).real
+          (@Shao.closedStrip (n j) b) < δ
+
+end Shao.OQ4.UniformConditionalEnergy
+end
