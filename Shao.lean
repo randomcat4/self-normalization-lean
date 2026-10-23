@@ -53,6 +53,8 @@ import Shao.OQ3.FiniteStageRate
 import Shao.OQ3.FundamentalFourierAsymptotic
 import Shao.OQ3.GaussianBoundaryConstant
 import Shao.OQ3.GaussianBoundaryLaplaceMixture
+import Shao.OQ3.GaussianCurveTube
+import Shao.OQ3.GaussianFiniteArcTube
 import Shao.OQ3.GlobalNegativeLayerBound
 import Shao.OQ3.InverseTilt
 import Shao.OQ3.JointNonlattice
@@ -94,6 +96,10 @@ import Shao.OQ3.OpenDomainRealMoments
 import Shao.OQ3.OpenDomainSmoothMean
 import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
+import Shao.OQ3.ParabolaArcLipschitz
+import Shao.OQ3.ParabolaCellArcs
+import Shao.OQ3.ParabolaCellGaussianTube
+import Shao.OQ3.ParabolaWindowCellFrontier
 import Shao.OQ3.PositiveLayerTail
 import Shao.OQ3.PositiveRate
 import Shao.OQ3.ProductMeasureDomination
@@ -136,11 +142,14 @@ import Shao.OQ3.StandardGaussianCellMass
 import Shao.OQ3.StandardizedCellBounds
 import Shao.OQ3.StandardizedCellChangeOfMeasure
 import Shao.OQ3.StandardizedCellOscillation
+import Shao.OQ3.StandardizedFrontierTransport
 import Shao.OQ3.StandardizedGaussianCellOscillation
+import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
 import Shao.OQ4.AveragedResidual
 import Shao.OQ4.BoundaryOccupation
+import Shao.OQ4.CanonicalBrownian
 import Shao.OQ4.CosineCoefficients
 import Shao.OQ4.CosinePowers
 import Shao.OQ4.DelayedRecurrence
@@ -376,6 +385,7 @@ import Shao.Probability.SourceFutureNoiseInversion
 import Shao.Probability.SourceFutureNoiseOddEven
 import Shao.Probability.SourceKernelAmplitudeFamily
 import Shao.Probability.SourceKernelMarkedOutside
+import Shao.Probability.SourceLindleyRegulatorEnergyWeighted
 import Shao.Probability.SourceLindleyRegulatorFirstMoment
 import Shao.Probability.SourceLindleyRegulatorFirstMomentSums
 import Shao.Probability.SourceLindleyRegulatorSecondMoment
@@ -389,6 +399,7 @@ import Shao.Probability.SourceShortTimeGrid
 import Shao.Probability.SourceShortTimeKernelBounds
 import Shao.Probability.SourceShortTimeKernelTaylor
 import Shao.Probability.SourceTruncationBridge
+import Shao.Probability.TiltedLowFrequency
 import Shao.Probability.TruncationIntegrals
 import Shao.Probability.TruncationRegularity
 import Shao.Probability.TruncationSampleSize
