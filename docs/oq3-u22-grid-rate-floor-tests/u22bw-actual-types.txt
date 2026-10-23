@@ -1,0 +1,47 @@
+DECL Shao.OQ3.iid_parabola_finite_grid_weighted_reconstruction
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (n : ℕ),
+  1 ≤ n →
+    ∀ (level a0 rho : ℝ),
+      0 ≤ rho →
+        have V := {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+        have cell := fun k => Set.Ioc (↑k.1 / ↑n) ((↑k.1 + 1) / ↑n) ×ˢ Set.Ioc (↑k.2 / ↑n) ((↑k.2 + 1) / ↑n) ∩ V;
+        have C := (2 * rho + 2) * ((|a0| + rho) ^ 2 / level ^ 2 + rho + 2);
+        have P := MeasureTheory.Measure.pi fun x => mu;
+        have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+        0 < C ∧
+          ∃ K,
+            (∀ (k : ℤ × ℤ), k ∈ K ↔ (cell k).Nonempty) ∧
+              ↑K.card ≤ C * ↑n ^ 2 ∧
+                P.real (M ⁻¹' V) = ∑ k ∈ K, P.real (M ⁻¹' cell k) ∧
+                  ∀ (theta : ℤ × ℤ → ℝ × ℝ),
+                    (∀ k ∈ K, theta k ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+                      ∀ (y : ℤ × ℤ → ℝ × ℝ) (E : ℤ × ℤ → (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+                        have logZ := fun k =>
+                          Real.log (∫ (x : ℝ), Real.exp ((theta k).1 * x + (theta k).2 * x ^ 2) ∂mu);
+                        have Q := fun k =>
+                          MeasureTheory.Measure.pi fun x => mu.tilted fun x => (theta k).1 * x + (theta k).2 * x ^ 2;
+                        have F := fun k w => √↑n • (E k) (w - y k);
+                        have T := fun k z => F k (M z);
+                        have laws := fun k => MeasureTheory.Measure.map (T k) (Q k);
+                        have B := fun k => F k '' cell k;
+                        have g := fun k v =>
+                          Real.exp (-√↑n * ((theta k).1 * ((E k).symm v).1 + (theta k).2 * ((E k).symm v).2));
+                        (∀ k ∈ K, MeasurableSet (B k) ∧ MeasureTheory.Integrable (g k) (laws k)) ∧
+                          P.real (M ⁻¹' V) =
+                            ∑ k ∈ K,
+                              Real.exp (-↑n * ((theta k).1 * (y k).1 + (theta k).2 * (y k).2 - logZ k)) *
+                                ∫ (v : ℝ × ℝ) in B k, g k v ∂laws k
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.iid_parabola_finite_grid_weighted_reconstruction._simp_1_3
+TYPE ∀ {α : Type u} {β : Type v} {f : α → β} {s : Set β} {a : α}, (a ∈ f ⁻¹' s) = (f a ∈ s)
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.iid_parabola_finite_grid_weighted_reconstruction._simp_1_2
+TYPE ∀ {α : Type u} {ι : Sort v} {x : α} {s : ι → Set α}, (x ∈ ⋃ i, s i) = ∃ i, x ∈ s i
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.iid_parabola_finite_grid_weighted_reconstruction._simp_1_1
+TYPE ∀ {α : Type u} {s : Set α} {a : α} (hs : s.Finite), (a ∈ hs.toFinset) = (a ∈ s)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

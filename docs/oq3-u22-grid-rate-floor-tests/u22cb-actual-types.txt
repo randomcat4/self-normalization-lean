@@ -1,0 +1,33 @@
+DECL Shao.OQ3.standardized_rectangular_cell_uniform_bounded_borel_test._simp_1_1
+TYPE ∀ {α : Type u_1} [inst : LinearOrder α] {a b c : α}, (max a b ≤ c) = (a ≤ c ∧ b ≤ c)
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.standardized_rectangular_cell_uniform_bounded_borel_test
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    ∀ (theta : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (y : ℝ × ℝ) (aL aR qL qR M R S : ℝ),
+      0 ≤ M →
+        0 ≤ R →
+          0 ≤ S →
+            ‖theta‖ ≤ M →
+              ‖↑E‖ ≤ R →
+                ‖↑E.symm‖ ≤ S →
+                  y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR →
+                    aR - aL ≤ 1 / ↑n →
+                      qR - qL ≤ 1 / ↑n →
+                        ∀ (A : Set (ℝ × ℝ)),
+                          MeasurableSet A →
+                            A ⊆ Set.Ioc aL aR ×ˢ Set.Ioc qL qR →
+                              ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsFiniteMeasure nu],
+                                have F := fun w => √↑n • E (w - y);
+                                have B := {v | y + (√↑n)⁻¹ • E.symm v ∈ A};
+                                have g := fun v => Real.exp (-√↑n * (theta.1 * (E.symm v).1 + theta.2 * (E.symm v).2));
+                                have C0 := Real.exp (2 * M * S * R);
+                                0 < C0 ∧
+                                  MeasurableSet B ∧
+                                    B = F '' A ∧
+                                      Measurable (B.indicator g) ∧
+                                        (∀ (v : ℝ × ℝ), |B.indicator g v| ≤ C0) ∧
+                                          MeasureTheory.Integrable (B.indicator g) nu
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
