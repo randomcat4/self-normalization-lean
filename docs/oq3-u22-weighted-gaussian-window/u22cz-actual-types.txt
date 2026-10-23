@@ -1,0 +1,23 @@
+DECL Shao.OQ3.pair_characteristic_small_frequency_weighted_integral_bound
+TYPE ∀ (rho : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure rho] (n : ℕ),
+  1 ≤ n →
+    ∀ (delta B : ℝ),
+      0 ≤ B →
+        (∀ (xi eta : ℝ),
+            √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) ≤ delta →
+              ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho -
+                    ↑(Real.exp (-(xi ^ 2 + eta ^ 2) / 2))‖ ≤
+                B / √↑n * √(xi ^ 2 + eta ^ 2) ^ 3 * Real.exp (-(xi ^ 2 + eta ^ 2) / 8)) →
+          ∀ (k : ℕ),
+            have small := {w | √((w.1 / √↑n) ^ 2 + (w.2 / √↑n) ^ 2) ≤ delta};
+            have error := fun z =>
+              ‖∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho -
+                  ↑(Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 2))‖;
+            have weight := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k;
+            have envelope := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ (k + 3) * Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8);
+            MeasureTheory.Integrable envelope MeasureTheory.volume ∧
+              MeasureTheory.IntegrableOn (fun z => weight z * error z) small MeasureTheory.volume ∧
+                0 ≤ ∫ (z : ℝ × ℝ) in small, weight z * error z ∧
+                  ∫ (z : ℝ × ℝ) in small, weight z * error z ≤ B / √↑n * ∫ (z : ℝ × ℝ), envelope z
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

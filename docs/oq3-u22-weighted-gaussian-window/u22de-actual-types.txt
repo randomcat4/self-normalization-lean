@@ -1,0 +1,28 @@
+DECL Shao.OQ3.euclidean_gaussian_weighted_tail_bound
+TYPE ∀ (k : ℕ) (a R : ℝ),
+  0 < a →
+    0 ≤ R →
+      have tail := {z | R ≤ √(z.1 ^ 2 + z.2 ^ 2)};
+      have f := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k * Real.exp (-a * (z.1 ^ 2 + z.2 ^ 2));
+      have envelope := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k * Real.exp (-(a / 2) * (z.1 ^ 2 + z.2 ^ 2));
+      MeasureTheory.Integrable f MeasureTheory.volume ∧
+        MeasureTheory.Integrable envelope MeasureTheory.volume ∧
+          MeasureTheory.IntegrableOn f tail MeasureTheory.volume ∧
+            0 ≤ ∫ (z : ℝ × ℝ) in tail, f z ∧
+              ∫ (z : ℝ × ℝ) in tail, f z ≤ Real.exp (-a * R ^ 2 / 2) * ∫ (z : ℝ × ℝ), envelope z
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.eventually_scaled_euclidean_gaussian_weighted_tail
+TYPE ∀ (k : ℕ) (delta q epsilon : ℝ),
+  0 < delta →
+    0 < epsilon →
+      ∃ N,
+        1 ≤ N ∧
+          ∀ (n : ℕ),
+            N ≤ n →
+              have tail := {z | delta * √↑n ≤ √(z.1 ^ 2 + z.2 ^ 2)};
+              have f := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k * Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 2);
+              MeasureTheory.IntegrableOn f tail MeasureTheory.volume ∧
+                0 ≤ ∫ (z : ℝ × ℝ) in tail, f z ∧ (↑n).rpow q * ∫ (z : ℝ × ℝ) in tail, f z < epsilon
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
