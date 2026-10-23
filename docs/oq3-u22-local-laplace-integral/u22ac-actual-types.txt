@@ -1,0 +1,16 @@
+DECL Shao.OQ3.boundary_rate_chart_measure_and_integral
+TYPE ∀ (a0 level : ℝ),
+  have m := MeasureTheory.volume.prod MeasureTheory.volume;
+  have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+  MeasureTheory.MeasurePreserving G m m ∧
+    MeasurableEmbedding G ∧
+      ∀ (s : Set (ℝ × ℝ)) (f : ℝ × ℝ → ℝ),
+        (MeasureTheory.IntegrableOn f (G '' s) m ↔ MeasureTheory.IntegrableOn (fun w => f (G w)) s m) ∧
+          ∫ (w : ℝ × ℝ) in G '' s, f w ∂m = ∫ (w : ℝ × ℝ) in s, f (G w) ∂m
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.boundary_rate_chart_rectangle_image
+TYPE ∀ (a0 level rho : ℝ),
+  have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+  G '' {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho} =
+    {w | |w.1 - a0| ≤ rho ∧ w.1 ^ 2 / level ^ 2 - rho ≤ w.2 ∧ w.2 ≤ w.1 ^ 2 / level ^ 2}
+AXIOMS [propext, Classical.choice, Quot.sound]
