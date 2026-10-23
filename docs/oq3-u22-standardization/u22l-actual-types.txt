@@ -1,0 +1,35 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_compact_legendre_chart
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ≠ 0 →
+      have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+      have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+      have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+      ∃ e epsilon,
+        0 < epsilon ∧
+          ↑e = means ∧
+            theta ∈ e.source ∧
+              e.source ⊆ Omega ∧
+                Metric.closedBall (means theta) epsilon ⊆ e.target ∧
+                  have Theta := ↑e.symm '' Metric.closedBall (means theta) epsilon;
+                  IsCompact Theta ∧
+                    theta ∈ Theta ∧
+                      Theta ⊆ Omega ∧
+                        ∀ z ∈ Metric.closedBall (means theta) epsilon,
+                          ↑e.symm z ∈ Theta ∧
+                            means (↑e.symm z) = z ∧
+                              Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) z =
+                                ↑((↑e.symm z).1 * z.1 + (↑e.symm z).2 * z.2 -
+                                    Real.log (∫ (x : ℝ), Real.exp ((↑e.symm z).1 * x + (↑e.symm z).2 * x ^ 2) ∂mu))
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_quadratic_tilt_legendre_attained
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+    have m := (∫ (x : ℝ), x ∂nu, ∫ (x : ℝ), x ^ 2 ∂nu);
+    have Ktheta := Real.log (∫ (x : ℝ), Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu);
+    have I := theta.1 * m.1 + theta.2 * m.2 - Ktheta;
+    (∀ (p : ↑(Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2))),
+        (↑p).1 * m.1 + (↑p).2 * m.2 - Shao.Probability.bivariateLogMGF mu (fun x => (x, x ^ 2)) p ≤ I) ∧
+      Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) m = ↑I
+AXIOMS [propext, Classical.choice, Quot.sound]

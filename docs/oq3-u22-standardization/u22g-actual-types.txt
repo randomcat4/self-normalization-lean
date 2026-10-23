@@ -1,0 +1,26 @@
+DECL _private.Shao.OQ3.OpenDomainAffineMoments.0.Shao.OQ3.quadratic_power_growth
+TYPE ∀ (x : ℝ) (k : ℕ), (1 + x ^ 2) ^ k ≤ 2 ^ k * (1 + |x| ^ (2 * k))
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainAffineMoments.0.Shao.OQ3.affine_radius_le_abs
+TYPE ∀ (a b : ℝ), √(a ^ 2 + b ^ 2) ≤ |a| + |b|
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.compact_open_domain_affine_parabola_moments
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (A : ℝ × ℝ → Matrix (Fin 2) (Fin 2) ℝ) (U : ℝ),
+        0 ≤ U →
+          (∀ theta ∈ Theta, ∀ (i j : Fin 2), |A theta i j| ≤ U) →
+            have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+            have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+            have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+            have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+            (∀ theta ∈ Theta, MeasureTheory.IsProbabilityMeasure (laws theta)) ∧
+              ∀ (k : ℕ),
+                ∃ C,
+                  0 < C ∧
+                    ∀ theta ∈ Theta,
+                      MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) (laws theta) ∧
+                        0 ≤ ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ k ∂laws theta ∧
+                          ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ k ∂laws theta ≤ C
+AXIOMS [propext, Classical.choice, Quot.sound]

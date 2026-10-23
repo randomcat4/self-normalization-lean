@@ -1,0 +1,26 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_local_rate_derivatives
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ≠ 0 →
+      have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+      have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+      have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+      have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+      have D := Shao.OQ3.parabolaCovariance (nu theta);
+      have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+      have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+      have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+      have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+      have covector := pr0.smulRight pr0 + pr1.smulRight pr1;
+      ∃ L e,
+        ↑L = row0.prod row1 ∧
+          ↑e = means ∧
+            theta ∈ e.source ∧
+              means theta ∈ e.target ∧
+                e.source ⊆ Omega ∧
+                  have J := fun z => (↑e.symm z).1 * z.1 + (↑e.symm z).2 * z.2 - K (↑e.symm z);
+                  ContDiffAt ℝ (↑⊤) J (means theta) ∧
+                    HasFDerivAt J (theta.1 • pr0 + theta.2 • pr1) (means theta) ∧
+                      HasFDerivAt (fun z => fderiv ℝ J z) (covector ∘SL ↑L.symm) (means theta) ∧
+                        ∀ z ∈ e.target, Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) z = ↑(J z)
+AXIOMS [propext, Classical.choice, Quot.sound]
