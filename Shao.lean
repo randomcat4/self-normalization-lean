@@ -20,10 +20,12 @@ import Shao.OQ3.CenteredLogMGF
 import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
+import Shao.OQ3.CompactTiltCovarianceSpectrum
 import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CorrectedScaleContinuity
+import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.FarEnergyExponentialCover
 import Shao.OQ3.FiniteConstraints
