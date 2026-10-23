@@ -54,9 +54,15 @@ import Shao.OQ3.NormalTangentGaussian
 import Shao.OQ3.NormalTangentMoments
 import Shao.OQ3.NormalTangentPowerLimit
 import Shao.OQ3.NormalTrialCost
+import Shao.OQ3.OpenDomainCompactMoments
+import Shao.OQ3.OpenDomainFrechetCumulants
+import Shao.OQ3.OpenDomainMeanInverse
+import Shao.OQ3.OpenDomainSmoothMean
+import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.PositiveLayerTail
 import Shao.OQ3.PositiveRate
 import Shao.OQ3.ProductMeasureDomination
+import Shao.OQ3.QuadraticTiltCumulants
 import Shao.OQ3.RegularCovariance
 import Shao.OQ3.ResonanceArithmetic
 import Shao.OQ3.ResonantLimit
@@ -255,6 +261,7 @@ import Shao.Probability.BrownianGridBridge
 import Shao.Probability.BrownianSpectralEnvelope
 import Shao.Probability.BrownianSup
 import Shao.Probability.CenteredQuadraticCharacteristic
+import Shao.Probability.CenteredQuadraticCharacteristicPower
 import Shao.Probability.ClockControl
 import Shao.Probability.ConditionalIID
 import Shao.Probability.ExchangeableEvents
@@ -275,6 +282,7 @@ import Shao.Probability.QuadraticChordNoise
 import Shao.Probability.QuadraticFullNoise
 import Shao.Probability.QuadraticFullNoiseConeDerivatives
 import Shao.Probability.QuadraticFullNoiseDerivatives
+import Shao.Probability.QuadraticFullNoiseHighFrequency
 import Shao.Probability.RademacherGrid
 import Shao.Probability.RetainedComparison
 import Shao.Probability.RetainedMoments
@@ -283,6 +291,7 @@ import Shao.Probability.RetainedVariance
 import Shao.Probability.RetentionEvent
 import Shao.Probability.SourceClockBridge
 import Shao.Probability.SourceFourierScale
+import Shao.Probability.SourceFourierTestKernel
 import Shao.Probability.SourceFullNoiseBridge
 import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarNoise

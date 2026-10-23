@@ -1,0 +1,11 @@
+# Shared highfrequency(c), actual Fourier test kernel, and OQ3 open-domain interfaces
+
+Source highderivatives(c) now has the actual signed phi^m*Xi 0/1/2 derivative estimates and the original fixed-cutoff conditional-law/T-scale adapter. Actual mean phase, variance comparison and frequency/length guards are proved. This consumes the accepted v45 cone/centered interfaces and the independently reviewed new signed centered-power/gap budget. The source highderivatives(a,b) accepted scopes remain unchanged.
+
+The actual source smooth cutoff and strict H_y have proved L1 integrability and a full negative-unit-phase two-dimensional Fourier transform formula, includingu0/y0. OQ3 PR176 contributes six actual open-domain cumulant/moment/smoothness/local-inverse modules,9public targets; local invertibility explicitly retains the actual covariance determinant premise. Later OQ3 continuation sources are excluded.
+
+Three shared modules and six OQ3 modules:9new modules,15new public theorems. Result301modules,1944public theorems,3300namespace theorems including generated,5922module-owned constants. Each exact source has one independent full semantic/proof/actual-type/definition review plus source-bound server kernel/all-owned transitive-axiom receipts. Root reused those qualified reviews and all9exact author objects; only the aggregate import was elaborated. All292baseline sources/1069baseline artifacts unchanged. Complete namespace/owned axiom and module coverage checks PASS on pinned Lean4.36rc1/mathlib807d3836.
+
+The first final git diff check caught CRLF in the uploaded build script. Exact CRLF-to-LF equivalence and every other snapshotted hash were verified; only git diff was rerun, preserving the failure and all prior successful mathematical results. V45's two descriptive receipt-label corrections are documented separately; its actual checks were unaffected.
+
+Remaining: actual future/noise factorization is being implemented, followed by Fourier inversion with explicit2pi rescaling, oscillatory/marknorm and region/time integrals, smoothed probability comparison and desmoothing. Actual Region4 D/W derivative/u-tail consumer is in progress. C1/C2, OQ3 B/D, generalOQ4 and p53/OQ6/RS2 remain OPEN. Existing OQ3 A/C scoped closures unchanged. No new original root closure, novelty or completion-percentage claim.
