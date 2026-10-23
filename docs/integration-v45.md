@@ -1,0 +1,7 @@
+# Integration v45: actual smoothing derivatives
+
+Four source-bound modules are accepted together, preserving all three author heads. Actual K and fixed scalar Fourier first/second derivatives feed the actual Xi product, with six undifferentiated factors retained from each chord family. The recorded highderivatives(a) cone scope is closed, including the closed cone boundary. The actual centered characteristic now has finite-second-moment derivatives and the sharp variance-gap/Cauchy-Schwarz bounds on the whole real plane, including variance zero.
+
+Each new source received one independent complete source-to-statement/proof/all-owned-type/definition-value review and server kernel/transitive-axiom evidence. Root reuses all four exact source-bound objects and the qualified reviews; only aggregate import, public/owned axiom and module coverage checks are new. The previous288 production sources and their existing objects remain unchanged. No mathlib rebuild, producer re-elaboration or duplicate independent proof review occurs. Source/freeze, review and author receipts are attached under docs/integration-v45; publication-format.json preserves original and LF publication hashes.
+
+The full high-frequency product estimate(c), original source time/mean specialization, inversion, desmoothing and C1/C2 remain open. The signed centered-power/gap consumer is the next active proof unit; it is outside this frozen batch.
