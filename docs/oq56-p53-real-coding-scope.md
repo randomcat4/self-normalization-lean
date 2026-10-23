@@ -1,0 +1,9 @@
+# p53 actual symmetry and fixed real coding: original-source scope
+
+Source: p53 section3 (SHA2560bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561). This milestone fills two explicit obligations in the fixedpopulation construction: actualG/Z marginal symmetry and faithful coding of the fullactualtuple ((A,(B,eta)),(C,epsilon)) into a single realobservation X=3I+A. The complete deterministic alpha/x/N sequences remain fixed before sampling.
+
+The source normalized uniformnoise law, actualsignedshift and actualsignedamplitude law are retained. ActualG reflection is proved from the independent product of symmetric noise and signedshift; actualZ reflection transfers the true signedamplitude marginal. Both conclusions hold for allparameters and add no moment/core/monotonicity premise.
+
+The new reallaw is literally the existing actualpopulation law pushed through its pairedtag natural encoder and pure P35 intervalencoder. The Borel total decoder recovers the fulltuple on closed[-1,1], including endpoints. Its two labels have a fixed zero fallback offvalidcodes; no codesurjectivity/globalencoderinjectivity/globalrealinverse is assumed. Genuine mu-AE support proves actualdecoder-pushforward recovery, actualAErealinverse, both measurepreserving maps and actualindependentpair pushforward. The P35 probability model and negativeoperator are not substituted for p53.
+
+Direct consumers: actualrealG/Z/h and their allorder moments/firstprojection, the actualrealL2 positive rankone residualoperator, then the entirefixed iid real sample and original centeredrow jackknife. These remain separate sourcebound proof obligations. Actual iid sampling, trueR>0, balanced event probability, conditional moments and original tailratios are not proved by this milestone. P53/OQ6/RS2 roots remain OPEN. NoG exponentialmoment, wholekernelPSD, completecounterexample ornovelty claim.
