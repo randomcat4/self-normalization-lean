@@ -1,0 +1,191 @@
+-- Lane-lead exact formal freeze: all54 heads and17 transparent values (16defs+1abbrev).
+-- No theorem proof bodies; not an importable or kernel-checked module.
+-- Parent fully read proof, all exact heads/literal values and pinned API evidence before freeze.
+-- Namespace is lane-owned; no shared Probability/common-definition edit is needed.
+import Mathlib.Probability.BrownianMotion.Basic
+import Mathlib.Probability.Independence.InfinitePi
+import Mathlib.Probability.Independence.CharacteristicFunction
+import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+import Mathlib.Analysis.Normed.Group.FunctionSeries
+import Mathlib.Algebra.Order.Floor.Semiring
+
+noncomputable section
+namespace Shao.OQ4.CanonicalBrownian
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal ENNReal Topology BigOperators
+
+-- PUBLIC concrete sample space, probability measure, and literal process.
+abbrev Sample := (ℕ × ℕ) → ℝ
+
+def law : Measure Sample :=
+  Measure.infinitePi (fun _ : ℕ × ℕ => gaussianReal 0 1)
+
+instance instIsProbabilityMeasureLaw : IsProbabilityMeasure law
+
+private def coord (i : ℕ × ℕ) (ω : Sample) : ℝ := ω i
+
+private def clip (u : ℝ) : ℝ := max 0 (min 1 u)
+
+private def tent (u : ℝ) : ℝ := max 0 (1 - |2 * u - 1|)
+
+private def amplitude (n : ℕ) : ℝ := (2 * (Real.sqrt 2) ^ n)⁻¹
+
+private def hat (n k : ℕ) (u : ℝ) : ℝ :=
+  amplitude n * tent ((2 : ℝ) ^ n * u - (k : ℝ))
+
+private def level (m n : ℕ) (u : ℝ) (ω : Sample) : ℝ :=
+  ∑ k ∈ Finset.range (2 ^ n), coord (m, 2 ^ n + k) ω * hat n k u
+
+private def unitPartial (m N : ℕ) (u : ℝ) (ω : Sample) : ℝ :=
+  u * coord (m, 0) ω + ∑ n ∈ Finset.range N, level m n u ω
+
+private def unit (m : ℕ) (u : ℝ) (ω : Sample) : ℝ :=
+  u * coord (m, 0) ω + ∑' n : ℕ, level m n u ω
+
+private def Bpartial (N : ℕ) (t : ℝ≥0) (ω : Sample) : ℝ :=
+  ∑ m ∈ Finset.range (⌊(t : ℝ)⌋₊ + 1),
+    unitPartial m N (clip ((t : ℝ) - (m : ℝ))) ω
+
+def B (t : ℝ≥0) (ω : Sample) : ℝ :=
+  ∑ m ∈ Finset.range (⌊(t : ℝ)⌋₊ + 1),
+    unit m (clip ((t : ℝ) - (m : ℝ))) ω
+
+private def fourthMoment : ℝ :=
+  ∫ x : ℝ, |x| ^ 4 ∂gaussianReal 0 1
+
+private def bad (m n : ℕ) : Set Sample :=
+  {ω | ∃ k ∈ Finset.range (2 ^ n),
+    (4 / 3 : ℝ) ^ n < |coord (m, 2 ^ n + k) ω|}
+
+private def Good (ω : Sample) : Prop :=
+  ∀ m : ℕ, ∀ᶠ n : ℕ in atTop, ω ∉ bad m n
+
+private def unitCov (N : ℕ) (u v : ℝ) : ℝ :=
+  u * v + ∑ n ∈ Finset.range N,
+    ∑ k ∈ Finset.range (2 ^ n), hat n k u * hat n k v
+
+private def fullCov (N : ℕ) (s t : ℝ≥0) : ℝ :=
+  ∑ m ∈ Finset.range (⌊((max s t : ℝ≥0) : ℝ)⌋₊ + 1),
+    unitCov N (clip ((s : ℝ) - (m : ℝ)))
+      (clip ((t : ℝ) - (m : ℝ)))
+
+-- PRIVATE probability/convergence obligation inventory.
+private theorem measurable_coord (i : ℕ × ℕ) : Measurable (coord i)
+
+private theorem hasLaw_coord (i : ℕ × ℕ) :
+    HasLaw (coord i) (gaussianReal 0 1) law
+
+private theorem iIndepFun_coord : iIndepFun coord law
+
+private theorem integrable_fourthMoment :
+    Integrable (fun x : ℝ => |x| ^ 4) (gaussianReal 0 1)
+
+private theorem measurableSet_bad (m n : ℕ) : MeasurableSet (bad m n)
+
+private theorem bad_measure_le (m n : ℕ) :
+    law (bad m n) ≤ ENNReal.ofReal (fourthMoment * (81 / 128 : ℝ) ^ n)
+
+private theorem good_ae : ∀ᵐ ω ∂law, Good ω
+
+private theorem hat_zero (n k : ℕ) : hat n k 0 = 0
+
+private theorem hat_one (n k : ℕ) (hk : k < 2 ^ n) : hat n k 1 = 0
+
+private theorem level_bound (m n : ℕ) (R : ℝ) (hR : 0 ≤ R)
+    (ω : Sample) (hω : ∀ k ∈ Finset.range (2 ^ n),
+      |coord (m, 2 ^ n + k) ω| ≤ R) (u : ℝ) :
+    |level m n u ω| ≤ amplitude n * R
+
+private theorem unitPartial_zero (m N : ℕ) (ω : Sample) :
+    unitPartial m N 0 ω = 0
+
+private theorem unit_zero (m : ℕ) (ω : Sample) : unit m 0 ω = 0
+
+private theorem unitPartial_one (m N : ℕ) (ω : Sample) :
+    unitPartial m N 1 ω = coord (m, 0) ω
+
+private theorem unit_one (m : ℕ) (ω : Sample) :
+    unit m 1 ω = coord (m, 0) ω
+
+private theorem continuous_unitPartial (m N : ℕ) (ω : Sample) :
+    Continuous (fun u : ℝ => unitPartial m N u ω)
+
+private theorem unitPartial_tendstoUniformlyOn (ω : Sample) (hω : Good ω) (m : ℕ) :
+    TendstoUniformlyOn (fun N u => unitPartial m N u ω)
+      (fun u => unit m u ω) atTop Set.univ
+
+private theorem continuous_unit_of_good (ω : Sample) (hω : Good ω) (m : ℕ) :
+    Continuous (fun u : ℝ => unit m u ω)
+
+private theorem B_eq_sum_of_le (ω : Sample) (M : ℕ) (t : ℝ≥0)
+    (ht : (t : ℝ) ≤ (M : ℝ)) :
+    B t ω = ∑ m ∈ Finset.range M,
+      unit m (clip ((t : ℝ) - (m : ℝ))) ω
+
+private theorem continuous_B_of_good (ω : Sample) (hω : Good ω) :
+    Continuous (fun t : ℝ≥0 => B t ω)
+
+private theorem measurable_Bpartial (N : ℕ) (t : ℝ≥0) :
+    Measurable (Bpartial N t)
+
+private theorem Bpartial_tendsto_of_good (ω : Sample) (hω : Good ω) (t : ℝ≥0) :
+    Tendsto (fun N => Bpartial N t ω) atTop (𝓝 (B t ω))
+
+-- PRIVATE deterministic covariance and characteristic-function obligations.
+-- No desired Brownian/FDD/continuity property occurs as an assumption here.
+private theorem coordinate_index_injective (n p k l : ℕ)
+    (hk : k < 2 ^ n) (hl : l < 2 ^ p)
+    (h : 2 ^ n + k = 2 ^ p + l) : n = p ∧ k = l
+
+private theorem unitCov_dyadic (N j k : ℕ) (hj : j ≤ 2 ^ N) (hk : k ≤ 2 ^ N) :
+    unitCov N ((j : ℝ) / (2 : ℝ) ^ N) ((k : ℝ) / (2 : ℝ) ^ N) =
+      min ((j : ℝ) / (2 : ℝ) ^ N) ((k : ℝ) / (2 : ℝ) ^ N)
+
+private theorem unitCov_approx (N : ℕ) (u v : ℝ)
+    (hu : u ∈ Set.Icc (0 : ℝ) 1) (hv : v ∈ Set.Icc (0 : ℝ) 1) :
+    |unitCov N u v - min u v| ≤ ((2 : ℝ) ^ N)⁻¹
+
+private theorem fullCov_tendsto (s t : ℝ≥0) :
+    Tendsto (fun N => fullCov N s t) atTop
+      (𝓝 (min (s : ℝ) (t : ℝ)))
+
+private theorem partial_finite_characteristic (N : ℕ)
+    (I : Finset ℝ≥0) (a : I → ℝ) :
+    (∫ ω, Complex.exp
+      (((∑ i : I, a i * Bpartial N i.1 ω : ℝ) : ℂ) * Complex.I) ∂law) =
+      Complex.exp (-((∑ i : I, ∑ j : I,
+        a i * a j * fullCov N i.1 j.1 : ℝ) : ℂ) / 2)
+
+private theorem finite_characteristic (I : Finset ℝ≥0) (a : I → ℝ) :
+    (∫ ω, Complex.exp
+      (((∑ i : I, a i * B i.1 ω : ℝ) : ℂ) * Complex.I) ∂law) =
+      Complex.exp (-((∑ i : I, ∑ j : I,
+        a i * a j * min (i.1 : ℝ) (j.1 : ℝ) : ℝ) : ℂ) / 2)
+
+-- PUBLIC final interfaces. Each is unconditional in Sample/law/B.
+theorem B_zero (ω : Sample) : B 0 ω = 0
+
+theorem B_continuous_ae : ∀ᵐ ω ∂law, Continuous (fun t : ℝ≥0 => B t ω)
+
+theorem B_aemeasurable (t : ℝ≥0) : AEMeasurable (B t) law
+
+theorem B_hasLaw_finite (I : Finset ℝ≥0) :
+    HasLaw (fun ω => I.restrict (B · ω))
+      (ProbabilityTheory.BrownianReal.projectiveFamily I) law
+
+theorem isBrownianReal : IsBrownianReal B law
+
+theorem B_hasLaw_eval (t : ℝ≥0) : HasLaw (B t) (gaussianReal 0 t) law
+
+theorem B_integral (t : ℝ≥0) : (∫ ω, B t ω ∂law) = 0
+
+theorem B_covariance (s t : ℝ≥0) :
+    cov[B s, B t; law] = min (s : ℝ) (t : ℝ)
+
+theorem B_hasLaw_sub (s t : ℝ≥0) :
+    HasLaw (B s - B t) (gaussianReal 0 (nndist s.1 t.1)) law
+
+end Shao.OQ4.CanonicalBrownian
