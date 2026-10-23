@@ -1,0 +1,23 @@
+DECL Shao.OQ3.uniform_isotropic_pair_characteristic_local_gaussian_bound
+TYPE ∀ {ι : Type u_1} (K : Set ι) (laws : ι → MeasureTheory.Measure (Fin 2 → ℝ)),
+  (∀ p ∈ K, MeasureTheory.IsProbabilityMeasure (laws p)) →
+    (∀ p ∈ K, ∀ (i : Fin 2), MeasureTheory.MemLp (fun y => y i) 2 (laws p)) →
+      (∀ p ∈ K, ∀ (i : Fin 2), ∫ (y : Fin 2 → ℝ), y i ∂laws p = 0) →
+        (∀ p ∈ K,
+            ∀ (i j : Fin 2),
+              ProbabilityTheory.covariance (fun y => y i) (fun y => y j) (laws p) = if i = j then 1 else 0) →
+          (∃ C,
+              0 < C ∧
+                ∀ p ∈ K,
+                  MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) (laws p) ∧
+                    ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ 3 ∂laws p ≤ C) →
+            ∃ delta,
+              0 < delta ∧
+                delta ≤ 1 ∧
+                  ∀ p ∈ K,
+                    ∀ (u v : ℝ),
+                      √(u ^ 2 + v ^ 2) ≤ delta →
+                        ‖∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂laws p‖ ≤
+                          Real.exp (-(u ^ 2 + v ^ 2) / 4)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

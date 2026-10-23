@@ -1,0 +1,15 @@
+DECL Shao.OQ3.pair_linear_projection_abs_le_euclidean
+TYPE ∀ (u v a b : ℝ), |u * a + v * b| ≤ √(u ^ 2 + v ^ 2) * √(a ^ 2 + b ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_probability_characteristic_quadratic_remainder_bound
+TYPE ∀ (law : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure law],
+  (∀ (i : Fin 2), MeasureTheory.MemLp (fun y => y i) 2 law) →
+    (∀ (i : Fin 2), ∫ (y : Fin 2 → ℝ), y i ∂law = 0) →
+      (∀ (i j : Fin 2), ProbabilityTheory.covariance (fun y => y i) (fun y => y j) law = if i = j then 1 else 0) →
+        MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) law →
+          ∀ (u v : ℝ),
+            ‖∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂law - (1 - ↑(u ^ 2 + v ^ 2) / 2)‖ ≤
+              (Real.exp 1 + 4) * √(u ^ 2 + v ^ 2) ^ 3 * ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ 3 ∂law
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
