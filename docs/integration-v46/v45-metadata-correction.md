@@ -1,0 +1,3 @@
+# Deterministic v45 receipt metadata correction
+
+The historical receipt-v45.json baseline_reuse.source_count label is284; the executed gate's explicit guard and baseline-reuse.json source map contain288 unchanged baseline modules. The gate source_files_sha256/union checks and292 resulting modules are correct. The build_mode label says sequential changed sources plus aggregate; canonical-object-reuse.json and sequential/progress.json show all four exact producer objects were reused and only Shao aggregate re-elaborated. This corrects labels only, with no changed mathematical source, passed-check rerun, or historical receipt rewrite. Subsequent gates derive source_count from the verified map and describe actual object reuse.

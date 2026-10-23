@@ -1,0 +1,5 @@
+# Root scope acceptance — actual source Fourier test kernel
+
+Sole complete independent review CORRECT: common-kernel-review.md/json. Exact author22a68e78abc981e898f823bef7f019efa3731504, source151fe42cda5414873ea9c9ea3359d256e971132073ea9d1c714ea0105af234d3, objectf3d751f7a84fa991841a6a005e009b1d6ee28cb2347f55a0280417637adaaeba. Complete source,36actual-owned declarations and5definition values covered; kernel/owned-transitive-axiom receipt matches exact version. Root reuses qualified review and unchanged successful checks.
+
+Source-allowed actual smooth cutoff with strict interior compact support, actual strict H_y, actual negative-unit-phase two-dimensional transform, actual integrability and all-frequency exact sine formula includingu0/y0. No supplied transform or free kernel. Does not close actual future/noise factorization, inversion/2pi rescaling, marknorm/oscillatory integrals, IBP boundaries, region/time probability or C1C2. Accepted for v46 integration pending aggregate gate and merge.
