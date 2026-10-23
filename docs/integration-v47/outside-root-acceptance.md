@@ -1,0 +1,5 @@
+# Root exact-source scope acceptance: QuadraticFullNoiseOutsideWeights
+
+Actual low/high outside fixed-v sets and actual D/W second derivative norm integrals with deterministic N0=32 weights. Constants precede kappa, and gamma/kappa powers retained. Actual marked-v bounds, source scale smallness, whole-u IBP and y^-2 probability composition remain open.
+
+Root read both complete public theorem statements (and actual public definitions where present), checked interface quantifiers, original law/normalization/signs and the qualified complete independent review coverage. Exact source 7be205e1bff4747e2ac3976b61cb06bcd3d3d6e2cd45cd9edba8169ed7cd979d, object fb0362b6f0943eeffcc675689a5e9ce029e0cdf82d55d0b3fcd432fb8e1e63de. Reuse the sole fresh complete review common-outside-review.json (6dd864d1c195f4a24b07a758f29ccf8e3093b4c74b9edc3f09d7557286d42c01), all actual owned types/definition values and source-bound server kernel/transitive standard-three-axiom evidence. No second internal proof review or repeated producer compilation is required. Acceptance is subject only to aggregate integration and exact byte preservation.

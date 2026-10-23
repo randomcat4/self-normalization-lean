@@ -1,0 +1,5 @@
+# Root exact-source scope acceptance: QuadraticFullNoiseRegionFour
+
+Actual source D and W=uE second derivatives on the closed high-frequency cone and their fixed-v double-sided u-tail integrability/bounds. Original conditional law, T=m*m2, L2/kappa/gamma guards paid. Global derivative identities retain the full 2Eprime term. This is not the marked-v or y^-2 probability contribution.
+
+Root read both complete public theorem statements (and actual public definitions where present), checked interface quantifiers, original law/normalization/signs and the qualified complete independent review coverage. Exact source 9b09880a917b973ea52854fd04906f67cc8a7952e69ab46238a852b79b342ecf, object ea60703c33a6b503f835607153b84311549a8234eea52b8f2aa20f16039a91b5. Reuse the sole fresh complete review common-region4-review.json (4ce8756ec2b68609420922dcba6c4a9663fbc32066d40a8d917109a83e38eaed), all actual owned types/definition values and source-bound server kernel/transitive standard-three-axiom evidence. No second internal proof review or repeated producer compilation is required. Acceptance is subject only to aggregate integration and exact byte preservation.

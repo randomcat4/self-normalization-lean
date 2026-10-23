@@ -1,0 +1,7 @@
+# Actual shared derivative/tail consumers, future-noise Fourier factorization and OQ3 geometry
+
+Original source highderivatives(a-d) core is now paid in its recorded ranges. This batch adds actual global odd/even derivatives, closed-cone Region4 pointwise/u-tail estimates and actual low/high outside weighted-u integrals. The future/noise kernel has its actual L1 and exact Hhat*Xi*phi^m transform factorization. These supply concrete analysis inputs; marked-v estimates, whole-u integration by parts, Fourier inversion and region probability bounds remain subsequent obligations.
+
+OQ3 PR181 adds eight actual open-domain moment/whitening/chart/Legendre/rate/boundary modules. Spectral/weak-Cramer premises remain explicit where required; boundary curvature formula is not positivity. OQ3 B/D and C1/C2 remain OPEN.
+
+Twelve new modules, eighteen public theorems; aggregate totals and exact namespace/owned counts are authoritative in receipt-v47.json. All twelve producer objects and qualified complete independent source/proof/actual-type/value reviews are reused. Only aggregate import elaboration and project-wide coverage/transitive-axiom integration checks are new; all301 baseline sources and existing artifacts remain unchanged. No repeated producer proof compilation. Standard axiom whitelist propext, Classical.choice, Quot.sound; pinned Lean4.36rc1/mathlib807d3836, server-only CPU10–13/shared root lock.

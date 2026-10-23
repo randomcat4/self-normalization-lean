@@ -1,0 +1,5 @@
+# Root exact-source scope acceptance: QuadraticFullNoiseGlobalOddEven
+
+Original source(d) actual signed characteristic-power derivatives with bounds 1,2*sqrt(T),3*T, including m=0/T=0; actual global D/W second derivative bounds retain T+h*gamma. No cone/positive-T premise added. Original highderivatives(a-d) core is paid in its recorded ranges; C1/C2 are still open.
+
+Root read both complete public theorem statements (and actual public definitions where present), checked interface quantifiers, original law/normalization/signs and the qualified complete independent review coverage. Exact source 7256c6f101d86a76f78f713f06c031cba4ec75c7174bb9d73d0fdb629956008c, object 999cf81e1044a178f038875d1902fcc474b93bd2b5c0a17860a0c8a1dfe40dde. Reuse the sole fresh complete review common-global-review.json (c0a4b8c3b5a98dd9dc43665ad983e7d7c0c3611ae4a0266cb47b9687ced30698), all actual owned types/definition values and source-bound server kernel/transitive standard-three-axiom evidence. No second internal proof review or repeated producer compilation is required. Acceptance is subject only to aggregate integration and exact byte preservation.

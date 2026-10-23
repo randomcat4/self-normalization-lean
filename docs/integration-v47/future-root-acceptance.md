@@ -1,0 +1,5 @@
+# Root exact-source scope acceptance: SourceFutureNoiseFourier
+
+Actual averaged positive path/noise shifts, true H integrability and negative-unit-phase 2D transform factorization Hhat*Xi*phi^m. Genuine probability/Fubini/translation payments; all m and y=0/u=0 retained. Fourier-L1, continuity, inversion and region estimates are not inferred from this factorization.
+
+Root read both complete public theorem statements (and actual public definitions where present), checked interface quantifiers, original law/normalization/signs and the qualified complete independent review coverage. Exact source 4ddfbc6be3917fb60f441156158babb9cbbfd939d19b9604039cd0b281454807, object 284987012197dc7db3c5abd55d4ff6441d737b1de07b7612a08bf4f806f11fd2. Reuse the sole fresh complete review common-future-review.json (e6fb5b69c04afb9a8582b2c4fe2c5bf813ab1180ed4a9cf77f7247416b19e59d), all actual owned types/definition values and source-bound server kernel/transitive standard-three-axiom evidence. No second internal proof review or repeated producer compilation is required. Acceptance is subject only to aggregate integration and exact byte preservation.

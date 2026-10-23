@@ -1,0 +1,279 @@
+{
+  "head": "3346440dea28ce226bad375c62b288163ea7479e",
+  "units": [
+    {
+      "unit": "U22g",
+      "module": "Shao.OQ3.OpenDomainAffineMoments",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem compact_open_domain_affine_parabola_moments\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ))\n    (hcompact : IsCompact Theta)\n    (hTheta : Theta ⊆ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (A : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ) (U : ℝ) (hU : 0 ≤ U)\n    (hA : ∀ theta ∈ Theta, ∀ i j : Fin 2, |A theta i j| ≤ U) :\n    let tilt : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (Fin 2 → ℝ) := fun p =>\n      ![∫ x : ℝ, x ∂tilt p, ∫ x : ℝ, x ^ 2 ∂tilt p]\n    let Y : (ℝ × ℝ) → ℝ → (Fin 2 → ℝ) := fun p x =>\n      A p *ᵥ (![x, x ^ 2] - means p)\n    let laws : (ℝ × ℝ) → Measure (Fin 2 → ℝ) := fun p => (tilt p).map (Y p)\n    (∀ theta ∈ Theta, IsProbabilityMeasure (laws theta)) ∧\n      ∀ k : ℕ, ∃ C : ℝ, 0 < C ∧ ∀ theta ∈ Theta,\n        Integrable (fun y : Fin 2 → ℝ => (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k)\n          (laws theta) ∧\n        0 ≤ (∫ y : Fin 2 → ℝ, (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k ∂laws theta) ∧\n        (∫ y : Fin 2 → ℝ, (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k ∂laws theta) ≤ C "
+      ],
+      "review_markers": [
+        "### Independent translation of all actual declarations",
+        "The proof must cover all three declarations, all real x (not a bounded surrogate), all k including zero, U=0, empty Theta, arbitrary probability mu, actual means and actual normalized tilted laws. It must supply genuine integrability, not exploit totalized integrals; justify probability preservation, map measurability and integral transfer; derive uniformly bounded first/second actual tilted means from the stated domain/compactness hypotheses; and control Euclidean radius rather than silently substituting the product norm. The matrix assumption is the explicit uniform entry bound, not continuity or joint parameter measurability. No joint thet",
+        "Mathematical verdict: **CORRECT**, for all three actual owner declarations in this module. This is an independent complete source-to-statement/proof review, not a declaration-only review and not reliance on another review vote.",
+        "**Evidence verdict: CORRECT / existing server receipts sufficient for this exact source.** I ran no Lean command, owner audit, build, test gate, cache hydration, or cache mutation. All successful gates below were reused once, then checked by read-only record/log/source/hash inspection.",
+        "**STATUS: CORRECT.** All 166 final source lines, all three owner statements/proofs, the complete frozen scope, the actual consumed interface, the original source obligations and root-contract restrictions have been reviewed. The exact source version has a successful complete server kernel check and all-owner transitive standard-three-axiom receipt. No critical gap or uncovered G scope remains. This report independently accepts U22g as the stated helper only."
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW",
+        "source_sha256": "110a16cab72d655905659b30a496625f98aa70e188b004a8713006225ab9a8e3",
+        "all_owned": 3,
+        "all_theorems": 3,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22g — compact actual tilted affine-parabola Euclidean moments",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. This is the next source-bound moment transfer after U22f, independent of the blocked inverse-function cache. R2report57–60 and83–92 require uniform actual Euclidean moments of a centered transformed parabola family. This unit transfers true compact raw tilted moments through an arbitrary uniformly entry-bounded matrix family; a later actual whitening consumer must produce that bound from its retained spectral hypotheses.",
+        "",
+        "Module `Shao.OQ3.OpenDomainAffineMoments`, zero public definitions, one public theorem. Exact imports and TYPE:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22h",
+      "module": "Shao.OQ3.QuadraticWhiteningSpectralData",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem quadratic_whitening_spectral_data\n    (D : Matrix (Fin 2) (Fin 2) ℝ) (hsym : D 1 0 = D 0 1)\n    (lo hi : ℝ) (hlo : 0 < lo) (hhi : 0 < hi)\n    (hspec : ∀ xi eta : ℝ,\n      lo * (xi ^ 2 + eta ^ 2) ≤\n        xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧\n      xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤\n        hi * (xi ^ 2 + eta ^ 2)) :\n    let s : ℝ := Real.sqrt (D 0 0 * D 1 1 - (D 0 1) ^ 2)\n    let t : ℝ := Real.sqrt (D 0 0 + D 1 1 + 2 * s)\n    let A : Matrix (Fin 2) (Fin 2) ℝ :=\n      ![![(D 1 1 + s) / (s * t), -(D 0 1) / (s * t)],\n        ![-(D 0 1) / (s * t), (D 0 0 + s) / (s * t)]]\n    0 < s ∧ 0 < t ∧ Aᵀ = A ∧ A * D * A = 1 ∧\n      (∀ xi eta : ℝ, xi ≠ 0 ∨ eta ≠ 0 →\n        0 < xi * (A *ᵥ ![xi, eta]) 0 + eta * (A *ᵥ ![xi, eta]) 1) ∧\n      (∀ xi eta : ℝ,\n        (1 / Real.sqrt hi) * Real.sqrt (xi ^ 2 + eta ^ 2) ≤\n          Real.sqrt ((xi * A 0 0 + eta * A 1 0) ^ 2 +\n            (xi * A 0 1 + eta * A 1 1) ^ 2) ∧\n        Real.sqrt ((xi * A 0 0 + eta * A 1 0) ^ 2 +\n            (xi * A 0 1 + eta * A 1 1) ^ 2) ≤\n          (1 / Real.sqrt lo) * Real.sqrt (xi ^ 2 + eta ^ 2)) ∧\n      ∀ i j : Fin 2, |A i j| ≤ 1 / Real.sqrt lo "
+      ],
+      "review_markers": [
+        "STATUS: CORRECT",
+        "The immutable prefix is the first **3370 bytes / 25 lines** of this report, SHA256 `2fe91868a67c5bfdc62b85cbed76381ef26f424eebaf99ca2ad11d23c63707f7`. I verified that binding immediately before appending this review; it predates reading the scope, proof, original-source excerpts, and author receipts. It includes both complete actual-statement translations and the fixed acceptance criteria."
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW",
+        "source_sha256": "83520a430712a07148396f30f7c07619ef55bda9cc9e464a98eae63e071e874e",
+        "all_owned": 2,
+        "all_theorems": 2,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22h — reusable genuine positive covariance whitening data",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report53–59/83–92 and root-contract2/4. The next actual unbounded open-domain standardized family must produce its actual whitening matrix and entry/frequency bounds from retained uniform actual covariance spectra. U22g only transfers moments under an explicit entry bound; it does not produce the whitening construction. This finite-dimensional helper supplies that missing matrix interface, without claiming any root theorem by itself.",
+        "",
+        "Module `Shao.OQ3.QuadraticWhiteningSpectralData`, zero public definitions and one public theorem. The accepted private `CovarianceWhitening.whitening_spectral_data` proof at library lines29–210 is the complete mathematical proof pattern; it is not publicly callable and must not be referenced through a private name. Reproduce its exact numeric argument in this owned module, with full source attribution and independent review, then derive actual entry bounds from its genuine frequency bounds. No prior review substitutes for reviewing the new exact source.",
+        ""
+      ]
+    },
+    {
+      "unit": "U22i",
+      "module": "Shao.OQ3.OpenDomainWhitenedFamily",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem compact_open_domain_covariance_whitened_family\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ))\n    (hcompact : IsCompact Theta)\n    (hTheta : Theta ⊆ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (lo hi beta c R : ℝ) (hlo : 0 < lo) (hhi : 0 < hi)\n    (hbeta : 0 ≤ beta) (hc : 0 < c) (hR : 0 ≤ R)\n    (hspec : ∀ p ∈ Theta,\n      let D : Matrix (Fin 2) (Fin 2) ℝ :=\n        parabolaCovariance (mu.tilted (fun x => p.1 * x + p.2 * x ^ 2))\n      ∀ xi eta : ℝ,\n        lo * (xi ^ 2 + eta ^ 2) ≤\n          xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧\n        xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤\n          hi * (xi ^ 2 + eta ^ 2))\n    (hWC : ∀ p ∈ Theta, ∀ xi eta : ℝ, R < Real.sqrt (xi ^ 2 + eta ^ 2) →\n      ‖jointCharacteristic (mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)) xi eta‖ ≤\n        1 - c * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-beta)) :\n    let tilt : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let D : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p => parabolaCovariance (tilt p)\n    let s : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 * D p 1 1 - (D p 0 1) ^ 2)\n    let t : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 + D p 1 1 + 2 * s p)\n    let A : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p =>\n      ![![(D p 1 1 + s p) / (s p * t p), -(D p 0 1) / (s p * t p)],\n        ![-(D p 0 1) / (s p * t p), (D p 0 0 + s p) / (s p * t p)]]\n    let means : (ℝ × ℝ) → (Fin 2 → ℝ) := fun p =>\n      ![∫ x : ℝ, x ∂tilt p, ∫ x : ℝ, x ^ 2 ∂tilt p]\n    let Y : (ℝ × ℝ) → ℝ → (Fin 2 → ℝ) := fun p x => A p *ᵥ (![x, x ^ 2] - means p)\n    let laws : (ℝ × ℝ) → Measure (Fin 2 → ℝ) := fun p => (tilt p).map (Y p)\n    let Phi : (ℝ × ℝ) → ℝ → ℝ → ℂ := fun p xi eta =>\n      ∫ y : Fin 2 → ℝ,\n        Complex.exp (((xi * y 0 + eta * y 1 : ℝ) : ℂ) * Complex.I) ∂laws p\n    let L : ℝ := 1 / Real.sqrt hi\n    let U : ℝ := 1 / Real.sqrt lo\n    let cA : ℝ := c * Real.rpow U (-beta)\n    let RA : ℝ := R / L\n    0 < L ∧ 0 < U ∧ 0 < cA ∧ 0 ≤ RA ∧\n      (∀ p ∈ Theta,\n        0 < s p ∧ 0 < t p ∧ (A p)ᵀ = A p ∧ A p * D p * A p = 1 ∧\n        (∀ xi eta : ℝ, xi ≠ 0 ∨ eta ≠ 0 →\n          0 < xi * (A p *ᵥ ![xi, eta]) 0 + eta * (A p *ᵥ ![xi, eta]) 1) ∧\n        IsProbabilityMeasure (laws p) ∧\n        (∀ i : Fin 2, MemLp (fun y : Fin 2 → ℝ => y i) 2 (laws p) ∧\n          (∫ y : Fin 2 → ℝ, y i ∂laws p) = 0) ∧\n        (∀ i j : Fin 2, ProbabilityTheory.covariance\n          (fun y : Fin 2 → ℝ => y i) (fun y : Fin 2 → ℝ => y j) (laws p) =\n            if i = j then 1 else 0) ∧\n        (∀ xi eta : ℝ,\n          L * Real.sqrt (xi ^ 2 + eta ^ 2) ≤\n            Real.sqrt ((xi * A p 0 0 + eta * A p 1 0) ^ 2 +\n              (xi * A p 0 1 + eta * A p 1 1) ^ 2) ∧\n          Real.sqrt ((xi * A p 0 0 + eta * A p 1 0) ^ 2 +\n              (xi * A p 0 1 + eta * A p 1 1) ^ 2) ≤\n            U * Real.sqrt (xi ^ 2 + eta ^ 2)) ∧\n        ∀ xi eta : ℝ, RA < Real.sqrt (xi ^ 2 + eta ^ 2) →\n          ‖Phi p xi eta‖ ≤ 1 - cA * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-beta)) ∧\n      ∀ k : ℕ, ∃ C : ℝ, 0 < C ∧ ∀ p ∈ Theta,\n        Integrable (fun y : Fin 2 → ℝ => (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k) (laws p) ∧\n        0 ≤ (∫ y : Fin 2 → ℝ, (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k ∂laws p) ∧\n        (∫ y : Fin 2 → ℝ, (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) ^ k ∂laws p) ≤ C "
+      ],
+      "review_markers": [
+        "**STATUS: CORRECT.** The entire exact 120-line U22i implementation proves its frozen conditional family statement. I found no critical mathematical gap, substituted law/matrix, weakened quantifier, implicit bounded-support assumption, incorrect transpose/sign, or caller assumption containing the whitening conclusions. Acceptance is for this family interface and its one actual module-owned theorem, at source SHA256 `622601d0f8650bfc684f4dfde9a615700ad48c4911f5316734193278e115ee8e`. It does not close original OQ3 B or D.",
+        "For uniform raw moments, the consumed chain is `OpenDomainWeightedMoments -> OpenDomainFrechetCumulants -> OpenDomainSmoothMean -> OpenDomainCompactMoments`; I read each complete source, including all private definitions/proofs, rather than treating continuity as an unexplained premise. The weighted-moment derivative theorem first proves weighted-power integrability from the same interior-MGF argument. It shifts the quadratic parameter by a small positive `delta` still in the interior. On a parameter rectangle of radius `eps=delta/4`, the exponential is dominated by `exp(eps/2)*exp(p.1*x+(p.2+delta)*x^2)`, using `2|x|<=1+x^2`. Weighted powers",
+        "| Complete source attempt 01 | Exit 0, **6.466094164177775 seconds**, exact reviewed 120-line source; first and only complete-success attempt in history |"
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW_AND_H_ACCEPTANCE",
+        "source_sha256": "622601d0f8650bfc684f4dfde9a615700ad48c4911f5316734193278e115ee8e",
+        "all_owned": 1,
+        "all_theorems": 1,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22i — actual unbounded open-domain covariance-whitened family",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report38–61/83–92 and root-contract2/4. This consumer binds the actual tilt covariance to the actual positive symmetric whitening construction, uses genuine compact raw-moment and matrix-entry transfer, and retains the original family's explicit uniform spectra and weak-Cramer assumptions. No bounded-support premise or single-reference-law stability argument is introduced.",
+        "",
+        "Module `Shao.OQ3.OpenDomainWhitenedFamily`, zero public definitions and one public theorem. Exact imports and TYPE:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22j",
+      "module": "Shao.OQ3.OpenDomainRealMoments",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem compact_open_domain_affine_parabola_real_moments\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ))\n    (hcompact : IsCompact Theta)\n    (hTheta : Theta ⊆ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (A : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ) (U : ℝ) (hU : 0 ≤ U)\n    (hA : ∀ theta ∈ Theta, ∀ i j : Fin 2, |A theta i j| ≤ U) :\n    let tilt : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (Fin 2 → ℝ) := fun p =>\n      ![∫ x : ℝ, x ∂tilt p, ∫ x : ℝ, x ^ 2 ∂tilt p]\n    let Y : (ℝ × ℝ) → ℝ → (Fin 2 → ℝ) := fun p x =>\n      A p *ᵥ (![x, x ^ 2] - means p)\n    let laws : (ℝ × ℝ) → Measure (Fin 2 → ℝ) := fun p => (tilt p).map (Y p)\n    (∀ theta ∈ Theta, IsProbabilityMeasure (laws theta)) ∧\n      ∀ r : ℝ, 0 ≤ r → ∃ C : ℝ, 0 < C ∧ ∀ theta ∈ Theta,\n        Integrable (fun y : Fin 2 → ℝ => Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) r)\n          (laws theta) ∧\n        0 ≤ (∫ y : Fin 2 → ℝ, Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) r ∂laws theta) ∧\n        (∫ y : Fin 2 → ℝ, Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) r ∂laws theta) ≤ C ",
+        "theorem compact_open_domain_whitened_eight_add_delta_moment\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ))\n    (hcompact : IsCompact Theta)\n    (hTheta : Theta ⊆ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (lo hi delta : ℝ) (hlo : 0 < lo) (hhi : 0 < hi) (hdelta : 0 < delta)\n    (hspec : ∀ p ∈ Theta,\n      let D : Matrix (Fin 2) (Fin 2) ℝ :=\n        parabolaCovariance (mu.tilted (fun x => p.1 * x + p.2 * x ^ 2))\n      ∀ xi eta : ℝ,\n        lo * (xi ^ 2 + eta ^ 2) ≤\n          xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ∧\n        xi ^ 2 * D 0 0 + 2 * xi * eta * D 0 1 + eta ^ 2 * D 1 1 ≤\n          hi * (xi ^ 2 + eta ^ 2)) :\n    let tilt : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let D : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p => parabolaCovariance (tilt p)\n    let s : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 * D p 1 1 - (D p 0 1) ^ 2)\n    let t : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 + D p 1 1 + 2 * s p)\n    let A : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p =>\n      ![![(D p 1 1 + s p) / (s p * t p), -(D p 0 1) / (s p * t p)],\n        ![-(D p 0 1) / (s p * t p), (D p 0 0 + s p) / (s p * t p)]]\n    let means : (ℝ × ℝ) → (Fin 2 → ℝ) := fun p =>\n      ![∫ x : ℝ, x ∂tilt p, ∫ x : ℝ, x ^ 2 ∂tilt p]\n    let Y : (ℝ × ℝ) → ℝ → (Fin 2 → ℝ) := fun p x => A p *ᵥ (![x, x ^ 2] - means p)\n    let laws : (ℝ × ℝ) → Measure (Fin 2 → ℝ) := fun p => (tilt p).map (Y p)\n    (∀ p ∈ Theta, (A p)ᵀ = A p ∧ A p * D p * A p = 1 ∧\n      IsProbabilityMeasure (laws p)) ∧\n      ∃ C : ℝ, 0 < C ∧ ∀ p ∈ Theta,\n        Integrable (fun y : Fin 2 → ℝ =>\n          Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) (8 + delta)) (laws p) ∧\n        0 ≤ (∫ y : Fin 2 → ℝ,\n          Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) (8 + delta) ∂laws p) ∧\n        (∫ y : Fin 2 → ℝ,\n          Real.rpow (Real.sqrt ((y 0) ^ 2 + (y 1) ^ 2)) (8 + delta) ∂laws p) ≤ C "
+      ],
+      "review_markers": [
+        "The actual remote branch is `feat/oq3-open-domain-standardization` and current parent HEAD is `803d8d0fbea3c2a55b8167f7c1ff4902510f1b8e`. Run directory: `/root/rivermind-data/shao-lean-20261021/runs/oq3/u22j-20261023`. Worktree: `/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq3`. The recorded complete source checks and audit all use CPU14-17, native memory 8192 MiB, jobs 4, autoImplicit=false. The actual `lakefile.toml`, SHA256 `444f3a3a01fd8ff99f219cff08a99b20459c0d177c4e2c884af9eead481daf44`, retains autoImplicit=false and pins mathlib `807d3836b165983210ee2ecf3cd28f239436949c`. Actual `lean-toolchain`, SHA256 `d581a24b57a4ae9e0b",
+        "The complete failed attempt is preserved: `source-01.lean`, 7,509 bytes / 134 lines, SHA256 `79da2ee5f8a6f2a9a44da9682ad20fb0ea932249cdf30fb681af04f370ad8d39`; exit 1 after 5.565345300361514 seconds; its full 9,231-byte / 217-line log has SHA256 `1faa74d19ea26aa620f9984a3b75f2397ce0ae9a21cd3eff4bddc6fefa346ced`. I inspected the complete source-01/source-02 diff. All three statements and hypotheses are unchanged. The three edits only make the scalar rpow comparison explicit, disambiguate the nonnegative radius alias for the norm rewrite, and prove the actual probability mass integral of 1 explicitly. These fix the corresponding elaboration/rew"
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW",
+        "source_sha256": "4da837a392834289bb9b90b25953435b41a68b89038ef2e7f361648a30debbe7",
+        "all_owned": 3,
+        "all_theorems": 3,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22j — genuine real moments and the actual whitened 8+delta moment",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report38–61/83–92 and the original B moment condition. Natural-power integrability does not by itself state the required real 8+delta integrability. This unit supplies the real-power domination and binds its specialization to the same actual covariance whitening as U22i. It introduces no bounded-support premise, reference-law weak-Cramer stability, or caller-supplied moment conclusion.",
+        "",
+        "Module `Shao.OQ3.OpenDomainRealMoments`, zero public definitions and two public theorems. Exact imports and declarations:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22k",
+      "module": "Shao.OQ3.OpenDomainCompactMeanChart",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem open_domain_quadratic_tilt_compact_mean_chart\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)\n    (htheta : theta ∈ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (hdet : (parabolaCovariance\n      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det ≠ 0) :\n    let Omega : Set (ℝ × ℝ) := interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))\n    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>\n      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)\n    ∃ e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ), ∃ epsilon : ℝ,\n      0 < epsilon ∧\n      (e : (ℝ × ℝ) → (ℝ × ℝ)) = means ∧\n      theta ∈ e.source ∧ e.source ⊆ Omega ∧\n      Metric.closedBall (means theta) epsilon ⊆ e.target ∧\n      ContDiffAt ℝ ∞ (e.symm : (ℝ × ℝ) → (ℝ × ℝ)) (means theta) ∧\n      let U : Set (ℝ × ℝ) := Metric.ball (means theta) epsilon\n      let Theta : Set (ℝ × ℝ) := e.symm '' Metric.closedBall (means theta) epsilon\n      IsOpen U ∧ means theta ∈ U ∧ IsCompact Theta ∧ theta ∈ Theta ∧\n        Theta ⊆ Omega ∧\n        ContinuousOn (e.symm : (ℝ × ℝ) → (ℝ × ℝ))\n          (Metric.closedBall (means theta) epsilon) ∧\n        (∀ m ∈ Metric.closedBall (means theta) epsilon,\n          e.symm m ∈ Theta ∧ means (e.symm m) = m) ∧\n        (∀ p ∈ Theta, e.symm (means p) = p) ∧\n        means '' Theta = Metric.closedBall (means theta) epsilon ∧\n        e.symm '' U ⊆ Theta "
+      ],
+      "review_markers": [
+        "**K verdict: CORRECT.** All quantified points, including the closed-ball boundary, have the necessary memberships. The chart and compact set are nonempty and constructed rather than supplied by the caller. The theorem is conditional on a suitable interior theta and nonzero determinant; it does not assert that such a theta exists for every probability law. There is no bounded-X assumption, no global inverse claim, no uniform determinant/spectral bound inferred from compactness, and no silently enlarged original source scope.",
+        "**L1 verdict: CORRECT.** The key local-to-global step is legitimate: only the reference tilt parameter must be interior; every comparison test needs actual exponential integrability only. Neither convexity of a domain-free real K nor a local formal dual is substituted for the genuine full-domain supremum. The theorem proves attainment at theta, not uniqueness or any tail-domain minimization.",
+        "**L2 verdict: CORRECT.** It consumes K's produced chart rather than assuming a desired inverse or a global bound. K's positive radius ensures a genuine nonempty neighborhood, and inverse membership in the true interior supplies every use of L1. Dropping the unused center smoothness and other K conclusions in L2 weakens only the returned package, not the assumptions or the global rate being identified.",
+        "**Batch verdict: CORRECT.** Accepted scope is a local actual compact mean chart with center inverse smoothness, an all-true-domain dual bound attained at any actual interior tilt, and the finite true global EReal rate on the produced compact inverse chart. Uniform spectral nondegeneracy, original B's other moments/WC hypotheses, unique global tail minimum, local rate derivatives/Hessian, Song/Edgeworth, exact cells, boundary Laplace and far-layer probability are not proved by this batch. External-result attribution, root-contract far-probability repair and p54-related boundaries remain intact. OQ3 B/D and the other unresolved original roots r",
+        "K attempt 01's complete 85-line source hash is `66951ed5d114a910863006faf41ee8efc5ab37e4be09492a5c09992baf2c47f4`. The complete source-01→source-02 diff only introduces the local `hmeans` alias and uses it in three rewrites. The preserved failure log shows those exact rewrite-shape failures. L attempt 01's complete 116-line source hash is `bd7dc6c11b99ca876f645538ebc79602987da538cac83a9d6790452a5ea6a133`. Its complete diff first rewrites hshift before simplifying, changes the incorrectly qualified exponential convexity name to the pinned global `convexOn_exp`, and removes a redundant final `rfl`. The preserved log reports exactly that shift m",
+        "### Actual owner coverage and transitive axioms"
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW",
+        "source_sha256": "d76ee240a5f5ffa85d850eb920ca31e69640330926e49ed9131faa65e09a76f9",
+        "all_owned": 1,
+        "all_theorems": 1,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22k — actual local mean inverse with compact parameter control",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report50–60: the moment neighborhood is covered by the inverse mean map and its parameter image stays in a compact subset of the true exponential-integrability interior. This unit obtains that local compactness from the actual U22e mean chart, with actual tilted covariance determinant nonzero at the center. It is a local analytic producer, not a global injectivity or rate-minimization theorem.",
+        "",
+        "Module `Shao.OQ3.OpenDomainCompactMeanChart`, zero public definitions and one public theorem. Exact imports and TYPE:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22l",
+      "module": "Shao.OQ3.OpenDomainLegendre",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem open_domain_quadratic_tilt_legendre_attained\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)\n    (htheta : theta ∈ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))) :\n    let nu : Measure ℝ := mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)\n    let m : ℝ × ℝ := (∫ x : ℝ, x ∂nu, ∫ x : ℝ, x ^ 2 ∂nu)\n    let Ktheta : ℝ := Real.log\n      (∫ x : ℝ, Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu)\n    let I : ℝ := theta.1 * m.1 + theta.2 * m.2 - Ktheta\n    (∀ p : Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)),\n      (p : ℝ × ℝ).1 * m.1 + (p : ℝ × ℝ).2 * m.2 -\n        Shao.Probability.bivariateLogMGF mu (fun x : ℝ => (x, x ^ 2)) p ≤ I) ∧\n      Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) m = (I : EReal) ",
+        "theorem open_domain_quadratic_tilt_compact_legendre_chart\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)\n    (htheta : theta ∈ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (hdet : (parabolaCovariance\n      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det ≠ 0) :\n    let Omega : Set (ℝ × ℝ) := interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))\n    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>\n      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)\n    ∃ e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ), ∃ epsilon : ℝ,\n      0 < epsilon ∧ (e : (ℝ × ℝ) → (ℝ × ℝ)) = means ∧\n      theta ∈ e.source ∧ e.source ⊆ Omega ∧\n      Metric.closedBall (means theta) epsilon ⊆ e.target ∧\n      let Theta : Set (ℝ × ℝ) := e.symm '' Metric.closedBall (means theta) epsilon\n      IsCompact Theta ∧ theta ∈ Theta ∧ Theta ⊆ Omega ∧\n        ∀ z ∈ Metric.closedBall (means theta) epsilon,\n          e.symm z ∈ Theta ∧ means (e.symm z) = z ∧\n          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z =\n            (((e.symm z).1 * z.1 + (e.symm z).2 * z.2 - Real.log\n              (∫ x : ℝ, Real.exp ((e.symm z).1 * x + (e.symm z).2 * x ^ 2) ∂mu) : ℝ) : EReal) "
+      ],
+      "review_markers": [
+        "**K verdict: CORRECT.** All quantified points, including the closed-ball boundary, have the necessary memberships. The chart and compact set are nonempty and constructed rather than supplied by the caller. The theorem is conditional on a suitable interior theta and nonzero determinant; it does not assert that such a theta exists for every probability law. There is no bounded-X assumption, no global inverse claim, no uniform determinant/spectral bound inferred from compactness, and no silently enlarged original source scope.",
+        "**L1 verdict: CORRECT.** The key local-to-global step is legitimate: only the reference tilt parameter must be interior; every comparison test needs actual exponential integrability only. Neither convexity of a domain-free real K nor a local formal dual is substituted for the genuine full-domain supremum. The theorem proves attainment at theta, not uniqueness or any tail-domain minimization.",
+        "**L2 verdict: CORRECT.** It consumes K's produced chart rather than assuming a desired inverse or a global bound. K's positive radius ensures a genuine nonempty neighborhood, and inverse membership in the true interior supplies every use of L1. Dropping the unused center smoothness and other K conclusions in L2 weakens only the returned package, not the assumptions or the global rate being identified.",
+        "**Batch verdict: CORRECT.** Accepted scope is a local actual compact mean chart with center inverse smoothness, an all-true-domain dual bound attained at any actual interior tilt, and the finite true global EReal rate on the produced compact inverse chart. Uniform spectral nondegeneracy, original B's other moments/WC hypotheses, unique global tail minimum, local rate derivatives/Hessian, Song/Edgeworth, exact cells, boundary Laplace and far-layer probability are not proved by this batch. External-result attribution, root-contract far-probability repair and p54-related boundaries remain intact. OQ3 B/D and the other unresolved original roots r",
+        "K attempt 01's complete 85-line source hash is `66951ed5d114a910863006faf41ee8efc5ab37e4be09492a5c09992baf2c47f4`. The complete source-01→source-02 diff only introduces the local `hmeans` alias and uses it in three rewrites. The preserved failure log shows those exact rewrite-shape failures. L attempt 01's complete 116-line source hash is `bd7dc6c11b99ca876f645538ebc79602987da538cac83a9d6790452a5ea6a133`. Its complete diff first rewrites hshift before simplifying, changes the incorrectly qualified exponential convexity name to the pinned global `convexOn_exp`, and removes a redundant final `rfl`. The preserved log reports exactly that shift m",
+        "### Actual owner coverage and transitive axioms"
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW_AND_K_ACCEPTANCE",
+        "source_sha256": "941c08552f300af2c85e2df7f55399b69c4468bca467fe88b8a303a6a3c74bc3",
+        "all_owned": 2,
+        "all_theorems": 2,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22l — actual global Legendre value on the local mean chart",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report38–55 and root-contract2/4 require a true extended-real global Legendre transform and agreement with the finite local expression, rather than a domain-free real log integral or a merely formal dual formula. This unit proves the global bound by Jensen under the actual normalized tilt, then binds attainment to the compact local mean chart from U22k.",
+        "",
+        "Module `Shao.OQ3.OpenDomainLegendre`, zero public definitions and two public theorems. Exact imports and declarations:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22m",
+      "module": "Shao.OQ3.OpenDomainRateDerivatives",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem open_domain_quadratic_tilt_local_rate_derivatives\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)\n    (htheta : theta ∈ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (hdet : (parabolaCovariance\n      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det ≠ 0) :\n    let Omega : Set (ℝ × ℝ) := interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))\n    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>\n      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)\n    let K : (ℝ × ℝ) → ℝ := fun p => Real.log\n      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)\n    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance (nu theta)\n    let pr0 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ\n    let pr1 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ\n    let row0 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 0 • pr0 + D 0 1 • pr1\n    let row1 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 1 • pr0 + D 1 1 • pr1\n    let covector : (ℝ × ℝ) →L[ℝ] ((ℝ × ℝ) →L[ℝ] ℝ) :=\n      pr0.smulRight pr0 + pr1.smulRight pr1\n    ∃ L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ),\n      ∃ e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ),\n      (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) = row0.prod row1 ∧\n      (e : (ℝ × ℝ) → (ℝ × ℝ)) = means ∧\n      theta ∈ e.source ∧ means theta ∈ e.target ∧ e.source ⊆ Omega ∧\n      let J : (ℝ × ℝ) → ℝ := fun z =>\n        (e.symm z).1 * z.1 + (e.symm z).2 * z.2 - K (e.symm z)\n      ContDiffAt ℝ ∞ J (means theta) ∧\n        HasFDerivAt J (theta.1 • pr0 + theta.2 • pr1) (means theta) ∧\n        HasFDerivAt (fun z => fderiv ℝ J z)\n          (covector.comp (L.symm : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ))) (means theta) ∧\n        ∀ z ∈ e.target,\n          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z = (J z : EReal) "
+      ],
+      "review_markers": [
+        "M STATUS: CORRECT. Every premise of the consumed actual producer statements is supplied; the local differentiability, inverse, cancellation, second derivative and true global-rate conclusion all follow with the frozen quantifiers.",
+        "N STATUS: CORRECT. The unused-premise hints for hlevel and ha0 are harmless: the frozen positive geometric assumptions remain in the exported type, while this constant-denominator calculus proof happens to be valid more broadly. Their non-use neither changes the statement nor supplies any missing root hypothesis. No positivity of Lambda1 is inferred.",
+        "Batch STATUS: CORRECT. N consumes the L/e/J exported by one application of the exact reviewed M theorem, so its inverse covariance and the chart defining f belong to the same actual tilt and center. M in turn uses E's same actual covariance equivalence, C/D's same actual K and means, and L's same actual global transform. There is no cycle: C/D establish analytic inputs, E inverts means, L proves global attainment independently of M/N, M differentiates the local dual, and N restricts that actual local dual to the boundary. Imported compact-chart results in L do not presuppose M/N.",
+        "M and N run directories are `/root/rivermind-data/shao-lean-20261021/runs/oq3/u22m-20261023` and `.../u22n-20261023`. The full local build histories, receipts, audit records and environment manifests were read. The corresponding remote histories, records, manifests, Audit.lean, actual-types, scope and exact-source snapshot hashes agree with the local artifacts. The complete actual remote logs listed below were read, including the failed attempt."
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW_AND_L_ACCEPTANCE",
+        "source_sha256": "14c9e16d43864d1b40b94bc5d0ca8e1106ba2f7fece13a118348f247c80c294e",
+        "all_owned": 1,
+        "all_theorems": 1,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22m — genuine local Legendre gradient and inverse-covariance Hessian",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2report38–55, root-contract2/4 and the local boundary-rate setup require derivatives of the actual finite Legendre expression. This unit binds the local inverse from U22e to the true global value proved in U22l, and derives its first and second Frechet derivatives at the actual center. No formal inverse-Hessian or dual-gradient identity is a caller assumption.",
+        "",
+        "Module `Shao.OQ3.OpenDomainRateDerivatives`, zero public definitions and one public theorem. Exact imports and TYPE:",
+        ""
+      ]
+    },
+    {
+      "unit": "U22n",
+      "module": "Shao.OQ3.OpenDomainBoundaryRate",
+      "all_exact_hashes": true,
+      "public_statements": [
+        "theorem open_domain_quadratic_tilt_boundary_rate_derivatives\n    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)\n    (htheta : theta ∈ interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))\n    (hdet : (parabolaCovariance\n      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det ≠ 0)\n    (level a0 : ℝ) (hlevel : 0 < level) (ha0 : 0 < a0)\n    (hmean : (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),\n      ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =\n        (a0, a0 ^ 2 / level ^ 2))\n    (hsaddle : theta.1 = -2 * a0 * theta.2 / level ^ 2) :\n    let Omega : Set (ℝ × ℝ) := interior\n      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))\n    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>\n      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)\n    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>\n      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)\n    let K : (ℝ × ℝ) → ℝ := fun p => Real.log\n      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)\n    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance (nu theta)\n    let pr0 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ\n    let pr1 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ\n    let row0 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 0 • pr0 + D 0 1 • pr1\n    let row1 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 1 • pr0 + D 1 1 • pr1\n    ∃ L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ),\n      ∃ e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ),\n      (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) = row0.prod row1 ∧\n      (e : (ℝ × ℝ) → (ℝ × ℝ)) = means ∧\n      theta ∈ e.source ∧ means theta ∈ e.target ∧ e.source ⊆ Omega ∧\n      let J : (ℝ × ℝ) → ℝ := fun z =>\n        (e.symm z).1 * z.1 + (e.symm z).2 * z.2 - K (e.symm z)\n      let f : ℝ → ℝ := fun a => J (a, a ^ 2 / level ^ 2)\n      let v : ℝ × ℝ := (1, 2 * a0 / level ^ 2)\n      let Lambda1 : ℝ := 2 * theta.2 / level ^ 2 +\n        (L.symm v).1 + (2 * a0 / level ^ 2) * (L.symm v).2\n      ContDiffAt ℝ ∞ f a0 ∧ HasDerivAt f 0 a0 ∧\n        HasDerivAt (deriv f) Lambda1 a0 ∧\n        ∀ᶠ a in 𝓝 a0,\n          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))\n            (a, a ^ 2 / level ^ 2) = (f a : EReal) "
+      ],
+      "review_markers": [
+        "M STATUS: CORRECT. Every premise of the consumed actual producer statements is supplied; the local differentiability, inverse, cancellation, second derivative and true global-rate conclusion all follow with the frozen quantifiers.",
+        "N STATUS: CORRECT. The unused-premise hints for hlevel and ha0 are harmless: the frozen positive geometric assumptions remain in the exported type, while this constant-denominator calculus proof happens to be valid more broadly. Their non-use neither changes the statement nor supplies any missing root hypothesis. No positivity of Lambda1 is inferred.",
+        "Batch STATUS: CORRECT. N consumes the L/e/J exported by one application of the exact reviewed M theorem, so its inverse covariance and the chart defining f belong to the same actual tilt and center. M in turn uses E's same actual covariance equivalence, C/D's same actual K and means, and L's same actual global transform. There is no cycle: C/D establish analytic inputs, E inverts means, L proves global attainment independently of M/N, M differentiates the local dual, and N restricts that actual local dual to the boundary. Imported compact-chart results in L do not presuppose M/N.",
+        "M and N run directories are `/root/rivermind-data/shao-lean-20261021/runs/oq3/u22m-20261023` and `.../u22n-20261023`. The full local build histories, receipts, audit records and environment manifests were read. The corresponding remote histories, records, manifests, Audit.lean, actual-types, scope and exact-source snapshot hashes agree with the local artifacts. The complete actual remote logs listed below were read, including the failed attempt."
+      ],
+      "evidence": {
+        "status": "AUTHOR_PASS_PENDING_FRESH_COMPLETE_REVIEW_AND_M_ACCEPTANCE",
+        "source_sha256": "4978d909d243cb7547287dd9b1d384f795599c8f3ff9868bea42df24e453dac6",
+        "all_owned": 1,
+        "all_theorems": 1,
+        "all_transitive_axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "audit_exit": 0
+      },
+      "scope_lines": [
+        "# U22n — actual boundary rate and the source Lambda1 coefficient",
+        "",
+        "FROZEN before implementation, 2026-10-23, OQ3 lane. Source R2's fixed saddle boundary q=a^2/x^2 and root-contract2/4 define Lambda1 as 2*t0/x^2+(1,2*a0/x^2)*Delta^(-1)*(1,2*a0/x^2)^T. This unit computes the two derivatives of the actual local/global Legendre rate along that curve using U22m, including a genuine neighborhood derivative identity before differentiating again.",
+        "",
+        "Module `Shao.OQ3.OpenDomainBoundaryRate`, zero public definitions and one public theorem. Exact imports and TYPE:",
+        ""
+      ]
+    }
+  ]
+}
