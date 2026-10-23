@@ -1,0 +1,33 @@
+DECL Shao.OQ3.boundary_laplace_cutoff_aestronglyMeasurable_of_continuousOn
+TYPE ∀ (F A : ℝ × ℝ → ℝ) (rho t : ℝ),
+  ContinuousOn F {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho} →
+    ContinuousOn A {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho} →
+      MeasureTheory.AEStronglyMeasurable
+        (fun p =>
+          if |t * p.1| ≤ rho ∧ t ^ 2 * p.2 ≤ rho then
+            A (t * p.1, t ^ 2 * p.2) * Real.exp (-((F (t * p.1, t ^ 2 * p.2) - F (0, 0)) / t ^ 2))
+          else 0)
+        (MeasureTheory.volume.prod (MeasureTheory.volume.restrict (Set.Ici 0)))
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.exists_boundary_continuous_cutoff_window
+TYPE ∀ (F A : ℝ × ℝ → ℝ),
+  ContDiffAt ℝ 1 F (0, 0) →
+    ContDiffAt ℝ 1 A (0, 0) →
+      ∀ (Q : ℝ × ℝ → Prop),
+        (∀ᶠ (w : ℝ × ℝ) in nhds (0, 0), Q w) →
+          ∀ (rho0 : ℝ),
+            0 < rho0 →
+              ∃ rho,
+                0 < rho ∧
+                  rho ≤ rho0 ∧
+                    (∀ (r z : ℝ), |r| ≤ rho → 0 ≤ z → z ≤ rho → Q (r, z)) ∧
+                      ContinuousOn F {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho} ∧
+                        ContinuousOn A {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho} ∧
+                          ∀ (t : ℝ),
+                            MeasureTheory.AEStronglyMeasurable
+                              (fun p =>
+                                if |t * p.1| ≤ rho ∧ t ^ 2 * p.2 ≤ rho then
+                                  A (t * p.1, t ^ 2 * p.2) * Real.exp (-((F (t * p.1, t ^ 2 * p.2) - F (0, 0)) / t ^ 2))
+                                else 0)
+                              (MeasureTheory.volume.prod (MeasureTheory.volume.restrict (Set.Ici 0)))
+AXIOMS [propext, Classical.choice, Quot.sound]

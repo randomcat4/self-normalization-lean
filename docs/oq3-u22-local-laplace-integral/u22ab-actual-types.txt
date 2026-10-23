@@ -1,0 +1,90 @@
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_6
+TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero G₀] {a : G₀} (n : ℤ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_1
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 2] [NeZero 2], (2 = 0) = False
+AXIOMS [propext]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_3
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 4] [NeZero 4], (4 = 0) = False
+AXIOMS [propext]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_7
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ), (↑n + 1 = 0) = False
+AXIOMS [propext]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                  have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                  have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                  have D := Shao.OQ3.parabolaCovariance (nu theta);
+                  have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                  have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                  have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                  have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                  ∃ L e,
+                    ↑L = row0.prod row1 ∧
+                      ↑e = means ∧
+                        theta ∈ e.source ∧
+                          e.source ⊆ Omega ∧
+                            have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                            have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+                            have P := fun w => ↑e.symm (G w);
+                            have F := fun w => (P w).1 * (G w).1 + (P w).2 * (G w).2 - K (P w);
+                            have detF := fun w => (Shao.OQ3.parabolaCovariance (nu (P w))).det;
+                            have A := fun w => (√(detF w))⁻¹;
+                            have v := (1, 2 * a0 / level ^ 2);
+                            have Lambda1 := 2 * theta.2 / level ^ 2 + (L.symm v).1 + 2 * a0 / level ^ 2 * (L.symm v).2;
+                            have C0 := A (0, 0) * (√(2 * Real.pi / Lambda1) / -theta.2);
+                            have m := MeasureTheory.volume.prod (MeasureTheory.volume.restrict (Set.Ici 0));
+                            0 < -theta.2 ∧
+                              P (0, 0) = theta ∧
+                                A (0, 0) = (√D.det)⁻¹ ∧
+                                  0 < A (0, 0) ∧
+                                    (0 < Lambda1 →
+                                      0 < C0 ∧
+                                        ∃ rho C,
+                                          0 < rho ∧
+                                            0 < C ∧
+                                              (∀ (r z : ℝ),
+                                                  |r| ≤ rho →
+                                                    0 ≤ z →
+                                                      z ≤ rho →
+                                                        G (r, z) ∈ e.target ∧
+                                                          P (r, z) ∈ e.source ∧
+                                                            P (r, z) ∈ Omega ∧
+                                                              means (P (r, z)) = G (r, z) ∧
+                                                                0 < detF (r, z) ∧
+                                                                  Shao.Probability.bivariateLegendreRate mu
+                                                                      (fun x => (x, x ^ 2)) (G (r, z)) =
+                                                                    ↑(F (r, z))) ∧
+                                                ∀ (t : ℝ),
+                                                  0 < t →
+                                                    t ≤ 1 →
+                                                      have H := fun p =>
+                                                        if |t * p.1| ≤ rho ∧ t ^ 2 * p.2 ≤ rho then
+                                                          A (t * p.1, t ^ 2 * p.2) *
+                                                            Real.exp (-((F (t * p.1, t ^ 2 * p.2) - F (0, 0)) / t ^ 2))
+                                                        else 0;
+                                                      MeasureTheory.Integrable H m ∧
+                                                        |∫ (p : ℝ × ℝ), H p ∂m - C0| ≤ C * t ∧
+                                                          |(∫ (p : ℝ × ℝ), H p ∂m) / C0 - 1| ≤ C * t)
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_2
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 3] [NeZero 3], (3 = 0) = False
+AXIOMS [propext]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_4
+TYPE ∀ {M₀ : Type u_1} [inst : Mul M₀] [inst_1 : Zero M₀] [NoZeroDivisors M₀] {a b : M₀},
+  a ≠ 0 → b ≠ 0 → (a * b = 0) = False
+AXIOMS [propext]
+DECL Shao.OQ3.open_domain_boundary_laplace_cutoff_integral._simp_1_5
+TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero M₀] {a : M₀} [IsReduced M₀] (n : ℕ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext]
