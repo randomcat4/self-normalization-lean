@@ -1,0 +1,24 @@
+DECL Shao.OQ3.boundary_anisotropic_halfspace_scaling._simp_1_1
+TYPE ∀ {α : Type u_1} [inst : DivisionMonoid α] (a : α) (n : ℕ), (a ^ n)⁻¹ = a⁻¹ ^ n
+AXIOMS [propext]
+DECL Shao.OQ3.boundary_cutoff_rectangle_integral_scaling
+TYPE ∀ (f : ℝ × ℝ → ℝ) (rho t : ℝ),
+  0 < t →
+    have m := MeasureTheory.volume.prod (MeasureTheory.volume.restrict (Set.Ici 0));
+    have m0 := MeasureTheory.volume.prod MeasureTheory.volume;
+    have R := {w | |w.1| ≤ rho ∧ 0 ≤ w.2 ∧ w.2 ≤ rho};
+    have H := fun p => if |t * p.1| ≤ rho ∧ t ^ 2 * p.2 ≤ rho then f (t * p.1, t ^ 2 * p.2) else 0;
+    (MeasureTheory.Integrable H m ↔ MeasureTheory.IntegrableOn f R m0) ∧
+      ∫ (w : ℝ × ℝ) in R, f w ∂m0 = t ^ 3 * ∫ (p : ℝ × ℝ), H p ∂m
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.boundary_anisotropic_halfspace_scaling
+TYPE ∀ (t : ℝ),
+  0 < t →
+    have m := MeasureTheory.volume.prod (MeasureTheory.volume.restrict (Set.Ici 0));
+    have T := fun p => (t * p.1, t ^ 2 * p.2);
+    MeasureTheory.Measure.map T m = ENNReal.ofReal (t ^ 3)⁻¹ • m ∧
+      MeasurableEmbedding T ∧
+        ∀ (f : ℝ × ℝ → ℝ),
+          (MeasureTheory.Integrable (fun p => f (T p)) m ↔ MeasureTheory.Integrable f m) ∧
+            ∫ (p : ℝ × ℝ), f (T p) ∂m = (t ^ 3)⁻¹ * ∫ (p : ℝ × ℝ), f p ∂m
+AXIOMS [propext, Classical.choice, Quot.sound]
