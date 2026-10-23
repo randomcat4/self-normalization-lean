@@ -1,0 +1,21 @@
+DECL Shao.OQ3.standardized_cell_pair_oscillation_bound
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    ∀ (theta : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (y : ℝ × ℝ) (d : ℝ),
+      0 ≤ d →
+        ∀ (A : Set (ℝ × ℝ)),
+          (∀ w ∈ A, ‖w - y‖ ≤ d / ↑n) →
+            ∀ (h : ℝ),
+              0 ≤ h →
+                have B := (fun w => √↑n • E (w - y)) '' A;
+                have g := fun v => Real.exp (-√↑n * (theta.1 * (E.symm v).1 + theta.2 * (E.symm v).2));
+                have kappa := (|theta.1| + |theta.2|) * ‖↑E.symm‖;
+                have R := d * ‖↑E‖;
+                have C := Real.exp (kappa * R);
+                ∀ (z u : ℝ × ℝ),
+                  u ∈ Metric.closedBall z h →
+                    ∀ v ∈ Metric.closedBall z h,
+                      |B.indicator g u - B.indicator g v| ≤
+                        (if (Metric.closedBall z h ∩ B).Nonempty then 2 * √↑n * kappa * C * h else 0) +
+                          if (Metric.closedBall z h ∩ frontier B).Nonempty then 2 * C else 0
+AXIOMS [propext, Classical.choice, Quot.sound]

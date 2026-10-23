@@ -1,0 +1,16 @@
+DECL Shao.OQ3.iid_quadratic_exponential_separator_bound
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2),
+    ∀ (n : ℕ),
+      1 ≤ n →
+        ∀ (A : Set (ℝ × ℝ)),
+          MeasurableSet A →
+            ∀ (c : ℝ),
+              (∀ w ∈ A,
+                  c ≤
+                    theta.1 * w.1 + theta.2 * w.2 -
+                      Real.log (∫ (x : ℝ), Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu)) →
+                have P := MeasureTheory.Measure.pi fun x => mu;
+                have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                P.real (M ⁻¹' A) ≤ Real.exp (-↑n * c)
+AXIOMS [propext, Classical.choice, Quot.sound]

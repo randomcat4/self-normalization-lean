@@ -1,0 +1,17 @@
+DECL Shao.OQ3.compact_parabola_rate_probability_upper_bound
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (F : Set (ℝ × ℝ)),
+  IsCompact F →
+    ∀ (c : ℝ),
+      (∀ w ∈ F, ↑c < Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w) →
+        have Domain := Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2);
+        have K := fun theta => Real.log (∫ (x : ℝ), Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu);
+        have Test := fun theta w => theta.1 * w.1 + theta.2 * w.2 - K theta;
+        ∃ S,
+          0 < ↑S.card + 1 ∧
+            (∀ w ∈ F, ∃ theta ∈ S, c < Test (↑theta) w) ∧
+              ∀ (n : ℕ),
+                1 ≤ n →
+                  have P := MeasureTheory.Measure.pi fun x => mu;
+                  have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                  P.real (M ⁻¹' F) ≤ (↑S.card + 1) * Real.exp (-↑n * c)
+AXIOMS [propext, Classical.choice, Quot.sound]
