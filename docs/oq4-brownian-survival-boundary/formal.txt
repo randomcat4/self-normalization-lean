@@ -1,0 +1,172 @@
+-- Exact lane-lead formal freeze, 2026-10-23. Declarations/definition values only.
+-- All B/P/probability binders are explicit; pure event values remain P-free.
+-- No proof body or new mathematical premise is introduced by this file.
+import Shao.Probability.BrownianSup
+import Mathlib.Probability.Independence.ZeroOne
+import Mathlib.Probability.Distributions.Gaussian.IsGaussianProcess.Independence
+import Mathlib.Probability.Distributions.Gaussian.IsGaussianProcess.Basic
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.MeasureTheory.Measure.Prod
+import Mathlib.MeasureTheory.Measure.Continuity
+import Mathlib.Order.LiminfLimsup
+
+namespace Shao.OQ4.BrownianSurvivalBoundary
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology BigOperators
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+def closedSurvival (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) : Set Ω :=
+  {ω | ∀ t : ℝ≥0, t ≤ T → |u + B t ω| ≤ 1}
+
+def strictSurvival (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) : Set Ω :=
+  {ω | ∀ t : ℝ≥0, t ≤ T → |u + B t ω| < 1}
+
+noncomputable def pathSup (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) (ω : Ω) : ℝ :=
+  sSup ((fun t : ℝ≥0 => |u + B t ω|) '' Icc 0 T)
+
+theorem closedSurvival_nullMeasurable (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    NullMeasurableSet (closedSurvival B T u) P
+
+theorem strictSurvival_nullMeasurable (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    NullMeasurableSet (strictSurvival B T u) P
+
+theorem survival_sdiff_ae_eq_pathSup_eq_one (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    closedSurvival B T u \ strictSurvival B T u =ᵐ[P]
+      {ω | pathSup B T u ω = 1}
+
+theorem measure_survival_sdiff_eq_zero (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    P (closedSurvival B T u \ strictSurvival B T u) = 0
+
+theorem measure_pathSup_eq_one_eq_zero (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    P {ω | pathSup B T u ω = 1} = 0
+
+theorem measure_closedSurvival_pos_endpoint_eq_zero (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T) :
+    P (closedSurvival B T 1) = 0
+
+theorem measure_closedSurvival_neg_endpoint_eq_zero (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T) :
+    P (closedSurvival B T (-1)) = 0
+
+private noncomputable def unitTime (n : ℕ) : ℝ≥0 :=
+  Shao.Probability.BrownianSup.rationalTime n
+
+private noncomputable def coeff (n : ℕ) : ℝ :=
+  (unitTime n : ℝ)
+
+private noncomputable def sampleTime (T : ℝ≥0) (n : ℕ) : ℝ≥0 :=
+  T * unitTime n
+
+private def traceClosed (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u r : ℝ) : Set Ω :=
+  {ω | ∀ n : ℕ, |u + B (sampleTime T n) ω| ≤ r}
+
+private def traceUniform (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) : Set Ω :=
+  ⋃ k : ℕ, traceClosed B T u (1 - 1 / ((k : ℝ) + 1))
+
+private noncomputable def bridgeTrace (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω) : ℕ → ℝ :=
+  fun n => B (sampleTime T n) ω - coeff n * B T ω
+
+private def bridgeRegular : Set (ℕ → ℝ) :=
+  {z | ∀ k : ℕ, ∃ m : ℕ, ∀ n : ℕ,
+    coeff n ≤ 1 / ((m : ℝ) + 1) →
+      |z n| ≤ 1 / ((k : ℝ) + 1)}
+
+private def bridgeClosed (u r : ℝ) : Set ((ℕ → ℝ) × ℝ) :=
+  {p | ∀ n : ℕ, |u + p.1 n + coeff n * p.2| ≤ r}
+
+private def bridgeBoundary (u : ℝ) : Set ((ℕ → ℝ) × ℝ) :=
+  bridgeClosed u 1 \
+    ⋃ k : ℕ, bridgeClosed u (1 - 1 / ((k : ℝ) + 1))
+
+private theorem unitTime_mem (n : ℕ) :
+    unitTime n ∈ Icc (0 : ℝ≥0) 1
+
+private theorem traceClosed_nullMeasurable (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsPreBrownianReal B P) (T : ℝ≥0) (u r : ℝ) :
+    NullMeasurableSet (traceClosed B T u r) P
+
+private theorem closedSurvival_ae_eq_traceClosed (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    closedSurvival B T u =ᵐ[P] traceClosed B T u 1
+
+private theorem strictSurvival_ae_eq_traceUniform (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    strictSurvival B T u =ᵐ[P] traceUniform B T u
+
+private theorem continuous_pathSup_characterization (B : ℝ≥0 → Ω → ℝ)
+    (T : ℝ≥0) (u : ℝ) (ω : Ω) (hc : Continuous (B · ω)) :
+    (ω ∈ closedSurvival B T u ↔ pathSup B T u ω ≤ 1) ∧
+    (ω ∈ strictSurvival B T u ↔ pathSup B T u ω < 1)
+
+private theorem bridgeTrace_aemeasurable (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsPreBrownianReal B P) (T : ℝ≥0) :
+    AEMeasurable (bridgeTrace B T) P
+
+private theorem bridgeTrace_indep_terminal (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsPreBrownianReal B P) (T : ℝ≥0) :
+    IndepFun (bridgeTrace B T) (B T) P
+
+private theorem bridgeRegular_measurable :
+    MeasurableSet bridgeRegular
+
+private theorem bridgeTrace_mem_regular_ae (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) :
+    ∀ᵐ ω ∂P, bridgeTrace B T ω ∈ bridgeRegular
+
+private theorem bridgeBoundary_measurable (u : ℝ) :
+    MeasurableSet (bridgeBoundary u)
+
+private theorem bridgeBoundary_section_finite
+    (u : ℝ) (hu : |u| < 1) (z : ℕ → ℝ) (hz : z ∈ bridgeRegular) :
+    ((Prod.mk z) ⁻¹' bridgeBoundary u).Finite
+
+private theorem bridgeBoundary_product_null
+    (ν : Measure (ℕ → ℝ)) [IsProbabilityMeasure ν]
+    (T : ℝ≥0) (hT : 0 < T) (u : ℝ) (hu : |u| < 1)
+    (hν : ∀ᵐ z ∂ν, z ∈ bridgeRegular) :
+    (ν.prod (gaussianReal 0 T)) (bridgeBoundary u) = 0
+
+private theorem interior_survival_sdiff_null (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : |u| < 1) :
+    P (closedSurvival B T u \ strictSurvival B T u) = 0
+
+private def walkUpperBounded (X : ℕ → Ω → ℝ) : Set Ω :=
+  {ω | ∃ K : ℕ, ∀ n : ℕ,
+    (∑ i ∈ Finset.range n, X i ω) ≤ (K : ℝ)}
+
+private theorem walkUpperBounded_tail
+    (X : ℕ → Ω → ℝ) (hX : ∀ n : ℕ, Measurable (X n)) :
+    MeasurableSet[
+      Filter.limsup
+        (fun n : ℕ => MeasurableSpace.comap (X n) (borel ℝ))
+        Filter.atTop]
+      (walkUpperBounded X)
+
+private theorem gaussian_walkUpperBounded_null (P : Measure Ω) [IsProbabilityMeasure P]
+    (X : ℕ → Ω → ℝ)
+    (hXm : ∀ n : ℕ, Measurable (X n))
+    (hXi : iIndepFun X P)
+    (hSlaw : ∀ n : ℕ,
+      HasLaw (fun ω => ∑ i ∈ Finset.range n, X i ω)
+        (gaussianReal 0 (n : ℝ≥0)) P) :
+    P (walkUpperBounded X) = 0
+
+private theorem preBrownian_integer_unboundedAbove_ae (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsPreBrownianReal B P) :
+    ∀ᵐ ω ∂P, ∀ a : ℝ, ∃ n : ℕ, a < B (n : ℝ≥0) ω
+
+private theorem preBrownian_crosses_both_before_ae (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsPreBrownianReal B P) :
+    ∀ᵐ ω ∂P, ∀ T : ℝ≥0, 0 < T →
+      (∃ t : ℝ≥0, 0 < t ∧ t ≤ T ∧ 0 < B t ω) ∧
+      (∃ t : ℝ≥0, 0 < t ∧ t ≤ T ∧ B t ω < 0)
+
+end Shao.OQ4.BrownianSurvivalBoundary
