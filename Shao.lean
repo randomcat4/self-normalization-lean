@@ -40,6 +40,8 @@ import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainStandardizedFarFrequency
+import Shao.OQ3.CompactOpenDomainStandardizedGaussianError
+import Shao.OQ3.CompactOpenDomainStandardizedLocalGaussian
 import Shao.OQ3.CompactOpenDomainStandardizedMiddleFrequency
 import Shao.OQ3.CompactOpenDomainTiltedFrequencyGap
 import Shao.OQ3.CompactOpenDomainWhitenedAnnulusGap
@@ -112,12 +114,15 @@ import Shao.OQ3.OpenDomainSmoothMean
 import Shao.OQ3.OpenDomainTiltedFourierContinuity
 import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
+import Shao.OQ3.PairCharacteristicGaussianRemainder
+import Shao.OQ3.PairCharacteristicQuadraticRemainder
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
 import Shao.OQ3.ParabolaCellAveragedOscillation
 import Shao.OQ3.ParabolaCellGaussianTube
 import Shao.OQ3.ParabolaCellNcubeOscillation
 import Shao.OQ3.ParabolaCellRateAnchor
+import Shao.OQ3.ParabolaFin2IIDCharacteristic
 import Shao.OQ3.ParabolaFiniteGridCover
 import Shao.OQ3.ParabolaGridCardinality
 import Shao.OQ3.ParabolaHalfOpenGridPartition
@@ -146,6 +151,7 @@ import Shao.OQ3.ResonantLimit
 import Shao.OQ3.SampleBoundary
 import Shao.OQ3.SampleChangeOfMeasure
 import Shao.OQ3.SampleParabolaTailDomain
+import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
 import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCanonicalRate
 import Shao.OQ3.SourceCanonicalSaddle
@@ -181,6 +187,8 @@ import Shao.OQ3.StandardizedGaussianCellOscillation
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
+import Shao.OQ3.UniformPairCharacteristicGaussianError
+import Shao.OQ3.UniformPairCharacteristicLocalGaussian
 import Shao.OQ3.WeakCramerPairCompactGap
 import Shao.OQ3.WeakCramerPairNonlattice
 import Shao.OQ4.AveragedResidual
@@ -193,6 +201,7 @@ import Shao.OQ4.BrownianTerminalKernelBlock
 import Shao.OQ4.BrownianTerminalSpectral
 import Shao.OQ4.BrownianUniformSurvival
 import Shao.OQ4.CanonicalBrownian
+import Shao.OQ4.ConditionalEnergyConcentration
 import Shao.OQ4.CosineCoefficients
 import Shao.OQ4.CosinePowers
 import Shao.OQ4.DelayedRecurrence
@@ -256,6 +265,7 @@ import Shao.OQ4.SpitzerKernelBounds
 import Shao.OQ4.TerminalNormalizedKernelLimit
 import Shao.OQ4.TruncatedEnergy
 import Shao.OQ4.UnconditionalKernelAsymptotic
+import Shao.OQ4.UniformConditionalEnergy
 import Shao.OQ4.VarianceKernelAsymptotic
 import Shao.OQ4.VarianceScaling
 import Shao.OQ4.WeightedThirdMomentB2
@@ -452,6 +462,7 @@ import Shao.Probability.SourceFullNoiseBridge
 import Shao.Probability.SourceFutureNoiseFourier
 import Shao.Probability.SourceFutureNoiseInversion
 import Shao.Probability.SourceFutureNoiseOddEven
+import Shao.Probability.SourceGrowingKernelBounds
 import Shao.Probability.SourceGrowingMicrotimeReflection
 import Shao.Probability.SourceGrowingMicrotimeTail
 import Shao.Probability.SourceGrowingRegionIntegrals
