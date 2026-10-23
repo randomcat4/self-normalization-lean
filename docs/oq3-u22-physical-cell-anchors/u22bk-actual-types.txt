@@ -1,0 +1,25 @@
+DECL Shao.OQ3.actual_parabola_window_isCompact
+TYPE ∀ (level a0 rho : ℝ),
+  0 ≤ rho → IsCompact {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho}
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_parabola_finite_half_open_grid_cover
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    ∀ (level a0 rho : ℝ),
+      0 ≤ rho →
+        have V := {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+        have cell := fun k => Set.Ioc (↑k.1 / ↑n) ((↑k.1 + 1) / ↑n) ×ˢ Set.Ioc (↑k.2 / ↑n) ((↑k.2 + 1) / ↑n) ∩ V;
+        have K :=
+          Set.Icc (⌈↑n * (a0 - rho)⌉ - 1, ⌈↑n * -rho⌉ - 1)
+            (⌈↑n * (a0 + rho)⌉ - 1, ⌈↑n * ((|a0| + rho) ^ 2 / level ^ 2)⌉ - 1);
+        K.Finite ∧ {k | (cell k).Nonempty} ⊆ K ∧ ⋃ k ∈ K, cell k = V ∧ Pairwise fun i j => Disjoint (cell i) (cell j)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_parabola_window_bounded_box
+TYPE ∀ (level a0 rho : ℝ),
+  0 ≤ rho →
+    have V := {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+    V ⊆ Set.Icc (a0 - rho) (a0 + rho) ×ˢ Set.Icc (-rho) ((|a0| + rho) ^ 2 / level ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

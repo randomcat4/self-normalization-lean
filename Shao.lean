@@ -98,8 +98,15 @@ import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
+import Shao.OQ3.ParabolaCellAveragedOscillation
 import Shao.OQ3.ParabolaCellGaussianTube
+import Shao.OQ3.ParabolaCellNcubeOscillation
+import Shao.OQ3.ParabolaCellRateAnchor
+import Shao.OQ3.ParabolaFiniteGridCover
+import Shao.OQ3.ParabolaGridCardinality
+import Shao.OQ3.ParabolaHalfOpenGridPartition
 import Shao.OQ3.ParabolaWindowCellFrontier
+import Shao.OQ3.PhysicalWindowCellRateAnchors
 import Shao.OQ3.PositiveLayerTail
 import Shao.OQ3.PositiveRate
 import Shao.OQ3.ProductMeasureDomination
@@ -361,6 +368,7 @@ import Shao.Probability.QuadraticCharacteristicPower
 import Shao.Probability.QuadraticChordConeDerivatives
 import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
+import Shao.Probability.QuadraticComplexChord
 import Shao.Probability.QuadraticFullNoise
 import Shao.Probability.QuadraticFullNoiseConeDerivatives
 import Shao.Probability.QuadraticFullNoiseDerivatives
@@ -403,6 +411,7 @@ import Shao.Probability.SourceShortTimeKernelBounds
 import Shao.Probability.SourceShortTimeKernelTaylor
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.SpitzerFinite
+import Shao.Probability.SpitzerLaplace
 import Shao.Probability.TiltedLowFrequency
 import Shao.Probability.TruncationIntegrals
 import Shao.Probability.TruncationRegularity
