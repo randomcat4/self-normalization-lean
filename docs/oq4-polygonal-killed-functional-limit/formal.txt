@@ -1,0 +1,279 @@
+-- Exact lane-lead formal freeze: all42 heads and16 transparent values (14defs+2abbrevs).
+-- Full mathematical proof, every proposed head/value, and pinned API evidence read.
+-- Producer declarations frozen; consumer may be locally implemented but not checked against unqualified objects.
+-- PROPOSAL ONLY: complete owned declaration heads and transparent values.
+-- No theorem proof bodies. Not a Lean implementation or a checked module.
+-- Parent exact-head/value freeze and qualified producer bindings required first.
+-- Producer binding follows author142's exact declaration proposal b8056e19.
+-- Producer qualification is pending; these imports are not accepted evidence.
+import Shao.OQ4.PolygonalPathTightness
+import Shao.OQ4.PolygonalBrownianWeakLimit
+import Shao.OQ4.BrownianSurvivalBoundary
+import Shao.Probability.MeasurablePath
+import Mathlib.MeasureTheory.Function.ConvergenceInDistribution
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import Mathlib.MeasureTheory.Measure.Tight
+import Mathlib.Topology.CompactOpen
+import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Algebra.Order.Floor.Semiring
+
+noncomputable section
+namespace Shao.OQ4.PolygonalKilledFunctionalLimit
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+-- Four PUBLIC definition values. Time zero is explicitly monitored.
+def floorHorizon (T : ℝ≥0) (h : ℝ) : ℕ :=
+  ⌊(T : ℝ) * h ^ 2⌋₊
+
+def discreteClosedSurvival (n l : ℕ) (h u : ℝ) (b : ℝ≥0) : Set (Shao.Path n) :=
+  {a | ∀ k : ℕ, k ≤ l → |u + Shao.prefixSum a k / h| ≤ (b : ℝ)}
+
+def discreteKilledCosine (n l : ℕ) (h u : ℝ) (b : ℝ≥0) : Shao.Path n → ℝ :=
+  (discreteClosedSurvival n l h u b).indicator
+    (fun a => Real.cos ((Real.pi / 2) * (u + Shao.prefixSum a l / h)))
+
+def brownianKilledCosine (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) : Ω → ℝ :=
+  (BrownianSurvivalBoundary.closedSurvival B T u).indicator
+    (fun ω => Real.cos ((Real.pi / 2) * (u + B T ω)))
+
+-- PUBLIC deterministic/measurability/integrability heads.
+theorem floorHorizon_le (T : ℝ≥0) (h : ℝ) (n : ℕ)
+    (horizon : (T : ℝ) * h ^ 2 ≤ (n : ℝ)) :
+    floorHorizon T h ≤ n
+
+theorem discreteClosedSurvival_iff_polygonal
+    (n l : ℕ) (h : ℝ) (hh : 0 < h) (hl : l ≤ n)
+    (u : ℝ) (b : ℝ≥0) (a : Shao.Path n) :
+    a ∈ discreteClosedSurvival n l h u b ↔
+      ∀ t : ℝ, t ∈ Icc 0 ((l : ℝ) / h ^ 2) →
+        |u + PolygonalThirdMoment.polygonalPath n h a t| ≤ (b : ℝ)
+
+theorem measurableSet_discreteClosedSurvival
+    (n l : ℕ) (h u : ℝ) (b : ℝ≥0) :
+    MeasurableSet (discreteClosedSurvival n l h u b)
+
+theorem integrable_discreteKilledCosine
+    (n l : ℕ) (h u : ℝ) (b : ℝ≥0)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] :
+    Integrable (discreteKilledCosine n l h u b)
+      (Measure.pi (fun _ : Fin n => ν))
+
+theorem integrable_brownianKilledCosine
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (u : ℝ) :
+    Integrable (brownianKilledCosine B T u) P
+
+-- PRIVATE domain aliases, each with its full transparent value.
+private abbrev PathSpace := C(unitInterval, ℝ)
+private abbrev Parameters := unitInterval × (ℝ × ℝ)
+
+private theorem scaleUnit_mem (θ s : unitInterval) :
+    (θ : ℝ) * (s : ℝ) ∈ Icc (0 : ℝ) 1
+
+private theorem continuous_scaleUnit_value (θ : unitInterval) :
+    Continuous (fun s : unitInterval =>
+      (⟨(θ : ℝ) * (s : ℝ), scaleUnit_mem θ s⟩ : unitInterval))
+
+private def scaleUnit (θ : unitInterval) : C(unitInterval, unitInterval) :=
+  ⟨fun s => ⟨(θ : ℝ) * (s : ℝ), scaleUnit_mem θ s⟩,
+    continuous_scaleUnit_value θ⟩
+
+private def reparam (θ : unitInterval) (f : PathSpace) : PathSpace :=
+  f.comp (scaleUnit θ)
+
+private theorem continuous_reparam :
+    Continuous (fun q : unitInterval × PathSpace => reparam q.1 q.2)
+
+private def stripGap (p : Parameters) (f : PathSpace) : ℝ :=
+  ‖ContinuousMap.const unitInterval p.2.1 + reparam p.1 f‖ - p.2.2
+
+private def terminalCos (p : Parameters) (f : PathSpace) : ℝ :=
+  Real.cos ((Real.pi / 2) * (p.2.1 + f p.1))
+
+private theorem continuous_stripGap :
+    Continuous (fun q : Parameters × PathSpace => stripGap q.1 q.2)
+
+private theorem continuous_terminalCos :
+    Continuous (fun q : Parameters × PathSpace => terminalCos q.1 q.2)
+
+private theorem stripGap_nonpos_iff (p : Parameters) (f : PathSpace) :
+    stripGap p f ≤ 0 ↔
+      ∀ s : unitInterval, |p.2.1 + f (scaleUnit p.1 s)| ≤ p.2.2
+
+private theorem floorRatio_mem (T : ℝ≥0) (h : ℝ)
+    (hT : 0 < T) (hh : 0 < h) :
+    ((floorHorizon T h : ℝ) / h ^ 2) / (T : ℝ) ∈ Icc (0 : ℝ) 1
+
+private def floorRatio (T : ℝ≥0) (h : ℝ) (hT : 0 < T) (hh : 0 < h) :
+    unitInterval :=
+  ⟨((floorHorizon T h : ℝ) / h ^ 2) / (T : ℝ), floorRatio_mem T h hT hh⟩
+
+private theorem floorRatio_error (T : ℝ≥0) (h : ℝ)
+    (hT : 0 < T) (hh : 0 < h) :
+    0 ≤ 1 - (floorRatio T h hT hh : ℝ) ∧
+      1 - (floorRatio T h hT hh : ℝ) < 1 / ((T : ℝ) * h ^ 2)
+
+private theorem floorRatio_tendsto (T : ℝ≥0) (hT : 0 < T)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => floorRatio T (hSeq j) hT (hpos j)) atTop
+      (𝓝 (1 : unitInterval))
+
+private theorem row_event_terminal_adapter
+    (T : ℝ≥0) (hT : 0 < T) (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (horizon : (T : ℝ) * h ^ 2 ≤ (n : ℝ)) (v : ℝ) (b : ℝ≥0)
+    (a : Shao.Path n) :
+    (a ∈ discreteClosedSurvival n (floorHorizon T h) h v b ↔
+      stripGap (floorRatio T h hT hh, (v, (b : ℝ)))
+        (PolygonalPathTightness.unitPolygonalPath T n h a) ≤ 0) ∧
+    terminalCos (floorRatio T h hT hh, (v, (b : ℝ)))
+      (PolygonalPathTightness.unitPolygonalPath T n h a) =
+        Real.cos ((Real.pi / 2) * (v + Shao.prefixSum a (floorHorizon T h) / h))
+
+private theorem uniform_parameter_on_compact
+    (H : Parameters × PathSpace → ℝ) (hH : Continuous H)
+    (pSeq : ℕ → Parameters) (p : Parameters)
+    (hp : Tendsto pSeq atTop (𝓝 p)) (K : Set PathSpace) (hK : IsCompact K)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ᶠ j in atTop, ∀ f ∈ K, |H (pSeq j, f) - H (p, f)| < ε
+
+private theorem tendsto_integral_varying_test
+    (μSeq : ℕ → ProbabilityMeasure PathSpace) (μ : ProbabilityMeasure PathSpace)
+    (hμ : Tendsto μSeq atTop (𝓝 μ))
+    (htight : IsTightMeasureSet (Set.range (fun j => (μSeq j : Measure PathSpace))))
+    (pSeq : ℕ → Parameters) (p : Parameters) (hp : Tendsto pSeq atTop (𝓝 p))
+    (H : Parameters × PathSpace → ℝ) (hH : Continuous H)
+    (C : ℝ) (hC : 0 ≤ C) (hbound : ∀ p f, |H (p, f)| ≤ C) :
+    Tendsto (fun j => ∫ f, H (pSeq j, f) ∂(μSeq j : Measure PathSpace)) atTop
+      (𝓝 (∫ f, H (p, f) ∂(μ : Measure PathSpace)))
+
+private def cutoffWidth (m : ℕ) : ℝ := 1 / ((m : ℝ) + 1)
+private def lowerCutoff (m : ℕ) (d : ℝ) : ℝ :=
+  max 0 (min 1 (-d / cutoffWidth m))
+private def upperCutoff (m : ℕ) (d : ℝ) : ℝ :=
+  max 0 (min 1 (1 - d / cutoffWidth m))
+
+private theorem continuous_lowerCutoff (m : ℕ) : Continuous (lowerCutoff m)
+private theorem continuous_upperCutoff (m : ℕ) : Continuous (upperCutoff m)
+
+private theorem cutoff_bounds (m : ℕ) (d : ℝ) :
+    0 ≤ lowerCutoff m d ∧
+      lowerCutoff m d ≤ (if d ≤ 0 then (1 : ℝ) else 0) ∧
+      (if d ≤ 0 then (1 : ℝ) else 0) ≤ upperCutoff m d ∧
+      upperCutoff m d ≤ 1 ∧
+      0 ≤ upperCutoff m d - lowerCutoff m d ∧
+      upperCutoff m d - lowerCutoff m d ≤ 1
+
+private theorem cutoff_limits (d : ℝ) :
+    Tendsto (fun m => lowerCutoff m d) atTop (𝓝 (if d < 0 then (1 : ℝ) else 0)) ∧
+      Tendsto (fun m => upperCutoff m d) atTop (𝓝 (if d ≤ 0 then (1 : ℝ) else 0)) ∧
+      Tendsto (fun m => upperCutoff m d - lowerCutoff m d) atTop
+        (𝓝 (if d = 0 then (1 : ℝ) else 0))
+
+private theorem tendsto_closed_functionals
+    (μSeq : ℕ → ProbabilityMeasure PathSpace) (μ : ProbabilityMeasure PathSpace)
+    (hμ : Tendsto μSeq atTop (𝓝 μ))
+    (htight : IsTightMeasureSet (Set.range (fun j => (μSeq j : Measure PathSpace))))
+    (pSeq : ℕ → Parameters) (p : Parameters) (hp : Tendsto pSeq atTop (𝓝 p))
+    (hboundary : (μ : Measure PathSpace) {f | stripGap p f = 0} = 0) :
+    Tendsto (fun j => (μSeq j : Measure PathSpace).real {f | stripGap (pSeq j) f ≤ 0})
+      atTop (𝓝 ((μ : Measure PathSpace).real {f | stripGap p f ≤ 0})) ∧
+    Tendsto (fun j => ∫ f,
+      ({g | stripGap (pSeq j) g ≤ 0} : Set PathSpace).indicator
+        (terminalCos (pSeq j)) f ∂(μSeq j : Measure PathSpace)) atTop
+      (𝓝 (∫ f, ({g | stripGap p g ≤ 0} : Set PathSpace).indicator
+        (terminalCos p) f ∂(μ : Measure PathSpace)))
+
+-- Repackage the producer's actual law; do not copy/replace its literal path.
+private def brownianPathLaw
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) : ProbabilityMeasure PathSpace :=
+  ⟨PolygonalBrownianWeakLimit.brownianUnitPathLaw B T P,
+    PolygonalBrownianWeakLimit.isProbabilityMeasure_brownianUnitPathLaw B T P hB⟩
+
+private def rowPathLaw (T : ℝ≥0) (n : ℕ) (h : ℝ) (ν : Measure ℝ)
+    (hprob : IsProbabilityMeasure ν) : ProbabilityMeasure PathSpace :=
+  ⟨PolygonalPathTightness.polygonalPathLaw T n h ν,
+    @PolygonalPathTightness.isProbabilityMeasure_polygonalPathLaw T n h ν hprob⟩
+
+-- Concrete producer adapter, not an added hypothesis of either public theorem.
+private theorem rowPathLaw_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0)
+    (nSeq : ℕ → ℕ) (hSeq : ℕ → ℝ) (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (hpos : ∀ j, 0 < hSeq j)
+    (horizon : ∀ j, (T : ℝ) * hSeq j ^ 2 ≤ (nSeq j : ℝ))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => rowPathLaw T (nSeq j) (hSeq j) (νSeq j) (hprob j)) atTop
+      (𝓝 (brownianPathLaw B P hB T))
+
+private theorem brownian_identifications
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    ((brownianPathLaw B P hB T : Measure PathSpace)
+      {f | stripGap ((1 : unitInterval), (u, (1 : ℝ))) f = 0} = 0) ∧
+    ((brownianPathLaw B P hB T : Measure PathSpace).real
+      {f | stripGap ((1 : unitInterval), (u, (1 : ℝ))) f ≤ 0} =
+        P.real (BrownianSurvivalBoundary.closedSurvival B T u)) ∧
+    ((∫ f,
+      ({g | stripGap ((1 : unitInterval), (u, (1 : ℝ))) g ≤ 0} : Set PathSpace).indicator
+        (terminalCos ((1 : unitInterval), (u, (1 : ℝ)))) f
+          ∂(brownianPathLaw B P hB T : Measure PathSpace)) =
+      ∫ ω, brownianKilledCosine B T u ω ∂P)
+
+-- PUBLIC mandatory actual probability and weighted-integral limits.
+-- No public weak-limit, tightness, boundary-null or desired-identity premise.
+theorem discrete_survival_tendsto_brownian
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (nSeq : ℕ → ℕ) (hSeq : ℕ → ℝ) (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (hpos : ∀ j, 0 < hSeq j)
+    (horizon : ∀ j, (T : ℝ) * hSeq j ^ 2 ≤ (nSeq j : ℝ))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (bSeq : ℕ → ℝ≥0) (hb : Tendsto bSeq atTop (𝓝 (1 : ℝ≥0)))
+    (uSeq : ℕ → ℝ) (u : ℝ) (huSeq : Tendsto uSeq atTop (𝓝 u))
+    (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+      (discreteClosedSurvival (nSeq j) (floorHorizon T (hSeq j))
+        (hSeq j) (uSeq j) (bSeq j))) atTop
+      (𝓝 (P.real (BrownianSurvivalBoundary.closedSurvival B T u)))
+
+theorem discrete_killed_cosine_tendsto_brownian
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (nSeq : ℕ → ℕ) (hSeq : ℕ → ℝ) (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (hpos : ∀ j, 0 < hSeq j)
+    (horizon : ∀ j, (T : ℝ) * hSeq j ^ 2 ≤ (nSeq j : ℝ))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (bSeq : ℕ → ℝ≥0) (hb : Tendsto bSeq atTop (𝓝 (1 : ℝ≥0)))
+    (uSeq : ℕ → ℝ) (u : ℝ) (huSeq : Tendsto uSeq atTop (𝓝 u))
+    (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j => ∫ a : Shao.Path (nSeq j),
+      discreteKilledCosine (nSeq j) (floorHorizon T (hSeq j))
+        (hSeq j) (uSeq j) (bSeq j) a
+          ∂Measure.pi (fun _ : Fin (nSeq j) => νSeq j)) atTop
+      (𝓝 (∫ ω, brownianKilledCosine B T u ω ∂P))
+
+end Shao.OQ4.PolygonalKilledFunctionalLimit
+
+end

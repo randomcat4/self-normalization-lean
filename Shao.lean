@@ -156,6 +156,7 @@ import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
 import Shao.OQ4.AveragedResidual
 import Shao.OQ4.BoundaryOccupation
+import Shao.OQ4.BrownianSurvivalBoundary
 import Shao.OQ4.CanonicalBrownian
 import Shao.OQ4.CosineCoefficients
 import Shao.OQ4.CosinePowers
@@ -189,6 +190,7 @@ import Shao.OQ4.OccupationPayment
 import Shao.OQ4.OvershootMoment
 import Shao.OQ4.OvershootSum
 import Shao.OQ4.PolygonalBrownianWeakLimit
+import Shao.OQ4.PolygonalKilledFunctionalLimit
 import Shao.OQ4.PolygonalPathTightness
 import Shao.OQ4.PolygonalThirdMomentB3
 import Shao.OQ4.RademacherAdjacentLog
