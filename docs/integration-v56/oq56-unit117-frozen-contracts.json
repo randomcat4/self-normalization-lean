@@ -1,0 +1,70 @@
+{
+  "unit": 117,
+  "module": "Shao.OQ5.P53.SparseBalancedEvent",
+  "namespace": "Shao.OQ5.P53",
+  "imports": [
+    "Shao.OQ5.P53.SparseSampleStatistics",
+    "Shao.OQ5.P45.BalancedBlock"
+  ],
+  "local_notation": {
+    "SparseObs": "((ℝ × (ℕ × Bool)) × (ℕ × Bool))"
+  },
+  "open": [
+    "MeasureTheory"
+  ],
+  "open_scoped": [
+    "BigOperators"
+  ],
+  "full_raw_definitions": {
+    "sparseLowObservation": "def sparseLowObservation (j : ℕ) : Set SparseObs :=\n  {z | z.1.2.1 < j ∧ z.2.1 < j}",
+    "sparseTargetObservation": "def sparseTargetObservation (j : ℕ) (b : Bool) : Set SparseObs :=\n  {z | z.1.2 = (j, true) ∧ z.2 = (j, b)}",
+    "sparseBalancedPairPattern": "def sparseBalancedPairPattern {n : ℕ} (j : ℕ) (i k : Fin n) (b : Bool) : Set (Fin n → SparseObs) :=\n  {ω | i < k ∧ ω i ∈ sparseTargetObservation j b ∧\n    ω k ∈ sparseTargetObservation j (!b) ∧\n    ∀ l : Fin n, l ≠ i → l ≠ k → ω l ∈ sparseLowObservation j}",
+    "sparseBalancedPairEvent": "def sparseBalancedPairEvent {n : ℕ} (j : ℕ) (i k : Fin n) : Set (Fin n → SparseObs) :=\n  sparseBalancedPairPattern j i k false ∪ sparseBalancedPairPattern j i k true",
+    "sparseBalancedEvent": "def sparseBalancedEvent (n j : ℕ) : Set (Fin n → SparseObs) :=\n  ⋃ i : Fin n, ⋃ k : Fin n, sparseBalancedPairEvent j i k",
+    "sparseBalancedPrefixEvent": "def sparseBalancedPrefixEvent (n j : ℕ) : Set (ℕ → SparseObs) :=\n  {ω | (fun i : Fin n => ω i.val) ∈ sparseBalancedEvent n j}"
+  },
+  "full_raw_contracts": {
+    "measurableSet_sparseLowObservation": "theorem measurableSet_sparseLowObservation :\n  ∀ j : ℕ, MeasurableSet (sparseLowObservation j)",
+    "measurableSet_sparseTargetObservation": "theorem measurableSet_sparseTargetObservation :\n  ∀ (j : ℕ) (b : Bool), MeasurableSet (sparseTargetObservation j b)",
+    "measurableSet_sparseBalancedPairPattern": "theorem measurableSet_sparseBalancedPairPattern :\n  ∀ (n j : ℕ) (i k : Fin n) (b : Bool),\n  MeasurableSet (sparseBalancedPairPattern j i k b)",
+    "measurableSet_sparseBalancedPairEvent": "theorem measurableSet_sparseBalancedPairEvent :\n  ∀ (n j : ℕ) (i k : Fin n), MeasurableSet (sparseBalancedPairEvent j i k)",
+    "measurableSet_sparseBalancedEvent": "theorem measurableSet_sparseBalancedEvent :\n  ∀ n j : ℕ, MeasurableSet (sparseBalancedEvent n j)",
+    "measurableSet_sparseBalancedPrefixEvent": "theorem measurableSet_sparseBalancedPrefixEvent :\n  ∀ n j : ℕ, MeasurableSet (sparseBalancedPrefixEvent n j)",
+    "sparseBalancedPairPattern_eq_pi": "theorem sparseBalancedPairPattern_eq_pi :\n  ∀ (n j : ℕ) (i k : Fin n) (b : Bool), i < k →\n  sparseBalancedPairPattern j i k b =\n    Set.pi Set.univ (fun l : Fin n =>\n      if l = i then sparseTargetObservation j b\n      else if l = k then sparseTargetObservation j (!b)\n      else sparseLowObservation j)",
+    "sparseBalancedPairPattern_disjoint": "theorem sparseBalancedPairPattern_disjoint :\n  ∀ (n j : ℕ) (i k : Fin n),\n  Disjoint (sparseBalancedPairPattern j i k false)\n    (sparseBalancedPairPattern j i k true)",
+    "sparseBalancedPairEvent_disjoint": "theorem sparseBalancedPairEvent_disjoint :\n  ∀ (n j : ℕ) (i k a c : Fin n), i < k → a < c → (i, k) ≠ (a, c) →\n  Disjoint (sparseBalancedPairEvent j i k) (sparseBalancedPairEvent j a c)",
+    "sparseBalancedPairPattern_balancedTarget": "theorem sparseBalancedPairPattern_balancedTarget :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ)\n    (i k : Fin (N j)) (b : Bool) (ω : Fin (N j) → SparseObs),\n  ω ∈ sparseBalancedPairPattern j i k b →\n  Shao.OQ5.P45.BalancedTarget (fun l => (ω l).1.1)\n    (fun l => sparsePopulationG α x N (ω l))\n    (fun l => sparsePopulationZ α x N (ω l))\n    ({i, k} : Finset (Fin (N j)))\n    (sparseLevelAmplitude α x N j) (sparseLevelShift α x N j)",
+    "sparseSampleAdjustedRow_balancedPair_target": "theorem sparseSampleAdjustedRow_balancedPair_target :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 3 ≤ N j →\n  ∀ (i k : Fin (N j)) (b : Bool) (ω : Fin (N j) → SparseObs),\n  ω ∈ sparseBalancedPairPattern j i k b →\n  ∀ l : Fin (N j), l ∈ ({i, k} : Finset (Fin (N j))) →\n  sparseSampleAdjustedRow α x N ω l = (ω l).1.1 +\n    sparsePopulationZ α x N (ω l) *\n      Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin (N j)))\n        (fun a => sparsePopulationZ α x N (ω a)) / ((N j : ℝ) - 2)",
+    "sparseSampleAdjustedRow_balancedPair_background": "theorem sparseSampleAdjustedRow_balancedPair_background :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 3 ≤ N j →\n  ∀ (i k : Fin (N j)) (b : Bool) (ω : Fin (N j) → SparseObs),\n  ω ∈ sparseBalancedPairPattern j i k b →\n  ∀ l : Fin (N j), l ∉ ({i, k} : Finset (Fin (N j))) →\n  sparseSampleAdjustedRow α x N ω l = sparsePopulationG α x N (ω l) +\n    sparsePopulationZ α x N (ω l) *\n      (Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin (N j)))\n        (fun a => sparsePopulationZ α x N (ω a)) - sparsePopulationZ α x N (ω l)) /\n          ((N j : ℝ) - 2)",
+    "sparseSampleU_balancedPair_formula": "theorem sparseSampleU_balancedPair_formula :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 3 ≤ N j →\n  ∀ (i k : Fin (N j)) (b : Bool) (ω : Fin (N j) → SparseObs),\n  ω ∈ sparseBalancedPairPattern j i k b →\n  sparseSampleU α x N ω =\n    2 * sparseLevelShift α x N j / ((N j : ℝ) - 1) +\n    (2 / (N j : ℝ)) * ((ω i).1.1 + (ω k).1.1) +\n    (2 / (N j : ℝ)) *\n      (∑ l : Fin (N j), if l ∈ ({i, k} : Finset (Fin (N j))) then 0\n        else sparsePopulationG α x N (ω l)) +\n    (Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin (N j)))\n        (fun l => sparsePopulationZ α x N (ω l)) ^ 2 -\n      Shao.OQ5.P35.backgroundSqSum ({i, k} : Finset (Fin (N j)))\n        (fun l => sparsePopulationZ α x N (ω l))) /\n          ((N j : ℝ) * ((N j : ℝ) - 1))",
+    "sparseSampleStudentizerSq_balancedPair_le": "theorem sparseSampleStudentizerSq_balancedPair_le :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 3 ≤ N j →\n  ∀ (i k : Fin (N j)) (b : Bool) (ω : Fin (N j) → SparseObs),\n  ω ∈ sparseBalancedPairPattern j i k b →\n  sparseSampleStudentizerSq α x N ω ≤ (4 / ((N j : ℝ) - 1)) *\n    ∑ l : Fin (N j),\n      (if l ∈ ({i, k} : Finset (Fin (N j))) then\n        (ω l).1.1 + sparsePopulationZ α x N (ω l) *\n          Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin (N j)))\n            (fun a => sparsePopulationZ α x N (ω a)) / ((N j : ℝ) - 2)\n      else sparsePopulationG α x N (ω l) + sparsePopulationZ α x N (ω l) *\n        (Shao.OQ5.P35.backgroundSum ({i, k} : Finset (Fin (N j)))\n          (fun a => sparsePopulationZ α x N (ω a)) - sparsePopulationZ α x N (ω l)) /\n            ((N j : ℝ) - 2)) ^ 2"
+  },
+  "public_definitions": 6,
+  "public_theorem_types": 14,
+  "frozenUTC": "2026-10-23T13:36:01.132Z",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION",
+  "source": {
+    "p53SHA256": "0bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561",
+    "actualP45SHA256": "0b799637356615cfb18a9fef016c11d682aeefde314106e0b56eb46a853c09ca",
+    "scope": "p53section4actualtwo-targetevent; p45section1pointwisebalancedidentity"
+  },
+  "premises": [
+    "No newselection/moment/alphapremise forstructuralfinitefacts. Positivelevelmass/conditionalmoments notclaimed.",
+    "Actualtwo targetB=C=j,eta=true,Csignsopposite; ALLotherB,C<j, allnoisesunrestricted; fullfixedlawunchanged.",
+    "Orderi<k eliminatesdoublecount; twoorientationpatternsexactdisjoint, differentunorderedpairsdisjoint.",
+    "Atn=Nj actualdj=tj²/(Nj-2) includingliteralzeroj; n>=3explicitfororiginalstatisticcancellation.",
+    "OriginalpositivekernelU/R²literal114, existingqualifiedP45balancedblock reusedexactly; noabstractfeaturelawsubstitution."
+  ],
+  "outOfScope": [
+    "Actualeventmass/probabilitypositivity",
+    "Conditionalbackgroundlaw/moments",
+    "Tailboundsandlimits",
+    "Rootclosure"
+  ],
+  "depends": [
+    "OQ56.U114",
+    "Shao.OQ5.P45.BalancedBlock"
+  ],
+  "mainFullOriginalP53AndActualP45Read": true,
+  "implementation_authorized": false
+}

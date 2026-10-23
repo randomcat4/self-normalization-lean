@@ -1,0 +1,71 @@
+{
+  "unit": 119,
+  "module": "Shao.OQ5.P53.SparseConditionalLaw",
+  "namespace": "Shao.OQ5.P53",
+  "imports": [
+    "Shao.OQ5.P53.SparseBalancedMass",
+    "Shao.Probability.ConditionalIID"
+  ],
+  "local_notation": {
+    "SparseObs": "((ℝ × (ℕ × Bool)) × (ℕ × Bool))"
+  },
+  "open": [
+    "MeasureTheory"
+  ],
+  "open_scoped": [
+    "BigOperators"
+  ],
+  "full_raw_definitions": {
+    "sparseLowObservationMeasure": "def sparseLowObservationMeasure (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) : Measure SparseObs :=\n  ProbabilityTheory.cond (sparsePopulationMeasure α x N) (sparseLowObservation j)",
+    "sparseTargetObservationMeasure": "def sparseTargetObservationMeasure (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool) : Measure SparseObs :=\n  ProbabilityTheory.cond (sparsePopulationMeasure α x N) (sparseTargetObservation j b)"
+  },
+  "full_raw_contracts": {
+    "sparseLowObservationMeasure_probability": "theorem sparseLowObservationMeasure_probability :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 1 ≤ j →\n  IsProbabilityMeasure (sparseLowObservationMeasure α x N j)",
+    "sparseTargetObservationMeasure_probability": "theorem sparseTargetObservationMeasure_probability :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool), 1 ≤ j →\n  IsProbabilityMeasure (sparseTargetObservationMeasure α x N j b)",
+    "sparseBalancedPairPattern_cond_eq_pi": "theorem sparseBalancedPairPattern_cond_eq_pi :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  ProbabilityTheory.cond (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N))\n    (sparseBalancedPairPattern j i k b) =\n  Measure.pi (fun l : Fin n =>\n    if l = i then sparseTargetObservationMeasure α x N j b\n    else if l = k then sparseTargetObservationMeasure α x N j (!b)\n    else sparseLowObservationMeasure α x N j)",
+    "iIndepFun_sparseBalancedPairPattern_cond": "theorem iIndepFun_sparseBalancedPairPattern_cond :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k →\n  ProbabilityTheory.iIndepFun (fun l : Fin n => fun ω : Fin n → SparseObs => ω l)\n    (ProbabilityTheory.cond (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N))\n      (sparseBalancedPairPattern j i k b))",
+    "sparseBalancedPairPattern_cond_coordinate_law": "theorem sparseBalancedPairPattern_cond_coordinate_law :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (n j : ℕ) (i k : Fin n) (b : Bool),\n  1 ≤ j → i < k → ∀ l : Fin n,\n  (ProbabilityTheory.cond (Measure.pi (fun _ : Fin n => sparsePopulationMeasure α x N))\n    (sparseBalancedPairPattern j i k b)).map (fun ω : Fin n → SparseObs => ω l) =\n    if l = i then sparseTargetObservationMeasure α x N j b\n    else if l = k then sparseTargetObservationMeasure α x N j (!b)\n    else sparseLowObservationMeasure α x N j",
+    "sparseLowObservationG_indep_Z": "theorem sparseLowObservationG_indep_Z :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 1 ≤ j →\n  ProbabilityTheory.IndepFun (sparsePopulationG α x N) (sparsePopulationZ α x N)\n    (sparseLowObservationMeasure α x N j)",
+    "memLp_sparseLowObservationG_two": "theorem memLp_sparseLowObservationG_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j →\n  MemLp (sparsePopulationG α x N) 2 (sparseLowObservationMeasure α x N j)",
+    "memLp_sparseLowObservationZ_two": "theorem memLp_sparseLowObservationZ_two :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 0 < α → 1 ≤ j →\n  MemLp (sparsePopulationZ α x N) 2 (sparseLowObservationMeasure α x N j)",
+    "integral_sparseLowObservationG_zero": "theorem integral_sparseLowObservationG_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j →\n  (∫ z, sparsePopulationG α x N z ∂sparseLowObservationMeasure α x N j) = 0",
+    "integral_sparseLowObservationZ_zero": "theorem integral_sparseLowObservationZ_zero :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 0 < α → 1 ≤ j →\n  (∫ z, sparsePopulationZ α x N z ∂sparseLowObservationMeasure α x N j) = 0",
+    "integral_sparseLowObservationG_sq_le": "theorem integral_sparseLowObservationG_sq_le :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ),\n  0 < α → SparseSelectionCore α x N → 1 ≤ j →\n  (∫ z, (sparsePopulationG α x N z) ^ 2 ∂sparseLowObservationMeasure α x N j) ≤\n    (∫ z, (sparsePopulationG α x N z) ^ 2 ∂sparsePopulationMeasure α x N) /\n      sparsePriorMass α x N j ^ 2",
+    "integral_sparseLowObservationZ_sq_le": "theorem integral_sparseLowObservationZ_sq_le :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ), 0 < α → 1 ≤ j →\n  (∫ z, (sparsePopulationZ α x N z) ^ 2 ∂sparseLowObservationMeasure α x N j) ≤\n    (∫ z, (sparsePopulationZ α x N z) ^ 2 ∂sparsePopulationMeasure α x N) /\n      sparsePriorMass α x N j ^ 2",
+    "sparseTargetObservation_noise_law": "theorem sparseTargetObservation_noise_law :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool), 1 ≤ j →\n  (sparseTargetObservationMeasure α x N j b).map (fun z : SparseObs => z.1.1) =\n    Shao.OQ5.P35.noiseLaw",
+    "sparseTargetObservationG_ae": "theorem sparseTargetObservationG_ae :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool), 1 ≤ j →\n  ∀ᵐ z : SparseObs ∂sparseTargetObservationMeasure α x N j b,\n    sparsePopulationG α x N z = z.1.1 + sparseLevelShift α x N j",
+    "sparseTargetObservationZ_ae": "theorem sparseTargetObservationZ_ae :\n  ∀ (α : ℝ) (x : ℕ → ℝ) (N : ℕ → ℕ) (j : ℕ) (b : Bool), 1 ≤ j →\n  ∀ᵐ z : SparseObs ∂sparseTargetObservationMeasure α x N j b,\n    sparsePopulationZ α x N z =\n      if b = true then sparseLevelAmplitude α x N j else -sparseLevelAmplitude α x N j"
+  },
+  "public_definitions": 2,
+  "public_theorem_types": 15,
+  "frozenUTC": "2026-10-23T14:31:59.960Z",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION_WAIT118",
+  "source": {
+    "p53SHA256": "0bfadbb2021248859f8b15df2ff184c73c879a7203991c27fdc4f5dd6c04f561",
+    "actualP45SHA256": "0b799637356615cfb18a9fef016c11d682aeefde314106e0b56eb46a853c09ca",
+    "scope": "p53section4trueconditionedbackgroundandtargets beforeconditionalmomentconsumers"
+  },
+  "depends": [
+    "OQ56.U118",
+    "OQ56.U117",
+    "OQ56.U106",
+    "Shao.Probability.ConditionalIID"
+  ],
+  "premises": [
+    "Positiveconditioning established byactual118mass; bothdefinitionsliteralcondofactualfixedpopulation.",
+    "Fullfiniteconditionalproductequality—notjustmarginals—retainsdifferenttargetorientations andactualbackgroundlaw, hencejointindependence.",
+    "LowG/Zindependencemustfollowactualseparatelabelproductconditioning, notunconditionedmarginalsymmetryalone.",
+    "Gsecondmoment andmeanzero consumeoriginal0<alpha/Core; Zsecondmoment andmeanzero need0<alpha only; no4thmoments.",
+    "Actualbackgroundsecondmomentsboundedbyoriginalsecondmoments/q_j² withq_j>=3/4; targetnoise remainsactualuniform andtargetG/ZliteralAE.",
+    "Finitepi isexact112finiteprefix ofonefixedlaw; no n-dependentnewpopulation."
+  ],
+  "outOfScope": [
+    "ConditionalnumeratorvarianceandtrueR²expectation estimates",
+    "Mixtureoverpairs",
+    "Tailprobabilitylowerboundandlimits",
+    "Rootclosure"
+  ],
+  "mainFullOriginalSourcesRead": true,
+  "consumedQualifiedConditionalIIDSourceSHA256": "855c2eb0e560ac9372505f8b41551a9895b9eb753be3ce2b3f3752be845af787",
+  "implementation_authorized": false
+}
