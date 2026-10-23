@@ -1,0 +1,26 @@
+DECL Shao.OQ3.actual_parabola_window_cell_frontier
+TYPE ∀ (aL aR qL qR level a0 rho : ℝ),
+  have L := max aL (a0 - rho);
+  have R := min aR (a0 + rho);
+  have A :=
+    Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+      {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+  ∀ w ∈ frontier A,
+    (w.1 = L ∨ w.1 = R) ∧ qL ≤ w.2 ∧ w.2 ≤ qR ∨
+      (w.2 = qL ∨ w.2 = qR) ∧ L ≤ w.1 ∧ w.1 ≤ R ∨
+        L ≤ w.1 ∧ w.1 ≤ R ∧ (w.2 = w.1 ^ 2 / level ^ 2 ∨ w.2 = w.1 ^ 2 / level ^ 2 - rho)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.parabola_strip_cell_frontier_of_sandwich
+TYPE ∀ (aL aR qL qR level rho : ℝ) (A : Set (ℝ × ℝ)),
+  {w | aL < w.1 ∧ w.1 < aR ∧ qL < w.2 ∧ w.2 < qR ∧ 0 < w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 < rho} ⊆
+      A →
+    A ⊆
+        {w |
+          aL ≤ w.1 ∧ w.1 ≤ aR ∧ qL ≤ w.2 ∧ w.2 ≤ qR ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho} →
+      ∀ w ∈ frontier A,
+        (w.1 = aL ∨ w.1 = aR) ∧ qL ≤ w.2 ∧ w.2 ≤ qR ∨
+          (w.2 = qL ∨ w.2 = qR) ∧ aL ≤ w.1 ∧ w.1 ≤ aR ∨
+            aL ≤ w.1 ∧ w.1 ≤ aR ∧ (w.2 = w.1 ^ 2 / level ^ 2 ∨ w.2 = w.1 ^ 2 / level ^ 2 - rho)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

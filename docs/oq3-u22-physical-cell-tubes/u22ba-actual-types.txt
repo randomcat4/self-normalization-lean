@@ -1,0 +1,14 @@
+DECL Shao.OQ3.actual_parabola_window_cell_six_compact_arcs
+TYPE ∀ (aL aR qL qR level a0 rho : ℝ),
+  have L := max aL (a0 - rho);
+  have R := min aR (a0 + rho);
+  have A :=
+    Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+      {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+  have curve :=
+    ![fun t => (L + t * (R - L), qL), fun t => (L + t * (R - L), qR), fun t => (L, qL + t * (qR - qL)), fun t =>
+      (R, qL + t * (qR - qL)), fun t => (L + t * (R - L), (L + t * (R - L)) ^ 2 / level ^ 2), fun t =>
+      (L + t * (R - L), (L + t * (R - L)) ^ 2 / level ^ 2 - rho)];
+  (∀ (i : Fin 6), IsCompact (curve i '' Set.Icc 0 1)) ∧ frontier A ⊆ ⋃ i, curve i '' Set.Icc 0 1
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
