@@ -1,0 +1,226 @@
+import Shao.OQ4.RademacherS5Assembly
+import Shao.Probability.BrownianSup
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
+Declaration-only freeze for the fixed Rademacher strict perfect-cube target,
+mathematical freeze frozen-rademacher-strict-cube-v1.md, F1--F4.
+Expected future module: Shao/OQ4/RademacherStrictCube.lean.
+Every theorem body is an empty comment placeholder. This text is not a Lean module.
+No implementation, Lean command, remote action or canonical emission is authorized.
+The scope is this fixed law and this fixed subsequence, with rawleaf increment zero.
+-/
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal Topology
+
+namespace Shao.OQ4.RademacherStrictCube
+
+-- These are the actual finite-path events, with positive observation indices.
+-- The strict event is defined for every real threshold, including at time zero.
+def strictEvent (N : ℕ) (h : ℝ) : Set (Shao.Path N) :=
+  {a | ∀ r : ℕ, 1 ≤ r → r ≤ N → |Shao.prefixSum a r| < h}
+
+def strictP (N : ℕ) (h : ℝ) : ℝ :=
+  (RademacherS5Assembly.pathLaw N).real (strictEvent N h)
+
+def strictSelfNormalizedEvent (N : ℕ) (s : ℝ) : Set (Shao.Path N) :=
+  {a | ∀ r : ℕ, 1 ≤ r → r ≤ N →
+    |Shao.prefixSum a r| < s * RademacherS5Assembly.V a}
+
+-- All additions and the cube below are in Nat before any cast to Real.
+def k (j : ℕ) : ℕ := j + 2
+
+def n (j : ℕ) : ℕ := k j ^ 3
+
+def x (j : ℕ) : ℝ := (k j : ℝ) / Real.sqrt (n j : ℝ)
+
+def a : ℝ := Real.pi ^ 2 / 4
+
+-- No free probability or tail function is introduced.
+def b {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (s : ℝ) : ℝ :=
+  Shao.Probability.BrownianSup.probability B P hB s
+
+def strictRatio {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (j : ℕ) : ℝ :=
+  strictP (n j) (k j : ℝ) / b B P hB (x j)
+
+def weakRatio {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (j : ℕ) : ℝ :=
+  RademacherS5Assembly.p (n j) (k j : ℝ) / b B P hB (x j)
+
+def sourceRatio {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (j : ℕ) : ℝ :=
+  (RademacherS5Assembly.pathLaw (n j)).real
+      (strictSelfNormalizedEvent (n j) (x j)) / b B P hB (x j)
+
+def mainRate (j : ℕ) : ℝ := (n j : ℝ) / (k j : ℝ) ^ 2
+
+-- This transparent predicate contains only conclusions on one common tail.
+def CommonTailAt {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (j : ℕ) : Prop :=
+  0 < strictP (n j) (k j : ℝ) ∧
+  0 < RademacherS5Assembly.p (n j) (k j : ℝ) ∧
+  0 < b B P hB (x j) ∧
+  0 < strictRatio B P hB j ∧ 0 < weakRatio B P hB j ∧
+  0 < RademacherS5Assembly.p (n j) (k j : ℝ) /
+    strictP (n j) (k j : ℝ) ∧
+  Real.log (strictRatio B P hB j) =
+    Real.log (strictP (n j) (k j : ℝ)) - Real.log (b B P hB (x j)) ∧
+  Real.log (weakRatio B P hB j) =
+    Real.log (RademacherS5Assembly.p (n j) (k j : ℝ)) -
+      Real.log (b B P hB (x j)) ∧
+  RademacherS5Assembly.p (n j) (k j : ℝ) / strictP (n j) (k j : ℝ) =
+    weakRatio B P hB j / strictRatio B P hB j ∧
+  Real.log (RademacherS5Assembly.p (n j) (k j : ℝ) /
+      strictP (n j) (k j : ℝ)) =
+    Real.log (RademacherS5Assembly.p (n j) (k j : ℝ)) -
+      Real.log (strictP (n j) (k j : ℝ)) ∧
+  Real.log (RademacherS5Assembly.p (n j) (k j : ℝ)) -
+      Real.log (strictP (n j) (k j : ℝ)) =
+    Real.log (weakRatio B P hB j) - Real.log (strictRatio B P hB j)
+
+-- F1: one common full-measure set supplies actual coordinate support,
+-- integer partial sums, genuine energy, and the actual normalizer identity.
+theorem actual_path_support (N : ℕ) :
+    IsProbabilityMeasure (RademacherS5Assembly.pathLaw N) ∧
+    RademacherS5Assembly.pathLaw N =
+      Measure.pi (fun _ : Fin N => RademacherCosine.law) ∧
+    (∀ᵐ v ∂(RademacherS5Assembly.pathLaw N),
+      (∀ i : Fin N, v i = 1 ∨ v i = -1) ∧
+      (∀ r : ℕ, r ≤ N → ∃ z : ℤ, Shao.prefixSum v r = (z : ℝ)) ∧
+      Shao.energy v = (N : ℝ) ∧
+      RademacherS5Assembly.V v = Real.sqrt (N : ℝ)) :=
+  /- -/
+
+theorem measurable_events (N : ℕ) (h s : ℝ) :
+    MeasurableSet (strictEvent N h) ∧
+    MeasurableSet (@Shao.closedStrip N h) ∧
+    MeasurableSet (strictSelfNormalizedEvent N s) :=
+  /- -/
+
+theorem zero_time (h s : ℝ) :
+    strictEvent 0 h = Set.univ ∧ strictP 0 h = 1 ∧
+    strictSelfNormalizedEvent 0 s = Set.univ ∧
+    (RademacherS5Assembly.pathLaw 0).real
+      (strictSelfNormalizedEvent 0 s) = 1 :=
+  /- -/
+
+-- The predecessor is Nat subtraction followed by a cast; its Real alignment
+-- is an output. No support, integer-valuedness, or event bridge is assumed.
+theorem integer_boundary_bridge (N K : ℕ) (hK : 2 ≤ K) :
+    ((K - 1 : ℕ) : ℝ) = (K : ℝ) - 1 ∧
+    RademacherS5Assembly.p N ((K - 1 : ℕ) : ℝ) =
+      (RademacherS5Assembly.pathLaw N).real
+        (@Shao.closedStrip N ((K - 1 : ℕ) : ℝ)) ∧
+    (∀ᵐ v ∂(RademacherS5Assembly.pathLaw N),
+      v ∈ strictEvent N (K : ℝ) ↔
+        v ∈ @Shao.closedStrip N ((K - 1 : ℕ) : ℝ)) ∧
+    strictP N (K : ℝ) = RademacherS5Assembly.p N ((K - 1 : ℕ) : ℝ) :=
+  /- -/
+
+-- F2: the fixed all-j geometry includes j=0, with no removed initial terms.
+theorem cube_geometry :
+    StrictMono n ∧
+    (∀ j : ℕ,
+      2 ≤ k j ∧ 8 ≤ n j ∧ 0 < (k j : ℝ) ∧ 0 < (n j : ℝ) ∧
+      0 < Real.sqrt (n j : ℝ) ∧ (Real.sqrt (n j : ℝ)) ^ 2 = (n j : ℝ) ∧
+      (n j : ℝ) = (k j : ℝ) ^ 3 ∧ 0 < x j ∧
+      x j * Real.sqrt (n j : ℝ) = (k j : ℝ) ∧
+      x j = Real.rpow (n j : ℝ) (-((1 : ℝ) / 6)) ∧
+      x j = RademacherS5Assembly.x 1 (n j) ∧
+      mainRate j = (k j : ℝ)) ∧
+    Tendsto mainRate atTop atTop ∧
+    Tendsto x atTop (𝓝 (0 : ℝ)) :=
+  /- -/
+
+-- F3's weak input is exactly S5's perfect-cube sequence shifted by one in Nat.
+theorem weak_cube_shift {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    n = RademacherS5Assembly.shift RademacherS5Assembly.cubeSeq 1 ∧
+    (∀ j : ℕ,
+      n j = RademacherS5Assembly.cubeSeq (j + 1) ∧
+      RademacherS5Assembly.height 1 (n j) = (k j : ℝ) ∧
+      RademacherS5Assembly.x 1 (n j) = x j ∧
+      b B P hB (x j) = RademacherS5Assembly.b B P hB
+        (RademacherS5Assembly.x 1 (RademacherS5Assembly.cubeSeq (j + 1))) ∧
+      RademacherS5Assembly.p (n j) (k j : ℝ) =
+        RademacherS5Assembly.p (RademacherS5Assembly.cubeSeq (j + 1))
+          (RademacherS5Assembly.height 1 (RademacherS5Assembly.cubeSeq (j + 1))) ∧
+      weakRatio B P hB j =
+        RademacherS5Assembly.Q B P hB 1 (RademacherS5Assembly.cubeSeq (j + 1))) :=
+  /- -/
+
+-- F1: the original strict self-normalized event and its actual probability
+-- are identified on every fixed subsequence index, before any limiting use.
+theorem strict_source_bridge {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (j : ℕ) :
+    MeasurableSet (strictSelfNormalizedEvent (n j) (x j)) ∧
+    MeasurableSet (strictEvent (n j) (k j : ℝ)) ∧
+    (∀ᵐ v ∂(RademacherS5Assembly.pathLaw (n j)),
+      RademacherS5Assembly.V v = Real.sqrt (n j : ℝ) ∧
+      (v ∈ strictSelfNormalizedEvent (n j) (x j) ↔
+        v ∈ strictEvent (n j) (k j : ℝ))) ∧
+    (RademacherS5Assembly.pathLaw (n j)).real
+      (strictSelfNormalizedEvent (n j) (x j)) = strictP (n j) (k j : ℝ) ∧
+    sourceRatio B P hB j = strictRatio B P hB j :=
+  /- -/
+
+-- F2: positivity and the ordinary logarithm meanings are conclusions only.
+theorem common_positive_tail {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∃ J : ℕ, ∀ j : ℕ, J ≤ j → CommonTailAt B P hB j :=
+  /- -/
+
+theorem F3_STRICT {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (strictRatio B P hB) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun j : ℕ => Real.log (strictRatio B P hB j))
+      atTop (𝓝 (0 : ℝ)) :=
+  /- -/
+
+theorem F3_WEAK {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (weakRatio B P hB) atTop (𝓝 (Real.exp a)) ∧
+    Tendsto (fun j : ℕ => Real.log (weakRatio B P hB j)) atTop (𝓝 a) :=
+  /- -/
+
+-- F4: adjacent probabilities use this same time n j and unchanged height k j.
+theorem F4_ADJACENT {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (fun j : ℕ =>
+      RademacherS5Assembly.p (n j) (k j : ℝ) / strictP (n j) (k j : ℝ))
+      atTop (𝓝 (Real.exp a)) ∧
+    Tendsto (fun j : ℕ =>
+      Real.log (RademacherS5Assembly.p (n j) (k j : ℝ)) -
+        Real.log (strictP (n j) (k j : ℝ))) atTop (𝓝 a) :=
+  /- -/
+
+theorem F4_NORMALIZED {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (fun j : ℕ => Real.log (strictRatio B P hB j) / mainRate j)
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun j : ℕ => Real.log (weakRatio B P hB j) / mainRate j)
+      atTop (𝓝 (0 : ℝ)) :=
+  /- -/
+
+end Shao.OQ4.RademacherStrictCube
+
+end
