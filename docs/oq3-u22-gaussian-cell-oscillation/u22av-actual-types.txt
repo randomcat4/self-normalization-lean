@@ -1,0 +1,21 @@
+DECL Shao.OQ3.indicator_cell_averaged_oscillation_bound._simp_1_1
+TYPE ∀ {α : Type u} [inst : PseudoMetricSpace α] {x y : α} {ε : ℝ}, (y ∈ Metric.closedBall x ε) = (dist y x ≤ ε)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.indicator_cell_averaged_oscillation_bound
+TYPE ∀ (μ : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsFiniteMeasure μ] (A : Set (ℝ × ℝ)) (g : ℝ × ℝ → ℝ)
+  (C L h : ℝ),
+  0 ≤ C →
+    0 ≤ L →
+      0 ≤ h →
+        (∀ u ∈ A, |g u| ≤ C) →
+          (∀ u ∈ A, ∀ v ∈ A, |g u - g v| ≤ L * dist u v) →
+            MeasureTheory.Integrable (Shao.OQ3.openBallOscillation (A.indicator g) h) μ ∧
+              (∀ (z : ℝ × ℝ),
+                  Shao.OQ3.openBallOscillation (A.indicator g) h z ≤
+                    (Metric.cthickening h A).indicator (fun x => 2 * L * h) z +
+                      (Metric.cthickening h (frontier A)).indicator (fun x => 2 * C) z) ∧
+                ∫ (z : ℝ × ℝ), Shao.OQ3.openBallOscillation (A.indicator g) h z ∂μ ≤
+                  2 * L * h * μ.real (Metric.cthickening h A) + 2 * C * μ.real (Metric.cthickening h (frontier A))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
