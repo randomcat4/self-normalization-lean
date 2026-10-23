@@ -1,0 +1,56 @@
+DECL Shao.OQ3.compact_open_domain_affine_frequency_gap
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (beta c R : ℝ),
+        0 ≤ beta →
+          0 < c →
+            0 ≤ R →
+              (∀ theta ∈ Theta,
+                  ∀ (u v : ℝ),
+                    R < √(u ^ 2 + v ^ 2) →
+                      ‖∫ (x : ℝ),
+                            Complex.exp
+                              (↑(u * x + v * x ^ 2) * Complex.I) ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2‖ ≤
+                        1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                ∀ (A : ℝ × ℝ → Matrix (Fin 2) (Fin 2) ℝ) (b : ℝ × ℝ → Fin 2 → ℝ) (L U : ℝ),
+                  0 < L →
+                    0 < U →
+                      (∀ theta ∈ Theta,
+                          ∀ (xi eta : ℝ),
+                            L * √(xi ^ 2 + eta ^ 2) ≤
+                                √((xi * A theta 0 0 + eta * A theta 1 0) ^ 2 +
+                                    (xi * A theta 0 1 + eta * A theta 1 1) ^ 2) ∧
+                              √((xi * A theta 0 0 + eta * A theta 1 0) ^ 2 +
+                                    (xi * A theta 0 1 + eta * A theta 1 1) ^ 2) ≤
+                                U * √(xi ^ 2 + eta ^ 2)) →
+                        ∀ (delta H : ℝ),
+                          0 < delta →
+                            have nu := fun theta => mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+                            have Y := fun theta x => (A theta).mulVec (![x, x ^ 2] - b theta);
+                            have laws := fun theta => MeasureTheory.Measure.map (Y theta) (nu theta);
+                            have Phi := fun theta xi eta =>
+                              ∫ (y : Fin 2 → ℝ), Complex.exp (↑(xi * y 0 + eta * y 1) * Complex.I) ∂laws theta;
+                            (∀ theta ∈ Theta, MeasureTheory.IsProbabilityMeasure (laws theta)) ∧
+                              ∃ gamma,
+                                0 < gamma ∧
+                                  gamma < 1 ∧
+                                    ∀ theta ∈ Theta,
+                                      ∀ (xi eta : ℝ),
+                                        delta ≤ √(xi ^ 2 + eta ^ 2) →
+                                          √(xi ^ 2 + eta ^ 2) ≤ H → ‖Phi theta xi eta‖ ≤ gamma
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.jointPhase.eq_1
+TYPE ∀ (xi eta x : ℝ), Shao.OQ3.jointPhase xi eta x = Complex.exp (↑(xi * x + eta * x ^ 2) * Complex.I)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_affine_frequency_gap._simp_1_2
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ) [inst_2 : n.AtLeastTwo],
+  (OfNat.ofNat n = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.isCompact_euclidean_pair_annulus
+TYPE ∀ (delta H : ℝ), IsCompact {a | delta ≤ √(a.1 ^ 2 + a.2 ^ 2) ∧ √(a.1 ^ 2 + a.2 ^ 2) ≤ H}
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
