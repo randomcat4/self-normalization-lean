@@ -1,0 +1,9 @@
+# Actual marked tails, exact Fourier inversion and source-bound lane consumers
+
+The actual cutoff amplitude family now has one uniform derivative budget through order32, including the full signed closed parameter range. The marked outside-v theorem proves genuine nonstationary IBP32, sine minimum factor, actual0/1weighted tail integrability and exponents31/30. The true future/noise kernel has continuity, all natural u-moment Fourier L1, exact positive-phase(2pi)^-2 inversion, and genuine first/nested second spatial derivatives. These complete their exact frozen analytic producer obligations; actual odd/even formulas, whole-u IBP, region/time probability estimates and C1/C2 remain subsequent work.
+
+OQ3 PR189 adds actual boundary jet/Taylor/coercivity/covariance amplitude and a pointwise scaled cutoff envelope. Positive curvature and determinant premises are retained; no integral/Jacobian/Edgeworth/far-probability conclusion is claimed. P53 PR185/187/188 add the actual G law, independent G/Z population, literal kernel/projection and positive canonical residual moment identities, without claiming the L2 operator, real encoding, true R or tails.
+
+Sixteen new modules,56 public theorems. Exact namespace/owned counts are in receipt-v49.json. All16 exact source-bound author objects and qualified complete independent source/proof/all-owned-type/value reviews are reused. Only aggregate import and project-wide coverage/transitive-axiom integration gates are new. All318 baseline source modules/artifacts remain unchanged, fixed Lean4.36rc1/mathlib807d, standard-three axioms, server-only CPU10–13/shared root lock.
+
+No original C1/C2, OQ3 B/D, general OQ4 or p53/OQ6/RS2 root closure, novelty or completion percentage is claimed. Root continues the next actual public chain rather than stopping at a producer milestone.
