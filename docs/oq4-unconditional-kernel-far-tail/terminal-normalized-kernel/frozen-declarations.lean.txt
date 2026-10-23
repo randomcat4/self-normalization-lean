@@ -1,0 +1,172 @@
+-- PROPOSAL ONLY: exhaustive 13 theorem heads, 9 private and 4 public.
+-- ZERO new def/abbrev/instance values. No theorem proof bodies.
+-- Parent complete proof/head freeze is required before implementation.
+-- Pending exact upstream qualification is not asserted by these imports.
+import Shao.OQ4.CosinePowers
+import Shao.OQ4.KernelRecurrence
+import Shao.OQ4.KilledPathLaw
+import Shao.OQ4.BrownianLongTimeRelativeBridge
+import Shao.OQ4.BrownianTerminalKernelBlock
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Order.Filter.AtTopBot.Tendsto
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.TerminalNormalizedKernelLimit
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped NNReal Topology
+
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧ Integrable (fun x : ℝ => x ^ 2) ν
+
+private theorem common_moment_bound_nonneg
+    (νSeq : ℕ → Measure ℝ) (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M) :
+    0 ≤ M
+
+private theorem large_rate_bounds_eventually
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hinfty : Tendsto hSeq atTop atTop) :
+    ∀ᶠ j in atTop,
+      1 ≤ hSeq j ∧ Real.pi * (1 + M) ≤ hSeq j ∧
+        (3 : ℝ) / 4 ≤ principalRate (νSeq j) (hSeq j) ∧
+          principalRate (νSeq j) (hSeq j) < 1
+
+-- PUBLIC free coefficient conclusion; no S/AC or N/h^2->infinity premise.
+theorem varying_row_free_cosine_rate_compensation
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => principalRate (νSeq j) (hSeq j) ^ NSeq j *
+      Real.exp (lambda * (NSeq j : ℝ) / hSeq j ^ 2)) atTop (𝓝 (1 : ℝ))
+
+private theorem floor_horizon_ratio_tendsto
+    (T : ℝ≥0) (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j =>
+      (PolygonalKilledFunctionalLimit.floorHorizon T (hSeq j) : ℝ) / hSeq j ^ 2)
+      atTop (𝓝 (T : ℝ))
+
+private theorem terminal_horizon_decomposition_eventually
+    (T : ℝ≥0) (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ)
+    (hpos : ∀ j, 0 < hSeq j)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop) :
+    ∀ᶠ j in atTop,
+      let L : ℕ := PolygonalKilledFunctionalLimit.floorHorizon T (hSeq j)
+      L + ⌊hSeq j ^ 2⌋₊ ≤ NSeq j ∧ L ≤ NSeq j ∧
+        ⌊hSeq j ^ 2⌋₊ ≤ NSeq j - L ∧ NSeq j - L ≤ NSeq j ∧
+          (NSeq j - L) + L = NSeq j
+
+private theorem fixed_time_inverse_rate_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (T : ℝ≥0) (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j =>
+      (principalRate (νSeq j) (hSeq j) ^
+        PolygonalKilledFunctionalLimit.floorHorizon T (hSeq j))⁻¹)
+      atTop (𝓝 (Real.exp (lambda * (T : ℝ))))
+
+private theorem source_survival_error_bounds_of_forall
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h : ℝ) (hh : 0 ≤ h) (ε : ℝ)
+    (hbound : ∀ z : ℝ, |z| ≤ h →
+      |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+        BrownianUniformSurvival.brownianSurvival CanonicalBrownian.B
+          CanonicalBrownian.law T (z / h)| ≤ ε) :
+    0 ≤ BrownianTerminalKernelBlock.sourceSurvivalError ν T h ∧
+      BrownianTerminalKernelBlock.sourceSurvivalError ν T h ≤ ε
+
+private theorem varying_row_source_survival_error_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (T : ℝ≥0) (hT : 0 < T)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => @BrownianTerminalKernelBlock.sourceSurvivalError
+      (νSeq j) (hprob j) T (hSeq j)) atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC original finite normalized P2, with all n>=0 and actual error/rate.
+theorem normalized_terminal_kernel_block
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (hT : 1 ≤ T)
+    (h : ℝ) (hh : 0 < h) (hρ : 0 < principalRate ν h) (n : ℕ) :
+    |normalizedKernelMass ν h (n + PolygonalKilledFunctionalLimit.floorHorizon T h) 0 -
+      (4 / Real.pi) * Real.exp (-lambda * (T : ℝ)) *
+        (principalRate ν h ^ PolygonalKilledFunctionalLimit.floorHorizon T h)⁻¹ *
+          normalizedKernelCosine ν h n 0| ≤
+      (BrownianTerminalKernelBlock.sourceSurvivalError ν T h +
+        BrownianTerminalSpectral.remainderC * Real.exp (-9 * lambda * (T : ℝ))) *
+          (principalRate ν h ^ PolygonalKilledFunctionalLimit.floorHorizon T h)⁻¹ *
+            normalizedKernelMass ν h n 0
+
+private theorem terminal_tail_small
+    (H ε : ℝ) (hH : 0 < H) (hε : 0 < ε) :
+    ∃ T : ℝ≥0, 1 ≤ T ∧
+      2 * H * BrownianTerminalSpectral.remainderC *
+        Real.exp (-8 * lambda * (T : ℝ)) < ε / 3
+
+-- PUBLIC full common-M varying-row normalized limit; actual S/AC stay explicit.
+theorem varying_row_normalized_kernel_mass_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (Cq Cs : ℝ) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs)
+    (hAC : ∀ j, iidIntervalConcentration (νSeq j) (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) Cq)
+    (hS : ∀ j, iidOneSidedSurvival (νSeq j) (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) Cs)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => @normalizedKernelMass (νSeq j) (hprob j) (hSeq j) (NSeq j) 0)
+      atTop (𝓝 (4 / Real.pi))
+
+-- PUBLIC actual finite-product closed-strip probability version of conditional K.
+-- Every primitive assumption is repeated literally; no supplied normalized limit.
+theorem varying_row_closedStrip_relative_asymptotic
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (Cq Cs : ℝ) (hCq : 0 ≤ Cq) (hCs : 0 ≤ Cs)
+    (hAC : ∀ j, iidIntervalConcentration (νSeq j) (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) Cq)
+    (hS : ∀ j, iidOneSidedSurvival (νSeq j) (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) Cs)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (NSeq j) => νSeq j)).real
+        (@Shao.closedStrip (NSeq j) (hSeq j)) /
+          ((4 / Real.pi) * Real.exp (-lambda * (NSeq j : ℝ) / hSeq j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.TerminalNormalizedKernelLimit
+end

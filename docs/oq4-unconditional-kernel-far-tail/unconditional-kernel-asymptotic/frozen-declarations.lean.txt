@@ -1,0 +1,116 @@
+-- AUTHOR161 PROPOSAL ONLY. No Lean implementation or declaration freeze.
+-- Proposed new module: Shao/OQ4/UnconditionalKernelAsymptotic.lean
+-- EXHAUSTIVE: eight imports, two private theorem heads, four public theorem heads.
+-- ZERO new def/abbrev/instance/structure/notation/macro values.
+-- Existing imported definitions and constants are never redeclared.
+
+import Shao.Probability.BerryEsseen
+import Shao.Probability.SpitzerLaplace
+import Shao.OQ4.SpitzerKernelBounds
+import Shao.OQ4.TerminalNormalizedKernelLimit
+import Shao.OQ4.VarianceKernelAsymptotic
+import Shao.OQ4.VarianceScaling
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.OQ4.UnconditionalKernelAsymptotic
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open scoped Topology
+
+-- PRIVATE 1: probability plus finite absolute third moment pays lower moments.
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧ Integrable (fun x : ℝ => x ^ 2) ν
+
+-- PRIVATE 2: actual mapped measure, rather than original-measure test functions.
+-- Positive v is derived from the unchanged variance range in the public caller.
+-- No common-M or extra first/square-integrability premise is needed here.
+private theorem standardized_law_unit_moments
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (v : ℝ) (hv : 0 < v)
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = v) :
+    let σ : ℝ := Real.sqrt v
+    let η : Measure ℝ := ν.map (fun x : ℝ => x / σ)
+    IsProbabilityMeasure η ∧
+      Integrable (fun y : ℝ => |y| ^ 3) η ∧
+      (∫ y : ℝ, y ∂η) = 0 ∧
+      (∫ y : ℝ, y ^ 2 ∂η) = 1 ∧
+      (∫ y : ℝ, |y| ^ 3 ∂η) =
+        (σ⁻¹) ^ 3 * (∫ x : ℝ, |x| ^ 3 ∂ν)
+
+-- PUBLIC 1: root's genuine BE theorem and accepted actual SP pay primitive S/AC.
+-- Both literal universal constants are internally produced, not parameters.
+theorem iid_unitVariance_kernel_probability_inputs
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    1 ≤ (∫ x : ℝ, |x| ^ 3 ∂ν) ∧
+      0 ≤ Real.sqrt 2 * Real.exp (6 + 3 * (1024 : ℝ)) ∧
+      0 ≤ (2049 : ℝ) ∧
+      iidOneSidedSurvival ν (∫ x : ℝ, |x| ^ 3 ∂ν)
+        (Real.sqrt 2 * Real.exp (6 + 3 * (1024 : ℝ))) ∧
+      iidIntervalConcentration ν (∫ x : ℝ, |x| ^ 3 ∂ν) (2049 : ℝ)
+
+-- PUBLIC 2: exact154 normalized conclusion, minus its paid S/AC inputs/constants.
+theorem varying_row_normalized_kernel_mass_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => @normalizedKernelMass (νSeq j) (hprob j) (hSeq j) (NSeq j) 0)
+      atTop (𝓝 (4 / Real.pi))
+
+-- PUBLIC 3: exact154 literal finite-product closed-strip relative conclusion.
+theorem varying_row_closedStrip_relative_asymptotic
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (NSeq j) => νSeq j)).real
+        (@Shao.closedStrip (NSeq j) (hSeq j)) /
+          ((4 / Real.pi) * Real.exp (-lambda * (NSeq j : ℝ) / hSeq j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+-- PUBLIC 4: exact156 original-law/variance conclusion, minus standardized S/AC.
+theorem varying_row_variance_closedStrip_relative_asymptotic
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (vSeq : ℕ → ℝ)
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = vSeq j)
+    (hvlower : ∀ j, (1 / 2 : ℝ) ≤ vSeq j)
+    (hvupper : ∀ j, vSeq j ≤ 2)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (NSeq : ℕ → ℕ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (hlong : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (NSeq j : ℝ) / hSeq j ^ 3)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (NSeq j) => νSeq j)).real
+        (@Shao.closedStrip (NSeq j) (hSeq j)) /
+          ((4 / Real.pi) *
+            Real.exp (-lambda * vSeq j * (NSeq j : ℝ) / hSeq j ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.UnconditionalKernelAsymptotic
+end
