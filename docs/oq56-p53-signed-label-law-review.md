@@ -1,0 +1,11 @@
+# Independent verification of SparseSignedLabelLaw
+
+The exact source SHA256 is 37cb9016a4f32dc7a9fb1dc0f4472541e0cb564fff641b215327600d610fcaaf (8170bytes/175lines). An independent never-author reviewer (gpt-6.1-sol/xhigh, freshcontext) completely read all15 lexical declarations/proofs against p53/p45 and the frozen1definition/8theorems. All9 public interfaces are unchanged; no assumptions or original scope were altered.
+
+The designated server author check exited0 with empty streams (receipt4804ecb4bd4961ec117e72ddf8ab109fb276939448c4d2e2a91c5d6e47e113c9). The independent no-o audit used all8170 exact source bytes as its prefix, did not import its own object, and passed the9 type examples plus product-definition rfl. It observed18 constants (3definitions/15theorems), including3 generated declarations; the reviewer fully read all actual types and7 support types/owners. All25 transitive axiom lists use only propext,Classical.choice,Quot.sound.
+
+Clean independent receipt: 475322802205cbdaac75c24fc79118d5e5cf4d89b0d77894d1ed682db8f123f7; exit0,4.447905s, no diagnostics, empty stderr, all owned processes ended. All70 protected records and Git metadata were unchanged. Object SHA2568c20f2f4af2837802af8780b40229de37bc09fc9fdf4ddcf954b5aad9591b848 (147496bytes) stayed fixed. Full logs remain onserver. Curated evidence SHA25610fa305f5701e6941ffa607b4ab18c60adc9e767a22c73212be569dd6019df91; final independent report JSON SHA25623bd432c8f3d6ace857216d194f1791b2cca9d46540386e38252bdf2fc72a039.
+
+Failure history is retained: author01 failed only the private fair-factor normalization and was precisely repaired; a busy broker attempt did not start Lean. Independent01 Lean already exited0 but the runner rejected three unused-variable warnings in the appended type example. Independent02 renamed only those appendix binders; all51 actual audit messages were identical, so complete type reading was reused. Total actual Lean calls: author2,independent2. No proof escapes or unapproved axioms.
+
+Checks used CPU22-25/-M8192/-j4 with the pinned versions. Authors and independent reviewer are permanently stopped for this source. Root alone reviews integration and merges. P53/OQ6/RS2 stay OPEN.
