@@ -1,0 +1,29 @@
+DECL Shao.OQ3.boundary_weighted_scaled_cutoff_error
+TYPE ∀ (F A : ℝ × ℝ → ℝ) (lambda Lambda1 rho CF CA c d : ℝ),
+  0 ≤ CF →
+    0 ≤ CA →
+      0 < rho →
+        0 < d →
+          d ≤ c →
+            d ≤ lambda →
+              d ≤ Lambda1 / 2 →
+                (∀ (r z : ℝ),
+                    |r| ≤ rho →
+                      0 ≤ z →
+                        z ≤ rho →
+                          |F (r, z) - F (0, 0) - lambda * z - Lambda1 / 2 * r ^ 2| ≤ CF * (|r| ^ 3 + |r| * z + z ^ 2)) →
+                  (∀ (r z : ℝ), |r| ≤ rho → 0 ≤ z → z ≤ rho → c * (z + r ^ 2) ≤ F (r, z) - F (0, 0)) →
+                    (∀ (r z : ℝ), |r| ≤ rho → 0 ≤ z → z ≤ rho → |A (r, z) - A (0, 0)| ≤ CA * (|r| + z)) →
+                      ∀ (t u v : ℝ),
+                        0 < t →
+                          t ≤ 1 →
+                            0 ≤ v →
+                              |(if |t * u| ≤ rho ∧ t ^ 2 * v ≤ rho then
+                                      A (t * u, t ^ 2 * v) * Real.exp (-((F (t * u, t ^ 2 * v) - F (0, 0)) / t ^ 2))
+                                    else 0) -
+                                    A (0, 0) * Real.exp (-(lambda * v + Lambda1 / 2 * u ^ 2))| ≤
+                                t *
+                                    (CA * (|u| + v) + |A (0, 0)| * CF * (|u| ^ 3 + |u| * v + v ^ 2) +
+                                      |A (0, 0)| / rho * (|u| + v)) *
+                                  Real.exp (-d * (v + u ^ 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
