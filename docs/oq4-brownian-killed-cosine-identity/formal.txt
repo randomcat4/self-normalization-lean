@@ -1,0 +1,148 @@
+-- Lane-lead exact formal freeze: 22 heads = 4 private definition values,
+-- 16 private theorem heads and 2 public theorem heads. No theorem bodies.
+-- Parent read full proof, all22 exact heads/all4 literal values, and all API evidence before freeze.
+-- Imports bind exact upstream source interfaces; no unqualified artifact is checked here.
+import Shao.OQ4.PolygonalKilledFunctionalLimit
+import Shao.OQ4.RademacherIteration
+import Shao.OQ4.RademacherScalarBounds
+import Shao.OQ4.KilledPathLaw
+import Mathlib.Algebra.Order.Floor.Ring
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
+
+noncomputable section
+namespace Shao.OQ4.BrownianKilledCosineIdentity
+open MeasureTheory ProbabilityTheory Filter Set
+open RademacherScalarBounds
+open scoped NNReal Topology
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+private def stripRadius (m : ℕ) : ℝ≥0 :=
+  (m : ℝ≥0) / ((m : ℝ≥0) + 1)
+
+private def latticeStart (m : ℕ) (u : ℝ) : ℤ :=
+  max (-(m : ℤ)) (min (m : ℤ) ⌊H m * u⌋)
+
+private def rowLength (T : ℝ≥0) (m : ℕ) : ℕ :=
+  ⌈(T : ℝ) * H m ^ 2⌉₊
+
+private def prefixFamily (n l : ℕ) (hl : l ≤ n) :
+    Fin l → Shao.Path n → ℝ :=
+  fun i a => a (Fin.castLE hl i)
+
+private theorem latticeStart_bounds (m : ℕ) (u : ℝ) :
+    -(m : ℤ) ≤ latticeStart m u ∧ latticeStart m u ≤ (m : ℤ)
+
+private theorem scaledStart_error (m : ℕ) (hm : 1 ≤ m)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    |(latticeStart m u : ℝ) / H m - u| ≤ 1 / H m
+
+private theorem scale_tendsto :
+    Tendsto (fun j : ℕ => H (j + 1)) atTop atTop
+
+private theorem radius_tendsto :
+    Tendsto (fun j : ℕ => stripRadius (j + 1)) atTop (𝓝 (1 : ℝ≥0))
+
+private theorem start_tendsto (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j : ℕ => (latticeStart (j + 1) u : ℝ) / H (j + 1))
+      atTop (𝓝 u)
+
+private theorem rowLength_horizon (T : ℝ≥0) (m : ℕ) :
+    (T : ℝ) * H m ^ 2 ≤ (rowLength T m : ℝ)
+
+private theorem rademacher_moments :
+    Integrable (fun x : ℝ => |x| ^ 3) RademacherCosine.law ∧
+      (∫ x : ℝ, x ∂RademacherCosine.law) = 0 ∧
+      (∫ x : ℝ, x ^ 2 ∂RademacherCosine.law) = 1 ∧
+      (∫ x : ℝ, |x| ^ 3 ∂RademacherCosine.law) = 1
+
+private theorem prefixFamily_iid (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n l : ℕ) (hl : l ≤ n) :
+    (∀ i, Measurable (prefixFamily n l hl i)) ∧
+      iIndepFun (prefixFamily n l hl) (Measure.pi (fun _ : Fin n => ν)) ∧
+      ∀ i, IdentDistrib (prefixFamily n l hl i) (id : ℝ → ℝ)
+        (Measure.pi (fun _ : Fin n => ν)) ν
+
+private theorem prefixSum_prefixFamily (n l : ℕ) (hl : l ≤ n)
+    (a : Shao.Path n) (k : ℕ) (hk : k ≤ l) :
+    Shao.prefixSum (Shao.Probability.samplePath (prefixFamily n l hl) a) k =
+      Shao.prefixSum a k
+
+private theorem discrete_event_iff_shifted_scaled (n l : ℕ)
+    (hl : l ≤ n) (h : ℝ) (hh : 0 < h) (b : ℝ≥0)
+    (z : ℝ) (hz : |z| ≤ (b : ℝ) * h) (a : Shao.Path n) :
+    a ∈ PolygonalKilledFunctionalLimit.discreteClosedSurvival
+      n l h (z / h) b ↔
+      Shao.Probability.samplePath (prefixFamily n l hl) a ∈
+        shiftedClosedSurvival (n := l) ((b : ℝ) * h) z
+
+-- PUBLIC generic bridge for the next actual B0/B1 consumers.
+-- Physical threshold is b*h; z is the physical starting point.
+-- The actual discrete event includes k=0. Integrability is proved, not assumed.
+theorem discrete_killed_test_integral
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n l : ℕ) (hl : l ≤ n)
+    (h : ℝ) (hh : 0 < h) (b : ℝ≥0) (z : ℝ) (hz : |z| ≤ (b : ℝ) * h)
+    (F : ℝ → ℝ) (hF : Measurable F) (hbound : ∃ M : ℝ, ∀ w, |F w| ≤ M) :
+    Integrable F (killedIterKernel ν ((b : ℝ) * h) l z) ∧
+      Integrable
+        ((PolygonalKilledFunctionalLimit.discreteClosedSurvival n l h (z / h) b).indicator
+          (fun a : Shao.Path n => F (z + Shao.prefixSum a l)))
+        (Measure.pi (fun _ : Fin n => ν)) ∧
+      (∫ a : Shao.Path n,
+        (PolygonalKilledFunctionalLimit.discreteClosedSurvival n l h (z / h) b).indicator
+          (fun a => F (z + Shao.prefixSum a l)) a
+          ∂Measure.pi (fun _ : Fin n => ν)) =
+        killedAction ν ((b : ℝ) * h) l F z
+
+private theorem discreteKilledCosine_eq_cut (n l m : ℕ)
+    (r : ℤ) (a : Shao.Path n) :
+    PolygonalKilledFunctionalLimit.discreteKilledCosine
+      n l (H m) ((r : ℝ) / H m) (stripRadius m) a =
+      (PolygonalKilledFunctionalLimit.discreteClosedSurvival
+        n l (H m) ((r : ℝ) / H m) (stripRadius m)).indicator
+        (fun a => Real.cos (RademacherCosine.angle m *
+          ((r : ℝ) + Shao.prefixSum a l))) a
+
+private theorem finite_row_identity (n l m : ℕ)
+    (hm : 1 ≤ m) (hl : l ≤ n) (r : ℤ)
+    (hrlo : -(m : ℤ) ≤ r) (hrhi : r ≤ (m : ℤ)) :
+    (∫ a : Shao.Path n, PolygonalKilledFunctionalLimit.discreteKilledCosine
+      n l (H m) ((r : ℝ) / H m) (stripRadius m) a
+        ∂Measure.pi (fun _ : Fin n => RademacherCosine.law)) =
+      RademacherCosine.rho m ^ l *
+        Real.cos (RademacherCosine.angle m * (r : ℝ))
+
+private theorem principal_power_error (T : ℝ≥0) (m : ℕ) (hm : 1 ≤ m) :
+    |(PolygonalKilledFunctionalLimit.floorHorizon T (H m) : ℝ) *
+        Real.log (RademacherCosine.rho m) + lambda * (T : ℝ)| ≤
+      (lambda + (T : ℝ) * C_rho) / H m ^ 2
+
+private theorem principal_power_tendsto (T : ℝ≥0) :
+    Tendsto (fun j : ℕ => RademacherCosine.rho (j + 1) ^
+      PolygonalKilledFunctionalLimit.floorHorizon T (H (j + 1))) atTop
+      (𝓝 (Real.exp (-lambda * (T : ℝ))))
+
+private theorem brownianKilledCosine_zero_ae
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    PolygonalKilledFunctionalLimit.brownianKilledCosine B 0 u =ᵐ[P]
+      (fun _ : Ω => Real.cos (Real.pi * u / 2))
+
+private theorem brownianKilledCosine_integral_pos
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    (∫ ω, PolygonalKilledFunctionalLimit.brownianKilledCosine B T u ω ∂P) =
+      Real.exp (-lambda * (T : ℝ)) * Real.cos (Real.pi * u / 2)
+
+-- PUBLIC: exact actual raw Brownian integrand, including T=0 and u=±1.
+-- No stopped-identity, convergence, boundary-null, Itô or integrability premise.
+theorem brownian_killed_cosine_identity
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1) :
+    (∫ ω, PolygonalKilledFunctionalLimit.brownianKilledCosine B T u ω ∂P) =
+      Real.exp (-(Real.pi ^ 2 / 8) * (T : ℝ)) * Real.cos (Real.pi * u / 2)
+
+end Shao.OQ4.BrownianKilledCosineIdentity
+end

@@ -1,0 +1,21 @@
+# Frozen actual Brownian killed cosine identity (source B4)
+
+Frozen by exclusive OQ4 lane lead at 2026-10-23T12:15:46.154573+00:00. Use math-theorem only. This is the mathematical/exact-interface freeze before formal implementation, not a kernel or independent acceptance claim.
+
+Original source C:/game/shao/current/oq4/b01/proof01.md233–264, especially259–264, contains the actual Brownian stopped cosine identity B4. The public target is arbitrary measurable Ω, arbitrary probability P, actual unchanged IsBrownianReal B P, every T:NNReal, u∈[-1,1]:
+
+integral (PolygonalKilledFunctionalLimit.brownianKilledCosine B T u) dP = exp(-(pi²/8)*(T:Real))*cos(pi*u/2).
+
+The actual raw closedSurvival includes every t≤T, t0 and tT. The literal integrand is producer143's event indicator times cos((pi/2)*(u+B_T)); no stopped-process substitute or existential path. T0 and both u±1 included. All measurability and integrability facts are proved using the actual producer interfaces. No desired identity, FDD/weaklimit/tightness, boundarynull, regularity/filtration/completeness, Ito or integrability premise is added to the public final theorem.
+
+This proof uses the genuine finite Rademacher principal cosine identity and the actual general-row killed-functional limit. The source uses Ito's formula; preserve that attribution and explicitly identify this as an alternative proof of the same B4, not a formalization of the Ito argument. No novelty claim. GeneralOQ4/B0/B1/K/Kv/spectrum/energy roots stay OPEN.
+
+The exact complete22head/4literalvalue inventory is [formal freeze](frozen-brownian-killed-cosine-identity-formal-v1.lean.txt), SHA256 94c205a87fdb7edab61a80397c0c6bd5aeaa46f115b05e86cfc0a3673ca59733. Four private definitions stripRadius/latticeStart/rowLength/prefixFamily;16private theoremheads;2public theoremheads. No instances or new structures. All exact heads, quantifiers, premises, conclusions and four definition values must remain unchanged; propose any needed newhelper or statement repair before changing it.
+
+The second public theorem discrete_killed_test_integral is an exact generic finite bridge for the real B0/B1 consumer: arbitrary probability lawν, n≥l, h>0, b:NNReal, physical start|z|≤b*h, arbitrary bounded measurable realF. It returns integrability on the actual killed kernel and actualπ_n inclusiveevent, with equality of the indicator integral and killedActionν(b*h)lFz. It proves the full firstl coordinate joint iid law, exact prefix identity, and the k0 condition; n=l=0/b0/boundary starts retain their actual semantics.
+
+Mandatory complete proof: use m=j+1,H=m+1, signedfloor-clampedintegerstart r∈[-m,m] with|r/H-u|≤1/H, b=m/H→1, N=ceil(T H²), L=floor(T H²)≤N and coveringlengthN≥T H². Do not replace N byL. Prove physicalstripm andfrequencyπ/(2H) exactly, including k0 and endpoints. Actualfiniteeigenidentity yieldsρ_m^L*cos(angle_m*r), with no general-law eigenidentity assumption. SCA2 gives |Llogρ+λT|≤(λ+T Cρ)/H² and hencepowerlimit. Actualproducer143 closes the killedintegral limit and uniqueness; T0 separately follows B0=0AE without a false zero-time survival-null claim.
+
+Parent fully read proof.md SHA9128096e5daf83f81f9173562abd71e9354cd5c3c2b0cc2dc9404538ada61fbe (18085B/205LF), proposal SHA54c03eb77ce1d7dba8c990099b3f4640fe2d938c2e224c2a6c32b44b7eecc4c1 (6871B/148LF) and api-evidence.md SHAa412f5bdbb4ee502f6be1463c48d6aa8bac55378ca7edd1ed8922023a4675875 (8048B/79LF), with no mathematicalgap or addedpremise identified. This lane read is not independentreview or source qualification.
+
+Exactupstream143 source1a024c4bcfc22d42d5ff73ed7e1554abbac36ea352201fa673125f5006d3f98c/formalbe40d0f71abed6a2c2da2a407a21e22e1f11bbf11231d32ba0e01d089c448060 remains unqualified, as do dependencies139boundary/142pendingfinalreview. Parent permits own local formal implementation against these frozeninterfaces only. No actualLean/import check/object emission until requiredproducer qualifications and explicitsole-heavy handoff. No mathematicalpremise change, no sorry/admit/newaxiom/unsafe/native_decide/partial. Later acceptance requires one fresh complete independentsource/proof/allactualtypes+values review and exactsource serverkernel/fulltransitiveAX withstandardwhitelist propext/Classical.choice/Quot.sound.
