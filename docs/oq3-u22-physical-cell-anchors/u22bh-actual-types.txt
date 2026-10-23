@@ -1,0 +1,24 @@
+DECL Shao.OQ3.actual_parabola_cell_ncube_gaussian_oscillation_bound
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    ∀ (theta : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (y : ℝ × ℝ) (aL aR qL qR level a0 rho : ℝ),
+      0 ≤ rho →
+        y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR →
+          aR - aL ≤ 1 / ↑n →
+            qR - qL ≤ 1 / ↑n →
+              have h := 1 / ↑n ^ 3;
+              have A :=
+                Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+                  {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+              have B := (fun w => √↑n • E (w - y)) '' A;
+              have g := fun v => Real.exp (-√↑n * (theta.1 * (E.symm v).1 + theta.2 * (E.symm v).2));
+              have kappa := (|theta.1| + |theta.2|) * ‖↑E.symm‖;
+              have R := ‖↑E‖;
+              have C := Real.exp (kappa * R);
+              have G := R * (1 + 2 * (|a0| + rho) / level ^ 2);
+              have Φ := (ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1);
+              MeasureTheory.Integrable (Shao.OQ3.openBallOscillation (B.indicator g) h) Φ ∧
+                ∫ (z : ℝ × ℝ), Shao.OQ3.openBallOscillation (B.indicator g) h z ∂Φ ≤
+                  C * (8 * kappa * (R + 1) ^ 2 + 768 * (G + 1)) / (↑n ^ 3 * √↑n)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

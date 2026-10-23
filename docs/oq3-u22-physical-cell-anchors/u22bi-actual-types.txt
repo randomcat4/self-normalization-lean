@@ -1,0 +1,20 @@
+DECL Shao.OQ3.actual_parabola_cell_closure_rate_anchor
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (aL aR qL qR level a0 rho : ℝ),
+  (Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+        {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho}).Nonempty →
+    have V := {w | |w.1 - a0| ≤ rho ∧ 0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+    have A := Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩ V;
+    have Q := Set.Icc aL aR ×ˢ Set.Icc qL qR;
+    IsCompact (closure A) ∧
+      ∃ y ∈ closure A,
+        y ∈ Q ∩ V ∧
+          ∀ w ∈ closure A,
+            Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) y ≤
+              Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bivariate_legendre_rate_lower_semicontinuous
+TYPE ∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (mu : MeasureTheory.Measure Ω) [inst_1 : NeZero mu] (W : Ω → ℝ × ℝ),
+  LowerSemicontinuous (Shao.Probability.bivariateLegendreRate mu W)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
