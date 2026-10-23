@@ -1,0 +1,24 @@
+DECL Shao.OQ3.openBallOscillation
+TYPE (ℝ × ℝ → ℝ) → ℝ → ℝ × ℝ → ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+VALUE fun f h z => sSup (insert 0 {r | ∃ u ∈ Metric.ball z h, ∃ v ∈ Metric.ball z h, r = |f u - f v|})
+DECL Shao.OQ3.open_ball_oscillation_integrable
+TYPE ∀ (μ : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsFiniteMeasure μ] (f : ℝ × ℝ → ℝ) (C h : ℝ),
+  0 ≤ C → (∀ (x : ℝ × ℝ), |f x| ≤ C) → MeasureTheory.Integrable (Shao.OQ3.openBallOscillation f h) μ
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_ball_oscillation_properties._simp_1_1
+TYPE ∀ {α : Type u} [inst : PseudoMetricSpace α] {x y : α} {ε : ℝ}, (y ∈ Metric.ball x ε) = (dist y x < ε)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_ball_oscillation_properties
+TYPE ∀ (f : ℝ × ℝ → ℝ) (C h : ℝ),
+  0 ≤ C →
+    (∀ (x : ℝ × ℝ), |f x| ≤ C) →
+      (∀ (z : ℝ × ℝ), 0 ≤ Shao.OQ3.openBallOscillation f h z ∧ Shao.OQ3.openBallOscillation f h z ≤ 2 * C) ∧
+        (∀ (z u : ℝ × ℝ),
+            u ∈ Metric.ball z h → ∀ v ∈ Metric.ball z h, |f u - f v| ≤ Shao.OQ3.openBallOscillation f h z) ∧
+          (∀ (t : ℝ), IsOpen {z | t < Shao.OQ3.openBallOscillation f h z}) ∧
+            Measurable (Shao.OQ3.openBallOscillation f h)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
