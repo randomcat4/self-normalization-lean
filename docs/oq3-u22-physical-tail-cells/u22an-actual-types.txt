@@ -1,0 +1,26 @@
+DECL Shao.OQ3.iid_self_normalized_tail_map_and_split
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (level : ℝ),
+  0 < level →
+    ∀ (n : ℕ),
+      1 ≤ n →
+        ∀ (U : Set (ℝ × ℝ)),
+          MeasurableSet U →
+            have P := MeasureTheory.Measure.pi fun x => mu;
+            have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+            have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+            have T := {z | level * √↑n ≤ if Shao.energy z = 0 then 0 else (∑ i, z i) / √(Shao.energy z)};
+            MeasurableSet Tail ∧
+              MeasurableSet T ∧
+                P.real T = (MeasureTheory.Measure.map M P).real Tail ∧
+                  P.real T =
+                    (MeasureTheory.Measure.map M P).real (U ∩ Tail) + (MeasureTheory.Measure.map M P).real (Tail \ U)
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.sample_self_normalized_tail_iff
+TYPE ∀ (level : ℝ),
+  0 < level →
+    ∀ (n : ℕ),
+      1 ≤ n →
+        ∀ (z : Shao.Path n),
+          have M := ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+          (level * √↑n ≤ if Shao.energy z = 0 then 0 else (∑ i, z i) / √(Shao.energy z)) ↔ 0 < M.2 ∧ level * √M.2 ≤ M.1
+AXIOMS [propext, Classical.choice, Quot.sound]

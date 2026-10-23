@@ -1,0 +1,30 @@
+DECL Shao.OQ3.iid_quadratic_sample_tilt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2),
+    ∀ (n : ℕ),
+      have f := fun x => theta.1 * x + theta.2 * x ^ 2;
+      have S := fun z => ∑ i, f (z i);
+      have Z := ∫ (x : ℝ), Real.exp (f x) ∂mu;
+      have P := MeasureTheory.Measure.pi fun x => mu;
+      MeasureTheory.Integrable (fun z => Real.exp (S z)) P ∧
+        ∫ (z : Shao.Path n), Real.exp (S z) ∂P = Z ^ n ∧ P.tilted S = MeasureTheory.Measure.pi fun x => mu.tilted f
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.iid_quadratic_cell_change_of_measure._simp_1_1
+TYPE ∀ {ι : Type u_1} {R : Type u_4} [inst : NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R) (a : R),
+  ∑ i ∈ s, a * f i = a * ∑ i ∈ s, f i
+AXIOMS [propext, Quot.sound]
+DECL Shao.OQ3.iid_quadratic_cell_change_of_measure
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2),
+    ∀ (n : ℕ) (y : ℝ × ℝ) (A : Set (ℝ × ℝ)),
+      MeasurableSet A →
+        have f := fun x => theta.1 * x + theta.2 * x ^ 2;
+        have K := Real.log (∫ (x : ℝ), Real.exp (f x) ∂mu);
+        have P := MeasureTheory.Measure.pi fun x => mu;
+        have Q := MeasureTheory.Measure.pi fun x => mu.tilted f;
+        have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+        have E := M ⁻¹' A;
+        have G := fun z => Real.exp (-(theta.1 * (∑ i, z i - ↑n * y.1) + theta.2 * (Shao.energy z - ↑n * y.2)));
+        MeasureTheory.Integrable G Q ∧
+          P.real E = Real.exp (-↑n * (theta.1 * y.1 + theta.2 * y.2 - K)) * ∫ (z : Shao.Path n) in E, G z ∂Q
+AXIOMS [propext, Classical.choice, Quot.sound]
