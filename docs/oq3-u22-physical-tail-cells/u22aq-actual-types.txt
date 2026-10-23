@@ -1,0 +1,19 @@
+DECL Shao.OQ3.indicator_cell_pair_oscillation_bound
+TYPE ∀ (A : Set (ℝ × ℝ)) (g : ℝ × ℝ → ℝ) (C L h : ℝ),
+  0 ≤ C →
+    0 ≤ L →
+      0 ≤ h →
+        (∀ u ∈ A, |g u| ≤ C) →
+          (∀ u ∈ A, ∀ v ∈ A, |g u - g v| ≤ L * dist u v) →
+            ∀ (z : ℝ × ℝ),
+              have Near := (Metric.closedBall z h ∩ A).Nonempty;
+              have Edge := (Metric.closedBall z h ∩ frontier A).Nonempty;
+              ∀ u ∈ Metric.closedBall z h,
+                ∀ v ∈ Metric.closedBall z h,
+                  |A.indicator g u - A.indicator g v| ≤ (if Near then 2 * L * h else 0) + if Edge then 2 * C else 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.closed_ball_membership_iff_of_frontier_disjoint
+TYPE ∀ (A : Set (ℝ × ℝ)) (z : ℝ × ℝ) (h : ℝ),
+  Disjoint (Metric.closedBall z h) (frontier A) →
+    ∀ u ∈ Metric.closedBall z h, ∀ v ∈ Metric.closedBall z h, u ∈ A ↔ v ∈ A
+AXIOMS [propext, Classical.choice, Quot.sound]
