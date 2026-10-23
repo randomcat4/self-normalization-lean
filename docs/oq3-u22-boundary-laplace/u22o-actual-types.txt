@@ -1,0 +1,41 @@
+DECL Shao.OQ3.open_domain_quadratic_tilt_boundary_coordinate_jet
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ≠ 0 →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                  have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                  have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                  have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                  have D := Shao.OQ3.parabolaCovariance (nu theta);
+                  have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                  have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                  have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                  have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                  have B := pr0.prod ((2 * a0 / level ^ 2) • pr0 - pr1);
+                  ∃ L e,
+                    ↑L = row0.prod row1 ∧
+                      ↑e = means ∧
+                        theta ∈ e.source ∧
+                          means theta ∈ e.target ∧
+                            e.source ⊆ Omega ∧
+                              have J := fun z => (↑e.symm z).1 * z.1 + (↑e.symm z).2 * z.2 - K (↑e.symm z);
+                              have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+                              have F := fun w => J (G w);
+                              0 < -theta.2 ∧
+                                ContDiffAt ℝ (↑⊤) F (0, 0) ∧
+                                  HasFDerivAt F (-theta.2 • pr1) (0, 0) ∧
+                                    (∀ (u v : ℝ × ℝ),
+                                        ((fderiv ℝ (fun w => fderiv ℝ F w) (0, 0)) u) v =
+                                          (L.symm (B u)).1 * (B v).1 + (L.symm (B u)).2 * (B v).2 +
+                                            2 * theta.2 / level ^ 2 * u.1 * v.1) ∧
+                                      ∀ᶠ (w : ℝ × ℝ) in nhds (0, 0),
+                                        Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) (G w) = ↑(F w)
+AXIOMS [propext, Classical.choice, Quot.sound]

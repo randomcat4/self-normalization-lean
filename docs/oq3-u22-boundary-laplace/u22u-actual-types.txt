@@ -1,0 +1,41 @@
+DECL Shao.OQ3.open_domain_chart_covariance_amplitude
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    ∀ (level a0 : ℝ),
+      0 < level →
+        0 < a0 →
+          (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+              (a0, a0 ^ 2 / level ^ 2) →
+            ∀ (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+              (↑e = fun p =>
+                  (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+                theta ∈ e.source →
+                  0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+                    have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                    have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+                    have P := fun w => ↑e.symm (G w);
+                    have detF := fun w =>
+                      (Shao.OQ3.parabolaCovariance (mu.tilted fun x => (P w).1 * x + (P w).2 * x ^ 2)).det;
+                    have A := fun w => (√(detF w))⁻¹;
+                    P (0, 0) = theta ∧
+                      ContDiffAt ℝ (↑⊤) P (0, 0) ∧
+                        ContDiffAt ℝ (↑⊤) A (0, 0) ∧
+                          A (0, 0) =
+                              (√(Shao.OQ3.parabolaCovariance
+                                      (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det)⁻¹ ∧
+                            ∃ rho C,
+                              0 < rho ∧
+                                0 < C ∧
+                                  ∀ (r z : ℝ),
+                                    |r| ≤ rho →
+                                      0 ≤ z →
+                                        z ≤ rho →
+                                          P (r, z) ∈ Omega ∧ 0 < detF (r, z) ∧ |A (r, z) - A (0, 0)| ≤ C * (|r| + z)
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_quadratic_covariance_det_contDiffOn
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ContDiffOn ℝ (↑⊤) (fun p => (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det)
+    (interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)))
+AXIOMS [propext, Classical.choice, Quot.sound]
