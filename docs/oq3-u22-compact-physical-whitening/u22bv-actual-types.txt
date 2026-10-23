@@ -1,0 +1,29 @@
+DECL Shao.OQ3.iid_parabola_affine_standardized_law
+TYPE ∀ (nu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure nu] (n : ℕ),
+  1 ≤ n →
+    ∀ (y : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+      have Y := fun x => E ((x, x ^ 2) - y);
+      have law := MeasureTheory.Measure.map Y nu;
+      have Q := MeasureTheory.Measure.pi fun x => nu;
+      have QY := MeasureTheory.Measure.pi fun x => law;
+      have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+      have T := fun z => √↑n • E (M z - y);
+      have S := fun v => (√↑n)⁻¹ • ∑ i, v i;
+      MeasureTheory.IsProbabilityMeasure law ∧
+        MeasureTheory.IsProbabilityMeasure (MeasureTheory.Measure.map T Q) ∧
+          (∀ (z : Shao.Path n), T z = S fun i => Y (z i)) ∧
+            MeasureTheory.Measure.map T Q = MeasureTheory.Measure.map S QY
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.iid_parabola_affine_standardized_law._proof_1_1
+TYPE ∀ (n : ℕ), 1 ≤ n → n = 0 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.parabola_affine_law_eq_coordinate_map
+TYPE ∀ (nu : MeasureTheory.Measure ℝ) (y : ℝ × ℝ) (E : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ) (Y : ℝ → Fin 2 → ℝ),
+  Measurable Y →
+    (∀ (x : ℝ), E ((x, x ^ 2) - y) = (Y x 0, Y x 1)) →
+      MeasureTheory.Measure.map (fun x => E ((x, x ^ 2) - y)) nu =
+        MeasureTheory.Measure.map (fun v => (v 0, v 1)) (MeasureTheory.Measure.map Y nu)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
