@@ -156,7 +156,10 @@ import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
 import Shao.OQ4.AveragedResidual
 import Shao.OQ4.BoundaryOccupation
+import Shao.OQ4.BrownianFixedTimeNormalization
+import Shao.OQ4.BrownianKilledCosineIdentity
 import Shao.OQ4.BrownianSurvivalBoundary
+import Shao.OQ4.BrownianUniformSurvival
 import Shao.OQ4.CanonicalBrownian
 import Shao.OQ4.CosineCoefficients
 import Shao.OQ4.CosinePowers
@@ -321,8 +324,10 @@ import Shao.OQ5.P52.FixedLayerVariance
 import Shao.OQ5.P52.FixedObservationNoiseMoments
 import Shao.OQ5.P52.LayeredKernelVersion
 import Shao.OQ5.P53.SparseBalancedEvent
+import Shao.OQ5.P53.SparseBalancedEventCost
 import Shao.OQ5.P53.SparseBalancedMass
 import Shao.OQ5.P53.SparseCoefficientMoments
+import Shao.OQ5.P53.SparseConditionalBackgroundMoments
 import Shao.OQ5.P53.SparseConditionalLaw
 import Shao.OQ5.P53.SparseLabelLaw
 import Shao.OQ5.P53.SparseMass
@@ -370,6 +375,7 @@ import Shao.Probability.QuadraticCharacteristicPower
 import Shao.Probability.QuadraticChordConeDerivatives
 import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
+import Shao.Probability.QuadraticComplexCharacteristic
 import Shao.Probability.QuadraticComplexChord
 import Shao.Probability.QuadraticFullNoise
 import Shao.Probability.QuadraticFullNoiseConeDerivatives
@@ -389,6 +395,7 @@ import Shao.Probability.RetainedSample
 import Shao.Probability.RetainedVariance
 import Shao.Probability.RetentionEvent
 import Shao.Probability.SourceClockBridge
+import Shao.Probability.SourceComplexBoundaryAmplitude
 import Shao.Probability.SourceFourierParameterPayment
 import Shao.Probability.SourceFourierScale
 import Shao.Probability.SourceFourierTestKernel

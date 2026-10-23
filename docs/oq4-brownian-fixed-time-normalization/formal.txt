@@ -1,0 +1,173 @@
+-- PROPOSAL ONLY: all 20 owned heads and the sole transparent definition value.
+-- 1 private definition, 15 private theorem heads, 4 public theorem heads.
+-- No theorem proof bodies; no Lean implementation or mechanical qualification.
+-- Parent complete mathematical/declaration/value freeze required before source.
+import Shao.OQ4.BrownianKilledCosineIdentity
+import Shao.OQ4.CanonicalBrownian
+import Shao.OQ4.CosinePowers
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Topology.Algebra.GroupWithZero
+import Mathlib.Order.Filter.AtTopBot.Tendsto
+
+noncomputable section
+namespace Shao.OQ4.BrownianFixedTimeNormalization
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology
+
+-- The sole new transparent value. Never replace this ceil by the monitored floor.
+private def rowLength (h : ℝ) : ℕ := ⌈h ^ 2⌉₊
+
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧ Integrable (fun x : ℝ => x ^ 2) ν
+
+private theorem third_moment_nonneg (ν : Measure ℝ) :
+    0 ≤ ∫ x : ℝ, |x| ^ 3 ∂ν
+
+private theorem rowLength_horizon (h : ℝ) :
+    h ^ 2 ≤ (rowLength h : ℝ)
+
+private theorem stepCount_le_rowLength (h : ℝ) :
+    ⌊h ^ 2⌋₊ ≤ rowLength h
+
+private theorem stepCount_ratio_bounds (h : ℝ) (hh : 0 < h) :
+    0 ≤ 1 - (⌊h ^ 2⌋₊ : ℝ) / h ^ 2 ∧
+      1 - (⌊h ^ 2⌋₊ : ℝ) / h ^ 2 < 1 / h ^ 2
+
+private theorem stepCount_ratio_tendsto
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => (⌊hSeq j ^ 2⌋₊ : ℝ) / hSeq j ^ 2) atTop (𝓝 (1 : ℝ))
+
+private theorem large_h_eventually (M : ℝ) (hSeq : ℕ → ℝ)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    ∀ᶠ j in atTop, 1 ≤ hSeq j ∧ Real.pi * (1 + M) ≤ hSeq j
+
+private theorem row_free_log_error
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hinfty : Tendsto hSeq atTop atTop) :
+    ∀ᶠ j in atTop,
+      ((3 : ℝ) / 4 ≤ cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j)) ∧
+        cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j)) < 1) ∧
+      |(⌊hSeq j ^ 2⌋₊ : ℝ) *
+          Real.log (cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j))) +
+        (Real.pi ^ 2 / 8) * ((⌊hSeq j ^ 2⌋₊ : ℝ) / hSeq j ^ 2)| ≤
+          (Real.pi ^ 3 * M / 48 + Real.pi ^ 4 / 8) / hSeq j
+
+private theorem row_free_power_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j)) ^
+      ⌊hSeq j ^ 2⌋₊) atTop (𝓝 (Real.exp (-(Real.pi ^ 2 / 8))))
+
+private theorem cosine_test_measurable (h : ℝ) :
+    Measurable (fun w : ℝ => Real.cos ((Real.pi / (2 * h)) * w))
+
+private theorem cosine_test_bound (h w : ℝ) :
+    |Real.cos ((Real.pi / (2 * h)) * w)| ≤ 1
+
+-- Exact producer145 bridge at physical start zero and radius one.
+-- Both the actual killed integrability and exact finite-row equality are retained.
+private theorem discrete_cosine_integral_eq_killed
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n l : ℕ) (hl : l ≤ n) (h : ℝ) (hh : 0 < h) :
+    Integrable (fun w : ℝ => Real.cos ((Real.pi / (2 * h)) * w))
+      (killedIterKernel ν h l 0) ∧
+    (∫ a : Shao.Path n,
+      PolygonalKilledFunctionalLimit.discreteKilledCosine n l h 0 1 a
+        ∂Measure.pi (fun _ : Fin n => ν)) =
+      killedAction ν h l (fun w => Real.cos ((Real.pi / (2 * h)) * w)) 0
+
+-- Instantiate the actual frozen canonical146 values; no supplied process.
+private theorem canonical_killed_cosine_integral :
+    (∫ ω : CanonicalBrownian.Sample,
+      PolygonalKilledFunctionalLimit.brownianKilledCosine
+        CanonicalBrownian.B 1 0 ω ∂CanonicalBrownian.law) =
+      Real.exp (-(Real.pi ^ 2 / 8))
+
+private theorem row_killed_cosine_tendsto
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => @killedAction (νSeq j) (hprob j) (hSeq j) ⌊hSeq j ^ 2⌋₊
+      (fun w => Real.cos ((Real.pi / (2 * hSeq j)) * w)) 0) atTop
+        (𝓝 (Real.exp (-(Real.pi ^ 2 / 8))))
+
+private theorem real_tendsto_atTop_of_positive_sequences
+    (f : ℝ → ℝ) (a : ℝ)
+    (hseq : ∀ hSeq : ℕ → ℝ, (∀ j, 0 < hSeq j) →
+      Tendsto hSeq atTop atTop →
+      Tendsto (fun j => f (hSeq j)) atTop (𝓝 a)) :
+    Tendsto f atTop (𝓝 a)
+
+-- PUBLIC strengthened sequential/common-M form, separately labelled.
+-- An explicit hprob is used by each actual killedAction instance.
+theorem varying_row_fixed_time_limits
+    (νSeq : ℕ → Measure ℝ) (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hinfty : Tendsto hSeq atTop atTop) :
+    Tendsto (fun j => cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j)) ^
+      ⌊hSeq j ^ 2⌋₊) atTop (𝓝 (Real.exp (-(Real.pi ^ 2 / 8)))) ∧
+    Tendsto (fun j => @killedAction (νSeq j) (hprob j) (hSeq j) ⌊hSeq j ^ 2⌋₊
+      (fun w => Real.cos ((Real.pi / (2 * hSeq j)) * w)) 0) atTop
+        (𝓝 (Real.exp (-(Real.pi ^ 2 / 8)))) ∧
+    Tendsto (fun j =>
+      (cosineCoefficient (νSeq j) (Real.pi / (2 * hSeq j)) ^ ⌊hSeq j ^ 2⌋₊)⁻¹ *
+        @killedAction (νSeq j) (hprob j) (hSeq j) ⌊hSeq j ^ 2⌋₊
+          (fun w => Real.cos ((Real.pi / (2 * hSeq j)) * w)) 0) atTop (𝓝 (1 : ℝ))
+
+-- PUBLIC actual free rho_h power limit, with first/second integrability derived.
+theorem free_cosine_power_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Tendsto (fun h : ℝ => cosineCoefficient ν (Real.pi / (2 * h)) ^ ⌊h ^ 2⌋₊)
+      atTop (𝓝 (Real.exp (-(Real.pi ^ 2 / 8))))
+
+-- PUBLIC actual killed numerator at the original start zero and floor(h^2).
+theorem killed_cosine_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Tendsto (fun h : ℝ => killedAction ν h ⌊h ^ 2⌋₊
+      (fun w => Real.cos ((Real.pi / (2 * h)) * w)) 0) atTop
+        (𝓝 (Real.exp (-(Real.pi ^ 2 / 8))))
+
+-- PUBLIC mandatory source B1. Pure actual kernel conclusion; no Brownian premise.
+-- Inverse natural power is the source rho_h^(-m); eventual rho_h > 0 is proved.
+theorem fixed_time_normalization
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Tendsto (fun h : ℝ =>
+      (cosineCoefficient ν (Real.pi / (2 * h)) ^ ⌊h ^ 2⌋₊)⁻¹ *
+        killedAction ν h ⌊h ^ 2⌋₊
+          (fun w => Real.cos ((Real.pi / (2 * h)) * w)) 0) atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.BrownianFixedTimeNormalization
+end

@@ -1,0 +1,171 @@
+-- AUTHOR147 DECLARATION PROPOSAL ONLY: NOT FROZEN, NOT IMPLEMENTED, NOT CHECKED.
+-- Complete inventory: 19 owned heads = 3 definition values + 16 theorem heads.
+-- Definitions: 2 public + 1 private. Theorems: 4 public + 12 private.
+-- No theorem proof body is present. Parent must freeze every head/value before implementation.
+import Shao.OQ4.PolygonalKilledFunctionalLimit
+import Shao.OQ4.BrownianSurvivalBoundary
+import Shao.OQ4.BrownianKilledCosineIdentity
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.Topology.Sequences
+import Mathlib.Topology.ContinuousOn
+import Mathlib.Algebra.Order.Floor.Semiring
+
+noncomputable section
+namespace Shao.OQ4.BrownianUniformSurvival
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+-- PUBLIC actual probability, with no modification/completion of the given B/P.
+def brownianSurvival (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω)
+    (T : ℝ≥0) (u : ℝ) : ℝ :=
+  P.real (BrownianSurvivalBoundary.closedSurvival B T u)
+
+-- PUBLIC literal real supremum over ALL physical starting points in [-h,h].
+def survivalError (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0) (h : ℝ) : ℝ :=
+  sSup ((fun z : ℝ =>
+    |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+      brownianSurvival B P T (z / h)|) '' Icc (-h) h)
+
+private def rowLength (T : ℝ≥0) (h : ℝ) : ℕ :=
+  ⌈(T : ℝ) * h ^ 2⌉₊
+
+private theorem continuous_pathSup_characterization
+    (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (u : ℝ) (ω : Ω)
+    (hc : Continuous (B · ω)) :
+    ω ∈ BrownianSurvivalBoundary.closedSurvival B T u ↔
+      BrownianSurvivalBoundary.pathSup B T u ω ≤ 1
+
+private theorem pathSup_abs_sub_le
+    (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω)
+    (hc : Continuous (B · ω)) (u v : ℝ) :
+    |BrownianSurvivalBoundary.pathSup B T u ω -
+      BrownianSurvivalBoundary.pathSup B T v ω| ≤ |u - v|
+
+private theorem survival_indicator_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω)
+    (hc : Continuous (B · ω)) (uSeq : ℕ → ℝ) (u : ℝ)
+    (huSeq : Tendsto uSeq atTop (𝓝 u))
+    (hboundary : BrownianSurvivalBoundary.pathSup B T u ω ≠ 1) :
+    Tendsto (fun j =>
+      (BrownianSurvivalBoundary.closedSurvival B T (uSeq j)).indicator
+        (fun _ : Ω => (1 : ℝ)) ω) atTop
+      (𝓝 ((BrownianSurvivalBoundary.closedSurvival B T u).indicator
+        (fun _ : Ω => (1 : ℝ)) ω))
+
+private theorem integral_indicator_one_nullMeasurable
+    {α : Type*} [MeasurableSpace α] (μ : Measure α) [IsFiniteMeasure μ]
+    (s : Set α) (hs : NullMeasurableSet s μ) :
+    (∫ a, s.indicator (fun _ : α => (1 : ℝ)) a ∂μ) = μ.real s
+
+-- The sequence need not stay in [-1,1]; only its limit is in that interval.
+private theorem brownian_survival_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (uSeq : ℕ → ℝ) (u : ℝ) (huSeq : Tendsto uSeq atTop (𝓝 u))
+    (hu : u ∈ Icc (-1 : ℝ) 1) :
+    Tendsto (fun j => brownianSurvival B P T (uSeq j)) atTop
+      (𝓝 (brownianSurvival B P T u))
+
+theorem continuousOn_brownianSurvival
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T) :
+    ContinuousOn (brownianSurvival B P T) (Icc (-1 : ℝ) 1)
+
+private theorem rowLength_horizon (T : ℝ≥0) (h : ℝ) :
+    (T : ℝ) * h ^ 2 ≤ (rowLength T h : ℝ)
+
+private theorem floorHorizon_le_rowLength (T : ℝ≥0) (h : ℝ) :
+    PolygonalKilledFunctionalLimit.floorHorizon T h ≤ rowLength T h
+
+private theorem discrete_survival_probability_eq_killedMass
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n l : ℕ) (hl : l ≤ n)
+    (h : ℝ) (hh : 0 < h) (z : ℝ) (hz : |z| ≤ h) :
+    (Measure.pi (fun _ : Fin n => ν)).real
+      (PolygonalKilledFunctionalLimit.discreteClosedSurvival
+        n l h (z / h) (1 : ℝ≥0)) =
+      killedMass ν h l z
+
+private theorem scaledStart_mem (h z : ℝ) (hh : 0 < h) (hz : |z| ≤ h) :
+    z / h ∈ Icc (-1 : ℝ) 1
+
+-- Actual varying row law and physical starting point, on the original finite kernels.
+-- @killedMass makes every varying probability instance explicit.
+private theorem killedMass_tendsto_brownian
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (hSeq : ℕ → ℝ) (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (hpos : ∀ j, 0 < hSeq j)
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hinfty : Tendsto hSeq atTop atTop)
+    (zSeq : ℕ → ℝ) (hz : ∀ j, |zSeq j| ≤ hSeq j)
+    (u : ℝ) (hu : u ∈ Icc (-1 : ℝ) 1)
+    (hstart : Tendsto (fun j => zSeq j / hSeq j) atTop (𝓝 u)) :
+    Tendsto (fun j => @killedMass (νSeq j) (hprob j) (hSeq j)
+      (PolygonalKilledFunctionalLimit.floorHorizon T (hSeq j)) (zSeq j))
+      atTop (𝓝 (brownianSurvival B P T u))
+
+private theorem survivalError_bounds
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h : ℝ) (hh : 0 ≤ h) :
+    0 ≤ survivalError B P ν T h ∧ survivalError B P ν T h ≤ 1
+
+private theorem survivalError_le_of_forall
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (T : ℝ≥0)
+    (h : ℝ) (hh : 0 ≤ h) (ε : ℝ)
+    (hbound : ∀ z : ℝ, |z| ≤ h →
+      |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+        brownianSurvival B P T (z / h)| ≤ ε) :
+    survivalError B P ν T h ≤ ε
+
+-- Stronger than the fixed-law source: H is shared by every law in the moment class.
+-- M is arbitrary; if the class is empty the universal conclusion is vacuous.
+-- B/P/T are fixed outside H. No uniformity over different B/P is asserted here.
+theorem uniform_brownian_survival_momentClass
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T) (M : ℝ)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∃ H : ℝ, 0 < H ∧ ∀ h : ℝ, H ≤ h →
+      ∀ (ν : Measure ℝ) (hprob : IsProbabilityMeasure ν),
+      Integrable (fun x : ℝ => |x| ^ 3) ν →
+      (∫ x : ℝ, x ∂ν) = 0 →
+      (∫ x : ℝ, x ^ 2 ∂ν) = 1 →
+      (∫ x : ℝ, |x| ^ 3 ∂ν) ≤ M →
+      ∀ z : ℝ, |z| ≤ h →
+        |@killedMass ν hprob h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+          brownianSurvival B P T (z / h)| < ε
+
+-- Exact fixed-law source corollary: finite third moment supplies its own M.
+theorem uniform_brownian_survival
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∃ H : ℝ, 0 < H ∧ ∀ h : ℝ, H ≤ h →
+      ∀ z : ℝ, |z| ≤ h →
+        |killedMass ν h (PolygonalKilledFunctionalLimit.floorHorizon T h) z -
+          brownianSurvival B P T (z / h)| < ε
+
+-- Exact source B0: the displayed real supremum tends to zero as real h -> +infinity.
+theorem tendsto_survivalError
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν)
+    (hmean : (∫ x : ℝ, x ∂ν) = 0)
+    (hsecond : (∫ x : ℝ, x ^ 2 ∂ν) = 1) :
+    Tendsto (survivalError B P ν T) atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.BrownianUniformSurvival
+end
