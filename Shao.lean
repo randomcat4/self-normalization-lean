@@ -28,11 +28,13 @@ import Shao.OQ3.BoundaryLaplaceNormalization
 import Shao.OQ3.BoundaryLaplacePhysicalDomain
 import Shao.OQ3.BoundaryLaplaceScaledError
 import Shao.OQ3.BoundaryLaplaceScaling
+import Shao.OQ3.CellAveragedOscillation
 import Shao.OQ3.CellBoundaryOscillation
 import Shao.OQ3.CenteredLogMGF
 import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
+import Shao.OQ3.CompactParabolaRateProbability
 import Shao.OQ3.CompactTiltCovarianceSpectrum
 import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
@@ -70,6 +72,7 @@ import Shao.OQ3.NormalTangentGaussian
 import Shao.OQ3.NormalTangentMoments
 import Shao.OQ3.NormalTangentPowerLimit
 import Shao.OQ3.NormalTrialCost
+import Shao.OQ3.OpenBallOscillation
 import Shao.OQ3.OpenDomainAffineMoments
 import Shao.OQ3.OpenDomainBoundaryJet
 import Shao.OQ3.OpenDomainBoundaryLaplaceIntegral
@@ -95,6 +98,7 @@ import Shao.OQ3.PositiveLayerTail
 import Shao.OQ3.PositiveRate
 import Shao.OQ3.ProductMeasureDomination
 import Shao.OQ3.QuadraticSampleChangeOfMeasure
+import Shao.OQ3.QuadraticSampleExponentialBound
 import Shao.OQ3.QuadraticTiltCumulants
 import Shao.OQ3.QuadraticWhiteningSpectralData
 import Shao.OQ3.RegularCovariance
@@ -128,8 +132,11 @@ import Shao.OQ3.StagePhaseReturns
 import Shao.OQ3.StageSourceAsymptotic
 import Shao.OQ3.StageSourceNegativeTail
 import Shao.OQ3.StageSourceWitness
+import Shao.OQ3.StandardGaussianCellMass
 import Shao.OQ3.StandardizedCellBounds
 import Shao.OQ3.StandardizedCellChangeOfMeasure
+import Shao.OQ3.StandardizedCellOscillation
+import Shao.OQ3.StandardizedGaussianCellOscillation
 import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
 import Shao.OQ4.AveragedResidual
@@ -365,6 +372,7 @@ import Shao.Probability.SourceFutureNoiseInversion
 import Shao.Probability.SourceFutureNoiseOddEven
 import Shao.Probability.SourceKernelAmplitudeFamily
 import Shao.Probability.SourceKernelMarkedOutside
+import Shao.Probability.SourceLindleyRegulatorFirstMoment
 import Shao.Probability.SourceLongKernelBounds
 import Shao.Probability.SourceMarkFourierNorms
 import Shao.Probability.SourceOddEvenMarkedIBP
@@ -373,6 +381,7 @@ import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceShortTimeGrid
 import Shao.Probability.SourceShortTimeKernelBounds
+import Shao.Probability.SourceShortTimeKernelTaylor
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.TruncationIntegrals
 import Shao.Probability.TruncationRegularity
