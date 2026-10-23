@@ -1,0 +1,7 @@
+# Root exact-scope acceptance: PR192
+
+PR192 head f7d11c963383ca268957f4b9a76f7577b8e87340 is accepted for the next aggregate. Root read all fourteen public theorem statements and both actual literal definitions, the complete sealed independent final report and the qualified acceptance. The source is the actual positive rankOne z z operator on the full L2 quotient of the same fixed p53 population. Actual Z*f and residual rows are integrable before the a.e. operator representation is used. Exact rank one and nonzero retain the same SparseSelectionCore; no finite-dimensional ambient or fourth moment is assumed.
+
+Qualified independent coverage includes the entire source/proof, all 28 actual types and two definition values, including generated relations and the targeted raw-expression repairs, and the complete standard-three-axiom audit. Exact source=commit=current, object and author/audit/targeted receipts were hash-verified in coordination/integration-v50/oq56-pr192-intake.json. Root reuses this evidence and the original object, without another proof review or compilation. The earlier display failures and failed metadata helper remain historical failures.
+
+Only the canonical residual operator is accepted. Whole-kernel positivity, G symmetry, real encoding/transport, iid construction, actual studentizer positivity, events, conditional estimates and tails remain downstream; original p53/OQ6/RS2 remain OPEN.
