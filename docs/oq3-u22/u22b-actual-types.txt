@@ -1,0 +1,19 @@
+DECL _private.Shao.OQ3.OpenDomainWeightedMoments.0.Shao.OQ3.open_domain_weighted_integrable
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    MeasureTheory.Integrable (fun x => x ^ k * Real.exp (theta.1 * x + theta.2 * x ^ 2)) mu
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainWeightedMoments.0.Shao.OQ3.open_domain_abs_weighted_integrable
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    MeasureTheory.Integrable (fun x => |x| ^ k * Real.exp (theta.1 * x + theta.2 * x ^ 2)) mu
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_weighted_moment_hasFDerivAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    have I := fun n p => ∫ (x : ℝ), x ^ n * Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu;
+    have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+    have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+    MeasureTheory.Integrable (fun x => x ^ k * Real.exp (theta.1 * x + theta.2 * x ^ 2)) mu ∧
+      HasFDerivAt (I k) (I (k + 1) theta • pr0 + I (k + 2) theta • pr1) theta
+AXIOMS [propext, Classical.choice, Quot.sound]

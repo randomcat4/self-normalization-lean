@@ -1,0 +1,91 @@
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qWeightedMoment.eq_1
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (k : ℕ) (p : ℝ × ℝ),
+  Shao.OQ3.qWeightedMoment✝ mu k p = ∫ (x : ℝ), x ^ k * Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qNormalizedMoment.eq_1
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (k : ℕ) (p : ℝ × ℝ),
+  Shao.OQ3.qNormalizedMoment✝ mu k p = Shao.OQ3.qWeightedMoment✝ mu k p / Shao.OQ3.qWeightedMoment✝ mu 0 p
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qMomentSlope
+TYPE MeasureTheory.Measure ℝ → ℕ → ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qMomentSlope._proof_2
+TYPE SMulCommClass ℝ ℝ ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qNormalizedMoment_hasFDerivAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (k : ℕ),
+  ∀ p ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    HasFDerivAt (Shao.OQ3.qNormalizedMoment✝ mu k) (Shao.OQ3.qNormalizedSlope✝ mu k p) p
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qPartition_pos
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ p ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)), 0 < Shao.OQ3.qWeightedMoment✝ mu 0 p
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL Shao.OQ3.open_domain_quadratic_tilt_frechet_cumulants
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+    have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+    have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+    have D := Shao.OQ3.parabolaCovariance (nu theta);
+    have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+    have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+    have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+    have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+    have gradient := (means theta).1 • pr0 + (means theta).2 • pr1;
+    have hessian := row0.smulRight pr0 + row1.smulRight pr1;
+    MeasureTheory.IsProbabilityMeasure (nu theta) ∧
+      MeasureTheory.MemLp (fun x => x) 2 (nu theta) ∧
+        MeasureTheory.MemLp (fun x => x ^ 2) 2 (nu theta) ∧
+          HasFDerivAt means (row0.prod row1) theta ∧
+            HasFDerivAt K gradient theta ∧ HasFDerivAt (fun p => fderiv ℝ K p) hessian theta
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qTiltedMoment_eq
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (k : ℕ) (p : ℝ × ℝ),
+  (∫ (x : ℝ), x ^ k ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2) = Shao.OQ3.qNormalizedMoment✝ mu k p
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qMomentSlope._proof_1
+TYPE ContinuousAdd ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qWeightedMoment
+TYPE MeasureTheory.Measure ℝ → ℕ → ℝ × ℝ → ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qNormalizedSlope
+TYPE MeasureTheory.Measure ℝ → ℕ → ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qMomentSlope._proof_3
+TYPE ContinuousConstSMul ℝ ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qMomentSlope.eq_1
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (k : ℕ) (p : ℝ × ℝ),
+  Shao.OQ3.qMomentSlope✝ mu k p =
+    Shao.OQ3.qWeightedMoment✝ mu (k + 1) p • ContinuousLinearMap.fst ℝ ℝ ℝ +
+      Shao.OQ3.qWeightedMoment✝ mu (k + 2) p • ContinuousLinearMap.snd ℝ ℝ ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qPartitionGradient
+TYPE MeasureTheory.Measure ℝ → ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qNormalizedMoment
+TYPE MeasureTheory.Measure ℝ → ℕ → ℝ × ℝ → ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qLogPartition_hasFDerivAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ p ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    HasFDerivAt (fun t => Real.log (Shao.OQ3.qWeightedMoment✝ mu 0 t)) (Shao.OQ3.qPartitionGradient✝ mu p) p
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qPartitionGradient.eq_1
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (p : ℝ × ℝ),
+  Shao.OQ3.qPartitionGradient✝ mu p =
+    Shao.OQ3.qNormalizedMoment✝ mu 1 p • ContinuousLinearMap.fst ℝ ℝ ℝ +
+      Shao.OQ3.qNormalizedMoment✝ mu 2 p • ContinuousLinearMap.snd ℝ ℝ ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+DECL _private.Shao.OQ3.OpenDomainFrechetCumulants.0.Shao.OQ3.qNormalizedSlope.eq_1
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) (k : ℕ) (p : ℝ × ℝ),
+  Shao.OQ3.qNormalizedSlope✝ mu k p =
+    (Shao.OQ3.qNormalizedMoment✝ mu (k + 1) p -
+          Shao.OQ3.qNormalizedMoment✝ mu k p * Shao.OQ3.qNormalizedMoment✝ mu 1 p) •
+        ContinuousLinearMap.fst ℝ ℝ ℝ +
+      (Shao.OQ3.qNormalizedMoment✝ mu (k + 2) p -
+          Shao.OQ3.qNormalizedMoment✝ mu k p * Shao.OQ3.qNormalizedMoment✝ mu 2 p) •
+        ContinuousLinearMap.snd ℝ ℝ ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
