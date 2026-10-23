@@ -1,0 +1,13 @@
+# Actual varying-row polygonal convergence to a given Brownian path law
+
+This batch proves the joint finite-dimensional limits and then the full weak convergence in C([0,1], real) of the actual rescaled polygonal paths to the actual given Brownian process observed on [0,T]. It implements the dependency stated in original oq4/b01/proof01.md233–255, with the already qualified B2/B3 moment estimate and actual path-law tightness as inputs.
+
+RowPolygonalFDD proves the real disjoint-block product law, cumulative-prefix Gaussian limit and joint polygonal finite-dimensional limit. The endpoint residual is controlled in L3 and in probability. Zero durations, repeated observation times, an empty finite observation list and finite exceptional rows are included.
+
+PolygonalBrownianWeakLimit defines brownianUnitPath literally as the given B(Tu) continuous map when that path is continuous, and zero otherwise. It proves simultaneous all-time almost-everywhere agreement, almost-everywhere measurability and the actual pushforward probability law. The finite-grid Brownian law is derived from the actual increments, including zero increments. A finite-grid interpolation argument proves the tightness-plus-grid convergence implication by bounded-continuous integrals, and discharges every such premise in the public varying-row result. No desired weak limit or uniqueness assertion is added as a public assumption.
+
+For each row the measure is an actual finite product of a probability law with mean zero, second moment one and a common third absolute moment bound. The spatial scales are positive and tend to infinity; the finite row length covers T times the square of its scale. The target process is any actual given IsBrownianReal B P on an arbitrary measurable probability space. T=0 and atomic row laws are retained. No shared definitions or mathematical premises have been changed.
+
+The frozen original server source+kernel+all-owned type/value and transitive-axiom receipts are reused. Each module has one fresh complete independent review; the lane accepts only after that full review is read. Existing necessary producer objects are reused by their original identities. See the accompanying acceptance manifest for exact source, review, original check, object and runtime-binding hashes.
+
+Direct next consumers are the actual closed killed-event/floor-horizon limit and Brownian boundary-null adapter. Those, the stopped cosine identity B4, uniform B0, normalized B1, K/Kv and general OQ4 remain separate obligations. This batch claims no original-root closure, completion percentage or novelty.
