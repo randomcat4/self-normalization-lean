@@ -1,0 +1,18 @@
+DECL Shao.OQ3.open_domain_local_exponential_envelope
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    ∃ r,
+      0 < r ∧
+        ((theta.1 + r, theta.2 + r) ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) ∧
+          ((theta.1 - r, theta.2 + r) ∈ Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) ∧
+            have g := fun x =>
+              Real.exp ((theta.1 + r) * x + (theta.2 + r) * x ^ 2) +
+                Real.exp ((theta.1 - r) * x + (theta.2 + r) * x ^ 2);
+            MeasureTheory.Integrable g mu ∧
+              (∀ (x : ℝ), 0 ≤ g x) ∧
+                ∀ (p : ℝ × ℝ),
+                  ‖p - theta‖ < r →
+                    MeasureTheory.Integrable (fun x => Real.exp (p.1 * x + p.2 * x ^ 2)) mu ∧
+                      ∀ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ≤ g x
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

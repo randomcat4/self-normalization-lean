@@ -1,0 +1,40 @@
+DECL Shao.OQ3.open_domain_partition_function_continuousAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < ∫ (x : ℝ), Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu ∧
+      ContinuousAt (fun p => ∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu) theta
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_domain_weighted_fourier_continuousAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (theta xi : ℝ × ℝ),
+  theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+    MeasureTheory.Integrable
+        (fun x => Real.exp (theta.1 * x + theta.2 * x ^ 2) • Complex.exp (↑(xi.1 * x + xi.2 * x ^ 2) * Complex.I)) mu ∧
+      ContinuousAt
+        (fun z =>
+          ∫ (x : ℝ), Real.exp (z.1.1 * x + z.1.2 * x ^ 2) • Complex.exp (↑(z.2.1 * x + z.2.2 * x ^ 2) * Complex.I) ∂mu)
+        (theta, xi)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_domain_weighted_fourier_continuousAt._simp_1_1
+TYPE ∀ {α : Type u} [inst : PseudoMetricSpace α] {x y : α} {ε : ℝ}, (y ∈ Metric.ball x ε) = (dist y x < ε)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_domain_tilted_fourier_continuousAt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (theta xi : ℝ × ℝ),
+  theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+    have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+    have phase := fun x => Complex.exp (↑(xi.1 * x + xi.2 * x ^ 2) * Complex.I);
+    MeasureTheory.IsProbabilityMeasure nu ∧
+      MeasureTheory.Integrable phase nu ∧
+        ContinuousAt
+          (fun z =>
+            ∫ (x : ℝ),
+              Complex.exp (↑(z.2.1 * x + z.2.2 * x ^ 2) * Complex.I) ∂mu.tilted fun x => z.1.1 * x + z.1.2 * x ^ 2)
+          (theta, xi)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_domain_partition_function_continuousAt._simp_1_1
+TYPE ∀ {α : Type u} [inst : PseudoMetricSpace α] {x y : α} {ε : ℝ}, (y ∈ Metric.ball x ε) = (dist y x < ε)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

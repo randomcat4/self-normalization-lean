@@ -1,0 +1,48 @@
+DECL Shao.OQ3.compact_open_domain_tilted_frequency_gap
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (beta c R : ℝ),
+        0 ≤ beta →
+          0 < c →
+            0 ≤ R →
+              (∀ theta ∈ Theta,
+                  ∀ (u v : ℝ),
+                    R < √(u ^ 2 + v ^ 2) →
+                      ‖∫ (x : ℝ),
+                            Complex.exp
+                              (↑(u * x + v * x ^ 2) * Complex.I) ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2‖ ≤
+                        1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                ∀ (K : Set (ℝ × ℝ)),
+                  IsCompact K →
+                    (∀ a ∈ K, a.1 ≠ 0 ∨ a.2 ≠ 0) →
+                      ∃ gamma,
+                        0 < gamma ∧
+                          gamma < 1 ∧
+                            ∀ theta ∈ Theta,
+                              ∀ a ∈ K,
+                                ‖∫ (x : ℝ),
+                                      Complex.exp
+                                        (↑(a.1 * x + a.2 * x ^ 2) *
+                                          Complex.I) ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2‖ ≤
+                                  gamma
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.open_domain_tilted_weak_cramer_nonlattice
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    ∀ (beta c R : ℝ),
+      0 ≤ beta →
+        0 < c →
+          0 ≤ R →
+            (∀ (u v : ℝ),
+                R < √(u ^ 2 + v ^ 2) →
+                  ‖∫ (x : ℝ),
+                        Complex.exp
+                          (↑(u * x + v * x ^ 2) * Complex.I) ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2‖ ≤
+                    1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+              have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+              MeasureTheory.IsProbabilityMeasure nu ∧
+                ∀ (u v : ℝ), u ≠ 0 ∨ v ≠ 0 → ‖∫ (x : ℝ), Complex.exp (↑(u * x + v * x ^ 2) * Complex.I) ∂nu‖ < 1
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
