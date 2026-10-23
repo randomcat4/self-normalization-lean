@@ -35,10 +35,14 @@ import Shao.OQ3.CenteredLogMGF
 import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
+import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainStandardizedFarFrequency
+import Shao.OQ3.CompactOpenDomainStandardizedMiddleFrequency
+import Shao.OQ3.CompactOpenDomainTiltedFrequencyGap
+import Shao.OQ3.CompactOpenDomainWhitenedAnnulusGap
 import Shao.OQ3.CompactParabolaGaussianOscillation
 import Shao.OQ3.CompactParabolaRateProbability
 import Shao.OQ3.CompactTiltCovarianceSpectrum
@@ -82,6 +86,7 @@ import Shao.OQ3.NormalTangentPowerLimit
 import Shao.OQ3.NormalTrialCost
 import Shao.OQ3.NormalizedIIDPairCharacteristic
 import Shao.OQ3.NormalizedIIDPairFrequencyDecay
+import Shao.OQ3.NormalizedIIDPairMiddleFrequency
 import Shao.OQ3.NormalizedIIDPairSuperpolynomialDecay
 import Shao.OQ3.OpenBallOscillation
 import Shao.OQ3.OpenDomainAffineMoments
@@ -97,12 +102,14 @@ import Shao.OQ3.OpenDomainBoundaryTaylor
 import Shao.OQ3.OpenDomainCompactMeanChart
 import Shao.OQ3.OpenDomainCompactMoments
 import Shao.OQ3.OpenDomainCovarianceAmplitude
+import Shao.OQ3.OpenDomainExponentialEnvelope
 import Shao.OQ3.OpenDomainFrechetCumulants
 import Shao.OQ3.OpenDomainLegendre
 import Shao.OQ3.OpenDomainMeanInverse
 import Shao.OQ3.OpenDomainRateDerivatives
 import Shao.OQ3.OpenDomainRealMoments
 import Shao.OQ3.OpenDomainSmoothMean
+import Shao.OQ3.OpenDomainTiltedFourierContinuity
 import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
 import Shao.OQ3.ParabolaArcLipschitz
@@ -365,6 +372,9 @@ import Shao.OQ5.P53.SparseFixedRealCounterexample
 import Shao.OQ5.P53.SparseLabelLaw
 import Shao.OQ5.P53.SparseMass
 import Shao.OQ5.P53.SparseMassLimits
+import Shao.OQ5.P53.SparseNormalizedFixedRealCounterexample
+import Shao.OQ5.P53.SparseNormalizedRealOperator
+import Shao.OQ5.P53.SparseNormalizedRealStatistics
 import Shao.OQ5.P53.SparsePopulation
 import Shao.OQ5.P53.SparsePopulationKernel
 import Shao.OQ5.P53.SparsePopulationOperator
@@ -373,6 +383,7 @@ import Shao.OQ5.P53.SparsePositiveStudentizer
 import Shao.OQ5.P53.SparseProjectionLaw
 import Shao.OQ5.P53.SparseRealEncoding
 import Shao.OQ5.P53.SparseRealModel
+import Shao.OQ5.P53.SparseRealNormalization
 import Shao.OQ5.P53.SparseRealOperator
 import Shao.OQ5.P53.SparseRealSample
 import Shao.OQ5.P53.SparseRealStatistics
@@ -443,6 +454,7 @@ import Shao.Probability.SourceFutureNoiseInversion
 import Shao.Probability.SourceFutureNoiseOddEven
 import Shao.Probability.SourceGrowingMicrotimeReflection
 import Shao.Probability.SourceGrowingMicrotimeTail
+import Shao.Probability.SourceGrowingRegionIntegrals
 import Shao.Probability.SourceGrowingTiltParameterPayment
 import Shao.Probability.SourceKernelAmplitudeFamily
 import Shao.Probability.SourceKernelMarkedOutside
@@ -455,6 +467,7 @@ import Shao.Probability.SourceLindleySurvival
 import Shao.Probability.SourceLocalizedMicrotimeDerivatives
 import Shao.Probability.SourceLongKernelBounds
 import Shao.Probability.SourceMarkFourierNorms
+import Shao.Probability.SourceNoiseCost
 import Shao.Probability.SourceNoiseSandwich
 import Shao.Probability.SourceOddEvenMarkedIBP
 import Shao.Probability.SourceOddEvenWholeLineIBP
