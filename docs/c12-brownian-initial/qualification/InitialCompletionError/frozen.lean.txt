@@ -1,0 +1,43 @@
+import Shao.C2.EndpointCDFTransfer
+
+open scoped NNReal
+noncomputable section
+namespace Shao.C2.InitialCompletionError
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw Shao.C2.EndpointCDFTransfer
+
+theorem zero_energy_removal {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) [IsProbabilityMeasure P] (W Q : Ω → ℝ)
+    (hW : AEMeasurable W P) (hQ : Measurable Q) (hQ0 : ∀ᵐ ω ∂P, 0 ≤ Q ω)
+    (f : ℝ → ℝ) (hf : Measurable f) (hf0 : ∀ w, 0 ≤ f w) (hf1 : ∀ w, f w ≤ 1) :
+    |(∫ ω, (if 0 < Q ω then f (W ω) else 0) ∂P) - ∫ ω, f (W ω) ∂P| ≤
+      P.real {ω | Q ω = 0}
+
+theorem initial_marginal_error_of_cdf
+    {Ω ΩB : Type*} [MeasurableSpace Ω] [MeasurableSpace ΩB]
+    (P : Measure Ω) [IsProbabilityMeasure P] (W Q : Ω → ℝ)
+    (hW : AEMeasurable W P) (hQ : Measurable Q) (hQ0 : ∀ᵐ ω ∂P, 0 ≤ Q ω)
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ,
+      |P.real {ω | W ω ≤ x} - (gaussianReal 0 1).real (Set.Iic x)| ≤ δ)
+    (a : ℝ) :
+    |(∫ ω, (if 0 < Q ω then intervalCompletion (bridgeLaw B PB) a 0 1 (W ω) else 0) ∂P) -
+      PB.real {ω | ∀ t : BridgeTime, |B ⟨(t : ℝ), t.property.1⟩ ω| < a}| ≤
+      2 * δ + P.real {ω | Q ω = 0}
+
+theorem initial_joint_error_of_cdf
+    {Ω ΩB : Type*} [MeasurableSpace Ω] [MeasurableSpace ΩB]
+    (P : Measure Ω) [IsProbabilityMeasure P] (W Q : Ω → ℝ)
+    (hW : AEMeasurable W P) (hQ : Measurable Q) (hQ0 : ∀ᵐ ω ∂P, 0 ≤ Q ω)
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ,
+      |P.real {ω | W ω ≤ x} - (gaussianReal 0 1).real (Set.Iic x)| ≤ δ)
+    (a v : ℝ) :
+    |(∫ ω, (if 0 < Q ω then
+        (if W ω ≤ v then intervalCompletion (bridgeLaw B PB) a 0 1 (W ω) else 0) else 0) ∂P) -
+      PB.real {ω | (∀ t : BridgeTime, |B ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧ B 1 ω ≤ v}| ≤
+      2 * δ + P.real {ω | Q ω = 0}
+
+end Shao.C2.InitialCompletionError

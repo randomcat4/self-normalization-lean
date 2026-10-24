@@ -1,0 +1,42 @@
+import Shao.C2.BrownianBridgeLaw
+import Mathlib.Probability.Distributions.Gaussian.IsGaussianProcess.Independence
+
+open scoped NNReal
+
+noncomputable section
+namespace Shao.C2.BrownianBridgeLaw
+open MeasureTheory ProbabilityTheory
+open Shao.C2.BridgeDomination
+
+def bridgeJointProcess {Ω : Type*} (B : ℝ≥0 → Ω → ℝ) :
+    BridgeTime ⊕ Unit → Ω → ℝ :=
+  Sum.elim
+    (fun t ω => B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω)
+    (fun _ ω => B 1 ω)
+
+theorem isGaussianProcess_bridgeJointProcess {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) : IsGaussianProcess (bridgeJointProcess B) P
+
+theorem covariance_bridge_endpoint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (t : BridgeTime) :
+    cov[fun ω => B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω, B 1; P] = 0
+
+theorem raw_bridge_indep_endpoint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    IndepFun (fun ω (t : BridgeTime) =>
+      B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω) (B 1) P
+
+theorem bridgeNoise_indep_endpoint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) : IndepFun (bridgeNoise B) (B 1) P
+
+theorem bridge_endpoint_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    HasLaw (fun ω => (bridgeNoise B ω, B 1 ω))
+      ((bridgeLaw B P).prod (gaussianReal 0 1)) P
+
+end Shao.C2.BrownianBridgeLaw

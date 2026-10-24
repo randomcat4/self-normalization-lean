@@ -1,0 +1,33 @@
+import Shao.C2.InitialBrownianIdentity
+
+noncomputable section
+namespace Shao.C2.InitialCompletionVariation
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+theorem closed_cutoff_variation_le (f : ℝ → ℝ)
+    (hf0 : ∀ w, 0 ≤ f w) (hf1 : ∀ w, f w ≤ 1) (v : ℝ) :
+    eVariationOn (fun w => if w ≤ v then f w else 0) Set.univ ≤
+      eVariationOn f Set.univ + 1
+
+theorem initial_interval_measurable
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν] (a : ℝ) :
+    Measurable (fun w : ℝ => intervalCompletion ν a 0 1 w)
+
+theorem initial_interval_integrable
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (ρ : Measure ℝ) [IsProbabilityMeasure ρ] (a : ℝ) :
+    Integrable (fun w : ℝ => intervalCompletion ν a 0 1 w) ρ
+
+theorem initial_joint_variation
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν] (a v : ℝ) :
+    eVariationOn (fun w : ℝ => if w ≤ v then intervalCompletion ν a 0 1 w else 0)
+      Set.univ ≤ 3
+
+theorem initial_joint_integrable
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (ρ : Measure ℝ) [IsProbabilityMeasure ρ] (a v : ℝ) :
+    Integrable (fun w : ℝ => if w ≤ v then intervalCompletion ν a 0 1 w else 0) ρ
+
+end Shao.C2.InitialCompletionVariation
