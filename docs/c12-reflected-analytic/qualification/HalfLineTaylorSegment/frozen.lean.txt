@@ -1,0 +1,45 @@
+import Shao.C2.CompletionFirstProfile
+
+noncomputable section
+namespace Shao.C2.HalfLineTaylorSegment
+
+def segmentEnergy (T b θ : ℝ) : ℝ := T - θ * b ^ 2
+def segmentDistance (u b θ : ℝ) : ℝ := u - θ * b
+def incrementProfile (u v T b : ℝ) : ℝ := Real.exp (-(max (u - |b|) 0) * v / T)
+
+theorem segment_energy_bounds (T b θ : ℝ) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) :
+    0 < segmentEnergy T b θ ∧ T / 2 ≤ segmentEnergy T b θ ∧ segmentEnergy T b θ ≤ T := by
+
+theorem segment_distance_nonneg (u b θ : ℝ) (hu : 0 < u) (hnew : 0 ≤ u - b)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) :
+    0 ≤ segmentDistance u b θ := by
+
+theorem segment_distance_pos (u b θ : ℝ) (hu : 0 < u) (hnew : 0 ≤ u - b)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) :
+    0 < segmentDistance u b θ := by
+
+theorem segment_profile_le_increment (u v T b θ : ℝ) (hu : 0 < u) (hv : 0 ≤ v)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) :
+    Real.exp (-segmentDistance u b θ * v / segmentEnergy T b θ) ≤ incrementProfile u v T b := by
+
+theorem segment_sqrt_comparison (T b θ : ℝ) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) :
+    Real.sqrt T ≤ 2 * Real.sqrt (segmentEnergy T b θ) := by
+
+theorem segment_displacement_bound (d T b θ : ℝ) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) :
+    1 + |d - θ * b| / Real.sqrt (segmentEnergy T b θ) ≤
+      3 * (1 + |d| / Real.sqrt T) := by
+
+theorem segment_profile_transport (u v d T b θ : ℝ) (hu : 0 < u) (hv : 0 ≤ v)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) (r j : ℕ) :
+    (1 / Real.sqrt (segmentEnergy T b θ)) ^ r *
+        (1 + |d - θ * b| / Real.sqrt (segmentEnergy T b θ)) ^ j *
+          Real.exp (-segmentDistance u b θ * v / segmentEnergy T b θ) ≤
+      (2 : ℝ) ^ r * (3 : ℝ) ^ j * (1 / Real.sqrt T) ^ r *
+        (1 + |d| / Real.sqrt T) ^ j * incrementProfile u v T b := by
+
+end Shao.C2.HalfLineTaylorSegment

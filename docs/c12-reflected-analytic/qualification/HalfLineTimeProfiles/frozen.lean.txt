@@ -1,0 +1,37 @@
+import Shao.C2.HalfLineHeatEquation
+import Mathlib.Analysis.Calculus.Deriv.Pow
+
+noncomputable section
+namespace Shao.C2.HalfLineTimeProfiles
+open Shao.C2.HalfLineReflectionFormula
+
+def timeCompletion (C T : ℝ) : ℝ := 1 - Real.exp (-C / T)
+
+theorem nonneg_exp_monomial_profile (q : ℝ) (hq : 0 ≤ q) (m : ℕ) :
+    q ^ m * Real.exp (-q) ≤
+      (2 : ℝ) ^ m * (Nat.factorial m : ℝ) * Real.exp (-q / 2) := by
+
+theorem timeCompletion_hasDerivAt (C T : ℝ) (hT : 0 < T) :
+    HasDerivAt (timeCompletion C)
+      (-(C / T ^ 2) * Real.exp (-C / T)) T := by
+
+theorem timeCompletion_second_hasDerivAt (C T : ℝ) (hT : 0 < T) :
+    HasDerivAt (deriv (timeCompletion C))
+      ((2 * C / T ^ 3 - C ^ 2 / T ^ 4) * Real.exp (-C / T)) T := by
+
+theorem timeCompletion_third_hasDerivAt (C T : ℝ) (hT : 0 < T) :
+    HasDerivAt (deriv (deriv (timeCompletion C)))
+      ((-6 * C / T ^ 4 + 6 * C ^ 2 / T ^ 5 - C ^ 3 / T ^ 6) * Real.exp (-C / T)) T := by
+
+theorem timeCompletion_time_profiles (C T : ℝ) (hC : 0 ≤ C) (hT : 0 < T) :
+    |deriv (timeCompletion C) T| ≤ 2 / T * Real.exp (-C / (2 * T)) ∧
+    |deriv (deriv (timeCompletion C)) T| ≤ 12 / T ^ 2 * Real.exp (-C / (2 * T)) ∧
+    |deriv (deriv (deriv (timeCompletion C))) T| ≤ 108 / T ^ 3 * Real.exp (-C / (2 * T)) := by
+
+theorem upperReflection_eq_timeCompletion (a y T z : ℝ) :
+    upperReflection a y T z = timeCompletion (2 * (a - y) * (a - z)) T := by
+
+theorem lowerReflection_eq_timeCompletion (a y T z : ℝ) :
+    lowerReflection a y T z = timeCompletion (2 * (a + y) * (a + z)) T := by
+
+end Shao.C2.HalfLineTimeProfiles
