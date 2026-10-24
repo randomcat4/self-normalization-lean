@@ -1,0 +1,300 @@
+-- PROPOSAL ONLY. Exhaustive heads/full values/imports/options for parent freeze.
+-- Heads below deliberately have no theorem proof bodies; this is not Lean source.
+-- Two modules: A first, then B. No implementation is authorized by this inventory.
+
+-- ===== A: Shao/OQ4/BrownianPositiveCDF.lean =====
+import Shao.Probability.BrownianSup
+import Shao.Probability.BrownianFirstTerm
+import Shao.OQ4.BrownianSurvivalBoundary
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+
+noncomputable section
+namespace Shao.OQ4.BrownianPositiveCDF
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology
+set_option autoImplicit false
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+-- A01, PRIVATE transparent value (complete).
+private def scaledProcess (B : ℝ≥0 → Ω → ℝ) (c : ℝ≥0) : ℝ≥0 → Ω → ℝ :=
+  fun t ω => (Real.sqrt (c : ℝ))⁻¹ * B (c * t) ω
+
+-- A02, PRIVATE head.
+private theorem isBrownian_scaledProcess
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω)
+    (hB : IsBrownianReal B P) (c : ℝ≥0) (hc : 0 < c) :
+    IsBrownianReal (scaledProcess B c) P
+
+-- A03, PRIVATE head.
+private theorem time_change_bijection (c : ℝ≥0) (hc : 0 < c) :
+    (fun t : ℝ≥0 => c * t) '' Icc 0 c⁻¹ = Icc 0 1
+
+-- A04, PRIVATE head.
+private theorem rawSup_scaled_level
+    (B : ℝ≥0 → Ω → ℝ) (ω : Ω) (hc : Continuous (B · ω))
+    (x : ℝ) (hx : 0 < x) :
+    BrownianSurvivalBoundary.pathSup
+      (scaledProcess B (Real.toNNReal (x ^ 2)))
+      (Real.toNNReal (x ^ 2))⁻¹ 0 ω =
+        Shao.Probability.BrownianSup.pathSup B ω / x
+
+-- A05, PRIVATE head; generic probability-space measure fact, not a desired-limit input.
+private theorem cdf_continuousAt_of_null_atom
+    (P : Measure Ω) [IsProbabilityMeasure P]
+    (Z : Ω → ℝ) (hZ : Measurable Z) (x : ℝ)
+    (hAtom : P {ω | Z ω = x} = 0) :
+    ContinuousAt (fun y : ℝ => P.real {ω | Z ω ≤ y}) x
+
+-- A06, PUBLIC head.
+theorem measure_U_eq_zero
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x) :
+    P {ω | Shao.Probability.BrownianSup.U B P hB ω = x} = 0
+
+-- A07, PUBLIC head; no positivity condition is needed for monotonicity.
+theorem probability_mono
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Monotone (Shao.Probability.BrownianSup.probability B P hB)
+
+-- A08, PUBLIC head.
+theorem probability_continuousAt
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x) :
+    ContinuousAt (Shao.Probability.BrownianSup.probability B P hB) x
+
+-- A09, PUBLIC head.
+theorem probability_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (r : ℕ → ℝ) (x : ℝ) (hx : 0 < x)
+    (hr : Tendsto r atTop (𝓝 x)) :
+    Tendsto (fun j => Shao.Probability.BrownianSup.probability B P hB (r j))
+      atTop (𝓝 (Shao.Probability.BrownianSup.probability B P hB x))
+
+-- A10, PUBLIC head.
+theorem probability_pos
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x) :
+    0 < Shao.Probability.BrownianSup.probability B P hB x
+
+-- A11, PRIVATE head; deterministic exact event identity, no continuity premise.
+private theorem closedSurvival_eq_scaled_fullStrip
+    (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (hT : 0 < T) :
+    BrownianSurvivalBoundary.closedSurvival B T 0 =
+      Shao.Probability.BrownianSup.fullStrip (scaledProcess B T)
+        (1 / Real.sqrt (T : ℝ))
+
+-- A12, PUBLIC head.
+theorem survival_time_eq_probability
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : 0 < T) :
+    P.real (BrownianSurvivalBoundary.closedSurvival B T 0) =
+      Shao.Probability.BrownianSup.probability B P hB (1 / Real.sqrt (T : ℝ))
+
+end Shao.OQ4.BrownianPositiveCDF
+
+-- ===== B: Shao/OQ4/PositiveBoundaryStudentized.lean =====
+import Shao.OQ4.BrownianPositiveCDF
+import Shao.OQ4.PolygonalKilledFunctionalLimit
+import Shao.OQ4.RandomDenominatorFarTail
+import Shao.Probability.FiniteIID
+import Shao.Probability.MeasurablePath
+import Shao.Basic.ClosedSurvival
+import Mathlib.Probability.StrongLaw
+import Mathlib.Probability.Independence.InfinitePi
+import Mathlib.Probability.ProductMeasure
+import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
+
+noncomputable section
+namespace Shao.OQ4.PositiveBoundaryStudentized
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped BigOperators NNReal Topology
+set_option autoImplicit false
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+-- B01–B04, complete transparent values (3 PRIVATE, 1 PUBLIC).
+private def infiniteLaw (ν : Measure ℝ) : Measure (ℕ → ℝ) :=
+  Measure.infinitePi (fun _ : ℕ => ν)
+
+private def finiteProjection (n : ℕ) (ω : ℕ → ℝ) : Shao.Path n :=
+  fun i => ω i.val
+
+private def squareAverage (n : ℕ) (ω : ℕ → ℝ) : ℝ :=
+  (∑ i ∈ Finset.range n, (ω i) ^ 2) / (n : ℝ)
+
+def energyBad (n : ℕ) (δ : ℝ) : Set (Shao.Path n) :=
+  {a | δ * (n : ℝ) < |Shao.energy a - (n : ℝ)|}
+
+-- B05, PRIVATE head.
+private theorem measurable_finiteProjection (n : ℕ) :
+    Measurable (finiteProjection n)
+
+-- B06, PRIVATE head. Includes n=0.
+private theorem finiteProjection_map_eq_pi
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n : ℕ) :
+    (infiniteLaw ν).map (finiteProjection n) = Measure.pi (fun _ : Fin n => ν)
+
+-- B07, PRIVATE head. Exact reindexing, including the empty sum.
+private theorem projection_energy (n : ℕ) (ω : ℕ → ℝ) :
+    Shao.energy (finiteProjection n ω) = ∑ i ∈ Finset.range n, (ω i) ^ 2
+
+-- B08, PRIVATE head.
+private theorem measurable_squareAverage (n : ℕ) : Measurable (squareAverage n)
+
+-- B09, PRIVATE head. Only integrability of the square.
+private theorem squareAverage_ae_tendsto
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (hSq : Integrable (fun z : ℝ => z ^ 2) ν)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1) :
+    ∀ᵐ ω ∂infiniteLaw ν,
+      Tendsto (fun n : ℕ => squareAverage n ω) atTop (𝓝 (1 : ℝ))
+
+-- B10, PRIVATE head.
+private theorem measurableSet_energyBad (n : ℕ) (δ : ℝ) :
+    MeasurableSet (energyBad n δ)
+
+-- B11, PRIVATE head. Exact finite-law event transport for every n.
+private theorem finite_energy_bad_eq_infinite
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n : ℕ) (δ : ℝ) :
+    (Measure.pi (fun _ : Fin n => ν)).real (energyBad n δ) =
+      (infiniteLaw ν).real {ω | δ * (n : ℝ) <
+        |(∑ i ∈ Finset.range n, (ω i) ^ 2) - (n : ℝ)|}
+
+-- B12, PUBLIC head.
+theorem finite_energy_lln
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (hSq : Integrable (fun z : ℝ => z ^ 2) ν)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (δ : ℝ) (hδ : 0 < δ) :
+    Tendsto (fun n : ℕ => (Measure.pi (fun _ : Fin n => ν)).real
+      (energyBad n δ)) atTop (𝓝 (0 : ℝ))
+
+-- B13, PRIVATE head.
+private theorem integrable_square_of_third
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν) :
+    Integrable (fun z : ℝ => z ^ 2) ν
+
+-- B14, PRIVATE head.
+private theorem sqrt_nat_tendsto
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop) :
+    Tendsto (fun j => Real.sqrt (nSeq j : ℝ)) atTop atTop
+
+-- B15, PRIVATE head. No positive-n premise; exact at n=0 too.
+private theorem horizon_exact (r : ℝ) (hr : 0 < r) (n : ℕ) :
+    (Real.toNNReal ((r ^ 2)⁻¹) : ℝ) * (r * Real.sqrt (n : ℝ)) ^ 2 = (n : ℝ) ∧
+      PolygonalKilledFunctionalLimit.floorHorizon
+        (Real.toNNReal ((r ^ 2)⁻¹)) (r * Real.sqrt (n : ℝ)) = n
+
+-- B16, PRIVATE head. Full row horizon retained, including zero prefix.
+private theorem discrete_event_eq_closedStrip
+    (n : ℕ) (h : ℝ) (hh : 0 < h) (b : ℝ≥0) :
+    PolygonalKilledFunctionalLimit.discreteClosedSurvival n n h 0 b =
+      (Shao.closedStrip ((b : ℝ) * h) : Set (Shao.Path n))
+
+-- B17, PUBLIC head. No all-index positivity / monotonicity restriction.
+theorem deterministic_positive_boundary_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (rSeq : ℕ → ℝ) (r : ℝ) (hr : 0 < r)
+    (hrSeq : Tendsto rSeq atTop (𝓝 r)) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => ν)).real
+      (Shao.closedStrip (rSeq j * Real.sqrt (nSeq j : ℝ)))) atTop
+        (𝓝 (Shao.Probability.BrownianSup.probability B P hB r))
+
+-- B18, PRIVATE head.
+private theorem measurableSet_closedStrip (n : ℕ) (w : ℝ) :
+    MeasurableSet (Shao.closedStrip w : Set (Shao.Path n))
+
+-- B19, PRIVATE head, actual generic FAR definition.
+private theorem measurableSet_randomDenominatorEvent (n : ℕ) (h : ℝ) :
+    MeasurableSet (RandomDenominatorFarTail.randomDenominatorEvent n h)
+
+-- B20, PUBLIC head. Includes n=0, without cancelling 0/0 incorrectly.
+theorem randomDenominatorEvent_eq (n : ℕ) (x : ℝ) :
+    RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ)) =
+      {a : Shao.Path n | a ∈ Shao.closedStrip (x * Real.sqrt (Shao.energy a))}
+
+-- B21, PRIVATE head.
+private theorem sandwich_sets (n : ℕ) (x : ℝ) (hx : 0 ≤ x)
+    (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ < 1) :
+    ((Shao.closedStrip (x * Real.sqrt (n : ℝ) * Real.sqrt (1 - δ)) :
+      Set (Shao.Path n)) \ energyBad n δ) ⊆
+        RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ)) ∧
+    RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ)) ⊆
+      (Shao.closedStrip (x * Real.sqrt (n : ℝ) * Real.sqrt (1 + δ)) ∪ energyBad n δ)
+
+-- B22, PUBLIC head. Finite, atom-preserving, no moment/centering premises.
+theorem sandwich_probability
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (x : ℝ) (hx : 0 ≤ x) (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ < 1) :
+    (Measure.pi (fun _ : Fin n => ν)).real
+        (Shao.closedStrip (x * Real.sqrt (n : ℝ) * Real.sqrt (1 - δ))) -
+      (Measure.pi (fun _ : Fin n => ν)).real (energyBad n δ) ≤
+        (Measure.pi (fun _ : Fin n => ν)).real
+          (RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ))) ∧
+    (Measure.pi (fun _ : Fin n => ν)).real
+        (RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ))) ≤
+      (Measure.pi (fun _ : Fin n => ν)).real
+        (Shao.closedStrip (x * Real.sqrt (n : ℝ) * Real.sqrt (1 + δ))) +
+      (Measure.pi (fun _ : Fin n => ν)).real (energyBad n δ)
+
+-- B23, PUBLIC head. Original fixed standardized law assumptions only.
+theorem studentized_positive_boundary_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (x : ℝ) (hx : 0 < x)
+    (hxSeq : Tendsto xSeq atTop (𝓝 x)) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => ν)).real
+      (RandomDenominatorFarTail.randomDenominatorEvent (nSeq j)
+        (xSeq j * Real.sqrt (nSeq j : ℝ)))) atTop
+      (𝓝 (Shao.Probability.BrownianSup.probability B P hB x))
+
+-- B24, PUBLIC head. Actual changing CDF denominator, no target ratio premise.
+theorem studentized_positive_boundary_ratio_tendsto
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (x : ℝ) (hx : 0 < x)
+    (hxSeq : Tendsto xSeq atTop (𝓝 x)) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (nSeq j) => ν)).real
+        (RandomDenominatorFarTail.randomDenominatorEvent (nSeq j)
+          (xSeq j * Real.sqrt (nSeq j : ℝ))) /
+      Shao.Probability.BrownianSup.probability B P hB (xSeq j))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.PositiveBoundaryStudentized
+
+-- Exhaustive total: A12+B24=36 declarations:31 theorem heads,5 full def values.
+-- A:1 private def,5 private theorems,6 public theorems.
+-- B:3 private defs,1 public def,14 private theorems,6 public theorems.
+-- No other module-level declarations/instances/structures/macros are proposed.
+-- Expected allowed axioms after future server audit: propext, Classical.choice, Quot.sound.

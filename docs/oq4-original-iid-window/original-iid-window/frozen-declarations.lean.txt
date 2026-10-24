@@ -1,0 +1,412 @@
+/-
+AUTHOR181 PROPOSAL ONLY: exhaustive module headers, theorem heads and full values.
+No theorem proof bodies. This is not a Lean implementation or a checked source.
+Parent must freeze this complete proposal before implementation.
+Two modules in dependency order: OriginalWindowProduct, OriginalIIDWindow.
+No additional top-level declaration, instance, macro, notation or option is proposed.
+-/
+
+-- ===== A: Shao/OQ4/OriginalWindowProduct.lean =====
+import Shao.OQ4.RandomDenominatorAsymptotic
+import Shao.OQ4.PositiveBoundaryStudentized
+import Shao.Probability.BrownianFirstTerm
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Topology.Sequences
+import Mathlib.Topology.Instances.Real.Lemmas
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Order.Filter.AtTopBot.CountablyGenerated
+import Mathlib.MeasureTheory.Measure.Real
+import Mathlib.Topology.Algebra.Order.Field
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
+
+noncomputable section
+namespace Shao.OQ4.OriginalWindowProduct
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal Topology
+set_option autoImplicit false
+variable {ΩB : Type*} [MeasurableSpace ΩB]
+
+-- A01 PUBLIC full value. Fixed law, genuine random energy, all finite lengths.
+def productProbability (ν : Measure ℝ) (n : ℕ) (x : ℝ) : ℝ :=
+  (Measure.pi (fun _ : Fin n => ν)).real
+    (RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ)))
+
+-- A02 PUBLIC full value. The reference CDF is the actual supplied Brownian law.
+def relativeError
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) (n : ℕ) (x : ℝ) : ℝ :=
+  |productProbability ν n x / Shao.Probability.BrownianSup.probability B P hB x - 1|
+
+-- A03 PUBLIC full value. Exact open source window, including early indices.
+def windowValues
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) (a : ℕ → ℝ) (n : ℕ) : Set ℝ :=
+  (fun x : ℝ => relativeError B P hB ν n x) '' Ioo (a n) 1
+
+-- A04 PUBLIC full value. Real conditional supremum, without early-index patching.
+def windowError
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
+  sSup (windowValues B P hB ν a n)
+
+-- A05 PRIVATE head. All fractional exponents are real.
+private theorem scale_identities (n : ℕ) (hn : 0 < n) (x : ℝ) (hx : 0 < x) :
+    x * Real.sqrt (n : ℝ) =
+        (x * (n : ℝ) ^ ((1 : ℝ) / 6)) * (n : ℝ) ^ ((1 : ℝ) / 3) ∧
+    (n : ℝ) / (x * Real.sqrt (n : ℝ)) ^ 2 = 1 / x ^ 2 ∧
+    (n : ℝ) / (x * Real.sqrt (n : ℝ)) ^ 3 =
+        1 / (x * (n : ℝ) ^ ((1 : ℝ) / 6)) ^ 3
+
+-- A06 PRIVATE head. No all-index positivity is added to a limit target.
+private theorem small_boundary_scales
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => xSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    Tendsto (fun j => xSeq j * Real.sqrt (nSeq j : ℝ)) atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) /
+      (xSeq j * Real.sqrt (nSeq j : ℝ)) ^ 2) atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) /
+      (xSeq j * Real.sqrt (nSeq j : ℝ)) ^ 3) atTop (𝓝 (0 : ℝ))
+
+-- A07 PRIVATE head. Literal equality, not an asymptotic logarithmic comparison.
+private theorem farMainTerm_eq_firstTerm (n : ℕ) (hn : 0 < n)
+    (x : ℝ) (hx : 0 < x) :
+    RandomDenominatorFarTail.farMainTerm n (x * Real.sqrt (n : ℝ)) =
+      Shao.Probability.BrownianSup.firstTerm x
+
+-- A08 PRIVATE head. Derived from the qualified epsilon-delta actual first term.
+private theorem actual_firstTerm_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j => Shao.Probability.BrownianSup.probability B P hB (xSeq j) /
+      Shao.Probability.BrownianSup.firstTerm (xSeq j)) atTop (𝓝 (1 : ℝ))
+
+-- A09 PUBLIC head. Calls E5 internally; E5 is never a hypothesis of this theorem.
+theorem small_boundary_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => xSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    Tendsto (fun j => productProbability ν (nSeq j) (xSeq j) /
+      Shao.Probability.BrownianSup.probability B P hB (xSeq j))
+      atTop (𝓝 (1 : ℝ))
+
+-- A10 PRIVATE head. Positivity is paid, not assumed at every index.
+private theorem eventually_window_positive
+    (a : ℕ → ℝ) (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    ∀ᶠ n in atTop, 0 < a n ∧ a n < 1
+
+-- A11 PRIVATE head. Genuine frequently-bad extraction and compact subsequence.
+private theorem bad_window_subsequence
+    (e : ℕ → ℝ → ℝ) (a : ℕ → ℝ) (ε : ℝ)
+    (ha : ∀ᶠ n in atTop, 0 < a n)
+    (hbad : ∃ᶠ n in atTop, ∃ x ∈ Ioo (a n) 1, ε ≤ e n x) :
+    ∃ nSeq : ℕ → ℕ, ∃ xSeq : ℕ → ℝ, ∃ x : ℝ,
+      StrictMono nSeq ∧ x ∈ Icc 0 1 ∧ Tendsto xSeq atTop (𝓝 x) ∧
+      (∀ j, 0 < xSeq j ∧ xSeq j ∈ Ioo (a (nSeq j)) 1 ∧ ε ≤ e (nSeq j) (xSeq j))
+
+-- A12 PUBLIC head. Original decreasing-window hypotheses are retained.
+theorem product_window_eventually
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop,
+      ∀ x ∈ Ioo (a n) 1, relativeError B P hB ν n x < ε
+
+-- A13 PRIVATE head. Applies to the actual measurable product-law event.
+private theorem productProbability_bounds
+    (ν : Measure ℝ) [IsProbabilityMeasure ν] (n : ℕ) (x : ℝ) :
+    0 ≤ productProbability ν n x ∧ productProbability ν n x ≤ 1
+
+-- A14 PRIVATE head. A midpoint witnesses nonemptiness.
+private theorem windowValues_nonempty
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) (a : ℕ → ℝ) (n : ℕ)
+    (ha : a n < 1) : (windowValues B P hB ν a n).Nonempty
+
+-- A15 PRIVATE head. The bound depends on n through the positive F(a n).
+private theorem windowValues_bound
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (a : ℕ → ℝ) (n : ℕ) (ha : 0 < a n) :
+    ∀ y ∈ windowValues B P hB ν a n,
+      y ≤ 1 + 1 / Shao.Probability.BrownianSup.probability B P hB (a n)
+
+-- A16 PUBLIC head. This pays a genuine finite supremum at each good index.
+theorem windowError_spec
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (a : ℕ → ℝ) (n : ℕ) (ha0 : 0 < a n) (ha1 : a n < 1) :
+    (windowValues B P hB ν a n).Nonempty ∧
+      BddAbove (windowValues B P hB ν a n) ∧
+      IsLUB (windowValues B P hB ν a n) (windowError B P hB ν a n) ∧
+      0 ≤ windowError B P hB ν a n
+
+-- A17 PUBLIC head. Exact requested real supremum for one fixed standardized law.
+theorem product_window_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hmean : (∫ z : ℝ, z ∂ν) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    Tendsto (windowError B P hB ν a) atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.OriginalWindowProduct
+
+-- ===== B: Shao/OQ4/OriginalIIDWindow.lean =====
+import Shao.OQ4.OriginalWindowProduct
+import Shao.OQ4.VarianceScaling
+import Shao.Probability.FiniteIID
+import Shao.Probability.MeasurablePath
+import Shao.Basic.ClosedSurvival
+import Mathlib.Probability.IdentDistrib
+import Mathlib.Probability.Independence.Basic
+import Mathlib.MeasureTheory.Measure.AEMeasurable
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
+
+noncomputable section
+namespace Shao.OQ4.OriginalIIDWindow
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal BigOperators Topology
+set_option autoImplicit false
+variable {ΩB ΩX : Type*} [MeasurableSpace ΩB] [MeasurableSpace ΩX]
+
+-- B01 PUBLIC full value. Literal source X_1,...,X_n; X_0 is unused.
+def sourcePath (n : ℕ) (X : ℕ → ΩX → ℝ) (ω : ΩX) : Shao.Path n :=
+  fun i => X (i.val + 1) ω
+
+-- B02 PUBLIC full value. Actual sum of squares, without normalization.
+def sourceEnergy (n : ℕ) (X : ℕ → ΩX → ℝ) (ω : ΩX) : ℝ :=
+  Shao.energy (sourcePath n X ω)
+
+-- B03 PUBLIC full value. M_n is max over positive prefixes when n>0.
+-- At n=0 the chosen extension is zero; no empty positive-index max is invented.
+def sourceMaximum (n : ℕ) (X : ℕ → ΩX → ℝ) (ω : ΩX) : ℝ :=
+  if hn : 0 < n then Shao.absMax (sourcePath n X ω) hn else 0
+
+-- B04 PUBLIC full value. Weak multiplicative event, including Q=0.
+def sourceEvent (n : ℕ) (X : ℕ → ΩX → ℝ) (x : ℝ) : Set ΩX :=
+  {ω | sourceMaximum n X ω ≤ x * Real.sqrt (sourceEnergy n X ω)}
+
+-- B05 PUBLIC full value. Exact original probability and actual chosen Brownian CDF.
+def sourceWindowError
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (a : ℕ → ℝ) (n : ℕ) : ℝ :=
+  sSup ((fun x : ℝ => |μ.real (sourceEvent n X x) /
+    Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1)
+
+-- B06 PRIVATE head. Exact source partial-sum identification, including k=0.
+private theorem source_prefix_eq (n k : ℕ) (hk : k ≤ n)
+    (X : ℕ → ΩX → ℝ) (ω : ΩX) :
+    Shao.prefixSum (sourcePath n X ω) k =
+      ∑ i ∈ Finset.range k, X (i + 1) ω
+
+-- B07 PUBLIC head. The energy includes precisely source coordinates 1 through n.
+theorem sourceEnergy_eq_sum (n : ℕ) (X : ℕ → ΩX → ℝ) (ω : ΩX) :
+    sourceEnergy n X ω = ∑ i ∈ Finset.range n, (X (i + 1) ω) ^ 2
+
+-- B08 PUBLIC head. Genuine M_n, with its nonempty maximum premise.
+theorem sourceMaximum_le_iff (n : ℕ) (hn : 0 < n)
+    (X : ℕ → ΩX → ℝ) (ω : ΩX) (w : ℝ) :
+    sourceMaximum n X ω ≤ w ↔
+      ∀ k : ℕ, 1 ≤ k → k ≤ n → |∑ i ∈ Finset.range k, X (i + 1) ω| ≤ w
+
+-- B09 PRIVATE head.
+private theorem measurable_sourcePath (n : ℕ) (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, Measurable (X (i + 1))) : Measurable (sourcePath n X)
+
+-- B10 PRIVATE head. No law or moment restriction.
+private theorem measurableSet_sourceEvent (n : ℕ) (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, Measurable (X (i + 1))) (x : ℝ) :
+    MeasurableSet (sourceEvent n X x)
+
+-- B11 PRIVATE head. All x, all n, with n=0 proved separately.
+private theorem sourceEvent_eq_closedStrip (n : ℕ) (X : ℕ → ΩX → ℝ) (x : ℝ) :
+    sourceEvent n X x =
+      {ω | sourcePath n X ω ∈ Shao.closedStrip (x * Real.sqrt (sourceEnergy n X ω))}
+
+-- B12 PUBLIC head. Exact event scaling for every path, including zero energy.
+theorem sourceEvent_scale (n : ℕ) (X : ℕ → ΩX → ℝ)
+    (σ : ℝ) (hσ : 0 < σ) (x : ℝ) :
+    sourceEvent n (fun i ω => X i ω / σ) x = sourceEvent n X x
+
+-- B13 PRIVATE head. Lower moments are conclusions, never additional assumptions.
+private theorem integrable_lower_moments
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (Y : ΩX → ℝ)
+    (hY : AEMeasurable Y μ) (h3 : Integrable (fun ω => |Y ω| ^ 3) μ) :
+    Integrable Y μ ∧ Integrable (fun ω => (Y ω) ^ 2) μ
+
+-- B14 PRIVATE head. Uses the actual mapped standardized law, not an abstract law.
+private theorem standardized_law_moments
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (Y : ΩX → ℝ)
+    (hY : Measurable Y) (h3 : Integrable (fun ω => |Y ω| ^ 3) μ)
+    (hmean : (∫ ω, Y ω ∂μ) = 0)
+    (hsecond : 0 < ∫ ω, (Y ω) ^ 2 ∂μ) :
+    let σ : ℝ := Real.sqrt (∫ ω, (Y ω) ^ 2 ∂μ)
+    let ν : Measure ℝ := μ.map (fun ω => Y ω / σ)
+    0 < σ ∧ IsProbabilityMeasure ν ∧
+      Integrable (fun z : ℝ => |z| ^ 3) ν ∧
+      (∫ z : ℝ, z ∂ν) = 0 ∧ (∫ z : ℝ, z ^ 2 ∂ν) = 1
+
+-- B15 PRIVATE head. Actual finite map equality, including Fin0.
+private theorem standardized_sample_map_eq_pi
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, Measurable (X (i + 1)))
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+    (σ : ℝ) (hσ : 0 < σ) (n : ℕ) :
+    μ.map (sourcePath n (fun i ω => X i ω / σ)) =
+      Measure.pi (fun _ : Fin n => μ.map (fun ω => X 1 ω / σ))
+
+-- B16 PUBLIC head. Exact probability, before taking any limit.
+theorem source_probability_eq_product
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, Measurable (X (i + 1)))
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+    (σ : ℝ) (hσ : 0 < σ) (n : ℕ) (x : ℝ) :
+    μ.real (sourceEvent n X x) =
+      OriginalWindowProduct.productProbability (μ.map (fun ω => X 1 ω / σ)) n x
+
+-- B17 PRIVATE head. Explicit measurable versions, without restricting the law.
+private theorem measurable_versions
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ) :
+    ∃ Y : ℕ → ΩX → ℝ,
+      (∀ i : ℕ, Measurable (Y (i + 1))) ∧
+      (∀ i : ℕ, X (i + 1) =ᵐ[μ] Y (i + 1))
+
+-- B18 PRIVATE head. Finite event equality holds modulo the actual measure.
+private theorem sourceEvent_ae_congr
+    (μ : Measure ΩX) (X Y : ℕ → ΩX → ℝ)
+    (hXY : ∀ i : ℕ, X (i + 1) =ᵐ[μ] Y (i + 1)) (n : ℕ) (x : ℝ) :
+    ∀ᵐ ω ∂μ, ω ∈ sourceEvent n X x ↔ ω ∈ sourceEvent n Y x
+
+-- B19 PRIVATE head. Independence and common law survive the actual AE changes.
+private theorem iid_congr_ae
+    (μ : Measure ΩX) (X Y : ℕ → ΩX → ℝ)
+    (hXY : ∀ i : ℕ, X (i + 1) =ᵐ[μ] Y (i + 1))
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ) :
+    iIndepFun (fun i : ℕ => Y (i + 1)) μ ∧
+      (∀ i : ℕ, IdentDistrib (Y (i + 1)) (Y 1) μ μ)
+
+-- B20 PUBLIC head. Pays the AE-measurable original random-variable interface.
+theorem nullMeasurableSet_sourceEvent
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ) (n : ℕ) (x : ℝ) :
+    NullMeasurableSet (sourceEvent n X x) μ
+
+-- B21 PUBLIC head. Exact equality includes early empty/unbounded image sets.
+theorem sourceWindowError_congr_ae
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) (X Y : ℕ → ΩX → ℝ)
+    (hXY : ∀ i : ℕ, X (i + 1) =ᵐ[μ] Y (i + 1)) (a : ℕ → ℝ) (n : ℕ) :
+    sourceWindowError B P hB μ X a n = sourceWindowError B P hB μ Y a n
+
+-- B22 PUBLIC head. Genuine finite original-event supremum, no global CDF bound.
+theorem sourceWindowError_spec
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) [IsProbabilityMeasure μ]
+    (X : ℕ → ΩX → ℝ) (a : ℕ → ℝ) (n : ℕ)
+    (ha0 : 0 < a n) (ha1 : a n < 1) :
+    ((fun x : ℝ => |μ.real (sourceEvent n X x) /
+      Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1).Nonempty ∧
+    BddAbove ((fun x : ℝ => |μ.real (sourceEvent n X x) /
+      Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1) ∧
+    IsLUB ((fun x : ℝ => |μ.real (sourceEvent n X x) /
+      Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1)
+      (sourceWindowError B P hB μ X a n) ∧
+    0 ≤ sourceWindowError B P hB μ X a n
+
+-- B23 PUBLIC head. Full original fixed iid law, ordinary measurable variables.
+theorem source_window_measurable_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) [IsProbabilityMeasure μ]
+    (X : ℕ → ΩX → ℝ) (hX : ∀ i : ℕ, Measurable (X (i + 1)))
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+    (h3 : Integrable (fun ω => |X 1 ω| ^ 3) μ)
+    (hmean : (∫ ω, X 1 ω ∂μ) = 0)
+    (hsecond : 0 < ∫ ω, (X 1 ω) ^ 2 ∂μ)
+    (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    Tendsto (sourceWindowError B P hB μ X a) atTop (𝓝 (0 : ℝ))
+
+-- B24 PUBLIC head. Exact AE extension; no atomlessness or space restriction.
+theorem source_window_ae_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) [IsProbabilityMeasure μ]
+    (X : ℕ → ΩX → ℝ) (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+    (h3 : Integrable (fun ω => |X 1 ω| ^ 3) μ)
+    (hmean : (∫ ω, X 1 ω ∂μ) = 0)
+    (hsecond : 0 < ∫ ω, (X 1 ω) ^ 2 ∂μ)
+    (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    Tendsto (sourceWindowError B P hB μ X a) atTop (𝓝 (0 : ℝ))
+
+-- B25 PUBLIC ORIGINAL ROOT head. The actual iid M<=xV probability is displayed.
+theorem original_iid_sSup_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) [IsProbabilityMeasure μ]
+    (X : ℕ → ΩX → ℝ) (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+    (h3 : Integrable (fun ω => |X 1 ω| ^ 3) μ)
+    (hmean : (∫ ω, X 1 ω ∂μ) = 0)
+    (hsecond : 0 < ∫ ω, (X 1 ω) ^ 2 ∂μ)
+    (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    Tendsto (fun n : ℕ => sSup ((fun x : ℝ =>
+      |μ.real {ω | sourceMaximum n X ω ≤ x * Real.sqrt (sourceEnergy n X ω)} /
+        Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1))
+      atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.OriginalIIDWindow
+
+-- Exhaustive inventory: A17+B25=42 declarations; 33 theorem heads; 9 full values.
+-- A:4 public defs,9 private theorem heads,4 public theorem heads.
+-- B:5 public defs,10 private theorem heads,10 public theorem heads.
+-- Total:19 private/14 public theorem heads;32 import lines;2 options.
+-- No Lean/parser/server check has been run. Allowed future axioms only:
+-- propext, Classical.choice, Quot.sound. All original root groups remain OPEN.

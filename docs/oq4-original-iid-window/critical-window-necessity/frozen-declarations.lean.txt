@@ -1,0 +1,280 @@
+/-
+AUTHOR187 PROPOSAL ONLY. No theorem/instance proof bodies and no Lean check.
+Parent must freeze the complete proposal before any implementation.
+One proposed module: Shao/OQ4/CriticalWindowNecessity.lean.
+All top-level declarations, imports, options and full transparent values follow.
+No additional top-level helper, structure, macro, notation or instance is proposed.
+Local have/let facts inside later proofs do not create module interfaces.
+-/
+
+import Shao.OQ4.OriginalIIDWindow
+import Shao.OQ4.BrownianPositiveCDF
+import Shao.OQ4.RademacherS5Assembly
+import Mathlib.Probability.Independence.InfinitePi
+import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.MeasureTheory.Measure.Real
+import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
+
+noncomputable section
+universe u v
+namespace Shao.OQ4.CriticalWindowNecessity
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped NNReal BigOperators Topology
+set_option autoImplicit false
+variable {ΩB : Type v} [MeasurableSpace ΩB]
+
+-- D01 PUBLIC full value. The law is never rounded; only the real boundary is.
+def criticalCell (c : ℝ) (n : ℕ) : ℕ :=
+  Nat.ceil (c * (n : ℝ) ^ ((1 : ℝ) / 3))
+
+-- D02 PUBLIC full value. Integer weak wall, with absorbing site m+1.
+def criticalHeight (c : ℝ) (n : ℕ) : ℝ := (criticalCell c n : ℝ)
+
+-- D03 PUBLIC full value. Literal x=h/sqrt(n), with existing total division at0.
+def criticalPoint (c : ℝ) (n : ℕ) : ℝ :=
+  criticalHeight c n / Real.sqrt (n : ℝ)
+
+-- D04 PUBLIC full value. Positive for c>0, derived rather than postulated.
+def criticalGap (c : ℝ) : ℝ := Real.exp (Real.pi ^ 2 / (4 * c ^ 3)) - 1
+
+-- T05 PRIVATE head. Exact identities on the positive-time branch.
+private theorem critical_power_identities (c : ℝ) (hc : 0 < c)
+    (n : ℕ) (hn : 0 < n) :
+    ((n : ℝ) ^ ((1 : ℝ) / 3)) ^ 3 = (n : ℝ) ∧
+    Real.sqrt (n : ℝ) =
+      (n : ℝ) ^ ((1 : ℝ) / 3) * (n : ℝ) ^ ((1 : ℝ) / 6) ∧
+    criticalPoint c n * (n : ℝ) ^ ((1 : ℝ) / 6) =
+      criticalHeight c n / (n : ℝ) ^ ((1 : ℝ) / 3) ∧
+    (n : ℝ) / criticalHeight c n ^ 2 =
+      (n : ℝ) ^ ((1 : ℝ) / 3) /
+        (criticalHeight c n / (n : ℝ) ^ ((1 : ℝ) / 3)) ^ 2 ∧
+    (n : ℝ) / criticalHeight c n ^ 3 =
+      1 / (criticalHeight c n / (n : ℝ) ^ ((1 : ℝ) / 3)) ^ 3
+
+-- T06 PRIVATE head. Every analytic input to the old S4 is a conclusion here.
+private theorem rounded_scales (c : ℝ) (hc : 0 < c)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop) :
+    (∀ n : ℕ, 0 ≤ criticalHeight c n - c * (n : ℝ) ^ ((1 : ℝ) / 3) ∧
+      criticalHeight c n - c * (n : ℝ) ^ ((1 : ℝ) / 3) < 1) ∧
+    Tendsto (fun j => criticalHeight c (nSeq j) /
+      (nSeq j : ℝ) ^ ((1 : ℝ) / 3)) atTop (𝓝 c) ∧
+    Tendsto (fun j => criticalHeight c (nSeq j)) atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) / criticalHeight c (nSeq j) ^ 2)
+      atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) / criticalHeight c (nSeq j) ^ 3)
+      atTop (𝓝 (1 / c ^ 3)) ∧
+    Tendsto (fun j => criticalPoint c (nSeq j)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun j => criticalPoint c (nSeq j) *
+      (nSeq j : ℝ) ^ ((1 : ℝ) / 6)) atTop (𝓝 c) ∧
+    (∀ᶠ j in atTop,
+      1 ≤ nSeq j ∧ 1 ≤ criticalCell c (nSeq j) ∧
+      0 < criticalHeight c (nSeq j) ∧ 0 < criticalPoint c (nSeq j) ∧
+      criticalPoint c (nSeq j) * Real.sqrt (nSeq j : ℝ) =
+        criticalHeight c (nSeq j) ∧
+      RademacherS4Assembly.delta (criticalCell c (nSeq j))
+        (criticalHeight c (nSeq j)) = 1)
+
+-- T07 PUBLIC head. Derived from the actual two half-weighted atoms.
+theorem rademacher_moments :
+    Integrable (fun z : ℝ => |z| ^ 3) RademacherCosine.law ∧
+    (∫ z : ℝ, z ∂RademacherCosine.law) = 0 ∧
+    (∫ z : ℝ, z ^ 2 ∂RademacherCosine.law) = 1 ∧
+    (∫ z : ℝ, |z| ^ 3 ∂RademacherCosine.law) = 1
+
+-- T08 PRIVATE head. Does not consume OriginalWindowProduct's private helper.
+private theorem rademacher_probability_bounds (n : ℕ) (x : ℝ) :
+    0 ≤ OriginalWindowProduct.productProbability RademacherCosine.law n x ∧
+    OriginalWindowProduct.productProbability RademacherCosine.law n x ≤ 1
+
+-- T09 PRIVATE head. All x, including nonpositive x; n=0 is not asserted here.
+private theorem rademacher_event_bridge (n : ℕ) (hn : 0 < n) (x : ℝ) :
+    (∀ᵐ w ∂(Measure.pi (fun _ : Fin n => RademacherCosine.law)),
+      (w ∈ RandomDenominatorFarTail.randomDenominatorEvent n
+        (x * Real.sqrt (n : ℝ)) ↔
+      w ∈ @Shao.closedStrip n (x * Real.sqrt (n : ℝ)))) ∧
+    OriginalWindowProduct.productProbability RademacherCosine.law n x =
+      RademacherS2Assembly.p n (x * Real.sqrt (n : ℝ))
+
+-- T10 PUBLIC head. First-step obstruction also pays x<=0 without a CDF premise.
+theorem rademacher_zero_below_first_step
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n : ℕ) (hn : 0 < n)
+    (x : ℝ) (hx : x < 1 / Real.sqrt (n : ℝ)) :
+    OriginalWindowProduct.productProbability RademacherCosine.law n x = 0 ∧
+    OriginalWindowProduct.relativeError B P hB RademacherCosine.law n x = 1
+
+-- T11 PRIVATE head. A finite bound for every real x, independent of a_n's sign.
+private theorem rademacher_error_bound
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n : ℕ) (hn : 0 < n) (x : ℝ) :
+    OriginalWindowProduct.relativeError B P hB RademacherCosine.law n x ≤
+      1 + 1 / Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (n : ℝ))
+
+-- T12 PUBLIC head. Genuine finite real sSup for ANY lower endpoint below1.
+theorem rademacher_windowError_spec
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (n : ℕ)
+    (hn : 0 < n) (ha : a n < 1) :
+    (OriginalWindowProduct.windowValues B P hB RademacherCosine.law a n).Nonempty ∧
+    BddAbove (OriginalWindowProduct.windowValues B P hB RademacherCosine.law a n) ∧
+    IsLUB (OriginalWindowProduct.windowValues B P hB RademacherCosine.law a n)
+      (OriginalWindowProduct.windowError B P hB RademacherCosine.law a n) ∧
+    0 ≤ OriginalWindowProduct.windowError B P hB RademacherCosine.law a n ∧
+    OriginalWindowProduct.windowError B P hB RademacherCosine.law a n ≤
+      1 + 1 / Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (n : ℝ)) ∧
+    (∀ x ∈ Ioo (a n) 1,
+      OriginalWindowProduct.relativeError B P hB RademacherCosine.law n x ≤
+        OriginalWindowProduct.windowError B P hB RademacherCosine.law a n)
+
+-- T13 PUBLIC head. Actual probability quotient, not a log quotient or rate.
+theorem critical_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (c : ℝ) (hc : 0 < c)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop) :
+    0 < criticalGap c ∧
+    Tendsto (fun j =>
+      OriginalWindowProduct.productProbability RademacherCosine.law (nSeq j)
+        (criticalPoint c (nSeq j)) /
+      Shao.Probability.BrownianSup.probability B P hB (criticalPoint c (nSeq j)))
+      atTop (𝓝 (Real.exp (Real.pi ^ 2 / (4 * c ^ 3)))) ∧
+    Tendsto (fun j => OriginalWindowProduct.relativeError B P hB
+      RademacherCosine.law (nSeq j) (criticalPoint c (nSeq j)))
+      atTop (𝓝 (criticalGap c))
+
+-- T14 PRIVATE head. Strictly increasing positive indices; no positivity of a.
+private theorem bad_scale_subsequence (a : ℕ → ℝ)
+    (hbad : ¬ Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∃ nSeq : ℕ → ℕ,
+      StrictMono nSeq ∧ (∀ j, 1 ≤ nSeq j) ∧
+      (∀ j, a (nSeq j) * (nSeq j : ℝ) ^ ((1 : ℝ) / 6) ≤ C)
+
+-- T15 PRIVATE head. Exact original open interval; no rounded x substitution.
+private theorem critical_inside_window (a : ℕ → ℝ) (C : ℝ) (hC : 0 ≤ C)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (hbound : ∀ j, a (nSeq j) * (nSeq j : ℝ) ^ ((1 : ℝ) / 6) ≤ C) :
+    ∀ᶠ j in atTop, criticalPoint (C + 1) (nSeq j) ∈ Ioo (a (nSeq j)) 1
+
+-- T16 PUBLIC head. One fixed law; includes the actual proper-sSup lower bound.
+-- This stronger necessity statement does not require Antitone a or a->0.
+theorem rademacher_window_obstruction
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ)
+    (hbad : ¬ Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    ∃ c : ℝ, 0 < c ∧ 0 < criticalGap c ∧ ∃ nSeq : ℕ → ℕ,
+      StrictMono nSeq ∧
+      (∀ᶠ j in atTop,
+        1 ≤ nSeq j ∧ criticalPoint c (nSeq j) ∈ Ioo (a (nSeq j)) 1) ∧
+      Tendsto (fun j => OriginalWindowProduct.relativeError B P hB
+        RademacherCosine.law (nSeq j) (criticalPoint c (nSeq j)))
+        atTop (𝓝 (criticalGap c)) ∧
+      (∀ᶠ j in atTop, criticalGap c / 2 ≤
+        OriginalWindowProduct.windowError B P hB RademacherCosine.law a (nSeq j))
+
+-- T17 PUBLIC head. Necessity for the same fixed law at every n.
+theorem rademacher_window_necessity
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ)
+    (hwin : Tendsto (OriginalWindowProduct.windowError B P hB
+      RademacherCosine.law a) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop
+
+-- D18 PUBLIC full value. Each law is fixed outside the n-limit; no sup over laws.
+def universalFixedLawWindow
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) : Prop :=
+  ∀ (ν : Measure ℝ), IsProbabilityMeasure ν →
+    Integrable (fun z : ℝ => |z| ^ 3) ν →
+    (∫ z : ℝ, z ∂ν) = 0 → (∫ z : ℝ, z ^ 2 ∂ν) = 1 →
+    Tendsto (OriginalWindowProduct.windowError B P hB ν a) atTop (𝓝 (0 : ℝ))
+
+-- T19 PUBLIC SHARP CLASSIFICATION head. Original hypotheses, fixed laws.
+theorem universal_fixed_law_window_iff
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ))) :
+    universalFixedLawWindow B P hB a ↔
+      Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop
+
+-- D20 PUBLIC full value. One actual infinite product, with a measurable universe lift.
+def rademacherIIDLaw : Measure (ULift.{u} (ℕ → ℝ)) :=
+  (Measure.infinitePi (fun _ : ℕ => RademacherCosine.law)).map ULift.up
+
+-- D21 PUBLIC full value. The OriginalIIDWindow interface uses X_(i+1).
+def rademacherIIDCoordinate (i : ℕ) (ω : ULift.{u} (ℕ → ℝ)) : ℝ :=
+  ω.down i
+
+-- T22 PUBLIC head. Proves every original moment/iid premise for that one space.
+theorem rademacherIID_facts :
+    IsProbabilityMeasure (rademacherIIDLaw.{u}) ∧
+    (∀ i : ℕ, Measurable (rademacherIIDCoordinate.{u} (i + 1))) ∧
+    iIndepFun (fun i : ℕ => rademacherIIDCoordinate.{u} (i + 1))
+      (rademacherIIDLaw.{u}) ∧
+    (∀ i : ℕ, IdentDistrib (rademacherIIDCoordinate.{u} (i + 1))
+      (rademacherIIDCoordinate.{u} 1) (rademacherIIDLaw.{u}) (rademacherIIDLaw.{u})) ∧
+    (∀ i : ℕ, (rademacherIIDLaw.{u}).map (rademacherIIDCoordinate.{u} (i + 1)) =
+      RademacherCosine.law) ∧
+    Integrable (fun ω => |rademacherIIDCoordinate.{u} 1 ω| ^ 3)
+      (rademacherIIDLaw.{u}) ∧
+    (∫ ω, rademacherIIDCoordinate.{u} 1 ω ∂(rademacherIIDLaw.{u})) = 0 ∧
+    (∫ ω, (rademacherIIDCoordinate.{u} 1 ω) ^ 2 ∂(rademacherIIDLaw.{u})) = 1
+
+-- T23 PUBLIC head. Literal one-based original event, every n and every x.
+theorem rademacher_original_probability_eq_product (n : ℕ) (x : ℝ) :
+    (rademacherIIDLaw.{u}).real
+      (OriginalIIDWindow.sourceEvent n (rademacherIIDCoordinate.{u}) x) =
+      OriginalWindowProduct.productProbability RademacherCosine.law n x
+
+-- T24 PUBLIC head. Exact equality of real suprema, with all early conventions.
+theorem rademacher_original_window_eq_product
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (n : ℕ) :
+    OriginalIIDWindow.sourceWindowError B P hB (rademacherIIDLaw.{u})
+      (rademacherIIDCoordinate.{u}) a n =
+    OriginalWindowProduct.windowError B P hB RademacherCosine.law a n
+
+-- T25 PUBLIC ORIGINAL SHARP CLASSIFICATION head. All fixed iid spaces at ANY u.
+-- No standardized-variance restriction, no ordinary-measurability restriction.
+-- ULift above supplies a concrete Rademacher test space in that very universe.
+theorem universal_fixed_iid_window_iff
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ))) :
+    (∀ (ΩX : Type u) [MeasurableSpace ΩX]
+      (μ : Measure ΩX) [IsProbabilityMeasure μ]
+      (X : ℕ → ΩX → ℝ) (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ)
+      (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+      (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+      (h3 : Integrable (fun ω => |X 1 ω| ^ 3) μ)
+      (hmean : (∫ ω, X 1 ω ∂μ) = 0)
+      (hsecond : 0 < ∫ ω, (X 1 ω) ^ 2 ∂μ),
+      Tendsto (fun n : ℕ => sSup ((fun x : ℝ =>
+        |μ.real {ω | OriginalIIDWindow.sourceMaximum n X ω ≤
+          x * Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)} /
+          Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1))
+        atTop (𝓝 (0 : ℝ))) ↔
+      Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop
+
+end Shao.OQ4.CriticalWindowNecessity
+end
+
+/- Exhaustive proposed inventory:
+25 declarations = 7 full PUBLIC def values + 18 theorem heads; no new instance.
+18 theorems = 7 PRIVATE heads + 11 PUBLIC heads.
+18 import lines; one autoImplicit=false option; one namespace; one noncomputable
+section; balanced matching end commands. No other top-level declaration.
+No theorem/instance body, placeholder proof, parser run or formal qualification.
+Pending dependencies must qualify before a future source-bound consumer gate.
+-/
