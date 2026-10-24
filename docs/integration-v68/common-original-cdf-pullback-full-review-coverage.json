@@ -1,0 +1,787 @@
+{
+  "status": "COMPLETE",
+  "at": "2026-10-24T01:15:00.403082+00:00",
+  "module": "Shao.Probability.OriginalCDFPullback",
+  "source_sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+  "source_lines_fully_read": [
+    1,
+    440
+  ],
+  "complete_public_heads": [
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback",
+      "source_line": 253,
+      "frozen_head_byte_equal": true,
+      "complete_head_sha256": "06d039ec58fc890dcf7b378d1d2ee18a1a06aa819cb30bbe826b1f52e483ac56",
+      "complete_source_head": "theorem sourceTruncation_original_max_cdf_pullback :\n    ∃ C : ℝ, 0 < C ∧\n      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n),\n        Integrable (fun z : ℝ => z ^ 2) nu →\n        (∫ z : ℝ, z ∂nu) = 0 →\n        (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →\n        ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ 1 / 800 →\n          Shao.truncationBudget nu n x ≤ epsilon ^ 3 / 8 →\n          let h : ℝ := epsilon / (1 + x)\n          let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}\n          let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)\n          let rho : Measure ℝ := ProbabilityTheory.cond nu {z : ℝ | |z| ≤ h}\n          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)\n          let p : ℝ := P0.real N\n          let R : ℝ := Shao.truncationBudget nu n x\n          let w : ℝ := R * Shao.standardNormalTail x\n          let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0\n          let F0 : ℝ → ℝ := fun u => P0.real {v : Shao.Path n |\n            0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}\n          let F : ℝ → ℝ := fun u => P.real {v : Shao.Path n |\n            0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}\n          let E : ℝ → ℝ := fun u => F0 u - G u\n          let bad : ℝ → ℝ := fun u =>\n            if 0 < u then P0.real (Shao.upperCrossing hn u ∩ Nᶜ) else 0\n          let bias : ℝ → ℝ := fun u =>\n            if 0 < u then 2 * Shao.standardNormalTail u * (1 - p) else 0\n          (7 / 8 : ℝ) ≤ p ∧ p ≤ 1 ∧ 1 - p ≤ R / epsilon ^ 3 ∧\n            IsProbabilityMeasure rho ∧ IsProbabilityMeasure P ∧\n            ProbabilityTheory.cond P0 N = P ∧\n            (∀ u : ℝ, E u = p * (F u - G u) + bias u - bad u) ∧\n            ∀ u : ℝ, |u - x| ≤ 1 / (1 + x) →\n              0 ≤ bad u ∧ 0 ≤ bias u ∧\n              bad u + bias u ≤ C / epsilon ^ 3 * w ∧\n              |p * (F u - G u) - E u| ≤ C / epsilon ^ 3 * w ∧\n              |F u - G u - E u / p| ≤ (4 / 3 : ℝ) * C / epsilon ^ 3 * w ∧\n              (∀ s : ℝ, (s = 1 ∨ s = -1) →\n                s * E u / p - C / epsilon ^ 3 * w / p ≤ s * (F u - G u) ∧\n                s * (F u - G u) ≤ s * E u / p + C / epsilon ^ 3 * w / p)",
+      "full_read": true
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing",
+      "source_line": 49,
+      "frozen_head_byte_equal": true,
+      "complete_head_sha256": "1b03a09d921a491d5e30f25ab60b951e5b62ca2fa1cf58fdacc2350f42ccc2bf",
+      "complete_source_head": "theorem sourceTruncation_original_two_signs_bad_crossing :\n    ∃ C : ℝ, 0 < C ∧\n      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n),\n        Integrable (fun z : ℝ => z ^ 2) nu →\n        (∫ z : ℝ, z ∂nu) = 0 →\n        (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →\n        ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ 1 / 800 →\n          Shao.truncationBudget nu n x ≤ epsilon ^ 3 / 8 →\n          let h : ℝ := epsilon / (1 + x)\n          let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}\n          let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)\n          let w : ℝ := Shao.truncationBudget nu n x * Shao.standardNormalTail x\n          ∀ u : ℝ, 0 < u → |u - x| ≤ 1 / (1 + x) →\n            (∀ s : ℝ, (s = 1 ∨ s = -1) →\n              P0.real ({v : Shao.Path n |\n                u * Real.sqrt (Shao.energy v) ≤ Shao.upperMax (s • v) hn} ∩ Nᶜ) ≤\n                C / epsilon ^ 3 * w) ∧\n            P0.real ({v : Shao.Path n |\n              u * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v n|} ∩ Nᶜ) ≤\n                C / epsilon ^ 3 * w ∧\n            P0.real (Shao.upperCrossing hn u ∩ Nᶜ) +\n              P0.real ({v : Shao.Path n |\n                u * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v n|} ∩ Nᶜ) ≤\n                  C / epsilon ^ 3 * w",
+      "full_read": true
+    },
+    {
+      "name": "Shao.Probability.endpoint_cdf_exact_zero_energy_identity",
+      "source_line": 195,
+      "frozen_head_byte_equal": true,
+      "complete_head_sha256": "c97ab2d2290c9fb95dec1101c2d2917081471b00995f02ab20c500605ce1bb0c",
+      "complete_source_head": "theorem endpoint_cdf_exact_zero_energy_identity\n    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]\n    (t : ℝ) (ht : 0 < t) :\n    let Wplus : Set (Shao.Path n) :=\n      {v | t * Real.sqrt (Shao.energy v) ≤ Shao.prefixSum v n}\n    let Wminus : Set (Shao.Path n) :=\n      {v | t * Real.sqrt (Shao.energy v) ≤ -Shao.prefixSum v n}\n    P.real {v : Shao.Path n |\n      0 < Shao.energy v ∧ |Shao.prefixSum v n| < t * Real.sqrt (Shao.energy v)} =\n      1 - P.real Wplus - P.real Wminus + P.real {v : Shao.Path n | Shao.energy v = 0}",
+      "full_read": true
+    }
+  ],
+  "complete_private_heads": [
+    {
+      "name": "ocp_strict_compl",
+      "line": 19,
+      "complete_source_head": "private theorem ocp_strict_compl (n : ℕ) (hn : 0 < n) (u : ℝ) (hu : 0 < u) :\n    {v : Shao.Path n | 0 < Shao.energy v ∧\n      Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)} =\n      (Shao.upperCrossing hn u)ᶜ",
+      "frozen_exact": true,
+      "full_read": true
+    },
+    {
+      "name": "ocp_strict_nonpos",
+      "line": 40,
+      "complete_source_head": "private theorem ocp_strict_nonpos (n : ℕ) (u : ℝ) (hu : u ≤ 0) :\n    {v : Shao.Path n | 0 < Shao.energy v ∧\n      Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)} = ∅",
+      "frozen_exact": true,
+      "full_read": true
+    }
+  ],
+  "source_proofs": [
+    {
+      "name": "ocp_strict_compl",
+      "lines": [
+        19,
+        38
+      ],
+      "reason": "Positive-energy strict maxWithZero event equals complement of weak upper crossing; energy=0 forces membership in crossing. Positive wall permits removing max(0,upperMax).",
+      "complete_statement_and_proof_read": true
+    },
+    {
+      "name": "ocp_strict_nonpos",
+      "lines": [
+        40,
+        47
+      ],
+      "reason": "For u<=0 the wall is nonpositive and maxWithZero>=0, so strict event is empty.",
+      "complete_statement_and_proof_read": true
+    },
+    {
+      "name": "sourceTruncation_original_two_signs_bad_crossing",
+      "lines": [
+        49,
+        193
+      ],
+      "reason": "Uniform marked producer; epsilon small yields budget<=1/16, sample-size lower gives u^6<=n, radial monotonicity gives actual u-budget<=1. Closed-cutoff complement equals existential mark. Gaussian local comparison and actual tail budget pay each sign; terminal n is monitored, so endpoint event is in signed union. Constant 3*Cm*exp 2 is chosen before all laws/parameters.",
+      "complete_statement_and_proof_read": true
+    },
+    {
+      "name": "endpoint_cdf_exact_zero_energy_identity",
+      "lines": [
+        195,
+        251
+      ],
+      "reason": "Strict positive-energy endpoint event is complement of union of weak tails; intersection is exactly Q=0, with no atom removal or symmetry. Measurable inclusion-exclusion gives exact formula for arbitrary P and n=0.",
+      "complete_statement_and_proof_read": true
+    },
+    {
+      "name": "sourceTruncation_original_max_cdf_pullback",
+      "lines": [
+        253,
+        438
+      ],
+      "reason": "Actual coordinate IID law gives conditioning and p>=7/8. Actual rho/P probability classes are derived. Exact crossing partition gives identity for u>0, zero extension covers u<=0. Nonnegative bad+bias budget gives absolute error, positive p division, 1/p<=4/3 and both signs without importing target PB or END.",
+      "complete_statement_and_proof_read": true
+    }
+  ],
+  "local_literal_count": 43,
+  "statement_local_literals": 20,
+  "proof_local_literals": 23,
+  "ordinary_let_count": 40,
+  "letI_count": 3,
+  "all_local_literals": [
+    {
+      "line": 57,
+      "end_line": 57,
+      "kind": "let",
+      "literal": "          let h : ℝ := epsilon / (1 + x)",
+      "sha256": "299f93cdc2f1012615091e3eefdcba7449fa8e21a7b7ddf205145ebd8ffc5402",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 58,
+      "end_line": 58,
+      "kind": "let",
+      "literal": "          let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}",
+      "sha256": "3612222af19c68496be3a00127fce0505ef2de610f43c59685f5163fe91453a9",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 59,
+      "end_line": 59,
+      "kind": "let",
+      "literal": "          let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "20986d3eddabaa9ffe26f1dcb44c6f678aee433e6537ee853bdc9e4ec4021667",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 60,
+      "end_line": 60,
+      "kind": "let",
+      "literal": "          let w : ℝ := Shao.truncationBudget nu n x * Shao.standardNormalTail x",
+      "sha256": "1d2637cd10b2a2de19f4b96d4267f05289b1b87950d13ebf508078c6cdfa7539",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 77,
+      "end_line": 77,
+      "kind": "letI",
+      "literal": "  letI : IsProbabilityMeasure nu := hnu",
+      "sha256": "9c92848bc9009cfba000999bf9dfa448a4247d1ffb3d639f0bdb15a90dc7472e",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 79,
+      "end_line": 79,
+      "kind": "let",
+      "literal": "  let h : ℝ := epsilon / (1 + x)",
+      "sha256": "70e3e7e3131d1e5d7490b26e4708dd150aaceddf2779d98a314a3ecc12d56a54",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 80,
+      "end_line": 80,
+      "kind": "let",
+      "literal": "  let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}",
+      "sha256": "75881cef8ab73fef58a8c01c4040305cf2cb131500c83bd9a584ddaa53732e4f",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 81,
+      "end_line": 81,
+      "kind": "let",
+      "literal": "  let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "c64653d79378548cee4e4788ff9194f44afadc798ad015431955e73cef2c69a1",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 82,
+      "end_line": 82,
+      "kind": "let",
+      "literal": "  let w : ℝ := Shao.truncationBudget nu n x * Shao.standardNormalTail x",
+      "sha256": "9cc7d787106febfa4e1b0b0831d1fba4aa92e522bba0e34dfbd93d0be8f9019f",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 198,
+      "end_line": 199,
+      "kind": "let",
+      "literal": "    let Wplus : Set (Shao.Path n) :=\n      {v | t * Real.sqrt (Shao.energy v) ≤ Shao.prefixSum v n}",
+      "sha256": "fb0819966131b7aab4a7509bd2f1646e78fd6bdd036d9e5ef891f2ec57c288e2",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 200,
+      "end_line": 201,
+      "kind": "let",
+      "literal": "    let Wminus : Set (Shao.Path n) :=\n      {v | t * Real.sqrt (Shao.energy v) ≤ -Shao.prefixSum v n}",
+      "sha256": "3c8867f537b4068380381c5c39f09d6495154f6de37ea0e98feba578aec0463c",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 207,
+      "end_line": 208,
+      "kind": "let",
+      "literal": "  let Wplus : Set (Shao.Path n) :=\n    {v | t * Real.sqrt (Shao.energy v) ≤ Shao.prefixSum v n}",
+      "sha256": "6243bdd864102d7302c6e24d155eddd9cc8cbd877ed9063d2c1b705aad6ac4d1",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 209,
+      "end_line": 210,
+      "kind": "let",
+      "literal": "  let Wminus : Set (Shao.Path n) :=\n    {v | t * Real.sqrt (Shao.energy v) ≤ -Shao.prefixSum v n}",
+      "sha256": "224f5a1fa39ce3c55fdf475e67854b244e341aeb6ccd376f987bfd8679dc72df",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 261,
+      "end_line": 261,
+      "kind": "let",
+      "literal": "          let h : ℝ := epsilon / (1 + x)",
+      "sha256": "299f93cdc2f1012615091e3eefdcba7449fa8e21a7b7ddf205145ebd8ffc5402",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 262,
+      "end_line": 262,
+      "kind": "let",
+      "literal": "          let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}",
+      "sha256": "3612222af19c68496be3a00127fce0505ef2de610f43c59685f5163fe91453a9",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 263,
+      "end_line": 263,
+      "kind": "let",
+      "literal": "          let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "20986d3eddabaa9ffe26f1dcb44c6f678aee433e6537ee853bdc9e4ec4021667",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 264,
+      "end_line": 264,
+      "kind": "let",
+      "literal": "          let rho : Measure ℝ := ProbabilityTheory.cond nu {z : ℝ | |z| ≤ h}",
+      "sha256": "d443342caa327d71a2332f82c83445253f56b794d1e523d34ed45db0ecb66801",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 265,
+      "end_line": 265,
+      "kind": "let",
+      "literal": "          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)",
+      "sha256": "8f87864beaa26cbaae5a670fd9b9fcc29586e2edc0711fd4608ce2151f4ecfc3",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 266,
+      "end_line": 266,
+      "kind": "let",
+      "literal": "          let p : ℝ := P0.real N",
+      "sha256": "07d4f256cb5914dbdba042e9c7543d92e6cd157bddb9982bda70fef5caf97203",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 267,
+      "end_line": 267,
+      "kind": "let",
+      "literal": "          let R : ℝ := Shao.truncationBudget nu n x",
+      "sha256": "2b889b400eda7c222309b941401a1aafb32dea3f33402ff68ba63ea2db663fe0",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 268,
+      "end_line": 268,
+      "kind": "let",
+      "literal": "          let w : ℝ := R * Shao.standardNormalTail x",
+      "sha256": "940d585b2d8e3f0814fb2373ba62beeb39ba517e8bd04e956fe56a911a42e526",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 269,
+      "end_line": 269,
+      "kind": "let",
+      "literal": "          let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0",
+      "sha256": "688fe7954ee60389449d41ba26ca813d5a630b573c852c783df5d80962bc92b4",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 270,
+      "end_line": 271,
+      "kind": "let",
+      "literal": "          let F0 : ℝ → ℝ := fun u => P0.real {v : Shao.Path n |\n            0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}",
+      "sha256": "4dab6e556fb4525639c33070893637db3540b9b0cce7464253b76fa65d879cce",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 272,
+      "end_line": 273,
+      "kind": "let",
+      "literal": "          let F : ℝ → ℝ := fun u => P.real {v : Shao.Path n |\n            0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}",
+      "sha256": "b0c96a5cd55126d362aff03e30ce1563266d59d6e80321ea72e6903fbddcf836",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 274,
+      "end_line": 274,
+      "kind": "let",
+      "literal": "          let E : ℝ → ℝ := fun u => F0 u - G u",
+      "sha256": "ab355714230dffb6337d4665861a0fd02cf9cd5bc192bd2281ac1acc6788a485",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 275,
+      "end_line": 276,
+      "kind": "let",
+      "literal": "          let bad : ℝ → ℝ := fun u =>\n            if 0 < u then P0.real (Shao.upperCrossing hn u ∩ Nᶜ) else 0",
+      "sha256": "e4989570f97e6c109660e309ca8e7badc439f8ec4b4a4a6d7f6713bdd8de7d84",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 277,
+      "end_line": 278,
+      "kind": "let",
+      "literal": "          let bias : ℝ → ℝ := fun u =>\n            if 0 < u then 2 * Shao.standardNormalTail u * (1 - p) else 0",
+      "sha256": "6ffc52aea5e4c0387194da465476fbb8099aaf53ac245620c457e3bdd27bd98e",
+      "completely_read": true,
+      "location": "statement"
+    },
+    {
+      "line": 295,
+      "end_line": 295,
+      "kind": "letI",
+      "literal": "  letI : IsProbabilityMeasure nu := hnu",
+      "sha256": "9c92848bc9009cfba000999bf9dfa448a4247d1ffb3d639f0bdb15a90dc7472e",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 296,
+      "end_line": 296,
+      "kind": "let",
+      "literal": "  let h : ℝ := epsilon / (1 + x)",
+      "sha256": "70e3e7e3131d1e5d7490b26e4708dd150aaceddf2779d98a314a3ecc12d56a54",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 297,
+      "end_line": 297,
+      "kind": "let",
+      "literal": "  let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}",
+      "sha256": "75881cef8ab73fef58a8c01c4040305cf2cb131500c83bd9a584ddaa53732e4f",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 298,
+      "end_line": 298,
+      "kind": "let",
+      "literal": "  let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "c64653d79378548cee4e4788ff9194f44afadc798ad015431955e73cef2c69a1",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 299,
+      "end_line": 299,
+      "kind": "let",
+      "literal": "  let rho : Measure ℝ := cond nu {z : ℝ | |z| ≤ h}",
+      "sha256": "00cfcc83e4dc9a77c470408922e75e07dcf9e7588636cc3e204e9106ac975557",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 300,
+      "end_line": 300,
+      "kind": "let",
+      "literal": "  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)",
+      "sha256": "624a98bfc7a9b47bcd62103d297c68ce32a9bfe337d39f736de0b9005347828a",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 301,
+      "end_line": 301,
+      "kind": "let",
+      "literal": "  let p : ℝ := P0.real N",
+      "sha256": "6914f8e9dece3d637806716427c125c8839ea89257a63be23ca5152b264c0048",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 302,
+      "end_line": 302,
+      "kind": "let",
+      "literal": "  let R : ℝ := Shao.truncationBudget nu n x",
+      "sha256": "40b0192d93c38fab41a7967d351bc08104fff151b77e9b9bcfde3288e7c614ad",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 303,
+      "end_line": 303,
+      "kind": "let",
+      "literal": "  let w : ℝ := R * Shao.standardNormalTail x",
+      "sha256": "54959240686fc88d70a6ce3ee39e532625d9dfff1fefe1162121be027e934132",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 304,
+      "end_line": 304,
+      "kind": "let",
+      "literal": "  let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0",
+      "sha256": "cbb4661e796dc8646c74b9182b09decacfa1413810fb5512564f3832e4c45f7b",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 305,
+      "end_line": 306,
+      "kind": "let",
+      "literal": "  let F0 : ℝ → ℝ := fun u => P0.real {v : Shao.Path n |\n    0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}",
+      "sha256": "a5e20a3053a0f48e8e90a2a3fe3eaa748c90236693988827d99ce16b74f5d739",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 307,
+      "end_line": 308,
+      "kind": "let",
+      "literal": "  let F : ℝ → ℝ := fun u => P.real {v : Shao.Path n |\n    0 < Shao.energy v ∧ Shao.maxWithZero v < u * Real.sqrt (Shao.energy v)}",
+      "sha256": "7af3d084249026154747fd2996abb84529ae7edebedc4040b59a07f7415c4695",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 309,
+      "end_line": 309,
+      "kind": "let",
+      "literal": "  let E : ℝ → ℝ := fun u => F0 u - G u",
+      "sha256": "c3574b4f22ffed8ca7b046b66ac2d2cce4c32fa3b49601f7f22c46be7d0ae523",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 310,
+      "end_line": 310,
+      "kind": "let",
+      "literal": "  let bad : ℝ → ℝ := fun u => if 0 < u then P0.real (Shao.upperCrossing hn u ∩ Nᶜ) else 0",
+      "sha256": "f50acb9fcc66743125b3ff7994767e1a79fceb418bdf02dd8f54e827e93cb3a0",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 311,
+      "end_line": 311,
+      "kind": "let",
+      "literal": "  let bias : ℝ → ℝ := fun u => if 0 < u then 2 * Shao.standardNormalTail u * (1 - p) else 0",
+      "sha256": "c2d73a34af59e064d0f06a7fb659beeb2479d0ca879d651ace4a6b8f7f872bb6",
+      "completely_read": true,
+      "location": "proof"
+    },
+    {
+      "line": 343,
+      "end_line": 343,
+      "kind": "letI",
+      "literal": "  letI : IsProbabilityMeasure rho := hrho",
+      "sha256": "856e43ed0f93bbbdc5273f05e203036bf119dea761a0bee702303ac52b3fce9d",
+      "completely_read": true,
+      "location": "proof"
+    }
+  ],
+  "actual_owned_types_count": 20,
+  "native_raw_type_log": {
+    "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+    "sha256": "fd961e2e855164d5aca845fab85ceb250ae96df8b2d2e96c3556d291c6678b4a",
+    "full_raw_read_ranges": [
+      [
+        1,
+        230
+      ],
+      [
+        231,
+        467
+      ],
+      [
+        468,
+        664
+      ],
+      [
+        665,
+        837
+      ]
+    ],
+    "factorization_used": false,
+    "omitted_type_characters": 0,
+    "all_atoms_instances_and_ordered_conclusions_completely_read": true
+  },
+  "actual_owned_type_rows": [
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing._simp_4",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 3,
+      "last_line": 11,
+      "full_type_sha256": "165e02fa021795e102db5cc8ba603339b258b86cb58f4784cbb0c5237b762e98",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "_private.Shao.Probability.OriginalCDFPullback.0.Shao.Probability.ocp_strict_compl",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 12,
+      "last_line": 26,
+      "full_type_sha256": "9bba757e83bd23c2067b2c7d7183e91b786841815da2d4abd26d83507c3c8673",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_4",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 27,
+      "last_line": 35,
+      "full_type_sha256": "90a84656ac7ea2c049c8ae926cf675b3cce3e597dd1fd3cbf117d6f2156bf887",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_1",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 36,
+      "last_line": 41,
+      "full_type_sha256": "1697907a32dbc688b72e7b4f2e168b18e424461fc150d9178509876584e93201",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.endpoint_cdf_exact_zero_energy_identity._simp_1",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 42,
+      "last_line": 49,
+      "full_type_sha256": "e94e2232db8a8e7faec48b09386f0acb030d660b0c8491ba34a2eafae813cf94",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 50,
+      "last_line": 467,
+      "full_type_sha256": "d262751867bccd94a78424be48ce3aed59dfa73fd8d0a5154e1477f90bffdcf6",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_5",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 468,
+      "last_line": 476,
+      "full_type_sha256": "a785ea6e76e7fca41bddef99de5a50f54eca1a339a1b67c6c19b0de1361eaf65",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 477,
+      "last_line": 664,
+      "full_type_sha256": "9c15b2fc564f0e54004422d56004d1a8744349db939cef1bf8e92f62bd4f3f03",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_2",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 665,
+      "last_line": 669,
+      "full_type_sha256": "8cf384156e9b21fc19131eab497b39e5de2fb32d46aa38d08de628f117e04c8a",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_8",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 670,
+      "last_line": 692,
+      "full_type_sha256": "ea2762ac7c671181f411f83aee262e2e380889f02245b9b414a629088f3cce84",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing._simp_3",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 693,
+      "last_line": 698,
+      "full_type_sha256": "cc75873f73e27419b53004ad52c4234ce51fc7871172a352d2cff3f8469bcad1",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.endpoint_cdf_exact_zero_energy_identity._simp_2",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 699,
+      "last_line": 702,
+      "full_type_sha256": "ab9b684a51824349eb5ca23fd768d469810cc4d870e22042ba10e25db7aaadd7",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.endpoint_cdf_exact_zero_energy_identity",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 703,
+      "last_line": 747,
+      "full_type_sha256": "8913234027afc49ac24d1940adc1eb10f20d431f1eadc2f6a50f6be2b5efcb5a",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_9",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 748,
+      "last_line": 764,
+      "full_type_sha256": "b3b1a1cfef97bb534d90754edaf53b0a7502faeff42b5fb70f87656e024cf323",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing._simp_1",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 765,
+      "last_line": 772,
+      "full_type_sha256": "0f865600cd3e547093bb9d9c9f2d9029f871d80fc4103f329e410a5fb96b3f3c",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_two_signs_bad_crossing._simp_2",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 773,
+      "last_line": 779,
+      "full_type_sha256": "d2d445a699a21cd16de85a62851e35a3c4c1c5e0f46c34c38ea92a0fede78ba3",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_7",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 780,
+      "last_line": 804,
+      "full_type_sha256": "8a41ed0a93295f8743bf6c826ca9a6c55da149c7ec44845b4de4170b67d43dde",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_3",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 805,
+      "last_line": 813,
+      "full_type_sha256": "b5359b1f7d0ef9837a65bbab9181d9b9a54482502b784901590344eb1d1ccf04",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "Shao.Probability.sourceTruncation_original_max_cdf_pullback._simp_6",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 814,
+      "last_line": 822,
+      "full_type_sha256": "8d0d0f7e121f7a7684e9ff730cc6151374e23dfbf20aa61e596ce192c4d37ced",
+      "full_literal_read": true,
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "_private.Shao.Probability.OriginalCDFPullback.0.Shao.Probability.ocp_strict_nonpos",
+      "server_log": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/audit001.log",
+      "first_line": 823,
+      "last_line": 836,
+      "full_type_sha256": "8c41db63cd242ac0030753d3b80ac402b0e1eead7c72ce24ef31ed12cfd68797",
+      "full_literal_read": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    }
+  ],
+  "actual_non_theorem_values": 0,
+  "all_non_theorem_values_read": true,
+  "no_namespace_filter": true,
+  "original_source_fidelity": {
+    "file": "C:/game/shao/current/c12/main.tex",
+    "sha256": "beb00f718487e36de433175c97f1d500cb48e7a92ce5bd5ad5d62bb132122d06",
+    "complete_required_ranges_read": [
+      [
+        149,
+        200
+      ],
+      [
+        300,
+        312
+      ],
+      [
+        420,
+        535
+      ],
+      [
+        762,
+        860
+      ],
+      [
+        1530,
+        1565
+      ]
+    ],
+    "scope": "Normalized original finite-second-moment iid law, fixed-x closed cutoff, baseconditioning/strategytruncation/maxpullback and zero-energy convention. Endpoint identity is a deterministic probability identity strengthening arbitrary-law scope, not the END relative-error theorem."
+  },
+  "old_dependency_proofs_repeated": 0,
+  "reused_dependency_source_object_alias_count": 39
+}
