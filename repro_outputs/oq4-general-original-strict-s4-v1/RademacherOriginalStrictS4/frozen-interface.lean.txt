@@ -1,0 +1,84 @@
+import Shao.OQ4.RademacherGeneralStrictS4
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.RademacherOriginalStrictS4
+
+def sourceQ {ΩX : Type uX} [MeasurableSpace ΩX]
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (n : ℕ) (h : ℝ) : ℝ :=
+  μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+    (h / Real.sqrt (n : ℝ))) /
+    Shao.Probability.BrownianSup.probability B P hB
+      (h / Real.sqrt (n : ℝ))
+
+theorem source_strict_probability
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (h : ℝ) :
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+      (h / Real.sqrt (n : ℝ))) = RademacherStrictCube.strictP n h
+
+theorem original_strict_S4
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ k : ℕ, sourceQ B P hB μ X (n_ k) (h_ k) =
+      RademacherGeneralStrictS4.Q B P hB (n_ k) (h_ k)) ∧
+    (∀ᶠ k : ℕ in atTop,
+      0 < μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent (n_ k) X
+        (h_ k / Real.sqrt (n_ k : ℝ))) ∧
+      0 < μ.real (RademacherRealStrictBoundary.sourceDeterministicStrictEvent
+        (n_ k) X (h_ k)) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (h_ k / Real.sqrt (n_ k : ℝ)) ∧
+      0 < sourceQ B P hB μ X (n_ k) (h_ k) ∧
+      0 < μ.real (RademacherRealStrictBoundary.sourceDeterministicStrictEvent
+        (n_ k) X (h_ k)) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (h_ k / Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (sourceQ B P hB μ X (n_ k) (h_ k)) -
+        RademacherGeneralStrictS4.correction (n_ k) (h_ k))
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      sourceQ B P hB μ X (n_ k) (h_ k) /
+        Real.exp (RademacherGeneralStrictS4.correction (n_ k) (h_ k)))
+      atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (μ.real (RademacherRealStrictBoundary.sourceDeterministicStrictEvent
+        (n_ k) X (h_ k)) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (h_ k / Real.sqrt (n_ k : ℝ))) -
+        RademacherGeneralStrictS4.correction (n_ k) (h_ k))
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      (μ.real (RademacherRealStrictBoundary.sourceDeterministicStrictEvent
+        (n_ k) X (h_ k)) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (h_ k / Real.sqrt (n_ k : ℝ))) /
+        Real.exp (RademacherGeneralStrictS4.correction (n_ k) (h_ k)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RademacherOriginalStrictS4
+end

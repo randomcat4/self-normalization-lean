@@ -1,0 +1,60 @@
+import Shao.OQ4.RademacherRealStrictBoundary
+import Shao.OQ4.RademacherBrownianBoundaryShift
+import Shao.OQ4.RademacherS4Assembly
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped NNReal Topology
+universe uB
+
+namespace Shao.OQ4.RademacherGeneralStrictS4
+
+def delta (h : ℝ) : ℝ := (Nat.ceil h : ℝ) - h
+
+def correction (n : ℕ) (h : ℝ) : ℝ :=
+  (Real.pi ^ 2 / 4) * ((n : ℝ) / h ^ 3) * delta h
+
+def Q {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n : ℕ) (h : ℝ) : ℝ :=
+  RademacherStrictCube.strictP n h /
+    Shao.Probability.BrownianSup.probability B P hB
+      (h / Real.sqrt (n : ℝ))
+
+private theorem center_remainder_bound (n : ℕ) (h a : ℝ)
+    (hh : 2 ≤ h) (ha : h - 1 ≤ a) (hah : a < h) :
+    |(Real.pi ^ 2 / 4) * ((n : ℝ) / a ^ 3) +
+      (Real.pi ^ 2 / 8) * ((n : ℝ) / h ^ 2 - (n : ℝ) / a ^ 2) -
+      (Real.pi ^ 2 / 4) * ((n : ℝ) / h ^ 3) * (a + 1 - h)| ≤
+    (60 * (Real.pi ^ 2 / 8)) * ((n : ℝ) / h ^ 4)
+
+theorem strict_S4_EVENTUAL
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < RademacherStrictCube.strictP (n_ k) (h_ k) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (h_ k / Real.sqrt (n_ k : ℝ)) ∧
+      0 < Q B P hB (n_ k) (h_ k)) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (Q B P hB (n_ k) (h_ k)) -
+        correction (n_ k) (h_ k)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      Q B P hB (n_ k) (h_ k) /
+        Real.exp (correction (n_ k) (h_ k))) atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RademacherGeneralStrictS4
+end
