@@ -1,0 +1,9 @@
+# General strict S4 and actual original iid transport
+
+Source spectrum01.md section4 fixes the strict absorbing boundary at ceil(h); the new general sequence proof preserves that convention at every integer wall. For arbitrary natural time sequence n and real height sequence h with h→∞, n/h²→∞ and n/h³ eventually bounded above, the actual fixed-Rademacher strict probability divided by the actual Brownian probability at h/√n has corrected log error tending to0 and ratio divided by exp((π²/4)(n/h³)(ceilh−h)) tending to1. Common-tail probability positivity is proved. A pure private algebra lemma controls the genuine boundary-shift remainder by60(π²/8)n/h⁴.
+
+The second module transports this theorem to arbitrary original AE iid Rademacher sample spaces, with independent Brownian universe, actual finite sums and actual energy. Its probability bridge covers all n and real h, with the empty positive-prefix event retained at n0. Both original self-normalized and original deterministic finite-sum event ratios receive the same correction, without completeness or ordinary measurability assumptions.
+
+Fresh independent context217 completely reviewed both exact sources (301+187LF), all18actual native types and four complete definition values, source semantics and per-owner recursive axioms. Both CORRECT; kernel/AX PASS. Owners derive from native maps:7public,1private,10generated;4definitions+14theorems. Type/value transitive closure sizes overlap and are not added to declaration totals. Original successfulobjects254979a4/96235141 and all prior accepted objects/evidence remain unchanged.
+
+Dependency is PR259 exacthead7ee4ef3328c7f060e5d6fe4737fe7b1f8f298cf5. No shared/root imports or integration merge are performed by this lane. The next source-bound unit is literal strict critical phase/cluster, whose mathematical proposal218 is complete but remains unfrozen/unimplemented. All original root groups remain OPEN.
