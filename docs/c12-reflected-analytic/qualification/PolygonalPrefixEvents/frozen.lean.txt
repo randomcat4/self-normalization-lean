@@ -1,0 +1,40 @@
+import Shao.C2.BrownianUpperJointLimit
+
+noncomputable section
+namespace Shao.C2.PolygonalPrefixEvents
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.BridgeDomination Shao.C2.BrownianUpperJointLimit
+open Shao.OQ4.PolygonalPathTightness Shao.OQ4.PolygonalThirdMoment
+
+private theorem exists_segment (n : ℕ) (hn : 0 < n) (x : ℝ)
+    (hx : 0 ≤ x) (hxn : x ≤ (n : ℝ)) :
+    ∃ k : ℕ, k < n ∧ (k : ℝ) ≤ x ∧ x ≤ (k : ℝ) + 1 := by
+
+theorem unitPolygonalPath_one (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (p : Shao.Path n) :
+    unitPolygonalPath 1 n h p 1 = Shao.prefixSum p n / h := by
+
+theorem unitPolygonalPath_segment (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (p : Shao.Path n) (t : BridgeTime) :
+    ∃ k : ℕ, k < n ∧ ∃ θ : ℝ, 0 ≤ θ ∧ θ ≤ 1 ∧
+      unitPolygonalPath 1 n h p t =
+        (1 - θ) * (Shao.prefixSum p k / h) + θ * (Shao.prefixSum p (k + 1) / h) := by
+
+theorem unitPolygonalPath_le_iff (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (p : Shao.Path n) (a : ℝ) :
+    (∀ t : BridgeTime, unitPolygonalPath 1 n h p t ≤ a) ↔
+      ∀ k : ℕ, k ≤ n → Shao.prefixSum p k ≤ a * h := by
+
+theorem unitPolygonalPath_lt_iff (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (p : Shao.Path n) (a : ℝ) :
+    (∀ t : BridgeTime, unitPolygonalPath 1 n h p t < a) ↔
+      ∀ k : ℕ, k ≤ n → Shao.prefixSum p k < a * h := by
+
+theorem upperJoint_real_prefix (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (ν : Measure ℝ) (a v : ℝ) :
+    (polygonalPathLaw 1 n h ν).real (upperJointSet a v) =
+      (Measure.pi (fun _ : Fin n => ν)).real
+        {p : Shao.Path n | (∀ k : ℕ, k ≤ n → Shao.prefixSum p k ≤ a * h) ∧
+          Shao.prefixSum p n ≤ v * h} := by
+
+end Shao.C2.PolygonalPrefixEvents

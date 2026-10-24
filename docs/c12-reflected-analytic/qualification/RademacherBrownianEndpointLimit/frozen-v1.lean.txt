@@ -1,0 +1,76 @@
+import Shao.C2.PolygonalRademacherReflection
+
+noncomputable section
+namespace Shao.C2.RademacherBrownianEndpointLimit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped Topology NNReal ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianUpperJointLimit
+open Shao.C2.PolygonalPrefixEvents
+open Shao.OQ4.PolygonalPathTightness Shao.OQ4.PolygonalBrownianWeakLimit
+
+private theorem ae_unit_eval_one {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ᵐ ω ∂P, brownianUnitPath B 1 ω 1 = B 1 ω := by
+
+theorem rademacher_moments :
+    Integrable (fun x : ℝ => |x| ^ 3) Shao.OQ4.RademacherCosine.law ∧
+      (∫ x : ℝ, x ∂Shao.OQ4.RademacherCosine.law) = 0 ∧
+      (∫ x : ℝ, x ^ 2 ∂Shao.OQ4.RademacherCosine.law) = 1 ∧
+      (∫ x : ℝ, |x| ^ 3 ∂Shao.OQ4.RademacherCosine.law) = 1 := by
+
+theorem rademacher_pathLaw_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (fun j : ℕ =>
+      (⟨polygonalPathLaw 1 ((j + 1) ^ 2) ((j : ℝ) + 1) Shao.OQ4.RademacherCosine.law,
+        isProbabilityMeasure_polygonalPathLaw 1 ((j + 1) ^ 2) ((j : ℝ) + 1)
+          Shao.OQ4.RademacherCosine.law⟩ : ProbabilityMeasure C(BridgeTime, ℝ))) atTop
+      (𝓝 (⟨brownianUnitPathLaw B 1 P,
+        isProbabilityMeasure_brownianUnitPathLaw B 1 P hB⟩ : ProbabilityMeasure C(BridgeTime, ℝ))) := by
+
+theorem brownian_endpoint_real {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (S : Set ℝ) (hS : MeasurableSet S) :
+    (brownianUnitPathLaw B 1 P).real {f : C(BridgeTime, ℝ) | f 1 ∈ S} =
+      (gaussianReal 0 1).real S := by
+
+theorem polygonal_endpoint_real (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (ν : Measure ℝ) (S : Set ℝ) (hS : MeasurableSet S) :
+    (polygonalPathLaw 1 n h ν).real {f : C(BridgeTime, ℝ) | f 1 ∈ S} =
+      (Measure.pi (fun _ : Fin n => ν)).real {p : Shao.Path n | Shao.prefixSum p n / h ∈ S} := by
+
+private theorem endpoint_set_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (S : Set ℝ) (hS : MeasurableSet S)
+    (r : ℝ) (hfront : frontier S ⊆ {r}) :
+    Tendsto (fun j : ℕ =>
+      (Measure.pi (fun _ : Fin ((j + 1) ^ 2) => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path ((j + 1) ^ 2) | Shao.prefixSum p ((j + 1) ^ 2) / ((j : ℝ) + 1) ∈ S})
+      atTop (𝓝 ((gaussianReal 0 1).real S)) := by
+
+theorem rademacher_endpoint_cdf_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (v : ℝ) :
+    Tendsto (fun j : ℕ =>
+      (Measure.pi (fun _ : Fin ((j + 1) ^ 2) => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path ((j + 1) ^ 2) | Shao.prefixSum p ((j + 1) ^ 2) / ((j : ℝ) + 1) ≤ v})
+      atTop (𝓝 ((gaussianReal 0 1).real (Iic v))) := by
+
+theorem rademacher_endpoint_tail_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (v : ℝ) :
+    Tendsto (fun j : ℕ =>
+      (Measure.pi (fun _ : Fin ((j + 1) ^ 2) => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path ((j + 1) ^ 2) | v ≤ Shao.prefixSum p ((j + 1) ^ 2) / ((j : ℝ) + 1)})
+      atTop (𝓝 ((gaussianReal 0 1).real (Ici v))) := by
+
+theorem rademacher_upper_joint_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a v : ℝ) (ha : 0 < a) :
+    Tendsto (fun j : ℕ =>
+      (polygonalPathLaw 1 ((j + 1) ^ 2) ((j : ℝ) + 1) Shao.OQ4.RademacherCosine.law).real
+        (upperJointSet a v)) atTop
+      (𝓝 (P.real {ω | (∀ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧ B 1 ω ≤ v})) := by
+
+end Shao.C2.RademacherBrownianEndpointLimit
