@@ -1,0 +1,26 @@
+import Shao.C2.IntervalSineHighTimeProfiles
+import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
+
+noncomputable section
+namespace Shao.C2.IntervalGaussianCosinePoisson
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+
+theorem complex_gaussian_quadratic_summable (a b : ℂ) (ha : 0 < a.re) :
+    Summable (fun n : ℤ => Complex.exp (-(Real.pi : ℂ) * a * (n : ℂ) ^ 2 +
+      2 * (Real.pi : ℂ) * b * (n : ℂ))) := by
+
+theorem shifted_gaussian_summable (c u : ℝ) (hc : 0 < c) :
+    Summable (fun n : ℤ => Real.exp (-((n : ℝ) + u) ^ 2 / c)) := by
+
+theorem gaussian_cosine_summable (c u : ℝ) (hc : 0 < c) :
+    Summable (fun n : ℤ => Real.exp (-(Real.pi ^ 2) * c * (n : ℝ) ^ 2) *
+      Real.cos (2 * Real.pi * (n : ℝ) * u)) := by
+
+theorem shifted_gaussian_cosine_poisson (c u : ℝ) (hc : 0 < c) :
+    (∑' m : ℤ, Real.exp (-((m : ℝ) + u) ^ 2 / c)) =
+      Real.sqrt (Real.pi * c) *
+        (∑' n : ℤ, Real.exp (-(Real.pi ^ 2) * c * (n : ℝ) ^ 2) *
+          Real.cos (2 * Real.pi * (n : ℝ) * u)) := by
+
+end Shao.C2.IntervalGaussianCosinePoisson

@@ -1,0 +1,11 @@
+# Actual interval completion interior continuity — unit107
+
+Original source remains read-only supplement.tex4192–4315, whole-file SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd. This actual probability continuity is a necessary local interface toward identification, not the paper's full differentiability/Taylor claim.
+
+Four complete declarations/context frozen before implementation. The first two bounds apply to every probability law on the genuine pinned continuous bridge-noise space, all real parameters, one endpoint varying. The qualified upper-deficit antitonicity and lower-deficit monotonicity bracket each interval-probability increment between halfline increments; splitting by endpoint order yields the exact absolute bound. No regularity of the bridge law is assumed.
+
+For the actual Brownian bridge and positive T with both endpoints strictly inside,103/104 identify the upper/lower probabilities on an entire neighborhood with the existing smooth halfline reflection functions. Their actual derivatives imply continuity. Both absolute halfline increments tend to zero, so the proved bound and a genuine metric squeeze yield continuity of the actual interval probability separately in each endpoint. No interval continuity, differentiability or arbitrary conditional version is assumed, and no AE-to-pointwise substitution is used.
+
+Kernel001 encounters proof-local neighborhood notation outside its scope; all public heads are unaffected. Kernel002 reveals redundant tactics after reflexivity and constants needing an explicit function/type to instantiate. Kernel003 corrects only those proof expressions, passes with the original four frozen heads/context unchanged, and the complete all-owned recursive-axiom audit passes. Four actual theorem owners, zero non-theorem values. Both failed source/log versions and all warnings retained remotely; no successful old gate replayed/cachewritten.
+
+Independent complete review pending. Separate continuity does not establish interval differentiability or joint regularity. Killed/free identification, interval image/sine identity, full compensated small-step Taylor/hSmall and all original root groups remain OPEN. Classical attribution and p54 repairs preserved.

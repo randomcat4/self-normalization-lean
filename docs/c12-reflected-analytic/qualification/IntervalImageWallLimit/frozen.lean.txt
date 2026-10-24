@@ -1,0 +1,30 @@
+import Shao.C2.IntervalImageRevealBounds
+
+noncomputable section
+namespace Shao.C2.IntervalImageWallLimit
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageJointContinuity Shao.C2.IntervalImageTaylorSegment
+open Shao.C2.IntervalImageRevealBounds Shao.C2.IntervalGaussianLocal
+
+theorem intervalImageCandidate_joint_continuousOn (a z H U : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    ContinuousOn (fun p : ℝ × ℝ => intervalImageCandidate a z p.2 p.1)
+      (Icc (-a) a ×ˢ Icc H U) := by
+
+theorem intervalImageCandidate_scaled_step_continuousOn (a y z T b : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a) :
+    ContinuousOn (fun θ : ℝ => intervalImageCandidate a z (T - (θ * b) ^ 2) (y + θ * b))
+      (Icc (0 : ℝ) 1) := by
+
+theorem intervalImageCandidate_compensated_small_step_closed_bound (a y z T b : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a) :
+    |intervalImageCandidate a z (T - b ^ 2) (y + b) - intervalImageCandidate a z T y -
+        (b - b ^ 2 * (z - y) / T) * deriv (intervalImageCandidate a z T) y| ≤
+      compensatedProfileConstant * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalIncrementProfile a y T z b := by
+
+end Shao.C2.IntervalImageWallLimit

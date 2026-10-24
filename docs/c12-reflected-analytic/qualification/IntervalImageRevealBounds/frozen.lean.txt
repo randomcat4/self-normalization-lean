@@ -1,0 +1,56 @@
+import Shao.C2.IntervalImageGlobalProfiles
+import Shao.C2.HalfLineSmallTaylor
+
+noncomputable section
+namespace Shao.C2.IntervalImageRevealBounds
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageRevealDerivatives Shao.C2.IntervalImageLagrangeRemainder
+open Shao.C2.IntervalImageGlobalProfiles Shao.C2.IntervalGaussianLocal
+open Shao.C2.HalfLineSmallTaylor Shao.C2.HalfLineTaylorSegment
+
+def segmentMixedProfileConstant (j l : ℕ) : ℝ :=
+  globalMixedProfileConstant j l * (2 : ℝ) ^ (j + 2 * l) * (3 : ℝ) ^ j
+
+def thirdPathProfileConstant : ℝ :=
+  segmentMixedProfileConstant 3 0 + 3 * segmentMixedProfileConstant 2 1 +
+    3 * segmentMixedProfileConstant 1 2 + segmentMixedProfileConstant 0 3
+
+def compensatedProfileConstant : ℝ :=
+  thirdPathProfileConstant / 6 + segmentMixedProfileConstant 1 1 +
+    segmentMixedProfileConstant 0 2 / 2
+
+theorem segmentMixedProfileConstant_nonneg (j l : ℕ) :
+    0 ≤ segmentMixedProfileConstant j l := by
+
+theorem thirdPathProfileConstant_nonneg : 0 ≤ thirdPathProfileConstant := by
+
+theorem compensatedProfileConstant_nonneg : 0 ≤ compensatedProfileConstant := by
+
+theorem weighted_segment_mixed_bound (j l : ℕ) (a y z T b θ : ℝ)
+    (hjl : j + l ≤ 3) (horder : 3 ≤ j + 2 * l)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) :
+    |b| ^ (j + 2 * l) * |mixedImageCandidate j l a z (T - θ * b ^ 2) (y + θ * b)| ≤
+      segmentMixedProfileConstant j l * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalIncrementProfile a y T z b := by
+
+theorem pathThird_segment_profile (a y z T b θ : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) :
+    |pathThird a z T y b θ| ≤
+      thirdPathProfileConstant * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalIncrementProfile a y T z b := by
+
+theorem intervalImageCandidate_compensated_small_step_bound (a y z T b : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| < a) :
+    |intervalImageCandidate a z (T - b ^ 2) (y + b) - intervalImageCandidate a z T y -
+        (b - b ^ 2 * (z - y) / T) * deriv (intervalImageCandidate a z T) y| ≤
+      compensatedProfileConstant * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalIncrementProfile a y T z b := by
+
+end Shao.C2.IntervalImageRevealBounds

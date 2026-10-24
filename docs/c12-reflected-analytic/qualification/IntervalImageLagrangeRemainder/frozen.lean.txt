@@ -1,0 +1,34 @@
+import Shao.C2.IntervalImageRevealRegularity
+import Shao.C2.IntervalImageTaylorSegment
+import Mathlib.Analysis.Calculus.Taylor
+
+noncomputable section
+namespace Shao.C2.IntervalImageLagrangeRemainder
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageRevealDerivatives Shao.C2.IntervalImageRevealRegularity
+open Shao.C2.IntervalImageTaylorSegment Shao.C2.HalfLineTaylorSegment
+open Shao.C2.IntervalImageJointDerivatives
+
+theorem segment_space_strict (a y b θ : ℝ) (hy : |y| < a) (hnew : |y + b| < a)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1) : |y + θ * b| < a := by
+
+theorem intervalImageCandidate_path_contDiffOn_three (a z T y b : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a)
+    (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| < a) :
+    ContDiffOn ℝ (3 : ℕ)
+      (fun t : ℝ => intervalImageCandidate a z (T - t * b ^ 2) (y + t * b))
+      (Icc (0 : ℝ) 1) := by
+
+theorem compensated_lagrange_remainder (a z T y b : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a)
+    (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| < a) :
+    ∃ θ ∈ Ioo (0 : ℝ) 1,
+      intervalImageCandidate a z (T - b ^ 2) (y + b) - intervalImageCandidate a z T y -
+          (b - b ^ 2 * (z - y) / T) * deriv (intervalImageCandidate a z T) y =
+        (1 / 6 : ℝ) * pathThird a z T y b θ -
+          b ^ 3 * mixedImageCandidate 1 1 a z T y +
+            (1 / 2 : ℝ) * b ^ 4 * mixedImageCandidate 0 2 a z T y := by
+
+end Shao.C2.IntervalImageLagrangeRemainder

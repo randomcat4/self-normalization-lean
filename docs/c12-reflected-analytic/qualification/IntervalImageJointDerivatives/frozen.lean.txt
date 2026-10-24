@@ -1,0 +1,39 @@
+import Shao.C2.IntervalImageTaylorSegment
+import Mathlib.Analysis.Calculus.FDeriv.Partial
+
+noncomputable section
+namespace Shao.C2.IntervalImageJointDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedSpatialDerivatives Shao.C2.IntervalImageLocalRegularity
+open Shao.C2.IntervalImageTaylorSegment
+
+theorem mixedImageCandidate_hasStrictFDerivAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    HasStrictFDerivAt (fun p : ℝ × ℝ => mixedImageCandidate j l a z p.2 p.1)
+      (((1 : ℝ →L[ℝ] ℝ).smulRight (mixedImageCandidate (j + 1) l a z T y)).coprod
+        ((1 : ℝ →L[ℝ] ℝ).smulRight (mixedImageCandidate j (l + 1) a z T y))) (y, T) := by
+
+theorem intervalImageCandidate_mixed_hasStrictFDerivAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    HasStrictFDerivAt (fun p : ℝ × ℝ =>
+      iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) p.1) p.2)
+      (((1 : ℝ →L[ℝ] ℝ).smulRight (mixedImageCandidate (j + 1) l a z T y)).coprod
+        ((1 : ℝ →L[ℝ] ℝ).smulRight (mixedImageCandidate j (l + 1) a z T y))) (y, T) := by
+
+theorem mixedImageCandidate_path_hasDerivAt (j l : ℕ) (a z T y b θ : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    HasDerivAt (fun t => mixedImageCandidate j l a z (T - t * b ^ 2) (y + t * b))
+      (b * mixedImageCandidate (j + 1) l a z (T - θ * b ^ 2) (y + θ * b) -
+        b ^ 2 * mixedImageCandidate j (l + 1) a z (T - θ * b ^ 2) (y + θ * b)) θ := by
+
+theorem intervalImageCandidate_mixed_path_hasDerivAt (j l : ℕ) (a z T y b θ : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    HasDerivAt (fun t => iteratedDeriv l
+      (fun S => iteratedDeriv j (intervalImageCandidate a z S) (y + t * b)) (T - t * b ^ 2))
+      (b * mixedImageCandidate (j + 1) l a z (T - θ * b ^ 2) (y + θ * b) -
+        b ^ 2 * mixedImageCandidate j (l + 1) a z (T - θ * b ^ 2) (y + θ * b)) θ := by
+
+end Shao.C2.IntervalImageJointDerivatives
+

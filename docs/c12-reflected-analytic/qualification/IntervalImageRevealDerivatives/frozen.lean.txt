@@ -1,0 +1,43 @@
+import Shao.C2.IntervalImageSineProfiles
+
+noncomputable section
+namespace Shao.C2.IntervalImageRevealDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageJointDerivatives
+
+def pathFirst (a z T y b θ : ℝ) : ℝ :=
+  b * mixedImageCandidate 1 0 a z (T - θ * b ^ 2) (y + θ * b) -
+    b ^ 2 * mixedImageCandidate 0 1 a z (T - θ * b ^ 2) (y + θ * b)
+
+def pathSecond (a z T y b θ : ℝ) : ℝ :=
+  b ^ 2 * mixedImageCandidate 2 0 a z (T - θ * b ^ 2) (y + θ * b) -
+    2 * b ^ 3 * mixedImageCandidate 1 1 a z (T - θ * b ^ 2) (y + θ * b) +
+      b ^ 4 * mixedImageCandidate 0 2 a z (T - θ * b ^ 2) (y + θ * b)
+
+def pathThird (a z T y b θ : ℝ) : ℝ :=
+  b ^ 3 * mixedImageCandidate 3 0 a z (T - θ * b ^ 2) (y + θ * b) -
+    3 * b ^ 4 * mixedImageCandidate 2 1 a z (T - θ * b ^ 2) (y + θ * b) +
+      3 * b ^ 5 * mixedImageCandidate 1 2 a z (T - θ * b ^ 2) (y + θ * b) -
+        b ^ 6 * mixedImageCandidate 0 3 a z (T - θ * b ^ 2) (y + θ * b)
+
+theorem pathFirst_hasDerivAt (a z T y b θ : ℝ) (ha : 0 < a) (hz : |z| ≤ a)
+    (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    HasDerivAt (pathFirst a z T y b) (pathSecond a z T y b θ) θ := by
+
+theorem pathSecond_hasDerivAt (a z T y b θ : ℝ) (ha : 0 < a) (hz : |z| ≤ a)
+    (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    HasDerivAt (pathSecond a z T y b) (pathThird a z T y b θ) θ := by
+
+theorem intervalImageCandidate_path_iteratedDeriv_two (a z T y b θ : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    iteratedDeriv 2 (fun t : ℝ => intervalImageCandidate a z (T - t * b ^ 2) (y + t * b)) θ =
+      pathSecond a z T y b θ := by
+
+theorem intervalImageCandidate_path_iteratedDeriv_three (a z T y b θ : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    iteratedDeriv 3 (fun t : ℝ => intervalImageCandidate a z (T - t * b ^ 2) (y + t * b)) θ =
+      pathThird a z T y b θ := by
+
+end Shao.C2.IntervalImageRevealDerivatives
