@@ -1,0 +1,60 @@
+import Shao.C2.BrownianBridgeLawUniversality
+
+noncomputable section
+namespace Shao.C2.BrownianKilledEndpointDensity
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.ScaledBrownianIdentity Shao.C2.BridgeCompletionGlobalContinuity
+open Shao.C2.PhysicalBrownianEndpointDensity Shao.C2.BrownianBridgeLawUniversality
+attribute [local instance] Classical.propDecidable
+
+theorem standardGaussian_affine_hasLaw (y : ℝ) (T : ℝ≥0) :
+    HasLaw (fun w : ℝ => y + Real.sqrt (T : ℝ) * w)
+      (gaussianReal y T) (gaussianReal 0 1) := by
+
+private theorem product_real_section (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (ρ : Measure ℝ) [IsProbabilityMeasure ρ]
+    (S : Set (BridgeNoise × ℝ)) (hS : MeasurableSet S) :
+    (ν.prod ρ).real S = ∫ w : ℝ, ν.real {g | (g, w) ∈ S} ∂ρ := by
+
+private theorem product_scaled_initial_set
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν] (a y T : ℝ)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    (ν.prod (gaussianReal 0 1)).real
+      (scaledInitialSurvival a y T ∩ {p : BridgeNoise × ℝ | y + Real.sqrt T * p.2 ∈ A}) =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ∈ A then
+        intervalCompletion ν a y T (y + Real.sqrt T * w) else 0) ∂(gaussianReal 0 1) := by
+
+private theorem brownian_scaled_initial_set {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T : ℝ) (A : Set ℝ) (hA : MeasurableSet A) :
+    P.real {ω | (∀ t : BridgeTime,
+      |y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧
+        y + Real.sqrt T * B 1 ω ∈ A} =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ∈ A then
+        intervalCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+          ∂(gaussianReal 0 1) := by
+
+private theorem physical_joint_event_eq_scaled {Ω : Type*}
+    (B : ℝ≥0 → Ω → ℝ) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) (A : Set ℝ) :
+    {ω | (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ∈ A} =
+      {ω | (∀ t : BridgeTime, |y + Real.sqrt (T : ℝ) *
+        normalizedPhysicalBrownian B T ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧
+          y + Real.sqrt (T : ℝ) * normalizedPhysicalBrownian B T 1 ω ∈ A} := by
+
+theorem integrable_killed_density {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    Integrable (fun z : ℝ => gaussianPDFReal y T z *
+      intervalCompletion (bridgeLaw B P) a y (T : ℝ) z) := by
+
+theorem brownian_physical_interval_joint_eq_integral {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    P.real {ω | (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ∈ A} =
+      ∫ z : ℝ in A, gaussianPDFReal y T z *
+        intervalCompletion (bridgeLaw B P) a y (T : ℝ) z := by
+
+end Shao.C2.BrownianKilledEndpointDensity

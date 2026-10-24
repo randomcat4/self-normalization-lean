@@ -1,0 +1,59 @@
+import Shao.C2.BrownianKilledEndpointDensity
+import Mathlib.Probability.Kernel.WithDensity
+
+noncomputable section
+namespace Shao.C2.BrownianKilledKernel
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeIntervalContinuity Shao.C2.BridgeCompletionGlobalContinuity
+open Shao.C2.BrownianKilledEndpointDensity
+
+def actualIntervalKernel {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) (a : ℝ) (T : ℝ≥0) : Kernel ℝ ℝ :=
+  (Kernel.const ℝ volume).withDensity (fun y z : ℝ =>
+    ENNReal.ofReal (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z))
+
+theorem bridge_interval_joint_continuous {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a T : ℝ) (hT : 0 < T) :
+    Continuous (fun p : ℝ × ℝ => intervalCompletion (bridgeLaw B P) a p.1 T p.2) := by
+
+theorem killed_density_joint_continuous {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    Continuous (fun p : ℝ × ℝ => gaussianPDFReal p.1 T p.2 *
+      intervalCompletion (bridgeLaw B P) a p.1 (T : ℝ) p.2) := by
+
+theorem actualIntervalKernel_apply_eq_density {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    actualIntervalKernel B P a T y = volume.withDensity (fun z : ℝ =>
+      ENNReal.ofReal (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z)) := by
+
+theorem actualIntervalKernel_apply_eq_survival {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    actualIntervalKernel B P a T y A =
+      ENNReal.ofReal (P.real {ω |
+        (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ∈ A}) := by
+
+theorem actualIntervalKernel_real_eq_survival {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    (actualIntervalKernel B P a T y).real A =
+      P.real {ω | (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ∈ A} := by
+
+theorem actualIntervalKernel_mass_le_one {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    actualIntervalKernel B P a T y univ ≤ 1 := by
+
+theorem actualIntervalKernel_isFiniteKernel {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    IsFiniteKernel (actualIntervalKernel B P a T) := by
+
+end Shao.C2.BrownianKilledKernel
