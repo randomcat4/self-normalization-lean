@@ -1,0 +1,72 @@
+import Shao.C1.StoppedPermutationTelescope
+import Shao.C1.GuardedPermutationIntegrability
+import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+import Mathlib.MeasureTheory.Measure.Count
+
+noncomputable section
+namespace Shao.C1.IntegratedPermutationTelescope
+open MeasureTheory
+open scoped BigOperators ENNReal
+open Shao.C1.PermutationEnergyEnvelope Shao.C1.GuardedPermutationIntegrability
+
+def uniformPermutationLaw (n : ℕ) [MeasurableSpace (Equiv.Perm (Fin n))] :
+    Measure (Equiv.Perm (Fin n)) :=
+  (Fintype.card (Equiv.Perm (Fin n)) : ℝ≥0∞)⁻¹ • Measure.count
+
+def stoppedGuardedRemainder {n : ℕ}
+    (ν : Shao.Path n → Equiv.Perm (Fin n) → ℕ)
+    (V : Shao.Path n → Equiv.Perm (Fin n) → ℕ → ℝ)
+    (FY : Shao.Path n → Equiv.Perm (Fin n) → Fin n → ℝ)
+    (H : ℝ) (a : Shao.Path n) (σ : Equiv.Perm (Fin n)) (r : Fin n) : ℝ :=
+  if r.val < ν a σ then
+    guardedRemainder σ r H (fun b => FY b σ r)
+      (fun b => V b σ (r.val + 1)) (fun b => V b σ r.val) a
+  else 0
+
+theorem uniformPermutationLaw_isProbability (n : ℕ)
+    [MeasurableSpace (Equiv.Perm (Fin n))] :
+    IsProbabilityMeasure (uniformPermutationLaw n)
+
+theorem integral_uniformPermutationLaw (n : ℕ)
+    [MeasurableSpace (Equiv.Perm (Fin n))]
+    [MeasurableSingletonClass (Equiv.Perm (Fin n))]
+    (f : Equiv.Perm (Fin n) → ℝ) :
+    (∫ σ, f σ ∂(uniformPermutationLaw n)) =
+      (Fintype.card (Equiv.Perm (Fin n)) : ℝ)⁻¹ * ∑ σ, f σ
+
+theorem integrated_stopped_compensation (n : ℕ)
+    [MeasurableSpace (Equiv.Perm (Fin n))]
+    [MeasurableSingletonClass (Equiv.Perm (Fin n))]
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (ν : Shao.Path n → Equiv.Perm (Fin n) → ℕ)
+    (hν : ∀ a σ, ν a σ ≤ n)
+    (hνmeas : ∀ σ, Measurable (fun a => ν a σ))
+    (hνobs : ∀ (a : Shao.Path n) (r : Fin n) (σ τ : Equiv.Perm (Fin n)),
+      (∀ i : Fin n, i.val < r.val → σ i = τ i) →
+        (r.val < ν a σ ↔ r.val < ν a τ))
+    (V : Shao.Path n → Equiv.Perm (Fin n) → ℕ → ℝ)
+    (hVmeas : ∀ σ k, Measurable (fun a => V a σ k))
+    (hVbounds : ∀ a σ k, 0 ≤ V a σ k ∧ V a σ k ≤ 1)
+    (FY : Shao.Path n → Equiv.Perm (Fin n) → Fin n → ℝ)
+    (hFYmeas : ∀ σ r, Measurable (fun a => FY a σ r))
+    (hFYobs : ∀ (a : Shao.Path n) (r : Fin n) (σ τ : Equiv.Perm (Fin n)),
+      (∀ i : Fin n, i.val < r.val → σ i = τ i) → FY a σ r = FY a τ r)
+    (H C : ℝ) (hH : 0 < H) (hC : 0 ≤ C)
+    (hcutoff : ∀ (a : Shao.Path n) (σ : Equiv.Perm (Fin n)) (r : Fin n),
+      r.val < ν a σ → H ≤ revealRemainingEnergy a σ r)
+    (hfy : ∀ (a : Shao.Path n) (σ : Equiv.Perm (Fin n)) (r : Fin n),
+      H ≤ revealRemainingEnergy a σ r →
+        |FY a σ r| ≤ C / Real.sqrt (revealRemainingEnergy a σ r) *
+          (1 + |revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r)))
+    (m : Shao.Path n → ℝ) (hmmeas : Measurable m) (hmabs : ∀ a, |m a| ≤ 1)
+    (hminvariant : ∀ (a : Shao.Path n) (τ : Equiv.Perm (Fin n)),
+      m (fun i => a (τ i)) = m a) :
+    Integrable (fun a => ∫ σ, m a * (V a σ (ν a σ) - V a σ 0)
+      ∂(uniformPermutationLaw n)) P ∧
+    Integrable (fun a => ∫ σ, m a * (∑ r : Fin n, stoppedGuardedRemainder ν V FY H a σ r)
+      ∂(uniformPermutationLaw n)) P ∧
+    (∫ a, ∫ σ, m a * (V a σ (ν a σ) - V a σ 0) ∂(uniformPermutationLaw n) ∂P) =
+      ∫ a, ∫ σ, m a * (∑ r : Fin n, stoppedGuardedRemainder ν V FY H a σ r)
+        ∂(uniformPermutationLaw n) ∂P
+
+end Shao.C1.IntegratedPermutationTelescope
