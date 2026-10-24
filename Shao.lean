@@ -21,11 +21,18 @@ import Shao.C2.ActualIntervalProjection
 import Shao.C2.ActualOriginalBrownianComparison
 import Shao.C2.ActualOriginalCompactRelative
 import Shao.C2.AdaptiveRevealCutoff
+import Shao.C2.AuxiliaryCenteredEvent
+import Shao.C2.AuxiliaryCenteredProductLaw
 import Shao.C2.AuxiliaryEnergyCentered
 import Shao.C2.AuxiliaryEnergyLaplace
 import Shao.C2.AuxiliaryEnergyMoments
 import Shao.C2.AuxiliaryEnergyTilt
 import Shao.C2.AuxiliaryLowEnergyGaussian
+import Shao.C2.AuxiliaryMarkedDeletion
+import Shao.C2.AuxiliaryOwnC1Budget
+import Shao.C2.AuxiliarySourceEvent
+import Shao.C2.AuxiliarySourceGaussian
+import Shao.C2.AuxiliarySourceParameters
 import Shao.C2.AuxiliaryTiltedProductEnergy
 import Shao.C2.BridgeCompletionGlobalContinuity
 import Shao.C2.BridgeDomination
@@ -712,6 +719,7 @@ import Shao.Probability.SourceActualGaussianTransfer
 import Shao.Probability.SourceActualIntervalInitialCDF
 import Shao.Probability.SourceActualIntervalProfileBudget
 import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualRegularPhysicalRatio
 import Shao.Probability.SourceActualTransferAssembly
 import Shao.Probability.SourceBackwardStoppedEnergy
 import Shao.Probability.SourceBoundedYReflection
