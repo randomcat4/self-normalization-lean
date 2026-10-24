@@ -1,0 +1,9 @@
+# Spatialzeroextension actual one-sided source PDE
+
+Readonly supplement.tex4192–4253, especially4231–4233, positive-timewallzerotrace4200–4206; smallTaylorproof4302–4315 contextualizes howPDEisused. Fourfullheads/context/imports frozen beforeproof, no definitions, exactfullfrozenprojection unchanged. AlloriginalrootsOPEN; no actualBrownianprobabilityID orintervalkernelPDEclaimed.
+
+Whole-timewalltracehelpers areexactspatialcutdefinitions at y=a or-a: strictinsidebranchfalse sofunctionidentically0. This is an explicitfullrealT scalarhelper only, NOTa declarationofsourceT0/a0probabilitylaw. Physicalobjects remainunderpositiveT/a/terminalinterior.
+
+Forbothclosedhalflinesincludingwall, fulltimefunction equality identifiesactualspatialcut withtimeCompletion(C) using41setwisevalueidentity and33scalaridentity. AtT>0actualHasDerivAt timeCompletion givesrealpartialtime. Unit43entiretimefunction identities ofgenuineiteratedDerivWithin atj1/j2, evaluatedatT, provideactualone-sidedspatialpartials, upperj1negative/lowerj1positive/bothj2curvature. Substituteactualpartials thennonzerodenominatorrationalringalgebra proves f_T=f_yy/2+(z-y)/T*f_y. Spatialwithinderivatives areofcutminus1 sohaveexactpositive-orderconstantshiftinterpretation. No singlepoint equality isdifferentiated, no assumptioncutglobal acrosswallsmootheverused. a>0,terminalstrict,T>0sourcepremisesretained; oldycanwall. Atwalltimepartial0 andspatialtwoPDEterms cancelexactly.
+
+Firstkernelattempt001/all13actualownerrecursiveaxiomPASS CPU14–17/c12-heavy.lock/-M8192-j4 pinnedversions.13theorems(4public),0definitions; actualcompleteexports/emptyvalues. Nofailedgates, oldproducerbuild orsuccessfulreplay. Freshindependentcompletefinalreview pendingwithrelatedunit43.

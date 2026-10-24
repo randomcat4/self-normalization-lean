@@ -1,0 +1,31 @@
+import Shao.C2.HalfLineExtensionTimeProfiles
+
+noncomputable section
+namespace Shao.C2.HalfLineExtensionPDE
+open Shao.C2.HalfLineSpatialExtension Shao.C2.HalfLineExtensionTimeProfiles
+open Shao.C2.HalfLineReflectionFormula Shao.C2.HalfLineTimeProfiles
+open Shao.C2.HalfLineMixedProfiles
+
+theorem upperSpatialExtension_wall_time_function (a z : ℝ) :
+    (fun t : ℝ => upperSpatialExtension a t z a) = (fun _ : ℝ => 0) := by
+
+theorem lowerSpatialExtension_wall_time_function (a z : ℝ) :
+    (fun t : ℝ => lowerSpatialExtension a t z (-a)) = (fun _ : ℝ => 0) := by
+
+theorem upperSpatialExtension_heat_equation (a y z T : ℝ) (ha : 0 < a)
+    (hy : y ≤ a) (hz : z < a) (hT : 0 < T) :
+    deriv (fun t : ℝ => upperSpatialExtension a t z y) T =
+      (1 / 2 : ℝ) * iteratedDerivWithin 2
+        (fun x : ℝ => upperSpatialExtension a T z x - 1) (Set.Iic a) y +
+      ((z - y) / T) * iteratedDerivWithin 1
+        (fun x : ℝ => upperSpatialExtension a T z x - 1) (Set.Iic a) y := by
+
+theorem lowerSpatialExtension_heat_equation (a y z T : ℝ) (ha : 0 < a)
+    (hy : -a ≤ y) (hz : -a < z) (hT : 0 < T) :
+    deriv (fun t : ℝ => lowerSpatialExtension a t z y) T =
+      (1 / 2 : ℝ) * iteratedDerivWithin 2
+        (fun x : ℝ => lowerSpatialExtension a T z x - 1) (Set.Ici (-a)) y +
+      ((z - y) / T) * iteratedDerivWithin 1
+        (fun x : ℝ => lowerSpatialExtension a T z x - 1) (Set.Ici (-a)) y := by
+
+end Shao.C2.HalfLineExtensionPDE
