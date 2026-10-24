@@ -1,0 +1,22 @@
+DECL Shao.OQ3.uniform_pair_characteristic_moment_remainder_bound
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure (Fin 2 → ℝ)),
+  (∀ (i : ι), MeasureTheory.IsProbabilityMeasure (law i)) →
+    ∀ (m : ℕ) (M : ℝ),
+      (∀ (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ m) (law i)) →
+        (∀ (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ m ∂law i ≤ M) →
+          ∀ (i : ι) (u v : ℝ),
+            ‖∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂law i -
+                  ∑ j ∈ Finset.range m,
+                    Complex.I ^ j / ↑j.factorial * ↑(∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ j ∂law i)‖ ≤
+              (Real.exp 1 + ↑m + 1) * M * √(u ^ 2 + v ^ 2) ^ m
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_probability_characteristic_moment_remainder_bound
+TYPE ∀ (law : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure law] (m : ℕ),
+  MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ m) law →
+    ∀ (u v : ℝ),
+      ‖∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂law -
+            ∑ j ∈ Finset.range m, Complex.I ^ j / ↑j.factorial * ↑(∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ j ∂law)‖ ≤
+        (Real.exp 1 + ↑m + 1) * √(u ^ 2 + v ^ 2) ^ m * ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ m ∂law
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
