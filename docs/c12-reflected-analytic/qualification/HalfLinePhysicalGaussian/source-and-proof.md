@@ -1,0 +1,9 @@
+# Physical upper/lower halfline Gaussian retained remainders
+
+Readonly supplement4192-4253 and4322-4393. The scalar models are upperCompletion=completion(a-y,a-z,T) and lowerCompletion=completion(a+y,a+z,T), using47 explicit reachable zero-time convention. They are scalar completion models, with actual Brownian probability identification still OPEN. No accepted source definition changes.
+
+At positive T and an interior terminal endpoint, the entire spatial functions equal the qualified spatial cuts41. Qualified actual derivative42 supplies -slopeTime for the upper and +slopeTime for the lower. The actual-derivative full compensated remainders identify with normalized47 localRemainder under beta=b (upper) and beta=-b (lower); normalized d=z-y and y-z respectively. All signs, time-square changes and actual derivatives are preserved.
+
+Retained remainders use the projected physical displacement a-y at upper small crossing, and -a-y at lower small crossing, including equality hits. These correspond exactly to normalized displacement u. The reachability premise T-b²=0 -> y+b=z translates to the exact normalized premise of47. Applying47 gives both physical one-wall Gaussian bounds with C8000100 and q³D³Pi. No separate interval negative overshoot or separated positive overshoot is asserted.
+
+All10 complete heads,6 complete transparent values and imports frozen before proof. Kernel002 and recursiveaxioms for all22 owners=16theoremconstants+6definitions PASS; complete22 actual types and6 values exported. Failed001 is only dependent Decidable proposition rewrite API, preserved source/log remotely. Unit47 is under independent complete final review;42 already qualified and publishedPR281. Their exact dependencies are reused without old Lean replay. All original roots and actualBrownian identification/actualintervalhigher/time/mixed regularity/PDE/Taylor/localestimate OPEN. Independent final complete review of this exact source pending.

@@ -1,0 +1,70 @@
+import Shao.C2.GaussianWallEnvelope
+import Shao.C2.HalfLineSmallTaylor
+
+noncomputable section
+namespace Shao.C2.HalfLineGaussianStep
+open Shao.C2.GaussianWallEnvelope Shao.C2.HalfLineTaylorSegment
+open Shao.C2.HalfLineTaylorPath Shao.C2.HalfLineMixedProfiles
+open Shao.C2.HalfLineSpatialProfiles Shao.C2.HalfLineSmallTaylor
+
+def completion (u v T : ℝ) : ℝ :=
+  if 0 < u ∧ 0 < v then
+    if 0 < T then 1 - Real.exp (-2 * u * v / T)
+    else if T = 0 ∧ u = v then 1 else 0
+  else 0
+
+def localRemainder (u v T b : ℝ) : ℝ :=
+  completion (u - b) v (T - b ^ 2) - completion u v T -
+    (b - b ^ 2 * (u - v) / T) * (-slopeTime u v T)
+
+def retainedRemainder (u v T b : ℝ) : ℝ :=
+  if b ^ 2 ≤ T / 2 ∧ u - b ≤ 0 then localRemainder u v T u
+  else localRemainder u v T b
+
+theorem completion_positive_time (u v T : ℝ) (hu : 0 ≤ u) (hv : 0 < v) (hT : 0 < T) :
+    completion u v T = 1 - Real.exp (-2 * u * v / T) := by
+
+theorem completion_bounds (u v T : ℝ) :
+    0 ≤ completion u v T ∧ completion u v T ≤ 1 := by
+
+theorem completion_reachable_zero_time (u v : ℝ) (hu : 0 < u) (hv : 0 < v) (h : u = v) :
+    completion u v 0 = 1 := by
+
+theorem compensation_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T) :
+    |(b - b ^ 2 * (u - v) / T) * (-slopeTime u v T)| ≤
+      8 * (|b| / Real.sqrt T) * (1 + |u - v| / Real.sqrt T) ^ 2 *
+        wallEnvelope u |b| (u - v) T := by
+
+theorem future_deficit_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T) (hnew : 0 ≤ u - b)
+    (hzero : T - b ^ 2 = 0 → u - b = v) :
+    1 - completion (u - b) v (T - b ^ 2) ≤ wallEnvelope u |b| (u - v) T := by
+
+theorem completion_difference_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → u - b = v) :
+    |completion (u - b) v (T - b ^ 2) - completion u v T| ≤
+      2 * wallEnvelope u |b| (u - v) T := by
+
+theorem local_small_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b) :
+    |localRemainder u v T b| ≤
+      8000100 * (|b| / Real.sqrt T) ^ 3 * (1 + |u - v| / Real.sqrt T) ^ 3 *
+        wallEnvelope u |b| (u - v) T := by
+
+theorem local_large_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T) (hlarge : T / 2 < b ^ 2)
+    (hzero : T - b ^ 2 = 0 → u - b = v) :
+    |localRemainder u v T b| ≤
+      8000100 * (|b| / Real.sqrt T) ^ 3 * (1 + |u - v| / Real.sqrt T) ^ 3 *
+        wallEnvelope u |b| (u - v) T := by
+
+theorem retained_envelope_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → u - b = v) :
+    |retainedRemainder u v T b| ≤
+      8000100 * (|b| / Real.sqrt T) ^ 3 * (1 + |u - v| / Real.sqrt T) ^ 3 *
+        wallEnvelope u |b| (u - v) T := by
+
+end Shao.C2.HalfLineGaussianStep

@@ -1,0 +1,37 @@
+import Shao.C2.HalfLineTaylorSegment
+
+noncomputable section
+namespace Shao.C2.ProjectionOvershoot
+
+def projectedFactor (u T e : ℝ) : ℝ := 1 - u * e / T
+def projectionFactor (B u T e : ℝ) : ℝ := 1 - (B + u) * e / T
+def projectionOvershoot (B u T e G : ℝ) : ℝ :=
+  -(B - u) * projectionFactor B u T e * G
+def zeroFutureRemainder (F b T e G : ℝ) : ℝ :=
+  -F - (b - b ^ 2 * e / T) * G
+
+theorem projection_factors_bounds (B u T e : ℝ) (hu : 0 < u) (huB : u ≤ B)
+    (hT : 0 < T) (hsmall : B ^ 2 ≤ T / 2) (he : e < u) :
+    (1 / 2 : ℝ) ≤ projectedFactor u T e ∧
+      0 ≤ projectionFactor B u T e ∧
+      projectionFactor B u T e ≤ 2 * (1 + |e| / Real.sqrt T) := by
+
+theorem projection_factor_identity (B u T e : ℝ) :
+    (B + u) * projectedFactor u T e - u * projectionFactor B u T e = B := by
+
+theorem zero_future_remainder_projection_identity (F B u T e G : ℝ) :
+    zeroFutureRemainder F B T e G =
+      zeroFutureRemainder F u T e G + projectionOvershoot B u T e G := by
+
+theorem projected_positive_slope_budget (F u T e G : ℝ) (hF : 0 ≤ F) :
+    u * projectedFactor u T e * max G 0 ≤ |zeroFutureRemainder F u T e G| := by
+
+theorem projection_own_negative_budget (F B u T e G K : ℝ) (hF : 0 ≤ F)
+    (hK : 0 ≤ K) (hu : 0 < u) (huB : u ≤ B) (hT : 0 < T)
+    (hsmall : B ^ 2 ≤ T / 2) (he : e < u)
+    (hproj : |zeroFutureRemainder F u T e G| ≤ K * u ^ 3) :
+    |zeroFutureRemainder F u T e G| + max (-projectionOvershoot B u T e G) 0 ≤
+        K * u * B ^ 2 ∧
+      K * u * B ^ 2 ≤ K * B ^ 3 := by
+
+end Shao.C2.ProjectionOvershoot
