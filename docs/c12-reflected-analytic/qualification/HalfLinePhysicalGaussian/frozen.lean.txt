@@ -1,0 +1,75 @@
+import Shao.C2.HalfLineGaussianStep
+import Shao.C2.HalfLineExtensionTaylor
+
+noncomputable section
+namespace Shao.C2.HalfLinePhysicalGaussian
+open Shao.C2.HalfLineGaussianStep Shao.C2.HalfLineMixedProfiles
+open Shao.C2.HalfLineSpatialExtension Shao.C2.HalfLineExtensionTaylor
+open Shao.C2.GaussianWallEnvelope
+
+def upperCompletion (a y T z : ℝ) : ℝ := completion (a - y) (a - z) T
+def lowerCompletion (a y T z : ℝ) : ℝ := completion (a + y) (a + z) T
+
+def upperRemainder (a y T z b : ℝ) : ℝ :=
+  upperCompletion a (y + b) (T - b ^ 2) z - upperCompletion a y T z -
+    (b - b ^ 2 * (z - y) / T) * deriv (fun w => upperCompletion a w T z) y
+
+def lowerRemainder (a y T z b : ℝ) : ℝ :=
+  lowerCompletion a (y + b) (T - b ^ 2) z - lowerCompletion a y T z -
+    (b - b ^ 2 * (z - y) / T) * deriv (fun w => lowerCompletion a w T z) y
+
+def upperRetainedRemainder (a y T z b : ℝ) : ℝ :=
+  if b ^ 2 ≤ T / 2 ∧ a ≤ y + b then upperRemainder a y T z (a - y)
+  else upperRemainder a y T z b
+
+def lowerRetainedRemainder (a y T z b : ℝ) : ℝ :=
+  if b ^ 2 ≤ T / 2 ∧ y + b ≤ -a then lowerRemainder a y T z (-a - y)
+  else lowerRemainder a y T z b
+
+theorem upperCompletion_eq_spatialExtension (a T z : ℝ) (ha : 0 < a)
+    (hT : 0 < T) (hz : z < a) :
+    (fun y => upperCompletion a y T z) = upperSpatialExtension a T z := by
+
+theorem lowerCompletion_eq_spatialExtension (a T z : ℝ) (ha : 0 < a)
+    (hT : 0 < T) (hz : -a < z) :
+    (fun y => lowerCompletion a y T z) = lowerSpatialExtension a T z := by
+
+theorem upperCompletion_hasDerivAt (a y T z : ℝ) (ha : 0 < a)
+    (hy : y < a) (hT : 0 < T) (hz : z < a) :
+    HasDerivAt (fun w => upperCompletion a w T z) (-slopeTime (a - y) (a - z) T) y := by
+
+theorem lowerCompletion_hasDerivAt (a y T z : ℝ) (ha : 0 < a)
+    (hy : -a < y) (hT : 0 < T) (hz : -a < z) :
+    HasDerivAt (fun w => lowerCompletion a w T z) (slopeTime (a + y) (a + z) T) y := by
+
+theorem upper_remainder_identity (a y T z b : ℝ) (ha : 0 < a)
+    (hy : y < a) (hT : 0 < T) (hz : z < a) :
+    upperRemainder a y T z b = localRemainder (a - y) (a - z) T b := by
+
+theorem lower_remainder_identity (a y T z b : ℝ) (ha : 0 < a)
+    (hy : -a < y) (hT : 0 < T) (hz : -a < z) :
+    lowerRemainder a y T z b = localRemainder (a + y) (a + z) T (-b) := by
+
+theorem upper_retained_identity (a y T z b : ℝ) (ha : 0 < a)
+    (hy : y < a) (hT : 0 < T) (hz : z < a) :
+    upperRetainedRemainder a y T z b = retainedRemainder (a - y) (a - z) T b := by
+
+theorem lower_retained_identity (a y T z b : ℝ) (ha : 0 < a)
+    (hy : -a < y) (hT : 0 < T) (hz : -a < z) :
+    lowerRetainedRemainder a y T z b = retainedRemainder (a + y) (a + z) T (-b) := by
+
+theorem upper_retained_gaussian_bound (a y T z b : ℝ) (ha : 0 < a)
+    (hy : y < a) (hz : z < a) (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → y + b = z) :
+    |upperRetainedRemainder a y T z b| ≤
+      8000100 * (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 *
+        Real.exp (-((max (a - y - (|b| + max (z - y) 0)) 0) ^ 2) / T) := by
+
+theorem lower_retained_gaussian_bound (a y T z b : ℝ) (ha : 0 < a)
+    (hy : -a < y) (hz : -a < z) (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → y + b = z) :
+    |lowerRetainedRemainder a y T z b| ≤
+      8000100 * (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 *
+        Real.exp (-((max (a + y - (|b| + max (y - z) 0)) 0) ^ 2) / T) := by
+
+end Shao.C2.HalfLinePhysicalGaussian

@@ -1,0 +1,1191 @@
+{
+  "status": "CORRECT",
+  "qualifiedCompleteIndependentReview": true,
+  "completedAtUTC": "2026-10-24T10:08:32.502952+00:00",
+  "units": [
+    {
+      "unit": 45,
+      "module": "Shao.C2.ProjectionOvershoot",
+      "status": "CORRECT",
+      "qualifiedCompleteIndependentReview": true,
+      "sourceSHA256": "153b3fb011ea51f87b2d19ae1f76aa4d562e94346cfc47e3f4f5bf021f29b5cc",
+      "objectSHA256": "47df27f6230b781136a919ed24a64665a689da34c600319506da8f96cb799f3e",
+      "frozenSHA256": "353adfaadf4b485c883283d63ffce89126d69feaa3ffce41b5fa103c1e52e33a",
+      "authorReceiptSHA256": "88415394800873ee0c124ca33ead01ae4c2a9f144c5cfa97e35841481339eab6",
+      "authorReleaseSHA256": "81c78392b2c418392b9f2ce8d67ac1065e6b2c53f97aedf87fc3cec427d01dc1",
+      "sourceBytes": 6125,
+      "sourceUTF8NoBOMLF": true,
+      "allImportsPublicHeadsAndTransparentValuesExactMatchFreeze": true,
+      "frozenDeclarations": [
+        {
+          "kind": "def",
+          "name": "projectedFactor",
+          "text": "def projectedFactor (u T e : ℝ) : ℝ := 1 - u * e / T"
+        },
+        {
+          "kind": "def",
+          "name": "projectionFactor",
+          "text": "def projectionFactor (B u T e : ℝ) : ℝ := 1 - (B + u) * e / T"
+        },
+        {
+          "kind": "def",
+          "name": "projectionOvershoot",
+          "text": "def projectionOvershoot (B u T e G : ℝ) : ℝ :=\n  -(B - u) * projectionFactor B u T e * G"
+        },
+        {
+          "kind": "def",
+          "name": "zeroFutureRemainder",
+          "text": "def zeroFutureRemainder (F b T e G : ℝ) : ℝ :=\n  -F - (b - b ^ 2 * e / T) * G"
+        },
+        {
+          "kind": "theorem",
+          "name": "projection_factors_bounds",
+          "text": "theorem projection_factors_bounds (B u T e : ℝ) (hu : 0 < u) (huB : u ≤ B)\n    (hT : 0 < T) (hsmall : B ^ 2 ≤ T / 2) (he : e < u) :\n    (1 / 2 : ℝ) ≤ projectedFactor u T e ∧\n      0 ≤ projectionFactor B u T e ∧\n      projectionFactor B u T e ≤ 2 * (1 + |e| / Real.sqrt T) := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "projection_factor_identity",
+          "text": "theorem projection_factor_identity (B u T e : ℝ) :\n    (B + u) * projectedFactor u T e - u * projectionFactor B u T e = B := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "zero_future_remainder_projection_identity",
+          "text": "theorem zero_future_remainder_projection_identity (F B u T e G : ℝ) :\n    zeroFutureRemainder F B T e G =\n      zeroFutureRemainder F u T e G + projectionOvershoot B u T e G := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "projected_positive_slope_budget",
+          "text": "theorem projected_positive_slope_budget (F u T e G : ℝ) (hF : 0 ≤ F) :\n    u * projectedFactor u T e * max G 0 ≤ |zeroFutureRemainder F u T e G| := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "projection_own_negative_budget",
+          "text": "theorem projection_own_negative_budget (F B u T e G K : ℝ) (hF : 0 ≤ F)\n    (hK : 0 ≤ K) (hu : 0 < u) (huB : u ≤ B) (hT : 0 < T)\n    (hsmall : B ^ 2 ≤ T / 2) (he : e < u)\n    (hproj : |zeroFutureRemainder F u T e G| ≤ K * u ^ 3) :\n    |zeroFutureRemainder F u T e G| + max (-projectionOvershoot B u T e G) 0 ≤\n        K * u * B ^ 2 ∧\n      K * u * B ^ 2 ≤ K * B ^ 3 := by"
+        }
+      ],
+      "frozenPreamble": "import Shao.C2.HalfLineTaylorSegment\n\nnoncomputable section\nnamespace Shao.C2.ProjectionOvershoot",
+      "fullSourceRead": true,
+      "fullProofReview": true,
+      "allActualOwnedTypesReadComplete": true,
+      "allNonTheoremValuesReadComplete": true,
+      "allPrivateGeneratedIncluded": true,
+      "actualOwnerCounts": {
+        "total": 16,
+        "theorems": 12,
+        "definitions": 4,
+        "public": 5
+      },
+      "allOwnedCoverage": [
+        {
+          "name": "Shao.C2.ProjectionOvershoot.zero_future_remainder_projection_identity",
+          "kind": "theorem",
+          "typeBlockSHA256": "ae8d826092e353c4c60c44adf1844aad620829b4077eb9a1ee520b3e50a5d8b5",
+          "actualTypeSHA256": "4347d4afc20e18a3315d3dd60402920bfae55cd4e6b6e78e9685a9f0c11a82b1",
+          "actualTypeBytes": 309,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 62,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型保留任意F,B,u,T,e,G，结论R_B=R_u+O。展开后u^2+(B-u)(B+u)=B^2，常数-F及B^2e/T补偿均完整；并未以该代数等式冒充物理概率身份。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_7",
+          "kind": "theorem",
+          "typeBlockSHA256": "f32f624fb092c0c15bcb681b6d47746df716c0119ad2ea5d1b267a63fc6e6e57",
+          "actualTypeSHA256": "ca843f57beb73d16929cf36a74fa27a70bc82e36aaae269f2727325579041bde",
+          "actualTypeBytes": 768,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在AddMonoidWithOne及CharZero下，任意Nat n的命题((Nat.cast n)+1=0)等于False。n和特征零实例均完整。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projectionFactor",
+          "kind": "definition",
+          "typeBlockSHA256": "3504389f9a9948032d7d406e6a9c6343018be9dcb062cd24029e34f11b6c029f",
+          "actualTypeSHA256": "afe955ac17a5a5b5828c458c0d8ebee38c8ff6246961f718fed0ca146b25f98e",
+          "actualTypeBytes": 26,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 7,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": false,
+          "proofCoverage": "Entire transparent source and elaborated value",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型(B u T e : Real)→Real；完整透明值1-(B+u)*e/T。对应归一化后的c；除法保留Lean实数全定义，正时间仅由使用它的定理前提约束。",
+          "valueBlockSHA256": "dab515ae7d1626b34179b26510bb7162eba0ca759f05568c16b665f1a99b541e",
+          "valueSHA256": "ba51d0733359e6678399dab6a21ad1028a5a9e92fcec2fbe0ab5bde8ce0f6b23",
+          "valueBytes": 462,
+          "completeActualValueReviewed": true,
+          "fullTransparentValueMatchesFreeze": true,
+          "actualValueOmissions": false
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_1",
+          "kind": "theorem",
+          "typeBlockSHA256": "165d3578daf3d7c4199a978de23fe238a3c5959a5bc99de8c6bcf6424180a3fc",
+          "actualTypeSHA256": "33c2cad2b9d93c5620288b85c068f1b55f1cca63a77dd4f313032e36761b6f62",
+          "actualTypeBytes": 367,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在Zero α、OfNat α 2及NeZero 2下，命题(2=0)等于False。是非零数字2的化简辅助项，不包含源问题附加条件。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_3",
+          "kind": "theorem",
+          "typeBlockSHA256": "1d5008ea10755d12823191a9c882252b55c44849d5466182b9318a1b3ec46ed2",
+          "actualTypeSHA256": "e1fd1119a060fc5d401d17a27d81458bfe3c3fbb2379b2184376ce3061c8aefd",
+          "actualTypeBytes": 367,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在Zero α、OfNat α 4及NeZero 4下，命题(4=0)等于False。完整量词和实例均已读。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projectionOvershoot",
+          "kind": "definition",
+          "typeBlockSHA256": "98ac45fef25be1af72da196e1fe630fc88643a6b7a5107b8efee0315c9ff6cb2",
+          "actualTypeSHA256": "7861f19dc7783ac01fd1a6cba101069590eab579933a274a3844f34b89510b0b",
+          "actualTypeBytes": 28,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 8,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": false,
+          "proofCoverage": "Entire transparent source and elaborated value",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型(B u T e G : Real)→Real；完整值为(-(B-u))*projectionFactor(B,u,T,e)*G，负号、δ和G位置均正确。对应O=-δcG。",
+          "valueBlockSHA256": "ab735b07c968d0738a344e0e955a2fdc75439130037e124a433f4b20eb002edc",
+          "valueSHA256": "641b091e98a6862db6dd7777c5ae19e6c97a59cd4f1beeaf535cbde84750f058",
+          "valueBytes": 356,
+          "completeActualValueReviewed": true,
+          "fullTransparentValueMatchesFreeze": true,
+          "actualValueOmissions": false
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_5",
+          "kind": "theorem",
+          "typeBlockSHA256": "bed05574b9dc9564f6523067ded59b271f15492499dd4138b713e3037e6d04fc",
+          "actualTypeSHA256": "052e8a26f44ec4fe11cf266de436b71a6a6b557d54cb9bcf24d8f8011f097b17",
+          "actualTypeBytes": 1106,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在MonoidWithZero及IsReduced下，任意Nat n与a≠0推出命题(a^n=0)等于False。n=0包含在量词内；全部实例、a非零前提和结论已读。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_6",
+          "kind": "theorem",
+          "typeBlockSHA256": "58a36ced71007b05fcaf262a835295100c946291d3f15f0d861a2748d00375b2",
+          "actualTypeSHA256": "f732abb7632a250a4c8025c156a3c774dc1b14ae88d757d9ee5faf1509bd4f01",
+          "actualTypeBytes": 977,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在GroupWithZero下，任意Int n及a≠0推出命题(a^n=0)等于False。整数幂和非零前提完整，不被误读为任意零底数可逆。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.zeroFutureRemainder",
+          "kind": "definition",
+          "typeBlockSHA256": "8925456f5b289b79a5c92ba18745c796b99122e00ef3c70f1f3680a7c4877c47",
+          "actualTypeSHA256": "8c58586c2f6925854692ce2de5821720a73908ff2260311942fe28ec7348e466",
+          "actualTypeBytes": 28,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 10,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": false,
+          "proofCoverage": "Entire transparent source and elaborated value",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型(F b T e G : Real)→Real；完整值为-F-(b-b^2*e/T)*G，未删除时间补偿。这里只定义未来完成值为零时的代数形式，不自行证明物理完成核为零。",
+          "valueBlockSHA256": "15994dc89b9c99d0ae1161e3666704ef0ed070236ebebc2f74ef1b9ec3bf6cd6",
+          "valueSHA256": "8507f11ecaf13a1b6242a72332e1d2141949216c9cb8acd31410a42b49b6277b",
+          "valueBytes": 759,
+          "completeActualValueReviewed": true,
+          "fullTransparentValueMatchesFreeze": true,
+          "actualValueOmissions": false
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factor_identity",
+          "kind": "theorem",
+          "typeBlockSHA256": "f520e14095a38bcfc1a4626bcbeaa2c274ffd0f8b9571edac89a2f07e1c7b5bd",
+          "actualTypeSHA256": "f6586a62cf2b318b5f26f0190d9a1afe92314e35f1f285078ebef9255d54bc2d",
+          "actualTypeBytes": 484,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 57,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型为任意实数B,u,T,e的(B+u)A-u*c=B。展开两个透明值后ring精确消去ue/T项；不除以u或A，因此T=0等全定义边界也成立。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_own_negative_budget",
+          "kind": "theorem",
+          "typeBlockSHA256": "d27bb79262fa3cab77b12fbad7def0173c6a23b074298fe180a369330b819579",
+          "actualTypeSHA256": "914aceaa486b1801c4e2797950c305e04eb31accd72f43ca450d7822cebdeda7",
+          "actualTypeBytes": 3296,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 82,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型保留F≥0、K≥0、0<u≤B、0<T、B^2≤T/2、e<u及|R_u|≤K*u^3。以u>0取消得到A*G+≤K*u^2；因u*c=(B+u)A-B≤(B+u)A，乘G+≥0及B+u≥0再取消u得到c*G+≤K*u(B+u)。δ,c≥0使max(-O,0)=δ*c*G+精确成立；相加后u^3+δ*u*(B+u)=u*B^2，最后K≥0和u≤B给K*u*B^2≤K*B^3。未假设G非负、投影属于剩余标签或物理概率身份。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_2",
+          "kind": "theorem",
+          "typeBlockSHA256": "3d563b340638a57d5ad0bd1f7433fd8aa3d6f6ac976fad60938d083c4496bd49",
+          "actualTypeSHA256": "f111543de40e706e323113aa3400c19ee05450441faba557268e7721fb8a4fdc",
+          "actualTypeBytes": 367,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在Zero α、OfNat α 3及NeZero 3下，命题(3=0)等于False。完整量词和实例均已读。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projected_positive_slope_budget",
+          "kind": "theorem",
+          "typeBlockSHA256": "33ba3df0f5d2272c3c3025c10bf770dcbbec3ccb2ea13c843d917387f775f19d",
+          "actualTypeSHA256": "5a467fe1661922895c22461809026ed487ac1a4d8789bc346887a6027b096ed7",
+          "actualTypeBytes": 613,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 68,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型仅需F≥0，目标u*A*max(G,0)≤|R_u|，无隐含u,A,T符号前提。G≥0时R_u=-F-uAG及-|R_u|≤R_u推出uAG≤|R_u|-F≤|R_u|；G<0时正部为0。两分支覆盖G=0。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projectedFactor",
+          "kind": "definition",
+          "typeBlockSHA256": "eddf72ce03a491915582fc527515cd9c13595769e2c6cea46fbe5ea1acbbeffe",
+          "actualTypeSHA256": "9d944ddecee2d15ac73cac5eb244649c0bbd4f60253aabab0d37c7c74cdb32c2",
+          "actualTypeBytes": 24,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 6,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": false,
+          "proofCoverage": "Entire transparent source and elaborated value",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型(u T e : Real)→Real；完整透明值逐层为1-u*e/T，参数顺序与冻结一致。对应原文A，未引入实际概率或正时间默认值。",
+          "valueBlockSHA256": "8a6dea9339fb4275e6495d30b92a21f528ad760790e806767d68e0b5bb650555",
+          "valueSHA256": "8091b47afe87e992d5066b899de2e34df6b0f2ff12c3b85965793698c8088914",
+          "valueBytes": 372,
+          "completeActualValueReviewed": true,
+          "fullTransparentValueMatchesFreeze": true,
+          "actualValueOmissions": false
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds._simp_1_4",
+          "kind": "theorem",
+          "typeBlockSHA256": "2222743738abb587bd126210420914354e009d335ca8a8e655c059f06fcec8c2",
+          "actualTypeSHA256": "bbe2f27af69d7796f0746103ab32729c039232e610b2f9717476ce1178c565ec",
+          "actualTypeBytes": 539,
+          "axioms": [
+            "propext"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": null,
+          "generatedAuxiliary": true,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire projection_factors_bounds source tactic proof and qualified kernel generated theorem coverage",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整泛型实际类型：在Mul M、Zero M、NoZeroDivisors M下，a≠0、b≠0推出命题(a*b=0)等于False。它是无零因子化简，不是未经证明的新公理。"
+        },
+        {
+          "name": "Shao.C2.ProjectionOvershoot.projection_factors_bounds",
+          "kind": "theorem",
+          "typeBlockSHA256": "a4bceb8a13af2ffc6f8d5471651293adcef4c94eb5a866d7ae5b3639b0010ee7",
+          "actualTypeSHA256": "1d11bfe9e32fe7a7dcbc70c955136c2cf90dd14d4aa08e165d956fa68b9646ce",
+          "actualTypeBytes": 2715,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.ProjectionOvershoot",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 13,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型保留B,u,T,e、0<u、u≤B、0<T、B^2≤T/2、e<u，完整结论为1/2≤A、0≤c、c≤2(1+|e|/sqrt T)。通读整个证明：u^2≤B^2、ue≤u^2推出A下界；(B+u)e≤(B+u)u≤2B^2≤T推出c非负；设s=sqrt T>0，以s^2=T、B≤s、B+u≤2s及-e≤|e|推出c上界。严格正的T与s仅在除法和field_simp处使用，方向无反转。"
+        }
+      ],
+      "kernelAndAuditReceiptReuse": {
+        "sourceBoundAuthorKernelExit": 0,
+        "sourceBoundAuthorAuditExit": 0,
+        "successfulAttempt": "attempt003",
+        "kernelCommand": "source activate.sh THEN cd workspaces/c12-bridge-domination-v71; flock locks/c12-heavy.lock taskset -c 14-17 lake env lean -M8192 -j4 -o /root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/ProjectionOvershoot.olean Shao/C2/ProjectionOvershoot.lean",
+        "auditCommand": "same activation/cd/lock/affinity; lake env lean -M8192 -j4 /root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/OwnedAudit.lean",
+        "sourceAndOutputAndInstalledObjectExact": true,
+        "receiptExactOnServer": true,
+        "reviewerLeanCommands": 0,
+        "sourceEncoding": "UTF-8 no BOM LF; CR count0",
+        "CPUs": "14-17",
+        "memoryMiB": 8192,
+        "jobs": 4
+      },
+      "sourceAndAuditArtifactHashes": {
+        "actual-definition-values.txt": {
+          "sha256": "1203cbfcd2904f3e72cd4cf2030f0b4ca7de44f36c89eedfffb5f255f9e14bf9",
+          "bytes": 2226
+        },
+        "actual-owned-types.txt": {
+          "sha256": "a21f5e0b06c9d0206704e698ed9805cc086211c443081b14fee7e82e34fdb3df",
+          "bytes": 14137
+        },
+        "frozen.lean.txt": {
+          "sha256": "353adfaadf4b485c883283d63ffce89126d69feaa3ffce41b5fa103c1e52e33a",
+          "bytes": 1590
+        },
+        "owned-audit.json": {
+          "sha256": "c0c310b0742594dbe43f18c8ce8c702f5f226d19b2bc1512a5fc44982bbffdb2",
+          "bytes": 3412
+        },
+        "OwnedAudit.lean": {
+          "sha256": "b51f70ebdaa9b87d3dedd6221872a49f3ff0279625720413540191a909fa4277",
+          "bytes": 3059
+        },
+        "RELEASE.json": {
+          "sha256": "81c78392b2c418392b9f2ce8d67ac1065e6b2c53f97aedf87fc3cec427d01dc1",
+          "bytes": 799
+        },
+        "source-and-proof.md": {
+          "sha256": "204ac2eebe8b459c71e2ea3be45ab291a7f3b25bf7a47db5a33948c348137b4d",
+          "bytes": 2095
+        }
+      },
+      "remoteExactArtifacts": {
+        "OwnedAudit.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/OwnedAudit.lean",
+          "sha256": "b51f70ebdaa9b87d3dedd6221872a49f3ff0279625720413540191a909fa4277",
+          "bytes": 3059,
+          "expectedSHA256": "b51f70ebdaa9b87d3dedd6221872a49f3ff0279625720413540191a909fa4277",
+          "expectedBytes": 3059,
+          "matchesReceipt": true
+        },
+        "owned-audit.json": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/owned-audit.json",
+          "sha256": "c0c310b0742594dbe43f18c8ce8c702f5f226d19b2bc1512a5fc44982bbffdb2",
+          "bytes": 3412,
+          "expectedSHA256": "c0c310b0742594dbe43f18c8ce8c702f5f226d19b2bc1512a5fc44982bbffdb2",
+          "expectedBytes": 3412,
+          "matchesReceipt": true
+        },
+        "actual-owned-types.txt": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/actual-owned-types.txt",
+          "sha256": "a21f5e0b06c9d0206704e698ed9805cc086211c443081b14fee7e82e34fdb3df",
+          "bytes": 14137,
+          "expectedSHA256": "a21f5e0b06c9d0206704e698ed9805cc086211c443081b14fee7e82e34fdb3df",
+          "expectedBytes": 14137,
+          "matchesReceipt": true
+        },
+        "actual-definition-values.txt": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/actual-definition-values.txt",
+          "sha256": "1203cbfcd2904f3e72cd4cf2030f0b4ca7de44f36c89eedfffb5f255f9e14bf9",
+          "bytes": 2226,
+          "expectedSHA256": "1203cbfcd2904f3e72cd4cf2030f0b4ca7de44f36c89eedfffb5f255f9e14bf9",
+          "expectedBytes": 2226,
+          "matchesReceipt": true
+        },
+        "owned-audit.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/owned-audit.log",
+          "sha256": "66e94a297c2bad0e127eaa9ae97234de9d85905a38573ef05d18d9a028132a7c",
+          "bytes": 16576,
+          "expectedSHA256": "66e94a297c2bad0e127eaa9ae97234de9d85905a38573ef05d18d9a028132a7c",
+          "expectedBytes": 16576,
+          "matchesReceipt": true
+        },
+        "attempt001/source.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt001/source.lean",
+          "sha256": "63f66daa06ff0b509e77f4c845bac0b6bdbb1a86bb6fd29d9764e7406a9c64b1",
+          "bytes": 5901,
+          "expectedSHA256": "63f66daa06ff0b509e77f4c845bac0b6bdbb1a86bb6fd29d9764e7406a9c64b1",
+          "expectedBytes": 5901,
+          "matchesReceipt": true
+        },
+        "attempt001/lean.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt001/lean.log",
+          "sha256": "dec4ec235e200cfcb212c49bcc02dae283329b4dc32d0854ad4e0eb2f6f992ce",
+          "bytes": 2222,
+          "expectedSHA256": "dec4ec235e200cfcb212c49bcc02dae283329b4dc32d0854ad4e0eb2f6f992ce",
+          "expectedBytes": 2222,
+          "matchesReceipt": true
+        },
+        "attempt002/source.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt002/source.lean",
+          "sha256": "e55a07a4da8a4977a8514ee69e04946b55b5778f2cb7ec07d0ef54693157a22d",
+          "bytes": 6054,
+          "expectedSHA256": "e55a07a4da8a4977a8514ee69e04946b55b5778f2cb7ec07d0ef54693157a22d",
+          "expectedBytes": 6054,
+          "matchesReceipt": true
+        },
+        "attempt002/lean.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt002/lean.log",
+          "sha256": "42beef768cfc8425ff87b4ad3dd74d9c7499f11a079c651a421344908d0b9ded",
+          "bytes": 1091,
+          "expectedSHA256": "42beef768cfc8425ff87b4ad3dd74d9c7499f11a079c651a421344908d0b9ded",
+          "expectedBytes": 1091,
+          "matchesReceipt": true
+        },
+        "attempt003/source.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt003/source.lean",
+          "sha256": "153b3fb011ea51f87b2d19ae1f76aa4d562e94346cfc47e3f4f5bf021f29b5cc",
+          "bytes": 6125,
+          "expectedSHA256": "153b3fb011ea51f87b2d19ae1f76aa4d562e94346cfc47e3f4f5bf021f29b5cc",
+          "expectedBytes": 6125,
+          "matchesReceipt": true
+        },
+        "attempt003/lean.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-projection-overshoot-v71/attempt003/lean.log",
+          "sha256": "4f9f3e8915189f49e696a472083846991c96d030f6462bca24aa6dbabc44d391",
+          "bytes": 683,
+          "expectedSHA256": "4f9f3e8915189f49e696a472083846991c96d030f6462bca24aa6dbabc44d391",
+          "expectedBytes": 683,
+          "matchesReceipt": true
+        }
+      },
+      "auditLogBindings": {
+        "auditLogOwnerHeadersExactSet": true,
+        "auditLogOwnerHeadersCount": 16,
+        "allActualTypesVerbatimInAuditLog": true,
+        "allDefinitionValuesVerbatimInAuditLog": true,
+        "finalSourceMatchesLocalFreeze": true
+      },
+      "allOwnedAxiomSelection": "env.constants.toList; env.getModuleIdxFor? owner equals exact target module; Lean.collectAxioms for every actual owner including generated/private/non-theorem; reject every axiom outside whitelist",
+      "allowedAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "prohibitedSourceTokens": [],
+      "failedAttemptsPreserved": true,
+      "everyAttemptFrozenImportsHeadsValuesIdentical": true,
+      "attemptSummary": [
+        {
+          "name": "attempt001",
+          "sourceSHA256": "63f66daa06ff0b509e77f4c845bac0b6bdbb1a86bb6fd29d9764e7406a9c64b1",
+          "sameImportsHeadsTransparentValuesAsFreeze": true,
+          "sourceProofOnlyDiffReadComplete": true,
+          "completeLeanLogRead": true,
+          "isSuccessfulFinal": false
+        },
+        {
+          "name": "attempt002",
+          "sourceSHA256": "e55a07a4da8a4977a8514ee69e04946b55b5778f2cb7ec07d0ef54693157a22d",
+          "sameImportsHeadsTransparentValuesAsFreeze": true,
+          "sourceProofOnlyDiffReadComplete": true,
+          "completeLeanLogRead": true,
+          "isSuccessfulFinal": false
+        },
+        {
+          "name": "attempt003",
+          "sourceSHA256": "153b3fb011ea51f87b2d19ae1f76aa4d562e94346cfc47e3f4f5bf021f29b5cc",
+          "sameImportsHeadsTransparentValuesAsFreeze": true,
+          "sourceProofOnlyDiffReadComplete": true,
+          "completeLeanLogRead": true,
+          "isSuccessfulFinal": true
+        }
+      ],
+      "sourceRanges": [
+        [
+          4319,
+          4358
+        ]
+      ],
+      "sourceDefinitionContext": [
+        [
+          4192,
+          4253
+        ]
+      ],
+      "sourceFaithfulScope": "Source4322–4358 normalizedprojection identity/factorbounds and negativeovershoot paysownbudget<=K*u*B²<=K*B³, conditionalexplicitlyonF>=0,projectedremainderTaylorbound,K>=0,positiveenergy andcrossinggeometry. No fullphysicalkernel orrootclosure."
+    },
+    {
+      "unit": 46,
+      "module": "Shao.C2.GaussianWallEnvelope",
+      "status": "CORRECT",
+      "qualifiedCompleteIndependentReview": true,
+      "sourceSHA256": "5f8b3966e314c88f5091a5e7bf7353be0ec0cae4d6cf2842b83bc61a436d06d9",
+      "objectSHA256": "54a9bd090e395db8d447e3cb095ef7a6e6ab9ec482a95150e20fe3a77a657e45",
+      "frozenSHA256": "1eaed93b0eec51221449579792e39d681f45d04732eb6d7afcb536221a40f005",
+      "authorReceiptSHA256": "682b51e94b66001559cb0639567467b6d538fa0844c84e2a1fedf15d3f2505c7",
+      "authorReleaseSHA256": "5d111fdc5a75e81d11de73afbf183c34245a79d913a1770e6bce7752a6072d3b",
+      "sourceBytes": 4117,
+      "sourceUTF8NoBOMLF": true,
+      "allImportsPublicHeadsAndTransparentValuesExactMatchFreeze": true,
+      "frozenDeclarations": [
+        {
+          "kind": "def",
+          "name": "wallEnvelope",
+          "text": "def wallEnvelope (w B e T : ℝ) : ℝ :=\n  Real.exp (-((max (w - (B + max e 0)) 0) ^ 2) / T)"
+        },
+        {
+          "kind": "theorem",
+          "name": "wall_product_lower_bound",
+          "text": "theorem wall_product_lower_bound (w B e : ℝ) (hw : 0 < w) (hB : 0 ≤ B) (he : e < w) :\n    (max (w - (B + max e 0)) 0) ^ 2 ≤ max (w - B) 0 * (w - e) := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "increment_profile_le_wallEnvelope",
+          "text": "theorem increment_profile_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)\n    (he : e < w) (hT : 0 < T) :\n    incrementProfile w (w - e) T b ≤ wallEnvelope w |b| e T := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "initial_profile_le_wallEnvelope",
+          "text": "theorem initial_profile_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)\n    (he : e < w) (hT : 0 < T) :\n    Real.exp (-w * (w - e) / T) ≤ wallEnvelope w |b| e T := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "future_reflection_deficit_le_wallEnvelope",
+          "text": "theorem future_reflection_deficit_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)\n    (he : e < w) (hT : 0 < T) (hnew : 0 ≤ w - b) (hfuture : 0 < T - b ^ 2) :\n    Real.exp (-2 * (w - b) * (w - e) / (T - b ^ 2)) ≤ wallEnvelope w |b| e T := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "crossing_wallEnvelope_eq_one",
+          "text": "theorem crossing_wallEnvelope_eq_one (w b e T : ℝ) (hw : 0 < w) (hcross : w ≤ |b|) :\n    wallEnvelope w |b| e T = 1 := by"
+        },
+        {
+          "kind": "theorem",
+          "name": "wallEnvelope_bounds",
+          "text": "theorem wallEnvelope_bounds (w B e T : ℝ) (hT : 0 < T) :\n    0 < wallEnvelope w B e T ∧ wallEnvelope w B e T ≤ 1 := by"
+        }
+      ],
+      "frozenPreamble": "import Shao.C2.ProjectionOvershoot\n\nnoncomputable section\nnamespace Shao.C2.GaussianWallEnvelope\nopen Shao.C2.HalfLineTaylorSegment",
+      "fullSourceRead": true,
+      "fullProofReview": true,
+      "allActualOwnedTypesReadComplete": true,
+      "allNonTheoremValuesReadComplete": true,
+      "allPrivateGeneratedIncluded": true,
+      "actualOwnerCounts": {
+        "total": 7,
+        "theorems": 6,
+        "definitions": 1,
+        "public": 6
+      },
+      "allOwnedCoverage": [
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.wall_product_lower_bound",
+          "kind": "theorem",
+          "typeBlockSHA256": "18cac3b2aa098226f1a22cec5ce2407880ab3b6b5a3f5cfbb9006d49ce5ff03c",
+          "actualTypeSHA256": "9dc1039727c8b4acf2d663d88f7bd9817d3ad05820f2dc320cbaf647306d29fe",
+          "actualTypeBytes": 1312,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 10,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型保留0<w、0≤B、e<w和r^2≤max(w-B,0)*(w-e)。B≤B+e+、e≤B+e+使r≤max(w-B,0)、r≤w-e；r与max(w-B,0)非负，按正确符号方向相乘得到目标。hw虽在该代数证明中冗余仍完整保留；没有放宽被冻结的接口。"
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.future_reflection_deficit_le_wallEnvelope",
+          "kind": "theorem",
+          "typeBlockSHA256": "21b64396836d388cac10e50be7403363e28c4e6acdd2b97dbf424f141ec481fb",
+          "actualTypeSHA256": "51b10645c460d228d825c9d3e79cbf507d868eafef8b1878c95a0b5d70c15faa",
+          "actualTypeBytes": 2217,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 43,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型保留0<w、e<w、0<T、0≤w-b及0<T-b^2。令M=|b|+e+、r=(w-M)+；b,e≤M及两个右因子非负推出r^2≤(w-b)*(w-e)=P≥0。S=T-b^2满足0<S≤T，因此r^2/T≤P/T≤P/S≤2P/S；取负并用exp单调性得到完整系数2的未来反射亏损界。等号w-b=0合法；S=0从冻结作用域排除，没有将实数全定义除零冒充零时间概率结论。"
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.increment_profile_le_wallEnvelope",
+          "kind": "theorem",
+          "typeBlockSHA256": "eff15fa6d9106d2d34c06064158273975a2ae13cfb11383f689d1c55c94b9df7",
+          "actualTypeSHA256": "c43c68457bd5b3befe8e8eeb763ff3c7843131eb12f1528338670811caaea59c",
+          "actualTypeBytes": 567,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 22,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型为任意w,e,T,b且0<w、e<w、0<T，incrementProfile w (w-e) T b≤wallEnvelope w |b| e T。完整读取所消费35的定义及实际值，展开确为exp(-max(w-|b|,0)*(w-e)/T)，无误加反射系数2。用上一乘积下界取负、按T>0相除，再用exp单调性；方向正确。"
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.wallEnvelope",
+          "kind": "definition",
+          "typeBlockSHA256": "48eac8decbca23e9ee4b63f2c23cd6d43970f636ec8608b09184e79495b563b1",
+          "actualTypeSHA256": "9bf2f5f6b87703ff117b84c3af3f617902f456fe266fe5246e241359f3648688",
+          "actualTypeBytes": 26,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 7,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": false,
+          "proofCoverage": "Entire transparent source and elaborated value",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整实际类型(w B e T : Real)→Real；完整透明值exp(-(max(w-(B+max(e,0)),0)^2)/T)，正部嵌套、平方和除以T的次序与冻结一致。只定义单壁的一项，不是全壁和Π。",
+          "valueBlockSHA256": "505c65a21897806a604bb6ebab780bdc21a5b9837f7337e75eebfe40ea8cd83c",
+          "valueSHA256": "2805dac7a616f112087f5de5c1e65b0dd9c23d639f44d46c27ba032c523fda0a",
+          "valueBytes": 868,
+          "completeActualValueReviewed": true,
+          "fullTransparentValueMatchesFreeze": true,
+          "actualValueOmissions": false
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.initial_profile_le_wallEnvelope",
+          "kind": "theorem",
+          "typeBlockSHA256": "dc2a8b0c33087c89e10feff8d5da08117eafa6892a30d8e36db1c574931cd1cd",
+          "actualTypeSHA256": "57e41410f944b3eadcfeec65e630114b4d4b2f71b8c6cc0b4ee91c13cb56bf00",
+          "actualTypeBytes": 770,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 31,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型及三个假设与冻结一致。max(w-|b|,0)≤w及w-e>0将乘积比较提升到r^2≤w*(w-e)；取负、除以T>0、指数单调得到初始轮廓界。b可正可负且可为0，未要求小能量。"
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.wallEnvelope_bounds",
+          "kind": "theorem",
+          "typeBlockSHA256": "614ec49f6fa10a3f130699a0d92d170e7d0aa4f8fdcc6e17ac4f8b334833b7f5",
+          "actualTypeSHA256": "8f257645d85da936c3c0baaad090f674d0c4324733f5c8008435ec5b3d320c19",
+          "actualTypeBytes": 477,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 78,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型为任意w,B,e,T且T>0的0<envelope且envelope≤1。exp严格正；平方非负、负号及正分母使指数≤0。无需B或w的符号前提，也没有添加未写条件。"
+        },
+        {
+          "name": "Shao.C2.GaussianWallEnvelope.crossing_wallEnvelope_eq_one",
+          "kind": "theorem",
+          "typeBlockSHA256": "7395f90afe7c23528245e34a18bb5f8135e0b3c6b5cc8aa837b0f2716480d5a5",
+          "actualTypeSHA256": "a247db6560aff260342028d31efe9d0cab2f7ba261e80e0523127e0762e38aee",
+          "actualTypeBytes": 421,
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "actualOwner": "Shao.C2.GaussianWallEnvelope",
+          "completeActualTypeReviewed": true,
+          "actualTypeOmissions": false,
+          "sourceLine": 70,
+          "generatedAuxiliary": false,
+          "completeSourceProofReviewed": true,
+          "proofCoverage": "Entire final source proof",
+          "actualTypeMatchesFrozenSource": true,
+          "status": "CORRECT",
+          "specificReview": "完整类型保留0<w、w≤|b|，对任意e,T成立。w≤|b|+max(e,0)使外正部为0，exp(-0^2/T)=1，Lean全定义除法使T=0也无代数问题；它没有断言T=0时的实际反射亏损公式。等号击中被覆盖。"
+        }
+      ],
+      "kernelAndAuditReceiptReuse": {
+        "sourceBoundAuthorKernelExit": 0,
+        "sourceBoundAuthorAuditExit": 0,
+        "successfulAttempt": "attempt002",
+        "kernelCommand": "source activate.sh THEN cd workspaces/c12-bridge-domination-v71; flock locks/c12-heavy.lock taskset -c 14-17 lake env lean -M8192 -j4 -o /root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/GaussianWallEnvelope.olean Shao/C2/GaussianWallEnvelope.lean",
+        "auditCommand": "same activation/cd/lock/affinity; lake env lean -M8192 -j4 /root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/OwnedAudit.lean",
+        "sourceAndOutputAndInstalledObjectExact": true,
+        "receiptExactOnServer": true,
+        "reviewerLeanCommands": 0,
+        "sourceEncoding": "UTF-8 no BOM LF; CR count0",
+        "CPUs": "14-17",
+        "memoryMiB": 8192,
+        "jobs": 4
+      },
+      "sourceAndAuditArtifactHashes": {
+        "actual-definition-values.txt": {
+          "sha256": "505c65a21897806a604bb6ebab780bdc21a5b9837f7337e75eebfe40ea8cd83c",
+          "bytes": 933
+        },
+        "actual-owned-types.txt": {
+          "sha256": "297b1386da4c3c1e6a9f7d23d6fb95595711e4a148ba04c32f0fd6ab89ceee77",
+          "bytes": 6789
+        },
+        "frozen.lean.txt": {
+          "sha256": "1eaed93b0eec51221449579792e39d681f45d04732eb6d7afcb536221a40f005",
+          "bytes": 1258
+        },
+        "owned-audit.json": {
+          "sha256": "40e260c657db8336dee124cc60c1823e093fd399c6f6b8c7395a108d2fe712ca",
+          "bytes": 1820
+        },
+        "OwnedAudit.lean": {
+          "sha256": "e8009ab79cbcfa3c415498f8547568faa4f4e975c798732421d4a94da6a401a8",
+          "bytes": 3123
+        },
+        "RELEASE.json": {
+          "sha256": "5d111fdc5a75e81d11de73afbf183c34245a79d913a1770e6bce7752a6072d3b",
+          "bytes": 799
+        },
+        "source-and-proof.md": {
+          "sha256": "fb8f1c1108c8588980265ac4635c970b0b72393c4e1ba3d2eb1351cdc21681db",
+          "bytes": 1093
+        }
+      },
+      "remoteExactArtifacts": {
+        "OwnedAudit.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/OwnedAudit.lean",
+          "sha256": "e8009ab79cbcfa3c415498f8547568faa4f4e975c798732421d4a94da6a401a8",
+          "bytes": 3123,
+          "expectedSHA256": "e8009ab79cbcfa3c415498f8547568faa4f4e975c798732421d4a94da6a401a8",
+          "expectedBytes": 3123,
+          "matchesReceipt": true
+        },
+        "owned-audit.json": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/owned-audit.json",
+          "sha256": "40e260c657db8336dee124cc60c1823e093fd399c6f6b8c7395a108d2fe712ca",
+          "bytes": 1820,
+          "expectedSHA256": "40e260c657db8336dee124cc60c1823e093fd399c6f6b8c7395a108d2fe712ca",
+          "expectedBytes": 1820,
+          "matchesReceipt": true
+        },
+        "actual-owned-types.txt": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/actual-owned-types.txt",
+          "sha256": "297b1386da4c3c1e6a9f7d23d6fb95595711e4a148ba04c32f0fd6ab89ceee77",
+          "bytes": 6789,
+          "expectedSHA256": "297b1386da4c3c1e6a9f7d23d6fb95595711e4a148ba04c32f0fd6ab89ceee77",
+          "expectedBytes": 6789,
+          "matchesReceipt": true
+        },
+        "actual-definition-values.txt": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/actual-definition-values.txt",
+          "sha256": "505c65a21897806a604bb6ebab780bdc21a5b9837f7337e75eebfe40ea8cd83c",
+          "bytes": 933,
+          "expectedSHA256": "505c65a21897806a604bb6ebab780bdc21a5b9837f7337e75eebfe40ea8cd83c",
+          "expectedBytes": 933,
+          "matchesReceipt": true
+        },
+        "owned-audit.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/owned-audit.log",
+          "sha256": "f268897580ca36580ae9e2facf8d737bfecf4b87866db266238bc781cf427331",
+          "bytes": 7933,
+          "expectedSHA256": "f268897580ca36580ae9e2facf8d737bfecf4b87866db266238bc781cf427331",
+          "expectedBytes": 7933,
+          "matchesReceipt": true
+        },
+        "attempt001/lean.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/attempt001/lean.log",
+          "sha256": "554fa8d80c6003ee6d1b6b2861e2df16976f6c53f8d793564e04ea703ccdc12e",
+          "bytes": 2251,
+          "expectedSHA256": "554fa8d80c6003ee6d1b6b2861e2df16976f6c53f8d793564e04ea703ccdc12e",
+          "expectedBytes": 2251,
+          "matchesReceipt": true
+        },
+        "attempt001/source.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/attempt001/source.lean",
+          "sha256": "4a162d090682d1ca721a11f95cf9d185e262216c3b19a8e71906f89fe87a5e5f",
+          "bytes": 3953,
+          "expectedSHA256": "4a162d090682d1ca721a11f95cf9d185e262216c3b19a8e71906f89fe87a5e5f",
+          "expectedBytes": 3953,
+          "matchesReceipt": true
+        },
+        "attempt002/lean.log": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/attempt002/lean.log",
+          "sha256": "07ca2fe53fa3637aa6e825962deb74cc03bcd041703f19ab51714f0318e5dae1",
+          "bytes": 1957,
+          "expectedSHA256": "07ca2fe53fa3637aa6e825962deb74cc03bcd041703f19ab51714f0318e5dae1",
+          "expectedBytes": 1957,
+          "matchesReceipt": true
+        },
+        "attempt002/source.lean": {
+          "exists": true,
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-gaussian-wall-envelope-v71/attempt002/source.lean",
+          "sha256": "5f8b3966e314c88f5091a5e7bf7353be0ec0cae4d6cf2842b83bc61a436d06d9",
+          "bytes": 4117,
+          "expectedSHA256": "5f8b3966e314c88f5091a5e7bf7353be0ec0cae4d6cf2842b83bc61a436d06d9",
+          "expectedBytes": 4117,
+          "matchesReceipt": true
+        }
+      },
+      "auditLogBindings": {
+        "auditLogOwnerHeadersExactSet": true,
+        "auditLogOwnerHeadersCount": 7,
+        "allActualTypesVerbatimInAuditLog": true,
+        "allDefinitionValuesVerbatimInAuditLog": true,
+        "finalSourceMatchesLocalFreeze": true
+      },
+      "allOwnedAxiomSelection": "env.constants.toList; env.getModuleIdxFor? owner equals exact target module; Lean.collectAxioms for every actual owner including generated/private/non-theorem; reject every axiom outside whitelist",
+      "allowedAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "prohibitedSourceTokens": [],
+      "failedAttemptsPreserved": true,
+      "everyAttemptFrozenImportsHeadsValuesIdentical": true,
+      "attemptSummary": [
+        {
+          "name": "attempt001",
+          "sourceSHA256": "4a162d090682d1ca721a11f95cf9d185e262216c3b19a8e71906f89fe87a5e5f",
+          "sameImportsHeadsTransparentValuesAsFreeze": true,
+          "sourceProofOnlyDiffReadComplete": true,
+          "completeLeanLogRead": true,
+          "isSuccessfulFinal": false
+        },
+        {
+          "name": "attempt002",
+          "sourceSHA256": "5f8b3966e314c88f5091a5e7bf7353be0ec0cae4d6cf2842b83bc61a436d06d9",
+          "sameImportsHeadsTransparentValuesAsFreeze": true,
+          "sourceProofOnlyDiffReadComplete": true,
+          "completeLeanLogRead": true,
+          "isSuccessfulFinal": true
+        }
+      ],
+      "sourceRanges": [
+        [
+          4360,
+          4393
+        ]
+      ],
+      "sourceDefinitionContext": [
+        [
+          4192,
+          4253
+        ]
+      ],
+      "sourceFaithfulScope": "Source4360-4393 one-wall Gaussian envelope: product comparison, initial/increment profiles, positive-future reflection deficit, crossing envelope=1, and 0<envelope<=1. No full local remainder or physical Brownian identification/root closure."
+    }
+  ],
+  "reviewer": {
+    "task": "/root/projection_gaussian_final_review",
+    "role": "fresh independent FINAL complete reviewer",
+    "author": "01a16c4c-25a6-7740-a10e-12635a13edae",
+    "independentFromAuthor": true,
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "modelEffortSource": "Explicit prescribed fresh child configuration; independent provider runtime telemetry not exposed",
+    "productionEdits": false,
+    "freezeEdits": false,
+    "acceptedEvidenceEdits": false,
+    "sharedOrGitEdits": false,
+    "serverMutations": false,
+    "leanCommandsExecuted": 0,
+    "subagents": 0,
+    "ownedDirectory": "C:/game/shao lean/drafts/c12-lane/projection-gaussian-final-review-v1",
+    "usage": {
+      "input": null,
+      "cachedInput": null,
+      "output": null,
+      "reasoningSubset": null
+    },
+    "usageAvailability": "Provider counters unavailable; no inferred token totals, purchased-credit allocations, or subscription percentage"
+  },
+  "coverage": {
+    "fullOriginalRangesRead": [
+      [
+        4192,
+        4253
+      ],
+      [
+        4319,
+        4398
+      ]
+    ],
+    "fullFinalSourceProofsRead": true,
+    "completeFrozenDeclarationsCompared": true,
+    "actualOwnerCountsDerivedFromVerifiedMap": {
+      "modules": 2,
+      "publicTheorems": 11,
+      "actualTheorems": 18,
+      "actualNonTheorems": 5,
+      "actualTotal": 23,
+      "generatedTheorems": 7
+    },
+    "all23CompleteActualTypesRead": true,
+    "all5CompleteNonTheoremValuesRead": true,
+    "privateGeneratedCoverageComplete": true,
+    "noSamplingOrTruncationUsedForFinalTypeValueCoverage": true,
+    "losslessDictionaryUsed": false,
+    "mathematicalGaps": []
+  },
+  "originalSource": {
+    "path": "C:/game/shao/current/c12/supplement.tex",
+    "fullSHA256": "b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd",
+    "readOnly": true,
+    "normalization": {
+      "B": "abs b",
+      "u": "a-eta*y",
+      "e": "eta*(z-y)",
+      "G": "eta*f_y",
+      "F": "f",
+      "p": "eta*u",
+      "delta": "B-u",
+      "D": "1+abs(e)/sqrt(T)"
+    },
+    "sourceToStatement": "Unit45 extracts the exact zero-future-completion scalar algebra and conditional projected Taylor-budget transport, with nonnegative F and projected remainder bound explicit. Unit46 extracts one-wall scalar Gaussian comparisons, including positive future energy only where the reflection-deficit denominator is used. Neither asserts the complete original projection or local Gaussian remainder lemma without the outstanding physical/analytic assembly."
+  },
+  "serverObservation": {
+    "path": "C:/game/shao lean/drafts/c12-lane/projection-gaussian-final-review-v1/server-observation.json",
+    "sha256": "81942f4adf0a974d74498ffe32d2e8c0ef13c3276adaac403cc34c043e133996",
+    "responseSHA256": "2379dc728b81180f5e92bf50e9f01af20bc35221b9f1c0fff1e3fe1f6e8d0ca6",
+    "requestSHA256": "174ef0d36c07973e7df2d66ada58d80e2a90541c3ce078bfc6b6baffee9e40bd",
+    "observedAtUTC": "2026-10-24T10:04:31.275996+00:00",
+    "receiptObservedAtUTC": "2026-10-24T10:05:26.643273+00:00",
+    "receiptResponseSHA256": "08f662aed2de5b0eed547e879236c29aee5d18c8d7c30f02b96c0961c73ede2e",
+    "worktree": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71",
+    "currentHead": "73ac2a64924be782f630ef07391ace1f06ffbeaf",
+    "currentBranch": "author/c12-projection-overshoot-v71",
+    "receiptBaseHead": "467e398d5468d0614ba0ae97406cd3a5df6c4a69",
+    "receiptBaseHeadIsAncestor": true,
+    "branchHeadAdvanceDoesNotChangeSourcesOrObjects": true,
+    "leanToolchain": "leanprover/lean4:v4.36.0-rc1",
+    "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+    "packageLink": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages",
+    "readOnlyRequests": 2,
+    "leanCommandsExecuted": 0
+  },
+  "consumedInterfaceCoverage": [
+    {
+      "producerUnit": 35,
+      "module": "Shao.C2.HalfLineTaylorSegment",
+      "sourceSHA256": "45e62ea4cdf287373cf774167dc78e90e27ae682017a650a715e33e6b32098ea",
+      "objectSHA256": "a9ae0eb927304b1bea8378c3f92c7fc41cfaf7180de1a3a6528268ff80640071",
+      "receiptSHA256": "eb8bb14cd2de34aea31c2360596a1202266ac92bd992529f972c771fbc98def7",
+      "qualifiedReviewSHA256": "0ff0cc92f656a87761ab28d636b7c4d141b13f4d0c89ad874e0273fec9f6fae7",
+      "qualifiedReviewStatus": "CORRECT",
+      "qualifiedCompleteIndependentReview": true,
+      "qualifiedReviewerModel": "gpt-6.1-sol",
+      "qualifiedReviewerEffort": "xhigh",
+      "sourceAndInstalledAndQualifiedOutputObjectMatched": true,
+      "consumedDeclaration": "Shao.C2.HalfLineTaylorSegment.incrementProfile",
+      "fullDeclaration": "def incrementProfile (u v T b : ℝ) : ℝ := Real.exp (-(max (u - |b|) 0) * v / T)",
+      "fullActualType": "(u v T b : Real) → Real",
+      "completeActualTypeRead": true,
+      "completeActualDefinitionValueRead": true,
+      "completeTransparentSourceDeclarationRead": true,
+      "instantiation": "u=w, v=w-e, T=T, b=b; exp(-max(w-|b|,0)*(w-e)/T)",
+      "usedBy": [
+        "Shao.C2.GaussianWallEnvelope.increment_profile_le_wallEnvelope"
+      ],
+      "allOther35ProofsReusedWithoutCompleteRereview": true
+    },
+    {
+      "producerUnit": 45,
+      "module": "Shao.C2.ProjectionOvershoot",
+      "sourceSHA256": "153b3fb011ea51f87b2d19ae1f76aa4d562e94346cfc47e3f4f5bf021f29b5cc",
+      "objectSHA256": "47df27f6230b781136a919ed24a64665a689da34c600319506da8f96cb799f3e",
+      "usedByImport": "Shao.C2.GaussianWallEnvelope",
+      "specialized45DeclarationsUsedBy46": [],
+      "coverage": "Full independent review of45 in this report;46 accesses35 transitively through45; new namespaces disjoint."
+    }
+  ],
+  "scopeExclusions": [
+    "Actual Brownian killed-kernel/reflection probability identification remains OPEN.",
+    "Actual interval Taylor regularity, physical derivative nonnegativity/identification and the projected Taylor estimate as an analytic theorem remain separate obligations.",
+    "zeroFutureRemainder defines the zero-future scalar expression; it does not prove actual completion equals zero.",
+    "Full local remainder ell assembly, sum over monitored walls, small/large interior and crossing cases, and reachable zero-energy future handling remain OPEN.",
+    "Unit46 future reflection deficit requires 0<T-b^2; no zero-energy future-deficit formula is claimed.",
+    "No positive overshoot term is separated or bounded by these statements.",
+    "All C12/OQ3/OQ4/OQ56 original root groups remain OPEN; paused OQ3 is not resumed.",
+    "No novelty or full original theorem closure claimed; these are source-attributed elementary auxiliary lemmas."
+  ],
+  "mathematicalBoundaryChecks": [
+    "e may be negative and G has no sign restriction.",
+    "Equality crossing u=B gives delta=0 and is covered.",
+    "K=0 and G=0 are covered.",
+    "Projection p need not be a remaining label.",
+    "B and u are positive where u-cancellation is used; T and sqrt(T) are positive where denominators are ordered.",
+    "Envelope comparisons cover signed and zero b.",
+    "Future closed-wall equality w-b=0 is covered when future time is positive.",
+    "Crossing-envelope equality is a scalar identity for arbitrary T, including Lean total-division T=0; this is not a zero-time stochastic claim."
+  ],
+  "failureReview": "All preserved attempts have identical imports, all frozen public theorem heads, and all transparent definition values. Unit45 attempt001/002 errors are abs-expression rewriting, positive-multiplication cancellation API, addition-side association and rational normalization. Unit46 attempt001 changes only proof of P/S≤2P/S from unsupported nlinarith normalization to explicit multiplication monotonicity. Full preserved logs and complete diffs read; no premise or semantic target shift.",
+  "reportMarkdown": "C:/game/shao lean/drafts/c12-lane/projection-gaussian-final-review-v1/full-review.md",
+  "releasePath": "C:/game/shao lean/drafts/c12-lane/projection-gaussian-final-review-v1/writer-release.json"
+}

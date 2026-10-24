@@ -1,0 +1,7 @@
+# Source compensated Taylor bound for actual scalar spatialzeroextension
+
+Readonly supplement.tex4192–4253, especially4200–4206 and4234–4242. Four fullheads/context/imports frozen beforeproof, no definitions; fullfrozenprojection unchanged. Interior actual full HasDerivAt of each spatialcut follows by entire open neighborhood Iio a orIoi(-a) equality toanalyticreflection, notsinglepoint substitution. For these auxiliary analytic certificates allTreal isallowed; physicalcompletioninterpretation limitedpositiveT/a/terminalinterior inquantitativetheorems.
+
+SourcecompensatedsmallTaylor theorems now use spatialzeroextension atfuture andinitial and deriv ofthatactualspatialzeroextension atoldpoint. Unit41 exactclosed-domainvalueidentities covernewpointonwall andinitialstrictinterior. Newremainingtimepositive fromb²<=T/2; noT0/a0probabilityconvention invoked. TrueinteriorHasDerivAt identifiesactualspatialcutderivativewithqualified26globalanalyticcertificate. Thusqualified39 physicalscalarbounds transferexactly, preservingC8000100, sourcecompensation, profilesP_b, absb³T^-3/2D³, closednewpoint. Bothwallsignscheckedindependentlybyalreadyqualified39review.
+
+Firstkernelattempt001/firstall4actualownerrecursiveaxiomPASS CPU14–17/c12-heavy.lock/-M8192-j4 pinnedversions.4actualtheorems,0definitions. Completeactualtypes/emptyvaluesexported. No failedgates, nooldproducerbuild orsuccessfulreplay. Independentcompletefinalreview pendingsolelease withrelatedunit41. ActualBrownianreflectionID, actualintervalkernel/higherregularity andalloriginalrootsremainOPEN.
