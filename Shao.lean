@@ -296,6 +296,7 @@ import Shao.OQ4.RandomDenominatorFarTail
 import Shao.OQ4.ReflectedSurvival
 import Shao.OQ4.RowBlockGaussianLimit
 import Shao.OQ4.RowPolygonalFDD
+import Shao.OQ4.SparseCriticalDenominator
 import Shao.OQ4.SpitzerKernelBounds
 import Shao.OQ4.TerminalNormalizedKernelLimit
 import Shao.OQ4.TruncatedEnergy
@@ -439,10 +440,13 @@ import Shao.OQ5.P53.SparseSignedAmplitude
 import Shao.OQ5.P53.SparseSignedLabelLaw
 import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ5.P53.SparseSourceWindows
+import Shao.OQ6.ActualQuadraticTiltMoments
 import Shao.OQ6.CanonicalOverlap
 import Shao.OQ6.CanonicalTilt
 import Shao.OQ6.FiniteRows
+import Shao.OQ6.FiniteTiltedMoments
 import Shao.OQ6.ObservationProductTilt
+import Shao.OQ6.PartialObservationTilt
 import Shao.OQ6.QuadraticTilt
 import Shao.OQ6.QuantitativeOverlap
 import Shao.OQ6.ResidualDeletion
@@ -500,6 +504,7 @@ import Shao.Probability.RetainedMoments
 import Shao.Probability.RetainedSample
 import Shao.Probability.RetainedVariance
 import Shao.Probability.RetentionEvent
+import Shao.Probability.SourceBackwardStoppedEnergy
 import Shao.Probability.SourceBoundedYReflection
 import Shao.Probability.SourceClockBridge
 import Shao.Probability.SourceComplexBoundaryAmplitude
