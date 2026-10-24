@@ -1,0 +1,83 @@
+import Shao.C2.ActualBridgeIntervalTelescope
+import Shao.Probability.SourceOriginalIIDIntervalBudget
+
+noncomputable section
+namespace Shao.C2.ActualBridgeIIDIntervalBudget
+open MeasureTheory ProbabilityTheory Shao.Probability
+open Shao.Probability.SourcePermutationReveal Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget Shao.Probability.SourceActualIntervalProfileBudget
+open Shao.Probability.SourceOriginalIIDIntervalBudget
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeUpperAffineIdentification Shao.C2.BridgeLowerIdentification
+open Shao.C2.BridgeIntervalImageResolved Shao.C2.ActualBridgeIntervalTelescope
+open Shao.C2.IntervalImageRevealBounds
+open scoped BigOperators Classical NNReal
+
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+theorem actual_bridge_original_iid_interval_budget :
+    ∃ C : ℝ, 0 < C ∧ ∀ {Ξ : Type*} [MeasurableSpace Ξ]
+      (B : ℝ≥0 → Ξ → ℝ) (W : Measure Ξ) [IsProbabilityMeasure W] (hB : IsBrownianReal B W),
+      ∀ {Ω : Type*} [MeasurableSpace Ω] (mu : Measure Ω) (rho : Measure ℝ)
+        [IsProbabilityMeasure mu] [IsProbabilityMeasure rho],
+        let Q : Measure BridgeNoise := bridgeLaw B W
+        ∀ (n : ℕ) (hn : 0 < n) (X : Fin n → Ω → ℝ),
+          (∀ i, AEMeasurable (X i) mu) →
+          iIndepFun X mu →
+          (∀ i, IdentDistrib (X i) (id : ℝ → ℝ) mu rho) →
+          Integrable (fun z : ℝ => z ^ 2) rho →
+          (∫ z : ℝ, z ∂rho) = 0 → 0 < (∫ z : ℝ, z ^ 2 ∂rho) →
+          let population : Ω → Shao.Path n := samplePath X
+          let rawEnergy : Ω → ℝ := fun omega => ∑ i : Fin n, (X i omega) ^ 2
+          let rawTerminal : Ω → ℝ := fun omega => ∑ i : Fin n, X i omega
+          let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂rho
+          let scale : ℝ := Real.sqrt ((n : ℝ) * sigmaSq)
+          let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / scale) rho
+          let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+          let h : ℝ := 4 * (n : ℝ) * sigmaSq * R ^ 2
+          let nu : Ω → LabelPerm n → ℕ := fun omega sigma =>
+            energyCutoff (population omega) h sigma
+          let jointLaw : Measure (Ω × LabelPerm n) :=
+            mu.prod (uniformPermutationLaw n)
+          ∀ (x : ℝ), 0 ≤ x → x ≤ 1 →
+            let L : (Ω × LabelPerm n) → ℕ → ℝ := fun p r =>
+              sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+                (intervalDerivative Q) (population p.1) x (nu p.1) r p.2
+            let O : (Ω × LabelPerm n) → ℕ → ℝ := fun p r =>
+              sourceSeparatedOvershoot .interval (intervalDerivative Q)
+                (population p.1) x (nu p.1) r p.2
+            (∀ omega : Ω,
+              Shao.energy (population omega) = rawEnergy omega ∧
+              Shao.prefixSum (population omega) n = rawTerminal omega) ∧
+            (∀ sigma : LabelPerm n, AEMeasurable (fun omega => nu omega sigma) mu) ∧
+            (∀ r : ℕ,
+              AEMeasurable (fun p => L p r) jointLaw ∧
+              AEMeasurable (fun p => O p r) jointLaw) ∧
+            (∀ r : ℕ, Integrable (fun p => L p r) jointLaw ∧
+              Integrable (fun p => O p r) jointLaw) ∧
+            Integrable (fun p => ∑ r ∈ Finset.range n, (|L p r| + max (-O p r) 0)) jointLaw ∧
+            (∫ p, ∑ r ∈ Finset.range n, (|L p r| + max (-O p r) 0) ∂jointLaw) ≤ C * R := by
+  obtain ⟨C, hC, hmain⟩ := original_iid_actual_interval_retained_negative_budget
+    compensatedProfileConstant compensatedProfileConstant_nonneg
+  refine ⟨C, hC, ?_⟩
+  intro Ξ hΞ B W hW hB Ω hΩ mu rho hmu hrho
+  letI : IsProbabilityMeasure W := hW
+  letI : IsProbabilityMeasure mu := hmu
+  letI : IsProbabilityMeasure rho := hrho
+  letI : IsProbabilityMeasure (bridgeLaw B W) := isProbabilityMeasure_bridgeLaw B W hB
+  have hReflection : HalflineReflectionIdentities (bridgeLaw B W) := by
+    constructor
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        bridge_upper_formula B W hB w y T z hT hy hz
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        bridge_lower_formula B W hB w y T z hT hy hz
+  apply hmain mu rho (bridgeLaw B W) hReflection
+  · intro w y T z hw hT hy hz
+    exact actual_source_interval_differentiable B W hB w y T z hw hy hz hT
+  · intro w y T z beta hw hT hy hz hs hn
+    simpa only [div_pow, one_pow, one_div, div_eq_mul_inv, mul_pow, one_mul, mul_assoc] using
+      sourceRemainder_small_bound B W hB w y T z beta hw hy hz hT hs hn
+
+end Shao.C2.ActualBridgeIIDIntervalBudget
