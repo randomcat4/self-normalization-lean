@@ -1,0 +1,158 @@
+import Shao.OQ4.StrictIIDWindow
+import Shao.OQ4.CriticalWindowNecessity
+import Shao.OQ4.RademacherOriginalStrictS4
+import Mathlib.Algebra.Order.Floor.Semiring
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped BigOperators NNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.StrictWindowNecessity
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+-- B01: half-integer strict wall; delta_strict is EXACTLY 1/2.
+def criticalHeight (c : ℝ) (n : ℕ) : ℝ :=
+  CriticalWindowNecessity.criticalHeight c n + 1 / 2
+
+-- B02: total real division at n=0; limits explicitly use the n>0 tail.
+def criticalPoint (c : ℝ) (n : ℕ) : ℝ :=
+  criticalHeight c n / Real.sqrt (n : ℝ)
+
+-- B03: half of the weak integer displacement in the logarithmic correction.
+def criticalGap (c : ℝ) : ℝ := Real.exp (Real.pi ^ 2 / (8 * c ^ 3)) - 1
+
+-- B04: actual one-law quotient, positive tail, scale, and nonzero error limit.
+theorem rademacher_half_integer_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (c : ℝ) (hc : 0 < c)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop) :
+    0 < criticalGap c ∧
+    (∀ᶠ j : ℕ in atTop,
+      1 ≤ nSeq j ∧
+      RademacherGeneralStrictS4.delta (criticalHeight c (nSeq j)) = 1 / 2 ∧
+      0 < criticalPoint c (nSeq j) ∧
+      0 < (CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent (nSeq j)
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX})
+          (criticalPoint c (nSeq j))) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (criticalPoint c (nSeq j))) ∧
+    Tendsto (fun j => criticalPoint c (nSeq j)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun j => criticalPoint c (nSeq j) *
+      (nSeq j : ℝ) ^ ((1 : ℝ) / 6)) atTop (𝓝 c) ∧
+    Tendsto (fun j =>
+      (CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent (nSeq j)
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX})
+          (criticalPoint c (nSeq j))) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (criticalPoint c (nSeq j)))
+      atTop (𝓝 (Real.exp (Real.pi ^ 2 / (8 * c ^ 3)))) ∧
+    Tendsto (fun j =>
+      |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent (nSeq j)
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX})
+          (criticalPoint c (nSeq j))) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (criticalPoint c (nSeq j)) - 1|)
+      atTop (𝓝 (criticalGap c))
+
+-- B05: proper strict sSup even if a_n<=0, using accepted weak bounds + 1.
+theorem rademacher_strict_windowError_spec
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (n : ℕ)
+    (hn : 0 < n) (ha : a n < 1) :
+    ((fun x : ℝ =>
+      |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent n
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) x) /
+        Shao.Probability.BrownianSup.probability B P hB x - 1|) ''
+      Ioo (a n) 1).Nonempty ∧
+    BddAbove ((fun x : ℝ =>
+      |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent n
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) x) /
+        Shao.Probability.BrownianSup.probability B P hB x - 1|) ''
+      Ioo (a n) 1) ∧
+    IsLUB ((fun x : ℝ =>
+      |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent n
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) x) /
+        Shao.Probability.BrownianSup.probability B P hB x - 1|) ''
+      Ioo (a n) 1)
+      (StrictIIDWindow.sourceStrictWindowError B P hB
+        (CriticalWindowNecessity.rademacherIIDLaw.{uX})
+        (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) a n) ∧
+    0 ≤ StrictIIDWindow.sourceStrictWindowError B P hB
+      (CriticalWindowNecessity.rademacherIIDLaw.{uX})
+      (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) a n ∧
+    (∀ x ∈ Ioo (a n) 1,
+      |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+        (RademacherOriginalStrictBoundary.sourceStrictEvent n
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) x) /
+        Shao.Probability.BrownianSup.probability B P hB x - 1| ≤
+        StrictIIDWindow.sourceStrictWindowError B P hB
+          (CriticalWindowNecessity.rademacherIIDLaw.{uX})
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) a n)
+
+-- B06: stronger necessity witness; no antitonicity or a_n->0 premise.
+theorem rademacher_strict_window_obstruction
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ)
+    (hbad : ¬ Tendsto
+      (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop) :
+    ∃ c : ℝ, 0 < c ∧ 0 < criticalGap c ∧ ∃ nSeq : ℕ → ℕ,
+      StrictMono nSeq ∧
+      (∀ᶠ j : ℕ in atTop,
+        1 ≤ nSeq j ∧ criticalPoint c (nSeq j) ∈ Ioo (a (nSeq j)) 1) ∧
+      Tendsto (fun j =>
+        |(CriticalWindowNecessity.rademacherIIDLaw.{uX}).real
+          (RademacherOriginalStrictBoundary.sourceStrictEvent (nSeq j)
+            (CriticalWindowNecessity.rademacherIIDCoordinate.{uX})
+            (criticalPoint c (nSeq j))) /
+          Shao.Probability.BrownianSup.probability B P hB
+            (criticalPoint c (nSeq j)) - 1|)
+        atTop (𝓝 (criticalGap c)) ∧
+      (∀ᶠ j : ℕ in atTop,
+        criticalGap c / 2 ≤ StrictIIDWindow.sourceStrictWindowError B P hB
+          (CriticalWindowNecessity.rademacherIIDLaw.{uX})
+          (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) a (nSeq j))
+
+-- B07: one fixed Rademacher law; not a necessity claim for each law.
+theorem rademacher_strict_window_necessity
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ)
+    (hwin : Tendsto (StrictIIDWindow.sourceStrictWindowError B P hB
+      (CriticalWindowNecessity.rademacherIIDLaw.{uX})
+      (CriticalWindowNecessity.rademacherIIDCoordinate.{uX}) a)
+      atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop
+
+-- B08: universal fixed-family criterion at any prescribed sample universe.
+theorem universal_fixed_iid_strict_window_iff
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℕ → ℝ) (haAnti : Antitone a)
+    (ha : Tendsto a atTop (𝓝 (0 : ℝ))) :
+    (∀ (ΩX : Type uX) [MeasurableSpace ΩX]
+      (μ : Measure ΩX) [IsProbabilityMeasure μ]
+      (X : ℕ → ΩX → ℝ)
+      (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ)
+      (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+      (hIdent : ∀ i : ℕ, IdentDistrib (X (i + 1)) (X 1) μ μ)
+      (h3 : Integrable (fun ω => |X 1 ω| ^ 3) μ)
+      (hmean : (∫ ω, X 1 ω ∂μ) = 0)
+      (hsecond : 0 < ∫ ω, (X 1 ω) ^ 2 ∂μ),
+      Tendsto (fun n : ℕ => sSup ((fun x : ℝ =>
+        |μ.real {ω | OriginalIIDWindow.sourceMaximum n X ω <
+          x * Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)} /
+          Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Ioo (a n) 1))
+        atTop (𝓝 (0 : ℝ))) ↔
+      Tendsto (fun n => a n * (n : ℝ) ^ ((1 : ℝ) / 6)) atTop atTop
+
+end Shao.OQ4.StrictWindowNecessity
+end
