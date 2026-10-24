@@ -1,0 +1,7 @@
+Unit81: the actual sine-series high-time estimate of supplement.tex4284–4291.
+
+The exact normalized spectral constant depends only on the finite derivative orders. Unit77's genuinely summable weighted Gaussian estimate is applied at x=T/a²≥1 and r=j+2l. A fully proved square-root/scaling identity cancels every spatial-scale factor. The resulting bound on the literal mixed sine sum is C(j,l)*(1/sqrt(T))^(j+2l+1), valid for a,T>0 and T≥a², all real y,z. Unit80's genuine mixed derivative identities give the same estimate for both actual differentiation orders of the base sine series. The constant is explicitly nonnegative and contains no a,z,T,y dependence.
+
+Five complete public heads, the full constant value and all context/import bytes were frozen before implementation. First kernel001 and the complete defining-module ownership/transitive-axiom audit passed; eight owners comprise seven theorem constants and one definition. Complete actual type/value exports and exact source/object receipts are provided for independent final review. No prior gate was replayed.
+
+This is the analytic sine expansion estimate, pending independent qualification. The identity between this sine series and the killed heat kernel/image candidate is still OPEN; no Brownian probability identification is supplied. Reciprocal-free-density/Leibniz assembly, the complete high-time candidate profile, compensated Taylor/hSmall and original roots remain OPEN. Source repairs and external-result attribution are preserved.

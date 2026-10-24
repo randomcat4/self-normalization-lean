@@ -1,0 +1,1919 @@
+{
+  "status": "CORRECT",
+  "verdict": "CORRECT",
+  "qualifiedCompleteIndependentReview": true,
+  "completedAtUTC": "2026-10-24T13:36:17.406721+00:00",
+  "author": "01a16c4c-25a6-7740-a10e-12635a13edae",
+  "reviewer": {
+    "agent": "/root/interval_sine_terms_final_review",
+    "freshContext": true,
+    "modelConfigured": "gpt-6.1-sol",
+    "effortConfigured": "xhigh",
+    "runtimeACK": true,
+    "scopeExtensionsACKed": [
+      80,
+      81
+    ],
+    "runtimeModelTelemetry": null,
+    "runtimeEffortTelemetry": null
+  },
+  "units": [
+    {
+      "unit": 79,
+      "module": "Shao.C2.IntervalSineTerms",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\IntervalSineTerms.lean",
+        "sha256": "7872cd9167f5a18dfa8d6179ef561cae6ed692b2d2c71eaf145469c2323b1638",
+        "bytes": 8668
+      },
+      "objectSHA256": "a15b4f44fd3ca372eab85e47f88f12ee041c54ba08257ea52573a119d4fabeb7",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\frozen.lean.txt",
+        "sha256": "ce5e0ef0ebef842081501e15a858d6a2ae41a670e14d318402e4512cfb9c4b46",
+        "bytes": 2738
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\receipt.json",
+        "sha256": "59398edf51e86ea27d034a57996f0b433467972236f0dcaa17812a7bc449cca1",
+        "bytes": 5340
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\RELEASE.json",
+        "sha256": "11ab97ac668df08ff4666f4f323eb60d70ac5099be826a91ba29f03702579402",
+        "bytes": 799
+      },
+      "typeExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\actual-owned-types.txt",
+        "sha256": "3968c7e8fff0beb3c48553859f2b193dab1e6f9d7c6e09960a04fb601b2f0c5d",
+        "bytes": 36033
+      },
+      "valueExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-v1\\actual-definition-values.txt",
+        "sha256": "711ad55db8753c854848d67036acc954a99d28e26d87730aa56b21d44c7e1a33",
+        "bytes": 3447
+      },
+      "counts": {
+        "publicSourceTheorems": 9,
+        "actualOwned": 21,
+        "actualTheorems": 18,
+        "actualDefinitions": 3,
+        "generatedTheorems": 9
+      },
+      "allCompleteFrozenImportsContextHeadsAndValuesUnchanged": true,
+      "publicDeclarationReviews": [
+        {
+          "name": "Shao.C2.IntervalSineTerms.frequency_pos",
+          "sourceStartLine": 19,
+          "sourceEndLine": 22,
+          "fullFrozenHead": "theorem frequency_pos (a : ℝ) (n : ℕ) (ha : 0 < a) : 0 < frequency a n := by",
+          "headSHA256": "414e085d76188fff5ff73f90668649e2724f30ff0960e5c1a176db7f0abe58ce",
+          "proofSHA256": "c3b010cfe2001f870b5ab028b28923dd2efe0b39d1e241ac1ac197f4b98228cf",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "a6440539487f2572fef05b8235e90a954e7035405873b880349bd5b62ca04c5f",
+          "proofReview": "The index is N=n+1>=1. Its product with pi>0 divided by 2a>0 is strictly positive. This uses exactly a>0 and covers n=0.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.affine_sin_iteratedDeriv",
+          "sourceStartLine": 23,
+          "sourceEndLine": 46,
+          "fullFrozenHead": "theorem affine_sin_iteratedDeriv (j : ℕ) (ω q y : ℝ) :\n    iteratedDeriv j (fun w => Real.sin (ω * w + q)) y =\n      ω ^ j * Real.sin (ω * y + q + (j : ℝ) * Real.pi / 2) := by",
+          "headSHA256": "fcb6c1b1384fd4645aa59ecee6036d5d5b05232affb00385a1e06c955868274c",
+          "proofSHA256": "45f7fb62e5f32ffb386876a5a4d7b4c295322a90ab49a8e639aec89ce83e9a20",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "7c34b617e59ff2b80daf1734f4360e8bc63de8fc551470d54339fad398f5d719",
+          "proofReview": "Induction starts with the actual zeroth derivative. The induction hypothesis is promoted by funext to equality of whole functions before applying iteratedDeriv_succ. The affine phase has derivative omega; HasDerivAt.sin and const_mul give omega^j*cos(phase)*omega. The natural cast successor and sin(x+pi/2)=cos(x) give precisely omega^(j+1) and the next phase. All real omega,q,y, including omega=0 and j=0, are covered without an unproved smoothness assumption.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.sineTerm_spatial_iteratedDeriv",
+          "sourceStartLine": 47,
+          "sourceEndLine": 69,
+          "fullFrozenHead": "theorem sineTerm_spatial_iteratedDeriv (j : ℕ) (a z T y : ℝ) (n : ℕ) :\n    iteratedDeriv j (fun w => sineTerm a z T w n) y =\n      (1 / a) * Real.exp (-(frequency a n) ^ 2 * T / 2) * (frequency a n) ^ j *\n        Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2) *\n          Real.sin (frequency a n * (z + a)) := by",
+          "headSHA256": "0a57d5a1517a36b28e6a76f273ca81ca2abe0e49ee30da9fb32690f5724bb483",
+          "proofSHA256": "ce59b212331a8a9a949dc4bc08a7f58e39a2cd9aa31e23e48e8989ed3243a74e",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "934ba3399951b893752f5a93d5a2b0c5a31b2cc917ebde13af90ff2067c80266",
+          "proofReview": "The terminal sine factor, amplitude 1/a and heat exponential are held constant in the spatial variable. The equality with K*sin(omega*w+omega*a) holds as a whole function. The unconditional field constant-multiple iterated derivative rule and the proved affine sine identity give the exact formula; all coefficient rearrangements are ring identities. The source derivative holds the terminal endpoint and walls fixed.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_formula",
+          "sourceStartLine": 70,
+          "sourceEndLine": 97,
+          "fullFrozenHead": "theorem mixedSineTerm_formula (j l : ℕ) (a z T y : ℝ) (n : ℕ) :\n    mixedSineTerm j l a z T y n =\n      (1 / a) * (frequency a n) ^ j * (-(frequency a n) ^ 2 / 2) ^ l *\n        Real.exp (-(frequency a n) ^ 2 * T / 2) *\n          Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2) *\n            Real.sin (frequency a n * (z + a)) := by",
+          "headSHA256": "443a6fa6af54e580de884587409ccada78d1a7266af61f75638c4f817953029e",
+          "proofSHA256": "19849eaefa227fc1fe613d9c3caf5c9ec53c09f6f8ccc32f0e1f56e749faae2a",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "7f0e2a049fbf7f8033d201beb2605a6063be2a4f96a24f78e6c323d775888603",
+          "proofReview": "After the exact spatial formula, the entire time function is K*affineImageTerm(rate,0,1,S), rate=omega^2/2. The qualified producer affineImageTerm_iteratedDeriv is universal in its real parameters, so it applies with denominator 1 and no sign assumption. It supplies (-rate)^l exp(-rate*T). Explicit exponent/rate equalities and ring reassociation yield exactly the literal time-after-space iterated derivative, with no change of derivative order assumed.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_spatial_hasDerivAt",
+          "sourceStartLine": 98,
+          "sourceEndLine": 120,
+          "fullFrozenHead": "theorem mixedSineTerm_spatial_hasDerivAt (j l : ℕ) (a z T y : ℝ) (n : ℕ) :\n    HasDerivAt (fun w => mixedSineTerm j l a z T w n) (mixedSineTerm (j + 1) l a z T y n) y := by",
+          "headSHA256": "857b22980992f4cf2f4bf818aa3b89d3a630079dd91f4d4b54e0ba0373708bc2",
+          "proofSHA256": "d2a4564f5292f32718413c24fecd7cdbe42d3efd460caea0cc0fc4ca947c6bc7",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "500377baff6d65b90616ba4b770da978068c2ff3260adf4b4922493ae530abb6",
+          "proofReview": "The complete formula is rewritten as a constant C times a sine of affine spatial phase. Its phase derivative is omega. The genuine HasDerivAt sine chain rule gives C*cos(phase)*omega; the successor-phase identity and pow_succ identify this with mixedSineTerm(j+1,l). This establishes existence and the claimed derivative, rather than relying only on a total deriv value.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_time_hasDerivAt",
+          "sourceStartLine": 121,
+          "sourceEndLine": 137,
+          "fullFrozenHead": "theorem mixedSineTerm_time_hasDerivAt (j l : ℕ) (a z T y : ℝ) (n : ℕ) :\n    HasDerivAt (fun S => mixedSineTerm j l a z S y n) (mixedSineTerm j (l + 1) a z T y n) T := by",
+          "headSHA256": "5255be38fa8f9a10a463ce0ac01e3d65411c6229c95099155101255b50bb22ad",
+          "proofSHA256": "e1ebc1271db2978901e95ea742e53aa4e8291cd2a692cc1825daec34281b13f7",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "1ddeef478a73e29a6b958e5bfae9a7b8637b6b7d9fadd016076d4fe633b590cf",
+          "proofReview": "The whole time function is a constant C times exp(-omega^2*S/2). The affine exponent has genuine derivative -omega^2/2, and HasDerivAt.exp and const_mul give the next factor. pow_succ identifies the result with mixedSineTerm(j,l+1). T may be any real for this finite-term statement.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_norm_bound",
+          "sourceStartLine": 138,
+          "sourceEndLine": 157,
+          "fullFrozenHead": "theorem mixedSineTerm_norm_bound (j l : ℕ) (a z T y : ℝ) (n : ℕ) (ha : 0 < a) :\n    ‖mixedSineTerm j l a z T y n‖ ≤\n      (1 / a) * (frequency a n) ^ j * ((frequency a n) ^ 2 / 2) ^ l *\n        Real.exp (-(frequency a n) ^ 2 * T / 2) := by",
+          "headSHA256": "d983db53b5f05afe015abe32b997b3be65d78485f64c9e647e28cddfba7d130a",
+          "proofSHA256": "9f35f9ba38a47325057f57becd6cd46b390d6dd9339e14597a063837697b471f",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "de119abc1f68c7430cc3fea8cdd4a7102778a1ff3c188fe996d38f7befa15120",
+          "proofReview": "For a>0, omega>0 and the displayed scalar P is nonnegative for every real T. Taking absolute values of the complete formula removes the sign of (-omega^2/2)^l, and both sine factors have absolute value at most one. The multiplication inequalities have the required nonnegative factors. y,z need not be interior or nonzero, and neither j nor l is restricted.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound",
+          "sourceStartLine": 158,
+          "sourceEndLine": 178,
+          "fullFrozenHead": "theorem mixedSineTerm_weighted_bound (j l : ℕ) (a z T y : ℝ) (n : ℕ) (ha : 0 < a) :\n    ‖mixedSineTerm j l a z T y n‖ ≤\n      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *\n        weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (T / a ^ 2) n := by",
+          "headSHA256": "38e027aa95593e4329f3b155eafee1965c0047278ef38a4033ec7662ec0cd3a1",
+          "proofSHA256": "a9681dfdd204d09456e25e533193952369668d6802d255e7f3467b327bd3ebad",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "a4696db453de8ac33b3f2b572ed8e58028b7f0855b74bc98b08f686b0c54e261",
+          "proofReview": "With N=n+1, omega=N*pi/(2a), omega^2/2=N^2*pi^2/(8a^2), and the exponent is -(pi^2/8)*N^2*(T/a^2). Exact field algebra uses a!=0 from a>0. Combining N^j and (N^2)^l produces N^(j+2l). Thus the coefficient and weightedGaussian are exactly those frozen, without a lost factor 2, a wrong zero mode, or a changed exponent.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_summable",
+          "sourceStartLine": 179,
+          "sourceEndLine": 186,
+          "fullFrozenHead": "theorem mixedSineTerm_summable (j l : ℕ) (a z T y : ℝ) (ha : 0 < a) (hT : 0 < T) :\n    Summable (fun n : ℕ => mixedSineTerm j l a z T y n) := by",
+          "headSHA256": "58a9939750525b0e88cc05d1ee7f20323af2c97d477930a2b6d36b2735898b82",
+          "proofSHA256": "54263a6e93f59cd1638f7e68ba228b15f2124026ce5555ad3900a31738a37291",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "15830d05d08fcc50b80bb213579ce71428a33c2dc67b7433df4bf8b00691f9c1",
+          "proofReview": "The qualified weightedGaussian_summable is applied at c=pi^2/8>0, x=T/a^2>0 and r=j+2l. Multiplication by the exact constant preserves summability; the complete norm bound applies term by term. Summable.of_norm_bounded gives genuine unconditional real summability, hence absolute convergence, rather than relying on the default value of tsum.",
+          "verdict": "CORRECT"
+        }
+      ],
+      "actualOwnerCoverage": [
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_3",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "d9309b5dd4bd7eccc7e85b6349c85e80f4f67e521b1db8881932258791682601",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_1",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "bf5070676848dbca1604c72bf65ee321e5a676f8daef80fe54b6ca2729e4ef07",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_7",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "416bc17e7d8d8c1bbfeb68b8896987a3da4664d49fcf7558eff62bd0e2d23666",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.sineTerm_spatial_iteratedDeriv",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "934ba3399951b893752f5a93d5a2b0c5a31b2cc917ebde13af90ff2067c80266",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_time_hasDerivAt",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "1ddeef478a73e29a6b958e5bfae9a7b8637b6b7d9fadd016076d4fe633b590cf",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.frequency._proof_1",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "7254dd75e77ded86d917ce0c687ee5ae522066da4e98741112914f6edfc98064",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated numeral instance certificate Nat.AtLeastTwo(1+1) or Nat.AtLeastTwo(7+1); complete actual type read, no mathematical assumption added."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_summable",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "15830d05d08fcc50b80bb213579ce71428a33c2dc67b7433df4bf8b00691f9c1",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_5",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "970fab66714796c4b77327ea7eccdd2249521141c57dbcc56010fbd5235f5463",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.sineTerm",
+          "kind": "definition",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "6a86a8b8d44194d9b9dfff4bdfa5bfd620c0191d93b035f084f6460ad44654d7",
+          "valueBlockSHA256": "995a73374ccb2bb7718aaabb33c3941b5495b6b300cba61ab093f34ade69da57",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "completeActualValueRead": true,
+          "actualValueExportBoundToOriginalAuditLog": true
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_spatial_hasDerivAt",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "500377baff6d65b90616ba4b770da978068c2ff3260adf4b4922493ae530abb6",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_2",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "bc015e39a9b0cd8e828f4a6b6402a77dd65644a8074dfca7f443ecbb0f15266e",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm",
+          "kind": "definition",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "42be6701137b6b278947e16affb1622476acb34ef99e4ea92d7fe9a6ebdeb4fb",
+          "valueBlockSHA256": "2937a3381407981785d91f1c0dae59463d73f05e976a865b660c72ba5bb40307",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "completeActualValueRead": true,
+          "actualValueExportBoundToOriginalAuditLog": true
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm.eq_1",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "bcd3bc1b049f131f1de5cd0611dc4f8bcc05e884e27ee3e0b74a836fdaaa2d87",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated definitional equation: mixedSineTerm equals the literal time-after-space iteratedDeriv of sineTerm; complete actual type agrees with its full transparent value."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_4",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "2d2ee902e90aa4082866d92a7a763b3fe2eb79a5cc368ae0b856f5ed723c503e",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.frequency",
+          "kind": "definition",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "72f49640ee8804a7e55e3a58d61df2ee4edb634b4ae5a0f10809aac8eb2e64dc",
+          "valueBlockSHA256": "00ed8b56e84a6fee548e36e9abd82d988aeba044d4dcc94912d9e06ecfdb57cd",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "completeActualValueRead": true,
+          "actualValueExportBoundToOriginalAuditLog": true
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_formula",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "7f0e2a049fbf7f8033d201beb2605a6063be2a4f96a24f78e6c323d775888603",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound._simp_1_6",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "af27f008f8fa0057b1ab1e208c4ef9eeaa9703a319f9209fb207293f9d77cf28",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated field_simp helper: complete actual universal type is a standard nonzero numeral, cast n+1, product, natural power, or integer power proposition under its displayed algebraic nonzero/reducedness hypotheses; all binders and instances were read."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_norm_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "de119abc1f68c7430cc3fea8cdd4a7102778a1ff3c188fe996d38f7befa15120",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.frequency_pos",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "a6440539487f2572fef05b8235e90a954e7035405873b880349bd5b62ca04c5f",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.mixedSineTerm_weighted_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "a4696db453de8ac33b3f2b572ed8e58028b7f0855b74bc98b08f686b0c54e261",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineTerms",
+          "name": "Shao.C2.IntervalSineTerms.affine_sin_iteratedDeriv",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "7c34b617e59ff2b80daf1734f4360e8bc63de8fc551470d54339fad398f5d719",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        }
+      ],
+      "kernelAttempt": "attempt002",
+      "kernelExit": 0,
+      "auditExit": 0,
+      "sourceBoundServerArtifacts": {
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/IntervalSineTerms.lean",
+          "sha256": "7872cd9167f5a18dfa8d6179ef561cae6ed692b2d2c71eaf145469c2323b1638",
+          "bytes": 8668
+        },
+        "object": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/IntervalSineTerms.olean",
+          "sha256": "a15b4f44fd3ca372eab85e47f88f12ee041c54ba08257ea52573a119d4fabeb7",
+          "bytes": 945192
+        },
+        "installed": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/IntervalSineTerms.olean",
+          "sha256": "a15b4f44fd3ca372eab85e47f88f12ee041c54ba08257ea52573a119d4fabeb7",
+          "bytes": 945192
+        },
+        "receipt": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/receipt.json",
+          "sha256": "59398edf51e86ea27d034a57996f0b433467972236f0dcaa17812a7bc449cca1",
+          "bytes": 5340
+        },
+        "freeze": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/frozen.lean.txt",
+          "sha256": "ce5e0ef0ebef842081501e15a858d6a2ae41a670e14d318402e4512cfb9c4b46",
+          "bytes": 2738
+        },
+        "artifacts": {
+          "OwnedAudit.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/OwnedAudit.lean",
+            "sha256": "f7350545542533703d26e832a3b667af767493d043e4ce6190a1d43a5055a069",
+            "bytes": 3230
+          },
+          "owned-audit.json": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/owned-audit.json",
+            "sha256": "760a15c348357e636bcd719a97385b87f2ca1c5fd3d183bf79e456334f1f6faf",
+            "bytes": 4219
+          },
+          "actual-owned-types.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/actual-owned-types.txt",
+            "sha256": "3968c7e8fff0beb3c48553859f2b193dab1e6f9d7c6e09960a04fb601b2f0c5d",
+            "bytes": 36033
+          },
+          "actual-definition-values.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/actual-definition-values.txt",
+            "sha256": "711ad55db8753c854848d67036acc954a99d28e26d87730aa56b21d44c7e1a33",
+            "bytes": 3447
+          },
+          "owned-audit.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/owned-audit.log",
+            "sha256": "3adc12ddf52957000ef09ba19471820ca8d7d74904f0a70abf4ac2e5a90c5bd9",
+            "bytes": 39693
+          },
+          "frozen.lean.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/frozen.lean.txt",
+            "sha256": "ce5e0ef0ebef842081501e15a858d6a2ae41a670e14d318402e4512cfb9c4b46",
+            "bytes": 2738
+          },
+          "attempt001/lean.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/attempt001/lean.log",
+            "sha256": "6e3701eded16196bb8c1f6aa905ef5ecc875b63d15afc03cb34c5ce3d75a7756",
+            "bytes": 3129
+          },
+          "attempt001/source.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/attempt001/source.lean",
+            "sha256": "7a83f481f734154f41d62f053641cf88977ee3e67f59f3ac1e1f6248adb808f9",
+            "bytes": 8625
+          },
+          "attempt002/lean.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/attempt002/lean.log",
+            "sha256": "2861b4c57695742950596633878a561d194e7ae104135a5c069ade3c0ae845df",
+            "bytes": 2300
+          },
+          "attempt002/source.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-terms-v71/attempt002/source.lean",
+            "sha256": "7872cd9167f5a18dfa8d6179ef561cae6ed692b2d2c71eaf145469c2323b1638",
+            "bytes": 8668
+          }
+        },
+        "exportsExactFromAuditLog": {
+          "actual-owned-types.txt": true,
+          "actual-definition-values.txt": true
+        },
+        "auditTail": "AUDITED_TARGET_CONSTANTS 21 PUBLIC 9 THEOREMS 18 DEFINITIONS 3",
+        "sourceDelta": "--- failed001\n+++ accepted002\n@@ -74,24 +74,24 @@\n           Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2) *\n             Real.sin (frequency a n * (z + a)) := by\n   let ω := frequency a n\n-  let λ := ω ^ 2 / 2\n+  let rate := ω ^ 2 / 2\n   let K := (1 / a) * ω ^ j * Real.sin (ω * (y + a) + (j : ℝ) * Real.pi / 2) *\n     Real.sin (ω * (z + a))\n-  have he (S : ℝ) : -ω ^ 2 * S / 2 = -(λ * S + 0) / 1 := by dsimp only [λ]; ring\n+  have he (S : ℝ) : -ω ^ 2 * S / 2 = -(rate * S + 0) / 1 := by dsimp only [rate]; ring\n   have hf : (fun S => iteratedDeriv j (fun w => sineTerm a z S w n) y) =\n-      (fun S => K * affineImageTerm λ 0 1 S) := by\n+      (fun S => K * affineImageTerm rate 0 1 S) := by\n     funext S\n     rw [sineTerm_spatial_iteratedDeriv]\n     change (1 / a) * Real.exp (-ω ^ 2 * S / 2) * ω ^ j *\n       Real.sin (ω * (y + a) + (j : ℝ) * Real.pi / 2) * Real.sin (ω * (z + a)) =\n-        K * Real.exp (-(λ * S + 0) / 1)\n+        K * Real.exp (-(rate * S + 0) / 1)\n     rw [he]\n     dsimp only [K]\n     ring\n   rw [mixedSineTerm, hf, iteratedDeriv_const_mul_field, affineImageTerm_iteratedDeriv]\n   rw [← he T]\n-  have hλ : -λ / 1 = -ω ^ 2 / 2 := by dsimp only [λ]; ring\n-  rw [hλ]\n+  have hrate : -rate / 1 = -ω ^ 2 / 2 := by dsimp only [rate]; ring\n+  rw [hrate]\n   dsimp only [K, ω]\n   ring\n \n@@ -147,6 +147,7 @@\n   calc\n     _ = P * |Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2)| *\n         |Real.sin (frequency a n * (z + a))| := by\n+      dsimp only [P]\n       simp only [abs_mul, abs_pow, abs_div, abs_one, abs_of_pos ha, abs_of_pos hω,\n         abs_neg, abs_of_pos (Real.exp_pos _), abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]\n     _ ≤ P * 1 * 1 := mul_le_mul\n@@ -160,7 +161,7 @@\n         weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (T / a ^ 2) n := by\n   let N : ℝ := (n : ℝ) + 1\n   have hω : frequency a n = N * (Real.pi / (2 * a)) := by dsimp only [frequency, N]; ring\n-  have hλ : (frequency a n) ^ 2 / 2 = N ^ 2 * (Real.pi ^ 2 / (8 * a ^ 2)) := by\n+  have hrate : (frequency a n) ^ 2 / 2 = N ^ 2 * (Real.pi ^ 2 / (8 * a ^ 2)) := by\n     rw [hω]\n     field_simp [ne_of_gt ha] <;> ring\n   have he : -(frequency a n) ^ 2 * T / 2 = -(Real.pi ^ 2 / 8) * N ^ 2 * (T / a ^ 2) := by\n@@ -170,7 +171,7 @@\n     _ ≤ (1 / a) * (frequency a n) ^ j * ((frequency a n) ^ 2 / 2) ^ l *\n         Real.exp (-(frequency a n) ^ 2 * T / 2) := mixedSineTerm_norm_bound j l a z T y n ha\n     _ = _ := by\n-      rw [hλ, he, hω]\n+      rw [hrate, he, hω]\n       dsimp only [weightedGaussian, N]\n       simp only [mul_pow, pow_add, pow_mul]\n       ring\n",
+        "sourceEncoding": {
+          "frozen.lean.txt": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          },
+          "attempt001/source.lean": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          },
+          "attempt002/source.lean": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          }
+        },
+        "frozenUnchangedBothAttempts": {
+          "attempt001/source.lean": true,
+          "attempt002/source.lean": true
+        },
+        "savedKernelLogsReadComplete": true,
+        "kernelLogSummary": {
+          "attempt001/lean.log": {
+            "lines": 61,
+            "errorLineCount": 7,
+            "nonErrorWarningsRead": true
+          },
+          "attempt002/lean.log": {
+            "lines": 38,
+            "errorLineCount": 0,
+            "nonErrorWarningsRead": true
+          }
+        }
+      }
+    },
+    {
+      "unit": 80,
+      "module": "Shao.C2.IntervalSineSeries",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\IntervalSineSeries.lean",
+        "sha256": "817c78edfc4a784129f54046abf5a190bc7ccb5933ea8820b6091f1fbd3eb6dc",
+        "bytes": 6535
+      },
+      "objectSHA256": "a031cc109f0719f1aeb0350f39b80869247f5063b8f4530029cc79c17c7c5321",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\frozen.lean.txt",
+        "sha256": "9a089b4365602cae5f94c8fdb81e316447e56c023c7ea288b157006f2a9ce1fa",
+        "bytes": 2265
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\receipt.json",
+        "sha256": "0a48eb8bd8ddd00bc4fde2d88ee09fd57e1534b2257b30fb1040c0dcdfc29653",
+        "bytes": 4696
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\RELEASE.json",
+        "sha256": "51dcd17b01556fb71e923b434e42b006444a85e77edcc8a92ede035c2a3994e9",
+        "bytes": 799
+      },
+      "typeExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\actual-owned-types.txt",
+        "sha256": "4bed558166c70e6475e8f481bf5fbf4858a772fb3705ab166bd699edf250d4ea",
+        "bytes": 26349
+      },
+      "valueExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-series-v1\\actual-definition-values.txt",
+        "sha256": "d10eeb04e3c9573382bf38eac8c94379a18a788206eed988f66ea6b08f356df5",
+        "bytes": 382
+      },
+      "counts": {
+        "publicSourceTheorems": 8,
+        "actualOwned": 9,
+        "actualTheorems": 8,
+        "actualDefinitions": 1,
+        "generatedTheorems": 0
+      },
+      "allCompleteFrozenImportsContextHeadsAndValuesUnchanged": true,
+      "publicDeclarationReviews": [
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineTerm_strip_bound",
+          "sourceStartLine": 12,
+          "sourceEndLine": 25,
+          "fullFrozenHead": "theorem mixedSineTerm_strip_bound (j l : ℕ) (a z H T y : ℝ) (n : ℕ)\n    (ha : 0 < a) (hHT : H ≤ T) :\n    ‖mixedSineTerm j l a z T y n‖ ≤\n      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *\n        weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (H / a ^ 2) n := by",
+          "headSHA256": "8c7fdc534272de535a52fd95540dc6271f85704eb062cda069073e01695123f1",
+          "proofSHA256": "55c034b963e8e7dd2d9c204dc6fccce4d62f0e2b080430bb7c2201018e88ce4c",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "fde38c9668112d1474af315a95768177ea564e8c1392647d051c555678dfd8cb",
+          "proofReview": "For H<=T and a>0, H/a^2<=T/a^2. The coefficient -c*(n+1)^2 is nonpositive, so multiplication reverses the inequality. Exponential monotonicity and the nonnegative polynomial/amplitude factors yield the exact frozen majorant at H. This pointwise bound allows H,T to be any ordered reals; only its later summability applications require H>0.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_spatial_hasDerivAt",
+          "sourceStartLine": 26,
+          "sourceEndLine": 46,
+          "fullFrozenHead": "theorem mixedSineSeries_spatial_hasDerivAt (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    HasDerivAt (mixedSineSeries j l a z T) (mixedSineSeries (j + 1) l a z T y) y := by",
+          "headSHA256": "fe96276bcefd80774b89637b31d02ae4fef161f853b34ca5d6eadf1189225d40",
+          "proofSHA256": "c4dabe5e79ffba8520af6a2b06ae6bb9a9ad0fd323eb0858f96e6cd8956fdb08",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "eface380990600b14b5734c2f54167da1d0451fe33147cfed5eceb946be4f41b",
+          "proofReview": "Apply the pinned hasDerivAt_tsum_of_isPreconnected on the open real interval (y-1,y+1). Every term has the genuine spatial derivative from unit79. Its norm is bounded independently of the spatial argument by the summable weightedGaussian at order (j+1)+2l, since a,T>0. y lies in the interval and the original series is summable at y. Every hypothesis of the complete standard theorem is supplied, yielding the actual derivative of the sum with no interchange assumed.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_time_hasDerivAt",
+          "sourceStartLine": 47,
+          "sourceEndLine": 69,
+          "fullFrozenHead": "theorem mixedSineSeries_time_hasDerivAt (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    HasDerivAt (fun S => mixedSineSeries j l a z S y)\n      (mixedSineSeries j (l + 1) a z T y) T := by",
+          "headSHA256": "a1261bd0c3d52d07240f61d433fb574789f2bb563461aa5129006c3d44448bb6",
+          "proofSHA256": "104d706ac8797f46b8ced5cf1188b5c0dd23cabc8069d00100ddea8b24232366",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "d3d3ca31b22b66704aa36a6af14456fcd22db607253031f185f025b0314d6ecc",
+          "proofReview": "Use the open preconnected interval (T/2,2T), which contains T and has positive lower endpoint because T>0. The summable majorant for the next time derivative has order j+2(l+1) and fixed time T/2. The strip bound controls all S in that interval, and the term derivatives are genuine HasDerivAt statements. Base-point summability holds at T. This gives a derivative on a whole positive-time neighborhood, without treating a time-dependent majorant as uniform.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_spatial_iteratedDeriv",
+          "sourceStartLine": 70,
+          "sourceEndLine": 81,
+          "fullFrozenHead": "theorem mixedSineSeries_spatial_iteratedDeriv (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    iteratedDeriv j (mixedSineSeries 0 l a z T) y = mixedSineSeries j l a z T y := by",
+          "headSHA256": "a85df60ae1c83188c74586817ce1db6f0a870945e8684a54556da4faf67daae7",
+          "proofSHA256": "372a27aa9e8a87beceeaff167841cdf1474352d12b6cf39e1f1971d30254503e",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "136b125ab7f29180f890cca91c87dbced2bb9f42ff8a112524ae6fbf418cbaeb",
+          "proofReview": "Induction in j begins definitionally at zero. For the successor, the induction hypothesis is equality of the whole spatial functions for all w, then iteratedDeriv_succ and the genuine summed spatial derivative give the result. No derivative is taken of an isolated pointwise equality.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_time_iteratedDeriv",
+          "sourceStartLine": 82,
+          "sourceEndLine": 95,
+          "fullFrozenHead": "theorem mixedSineSeries_time_iteratedDeriv (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    iteratedDeriv l (fun S => mixedSineSeries j 0 a z S y) T =\n      mixedSineSeries j l a z T y := by",
+          "headSHA256": "ec4eccd0829e8ec764151a9e9b00461af13d3b0749a9ef547d7c67ad33eea2d3",
+          "proofSHA256": "13eaf0ff6ddc36ea2c1a2005ca37beb0db6b03a1ec4fcf7da3f44a9eb1151db0",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "d4c5f54acf77e60fbf59c7d6df14d49bf3c15016c4239d56dabfd7d7db3c8ff8",
+          "proofReview": "Induct in l while generalizing T. The induction hypothesis holds at every positive S. Since (0,infinity) is a neighborhood of T>0, this gives an EventuallyEq near T between the complete l-th derivative function and the summed l-th terms. EventuallyEq.deriv_eq followed by the genuine time derivative proves the successor. Behavior at nonpositive times is never silently substituted.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.sineSeries_mixed_iteratedDeriv",
+          "sourceStartLine": 96,
+          "sourceEndLine": 106,
+          "fullFrozenHead": "theorem sineSeries_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T =\n      mixedSineSeries j l a z T y := by",
+          "headSHA256": "54b89f76c749511f1bff430e3f5702f939eb4b1717edbd4550e46bbf0bc87eb0",
+          "proofSHA256": "590378a4671cfaa6863f362a676c063c7515f9d53fe835b14e336c19c63d075a",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "7b2b9f2783bc0df46d8c0dbad98b69035e21fcd54d25b310f0d6f2c7d2e51c44",
+          "proofReview": "The entire spatial derivative formula agrees with mixedSineSeries(j,0) on the positive-time neighborhood of T. The pinned EventuallyEq.iteratedDeriv_eq transports the l-th time derivative across that neighborhood equality. The proved time iteration then identifies the result. This closes the actual time-after-space mixed derivative, not a formal symbolic derivative.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.sineSeries_mixed_commutation",
+          "sourceStartLine": 107,
+          "sourceEndLine": 117,
+          "fullFrozenHead": "theorem sineSeries_mixed_commutation (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    iteratedDeriv j (fun w => iteratedDeriv l (fun S => mixedSineSeries 0 0 a z S w) T) y =\n      iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T := by",
+          "headSHA256": "60397c22ec9fb9447035740f4bf12412f7457a8b0c559378eb504ddf452b0dbd",
+          "proofSHA256": "3e0fad7ea8fd9e9b551ac7ae067c9009c4d12d3b9634d7b5e5b45103b351bd0e",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "3211fba92cf2a3f029efc3ca2868f6a2191dca3f07fde4b03d36da29aa39d29a",
+          "proofReview": "At fixed positive T the time-iterated formula is valid for every spatial w, hence equality of whole spatial functions with mixedSineSeries(0,l). Apply the actual spatial iteration to obtain mixedSineSeries(j,l), and use the preceding time-after-space formula for the other side. Thus both orders are proved through the same genuine series derivatives; no unsupported general Clairaut assertion is invoked.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_weighted_bound",
+          "sourceStartLine": 118,
+          "sourceEndLine": 129,
+          "fullFrozenHead": "theorem mixedSineSeries_weighted_bound (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) :\n    ‖mixedSineSeries j l a z T y‖ ≤\n      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *\n        (∑' n : ℕ, weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (T / a ^ 2) n) := by",
+          "headSHA256": "d277308e803a6a203a5bb13c68a373f31d8e0def6c6da13506cc9600429cb368",
+          "proofSHA256": "d99139e4ca2beb1bb1f899529015f8a63a828e8d2307067fc4a40444a8ef27bc",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "8a24a2d7c7b0f8bf37911aac3445ce337fc77206fcfb6e3c800ebbfa50eec48d",
+          "proofReview": "The original mixed terms are genuinely summable and the majorant has an actual HasSum after multiplying the qualified Gaussian series by the exact scalar. HasSum.norm_le_of_bounded sums the pointwise norm comparison and retains the exact coefficient and Gaussian sum. Both convergence hypotheses are explicit.",
+          "verdict": "CORRECT"
+        }
+      ],
+      "actualOwnerCoverage": [
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_time_hasDerivAt",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "d3d3ca31b22b66704aa36a6af14456fcd22db607253031f185f025b0314d6ecc",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_spatial_iteratedDeriv",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "136b125ab7f29180f890cca91c87dbced2bb9f42ff8a112524ae6fbf418cbaeb",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineTerm_strip_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "fde38c9668112d1474af315a95768177ea564e8c1392647d051c555678dfd8cb",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.sineSeries_mixed_iteratedDeriv",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "7b2b9f2783bc0df46d8c0dbad98b69035e21fcd54d25b310f0d6f2c7d2e51c44",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.sineSeries_mixed_commutation",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "3211fba92cf2a3f029efc3ca2868f6a2191dca3f07fde4b03d36da29aa39d29a",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_weighted_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "8a24a2d7c7b0f8bf37911aac3445ce337fc77206fcfb6e3c800ebbfa50eec48d",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_spatial_hasDerivAt",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "eface380990600b14b5734c2f54167da1d0451fe33147cfed5eceb946be4f41b",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries",
+          "kind": "definition",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "11ee022ce8ccb94750a680ba129770ff9202a3a67b583dba014bacb363c5a2eb",
+          "valueBlockSHA256": "d10eeb04e3c9573382bf38eac8c94379a18a788206eed988f66ea6b08f356df5",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "completeActualValueRead": true,
+          "actualValueExportBoundToOriginalAuditLog": true
+        },
+        {
+          "owner": "Shao.C2.IntervalSineSeries",
+          "name": "Shao.C2.IntervalSineSeries.mixedSineSeries_time_iteratedDeriv",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "d4c5f54acf77e60fbf59c7d6df14d49bf3c15016c4239d56dabfd7d7db3c8ff8",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        }
+      ],
+      "kernelAttempt": "attempt001",
+      "kernelExit": 0,
+      "auditExit": 0,
+      "sourceBoundServerArtifacts": {
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/IntervalSineSeries.lean",
+          "sha256": "817c78edfc4a784129f54046abf5a190bc7ccb5933ea8820b6091f1fbd3eb6dc",
+          "bytes": 6535
+        },
+        "object": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/IntervalSineSeries.olean",
+          "sha256": "a031cc109f0719f1aeb0350f39b80869247f5063b8f4530029cc79c17c7c5321",
+          "bytes": 182416
+        },
+        "installed": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/IntervalSineSeries.olean",
+          "sha256": "a031cc109f0719f1aeb0350f39b80869247f5063b8f4530029cc79c17c7c5321",
+          "bytes": 182416
+        },
+        "receipt": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/receipt.json",
+          "sha256": "0a48eb8bd8ddd00bc4fde2d88ee09fd57e1534b2257b30fb1040c0dcdfc29653",
+          "bytes": 4696
+        },
+        "freeze": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/frozen.lean.txt",
+          "sha256": "9a089b4365602cae5f94c8fdb81e316447e56c023c7ea288b157006f2a9ce1fa",
+          "bytes": 2265
+        },
+        "artifacts": {
+          "OwnedAudit.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/OwnedAudit.lean",
+            "sha256": "e2a60f185ed5162569f264b92aa97972c160b5bbdc54d31c937d72d1d868bb15",
+            "bytes": 3238
+          },
+          "owned-audit.json": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/owned-audit.json",
+            "sha256": "9f2d98820e31200c6950388a8be5048a1cf6ff95e870ac5430108934841c87d2",
+            "bytes": 2197
+          },
+          "actual-owned-types.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/actual-owned-types.txt",
+            "sha256": "4bed558166c70e6475e8f481bf5fbf4858a772fb3705ab166bd699edf250d4ea",
+            "bytes": 26349
+          },
+          "actual-definition-values.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/actual-definition-values.txt",
+            "sha256": "d10eeb04e3c9573382bf38eac8c94379a18a788206eed988f66ea6b08f356df5",
+            "bytes": 382
+          },
+          "owned-audit.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/owned-audit.log",
+            "sha256": "4f2cc0ded4a6f656e1cf88d351051fdeef02c4ea5fb6145f6e7dcfe256a0e6b9",
+            "bytes": 26942
+          },
+          "frozen.lean.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/frozen.lean.txt",
+            "sha256": "9a089b4365602cae5f94c8fdb81e316447e56c023c7ea288b157006f2a9ce1fa",
+            "bytes": 2265
+          },
+          "attempt001/lean.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/attempt001/lean.log",
+            "sha256": "3b9f67e9fa8108ee474f7c3ef65dad536f1fe71aedcea0213904f6d21d56d653",
+            "bytes": 150
+          },
+          "attempt001/source.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-series-v71/attempt001/source.lean",
+            "sha256": "817c78edfc4a784129f54046abf5a190bc7ccb5933ea8820b6091f1fbd3eb6dc",
+            "bytes": 6535
+          }
+        },
+        "exportsExactFromAuditLog": {
+          "actual-owned-types.txt": true,
+          "actual-definition-values.txt": true
+        },
+        "auditTail": "AUDITED_TARGET_CONSTANTS 9 PUBLIC 8 THEOREMS 8 DEFINITIONS 1",
+        "sourceDelta": "",
+        "sourceEncoding": {
+          "frozen.lean.txt": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          },
+          "attempt001/source.lean": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          }
+        },
+        "frozenUnchangedBothAttempts": {
+          "attempt001/source.lean": true
+        },
+        "savedKernelLogsReadComplete": true,
+        "kernelLogSummary": {
+          "attempt001/lean.log": {
+            "lines": 2,
+            "errorLineCount": 0,
+            "nonErrorWarningsRead": true
+          }
+        }
+      }
+    },
+    {
+      "unit": 81,
+      "module": "Shao.C2.IntervalSineHighTime",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\IntervalSineHighTime.lean",
+        "sha256": "a54d687db2e17d73b67447783d4b083eabecd468c6802204bccb0f1860796e08",
+        "bytes": 3400
+      },
+      "objectSHA256": "420d9a1260d958153c62388e536272c74b804237cc7963c11e31398407308b14",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\frozen.lean.txt",
+        "sha256": "df55d320358217f6ee46eda5615209acc2401dd3016310073151852af6523aff",
+        "bytes": 1672
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\receipt.json",
+        "sha256": "5f6a8ba1d6b4ca9b5c7c5458f00ae3d7e45574f6c013e72ac4fa0c1539198a90",
+        "bytes": 4755
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\RELEASE.json",
+        "sha256": "efb28f16fdb5e9c1573443cc178eeb3b531526d507b816664494e6f6d7594524",
+        "bytes": 799
+      },
+      "typeExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\actual-owned-types.txt",
+        "sha256": "f907385dec6d50d403d6ae20e81fc92a63731358ff78fecb99762e2b9c878db1",
+        "bytes": 14421
+      },
+      "valueExport": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-high-time-v1\\actual-definition-values.txt",
+        "sha256": "72c25699f3c3795d530c618c680155d519b972e69cd1f78228ecccdf6f7aeaa2",
+        "bytes": 2242
+      },
+      "counts": {
+        "publicSourceTheorems": 5,
+        "actualOwned": 8,
+        "actualTheorems": 7,
+        "actualDefinitions": 1,
+        "generatedTheorems": 2
+      },
+      "allCompleteFrozenImportsContextHeadsAndValuesUnchanged": true,
+      "publicDeclarationReviews": [
+        {
+          "name": "Shao.C2.IntervalSineHighTime.sineDerivativeConstant_nonneg",
+          "sourceStartLine": 13,
+          "sourceEndLine": 17,
+          "fullFrozenHead": "theorem sineDerivativeConstant_nonneg (j l : ℕ) : 0 ≤ sineDerivativeConstant j l := by",
+          "headSHA256": "dde9c4b6f1007a4c328c67c2b3d5ab2c217a23c97312a84cc5ad06e6a9853262",
+          "proofSHA256": "c833f9054f412e097b2497cde37592a1f4f3654da3b46224ddedde6261885cf4",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "b175f91dce37051dbc734e6f5b13e33a4237159b20fcd88fb28cc1f267b4131d",
+          "proofReview": "The complete constant value is (pi/2)^j*(pi^2/8)^l*spectralConstant(pi^2/8,j+2l). Its spectral factor is nonnegative by the qualified producer at positive pi^2/8; the other factors are nonnegative. It depends only on natural j,l, with no hidden dependence on a,z,T,y.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineHighTime.sine_scaling_identity",
+          "sourceStartLine": 18,
+          "sourceEndLine": 26,
+          "fullFrozenHead": "theorem sine_scaling_identity (j l : ℕ) (a T : ℝ) (ha : 0 < a) (hT : 0 < T) :\n    ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) /\n        (Real.sqrt (T / a ^ 2)) ^ (j + 2 * l + 1) =\n      ((Real.pi / 2) ^ j * (Real.pi ^ 2 / 8) ^ l) *\n        (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by",
+          "headSHA256": "f5c7bbd17e2a50052be7ad21e23a57f9f43db7e95fef867d1c5be532e8dffcb2",
+          "proofSHA256": "e396ee099dc58e18c24962a6a19a637a135cbc5a2cdc8d15bf1982de3e3f7b98",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "9eddc19fbf858862ebcea5dc364697ef6ef1f454dba5e3c252cbe99e4611e536",
+          "proofReview": "For a,T>0, sqrt(T/a^2)=sqrt(T)/a, using sqrt_div and sqrt_sq with their nonnegativity hypotheses. With q=j+2l+1, the amplitude is K*a^(-q); division by (sqrt(T)/a)^q cancels a^q exactly, leaving K*(1/sqrt(T))^q. Both denominators are nonzero and every natural power expansion is valid, including zero derivative orders.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineHighTime.mixedSineSeries_highTime_bound",
+          "sourceStartLine": 27,
+          "sourceEndLine": 53,
+          "fullFrozenHead": "theorem mixedSineSeries_highTime_bound (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :\n    ‖mixedSineSeries j l a z T y‖ ≤\n      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by",
+          "headSHA256": "238a0eb17fcf1255cc6bb64b8495005c3e51bac8585a054fa1bc4c882e84e212",
+          "proofSHA256": "2da36262cd44a46d27675fc12976c77295fe09f9f173426f74057f0a9bb67bd6",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "24b968b02a0324b85c570a6661b04c51579655b778205eab787b19d4d6804e23",
+          "proofReview": "Set x=T/a^2 and q=j+2l+1. a>0 and a^2<=T imply x>=1, so the qualified weightedGaussian_scaled_bound gives sqrt(x)^q*sum<=C. sqrt(x)>0 justifies division, yielding sum<=C/sqrt(x)^q. Multiply by the nonnegative exact amplitude from unit80, then use the exact scaling identity. The resulting constant is precisely sineDerivativeConstant(j,l). The inequality includes T=a^2 and all real y,z.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineHighTime.sineSeries_mixed_highTime_bound",
+          "sourceStartLine": 54,
+          "sourceEndLine": 60,
+          "fullFrozenHead": "theorem sineSeries_mixed_highTime_bound (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :\n    ‖iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T‖ ≤\n      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by",
+          "headSHA256": "eee7e23fc7d1cb7c0771435c26f4b64b7fba6ec305b93ff05c946fed9a043a13",
+          "proofSHA256": "68ba6fe8ee13c6afa43ba1f45f24eaab9f68cfe886ef360b616769bb9b9918c7",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "5075c9e91755a3e329130049c8fbae75d078ff17e75b03150387b06cc1f70d4a",
+          "proofReview": "Rewrite the actual time-after-space iterated derivative using unit80 sineSeries_mixed_iteratedDeriv, whose a,T positivity hypotheses are supplied. Apply the proved high-time bound with the unchanged a^2<=T condition.",
+          "verdict": "CORRECT"
+        },
+        {
+          "name": "Shao.C2.IntervalSineHighTime.sineSeries_commuted_highTime_bound",
+          "sourceStartLine": 61,
+          "sourceEndLine": 67,
+          "fullFrozenHead": "theorem sineSeries_commuted_highTime_bound (j l : ℕ) (a z T y : ℝ)\n    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :\n    ‖iteratedDeriv j (fun w => iteratedDeriv l (fun S => mixedSineSeries 0 0 a z S w) T) y‖ ≤\n      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by",
+          "headSHA256": "4f36e3daa655aed28f888d8ccb1451cf8879ab85ac092c9f170ed72ada931b60",
+          "proofSHA256": "d4a9ddb38569a11cbb1d4adba2362525f72d572dc262f236c00e71ba927f9390",
+          "completeSourceProofRead": true,
+          "completeActualTypeRead": true,
+          "actualTypeBlockSHA256": "b93edbca2d6d3392c5333aeb1b7186642e573d3db66244040c8656d7c1544c0e",
+          "proofReview": "Use the genuine mixed commutation theorem from unit80 at a,T>0 and then the previous mixed derivative estimate. The conclusion covers the other actual differentiation order with the same constant and high-time hypothesis.",
+          "verdict": "CORRECT"
+        }
+      ],
+      "actualOwnerCoverage": [
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineDerivativeConstant",
+          "kind": "definition",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "c7f92431bde44368d9175885e0d2fc92f8f7b1666a01a5590e9fe758cdbc399c",
+          "valueBlockSHA256": "72c25699f3c3795d530c618c680155d519b972e69cd1f78228ecccdf6f7aeaa2",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "completeActualValueRead": true,
+          "actualValueExportBoundToOriginalAuditLog": true
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineSeries_mixed_highTime_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "5075c9e91755a3e329130049c8fbae75d078ff17e75b03150387b06cc1f70d4a",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineDerivativeConstant_nonneg",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "b175f91dce37051dbc734e6f5b13e33a4237159b20fcd88fb28cc1f267b4131d",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineDerivativeConstant._proof_2",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "f49c27d0719d8ee0fc769cfc64c6477b20cb5c5322e927fc98ad9f3ea455502a",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated numeral instance certificate Nat.AtLeastTwo(1+1) or Nat.AtLeastTwo(7+1); complete actual type read, no mathematical assumption added."
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.mixedSineSeries_highTime_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "24b968b02a0324b85c570a6661b04c51579655b778205eab787b19d4d6804e23",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineSeries_commuted_highTime_bound",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "b93edbca2d6d3392c5333aeb1b7186642e573d3db66244040c8656d7c1544c0e",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sine_scaling_identity",
+          "kind": "theorem",
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "typeBlockSHA256": "9eddc19fbf858862ebcea5dc364697ef6ef1f454dba5e3c252cbe99e4611e536",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT"
+        },
+        {
+          "owner": "Shao.C2.IntervalSineHighTime",
+          "name": "Shao.C2.IntervalSineHighTime.sineDerivativeConstant._proof_1",
+          "kind": "theorem",
+          "axioms": [
+            "propext"
+          ],
+          "typeBlockSHA256": "03c561e4f419f786f9a9e2dd2ee0813b4749f5012e3424d33fc2f3104f5df48f",
+          "completeActualTypeRead": true,
+          "actualTypeExportBoundToOriginalAuditLog": true,
+          "verdict": "CORRECT",
+          "semanticReview": "Generated numeral instance certificate Nat.AtLeastTwo(1+1) or Nat.AtLeastTwo(7+1); complete actual type read, no mathematical assumption added."
+        }
+      ],
+      "kernelAttempt": "attempt001",
+      "kernelExit": 0,
+      "auditExit": 0,
+      "sourceBoundServerArtifacts": {
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/IntervalSineHighTime.lean",
+          "sha256": "a54d687db2e17d73b67447783d4b083eabecd468c6802204bccb0f1860796e08",
+          "bytes": 3400
+        },
+        "object": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/IntervalSineHighTime.olean",
+          "sha256": "420d9a1260d958153c62388e536272c74b804237cc7963c11e31398407308b14",
+          "bytes": 274104
+        },
+        "installed": {
+          "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/IntervalSineHighTime.olean",
+          "sha256": "420d9a1260d958153c62388e536272c74b804237cc7963c11e31398407308b14",
+          "bytes": 274104
+        },
+        "receipt": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/receipt.json",
+          "sha256": "5f6a8ba1d6b4ca9b5c7c5458f00ae3d7e45574f6c013e72ac4fa0c1539198a90",
+          "bytes": 4755
+        },
+        "freeze": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/frozen.lean.txt",
+          "sha256": "df55d320358217f6ee46eda5615209acc2401dd3016310073151852af6523aff",
+          "bytes": 1672
+        },
+        "artifacts": {
+          "OwnedAudit.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/OwnedAudit.lean",
+            "sha256": "8cb2f341b06fed5125a407855da93c4726b04332aa88a754b013af62541b3e86",
+            "bytes": 3061
+          },
+          "owned-audit.json": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/owned-audit.json",
+            "sha256": "6662376a1bb726c30c72edcb4c971a7529543277ac3ac5abc0092ccf2a2aa8f5",
+            "bytes": 1961
+          },
+          "actual-owned-types.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/actual-owned-types.txt",
+            "sha256": "f907385dec6d50d403d6ae20e81fc92a63731358ff78fecb99762e2b9c878db1",
+            "bytes": 14421
+          },
+          "actual-definition-values.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/actual-definition-values.txt",
+            "sha256": "72c25699f3c3795d530c618c680155d519b972e69cd1f78228ecccdf6f7aeaa2",
+            "bytes": 2242
+          },
+          "owned-audit.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/owned-audit.log",
+            "sha256": "2c7b5a9b78f1fd6dd99123e734ccb8efd3cec72d8a5ebff9d10e3584cfc65d34",
+            "bytes": 16874
+          },
+          "frozen.lean.txt": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/frozen.lean.txt",
+            "sha256": "df55d320358217f6ee46eda5615209acc2401dd3016310073151852af6523aff",
+            "bytes": 1672
+          },
+          "attempt001/lean.log": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/attempt001/lean.log",
+            "sha256": "db65d5fa70a3ddd086a6b5d7a50365e16f4ebe21e5ebab209d6d5107c3984423",
+            "bytes": 542
+          },
+          "attempt001/source.lean": {
+            "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-interval-sine-high-time-v71/attempt001/source.lean",
+            "sha256": "a54d687db2e17d73b67447783d4b083eabecd468c6802204bccb0f1860796e08",
+            "bytes": 3400
+          }
+        },
+        "exportsExactFromAuditLog": {
+          "actual-owned-types.txt": true,
+          "actual-definition-values.txt": true
+        },
+        "auditTail": "AUDITED_TARGET_CONSTANTS 8 PUBLIC 5 THEOREMS 7 DEFINITIONS 1",
+        "sourceDelta": "",
+        "sourceEncoding": {
+          "frozen.lean.txt": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          },
+          "attempt001/source.lean": {
+            "CR": 0,
+            "BOM": false,
+            "UTF8": true
+          }
+        },
+        "frozenUnchangedBothAttempts": {
+          "attempt001/source.lean": true
+        },
+        "savedKernelLogsReadComplete": true,
+        "kernelLogSummary": {
+          "attempt001/lean.log": {
+            "lines": 8,
+            "errorLineCount": 0,
+            "nonErrorWarningsRead": true
+          }
+        }
+      }
+    }
+  ],
+  "counts": {
+    "publicSourceTheorems": 22,
+    "actualOwned": 38,
+    "actualTheorems": 33,
+    "actualDefinitions": 5,
+    "generatedTheorems": 11,
+    "typeBytes": 76803,
+    "valueBytes": 6071
+  },
+  "completeFinalSourceAndProofRead": true,
+  "completeFrozenImportsContextsHeadsAndValuesRead": true,
+  "completeActualOwnedTypesRead": true,
+  "completeActualNonTheoremValuesRead": true,
+  "all38ActualOwnersCovered": true,
+  "readMethod": "Complete literal production source proof scripts, complete frozen contexts/heads/values, and complete pp.all actual owner type/non-theorem-value exports; no dictionary substitution or omitted required material. Oversized administrative displays were narrowed; mandatory mathematical reads were complete. Opaque theorem proof certificates are bound by exact objects/audit rather than printed.",
+  "originalSource": {
+    "file": {
+      "path": "C:\\game\\shao\\current\\c12\\supplement.tex",
+      "sha256": "b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd",
+      "bytes": 235015
+    },
+    "completeLinesRead": [
+      4192,
+      4315
+    ],
+    "coreSourceLines": [
+      4284,
+      4299
+    ]
+  },
+  "acceptedScope": "Actual finite positive-index sine heat terms; genuine normally convergent summed mixed spatial/time derivatives in both orders; exact Gaussian moment bound; actual high-time derivative estimate with constant depending only on j,l for a>0,T>0,a^2<=T. The series is not identified with the actual killed kernel/image kernel/Brownian probability.",
+  "freezeProvenance": [
+    {
+      "unit": 79,
+      "originalCallLine": 8870,
+      "callAtUTC": "2026-10-24T13:17:38.750Z",
+      "callId": "call_40aa19e854114ce68d708f3e9eddc84e",
+      "completedResultLine": 8874,
+      "completedResultAtUTC": "2026-10-24T13:17:40.107Z",
+      "reconstructedBytes": 2738,
+      "reconstructedSHA256": "ce5e0ef0ebef842081501e15a858d6a2ae41a670e14d318402e4512cfb9c4b46",
+      "byteExact": true,
+      "implementationCallLine": 8888,
+      "implementationAtUTC": "2026-10-24T13:19:18.406Z",
+      "precedesImplementation": true
+    },
+    {
+      "unit": 80,
+      "originalCallLine": 8984,
+      "callAtUTC": "2026-10-24T13:25:58.080Z",
+      "callId": "call_cdbdb52d31a04fa8913c980cafb0c82e",
+      "completedResultLine": 8988,
+      "completedResultAtUTC": "2026-10-24T13:25:59.201Z",
+      "reconstructedBytes": 2265,
+      "reconstructedSHA256": "9a089b4365602cae5f94c8fdb81e316447e56c023c7ea288b157006f2a9ce1fa",
+      "byteExact": true,
+      "implementationCallLine": 9011,
+      "implementationAtUTC": "2026-10-24T13:27:34.872Z",
+      "precedesImplementation": true
+    },
+    {
+      "unit": 81,
+      "originalCallLine": 9056,
+      "callAtUTC": "2026-10-24T13:29:50.549Z",
+      "callId": "call_7f954a80515f4e7683923a1496efd70a",
+      "completedResultLine": 9060,
+      "completedResultAtUTC": "2026-10-24T13:29:51.779Z",
+      "reconstructedBytes": 1672,
+      "reconstructedSHA256": "df55d320358217f6ee46eda5615209acc2401dd3016310073151852af6523aff",
+      "byteExact": true,
+      "implementationCallLine": 9085,
+      "implementationAtUTC": "2026-10-24T13:30:47.595Z",
+      "precedesImplementation": true
+    }
+  ],
+  "sourceBoundGateProvenance": [
+    {
+      "unit": 79,
+      "kind": "kernel001",
+      "callLine": 8888,
+      "callAtUTC": "2026-10-24T13:19:18.406Z",
+      "callId": "call_1ad5d4705033420e8d4de226dc88c519",
+      "completedResultLine": 8892,
+      "completedAtUTC": "2026-10-24T13:19:25.823Z",
+      "LeanExit": 1,
+      "enclosingShellExit": 0,
+      "argumentSHA256": "76cfb2b40bd4e6eba32773939ec0832436b1ef696f2a2901217368699012b19a",
+      "resultSHA256": "6f4705a8d43d27644bdd81f29601e542db28e704009c3261936869e7b4f25157",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 79,
+      "kind": "kernel002",
+      "callLine": 8898,
+      "callAtUTC": "2026-10-24T13:19:59.585Z",
+      "callId": "call_3579184ec0324756a185ed2dfc0d1940",
+      "completedResultLine": 8902,
+      "completedAtUTC": "2026-10-24T13:20:06.533Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 1,
+      "argumentSHA256": "03af780793584419b36f1a495ed4c435a5c4a460c305e012b111da3389318e51",
+      "resultSHA256": "828bb0071d13647204d9c2b30087401f29b405c2b6c4ab82d94eed24bbc3ea8c",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 79,
+      "kind": "audit",
+      "callLine": 8958,
+      "callAtUTC": "2026-10-24T13:24:29.420Z",
+      "callId": "call_d6a154ea65f1490291e69974c06c4c91",
+      "completedResultLine": 8961,
+      "completedAtUTC": "2026-10-24T13:24:36.511Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 0,
+      "argumentSHA256": "00cff3df84eeab3b5659ad5312d521d059cc46141ffe6b5df690ec6ad733d421",
+      "resultSHA256": "ff968fb00b81f89e9bebd741f32810a1c88f97e2d56f03239aa9179a6879ad78",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 80,
+      "kind": "kernel001",
+      "callLine": 9019,
+      "callAtUTC": "2026-10-24T13:27:44.376Z",
+      "callId": "call_d14880da94a34e72bdaacfb0b2a08a67",
+      "completedResultLine": 9022,
+      "completedAtUTC": "2026-10-24T13:27:52.208Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 1,
+      "argumentSHA256": "68c4e1139231e2de0e218d17201527566f1a9a2d77c02a321e9de9398cf83433",
+      "resultSHA256": "54a6bf30c4ab83a603101691400e2c28fac9aec31118c5452c2a66670fd8b24b",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 80,
+      "kind": "audit",
+      "callLine": 9026,
+      "callAtUTC": "2026-10-24T13:28:05.792Z",
+      "callId": "call_c804d547d18c41d7bad008cbbacbed5b",
+      "completedResultLine": 9029,
+      "completedAtUTC": "2026-10-24T13:28:13.670Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 0,
+      "argumentSHA256": "f188f707a50491830c6009d284a5c42883ac84275dbec4b52392b2a2c232a783",
+      "resultSHA256": "76134725baa73879a33a5dc842b439bdf185d950a3c2537f211a3456e14f3c80",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 81,
+      "kind": "kernel001",
+      "callLine": 9085,
+      "callAtUTC": "2026-10-24T13:30:47.595Z",
+      "callId": "call_ea3c02aaa18d43adab5f302a48b0adeb",
+      "completedResultLine": 9090,
+      "completedAtUTC": "2026-10-24T13:30:54.551Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 1,
+      "argumentSHA256": "e689192d5ab92d406f4802ac60e1a00bcc320d2d98dfc2072e89a526d7ecb8d9",
+      "resultSHA256": "be5c0e13e540e1a9cffe9982ed28594e5dd36cacca5c25f6c5ba7ec9845a8582",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    },
+    {
+      "unit": 81,
+      "kind": "audit",
+      "callLine": 9096,
+      "callAtUTC": "2026-10-24T13:31:28.913Z",
+      "callId": "call_0345577c993a4497b0f13de5dce3aff9",
+      "completedResultLine": 9099,
+      "completedAtUTC": "2026-10-24T13:31:35.307Z",
+      "LeanExit": 0,
+      "enclosingShellExit": 0,
+      "argumentSHA256": "73f7ebef95962bcee0aa12f81a3911080d5b12182543cd03e3386618660a6a14",
+      "resultSHA256": "efe37a909cfda6965d7b1ae2ed13b9faee5f5c0f67785a2f82b569686b77ae99",
+      "actualCompletedExecutionObserved": true,
+      "commandReadComplete": true,
+      "activationBeforeCd": true,
+      "CPUs": "14-17",
+      "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+      "memoryMiB": 8192,
+      "jobs": 4
+    }
+  ],
+  "allSavedKernelLogsRead": true,
+  "allActualGateCallsAndCompletedResultsRead": true,
+  "allOwnedRecursiveAxiomAuditPASS": true,
+  "axiomWhitelist": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "auditSelection": "env.constants.toList; actual defining module from env.getModuleIdxFor?; no namespace restriction; Lean.collectAxioms recursively for every owned constant including generated/private/other namespace; types and all defnInfo values exported.",
+  "qualifiedDependencies": [
+    {
+      "module": "Shao.C2.IntervalImageSpatialProfiles",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-v1\\IntervalImageSpatialProfiles.lean",
+        "sha256": "56592b1a2d9dc75067b4fe04d4867dc7f45e1449ef0abf08a63c55219ef17ca4",
+        "bytes": 8863
+      },
+      "objectSHA256": "d7e239194216e88373ddab9c8296738f9be0fd014dddfe6112211bc7e2d21847",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-v1\\frozen.lean.txt",
+        "sha256": "ae21c3f1fa2789ca0dd9f7ac868d0cab24031bbd664388e77a6e63d9e5eb0358",
+        "bytes": 2440
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-v1\\receipt.json",
+        "sha256": "9e895e7b5a9de92bd9fe3ea89a88be02f531906a6aee8757e60955f9805f3754",
+        "bytes": 5308
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-v1\\RELEASE.json",
+        "sha256": "c3e462236cb566340c054a7f1415ddd5a158d3a150b866bb91a422d9788163a3",
+        "bytes": 799
+      },
+      "review": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-final-review-v1\\full-review.json",
+        "sha256": "d5d6bdbf83c0d6cad7002d0e9b856bfb7bf5a6d3d607440a5eede8b5bae7b939",
+        "bytes": 19365
+      },
+      "reviewMarkdown": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-final-review-v1\\full-review.md",
+        "sha256": "70a55e5a248f39adee810494a1fc687f5ca2239212a00ed97a9df5d11959f278",
+        "bytes": 16645
+      },
+      "reviewRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-image-spatial-profiles-final-review-v1\\writer-release.json",
+        "sha256": "229e8b52451891a039f1b7a33e4434a06c39caa7d74345c8b30aff93d82df1c9",
+        "bytes": 1150
+      },
+      "qualifiedCompleteIndependentReviewReused": true,
+      "consumedCompleteActualInterfaces": [
+        {
+          "name": "Shao.C2.IntervalImageSpatialProfiles.affineImageTerm",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "d69184cf545036472c020d7d7a1e7f7132d278c956522dfab3a87e5e48f282f0",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalImageSpatialProfiles.affineImageTerm_iteratedDeriv",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "7281ba6e2717bf9a9c1a40a5947e4806c0ac66bde6a02d1ccea41286074dc59b",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalImageSpatialProfiles.affineImageTerm",
+          "export": "actual-definition-values.txt",
+          "blockSHA256": "3c19f77b79a6b7f13319a78da363013253bb8203a4358b8e24918b920e7dd58f",
+          "completeLiteralRead": true
+        }
+      ],
+      "prefix": "import Shao.C2.IntervalImageExponents\nimport Shao.C2.HalfLineTimeProfiles\n\nnoncomputable section\nnamespace Shao.C2.IntervalImageSpatialProfiles\nopen Shao.C2.IntervalImageExponents Shao.C2.HalfLineTimeProfiles\n",
+      "oldProofReviewOrGateReplayed": false
+    },
+    {
+      "module": "Shao.C2.IntervalSpectralGaussian",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-spectral-gaussian-v1\\IntervalSpectralGaussian.lean",
+        "sha256": "97382ed6111bb918de85ff2c9e7b2fe9df094a41888bbde9b67f8f17b42de36a",
+        "bytes": 7106
+      },
+      "objectSHA256": "9d39f7a88c783bc8d8beaee009e2ffc2326cd1097dea3d578b061d73b49a6ed9",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-spectral-gaussian-v1\\frozen.lean.txt",
+        "sha256": "4631f7dbf430472e0166fd85cb43bd4829d0e82b071d77aacaa515d11ff38ffd",
+        "bytes": 1736
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-spectral-gaussian-v1\\receipt.json",
+        "sha256": "cb28974c4df8799cac2ab32556cac924480c083d4557e251c5b4f30353bda2b7",
+        "bytes": 5412
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-spectral-gaussian-v1\\RELEASE.json",
+        "sha256": "62b3a7c652ff7d2c816234358fbca774fcbcf0cfa133eb71b3e9d40f578422ab",
+        "bytes": 799
+      },
+      "review": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\full-review.json",
+        "sha256": "4ac7eab2a86ff66a801d7c477c816c3eab62f996756544d7abca6dea1c7515b0",
+        "bytes": 71311
+      },
+      "reviewMarkdown": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\full-review.md",
+        "sha256": "aad4e09e6688d1f6cd4f698ad00ddfa60efbc91a7b0ad21439a0c8cceccba8d9",
+        "bytes": 17432
+      },
+      "reviewRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\writer-release.json",
+        "sha256": "a9a16050d59de8b72dc000952d525cc711a996739d3d21de6d070a46ecfc5701",
+        "bytes": 2708
+      },
+      "qualifiedCompleteIndependentReviewReused": true,
+      "consumedCompleteActualInterfaces": [
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.spectralConstant_nonneg",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "9c95771adf9b0492e2b03117a18fbffc1dee84c730bc7a1157592e267ff4cd06",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.weightedGaussian_summable",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "8e53214ea4952b9895a00fa34c1cebd9472d82973e679b7720b75e5334609ebf",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.spectralConstant",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "4d797939f0f01ef8efac982524365f6afac168945f0559f94860833999ff77b1",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.weightedGaussian_scaled_bound",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "ce07948b413a240587a19c09a26a5f716392a3ed5dbb3b2b4407324bb373c0fd",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.weightedGaussian",
+          "export": "actual-owned-types.txt",
+          "blockSHA256": "333efa3eecd05922bda469194e09710cf66d9498998129c624bf0059641b2fd3",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.spectralConstant",
+          "export": "actual-definition-values.txt",
+          "blockSHA256": "1805eac8b3df56c07708aaa90cfa853800a4ad1329ca76df9b3b17e069f0fb10",
+          "completeLiteralRead": true
+        },
+        {
+          "name": "Shao.C2.IntervalSpectralGaussian.weightedGaussian",
+          "export": "actual-definition-values.txt",
+          "blockSHA256": "a92e9ea690ff24a623b278da7d0250fb539c5304fd13fdd3784c10794049b859",
+          "completeLiteralRead": true
+        }
+      ],
+      "prefix": "import Shao.C2.IntervalImageTaylorSegment\n\nnoncomputable section\nnamespace Shao.C2.IntervalSpectralGaussian\nopen MeasureTheory Set Filter\nopen scoped BigOperators Topology\nopen Shao.C2.HalfLineTimeProfiles Shao.C2.IntervalImageSpatialConvergence\n",
+      "oldProofReviewOrGateReplayed": false
+    },
+    {
+      "module": "Shao.C2.IntervalHighTimeProfiles",
+      "source": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-profiles-v1\\IntervalHighTimeProfiles.lean",
+        "sha256": "0ae211f02c224c4c7b2456f441fc08a41a62d20f76fb8c840696aa8af0e64020",
+        "bytes": 4525
+      },
+      "objectSHA256": "32dee6333a142d2f536f1d563be45cc843311785786392274af0fa6a386d7f34",
+      "freeze": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-profiles-v1\\frozen.lean.txt",
+        "sha256": "5b570413a1a740ce4f54da0c22739812b9f433ab36d7064bb34f8eb517743b1e",
+        "bytes": 1616
+      },
+      "receipt": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-profiles-v1\\receipt.json",
+        "sha256": "c2d0e94cea50588e955e93c8776ab10136bd739517818488165915dd67aa82e2",
+        "bytes": 5351
+      },
+      "authorRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-profiles-v1\\RELEASE.json",
+        "sha256": "e402009a266676ce461597088ce8160bea6cc6206e26cccbbfb93f9d9ca7785b",
+        "bytes": 799
+      },
+      "review": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\full-review.json",
+        "sha256": "4ac7eab2a86ff66a801d7c477c816c3eab62f996756544d7abca6dea1c7515b0",
+        "bytes": 71311
+      },
+      "reviewMarkdown": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\full-review.md",
+        "sha256": "aad4e09e6688d1f6cd4f698ad00ddfa60efbc91a7b0ad21439a0c8cceccba8d9",
+        "bytes": 17432
+      },
+      "reviewRelease": {
+        "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-high-time-scalar-final-review-v1\\writer-release.json",
+        "sha256": "a9a16050d59de8b72dc000952d525cc711a996739d3d21de6d070a46ecfc5701",
+        "bytes": 2708
+      },
+      "qualifiedCompleteIndependentReviewReused": true,
+      "consumedCompleteActualInterfaces": [],
+      "prefix": "import Shao.C2.IntervalSpectralGaussian\n\nnoncomputable section\nnamespace Shao.C2.IntervalHighTimeProfiles\nopen MeasureTheory Set Filter\nopen scoped BigOperators Topology\nopen Shao.C2.CompletionFirstProfile Shao.C2.HalfLineTaylorSegment Shao.C2.IntervalGaussianLocal\n",
+      "oldProofReviewOrGateReplayed": false
+    }
+  ],
+  "standardInterfaces": [
+    {
+      "path": "Mathlib/Analysis/Calculus/SmoothSeries.lean",
+      "sourceSHA256": "65b62c3619c8f8c4fac4f8e3d65e723633510a219814ad25bd999bb428d64d04",
+      "objectSHA256": "935b5cef8a7cd9687deea893574d39d579ba4bffd7c03b71137fbfd3ef158f46",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Calculus/IteratedDeriv/Defs.lean",
+      "sourceSHA256": "95e6b06e0b5094f2404bef7f871317a22065cf3f4eea2775011be4fff7bdd491",
+      "objectSHA256": "ed273c6fda15116b704c068ca06088eb955cefbdbf13f1be29e0ebd678e03503",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Calculus/IteratedDeriv/Lemmas.lean",
+      "sourceSHA256": "c7104925a2be874d83ce24a5bb02452ff2d6269e768754635f8188fd461989dc",
+      "objectSHA256": "45adb6e32df44840885b0578b075037aa85683ada41ceba56717ef0a553f5212",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Calculus/Deriv/Mul.lean",
+      "sourceSHA256": "668434e58a11f6fe2c599adc9655494d0f23ba42937662499884df02daaa8c7c",
+      "objectSHA256": "3fb130ea852f136288e42636243509d0d4e4ede6dc1f704a485d2935967d81d3",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Calculus/Deriv/Add.lean",
+      "sourceSHA256": "e496df633cadeba1318b1c3df4061d4dae2badd73fe9f4a3b4cb26a47a461ac2",
+      "objectSHA256": "6c083d88c4e6e1ae9672c66c9b712308f046d9348c8de44d6b48dadba2970625",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Calculus/Deriv/Basic.lean",
+      "sourceSHA256": "31e8aceba6c650a5628a321b25feaff0d2e1f4e198cc5f540e64b80d31ee51b3",
+      "objectSHA256": "e4c123e4bdcd986941b70c2badac1de6b748a1969a7031e21141c6caa3a25b25",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/SpecialFunctions/ExpDeriv.lean",
+      "sourceSHA256": "318f03e493c1bcd208cb26130c455faf83db927659c0d9d672df56f33a9da351",
+      "objectSHA256": "e23451f758e7cbbad9fddf68dd11795ca8edd067942637ba04bfe11fe6e7ec6a",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/SpecialFunctions/Trigonometric/Deriv.lean",
+      "sourceSHA256": "30aeb63cbcc10d27e0cd7eaf9deaaaa0205ccaaf501e47470c94d5f9f0f2177f",
+      "objectSHA256": "647defd74f13af83b0ef381708878528eb34e78020d6fda98e4d68025031dda8",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/SpecialFunctions/Trigonometric/Basic.lean",
+      "sourceSHA256": "85fc5b104bd61801d259dda6cf837892c30bc4b44a1b23688398476941770cf7",
+      "objectSHA256": "e033ddb1ff3504048809e8e0e7dcd94031805c2fe5fc8f950cbf45cd16a61c2b",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Complex/Trigonometric.lean",
+      "sourceSHA256": "f6f2c2bb6da4d7dac960bef8d07dc2e337c474b417726c1fd15e30c6b74caafb",
+      "objectSHA256": "dd9181d032d403d4e3fcced9d814a9266cd285a3c3129771fe135b1d70a960ab",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Normed/Group/InfiniteSum.lean",
+      "sourceSHA256": "4b42d95c8c08ee19760bb661804f19f722275ccea410da3b432a0985b732739d",
+      "objectSHA256": "18801966622f19b6561d492ccf9d91ce9a2d7450d902a6f4266418baa79e07a1",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Ring.lean",
+      "sourceSHA256": "bba1f8897f3b78060d4893ee3b47f8edf6f533d2adca7909305d0a42ee50c087",
+      "objectSHA256": "4ddd1a0beea38e984d891f96e2ffff03aaf79725da6c2ddef818db6535a45cb4",
+      "pinnedGitBlobExact": true
+    },
+    {
+      "path": "Mathlib/Analysis/Real/Sqrt.lean",
+      "sourceSHA256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204",
+      "objectSHA256": "9a09ac674e3d6008c67e5082620f5ffe3e96dbe72472fdd1c43d5d0670f0df34",
+      "pinnedGitBlobExact": true
+    }
+  ],
+  "fullRequiredStandardDeclarationProofAndVariableContextsRead": true,
+  "finalSourceObservation": {
+    "atUTC": "2026-10-24T13:36:30.908560+00:00",
+    "allBoundPathsUnchanged": true,
+    "boundPathCount": 56,
+    "LeanInvocations": 0
+  },
+  "kernelEvidenceReusedWithoutReplay": true,
+  "sourceForbiddenTokens": [],
+  "criticalGaps": [],
+  "uncoveredWithinFrozenTargets": [],
+  "remainingOpen": [
+    "Identification of the literal sine series with the killed heat kernel and image candidate",
+    "Actual Brownian bridge survival probability identification",
+    "Reciprocal free-density derivative bounds and Leibniz assembly of the normalized interval quotient",
+    "Order-zero actual probability bound and full high-time profile consumer",
+    "Complete compensated Taylor remainder",
+    "Full original hSmall and root assembly"
+  ],
+  "allOriginalRoots": "OPEN",
+  "rootClosureClaimed": false,
+  "novelty": "Classical analytic auxiliary producers; no new mathematical novelty claimed. Source and external-result attribution/p54 repairs preserved.",
+  "workBoundaries": {
+    "writeScope": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1",
+    "productionWrites": 0,
+    "sourceFreezeSharedGitCacheWrites": 0,
+    "LeanInvocations": 0,
+    "auditReplays": 0,
+    "successfulGateReplays": 0,
+    "childSpawns": 0,
+    "rawLogsRetained": false
+  },
+  "reviewHelperFailures": [
+    "Initial local binding assumed every receipt artifact was also local; corrected to hash locally present exports and verify remaining artifacts read-only on server.",
+    "Initial session selector handled function_call only; extended to actual custom_tool_call records before reconstructing original patches.",
+    "Historical unit54 has no remote frozen.lean.txt; its unchanged local freeze is bound to the qualified archived review and current source/object/receipt; no old gate or proof replay.",
+    "Remote rg unavailable; deterministic read-only Python search used.",
+    "Oversized administrative displays narrowed; all required mathematical source/proof/type/value/context reads are complete."
+  ],
+  "usage": {
+    "input": null,
+    "cachedInput": null,
+    "output": null,
+    "reasoningSubset": null
+  },
+  "fullMarkdown": {
+    "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\full-review.md",
+    "sha256": "378b10a17b8f3a3baec3a27a7132cf2066b70c864b5956fea0c4598ef839e365",
+    "bytes": 21684
+  },
+  "supportingArtifacts": {
+    "local-bindings.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\local-bindings.json",
+      "sha256": "26e448dd5fbc48833b009678137c344810f7d82222a8560359a414aa957668c1",
+      "bytes": 10150
+    },
+    "local-bindings-80.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\local-bindings-80.json",
+      "sha256": "4101c5b8ded6b09a66a60590565bbb70b6933ce2439864167b0ea7305b05063c",
+      "bytes": 6290
+    },
+    "local-bindings-81.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\local-bindings-81.json",
+      "sha256": "40a8b022b9084215fb15d304fae5bb109de77b5b1936382d8b4542376b94ca5e",
+      "bytes": 5913
+    },
+    "remote-bindings.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\remote-bindings.json",
+      "sha256": "02d12838557228a063febe49bb81563a310db8f8cfe84f050ab7cccd006bbbf2",
+      "bytes": 32544
+    },
+    "qualified-interface-bindings.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\qualified-interface-bindings.json",
+      "sha256": "2ee4166128e4272e32484f7b5fa4638c9c53b57d3a22e8ee102db495ba606c3d",
+      "bytes": 9403
+    },
+    "session-provenance.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\session-provenance.json",
+      "sha256": "c3f4aad6ccc7bf003d01ecd7cfae26084597e8c88351bbc037ff27f6647ed8bb",
+      "bytes": 7373
+    },
+    "session-selected.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\session-selected.json",
+      "sha256": "5ca8d9fe1460a6b7387a7145909494869d41c749d9ec563e888b67e3a509bcad",
+      "bytes": 5654
+    },
+    "standard-contexts.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\standard-contexts.json",
+      "sha256": "d30244bdb0feec38217cb16565e3c1a7f54d9188345a0949c976d7a11abe8121",
+      "bytes": 50431
+    },
+    "standard-extra.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\standard-extra.json",
+      "sha256": "2dae2bb2dc7322ec8de665d73e3f744505d78da2f2fdbeb3a5fcf726f83e8369",
+      "bytes": 5769
+    },
+    "standard-sqrt.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\standard-sqrt.json",
+      "sha256": "20d211c35fd86bb8fb543a83d70592ebf56910b56eb923c6f7cf094844ea1916",
+      "bytes": 4049
+    },
+    "final-source-observation.json": {
+      "path": "C:\\game\\shao lean\\drafts\\c12-lane\\interval-sine-terms-final-review-v1\\final-source-observation.json",
+      "sha256": "7270b001ff6fd68db267fdd06e25ee57ccb93dd3a2a4c0e299902cd52a73ba75",
+      "bytes": 132
+    }
+  }
+}

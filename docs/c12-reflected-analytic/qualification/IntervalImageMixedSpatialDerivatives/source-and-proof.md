@@ -1,0 +1,13 @@
+# Genuine spatial differentiation of mixed families
+
+Source4298–4315: differentiated image expansions and joint/Taylor preparation. Complete imports/nine full theorem heads frozen before implementation; no new definitions. New source UTF-8 no BOM LF before first gate.
+
+The affine mixed term's actual spatial derivative is its actual mixed family at j+1, for every spatial order j and timeorder l≤3 at T>0. For l0 use qualified56's genuine spatial derivative. For l1/2/3 first identify the entire spatial function with the exact qualified59/62 scalar formula. Differentiate that polynomial/exponential expression genuinely with HasDerivAt arithmetic; factor the next spatial power via pow_succ, normalize Nat casts and use T!=0. The resulting slope equals the corresponding exact actual time derivative formula at j+1. No partial-derivative commutation is assumed.
+
+Whole-function-in-time equalities transfer the genuine affine result to mixedImageA/B. Finite add/sub yields the mixed finite head and each tail block derivative. Qualified64's compact uniform bound at j+1,l supplies a summable derivative majorant on Ioo(-a,a); positive T and the existing mixed-tail pointwise summability supply the other pinned SmoothSeries hypotheses. hasDerivAt_tsum_of_isPreconnected proves actual mixedTailSum differentiability, then adding the finite head proves the complete mixedImageCandidate derivative.
+
+Qualified65 identifies actual time-after-space derivatives with the explicit family at every interior point. A genuine interior neighborhood equality transfers HasDerivAt to that actual mixed derivative function, with slope the actual next spatial-order mixed derivative. Induction on j, using neighborhood equality before each differentiation, proves the displayed time-before-space versus time-after-space iterated derivative equality. This establishes the scoped mixed partial commutation rather than assuming it.
+
+No frozen mathematical hypothesis/import/head changed. Failed001 source/log preserved: hC needed mul_one/id normalization, and negative Pi functions needed Pi.neg_apply before polynomial normalization. Proof-only fixes give kernel002 PASS. Recursive all-owner audit PASS:17 actual theorem constants,9 public source theorems,0 definitions; exact complete value export is empty. Successful attempt002 sourceSnapshot explicitly bound to final source/object. Independent final complete review pending after71/72.
+
+Joint Frechet differentiability, joint Taylor/compensated remainder, high-time spectral estimates, actual Brownian probability identification and hSmall remain OPEN. All original root groups remain OPEN.

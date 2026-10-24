@@ -1,0 +1,40 @@
+import Shao.C2.IntervalImageTaylorSegment
+
+noncomputable section
+namespace Shao.C2.IntervalSpectralGaussian
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.HalfLineTimeProfiles Shao.C2.IntervalImageSpatialConvergence
+
+def weightedGaussian (c : ℝ) (r : ℕ) (x : ℝ) (n : ℕ) : ℝ :=
+  ((n : ℝ) + 1) ^ r * Real.exp (-c * ((n : ℝ) + 1) ^ 2 * x)
+
+def spectralConstant (c : ℝ) (r : ℕ) : ℝ :=
+  (1 / (c / 2)) ^ (r + 1) * (2 : ℝ) ^ (r + 1) * (Nat.factorial (r + 1) : ℝ) *
+    (∑' n : ℕ, weightedGaussian (c / 2) r 1 n)
+
+theorem weightedGaussian_nonneg (c x : ℝ) (r n : ℕ) :
+    0 ≤ weightedGaussian c r x n := by
+
+theorem weightedGaussian_summable (c x : ℝ) (r : ℕ) (hc : 0 < c) (hx : 0 < x) :
+    Summable (weightedGaussian c r x) := by
+
+theorem weightedGaussian_split_bound (c x : ℝ) (r n : ℕ) (hc : 0 < c) (hx : 1 ≤ x) :
+    weightedGaussian c r x n ≤ Real.exp (-(c / 2) * x) * weightedGaussian (c / 2) r 1 n := by
+
+theorem weightedGaussian_tsum_split (c x : ℝ) (r : ℕ) (hc : 0 < c) (hx : 1 ≤ x) :
+    (∑' n : ℕ, weightedGaussian c r x n) ≤
+      Real.exp (-(c / 2) * x) * (∑' n : ℕ, weightedGaussian (c / 2) r 1 n) := by
+
+theorem sqrt_power_exp_bound (c x : ℝ) (p : ℕ) (hc : 0 < c) (hx : 1 ≤ x) :
+    (Real.sqrt x) ^ p * Real.exp (-c * x) ≤
+      (1 / c) ^ p * (2 : ℝ) ^ p * (Nat.factorial p : ℝ) := by
+
+theorem spectralConstant_nonneg (c : ℝ) (r : ℕ) (hc : 0 < c) :
+    0 ≤ spectralConstant c r := by
+
+theorem weightedGaussian_scaled_bound (c x : ℝ) (r : ℕ) (hc : 0 < c) (hx : 1 ≤ x) :
+    (Real.sqrt x) ^ (r + 1) * (∑' n : ℕ, weightedGaussian c r x n) ≤ spectralConstant c r := by
+
+end Shao.C2.IntervalSpectralGaussian
+
