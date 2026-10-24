@@ -1,0 +1,45 @@
+import Shao.C2.IntervalDerivativeBound
+
+noncomputable section
+namespace Shao.C2.CompletionFirstProfile
+open MeasureTheory
+open Shao.C2.BridgeDomination Shao.C2.HalfLineReflectionFormula
+open Shao.C2.IntervalDerivativeBound
+
+def upperProfile (a y T z : ℝ) : ℝ := Real.exp (-(a - y) * (a - z) / T)
+def lowerProfile (a y T z : ℝ) : ℝ := Real.exp (-(a + y) * (a + z) / T)
+def intervalProfile (a y T z : ℝ) : ℝ := upperProfile a y T z + lowerProfile a y T z
+
+theorem reflection_deficit_le_profile (u v T : ℝ) (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) :
+    Real.exp (-2 * u * v / T) ≤ Real.exp (-u * v / T) := by
+
+theorem positive_reflection_slope_profile (u v T : ℝ)
+    (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) :
+    (2 * v / T) * Real.exp (-2 * u * v / T) ≤
+      (8 / Real.sqrt T * (1 + |u - v| / Real.sqrt T)) * Real.exp (-u * v / T) := by
+
+theorem upperReflection_deriv_profile (a y T z : ℝ) (hT : 0 < T) (hy : y < a) (hz : z < a) :
+    |deriv (fun u : ℝ => upperReflection a u T z) y| ≤
+      (8 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) * upperProfile a y T z := by
+
+theorem lowerReflection_deriv_profile (a y T z : ℝ) (hT : 0 < T) (hy : -a < y) (hz : -a < z) :
+    |deriv (fun u : ℝ => lowerReflection a u T z) y| ≤
+      (8 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) * lowerProfile a y T z := by
+
+theorem interval_deficit_profile_of_reflection
+    (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) (hT : 0 < T) (hy : |y| < a) (hz : |z| < a)
+    (hUpper : upperCompletion P a y T z = upperReflection a y T z)
+    (hLower : lowerCompletion P a y T z = lowerReflection a y T z) :
+    |intervalCompletion P a y T z - 1| ≤ intervalProfile a y T z := by
+
+theorem interval_deriv_profile_of_reflection
+    (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) (hT : 0 < T) (hy : |y| < a) (hz : |z| < a)
+    (hUpper : ∀ s : ℝ, s < a → upperCompletion P a s T z = upperReflection a s T z)
+    (hLower : ∀ s : ℝ, -a < s → lowerCompletion P a s T z = lowerReflection a s T z)
+    (hRegular : DifferentiableAt ℝ (fun s : ℝ => intervalCompletion P a s T z) y) :
+    |deriv (fun s : ℝ => intervalCompletion P a s T z) y| ≤
+      (8 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) * intervalProfile a y T z := by
+
+end Shao.C2.CompletionFirstProfile

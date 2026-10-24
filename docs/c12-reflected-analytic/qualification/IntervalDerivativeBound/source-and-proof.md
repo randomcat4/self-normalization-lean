@@ -1,0 +1,11 @@
+# Conditional first derivative estimate for the actual interval probability
+
+Source: read-only supplement.tex 4192–4253. Actual strict bridge completion probabilities are those accepted in `BridgeDomination`. This unit combines accepted signed derivative domination with the explicit halfline scalar formulas from unit26. Frozen whole imports and all four complete theorem heads are in `frozen.lean.txt`, SHA256 `ffa1979cecd949a9f9290a4857ca6c3ebe7c9d17f69e4ff6b7b207d114218a2f`; no definitions are added.
+
+The two reflection transfer lemmas retain full neighborhood identification hypotheses: the actual upper completion equals its formula for every spatial point below the upper wall; the lower completion equals its formula above the lower wall. Interior membership supplies a neighborhood of the point, and `HasDerivAt.congr_of_eventuallyEq` transfers genuine differentiability from the proven formula. Point equality alone is not used to infer derivatives.
+
+For positive time and both interior endpoints, interval differentiability is an explicit additional premise. Its actual derivative is sandwiched between the actual halfline derivatives by the previously accepted `signed_derivative_domination_of_hasDerivAt`. Unit26 bounds the magnitudes of the two bounding derivatives by the same `4/sqrt(T)*(1+|z-y|/sqrt(T))`, yielding the interval absolute bound. The uniform version uses `H>0`, `H<=T`, and `a<=A`; interior endpoints imply `|z-y|<=2A`, and monotonicity of square root and positive division gives `4/sqrt(H)*(1+2A/sqrt(H))`.
+
+This closes only the conditional bound connection. It does not prove the reflection identities, actual interval regularity, joint derivative measurability, PDE, higher derivative/profile/Taylor statements or original root theorems. All original groups remain OPEN. It does not replace the source's stronger derivative profile estimate by a claim that this weaker envelope proves that full lemma.
+
+Server kernel attempt002 and whole-owned audit pass. Actual ownership is four theorems, zero definitions; every complete actual type is exported. Attempt001 preserves a wrong rewrite orientation in proof text only. CPU14–17, c12-heavy.lock, -M8192 -j4, unchanged pinned Lean/mathlib and package view. No accepted old module was rebuilt. Independent final review is pending.
