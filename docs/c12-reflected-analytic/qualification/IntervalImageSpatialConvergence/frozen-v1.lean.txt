@@ -1,0 +1,63 @@
+import Shao.C2.IntervalImageSpatialProfiles
+import Mathlib.Analysis.SpecificLimits.Normed
+
+noncomputable section
+namespace Shao.C2.IntervalImageSpatialConvergence
+open Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+
+def StripPoint (a H U : ℝ) := {p : ℝ × ℝ // |p.1| ≤ a ∧ H ≤ p.2 ∧ p.2 ≤ U}
+
+def spatialPrefactor (j : ℕ) (a H : ℝ) : ℝ :=
+  (4 / Real.sqrt H * (1 + 2 * a / Real.sqrt H)) ^ j *
+    (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ))
+
+def gaussianMajorant (a U : ℝ) (n : ℕ) : ℝ :=
+  Real.exp (-(4 * a ^ 2 / U) * (n : ℝ) ^ 2)
+
+def spatialTailBlock (j : ℕ) (a z T y : ℝ) (n : ℕ) : ℝ :=
+  iteratedDeriv j (fun w => Real.exp (-imageA a w z ((n : ℤ) + 2 : ℤ) / T)) y +
+    iteratedDeriv j (fun w => Real.exp (-imageA a w z (-((n : ℤ) + 2) : ℤ) / T)) y -
+    iteratedDeriv j (fun w => Real.exp (-imageB a w z ((n : ℤ) + 1 : ℤ) / T)) y -
+    iteratedDeriv j (fun w => Real.exp (-imageB a w z (-((n : ℤ) + 2) : ℤ) / T)) y
+
+theorem summable_exp_neg_nat_sq (c : ℝ) (hc : 0 < c) :
+    Summable (fun n : ℕ => Real.exp (-c * (n : ℝ) ^ 2)) := by
+
+theorem gaussianMajorant_summable (a U : ℝ) (ha : 0 < a) (hU : 0 < U) :
+    Summable (gaussianMajorant a U) := by
+
+theorem tail_exponent_lower_bounds (a y z : ℝ) (n : ℕ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    8 * (n : ℝ) ^ 2 * a ^ 2 ≤ imageA a y z ((n : ℤ) + 2 : ℤ) ∧
+      8 * (n : ℝ) ^ 2 * a ^ 2 ≤ imageA a y z (-((n : ℤ) + 2) : ℤ) ∧
+      8 * (n : ℝ) ^ 2 * a ^ 2 ≤ imageB a y z ((n : ℤ) + 1 : ℤ) ∧
+      8 * (n : ℝ) ^ 2 * a ^ 2 ≤ imageB a y z (-((n : ℤ) + 2) : ℤ) := by
+
+theorem exponent_half_le_majorant (a C T U : ℝ) (n : ℕ) (hT : 0 < T) (hTU : T ≤ U)
+    (hC : 8 * (n : ℝ) ^ 2 * a ^ 2 ≤ C) :
+    Real.exp (-C / (2 * T)) ≤ gaussianMajorant a U n := by
+
+theorem spatial_prefactor_bound (j : ℕ) (a H T y z : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (hHT : H ≤ T) (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)) ≤ spatialPrefactor j a H := by
+
+theorem spatialTailBlock_bound (j : ℕ) (a z H U : ℝ) (n : ℕ) (p : StripPoint a H U)
+    (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    ‖spatialTailBlock j a z p.val.2 p.val.1 n‖ ≤
+      4 * spatialPrefactor j a H * gaussianMajorant a U n := by
+
+theorem spatialTailBlock_summable (j : ℕ) (a z H U : ℝ) (p : StripPoint a H U)
+    (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    Summable (fun n : ℕ => spatialTailBlock j a z p.val.2 p.val.1 n) := by
+
+theorem spatialTailBlock_uniformly_convergent (j : ℕ) (a z H U : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    TendstoUniformly
+      (fun N : ℕ => fun p : StripPoint a H U =>
+        ∑ n ∈ Finset.range N, spatialTailBlock j a z p.val.2 p.val.1 n)
+      (fun p : StripPoint a H U => ∑' n : ℕ, spatialTailBlock j a z p.val.2 p.val.1 n) atTop := by
+
+end Shao.C2.IntervalImageSpatialConvergence

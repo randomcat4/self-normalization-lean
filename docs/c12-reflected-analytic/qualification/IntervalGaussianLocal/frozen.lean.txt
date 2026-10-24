@@ -1,0 +1,60 @@
+import Shao.C2.IntervalGaussianLargeStep
+
+noncomputable section
+namespace Shao.C2.IntervalGaussianLocal
+open MeasureTheory
+open Shao.C2.BridgeDomination Shao.C2.SourceIntervalCompletion
+open Shao.C2.ActualIntervalProjection Shao.C2.IntervalGaussianLargeStep
+open Shao.C2.HalfLineTaylorSegment Shao.C2.GaussianWallEnvelope
+open Shao.C2.HalfLineReflectionFormula
+
+def intervalIncrementProfile (a y T z b : ℝ) : ℝ :=
+  incrementProfile (a - y) (a - z) T b + incrementProfile (a + y) (a + z) T b
+
+def retainedRemainder (ν : Measure BridgeNoise) (a y T z b : ℝ) : ℝ :=
+  if b ^ 2 ≤ T / 2 ∧ ¬ |y + b| < a then
+    if a ≤ y + b then sourceRemainder ν a y T z (a - y)
+    else sourceRemainder ν a y T z (-a - y)
+  else sourceRemainder ν a y T z b
+
+def negativeOvershoot (ν : Measure BridgeNoise) (a y T z b : ℝ) : ℝ :=
+  if b ^ 2 ≤ T / 2 ∧ ¬ |y + b| < a then
+    if a ≤ y + b then max (-upperOvershoot ν a y T z b) 0
+    else max (-lowerOvershoot ν a y T z b) 0
+  else 0
+
+theorem intervalIncrementProfile_bounds (a y T z b : ℝ) (hy : |y| < a)
+    (hz : |z| < a) (hT : 0 < T) :
+    0 ≤ intervalIncrementProfile a y T z b ∧ intervalIncrementProfile a y T z b ≤ 2 := by
+
+theorem intervalIncrementProfile_le_envelope (a y T z b : ℝ) (hy : |y| < a)
+    (hz : |z| < a) (hT : 0 < T) :
+    intervalIncrementProfile a y T z b ≤ intervalEnvelope a y T z b := by
+
+theorem source_projected_budget_of_small_taylor (ν : Measure BridgeNoise)
+    (a y T z β C : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T) (hC : 0 ≤ C)
+    (hsmall : β ^ 2 ≤ T / 2) (hnew : |y + β| ≤ a)
+    (hTaylor : |sourceRemainder ν a y T z β| ≤
+      C * |β| ^ 3 * (1 / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 *
+        intervalIncrementProfile a y T z β) :
+    |sourceRemainder ν a y T z β| ≤
+      (2 * C * (1 / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3) * |β| ^ 3 := by
+
+theorem actual_interval_local_gaussian_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b C : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| < a)
+    (hT : 0 < T) (hb : b ^ 2 ≤ T) (hC : 0 ≤ C)
+    (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y)
+    (hUpper : ∀ S : ℝ, 0 < S → ∀ w : ℝ, w < a →
+      upperCompletion ν a w S z = upperReflection a w S z)
+    (hLower : ∀ S : ℝ, 0 < S → ∀ w : ℝ, -a < w →
+      lowerCompletion ν a w S z = lowerReflection a w S z)
+    (hSmall : ∀ β : ℝ, β ^ 2 ≤ T / 2 → |y + β| ≤ a →
+      |sourceRemainder ν a y T z β| ≤
+        C * |β| ^ 3 * (1 / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 *
+          intervalIncrementProfile a y T z β) :
+    |retainedRemainder ν a y T z b| + negativeOvershoot ν a y T z b ≤
+      (2 * C + 40) * (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 *
+        intervalEnvelope a y T z b := by
+
+end Shao.C2.IntervalGaussianLocal

@@ -1,0 +1,9 @@
+# Actual interval projection and own negative-overshoot budget
+
+Readonly supplement4322-4358. This unit applies45 to the ACTUAL sourceIntervalCompletion probability wrapper18, retaining exact source future/old values and actual source spatial derivative. No scalar interval proxy or reflection identity is substituted. Complete actual differentiability is an explicit premise.
+
+At upper/lower crossing and at the projected wall, actual future source completion is0 by18 endpoint exterior theorem, for every future energy includingzero. Thus sourceRemainder is exactly the zero-future algebra of45. Upper normalizes B=b,u=a-y,e=z-y,G=f_y and projectedp=u. Lower normalizes B=-b,u=a+y,e=y-z,G=-f_y and projectedp=-u. Both retain the full b-b²(z-y)/T time compensation. Exact identity R_b=R_p+O_b follows without an assumption of sign of f_y. Equality hits give zero separated overshoot.
+
+For probability ν, old source completion F>=0 follows from18. Given source interval differentiability and the explicit projected bound |R_p|<=K|p|³,K>=0, smallcrossgeometry b²<=T/2 gives45 hypotheses0<u<=B,e<u. Its strong own budget becomes |R_p|+max(-O_b,0)<=K*(a-y)*b²<=K|b|³ (upper), and witha+y lower. Projected p need not be a remaining label; no sign assumption on actual derivative, no independent negative overshoot charge, and no separated positive overshoot are inserted. The missing interval projected Taylor bound is NOT supplied by this unit.
+
+All4 completeheads/all3 transparentvalues/imports frozen before proofs; UTF8LFnoBOM. Kernel001/all11 actualowners=8theoremconstants+3definitions recursiveaxiomPASS; all11 actual types and3 full values exported. No failedattempt or oldproducerrebuild/reviewreplay.45 qualified completefinal review and18 qualified evidence reused. Actual interval higher/time/mixed regularity/PDE/Taylor and all rootgroups remain OPEN. Independent complete final review of this exact source pending.

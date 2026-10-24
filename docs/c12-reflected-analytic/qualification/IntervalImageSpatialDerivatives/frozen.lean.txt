@@ -1,0 +1,38 @@
+import Shao.C2.IntervalImageSpatialConvergence
+import Mathlib.Analysis.Calculus.SmoothSeries
+
+noncomputable section
+namespace Shao.C2.IntervalImageSpatialDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence
+
+def spatialTailSum (j : ℕ) (a z T y : ℝ) : ℝ :=
+  ∑' n : ℕ, spatialTailBlock j a z T y n
+
+theorem affineImageTerm_iterated_hasDerivAt (j : ℕ) (c k T y : ℝ) :
+    HasDerivAt (iteratedDeriv j (affineImageTerm c k T))
+      (iteratedDeriv (j + 1) (affineImageTerm c k T) y) y := by
+
+theorem imageA_iterated_hasDerivAt (j : ℕ) (a z T y m : ℝ) :
+    HasDerivAt (iteratedDeriv j (fun w => Real.exp (-imageA a w z m / T)))
+      (iteratedDeriv (j + 1) (fun w => Real.exp (-imageA a w z m / T)) y) y := by
+
+theorem imageB_iterated_hasDerivAt (j : ℕ) (a z T y m : ℝ) :
+    HasDerivAt (iteratedDeriv j (fun w => Real.exp (-imageB a w z m / T)))
+      (iteratedDeriv (j + 1) (fun w => Real.exp (-imageB a w z m / T)) y) y := by
+
+theorem spatialTailBlock_hasDerivAt (j : ℕ) (a z T y : ℝ) (n : ℕ) :
+    HasDerivAt (fun w => spatialTailBlock j a z T w n)
+      (spatialTailBlock (j + 1) a z T y n) y := by
+
+theorem spatialTailSum_hasDerivAt (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    HasDerivAt (spatialTailSum j a z T) (spatialTailSum (j + 1) a z T y) y := by
+
+theorem spatialTailSum_iteratedDeriv (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    iteratedDeriv j (spatialTailSum 0 a z T) y = spatialTailSum j a z T y := by
+
+end Shao.C2.IntervalImageSpatialDerivatives
