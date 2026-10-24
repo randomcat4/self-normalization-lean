@@ -1,0 +1,9 @@
+# Unit143: actual bridge source interval stopped expectation
+
+This resolves the regularity/reflection inputs of the already qualified C2 ReflectedIntervalTelescope. The actual Brownian measure W and independent source path-population measure P remain distinct. All imports/context and3complete public theorem heads,0private/global values were frozen before implementation.
+
+The first theorem takes142 sourcecompletion HasDerivAt, uses the exact positive-time sourcecompletion=raw intervalCompletion function identity, and returns the HasDerivAt with its actual native derivative. This is precisely the pre-existing spatialDerivative definition, with no replacement analytic derivative. The second exposes source DifferentiableAt for root/common consumers.
+
+The third establishes the actual bridgeLaw probability instance and invokes the exact existing reflected stopped telescope. The first theorem supplies full interval regularity at every legal parameter. Actual103/104 upper/lower formulas supply both reflection identities after unfolding only their explicit scalar reflection definitions. Every original cutoff upper bound, measurable stop, reveal observability, positive remaining-energy cutoff, bounded measurable weight and permutation invariance hypothesis is retained verbatim. Both genuine Integrable conclusions and the exact same uniform permutation/source-population expectation equality are returned. No error estimate, iid law, final source comparison or original C12 root is inferred solely from this finite stopped identity.
+
+Attempt001 kernel/all3owner recursive AX PASS:3public theorems0private/generated/values. Complete actual types and empty value stream accompany the receipt. There are no failed gates. The unchanged older complete proof qualifications are to be reused rather than replayed. Independent complete review and root dependency assembly remain required.

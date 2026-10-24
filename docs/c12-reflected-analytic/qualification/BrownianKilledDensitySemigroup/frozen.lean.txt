@@ -1,0 +1,45 @@
+import Shao.C2.BrownianKilledComposition
+import Mathlib.Analysis.Calculus.ParametricIntegral
+
+noncomputable section
+namespace Shao.C2.BrownianKilledDensitySemigroup
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BrownianKilledKernel Shao.C2.BrownianKilledSemigroup
+open Shao.C2.BrownianBridgeLawUniversality Shao.C2.BrownianKilledEndpointDensity
+
+private theorem killed_density_uniform_bound {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y z : ℝ) (T : ℝ≥0) :
+    0 ≤ gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z ∧
+      gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z ≤
+        (Real.sqrt (2 * Real.pi * (T : ℝ)))⁻¹ := by
+
+theorem actualIntervalKernel_rowCDF_hasDerivAt {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y z : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    HasDerivAt (fun v : ℝ => (actualIntervalKernel B P a T y).real (Iic v))
+      (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z) z := by
+
+theorem actual_killed_density_semigroup_row {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y w : ℝ) (T S : ℝ≥0) (hT : T ≠ 0) (hS : S ≠ 0) :
+    Integrable (fun z : ℝ => gaussianPDFReal z S w *
+      intervalCompletion (bridgeLaw B P) a z (S : ℝ) w) (actualIntervalKernel B P a T y) ∧
+    gaussianPDFReal y (T + S) w * intervalCompletion (bridgeLaw B P) a y ((T + S : ℝ≥0) : ℝ) w =
+      ∫ z : ℝ, gaussianPDFReal z S w * intervalCompletion (bridgeLaw B P) a z (S : ℝ) w
+        ∂actualIntervalKernel B P a T y := by
+
+theorem actual_killed_density_convolution {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y w : ℝ) (T S : ℝ≥0) (hT : T ≠ 0) (hS : S ≠ 0) :
+    Integrable (fun z : ℝ =>
+      (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z) *
+      (gaussianPDFReal z S w * intervalCompletion (bridgeLaw B P) a z (S : ℝ) w)) volume ∧
+    gaussianPDFReal y (T + S) w * intervalCompletion (bridgeLaw B P) a y ((T + S : ℝ≥0) : ℝ) w =
+      ∫ z : ℝ,
+        (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z) *
+        (gaussianPDFReal z S w * intervalCompletion (bridgeLaw B P) a z (S : ℝ) w) := by
+
+end Shao.C2.BrownianKilledDensitySemigroup

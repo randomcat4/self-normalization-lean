@@ -1,0 +1,38 @@
+import Shao.C2.BrownianKilledDensitySemigroup
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+noncomputable section
+namespace Shao.C2.BrownianKilledInitialLimit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw Shao.C2.ScaledBrownianIdentity
+open Shao.C2.BrownianKilledKernel Shao.C2.BrownianKilledAction
+open Shao.C2.BrownianBridgeProductKernel
+
+theorem actualIntervalKernel_action_bridgeProduct {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (f : ℝ → ℝ) (hf : Measurable f) (hbound : ∃ M : ℝ, ∀ z, |f z| ≤ M) :
+    Integrable f (actualIntervalKernel B P a T y) ∧
+      Integrable ((scaledInitialSurvival a y (T : ℝ)).indicator
+        (fun p : BridgeNoise × ℝ => f (y + Real.sqrt (T : ℝ) * p.2)))
+        ((bridgeLaw B P).prod (gaussianReal 0 1)) ∧
+      (∫ z : ℝ, f z ∂actualIntervalKernel B P a T y) =
+        ∫ p : BridgeNoise × ℝ, (scaledInitialSurvival a y (T : ℝ)).indicator
+          (fun p => f (y + Real.sqrt (T : ℝ) * p.2)) p
+          ∂((bridgeLaw B P).prod (gaussianReal 0 1)) := by
+
+private theorem bridgeProduct_initial_pointwise (a y : ℝ) (hy : |y| < a)
+    (f : ℝ → ℝ) (hf : Continuous f) (p : BridgeNoise × ℝ) :
+    Tendsto (fun T : ℝ≥0 => (scaledInitialSurvival a y (T : ℝ)).indicator
+      (fun q : BridgeNoise × ℝ => f (y + Real.sqrt (T : ℝ) * q.2)) p)
+      (𝓝 0) (𝓝 (f y)) := by
+
+theorem actualIntervalKernel_initial_limit {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (hy : |y| < a)
+    (f : ℝ → ℝ) (hf : Continuous f) (hbound : ∃ M : ℝ, ∀ z, |f z| ≤ M) :
+    Tendsto (fun T : ℝ≥0 => ∫ z : ℝ, f z ∂actualIntervalKernel B P a T y)
+      (𝓝[>] 0) (𝓝 (f y)) := by
+
+end Shao.C2.BrownianKilledInitialLimit
