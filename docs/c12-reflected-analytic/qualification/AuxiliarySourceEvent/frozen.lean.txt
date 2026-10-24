@@ -1,0 +1,25 @@
+import Shao.C2.AuxiliaryCenteredEvent
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliarySourceEvent
+
+theorem auxiliary_rare_thresholds (x : ℝ) (hx : 1 ≤ x) :
+    let a : ℝ := Real.sqrt ((9 / 4) * x ^ 2 - 1)
+    let y : ℝ := a - 1 / (100 * (1 + x))
+    1 ≤ y ∧ y ≤ 2 * x ∧ a - y = 1 / (100 * (1 + x)) := by
+
+theorem auxiliary_centered_source_weak_event
+    {n : ℕ} (v : Shao.Path n) (mu x : ℝ) (hx : 1 ≤ x)
+    (hRank : 4 * x ^ 2 ≤ (n : ℝ))
+    (hEnergy : (n : ℝ) / 8 ≤ Shao.energy v)
+    (hDrift : Real.sqrt (n : ℝ) * |mu| ≤ 1 / (1000 * (1 + x)))
+    (hCross : Real.sqrt ((9 / 4) * x ^ 2 - 1) * Real.sqrt (Shao.energy v) ≤
+      |Shao.prefixSum v n|) :
+    let a : ℝ := Real.sqrt ((9 / 4) * x ^ 2 - 1)
+    let y : ℝ := a - 1 / (100 * (1 + x))
+    y * Real.sqrt (Shao.energy (fun i => v i - mu)) ≤
+      |Shao.prefixSum (fun i => v i - mu) n| := by
+
+end Shao.C2.AuxiliarySourceEvent

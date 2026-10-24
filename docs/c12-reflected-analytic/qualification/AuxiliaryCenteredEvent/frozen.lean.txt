@@ -1,0 +1,23 @@
+import Shao.C2.AuxiliaryLowEnergyGaussian
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliaryCenteredEvent
+open scoped BigOperators
+
+theorem auxiliary_centered_path_energy_and_sum
+    {n : ℕ} (v : Shao.Path n) (mu : ℝ) :
+    Shao.prefixSum (fun i => v i - mu) n = Shao.prefixSum v n - (n : ℝ) * mu ∧
+      Real.sqrt (Shao.energy (fun i => v i - mu)) ≤
+        Real.sqrt (Shao.energy v) + Real.sqrt (n : ℝ) * |mu| := by
+
+theorem auxiliary_centered_weak_event
+    {n : ℕ} (v : Shao.Path n) (mu a y : ℝ) (hy : 0 ≤ y)
+    (hShift : (Real.sqrt (n : ℝ) + y) * Real.sqrt (n : ℝ) * |mu| ≤
+      (a - y) * Real.sqrt (Shao.energy v))
+    (hCross : a * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v n|) :
+    y * Real.sqrt (Shao.energy (fun i => v i - mu)) ≤
+      |Shao.prefixSum (fun i => v i - mu) n| := by
+
+end Shao.C2.AuxiliaryCenteredEvent
