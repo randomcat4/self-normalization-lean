@@ -1,0 +1,31 @@
+import Shao.C2.ProjectionOvershoot
+
+noncomputable section
+namespace Shao.C2.GaussianWallEnvelope
+open Shao.C2.HalfLineTaylorSegment
+
+def wallEnvelope (w B e T : ℝ) : ℝ :=
+  Real.exp (-((max (w - (B + max e 0)) 0) ^ 2) / T)
+
+theorem wall_product_lower_bound (w B e : ℝ) (hw : 0 < w) (hB : 0 ≤ B) (he : e < w) :
+    (max (w - (B + max e 0)) 0) ^ 2 ≤ max (w - B) 0 * (w - e) := by
+
+theorem increment_profile_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)
+    (he : e < w) (hT : 0 < T) :
+    incrementProfile w (w - e) T b ≤ wallEnvelope w |b| e T := by
+
+theorem initial_profile_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)
+    (he : e < w) (hT : 0 < T) :
+    Real.exp (-w * (w - e) / T) ≤ wallEnvelope w |b| e T := by
+
+theorem future_reflection_deficit_le_wallEnvelope (w e T b : ℝ) (hw : 0 < w)
+    (he : e < w) (hT : 0 < T) (hnew : 0 ≤ w - b) (hfuture : 0 < T - b ^ 2) :
+    Real.exp (-2 * (w - b) * (w - e) / (T - b ^ 2)) ≤ wallEnvelope w |b| e T := by
+
+theorem crossing_wallEnvelope_eq_one (w b e T : ℝ) (hw : 0 < w) (hcross : w ≤ |b|) :
+    wallEnvelope w |b| e T = 1 := by
+
+theorem wallEnvelope_bounds (w B e T : ℝ) (hT : 0 < T) :
+    0 < wallEnvelope w B e T ∧ wallEnvelope w B e T ≤ 1 := by
+
+end Shao.C2.GaussianWallEnvelope
