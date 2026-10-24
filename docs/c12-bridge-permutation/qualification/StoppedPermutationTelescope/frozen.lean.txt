@@ -1,0 +1,41 @@
+import Shao.C1.PermutationCompensation
+import Mathlib.Data.Finset.Fin
+import Mathlib.Algebra.BigOperators.Fin
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.C1.PermutationCompensation
+open scoped BigOperators
+
+private theorem finite_stopped_sum
+    (n m : ℕ) (hm : m ≤ n) (v : ℕ → ℝ) :
+    (∑ i : Fin n, if i.val < m then v (i.val + 1) - v i.val else 0) = v m - v 0
+
+theorem finite_stopped_compensation
+    (n : ℕ) (a : Fin n → ℝ)
+    (ν : Equiv.Perm (Fin n) → ℕ) (hν : ∀ σ, ν σ ≤ n)
+    (hνobs : ∀ (r : Fin n) (σ τ : Equiv.Perm (Fin n)),
+      (∀ i : Fin n, i.val < r.val → σ i = τ i) →
+        (r.val < ν σ ↔ r.val < ν τ))
+    (W : Equiv.Perm (Fin n) → Fin n → ℝ)
+    (hW : ∀ (r : Fin n) (σ τ : Equiv.Perm (Fin n)),
+      (∀ i : Fin n, i.val < r.val → σ i = τ i) → W σ r = W τ r)
+    (H : ℝ) (hH : 0 < H)
+    (hcutoff : ∀ (σ : Equiv.Perm (Fin n)) (r : Fin n), r.val < ν σ →
+      H ≤ (∑ i : Fin n, (a i) ^ 2) -
+        ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < r.val), (a (σ i)) ^ 2) :
+    let d : Equiv.Perm (Fin n) → Fin n → ℝ := fun σ r =>
+      (∑ i : Fin n, a i) -
+        ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < r.val), a (σ i)
+    let T : Equiv.Perm (Fin n) → Fin n → ℝ := fun σ r =>
+      (∑ i : Fin n, (a i) ^ 2) -
+        ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < r.val), (a (σ i)) ^ 2
+    ∀ V : Equiv.Perm (Fin n) → ℕ → ℝ,
+      (∑ σ : Equiv.Perm (Fin n), (V σ (ν σ) - V σ 0)) =
+        ∑ σ : Equiv.Perm (Fin n), ∑ r : Fin n,
+          if r.val < ν σ then
+            V σ (r.val + 1) - V σ r.val -
+              W σ r * (a (σ r) - (a (σ r)) ^ 2 * d σ r / T σ r)
+          else 0
+
+end Shao.C1.PermutationCompensation
