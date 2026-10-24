@@ -1,0 +1,43 @@
+import Shao.C1.PermutationEnergyEnvelope
+import Shao.Probability.MeasurablePath
+
+noncomputable section
+namespace Shao.C1.GuardedPermutationIntegrability
+open MeasureTheory
+open Shao.C1.PermutationEnergyEnvelope
+
+def guardedRemainder {n : ℕ} (σ : Equiv.Perm (Fin n)) (r : Fin n) (H : ℝ)
+    (FY Vnext Vnow : Shao.Path n → ℝ) (a : Shao.Path n) : ℝ :=
+  if H ≤ revealRemainingEnergy a σ r then
+    Vnext a - Vnow a -
+      (a (σ r) - (a (σ r)) ^ 2 * revealRemainingSum a σ r / revealRemainingEnergy a σ r) * FY a
+  else 0
+
+theorem measurable_guarded_remainder {n : ℕ} (σ : Equiv.Perm (Fin n))
+    (r : Fin n) (H : ℝ) (FY Vnext Vnow : Shao.Path n → ℝ)
+    (hFY : Measurable FY) (hVnext : Measurable Vnext) (hVnow : Measurable Vnow) :
+    Measurable (guardedRemainder σ r H FY Vnext Vnow)
+
+theorem guarded_remainder_bound {n : ℕ} (σ : Equiv.Perm (Fin n))
+    (r : Fin n) (H C : ℝ) (hH : 0 < H) (hC : 0 ≤ C)
+    (FY Vnext Vnow : Shao.Path n → ℝ)
+    (hvNext : ∀ a, 0 ≤ Vnext a ∧ Vnext a ≤ 1)
+    (hvNow : ∀ a, 0 ≤ Vnow a ∧ Vnow a ≤ 1)
+    (hfy : ∀ a, H ≤ revealRemainingEnergy a σ r →
+      |FY a| ≤ C / Real.sqrt (revealRemainingEnergy a σ r) *
+        (1 + |revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r))) :
+    ∀ a, |guardedRemainder σ r H FY Vnext Vnow a| ≤ 1 + 2 * C * (1 + (n : ℝ))
+
+theorem guarded_remainder_integrable {n : ℕ}
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (σ : Equiv.Perm (Fin n)) (r : Fin n) (H C : ℝ) (hH : 0 < H) (hC : 0 ≤ C)
+    (FY Vnext Vnow : Shao.Path n → ℝ)
+    (hFY : Measurable FY) (hVnext : Measurable Vnext) (hVnow : Measurable Vnow)
+    (hvNext : ∀ a, 0 ≤ Vnext a ∧ Vnext a ≤ 1)
+    (hvNow : ∀ a, 0 ≤ Vnow a ∧ Vnow a ≤ 1)
+    (hfy : ∀ a, H ≤ revealRemainingEnergy a σ r →
+      |FY a| ≤ C / Real.sqrt (revealRemainingEnergy a σ r) *
+        (1 + |revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r))) :
+    Integrable (guardedRemainder σ r H FY Vnext Vnow) P
+
+end Shao.C1.GuardedPermutationIntegrability

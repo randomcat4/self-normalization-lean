@@ -1,0 +1,52 @@
+import Shao.C2.InitialCompletionError
+import Shao.Probability.MeasurablePath
+
+open scoped NNReal
+noncomputable section
+namespace Shao.C2.FiniteInitialCompletion
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw Shao.C2.EndpointCDFTransfer
+
+theorem atom_le_two_cdf
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (x : ℝ) (hρx : ρ {x} = 0) :
+    μ.real {x} ≤ 2 * δ
+
+theorem normalized_energy_zero_le_cdf
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ,
+      |P.real {z | Shao.C1.normalizedEndpoint z ≤ x} -
+        (gaussianReal 0 1).real (Set.Iic x)| ≤ δ) :
+    P.real {z | Shao.energy z = 0} ≤ 2 * δ
+
+theorem finite_initial_marginal_error_of_cdf
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ,
+      |P.real {z | Shao.C1.normalizedEndpoint z ≤ x} -
+        (gaussianReal 0 1).real (Set.Iic x)| ≤ δ)
+    (a : ℝ) :
+    |(∫ z, (if 0 < Shao.energy z then
+        intervalCompletion (bridgeLaw B PB) a 0 1 (Shao.C1.normalizedEndpoint z) else 0) ∂P) -
+      PB.real {ω | ∀ t : BridgeTime, |B ⟨(t : ℝ), t.property.1⟩ ω| < a}| ≤ 4 * δ
+
+theorem finite_initial_joint_error_of_cdf
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ,
+      |P.real {z | Shao.C1.normalizedEndpoint z ≤ x} -
+        (gaussianReal 0 1).real (Set.Iic x)| ≤ δ)
+    (a v : ℝ) :
+    |(∫ z, (if 0 < Shao.energy z then
+        (if Shao.C1.normalizedEndpoint z ≤ v then
+          intervalCompletion (bridgeLaw B PB) a 0 1 (Shao.C1.normalizedEndpoint z) else 0) else 0) ∂P) -
+      PB.real {ω | (∀ t : BridgeTime, |B ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧ B 1 ω ≤ v}| ≤ 4 * δ
+
+end Shao.C2.FiniteInitialCompletion

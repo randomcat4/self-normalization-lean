@@ -1,0 +1,48 @@
+import Shao.C1.PermutationCompensation
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.Analysis.Real.Sqrt
+
+noncomputable section
+namespace Shao.C1.PermutationEnergyEnvelope
+open scoped BigOperators
+
+def revealRemainingSum {n : ℕ} (a : Fin n → ℝ) (σ : Equiv.Perm (Fin n)) (r : Fin n) : ℝ :=
+  (∑ i : Fin n, a i) -
+    ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < r.val), a (σ i)
+
+def revealRemainingEnergy {n : ℕ} (a : Fin n → ℝ) (σ : Equiv.Perm (Fin n)) (r : Fin n) : ℝ :=
+  (∑ i : Fin n, (a i) ^ 2) -
+    ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < r.val), (a (σ i)) ^ 2
+
+theorem remaining_energy_bounds {n : ℕ} (a : Fin n → ℝ)
+    (σ : Equiv.Perm (Fin n)) (r : Fin n) :
+    (a (σ r)) ^ 2 ≤ revealRemainingEnergy a σ r ∧
+      revealRemainingSum a σ r ^ 2 ≤ (n - r.val : ℕ) * revealRemainingEnergy a σ r
+
+theorem normalized_remaining_bounds {n : ℕ} (a : Fin n → ℝ)
+    (σ : Equiv.Perm (Fin n)) (r : Fin n)
+    (hT : 0 < revealRemainingEnergy a σ r) :
+    |a (σ r)| ≤ Real.sqrt (revealRemainingEnergy a σ r) ∧
+      (|revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r)) ^ 2 ≤
+        (n - r.val : ℕ)
+
+theorem compensated_derivative_bound {n : ℕ} (a : Fin n → ℝ)
+    (σ : Equiv.Perm (Fin n)) (r : Fin n) (C fy : ℝ) (hC : 0 ≤ C)
+    (hT : 0 < revealRemainingEnergy a σ r)
+    (hfy : |fy| ≤ C / Real.sqrt (revealRemainingEnergy a σ r) *
+      (1 + |revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r))) :
+    |a (σ r) - (a (σ r)) ^ 2 * revealRemainingSum a σ r / revealRemainingEnergy a σ r| *
+      |fy| ≤ 2 * C * (1 + (n - r.val : ℕ))
+
+theorem actual_remainder_bound {n : ℕ} (a : Fin n → ℝ)
+    (σ : Equiv.Perm (Fin n)) (r : Fin n) (C fy vNext vNow : ℝ) (hC : 0 ≤ C)
+    (hT : 0 < revealRemainingEnergy a σ r)
+    (hfy : |fy| ≤ C / Real.sqrt (revealRemainingEnergy a σ r) *
+      (1 + |revealRemainingSum a σ r| / Real.sqrt (revealRemainingEnergy a σ r)))
+    (hvNext : 0 ≤ vNext ∧ vNext ≤ 1) (hvNow : 0 ≤ vNow ∧ vNow ≤ 1) :
+    |vNext - vNow -
+      (a (σ r) - (a (σ r)) ^ 2 * revealRemainingSum a σ r / revealRemainingEnergy a σ r) * fy| ≤
+        1 + 2 * C * (1 + (n - r.val : ℕ))
+
+end Shao.C1.PermutationEnergyEnvelope
