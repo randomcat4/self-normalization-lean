@@ -1,0 +1,51 @@
+import Shao.C2.InitialCompletionVariation
+import Mathlib.MeasureTheory.Integral.Layercake
+
+noncomputable section
+namespace Shao.C2.EndpointCDFTransfer
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+private theorem lower_set_cases (s : Set ℝ) (hs : IsLowerSet s) :
+    s = ∅ ∨ s = Set.univ ∨ ∃ a : ℝ, s = Set.Iio a ∨ s = Set.Iic a
+
+private theorem open_cdf_discrepancy
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (x : ℝ) :
+    |μ.real (Set.Iio x) - ρ.real (Set.Iio x)| ≤ δ
+
+theorem lower_set_discrepancy
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (s : Set ℝ) (hs : IsLowerSet s) :
+    |μ.real s - ρ.real s| ≤ δ
+
+theorem antitone_unit_expectation_error
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (f : ℝ → ℝ) (hf : Antitone f) (hf0 : ∀ w, 0 ≤ f w) (hf1 : ∀ w, f w ≤ 1) :
+    |(∫ w : ℝ, f w ∂μ) - ∫ w : ℝ, f w ∂ρ| ≤ δ
+
+theorem initial_completion_expectation_error
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (a : ℝ) :
+    |(∫ w : ℝ, intervalCompletion ν a 0 1 w ∂μ) -
+      ∫ w : ℝ, intervalCompletion ν a 0 1 w ∂ρ| ≤ 2 * δ
+
+theorem initial_joint_expectation_error
+    (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (μ ρ : Measure ℝ) [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hCDF : ∀ x : ℝ, |μ.real (Set.Iic x) - ρ.real (Set.Iic x)| ≤ δ)
+    (a v : ℝ) :
+    |(∫ w : ℝ, (if w ≤ v then intervalCompletion ν a 0 1 w else 0) ∂μ) -
+      ∫ w : ℝ, (if w ≤ v then intervalCompletion ν a 0 1 w else 0) ∂ρ| ≤ 2 * δ
+
+end Shao.C2.EndpointCDFTransfer

@@ -1,0 +1,56 @@
+import Shao.C2.BridgeDomination
+import Shao.OQ4.PolygonalBrownianWeakLimit
+
+noncomputable section
+namespace Shao.C2.BrownianBridgeLaw
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.BridgeDomination
+
+def leftWeight : C(BridgeTime, ℝ) :=
+  ⟨fun t => 1 - (t : ℝ), by fun_prop⟩
+
+def rightWeight : C(BridgeTime, ℝ) :=
+  ⟨fun t => (t : ℝ), by fun_prop⟩
+
+def pinPath (f : C(BridgeTime, ℝ)) : BridgeNoise :=
+  ⟨f - f 0 • leftWeight - f 1 • rightWeight,
+    by constructor <;> simp [leftWeight, rightWeight]⟩
+
+def bridgeNoise {Ω : Type*} (B : ℝ≥0 → Ω → ℝ) (ω : Ω) : BridgeNoise :=
+  pinPath (Shao.OQ4.PolygonalBrownianWeakLimit.brownianUnitPath B 1 ω)
+
+def bridgeLaw {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) : Measure BridgeNoise :=
+  P.map (bridgeNoise B)
+
+theorem continuous_pinPath : Continuous pinPath
+
+theorem aemeasurable_bridgeNoise {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) : AEMeasurable (bridgeNoise B) P
+
+theorem isProbabilityMeasure_bridgeLaw {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) : IsProbabilityMeasure (bridgeLaw B P)
+
+theorem ae_bridgeNoise_eq {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ᵐ ω ∂P, ∀ t : BridgeTime,
+      (bridgeNoise B ω).val t =
+        B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω
+
+theorem actual_interval_completion {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) :
+    intervalCompletion (bridgeLaw B P) a y T z =
+      P.real {ω | ∀ t : BridgeTime,
+        |(1 - (t : ℝ)) * y + (t : ℝ) * z + Real.sqrt T *
+          (B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω)| < a}
+
+theorem actual_initial_variation {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℝ) :
+    eVariationOn (fun w : ℝ => intervalCompletion (bridgeLaw B P) a 0 1 w) Set.univ ≤ 2
+
+end Shao.C2.BrownianBridgeLaw
