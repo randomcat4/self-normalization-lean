@@ -1540,4 +1540,383 @@ theorem sourceTruncation_bounded_y_reflection_comparison :
       Finset.sum_le_sum (fun j _ => abs_integral_le_integral_abs)
     _ ≤ _ := hbound
 
+/- BEGIN FIXED CUTOFF PUBLIC COMPANIONS.
+Additive export of the fixed one-sixteenth cutoff from the existing proof.
+The original source is recovered exactly by deleting this marked block.
+-/
+
+private theorem fixedCutoff_br_bounded_y_abs_sum :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun a : ℝ => a ^ 2) ν0 →
+          (n : ℝ) * (∫ a : ℝ, a ^ 2 ∂ν0) = 1 → (∫ a : ℝ, a ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ (1 / 16384 : ℝ) →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+            let mu : ℝ := ∫ a : ℝ, a ∂ρ
+            let b : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+            let gamma : ℝ := b / variance (id : ℝ → ℝ) ρ
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => ρ)
+            ∀ y : ℝ, gamma ≤ y → y ≤ 2 →
+              let ψ : ℝ × ℝ → ℝ := fun p => ∫ z : ℝ × ℝ,
+                sourceFourierTest y (p.1 + z.1, p.2 + z.2) ∂quadraticFullNoiseLaw ρ
+              (∑ j : Fin n, ∫ a : Shao.Path n, |lindleyDelta ρ ψ a j| ∂P) ≤
+                C * ((n : ℝ) * |mu| + (n : ℝ) * b) := by
+  classical
+  obtain ⟨Kl, hKl, hlong⟩ := sourceTruncation_futureNoise_early_long_kernel_bounds_fixed_cutoff
+  let el : ℝ := 1 / 16384
+  let Ll : ℝ := 16384
+  have hel : 0 < el := by norm_num [el]
+  have hel2 : el ≤ 1 / 2 := by norm_num [el]
+  have hLl : (16384 : ℝ) ≤ Ll := le_rfl
+  obtain ⟨Ks, hKs, hshort⟩ := sourceTruncation_futureNoise_short_kernel_local_shift_budgets_fixed_cutoff
+  let es : ℝ := 1 / 8192
+  let Ls : ℝ := 16384
+  have hes : 0 < es := by norm_num [es]
+  have hes2 : es ≤ 1 / 2 := by norm_num [es]
+  have hLs : (16384 : ℝ) ≤ Ls := le_rfl
+  obtain ⟨Cp, hCp, hpush⟩ := sourceTruncation_lindleyDelta_large_push_sum
+  obtain ⟨Cm, hCm, hmicro⟩ := sourceTruncation_lindleyDelta_micro_clock_sum
+  let B : ℝ := 256 * Real.exp (7 + 3 * (1024 : ℝ))
+  let L : ℝ := max Ll Ls
+  let C : ℝ := Kl * (85 + 9 * B) + Ks * (6 + 2 * B) + Cp + Cm * (L + 1)
+  have hB : 0 < B := by dsimp [B]; positivity
+  have hL : 1 ≤ L := le_trans (by linarith only [hLl]) (le_max_left _ _)
+  refine ⟨C, by dsimp [C]; positivity, ?_⟩
+  intro ν0 hp n h2 hn hm x epsilon hx he heFixed hR
+  have he0 : epsilon ≤ min el es := by
+    change epsilon ≤ min (1 / 16384 : ℝ) (1 / 8192 : ℝ)
+    exact le_min heFixed (heFixed.trans (by norm_num))
+  letI := hp
+  dsimp only
+  have hele : epsilon ≤ el := he0.trans (min_le_left _ _)
+  have hese : epsilon ≤ es := he0.trans (min_le_right _ _)
+  have he2 : epsilon ≤ 1 / 2 := hele.trans hel2
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+  let mu : ℝ := ∫ a : ℝ, a ∂ρ
+  let s : ℝ := ∫ a : ℝ, a ^ 2 ∂ρ
+  let b : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+  let gamma : ℝ := b / variance (id : ℝ → ℝ) ρ
+  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => ρ)
+  let N0 : ℝ := (n : ℝ) * |mu|
+  let N3 : ℝ := (n : ℝ) * b
+  let A : ℝ := N0 + N3
+  obtain ⟨_, _, hpρ, hsρ, _, h2ρ, h3ρ, _⟩ :=
+    Shao.sourceTruncation_law_data ν0 n h2 hn x epsilon hx he he2 hR
+  letI : IsProbabilityMeasure ρ := hpρ
+  obtain ⟨hn0, hs, hb, hV, hg, _, hslo, hshi, _, _, _⟩ :=
+    br_source_scale ν0 n h2 hn hm x epsilon hx he he2 hR
+  change 0 < s at hs
+  change 0 < b at hb
+  change 0 < gamma at hg
+  change (3 / 4 : ℝ) ≤ (n : ℝ) * s at hslo
+  change (n : ℝ) * s ≤ 4 / 3 at hshi
+  have hN : (0 : ℝ) < n := by exact_mod_cast hn0
+  have hN0 : 0 ≤ N0 := by dsimp [N0]; positivity
+  have hN3 : 0 < N3 := by dsimp [N3]; positivity
+  have hA : 0 ≤ A := by dsimp [A]; positivity
+  have hN3A : N3 ≤ A := by dsimp [A]; linarith only [hN0]
+  letI : IsProbabilityMeasure (quadraticFullNoiseLaw ρ) :=
+    (quadraticFullNoise_law_data ρ h3ρ hV (epsilon / (1 + x)) (by positivity) hsρ).2.2.1
+  intro y hgy hy2
+  have hy : 0 < y := hg.trans_le hgy
+  let ψ : ℝ × ℝ → ℝ := fun p => ∫ z : ℝ × ℝ,
+    sourceFourierTest y (p.1 + z.1, p.2 + z.2) ∂quadraticFullNoiseLaw ρ
+  let T : Fin n → ℝ := fun j => (((n - (j.val + 1) : ℕ) : ℝ)) * s
+  let d : Fin n → ℝ := fun j => ∫ a : Shao.Path n, |lindleyDelta ρ ψ a j| ∂P
+  let U : Fin n → ℝ := fun j => ∫ a : Shao.Path n, lindleyRegulator a j ∂P
+  let U2 : Fin n → ℝ := fun j => ∫ a : Shao.Path n, (lindleyRegulator a j) ^ 2 ∂P
+  let Eset : Finset (Fin n) := Finset.univ.filter (fun j => j.val + 1 ≤ n / 2)
+  let Lset : Finset (Fin n) := Finset.univ.filter
+    (fun j => n / 2 < j.val + 1 ∧ max (L * gamma ^ 2) (y ^ 2) ≤ T j)
+  let Sset : Finset (Fin n) := Finset.univ.filter
+    (fun j => n / 2 < j.val + 1 ∧ L * gamma ^ 2 ≤ T j ∧ T j < max (L * gamma ^ 2) (y ^ 2))
+  let Mset : Finset (Fin n) := Finset.univ.filter
+    (fun j => n / 2 < j.val + 1 ∧ T j < L * gamma ^ 2)
+  have hψ := br_smoothed_data ρ y
+  have hd (j : Fin n) : 0 ≤ d j := integral_nonneg (fun _ => abs_nonneg _)
+  have hU (j : Fin n) : 0 ≤ U j := integral_nonneg (fun _ => le_max_right _ _)
+  have hU2 (j : Fin n) : 0 ≤ U2 j := integral_nonneg (fun _ => sq_nonneg _)
+  have hUi (j : Fin n) := (iid_lindleyRegulator_prefix_first_moment ρ h2ρ n j).1
+  have hU2i (j : Fin n) := (sourceTruncation_lindleyRegulator_second_moment
+    ν0 n h2 hn hm x epsilon hx he he2 hR j).1
+  have hl (j : Fin n) := hlong ν0 hp n h2 hn hm x epsilon hx he hele hR y hgy hy2
+    (j.val + 1) (by omega) (by have hj := j.is_lt; omega)
+  have hlate (j : Fin n) (hj : n / 2 < j.val + 1) : U j ≤ 6 * s ∧ U2 j ≤ 2 * B * s * N3 := by
+    have hh := br_source_late_moments ν0 n h2 hn hm x epsilon hx he he2 hR j hj
+    have hfirst : (4 : ℝ) / n ≤ 6 * s := (div_le_iff₀ hN).2 (by nlinarith only [hslo])
+    have hsecond : U2 j ≤ B * b := hh.2.trans (mul_le_mul_of_nonneg_right
+      (by dsimp [B]; have hh := Real.exp_pos (7 + 3 * (1024 : ℝ)); linarith) hb.le)
+    have hscale : b ≤ 2 * s * N3 := by
+      have hmul := mul_le_mul_of_nonneg_right
+        (show (1 : ℝ) ≤ 2 * (n : ℝ) * s by nlinarith only [hslo]) hb.le
+      dsimp only [N3]
+      nlinarith only [hmul]
+    exact ⟨hh.1.trans hfirst, hsecond.trans (by
+      convert mul_le_mul_of_nonneg_left hscale hB.le using 1 <;> ring)⟩
+  have htotal := br_source_total_moments ν0 n h2 hn hm x epsilon hx he he2 hR
+  change (∑ j, U j) ≤ 5 ∧ (∑ j, U2 j) ≤ B * N3 at htotal
+  have hEbound : (∑ j ∈ Eset, d j) ≤ Kl * (5 + B) * A := by
+    have hterm (j : Fin n) (hj : j ∈ Eset) : d j ≤ Kl * A * U j + Kl * U2 j := by
+      exact br_taylor_integral ρ n ψ hψ.1 hψ.2.1 y hψ.2.2 j (Kl * A) Kl
+        (by positivity) hKl.le (hUi j) (hU2i j) (hl j).1
+        ((hl j).2.1 (Finset.mem_filter.1 hj).2)
+    have hsumU : (∑ j ∈ Eset, U j) ≤ 5 :=
+      (Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ Eset) (fun j _ _ => hU j)).trans htotal.1
+    have hsumU2 : (∑ j ∈ Eset, U2 j) ≤ B * N3 :=
+      (Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ Eset) (fun j _ _ => hU2 j)).trans htotal.2
+    calc
+      _ ≤ ∑ j ∈ Eset, (Kl * A * U j + Kl * U2 j) := Finset.sum_le_sum hterm
+      _ = Kl * A * (∑ j ∈ Eset, U j) + Kl * (∑ j ∈ Eset, U2 j) := by
+        rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+      _ ≤ Kl * A * 5 + Kl * (B * N3) := add_le_add
+        (mul_le_mul_of_nonneg_left hsumU (by positivity)) (mul_le_mul_of_nonneg_left hsumU2 hKl.le)
+      _ ≤ Kl * A * 5 + Kl * (B * A) := by gcongr
+      _ = _ := by ring
+  have hLbound : (∑ j ∈ Lset, d j) ≤ Kl * (80 + 8 * B) * A := by
+    let K : Finset ℕ := (Finset.range (n + 1)).filter (fun k => y ^ 2 ≤ (k : ℝ) * s)
+    have hgK := br_long_grid n K s y hs hy hshi (fun k hk =>
+      ⟨Nat.le_of_lt_succ (Finset.mem_range.1 (Finset.mem_filter.1 hk).1), (Finset.mem_filter.1 hk).2⟩)
+    have hmap (j : Fin n) (hj : j ∈ Lset) : n - (j.val + 1) ∈ K :=
+      Finset.mem_filter.2 ⟨Finset.mem_range.2 (by omega),
+        (le_max_right (L * gamma ^ 2) (y ^ 2)).trans (Finset.mem_filter.1 hj).2.2⟩
+    have hg1 : s * (∑ j ∈ Lset, 1 / Real.sqrt (T j)) ≤ 4 :=
+      (mul_le_mul_of_nonneg_left (br_remaining_sum_le n Lset
+        (fun k => 1 / Real.sqrt ((k : ℝ) * s)) K (fun _ => by positivity) hmap) hs.le).trans hgK.1
+    have hg3 : s * (∑ j ∈ Lset, 1 / (Real.sqrt (T j)) ^ 3) ≤ 4 / y :=
+      (mul_le_mul_of_nonneg_left (br_remaining_sum_le n Lset
+        (fun k => 1 / (Real.sqrt ((k : ℝ) * s)) ^ 3) K (fun _ => by positivity) hmap) hs.le).trans hgK.2
+    have hterm (j : Fin n) (hj : j ∈ Lset) : d j ≤ Kl *
+        (6 * y * N0 * (s / Real.sqrt (T j)) +
+          (6 + 2 * B) * y * N3 * (s / (Real.sqrt (T j)) ^ 3)) := by
+      have hjl := (Finset.mem_filter.1 hj).2
+      have hTl : max (Ll * gamma ^ 2) (y ^ 2) ≤ T j :=
+        (max_le_max (mul_le_mul_of_nonneg_right (le_max_left Ll Ls) (sq_nonneg gamma)) le_rfl).trans hjl.2
+      let O : ℝ := Kl * y * (N0 / Real.sqrt (T j) + N3 / (Real.sqrt (T j)) ^ 3)
+      let E : ℝ := Kl * y / (Real.sqrt (T j)) ^ 3
+      have hh := br_taylor_integral ρ n ψ hψ.1 hψ.2.1 y hψ.2.2 j O E
+        (by dsimp [O]; positivity) (by dsimp [E]; positivity) (hUi j) (hU2i j) (hl j).1
+        ((hl j).2.2 hjl.1 hTl)
+      apply hh.trans
+      calc
+        _ ≤ O * (6 * s) + E * (2 * B * s * N3) := add_le_add
+          (mul_le_mul_of_nonneg_left (hlate j hjl.1).1 (by dsimp [O]; positivity))
+          (mul_le_mul_of_nonneg_left (hlate j hjl.1).2 (by dsimp [E]; positivity))
+        _ = _ := by dsimp [O, E]; ring
+    calc
+      _ ≤ ∑ j ∈ Lset, Kl * (6 * y * N0 * (s / Real.sqrt (T j)) +
+          (6 + 2 * B) * y * N3 * (s / (Real.sqrt (T j)) ^ 3)) := Finset.sum_le_sum hterm
+      _ = Kl * (6 * y * N0 * (s * (∑ j ∈ Lset, 1 / Real.sqrt (T j))) +
+          (6 + 2 * B) * y * N3 * (s * (∑ j ∈ Lset, 1 / (Real.sqrt (T j)) ^ 3))) := by
+        calc
+          _ = (Kl * (6 * y * N0 * s)) * (∑ j ∈ Lset, 1 / Real.sqrt (T j)) +
+              (Kl * ((6 + 2 * B) * y * N3 * s)) * (∑ j ∈ Lset, 1 / (Real.sqrt (T j)) ^ 3) := by
+            rw [Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
+            apply Finset.sum_congr rfl
+            intro j _
+            ring
+          _ = _ := by ring
+      _ ≤ Kl * (6 * y * N0 * 4 + (6 + 2 * B) * y * N3 * (4 / y)) := by gcongr
+      _ = Kl * (24 * y * N0 + (24 + 8 * B) * N3) := by field_simp [hy.ne']; ring
+      _ ≤ Kl * (48 * N0 + (24 + 8 * B) * N3) := by gcongr; linarith only [hy2]
+      _ ≤ Kl * ((80 + 8 * B) * N0 + (80 + 8 * B) * N3) := by gcongr <;> linarith only [hB]
+      _ = _ := by dsimp only [A]; ring
+  let Js : Finset ℕ := (Finset.range (n + 1)).filter (fun i => n / 2 < i ∧
+    Ls * gamma ^ 2 ≤ (((n - i : ℕ) : ℝ) * s) ∧
+      (((n - i : ℕ) : ℝ) * s) < max (Ls * gamma ^ 2) (y ^ 2))
+  obtain ⟨O, E, hOE, hlocal, hOs, hEs⟩ :=
+    hshort ν0 hp n h2 hn hm x epsilon hx he hese hR y hgy hy2
+  change s * (∑ i ∈ Js, O i) ≤ Ks * A at hOs
+  change s * (∑ i ∈ Js, E i) ≤ Ks at hEs
+  have hSmem (j : Fin n) (hj : j ∈ Sset) : j.val + 1 ∈ Js := by
+    have hjs := (Finset.mem_filter.1 hj).2
+    have hTy : T j < y ^ 2 := by
+      rcases lt_max_iff.1 hjs.2.2 with h | h
+      · exact (not_lt_of_ge hjs.2.1 h).elim
+      · exact h
+    refine Finset.mem_filter.2 ⟨Finset.mem_range.2 (by have hh := j.is_lt; omega), hjs.1, ?_, ?_⟩
+    · exact (mul_le_mul_of_nonneg_right (le_max_right Ll Ls) (sq_nonneg gamma)).trans hjs.2.1
+    · exact hTy.trans_le (le_max_right _ _)
+  let big : Fin n → ℝ := fun j => ∫ a : Shao.Path n,
+    (if y / 16 < lindleyRegulator a j then |lindleyDelta ρ ψ a j| else 0) ∂P
+  have hbigi (j : Fin n) : Integrable (fun a : Shao.Path n =>
+      if y / 16 < lindleyRegulator a j then |lindleyDelta ρ ψ a j| else 0) P := by
+    refine (br_unit_integrable P _ (Measurable.ite
+      (measurableSet_lt measurable_const (br_regulator_measurable j))
+      (br_delta_data ρ n ψ hψ.1 hψ.2.1 j).1 measurable_const) ?_).1
+    intro a
+    split_ifs
+    · exact (br_delta_data ρ n ψ hψ.1 hψ.2.1 j).2.1 a
+    · simp
+  have hbig (j : Fin n) : 0 ≤ big j := integral_nonneg (fun a => by split_ifs <;> positivity)
+  have hSterm (j : Fin n) (hj : j ∈ Sset) :
+      d j ≤ 6 * s * O (j.val + 1) + 2 * B * s * N3 * E (j.val + 1) + big j := by
+    have hloc := (hlocal (j.val + 1) (hSmem j hj)).2
+    have hpnt (a : Shao.Path n) : |lindleyDelta ρ ψ a j| ≤
+        O (j.val + 1) * lindleyRegulator a j + E (j.val + 1) * (lindleyRegulator a j) ^ 2 +
+          (if y / 16 < lindleyRegulator a j then |lindleyDelta ρ ψ a j| else 0) := by
+      by_cases ha : y / 16 < lindleyRegulator a j
+      · rw [if_pos ha]
+        have hnon : 0 ≤ O (j.val + 1) * lindleyRegulator a j +
+            E (j.val + 1) * (lindleyRegulator a j) ^ 2 := by
+          have hu : 0 ≤ lindleyRegulator a j := le_max_right _ _
+          exact add_nonneg (mul_nonneg (hOE _).1 hu) (mul_nonneg (hOE _).2 (sq_nonneg _))
+        linarith only [hnon]
+      · rw [if_neg ha, add_zero]
+        have hh := hloc (lindleyRegulator a j) (Shao.prefixSquares a (j.val + 1))
+          (le_max_right _ _) (le_of_not_gt ha)
+        dsimp only [lindleyDelta]
+        rw [hψ.2.2, hψ.2.2]
+        have hnon := mul_nonneg (hOE (j.val + 1)).2 (sq_nonneg (lindleyRegulator a j))
+        nlinarith only [hh, hnon]
+    have hint := integral_mono (br_delta_data ρ n ψ hψ.1 hψ.2.1 j).2.2
+      (((hUi j).const_mul _).add ((hU2i j).const_mul _) |>.add (hbigi j)) hpnt
+    simp only [Pi.add_apply] at hint
+    have hF0 : Integrable (fun a : Shao.Path n =>
+        O (j.val + 1) * lindleyRegulator a j + E (j.val + 1) * (lindleyRegulator a j) ^ 2) P :=
+      ((hUi j).const_mul (O (j.val + 1))).add ((hU2i j).const_mul (E (j.val + 1)))
+    have heq : (∫ a : Shao.Path n,
+        (O (j.val + 1) * lindleyRegulator a j + E (j.val + 1) * (lindleyRegulator a j) ^ 2) +
+          (if y / 16 < lindleyRegulator a j then |lindleyDelta ρ ψ a j| else 0) ∂P) =
+        O (j.val + 1) * U j + E (j.val + 1) * U2 j + big j := by
+      rw [integral_add hF0 (hbigi j)]
+      rw [integral_add ((hUi j).const_mul (O (j.val + 1)))
+        ((hU2i j).const_mul (E (j.val + 1))), integral_const_mul, integral_const_mul]
+    rw [heq] at hint
+    apply hint.trans
+    have hl := hlate j (Finset.mem_filter.1 hj).2.1
+    have hh := add_le_add (mul_le_mul_of_nonneg_left hl.1 (hOE (j.val + 1)).1)
+      (mul_le_mul_of_nonneg_left hl.2 (hOE (j.val + 1)).2)
+    convert add_le_add_right hh (big j) using 1 <;> ring
+  let Jp : Finset (Fin n) := Finset.univ.filter
+    (fun j => n / 2 < j.val + 1 ∧ 0 < T j ∧ T j < y ^ 2)
+  have hSp : Sset ⊆ Jp := by
+    intro j hj
+    have hjs := (Finset.mem_filter.1 hj).2
+    have hTy : T j < y ^ 2 := by
+      rcases lt_max_iff.1 hjs.2.2 with h | h
+      · exact (not_lt_of_ge hjs.2.1 h).elim
+      · exact h
+    exact Finset.mem_filter.2 ⟨Finset.mem_univ _, hjs.1,
+      (show 0 < L * gamma ^ 2 by positivity).trans_le hjs.2.1, hTy⟩
+  have hbigsum : (∑ j ∈ Sset, big j) ≤ Cp * N3 := by
+    have hh := hpush ν0 hp n h2 hn hm x epsilon hx he he2 hR y hy
+    have hhfinal : (∑ j ∈ Jp, big j) ≤ Cp * N3 := by
+      simpa only [N3, mul_assoc] using hh.1.trans hh.2
+    exact (Finset.sum_le_sum_of_subset_of_nonneg hSp (fun j _ _ => hbig j)).trans hhfinal
+  have hSOs : s * (∑ j ∈ Sset, O (j.val + 1)) ≤ Ks * A :=
+    (mul_le_mul_of_nonneg_left (br_index_sum_le n Sset O Js (fun i => (hOE i).1) hSmem) hs.le).trans hOs
+  have hSEs : s * (∑ j ∈ Sset, E (j.val + 1)) ≤ Ks :=
+    (mul_le_mul_of_nonneg_left (br_index_sum_le n Sset E Js (fun i => (hOE i).2) hSmem) hs.le).trans hEs
+  have hSbound : (∑ j ∈ Sset, d j) ≤ Ks * (6 + 2 * B) * A + Cp * N3 := by
+    calc
+      _ ≤ ∑ j ∈ Sset, (6 * s * O (j.val + 1) + 2 * B * s * N3 * E (j.val + 1) + big j) :=
+        Finset.sum_le_sum hSterm
+      _ = 6 * (s * (∑ j ∈ Sset, O (j.val + 1))) +
+          2 * B * N3 * (s * (∑ j ∈ Sset, E (j.val + 1))) + ∑ j ∈ Sset, big j := by
+        simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+        ring
+      _ ≤ 6 * (Ks * A) + 2 * B * N3 * Ks + Cp * N3 :=
+        add_le_add (add_le_add (mul_le_mul_of_nonneg_left hSOs (by norm_num))
+          (mul_le_mul_of_nonneg_left hSEs (by positivity))) hbigsum
+      _ ≤ 6 * (Ks * A) + 2 * B * A * Ks + Cp * N3 := by gcongr
+      _ = _ := by ring
+  have hMbound : (∑ j ∈ Mset, d j) ≤ Cm * (L + 1) * N3 :=
+    hmicro ν0 hp n h2 hn hm x epsilon hx he he2 hR L y hL hy.le
+  have hcover (j : Fin n) : j ∈ Eset ∨ j ∈ Lset ∨ j ∈ Sset ∨ j ∈ Mset := by
+    by_cases hearly : j.val + 1 ≤ n / 2
+    · exact Or.inl (Finset.mem_filter.2 ⟨Finset.mem_univ _, hearly⟩)
+    have hlate : n / 2 < j.val + 1 := by omega
+    by_cases hsmall : T j < L * gamma ^ 2
+    · exact Or.inr (Or.inr (Or.inr (Finset.mem_filter.2 ⟨Finset.mem_univ _, hlate, hsmall⟩)))
+    by_cases hlarge : max (L * gamma ^ 2) (y ^ 2) ≤ T j
+    · exact Or.inr (Or.inl (Finset.mem_filter.2 ⟨Finset.mem_univ _, hlate, hlarge⟩))
+    exact Or.inr (Or.inr (Or.inl (Finset.mem_filter.2
+      ⟨Finset.mem_univ _, hlate, le_of_not_gt hsmall, lt_of_not_ge hlarge⟩)))
+  change (∑ j : Fin n, d j) ≤ C * A
+  calc
+    _ ≤ (∑ j ∈ Eset, d j) + (∑ j ∈ Lset, d j) +
+        (∑ j ∈ Sset, d j) + ∑ j ∈ Mset, d j := br_sum_cover d hd Eset Lset Sset Mset hcover
+    _ ≤ Kl * (5 + B) * A + Kl * (80 + 8 * B) * A +
+        (Ks * (6 + 2 * B) * A + Cp * N3) + Cm * (L + 1) * N3 :=
+      add_le_add (add_le_add (add_le_add hEbound hLbound) hSbound) hMbound
+    _ ≤ Kl * (5 + B) * A + Kl * (80 + 8 * B) * A +
+        (Ks * (6 + 2 * B) * A + Cp * A) + Cm * (L + 1) * A := by gcongr
+    _ = _ := by dsimp only [C]; ring
+
+theorem sourceTruncation_bounded_y_reflection_fixed_cutoff :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun a : ℝ => a ^ 2) ν0 →
+          (n : ℝ) * (∫ a : ℝ, a ^ 2 ∂ν0) = 1 →
+          (∫ a : ℝ, a ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ (1 / 16384 : ℝ) →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            let ρ : Measure ℝ :=
+              ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+            let mu : ℝ := ∫ a : ℝ, a ∂ρ
+            let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+            let gamma : ℝ := m3 / variance (id : ℝ → ℝ) ρ
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => ρ)
+            ∀ y : ℝ, gamma ≤ y → y ≤ 2 →
+              let ψ : ℝ × ℝ → ℝ := fun p =>
+                ∫ z : ℝ × ℝ,
+                  sourceFourierTest y (p.1 + z.1, p.2 + z.2)
+                  ∂quadraticFullNoiseLaw ρ
+              (∀ j : Fin n,
+                Integrable (fun a : Shao.Path n => |lindleyDelta ρ ψ a j|) P) ∧
+              (∑ j : Fin n, ∫ a : Shao.Path n, |lindleyDelta ρ ψ a j| ∂P) ≤
+                C * ((n : ℝ) * |mu| + (n : ℝ) * m3) ∧
+              ((∫ a : Shao.Path n,
+                  ψ (Shao.lindleyState a n le_rfl, Shao.energy a) ∂P) -
+                (∫ a : Shao.Path n,
+                  ψ (Shao.prefixSum a n, Shao.energy a) ∂P) =
+                ∑ j : Fin n, ∫ a : Shao.Path n, lindleyDelta ρ ψ a j ∂P) ∧
+              |(∫ a : Shao.Path n,
+                  ψ (Shao.lindleyState a n le_rfl, Shao.energy a) ∂P) -
+                (∫ a : Shao.Path n,
+                  ψ (Shao.prefixSum a n, Shao.energy a) ∂P)| ≤
+                C * ((n : ℝ) * |mu| + (n : ℝ) * m3) := by
+  classical
+  obtain ⟨C, hC, hsum⟩ := fixedCutoff_br_bounded_y_abs_sum
+  let epsilon0 : ℝ := 1 / 16384
+  have he0 : 0 < epsilon0 := by norm_num [epsilon0]
+  have he02 : epsilon0 ≤ 1 / 2 := by norm_num [epsilon0]
+  refine ⟨C, hC, ?_⟩
+  intro ν0 hp n h2 hn hm x epsilon hx he he0le hR
+  letI := hp
+  dsimp only
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => ρ)
+  obtain ⟨_, _, hpρ, hsρ, _, _, h3ρ, _⟩ :=
+    Shao.sourceTruncation_law_data ν0 n h2 hn x epsilon hx he (he0le.trans he02) hR
+  letI : IsProbabilityMeasure ρ := hpρ
+  have hV := (Shao.sourceTruncation_variance_bounds ν0 n h2 hn hm x epsilon hx he
+    (he0le.trans he02) hR).2.2.2.2.2.1
+  letI : IsProbabilityMeasure (quadraticFullNoiseLaw ρ) :=
+    (quadraticFullNoise_law_data ρ h3ρ hV (epsilon / (1 + x)) (by positivity) hsρ).2.2.1
+  intro y hgy hy2
+  let ψ : ℝ × ℝ → ℝ := fun p => ∫ z : ℝ × ℝ,
+    sourceFourierTest y (p.1 + z.1, p.2 + z.2) ∂quadraticFullNoiseLaw ρ
+  have hψ := br_smoothed_data ρ y
+  have hbound := hsum ν0 hp n h2 hn hm x epsilon hx he he0le hR y hgy hy2
+  have hLaw (j : Fin n) : IdentDistrib (fun a : Shao.Path n => a j) (id : ℝ → ℝ) P ρ := by
+    refine ⟨(measurable_pi_apply j).aemeasurable, aemeasurable_id, ?_⟩
+    simpa only [Measure.map_id] using (measurePreserving_eval (fun _ : Fin n => ρ) j).map_eq
+  have htel := iid_lindley_telescoping (fun j => measurable_pi_apply j)
+    (iIndepFun_pi (fun _ : Fin n => aemeasurable_id)) hLaw ψ hψ.1 hψ.2.1
+  change (∫ a : Shao.Path n, ψ (Shao.lindleyState a n le_rfl, Shao.energy a) ∂P) -
+    (∫ a : Shao.Path n, ψ (Shao.prefixSum a n, Shao.energy a) ∂P) =
+      ∑ j : Fin n, ∫ a : Shao.Path n, lindleyDelta ρ ψ a j ∂P at htel
+  refine ⟨fun j => (br_delta_data ρ n ψ hψ.1 hψ.2.1 j).2.2, hbound, htel, ?_⟩
+  rw [htel]
+  calc
+    _ ≤ ∑ j : Fin n, |∫ a : Shao.Path n, lindleyDelta ρ ψ a j ∂P| :=
+      Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ j : Fin n, ∫ a : Shao.Path n, |lindleyDelta ρ ψ a j| ∂P :=
+      Finset.sum_le_sum (fun j _ => abs_integral_le_integral_abs)
+    _ ≤ _ := hbound
+
+/- END FIXED CUTOFF PUBLIC COMPANIONS. -/
+
 end Shao.Probability

@@ -270,4 +270,144 @@ theorem sourceTruncation_futureNoise_short_kernel_local_shift_budgets :
       m2 * (∑ i ∈ J, O i) ≤ 2 * (K * A) := hOs
       _ = 2 * K * A := by ring
 
+/- BEGIN FIXED CUTOFF PUBLIC COMPANIONS.
+Additive export of the fixed one-sixteenth cutoff from the existing proof.
+The original source is recovered exactly by deleting this marked block.
+-/
+
+theorem sourceTruncation_futureNoise_short_kernel_local_shift_budgets_fixed_cutoff :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun a : ℝ => a ^ 2) ν0 →
+          (n : ℝ) * (∫ a : ℝ, a ^ 2 ∂ν0) = 1 →
+          (∫ a : ℝ, a ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ (1 / 8192 : ℝ) →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            let ρ : Measure ℝ :=
+              ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+            let mu : ℝ := ∫ a : ℝ, a ∂ρ
+            let m2 : ℝ := ∫ a : ℝ, a ^ 2 ∂ρ
+            let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+            let gamma : ℝ := m3 / variance (id : ℝ → ℝ) ρ
+            ∀ y : ℝ, gamma ≤ y → y ≤ 2 →
+              let T : ℕ → ℝ := fun i => ((n - i : ℕ) : ℝ) * m2
+              let J : Finset ℕ := (Finset.range (n + 1)).filter
+                (fun i => n / 2 < i ∧ (16384 : ℝ) * gamma ^ 2 ≤ T i ∧
+                  T i < max ((16384 : ℝ) * gamma ^ 2) (y ^ 2))
+              let f : ℕ → ℝ → ℝ → ℝ := fun i q w =>
+                sourceFutureNoiseKernel ρ (n - i) y (w, q)
+              let o : ℕ → ℝ → ℝ → ℝ := fun i q w =>
+                (f i q w - f i q (-w)) / 2
+              let e : ℕ → ℝ → ℝ → ℝ := fun i q w =>
+                (f i q w + f i q (-w)) / 2
+              ∃ O E : ℕ → ℝ,
+                (∀ i : ℕ, 0 ≤ O i ∧ 0 ≤ E i) ∧
+                (∀ i ∈ J,
+                  (∀ w q : ℝ, |w| ≤ y / 16 →
+                    |deriv (o i q) w| ≤ O i ∧
+                      |deriv (fun r : ℝ => deriv (e i q) r) w| ≤ E i) ∧
+                  (∀ u q : ℝ, 0 ≤ u → u ≤ y / 16 →
+                    |f i q 0 - f i q (-u)| ≤ u * O i + u ^ 2 / 2 * E i)) ∧
+                m2 * (∑ i ∈ J, O i) ≤
+                  C * ((n : ℝ) * |mu| + (n : ℝ) * m3) ∧
+                m2 * (∑ i ∈ J, E i) ≤ C := by
+  classical
+  obtain ⟨K, hK, hkernel⟩ := sourceTruncation_futureNoise_short_kernel_sums_fixed_cutoff
+  let epsilon0 : ℝ := 1 / 8192
+  let L2 : ℝ := 16384
+  have he0 : 0 < epsilon0 := by norm_num [epsilon0]
+  have he02 : epsilon0 ≤ 1 / 2 := by norm_num [epsilon0]
+  have hL2 : (16384 : ℝ) ≤ L2 := le_rfl
+  refine ⟨2 * K, by positivity, ?_⟩
+  intro ν0 hp n h2 hn hm x epsilon hx he he0le hbudget
+  letI : IsProbabilityMeasure ν0 := hp
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+  let mu : ℝ := ∫ a : ℝ, a ∂ρ
+  let m2 : ℝ := ∫ a : ℝ, a ^ 2 ∂ρ
+  let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+  let gamma : ℝ := m3 / variance (id : ℝ → ℝ) ρ
+  change ∀ y : ℝ, gamma ≤ y → y ≤ 2 → _
+  intro y hgy hy2
+  let T : ℕ → ℝ := fun i => ((n - i : ℕ) : ℝ) * m2
+  let J : Finset ℕ := (Finset.range (n + 1)).filter
+    (fun i => n / 2 < i ∧ L2 * gamma ^ 2 ≤ T i ∧ T i < max (L2 * gamma ^ 2) (y ^ 2))
+  let f : ℕ → ℝ → ℝ → ℝ := fun i q w => sourceFutureNoiseKernel ρ (n - i) y (w, q)
+  let o : ℕ → ℝ → ℝ → ℝ := fun i q w => (f i q w - f i q (-w)) / 2
+  let e : ℕ → ℝ → ℝ → ℝ := fun i q w => (f i q w + f i q (-w)) / 2
+  let A : ℝ := (n : ℝ) * |mu| + (n : ℝ) * m3
+  change ∃ O E : ℕ → ℝ, (∀ i, 0 ≤ O i ∧ 0 ≤ E i) ∧
+    (∀ i ∈ J, (∀ w q : ℝ, |w| ≤ y / 16 →
+      |deriv (o i q) w| ≤ O i ∧ |deriv (fun r : ℝ => deriv (e i q) r) w| ≤ E i) ∧
+      (∀ u q : ℝ, 0 ≤ u → u ≤ y / 16 →
+        |f i q 0 - f i q (-u)| ≤ u * O i + u ^ 2 / 2 * E i)) ∧
+    m2 * (∑ i ∈ J, O i) ≤ 2 * K * A ∧ m2 * (∑ i ∈ J, E i) ≤ 2 * K
+  have hdata := hkernel ν0 hp n h2 hn hm x epsilon hx he he0le hbudget y hgy hy2
+  change (∀ i ∈ J, ∀ w q : ℝ, |w| ≤ y / 16 →
+    DifferentiableAt ℝ (o i q) w ∧ DifferentiableAt ℝ (e i q) w ∧
+      DifferentiableAt ℝ (fun r : ℝ => deriv (e i q) r) w) ∧
+    (∀ q w : ℕ → ℝ, (∀ i ∈ J, |w i| ≤ y / 16) →
+      m2 * (∑ i ∈ J, |deriv (o i (q i)) (w i)|) ≤ K * A ∧
+        m2 * (∑ i ∈ J, |deriv (fun r : ℝ => deriv (e i (q i)) r) (w i)|) ≤ K) at hdata
+  have heHalf : epsilon ≤ 1 / 2 := he0le.trans he02
+  rcases sourceTruncation_variance_bounds ν0 n h2 hn hm x epsilon hx he heHalf hbudget with
+    ⟨_, _, _, hVm, _, hV, _, _⟩
+  change 0 < variance (id : ℝ → ℝ) ρ at hV
+  change variance (id : ℝ → ℝ) ρ = m2 - mu ^ 2 at hVm
+  have hm2 : 0 < m2 := by nlinarith [sq_nonneg mu]
+  have hg : 0 < gamma := (sourceTruncation_gamma_bounds ν0 n h2 hn hm x epsilon
+    hx he heHalf hbudget).2.1
+  have hy : 0 < y := hg.trans_le hgy
+  have hcap : 0 ≤ y / 16 := by positivity
+  obtain ⟨O, hO, hOb, hOs⟩ := finite_uniform_budgets J
+    (fun i q w => |deriv (o i q) w|) m2 (K * A) (y / 16) hm2 hcap
+    (fun _ _ _ => abs_nonneg _) (fun q w hw => (hdata.2 q w hw).1)
+  obtain ⟨E, hE, hEb, hEs⟩ := finite_uniform_budgets J
+    (fun i q w => |deriv (fun r : ℝ => deriv (e i q) r) w|) m2 K (y / 16) hm2 hcap
+    (fun _ _ _ => abs_nonneg _) (fun q w hw => (hdata.2 q w hw).2)
+  refine ⟨O, E, fun i => ⟨hO i, hE i⟩, ?_, ?_, hEs⟩
+  · intro i hi
+    refine ⟨fun w q hw => ⟨hOb i hi q w hw, hEb i hi q w hw⟩, ?_⟩
+    intro u q hu hucap
+    by_cases hz : u = 0
+    · subst u
+      simp
+    have hlocal (t : ℝ) (ht : t ∈ Set.Icc 0 u) : |t| ≤ y / 16 := by
+      rw [abs_of_nonneg ht.1]
+      exact ht.2.trans hucap
+    have h0 : (0 : ℝ) ∈ Set.Icc 0 u := ⟨le_rfl, hu⟩
+    have huI : u ∈ Set.Icc 0 u := ⟨hu, le_rfl⟩
+    have hozero : o i q 0 = 0 := by simp only [o, neg_zero, sub_self, zero_div]
+    have heven : ∀ t : ℝ, e i q (-t) = e i q t := by
+      intro t
+      dsimp only [e]
+      rw [neg_neg]
+      ring
+    have hezero : deriv (e i q) 0 = 0 := even_deriv_zero (e i q) heven
+      (hdata.1 i hi 0 q (by simpa using hcap)).2.1
+    have hoBound : |o i q u| ≤ u * O i := by
+      have hb := (convex_Icc (0 : ℝ) u).norm_image_sub_le_of_norm_deriv_le
+        (fun t ht => (hdata.1 i hi t q (hlocal t ht)).1)
+        (fun t ht => by simpa only [Real.norm_eq_abs] using hOb i hi q t (hlocal t ht)) h0 huI
+      simpa only [hozero, sub_zero, Real.norm_eq_abs, abs_of_nonneg hu, mul_comm] using hb
+    have heBound : |e i q u - e i q 0| ≤ u ^ 2 / 2 * E i :=
+      local_quadratic_remainder (e i q) (E i) u hu hezero
+        (fun t ht => (hdata.1 i hi t q (hlocal t ht)).2.1)
+        (fun t ht => (hdata.1 i hi t q (hlocal t ht)).2.2)
+        (fun t ht => hEb i hi q t (hlocal t ht))
+    have hident : f i q 0 - f i q (-u) = (e i q 0 - e i q u) + o i q u := by
+      dsimp only [e, o]
+      rw [neg_zero]
+      ring
+    rw [hident]
+    calc
+      |(e i q 0 - e i q u) + o i q u| ≤ |e i q 0 - e i q u| + |o i q u| := abs_add_le _ _
+      _ ≤ u ^ 2 / 2 * E i + u * O i :=
+        add_le_add (by simpa only [abs_sub_comm] using heBound) hoBound
+      _ = u * O i + u ^ 2 / 2 * E i := add_comm _ _
+  · calc
+      m2 * (∑ i ∈ J, O i) ≤ 2 * (K * A) := hOs
+      _ = 2 * K * A := by ring
+
+/- END FIXED CUTOFF PUBLIC COMPANIONS. -/
+
 end Shao.Probability

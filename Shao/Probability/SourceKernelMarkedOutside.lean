@@ -1097,4 +1097,84 @@ theorem sourceKernel_marked_outside_norms :
       _ = (2 * Cs) * min (y * |u|) 1 / (1 + L) ^ 30 := by ring
       _ ≤ _ := by dsimp [C]; gcongr; exact le_max_right Ce Cs
 
+/- BEGIN FIXED CUTOFF PUBLIC COMPANIONS.
+Additive export of the fixed one-sixteenth cutoff from the existing proof.
+The original source is recovered exactly by deleting this marked block.
+-/
+
+theorem sourceKernel_marked_outside_norms_fixed_sixteenth :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (k : ℕ), (k = 0 ∨ k = 2) →
+        ∀ (theta : ℝ), |theta| ≤ (1 / 16 : ℝ) →
+          ∀ (aStar y u w : ℝ),
+            0 < aStar → 0 ≤ y → y ≤ 2 → aStar * y ≤ (1 / 16 : ℝ) →
+              |w| ≤ y / 16 →
+              let a : ℝ → ℝ := fun r =>
+                sourceKernelCutoff r / (Real.sqrt r + theta) ^ k
+              let B : ℝ → ℂ := fun v =>
+                ∫ r : ℝ, (a r : ℂ) *
+                  Complex.exp
+                    ((((u * y * Real.sqrt r - v * r : ℝ) : ℂ)) * Complex.I)
+              let Bsin : ℝ → ℂ := fun v =>
+                ∫ r : ℝ,
+                  ((a r * Real.sin (u * (y * Real.sqrt r + w)) : ℝ) : ℂ) *
+                    Complex.exp (-(((v * r : ℝ) : ℂ) * Complex.I))
+              let A : Set ℝ := {v : ℝ | |u| / aStar < |v|}
+              IntegrableOn (fun v : ℝ => ‖B v‖) A ∧
+                IntegrableOn (fun v : ℝ => |v| * ‖B v‖) A ∧
+                IntegrableOn (fun v : ℝ => ‖Bsin v‖) A ∧
+                IntegrableOn (fun v : ℝ => |v| * ‖Bsin v‖) A ∧
+                (∫ v in A, ‖B v‖) ≤ C / (1 + |u| / aStar) ^ 31 ∧
+                (∫ v in A, |v| * ‖B v‖) ≤ C / (1 + |u| / aStar) ^ 30 ∧
+                (∫ v in A, ‖Bsin v‖) ≤
+                  C * min (y * |u|) 1 / (1 + |u| / aStar) ^ 31 ∧
+                (∫ v in A, |v| * ‖Bsin v‖) ≤
+                  C * min (y * |u|) 1 / (1 + |u| / aStar) ^ 30 := by
+  obtain ⟨Ce, hCe, hbe⟩ := outsideActual_exponential_pointwise
+  obtain ⟨Cs, hCs, hbs⟩ := outsideActual_sine_pointwise
+  obtain ⟨M, hM, hMb⟩ := sourceKernel_marked_amplitude_family
+  let C : ℝ := 2 * max Ce Cs
+  refine ⟨C, by dsimp [C]; positivity, ?_⟩
+  intro k hk theta ht aStar y u w ha hy hy2 hsmall hw
+  let a : ℝ → ℝ := fun r => sourceKernelCutoff r / (Real.sqrt r + theta) ^ k
+  let B : ℝ → ℂ := fun v => ∫ r : ℝ, (a r : ℂ) *
+    Complex.exp ((((u * y * Real.sqrt r - v * r : ℝ) : ℂ)) * Complex.I)
+  let Bsin : ℝ → ℂ := fun v => ∫ r : ℝ,
+    ((a r * Real.sin (u * (y * Real.sqrt r + w)) : ℝ) : ℂ) *
+      Complex.exp (-(((v * r : ℝ) : ℂ) * Complex.I))
+  let L : ℝ := |u| / aStar
+  have hL : 0 ≤ L := div_nonneg (abs_nonneg u) ha.le
+  have hm : 0 ≤ min (y * |u|) 1 := le_min (by positivity) (by norm_num)
+  have haC : Continuous a := (hMb k hk theta ht).1.continuous
+  have hac : HasCompactSupport a :=
+    isCompact_Icc.of_isClosed_subset (isClosed_tsupport _) (hMb k hk theta ht).2.1
+  have hBC : Continuous B := markedParameterizedIntegral_continuous a haC hac
+    (fun v r => u * y * Real.sqrt r - v * r) (by fun_prop)
+  have hBsinC : Continuous Bsin := by
+    have h := markedParameterizedIntegral_continuous
+      (fun r => a r * Real.sin (u * (y * Real.sqrt r + w))) (haC.mul (by fun_prop))
+      hac.mul_right (fun v r => -(v * r)) (by fun_prop)
+    simpa only [Complex.ofReal_neg, neg_mul] using h
+  have he := outsideProfile_moments_compare (fun v => ‖B v‖) hBC.norm
+    (fun v => norm_nonneg (B v)) L Ce hL hCe.le
+    (fun v hv => hbe k hk theta ht aStar y u v ha hy hsmall hv)
+  have hs := outsideProfile_moments_compare (fun v => ‖Bsin v‖) hBsinC.norm
+    (fun v => norm_nonneg (Bsin v)) L (Cs * min (y * |u|) 1) hL (mul_nonneg hCs.le hm)
+    (fun v hv => by
+      have h := hbs k hk theta ht aStar y u w v ha hy hw hsmall hv
+      simpa [Bsin, a, markedPhase, mul_neg] using h)
+  refine ⟨he.1, he.2.1, hs.1, hs.2.1, ?_, ?_, ?_, ?_⟩
+  · exact he.2.2.1.trans (by dsimp [C]; gcongr; exact le_max_left Ce Cs)
+  · exact he.2.2.2.trans (by dsimp [C]; gcongr; exact le_max_left Ce Cs)
+  · calc
+      _ ≤ 2 * (Cs * min (y * |u|) 1) / (1 + L) ^ 31 := hs.2.2.1
+      _ = (2 * Cs) * min (y * |u|) 1 / (1 + L) ^ 31 := by ring
+      _ ≤ _ := by dsimp [C]; gcongr; exact le_max_right Ce Cs
+  · calc
+      _ ≤ 2 * (Cs * min (y * |u|) 1) / (1 + L) ^ 30 := hs.2.2.2
+      _ = (2 * Cs) * min (y * |u|) 1 / (1 + L) ^ 30 := by ring
+      _ ≤ _ := by dsimp [C]; gcongr; exact le_max_right Ce Cs
+
+/- END FIXED CUTOFF PUBLIC COMPANIONS. -/
+
 end Shao.Probability
