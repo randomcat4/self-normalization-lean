@@ -1,0 +1,93 @@
+STATUS: CORRECT
+
+Fresh independent final complete review of C12 units59/60: Shao.C2.IntervalImageTimeDerivatives and Shao.C2.IntervalImageCandidatePDE. No critical mathematical gap or uncovered part of either exact frozen target remains. This accepts the analytic time-derivative/candidate-PDE milestone only; all original root groups remain OPEN.
+
+Author: C12 owner01a16c4c-25a6-7740-a10e-12635a13edae. Reviewer: /root/interval_image_candidate_pde_final_review, a fresh context independent of the author, explicitly assigned gpt-6.1-sol/xhigh. Actual runtime was acknowledged before substantive review. Independent model telemetry and the separate input, cached-input, output and reasoning-subset counters are not exposed and remain null; no exact subscription allocation is inferred. No subagent, production/freeze/shared/Git edit, cache write, Lean invocation, audit replay, producer recompile or successful-gate replay was made. Writes are confined to this review folder.
+
+The entire specified original supplement context4192–4300 and Taylor context4302–4315 were read, including every line4255–4300. The original file is read-only C:/game/shao/current/c12/supplement.tex, SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd. It fixes d=z-y and the exact affine A/B image exponents, holds walls and terminal endpoint fixed, requires justified positive-time differentiation, and states f_T=1/2 f_yy+(d/T)f_y for the actual killed-kernel quotient. The present formal theorem proves this equation for the already-qualified analytic image candidate. The actual probability/killed-kernel identification is still an open source dependency.
+
+The complete final Lean sources, complete frozen imports/namespace/open context, all nine public theorem heads, all three complete definition values, and all source proofs were read. Every complete actual owned type and every complete actual non-theorem value was also read. An outer tool initially truncated a combined display of unit59 types; the entire33812-byte export was then reread unabridged, removing the gap. Unit60 full21695-byte types and3936-byte values and unit59 full1712-byte value were read without omissions. No sampling or dictionary encoding was used.
+
+Counts derive from the exact actual defining-module owner maps and exact export name sets, rather than copied descriptive counts:
+
+| Unit | Public source theorems | Actual owned | Actual theorems | Actual definitions | Generated theorems | Other-namespace owned |
+|---|---:|---:|---:|---:|---:|---:|
+| 59 | 4 | 27 | 26 | 1 | 22 | 0 |
+| 60 | 5 | 11 | 9 | 2 | 4 | 1 |
+
+Total: nine public source theorems,38 actual owned constants,35 actual theorems and three actual definitions;26 generated theorems and zero other kinds. The generated Shao.C2.IntervalImageCandidateSpatial.imageCandidateSpatial.eq_1 is actually owned by unit60 and is included.
+
+Exact target bindings:
+
+| Unit/artifact | SHA256 |
+|---|---|
+| 59 source | 2a6e43a2d271ac2174030b70aa08986478780e7e2a1ad752e303e4f337bc536f |
+| 59 output and installed object | cd9598373d3af09e9739b9917f77063442010ac514a50b1979b7680eb138cf60 |
+| 59 freeze | f209ffa304c8e24d590e106599c695b721a091413e6460f206ee19955de29004 |
+| 59 author receipt | 09c25e572b5c937132c0812e6e3fbaaacdc7ab0d97fe376bc45074d97980ba48 |
+| 59 actual types | badf8fea50456ce603792a0ddd0e48660f441465177a57939ae15c30967a50cd |
+| 59 actual values | f978dafaaedf5316487c358758742df679ff330e5de24a43d980132a50000923 |
+| 60 source | 027a754edd95bd7c417fa90bfaadb49b9995c362b3964e3b7a7da8b6a9a8b392 |
+| 60 output and installed object | 0c73e508a13633b6794da5340fbb091a4011f9b3abc30fed08f01ff75ca5cf3a |
+| 60 freeze | 3923cf27af6d78a6783662eeeb525d44f0be0270cef786e26746bfdb96798736 |
+| 60 author receipt | c4c98912e63ccafd8f6ff4f533d99766b780df1945978564299dc4a9bf4318ea |
+| 60 actual types | 528ef9a68a2c2fe2d0cf9579e37787ab9a9ea3cf20b124505abb6f2f2c155368 |
+| 60 actual values | eabb7bd95876e1800e0fd738fe250462903c41862e65253f66cbb80baa6d750b |
+
+The frozen bytes were reconstructed losslessly from the exact saved tools.apply_patch AddFile calls: unit59 parent session line7089 at2026-10-24T11:31:47.803Z,1820bytes, before first proof-implementation script AddFile line7103 at11:32:49.605Z; unit60 line7172 at11:35:58.457Z,2567bytes, before first proof-implementation script AddFile line7204 at11:37:57.782Z. JSON decoding and removal of each AddFile + prefix reproduce the current freeze hashes exactly. Existing local mtimes independently agree. The first implementation script bytes differ from the final script because preserved proof-only revisions followed. Full declaration projections of every archived attempt preserve all imports/context, all public heads and all complete definition values. See local-checks.json.
+
+Read-only server observation at 2026-10-24T11:44:58.050297+00:00 found branch author/c12-interval-spacetime-v71 and HEAD 6af37e8cb5fe10410e1d81b20aed1a6b67ff3356. The original checker base head is b7c9d5d80f39b2eb2e942a114c2a90fff940dea3. The parent published only previously qualified50–58 and switched continuation branch during this review; this observation reports the actual current branch/head, while59/60 source/object bytes remain exactly bound. Toolchain is leanprover/lean4:v4.36.0-rc1, mathlib807d3836b165983210ee2ecf3cd28f239436949c, shared-v34/packages.
+
+Current worktree sources, exact successful source snapshots, output objects, installed objects and remote/local receipts all match. All12 receipt-listed unit59 artifacts and all10 unit60 artifacts match recorded SHA256 and byte size; all five locally present listed artifacts per unit also match. Complete type/value export blocks are exactly those extracted from the original owned-audit logs. The same observation verifies all six qualified53–58 dependencies current sources/successful snapshots/output and installed objects/receipts/consumed type and value exports/audit maps. Nothing was rebuilt. See remote-bindings.json and qualified-dependencies.json.
+
+Kernel59 attempt003 and kernel60 attempt002 have saved actual KERNEL_EXIT=0; both original audits have saved AUDIT_EXIT=0, with actual summaries27/4/26/1 and11/5/9/2. Narrow exact parent gate calls/results were read and bound in gate-provenance.json. Each command activates the pinned server environment, then changes to the C12 worktree, serializes with c12-heavy.lock, and uses CPU14–17, -M8192 -j4. The enclosing remote shell returns1 because its trailing grep finds no error line; the captured checker exit printed before grep is0. This distinction is preserved.
+
+The full archived failure/success logs and complete proof diffs were read on the server without copying raw logs into this workspace. Unit59 failed001/002 only on function application, extensionality and guarded arithmetic normalization. Final003 adds the required Pi.pow/mul/div application normalizations and handles both zero/successor orders. Unit60 failed001 only on the triangle-addition API order and a missing explicit HasDerivAt evaluation-point argument. Final002 fixes those proof lines. All frozen mathematical interfaces and definitions remain unchanged.
+
+Unit60 contains a descriptive receipt locator typo: sourceSnapshot names nonexistent attempt003, although kernelAttempt and the original artifact map already bind actual successful attempt002. The correct attempt002/source.lean was independently observed with the exact final source hash. The separate receipt-locator-erratum.json is bound in full-review.json. Original receipt/source/freeze/release bytes are preserved. This is a locator-only correction and does not change the proof evidence.
+
+The established all-owned audit selects by env.getModuleIdxFor? and the actual defining module, including private/generated names in any namespace. Lean.collectAxioms is transitive and is applied to every selected constant. Every actual export name exactly matches one audit row. All axiom sets lie within propext, Classical.choice, Quot.sound. Complete final sources contain none of sorry/admit/new axiom/unsafe/native_decide, and full exports contain no ellipsis, sorryAx or metavariable placeholder. The complete audit source was read for both units.
+
+Complete proof, definition and semantic review follows.
+
+Unit59 — Shao.C2.IntervalImageTimeDerivatives:
+
+- Shao.C2.IntervalImageTimeDerivatives.affineSpatialTimeSlope (source line13): The complete transparent value is (C/T²-j/T)(-c/T)^j exp(-C/T), C=cy+k, with the exact frozen association of products. Its complete elaborated value matches that expression; no c≠0 assumption is introduced.
+- Shao.C2.IntervalImageTimeDerivatives.affineSpatial_time_hasDerivAt (source line17): The whole variable-time function is first identified with the explicit actual spatial iteratedDeriv formula for every S. At T>0, constant/id quotient derivatives, the natural-power derivative and exp/product rules give the stated time slope. j=0 is checked separately from the successor case; field_simp uses only T≠0, never c≠0. Full function-application/extensionality normalization preserves the function being differentiated.
+- Shao.C2.IntervalImageTimeDerivatives.spatialImageA_time_hasDerivAt (source line41): The exact A exponent is cy+k with c=-4ma, k=8m²a²+4maz, for every integer m and arbitrary real a,z,y. The whole variable-time actual iterated derivative is rewritten before applying the affine theorem. C=c²/2-(z-y)c converts the time slope to 1/2 F_(j+2)+(z-y)/T F_(j+1)-j/T F_j by field/ring identities at T>0. No endpoint, a positivity, or nonzero c hypothesis is needed.
+- Shao.C2.IntervalImageTimeDerivatives.spatialImageB_time_hasDerivAt (source line72): For q=(2m+1)a, c=2(z+q), k=2q(z+q), the exact B exponent is cy+k=2(y+q)(z+q), and C=c²/2-(z-y)c. Whole-function equality and the affine theorem give the same PDE derivative family for every integer m, including c=0. Only positive evaluation time is required.
+- Shao.C2.IntervalImageTimeDerivatives.spatialTailBlock_time_hasDerivAt (source line103): The finite four-term block is exactly A_(n+2)+A_-(n+2)-B_(n+1)-B_-(n+2). Add/sub derivative rules and the exact complete block value identify both the full variable-time function and slope; ring distributes the three common coefficients. All natural n including0 and j including0 are covered.
+
+All22 generated theorem types were read completely. The equation theorem expands the frozen affineSpatialTimeSlope value with all parameters. The21 arithmetic simplification certificates carry exactly their displayed universe/typeclass/nonzero premises and conclude the expected equality-to-False facts for nonzero numerals, products, natural/integer powers and cast successors. Their source-generation proof certificates are covered by the exact successful kernel and recursive owner audit.
+
+Unit60 — Shao.C2.IntervalImageCandidatePDE:
+
+- Shao.C2.IntervalImageCandidatePDE.spatialTailTimeSlope (source line12): The complete transparent definition is exactly 1/2 block_(j+2)+(z-y)/T block_(j+1)-j/T block_j, with the original argument order and grouped-tail signs. The full elaborated value and all numeral proofs are covered.
+- Shao.C2.IntervalImageCandidatePDE.timeStripCoefficient (source line17): The complete transparent coefficient is 2 pref_(j+2)+(8a/H)pref_(j+1)+(4j/H)pref_j. It is independent of n,y,z and variable strip time; at positive a,H the coefficient is nonnegative. Its full actual value matches the freeze including all natural casts and numeral proofs.
+- Shao.C2.IntervalImageCandidatePDE.spatialTailTimeSlope_bound (source line22): On the exact closed StripPoint, H≤S≤U and |y|≤a, derive S>0, |z-y|≤2a, |(z-y)/S|≤2a/H and |j/S|≤j/H. Norm triangle/product inequalities and all three qualified spatialTailBlock bounds give coefficients (1/2)*4=2, (2a/H)*4=8a/H, (j/H)*4=4j/H. Every multiplication-order sign premise is supplied. A final ring rearrangement gives the complete frozen coefficient. Endpoints, n=0, j=0 and H=U remain permitted.
+- Shao.C2.IntervalImageCandidatePDE.spatialTailSum_time_hasDerivAt (source line59): At fixed y,z,a and T>0, use the open preconnected time interval (T/2,2T). Its derivative bound is the new strip bound with H=T/2,U=2T and the summable Gaussian times a fixed coefficient. Unit59 supplies genuine term derivatives at every point, and unit55 supplies convergence at T via H=U=T. All hypotheses and complete context of pinned hasDerivAt_tsum_of_isPreconnected are satisfied over complete real scalars. The theorem differentiates the actual tail tsum. Separate summability for j,j+1,j+2 justifies every tsum addition/subtraction and left scalar extraction; the resulting slope equals the frozen expression. No formal derivative or default nonsummable tsum value is substituted.
+- Shao.C2.IntervalImageCandidatePDE.finiteSpatialImages_time_hasDerivAt (source line100): The complete qualified finite head is explicitly A0+A1+A-1-B0-B-1 at every variable time after normalizing the exact Int casts. Repeated genuine unit59 add/sub derivatives then match the function and the full PDE-family slope by extensionality and ring. Only T>0 is required.
+- Shao.C2.IntervalImageCandidatePDE.imageCandidateSpatial_time_hasDerivAt (source line118): Add the genuine finite-head time derivative and genuine infinite-tail time derivative. The complete qualified candidate value is finiteSpatialImages+spatialTailSum for every time, so exact function equality and ring combine the slopes. The derivative is obtained for each fixed natural order j with closed |y|,|z|≤a, positive a,T. It does not assert actual unrestricted spatial derivatives at walls.
+- Shao.C2.IntervalImageCandidatePDE.intervalImageCandidate_time_hasDerivAt (source line129): Specialize the all-order candidate theorem to j=0 and |y|<a. The entire time function is exactly intervalImageCandidate=imageCandidateSpatial0. Qualified unit57 identifies its actual order2 and order1 spatial iterated derivatives at the same fixed T and strict interior y. Simplification removes the j/T term and leaves f_T=1/2 f_yy+(z-y)/T f_y, holding a,z fixed. Closed |z|≤a is allowed. This proves the analytic candidate equation, without assuming probability identification.
+
+All four generated theorem types were read completely: three Nat.AtLeastTwo numeral certificates for2,8,4, plus the cross-namespace imageCandidateSpatial equation. The latter is the unconditional complete expansion into finiteSpatialImages+spatialTailSum and agrees with the previously qualified complete value. No generated owner is omitted.
+
+The exhaustive38-row allOwnedCoverage in full-review.json records every complete actual-type hash, complete value hash where applicable, owner/kind/axioms, direct source line for source declarations, and semantic/proof review. Generated theorem proofs are accepted from their exact successful kernel certificates; no claim is made to a nonexistent source-level separate proof text for those compiler-generated constants.
+
+Qualified complete old proof reviews53–58 are reused at their exact hashes. Their status, author/reviewer separation, fresh prescribed gpt-6.1-sol/xhigh and source/object/receipt bindings were checked. No old complete proof review or successful check was repeated. Review JSON hashes are:
+
+- interval-image-exponents-final-review-v1: bc79b61da27e33e961f01411b52ded3c1fd10a569fa410aec6d275ef61e80731
+- interval-image-spatial-profiles-final-review-v1: d5d6bdbf83c0d6cad7002d0e9b856bfb7bf5a6d3d607440a5eede8b5bae7b939
+- interval-image-spatial-convergence-final-review-v1: db752eda93f0d1d96abd6f1df0d6635ceffcf7a47339d05ed389e466da6c1c38
+- interval-image-candidate-final-review-v1: b63deec7deaa45f3375545b754e6e885df813ed9fc54e5b1aadf4dc1c1e48a00
+- interval-image-int-series-final-review-v1: 27a47d42f11418323f4b8778ec810ec0820439ee6efa80ef7bb2e271463612fb
+
+Every actual dependency interface and full transparent value directly consumed here was completely read: imageA/B; affineImageTerm and its unconditional actual iteratedDeriv theorem; StripPoint, Gaussian majorant and summability; spatialPrefactor, full grouped spatialTailBlock, its uniform bound and summability; full spatialTailSum; finiteSpatialImages, imageCandidateSpatial and intervalImageCandidate, plus actual interior candidate iteratedDeriv; and integer-indexed spatialImageA/B. consumed-interface-coverage.json binds every full block.
+
+The critical standard-library declarations and complete variable/typeclass contexts were read in actual pinned mathlib source: HasDerivAt and constant/id rules; quotient/power/product/exp/add/sub derivative rules; the full SmoothSeries context and derivative-tsum theorem/proof; Summable.mul_left and complete scalar extraction; generated additive tsum addition/subtraction and their convergence, T2Space and NeBot conditions; and real open/preconnected interval interfaces. Exact consumed files equal the blobs at the pinned mathlib commit despite the broad dirty-worktree warning; cached object hashes are recorded where observed. The precise read spans and source bindings are in standard-*-spans.json, pinned-interface-binding.json and full-review.json. No extra derivative-continuity hypothesis is missing from the actual SmoothSeries theorem.
+
+Boundary review: all natural j including0, all natural grouped-tail n including0, and every integer image index are covered. Unit59 only needs positive time for termwise formulas, and allows c=0 and arbitrary real a,z,y. Tail/family time differentiation requires a>0,T>0 and closed |y|,|z|≤a, including equality. The genuine candidate spatial PDE retains strict |y|<a and closed |z|≤a. The terminal endpoint and walls remain fixed. The argument is local around each positive time and proves no estimate uniform across all derivative orders, no zero-time or nonpositive-width claim, and no actual spatial derivative/one-sided trace at a wall.
+
+The analytic candidate PDE is a substantive source-bound intermediate result. It does not close the original killed-kernel/probability completion theorem. Complete mixed/time profile estimates and Taylor majorants, one-sided wall traces, high-time sine estimates, actual probability identification, compensated Taylor/hSmall and all original root groups remain OPEN. Existing p54 repairs and external-result attribution are preserved. This is a formalization of classical analytic identities, with no new mathematical novelty claim.
+
+No critical gap remains within the frozen59/60 scope. The reviewer releases report-folder writer and execution authority with zero heavy commands and no in-flight operation; writer-release.json binds the final report hashes. This is a completed scoped review, not a persistent continuation mechanism.

@@ -1,0 +1,7 @@
+# Correctly weighted first-time mixed image profiles
+
+Read-only source4268, fixed a,z. From59 the actual first-time derivative of an order-j spatial affine exponential is (q-j)/T times the actual order-j value, q=C/T>=0. Bound |q-j|<=q+j, then apply54 affine_monomial_profile at monomial indices0 and1, with only nonnegative multipliers. This gives the exact mixedFirstConstant j = j*(1+2^j*j!)+(1+2^(j+1)*(j+1)!) and the profile (4/sqrt(T)*D)^j*mixedFirstConstant(j)/T*exp(-C/(2T)). The distance power is D^j, not D^(j+2).
+
+For both integer image families, entire-function equality in the variable time identifies the actual spatial derivative family with its affine representative before taking the actual time deriv. The genuine59 HasDerivAt supplies its derivative value.53 closed-domain exponent positivity and exact affine identities justify the scalar profile for every integer index, including0 and-1, every natural j including0, positive a,T and closed y,z.
+
+All4 full heads/sole definition/context frozen before proof. Kernel002/all13-owner recursive-axiom PASS. Failed001 retained; only typeclass parameter spelling and already-solved tactic sequencing fixed. Full13 actualtypes/solevalue exported. New receipt explicitly checks successful sourceSnapshot path against the exact artifact map. Independent final review pending after59/60. No sum-level wall-decay profile, higher-time mixed profiles, probability identity, hSmall or root closure is claimed.

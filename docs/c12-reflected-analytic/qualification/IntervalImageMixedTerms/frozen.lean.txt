@@ -1,0 +1,49 @@
+import Shao.C2.IntervalImageHigherTime
+
+noncomputable section
+namespace Shao.C2.IntervalImageMixedTerms
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime
+
+def mixedTimeConstant (j l : ℕ) : ℝ :=
+  match l with
+  | 0 => 1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)
+  | 1 => mixedFirstConstant j
+  | 2 => mixedSecondConstant j
+  | _ => mixedThirdConstant j
+
+theorem mixedTimeConstant_nonneg (j l : ℕ) : 0 ≤ mixedTimeConstant j l := by
+
+theorem affineSpatial_time_iterated_hasDerivAt (j l : ℕ) (c k y T : ℝ)
+    (hl : l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (iteratedDeriv l (fun S => iteratedDeriv j (affineImageTerm c k S) y))
+      (iteratedDeriv (l + 1) (fun S => iteratedDeriv j (affineImageTerm c k S) y) T) T := by
+
+theorem spatialImageA_time_iterated_hasDerivAt (j l : ℕ) (a z T y : ℝ) (m : ℤ)
+    (hl : l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (iteratedDeriv l (fun S => spatialImageA j a z S y m))
+      (iteratedDeriv (l + 1) (fun S => spatialImageA j a z S y m) T) T := by
+
+theorem spatialImageB_time_iterated_hasDerivAt (j l : ℕ) (a z T y : ℝ) (m : ℤ)
+    (hl : l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (iteratedDeriv l (fun S => spatialImageB j a z S y m))
+      (iteratedDeriv (l + 1) (fun S => spatialImageB j a z S y m) T) T := by
+
+theorem spatialImageA_mixed_profile (j l : ℕ) (a z T y : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    |iteratedDeriv l (fun S => spatialImageA j a z S y m) T| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j * mixedTimeConstant j l / T ^ l *
+        Real.exp (-imageA a y z (m : ℝ) / (2 * T)) := by
+
+theorem spatialImageB_mixed_profile (j l : ℕ) (a z T y : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    |iteratedDeriv l (fun S => spatialImageB j a z S y m) T| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j * mixedTimeConstant j l / T ^ l *
+        Real.exp (-imageB a y z (m : ℝ) / (2 * T)) := by
+
+end Shao.C2.IntervalImageMixedTerms

@@ -1,0 +1,39 @@
+import Shao.C2.IntervalImageIntSeries
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.Pow
+
+noncomputable section
+namespace Shao.C2.IntervalImageTimeDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+
+def affineSpatialTimeSlope (j : ℕ) (c k y T : ℝ) : ℝ :=
+  ((c * y + k) / T ^ 2 - (j : ℝ) / T) * (-c / T) ^ j *
+    Real.exp (-(c * y + k) / T)
+
+theorem affineSpatial_time_hasDerivAt (j : ℕ) (c k y T : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun S => iteratedDeriv j (affineImageTerm c k S) y)
+      (affineSpatialTimeSlope j c k y T) T := by
+
+theorem spatialImageA_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (m : ℤ) (hT : 0 < T) :
+    HasDerivAt (fun S => spatialImageA j a z S y m)
+      (1 / 2 * spatialImageA (j + 2) a z T y m +
+        (z - y) / T * spatialImageA (j + 1) a z T y m -
+          (j : ℝ) / T * spatialImageA j a z T y m) T := by
+
+theorem spatialImageB_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (m : ℤ) (hT : 0 < T) :
+    HasDerivAt (fun S => spatialImageB j a z S y m)
+      (1 / 2 * spatialImageB (j + 2) a z T y m +
+        (z - y) / T * spatialImageB (j + 1) a z T y m -
+          (j : ℝ) / T * spatialImageB j a z T y m) T := by
+
+theorem spatialTailBlock_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (n : ℕ) (hT : 0 < T) :
+    HasDerivAt (fun S => spatialTailBlock j a z S y n)
+      (1 / 2 * spatialTailBlock (j + 2) a z T y n +
+        (z - y) / T * spatialTailBlock (j + 1) a z T y n -
+          (j : ℝ) / T * spatialTailBlock j a z T y n) T := by
+
+end Shao.C2.IntervalImageTimeDerivatives

@@ -1,0 +1,50 @@
+import Shao.C2.IntervalImageMixedConvergence
+
+noncomputable section
+namespace Shao.C2.IntervalImageMixedCandidate
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence
+
+def mixedFiniteImages (j l : ℕ) (a z T y : ℝ) : ℝ :=
+  iteratedDeriv l (fun S => spatialImageA j a z S y 0) T +
+    iteratedDeriv l (fun S => spatialImageA j a z S y 1) T +
+    iteratedDeriv l (fun S => spatialImageA j a z S y (-1)) T -
+    iteratedDeriv l (fun S => spatialImageB j a z S y 0) T -
+    iteratedDeriv l (fun S => spatialImageB j a z S y (-1)) T
+
+def mixedImageCandidate (j l : ℕ) (a z T y : ℝ) : ℝ :=
+  mixedFiniteImages j l a z T y + mixedTailSum j l a z T y
+
+theorem mixedFiniteImages_zero (j : ℕ) (a z T y : ℝ) :
+    mixedFiniteImages j 0 a z T y = finiteSpatialImages j a z T y := by
+
+theorem mixedFiniteImages_time_hasDerivAt (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (fun S => mixedFiniteImages j l a z S y)
+      (mixedFiniteImages j (l + 1) a z T y) T := by
+
+theorem mixedImageCandidate_zero (j : ℕ) (a z T y : ℝ) :
+    mixedImageCandidate j 0 a z T y = imageCandidateSpatial j a z T y := by
+
+theorem mixedImageCandidate_time_hasDerivAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    HasDerivAt (fun S => mixedImageCandidate j l a z S y)
+      (mixedImageCandidate j (l + 1) a z T y) T := by
+
+theorem imageCandidateSpatial_time_iteratedDeriv (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 3)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    iteratedDeriv l (fun S => imageCandidateSpatial j a z S y) T =
+      mixedImageCandidate j l a z T y := by
+
+theorem intervalImageCandidate_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 3)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T =
+      mixedImageCandidate j l a z T y := by
+
+end Shao.C2.IntervalImageMixedCandidate

@@ -1,0 +1,37 @@
+import Shao.C2.IntervalImageCandidatePDE
+
+noncomputable section
+namespace Shao.C2.IntervalImageTimeProfiles
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+
+def mixedFirstConstant (j : ℕ) : ℝ :=
+  (j : ℝ) * (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)) +
+    (1 + (2 : ℝ) ^ (j + 1) * (Nat.factorial (j + 1) : ℝ))
+
+theorem mixedFirstConstant_nonneg (j : ℕ) : 0 ≤ mixedFirstConstant j := by
+
+theorem affineSpatialTimeSlope_profile (j : ℕ) (c k d y T : ℝ)
+    (hT : 0 < T) (hC : 0 ≤ c * y + k)
+    (hid : c * y + k = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |affineSpatialTimeSlope j c k y T| ≤
+      (4 / Real.sqrt T * (1 + |d| / Real.sqrt T)) ^ j * mixedFirstConstant j / T *
+        Real.exp (-(c * y + k) / (2 * T)) := by
+
+theorem spatialImageA_time_profile (j : ℕ) (a z T y : ℝ) (m : ℤ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    |deriv (fun S => spatialImageA j a z S y m) T| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j * mixedFirstConstant j / T *
+        Real.exp (-imageA a y z (m : ℝ) / (2 * T)) := by
+
+theorem spatialImageB_time_profile (j : ℕ) (a z T y : ℝ) (m : ℤ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    |deriv (fun S => spatialImageB j a z S y m) T| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j * mixedFirstConstant j / T *
+        Real.exp (-imageB a y z (m : ℝ) / (2 * T)) := by
+
+end Shao.C2.IntervalImageTimeProfiles
