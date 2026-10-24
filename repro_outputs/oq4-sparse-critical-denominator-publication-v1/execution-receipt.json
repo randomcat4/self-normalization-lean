@@ -1,0 +1,92 @@
+{
+  "wrapperProcessExitCode": 0,
+  "transportExitCode": null,
+  "actualLeanProcess": {
+    "leanProcessStarted": true,
+    "leanPID": 840726,
+    "actualLeanProcessExitCode": 0,
+    "leanElapsedSeconds": 70.83347089588642,
+    "timeoutSeconds": 600,
+    "timedOut": false,
+    "reaped": true,
+    "argv": [
+      "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/bin/lean",
+      "-M8192",
+      "-j4",
+      "-DmaxHeartbeats=2000000",
+      "-DautoImplicit=false",
+      "-Ddebug.skipKernelTC=false",
+      "-R",
+      "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/private",
+      "-o",
+      "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/original-object/Shao/OQ4/SparseCriticalDenominator.olean",
+      "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/private/Shao/OQ4/SparseCriticalDenominator.lean"
+    ],
+    "ownedLivePIDOnly": true
+  },
+  "elapsedSeconds": 70.90634174644947,
+  "sourceSHA256": "7ae7dceb70414510926cd3bf24b08fa991bcc49ba97bbe31cb247a94cded5040",
+  "auditSHA256": "62572cd50908fb685b784343053c655920566609fdaa97dd55fc0deb82cda3b1",
+  "combinedSHA256": "da671545536bec37f37987798802646033e34c62c1535f48dc2708ab9227c315",
+  "argv": [
+    "/usr/bin/taskset",
+    "-c",
+    "18-21",
+    "/usr/bin/flock",
+    "--exclusive",
+    "--no-fork",
+    "--nonblock",
+    "--conflict-exit-code",
+    "75",
+    "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-heavy.flock",
+    "/usr/bin/timeout",
+    "--signal=TERM",
+    "--kill-after=10s",
+    "620s",
+    "/opt/conda/bin/python3",
+    "-c",
+    "\"\"\"Literal server-only child. Preparation artifact: never run locally.\"\"\"\nimport json\nimport os\nfrom pathlib import Path\nimport signal\nimport subprocess\nimport sys\nimport time\n\n\ndef exclusive_json(path, value):\n    with path.open(\"x\", encoding=\"utf-8\", newline=\"\\n\") as stream:\n        json.dump(value, stream, ensure_ascii=False, indent=2)\n        stream.write(\"\\n\")\n        stream.flush()\n        os.fsync(stream.fileno())\n\n\nattempt = Path(sys.argv[1])\nargv = json.loads(sys.argv[2])\nstarted = time.monotonic()\ntimed_out = False\nwith (attempt / \"elaborated-stdout.txt\").open(\"xb\") as stdout, \\\n        (attempt / \"elaborated-stderr.txt\").open(\"xb\") as stderr:\n    child = subprocess.Popen(argv, stdout=stdout, stderr=stderr,\n                             start_new_session=True)\n    try:\n        exclusive_json(attempt / \"lean-child-start.json\", {\n            \"pid\": child.pid, \"parentPID\": os.getpid(), \"argv\": argv,\n            \"startNewSession\": True, \"timeoutSeconds\": 600,\n            \"identityBasis\": \"This live Popen object; never a persisted/restarted PID\",\n        })\n        try:\n            return_code = child.wait(timeout=600)\n        except subprocess.TimeoutExpired:\n            timed_out = True\n            # Only this worker's still-live child session may be signalled.\n            if child.poll() is None:\n                try:\n                    os.killpg(child.pid, signal.SIGTERM)\n                except ProcessLookupError:\n                    pass\n            try:\n                return_code = child.wait(timeout=10)\n            except subprocess.TimeoutExpired:\n                if child.poll() is None:\n                    try:\n                        os.killpg(child.pid, signal.SIGKILL)\n                    except ProcessLookupError:\n                        pass\n                return_code = child.wait()\n    finally:\n        # Also reap our own child if recording/waiting is interrupted. A saved\n        # PID from any prior process is never signalled.\n        if child.poll() is None:\n            try:\n                os.killpg(child.pid, signal.SIGKILL)\n            except ProcessLookupError:\n                pass\n            child.wait()\nexclusive_json(attempt / \"lean-process-receipt.json\", {\n    \"leanProcessStarted\": True, \"leanPID\": child.pid,\n    \"actualLeanProcessExitCode\": return_code,\n    \"leanElapsedSeconds\": time.monotonic() - started,\n    \"timeoutSeconds\": 600, \"timedOut\": timed_out, \"reaped\": True,\n    \"argv\": argv, \"ownedLivePIDOnly\": True,\n})\nsys.exit(124 if timed_out else return_code)\n",
+    "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202",
+    "[\"/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/bin/lean\", \"-M8192\", \"-j4\", \"-DmaxHeartbeats=2000000\", \"-DautoImplicit=false\", \"-Ddebug.skipKernelTC=false\", \"-R\", \"/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/private\", \"-o\", \"/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/original-object/Shao/OQ4/SparseCriticalDenominator.olean\", \"/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/private/Shao/OQ4/SparseCriticalDenominator.lean\"]"
+  ],
+  "firstWholeHasOutputArgument": true,
+  "rawFirstWholeExitZero": true,
+  "uncertainOriginalObjectExists": false,
+  "sourceAndLeanRecoveryStop": false,
+  "resources": {
+    "cpus": "18-21",
+    "memoryMiB": 8192,
+    "jobs": 4,
+    "childDeadlineSeconds": 600,
+    "outerSeconds": 620
+  },
+  "allOriginalRootGroups": "OPEN",
+  "object": {
+    "path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/original-object/Shao/OQ4/SparseCriticalDenominator.olean",
+    "resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq4/repro_outputs/oq4-sparse-critical-denominator-check-v3-prepared202/attempt-003-author202/original-object/Shao/OQ4/SparseCriticalDenominator.olean",
+    "sha256": "de484a1fe61643819e28e08ceb7a99b8bb15bd428e2ce36dc6dc97019cad91c6",
+    "bytes": 6106544,
+    "target_identity": {
+      "device": 64947,
+      "inode": 4718740,
+      "size": 6106544,
+      "mtime_ns": 1792815364256216564,
+      "mode_type": 32768
+    },
+    "capture": "ORIGINAL_CAPTURE_DURABLY_JOURNALLED",
+    "sourceSHA256": "7ae7dceb70414510926cd3bf24b08fa991bcc49ba97bbe31cb247a94cded5040",
+    "combinedSHA256": "da671545536bec37f37987798802646033e34c62c1535f48dc2708ab9227c315",
+    "firstWholeCheckHasOutput": true,
+    "device": 64947,
+    "inode": 4718740,
+    "mtime_ns": 1792815364256216564,
+    "mode_type": 32768
+  },
+  "flockReleased": true,
+  "beforeAfterPreparedPinsIdentical": true,
+  "beforeAfterExplicitBindingsIdentical": true,
+  "objectProduced": true,
+  "passMarkers": [
+    "SPARSE_CRITICAL_DENOMINATOR_AUTHOR_NATIVE_MACHINE_PASS owned=102 public=25 explicitPrivate=13 generated=64 closure=62469 projectDeclarations=743"
+  ]
+}
