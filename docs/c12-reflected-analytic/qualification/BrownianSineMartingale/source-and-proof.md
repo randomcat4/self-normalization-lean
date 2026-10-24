@@ -1,0 +1,15 @@
+# Unit 134: actual Brownian backward sine expectation against the full past
+
+Complete imports/context/three heads (2public,1private), no global value, frozen before implementation at `ae1de5ffd896b1ecfa4c6c27bd992bc221d3e833ff1b22ac35da7797ce04cf5c`. This connects the exact numerical sine heat series to the actual Brownian process, with arbitrary bounded measurable full-past-path weights. It does not assert the actual killed/image identity or stopping-time formula.
+
+The private helper records the existing qualified raw sine series' global spatial measurability and bound at a positive analytic time. It uses its actual global spatial derivative for continuity and the uniform weighted-Gaussian sum bound; no new arbitrary derivative order is developed.
+
+The actual increment/full-past joint law follows from native Brownian shift Gaussian marginals and qualified unit126's full continuous past/future path independence. Measurable endpoint evaluation of the actual future path gives its physical increment on one simultaneous AE path-copy event. Independence plus both exact marginal HasLaw statements gives the whole joint Gaussian-times-past-path law, including zero past or increment horizons.
+
+For the public weighted identity, both actual integrands are genuinely integrable by the bounded past weight, actual coordinate AE measurability and the global bounded sine series. The full product test is likewise genuinely integrable and measurable. Its pushforward under the proved joint law and finite-product Fubini reduce the future expectation to unit133's exact Gaussian action. The actual past endpoint equals B(T) on its single simultaneous AE path-copy event, establishing the displayed equality under the original B,P. No conditional expectation, event-level Markov premise, independent process replacement or assumed analytic killed kernel is used.
+
+The positive analytic cutoff H is explicit; actual T,S are arbitrary NNReal including0, and all real spatial starts/targets are retained. This is the weak backward martingale identity needed for bounded measurable survival masks before a finite stopped-mesh telescope.
+
+Attempt001 failed only because endpoint rewriting had already solved its goal before an extra reflexivity tactic, and two integrability bounds needed explicit pointwise function targets. Attempt002 removes that redundant tactic and normalizes the two proof targets; it passes. Both complete source/logs remain archived and project to the original full freeze. Actual module ownership is exactly3theorems:2public,1private,0generated/definitions/values. All3recursive AX pass; warnings are inherited checkout and harmless proof-style suggestions only.
+
+Server-only C12 CPU14–17 single heavy lock, pinned Lean/mathlib, -M8192 -j4, read-only cache; no passed-gate/old producer replay, local Lean/cache write, new axiom/sorry/admit/unsafe/native_decide, other-owner edit or merge. Independent final complete review pending. Image/PDE identification, unconditionalhSmall and C12roots remain OPEN.

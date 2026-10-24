@@ -1,0 +1,49 @@
+import Shao.C2.BrownianSineMartingale
+
+noncomputable section
+namespace Shao.C2.BrownianSineStoppedMesh
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology BigOperators
+open Shao.C2.BridgeDomination Shao.C2.IntervalSineSeries Shao.C2.BrownianSineMartingale
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+private theorem physical_survival_ae_unitPath {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) :
+    {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a} =ᵐ[P]
+      (brownianUnitPath B T) ⁻¹'
+        {p : C(BridgeTime, ℝ) | ‖ContinuousMap.const BridgeTime y + p‖ < a} := by
+
+theorem strict_survival_nullMeasurable {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) :
+    NullMeasurableSet {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a} P := by
+
+private theorem sine_restrict_integrable {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (t : ℝ≥0) (E : Set Ω) (hE : NullMeasurableSet E P) :
+    Integrable (E.indicator (fun ω => mixedSineSeries 0 0 a z H (y + B t ω))) P := by
+
+theorem brownian_sine_survival_mask {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H) (T S : ℝ≥0) :
+    (∫ ω in {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a},
+      mixedSineSeries 0 0 a z H (y + B (T + S) ω) ∂P) =
+    ∫ ω in {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a},
+      mixedSineSeries 0 0 a z (H + (S : ℝ)) (y + B T ω) ∂P := by
+
+theorem brownian_sine_finite_stopped_mesh {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (hy : |y| < a) (δ : ℝ≥0) (N : ℕ) :
+    (∫ ω in {ω | ∀ s : ℝ≥0, s ≤ (N : ℝ≥0) * δ → |y + B s ω| < a},
+      mixedSineSeries 0 0 a z H (y + B ((N : ℝ≥0) * δ) ω) ∂P) =
+      mixedSineSeries 0 0 a z (H + (N : ℝ) * (δ : ℝ)) y -
+        ∑ k ∈ Finset.range N,
+          ∫ ω in {ω | ∀ s : ℝ≥0, s ≤ (k : ℝ≥0) * δ → |y + B s ω| < a} \
+              {ω | ∀ s : ℝ≥0, s ≤ ((k + 1 : ℕ) : ℝ≥0) * δ → |y + B s ω| < a},
+            mixedSineSeries 0 0 a z (H + ((N - (k + 1) : ℕ) : ℝ) * (δ : ℝ))
+              (y + B (((k + 1 : ℕ) : ℝ≥0) * δ) ω) ∂P := by
+
+end Shao.C2.BrownianSineStoppedMesh

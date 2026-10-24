@@ -1,0 +1,9 @@
+# Physical centered Studentizer conversion and zero payment
+
+The finite conversion uses the actual centered jackknife square R2, the actual uncentered J, and c_n=4(N-1)/(N-2)^2 for every n>=3. On R2>0 it proves Tstar=tau(T) and all exact strict, closed and equality threshold identities. The R2=0 branches retain U=0, U>0 and U<0 separately, including their signed endpoint atoms. For |x|<=1 the actual Gaussian movement is at most12/N.
+
+Under the original product probability law, a measurable symmetric centered L2 kernel with normalized projection second moment supplies genuine U-square integrability and its bound8/N+4v/(N(N-1)). Actual localization yields P(Hcpt intersect Z)<=32a+16av/(N-1), then336s/sqrt(N), and P(Z)<=exp(-c_g N)+(1/16+16720s)/sqrt(N), where Z is the physical event R2=0 and s=1+sqrt(v). Exact CDF/upper-tail identities preserve the signed Zplus/Zminus atoms. Both strict and closed compact Gaussian errors are bounded by the corresponding actual Tstar error at tau(x), this zero payment, and12/N.
+
+The Tstar CDF error is retained on the right and remains unpaid here. This physical zero event differs from the original projection-scale zero event used by the probability consumers. There is no scalar probability-engine premise in this module. It does not identify G with the original p54 concentration event or prove the remaining conditional-moment/concentration/rate/relative-tail assembly. OQ56/C12 remain OPEN; OQ3 remains user-paused; the separately accepted limited OQ4 scope is preserved.
+
+Adjacent qualification and complete independent final-review documents bind the exact final source, original successful server kernel, every actual module-owned type/value, and recursive axioms. Original failed versions, warnings and proof-delta provenance remain in the lane evidence. No lane merge is authorized.
