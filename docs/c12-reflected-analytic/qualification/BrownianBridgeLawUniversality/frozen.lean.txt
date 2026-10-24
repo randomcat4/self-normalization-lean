@@ -1,0 +1,46 @@
+import Shao.C2.PhysicalBrownianEndpointDensity
+import Mathlib.MeasureTheory.Constructions.Projective
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
+
+noncomputable section
+namespace Shao.C2.BrownianBridgeLawUniversality
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.PhysicalBrownianEndpointDensity
+
+private theorem bridgeNoise_measure_eq_of_eval_law_eq (μ ν : Measure BridgeNoise)
+    (h : μ.map (fun g : BridgeNoise => fun t : BridgeTime => g.val t) =
+      ν.map (fun g : BridgeNoise => fun t : BridgeTime => g.val t)) : μ = ν := by
+
+theorem bridgeLaw_eq_of_isBrownianReal {Ω Ω' : Type*} [MeasurableSpace Ω]
+    [MeasurableSpace Ω'] (B : ℝ≥0 → Ω → ℝ) (C : ℝ≥0 → Ω' → ℝ)
+    (P : Measure Ω) (Q : Measure Ω') [IsProbabilityMeasure P] [IsProbabilityMeasure Q]
+    (hB : IsBrownianReal B P) (hC : IsBrownianReal C Q) :
+    bridgeLaw B P = bridgeLaw C Q := by
+
+theorem bridgeLaw_normalizedPhysicalBrownian {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T : ℝ≥0) (hT : T ≠ 0) :
+    bridgeLaw (normalizedPhysicalBrownian B T) P = bridgeLaw B P := by
+
+private theorem physical_survival_event_iff {Ω : Type*} (B : ℝ≥0 → Ω → ℝ)
+    (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) (ω : Ω) :
+    (∀ t : BridgeTime, |y + B (T * ⟨(t : ℝ), t.property.1⟩) ω| < a) ↔
+      ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a := by
+
+theorem brownian_physical_interval_joint_hasDerivAt_fixedLaw {Ω : Type*}
+    [MeasurableSpace Ω] (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y z : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    HasDerivAt (fun v : ℝ => P.real {ω |
+      (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ≤ v})
+      (gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z) z := by
+
+theorem brownian_physical_interval_density_ratio_fixedLaw {Ω : Type*}
+    [MeasurableSpace Ω] (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y z : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    deriv (fun v : ℝ => P.real {ω |
+      (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ∧ y + B T ω ≤ v}) z /
+        gaussianPDFReal y T z = intervalCompletion (bridgeLaw B P) a y (T : ℝ) z := by
+
+end Shao.C2.BrownianBridgeLawUniversality
