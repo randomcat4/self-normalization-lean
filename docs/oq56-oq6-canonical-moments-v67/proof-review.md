@@ -1,0 +1,21 @@
+# Independent proof and object review
+
+The source paragraph p39(9) requires a twice-cancelled tilted pair mean and an original-law AE row contraction. The following paragraph needs actual shared and disjoint observation integrals before finite edge-pair counting. These modules supply those analytic interfaces on the full observation space.
+
+| Unit | Public types | Actual owned types | Non-theorem values | Generated theorems | Transitive axiom occurrences |
+|---|---:|---:|---:|---:|---:|
+|136|2|10|0|1|30|
+|137|2|2|0|0|6|
+|138|2|3|0|0|9|
+
+All fourteen source theorem proofs received full independent source-to-statement and proof review. Exact proof-only repairs in136/137 received independent delta reviews with complete source reconstruction and unchanged proof coverage reused. The fifteen actual-owned constants comprise six public source theorems, eight private source helpers and one generated private square-root rewrite theorem. Every complete printed type was independently read; there are no actual non-theorem values. Each constant has exactly the transitive axiom list propext, Classical.choice and Quot.sound (fifteen lists, forty-five occurrences). The generated theorem is mapped to its source square-root rewrite and covered by its complete type, kernel object and transitive audit; no literal compiled-proof-term reading is claimed.
+
+Each module has one source-bound successful producer object and one independent sole-import/no-output-object actual-module-index audit. Publication reuses all three original objects with zero producer recompiles and zero new Lean calls. Producer136 retains five harmless warnings (two proposition letI suggestions and three unused variable names); producer138 retains two harmless proposition haveI suggestions. Their strict empty-output wrappers remain false. Producer137 and all three metadata audits are clean. No warning cleanup, replay or FIRSTEMPTY claim is made for136/138.
+
+- Unit136: qualification `7a6c1b6f008e104eac86dfb2e9bb400c0c0c7306873f386184681a33d72945f9`; independent final MD `850787285e51140dcdaee1506f957c8f5246598c206bfc7e069730b1d29888e2`; JSON `f71a8f28b87c7a3cb29d04f8553085388a919d9815b7e7293bf19324513a1ba0`; DONE `53fed3282144db2911c3efd88c8a7b4f50dab294ac8674a00e8d34fe85f419c4`; producer receipt `9486f38354e980e41592b1f7b04b2476bb649f12670ff5d4e5e2671f48c3ee02`; actual-owned audit receipt `09f8fdb8878a2e9278b9885567feb4168ad3736568a44236b746b797bf5018df`.
+- Unit137: qualification `372f2533c670f0cd3eb083720cb49d96d8248d725cc80923e5a49c10c4c01b93`; independent final MD `344a2b2bebb42a8e5dee3617a3f57ca501b4aa9d2b4c765233b030a4d0588d91`; JSON `9f2e0be550d30ce60c2bf63203f7986c9cba725b97661e62e6b06d3c4599f15a`; DONE `0bb48b5d6a0f714fecd4d6d17aee838b737078ddf0ae38449615ca1fb9f6f8c3`; producer receipt `b580daa24d2fd9a51c2ade1256fd4e9057a4a0174d83134705006e7ef8fad1aa`; actual-owned audit receipt `2e9753834a7dfe9cf8e6faf13958f94dd212e17b862fa91eb565360545ebeaf2`.
+- Unit138: qualification `eeaa8ca6e7ee79971f6d2898901cf9fa89fbad47c9f63129c694069f95465b74`; independent final MD `005d74f1040253b501d9ed0acd0e2283e032bce9136f30836d909e110688eb44`; JSON `7fb6a88107427c3c4e4770d3efe799e7fcc1f1161fab1662c7d91cef73c135ea`; DONE `454f9f3108f330d51ed3af0c03baedf3bf9f72e88c4d1c5edcff0c9633f615e5`; producer receipt `06c8c4f14a73e0074c0f1e31865af944c5a584a2441c78f4e217fd01cc1c91eb`; actual-owned audit receipt `526445e03e483025ed8e9c237ed44707cbac4718d6911c50858d81b9c58e6a59`.
+
+Unit138 derives rho absolutelycontinuous mu and transports the full original-law AE row event before projection, preserving genuine L2/L1 and literal product parentheses. Canonicality is never assumed under the tilted law. No r4, g²r², bounded residual, observation-space regularity, row-forall or desired-conclusion premise was introduced.
+
+The actual residual/quadratic normalizer/tilted-law source adapter, finite coordinate/orientation transport and counts, weighted deletion and the signed cross term, fixed original n coefficients, partial-tilt m_i^-1, costs(10)–(14), H/G probability consumers and original roots remain OPEN. Local unit139 draft is excluded. Preserve the p54 uniform conditional p-moment and atom-safe strict-margin repairs, external Shao–Zhou attribution and the fact that124 is not a prerequisite. Root alone merges.
