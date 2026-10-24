@@ -1,0 +1,9 @@
+# Strict critical phase: qualified canonical and original-space units
+
+For fixed Rademacher increments and each c>0, height=c*n^(1/3), literal Brownian radius=c*n^(-1/6), and strict phase delta=ceil(height)-height, the canonical module proves the actual strict self-normalized probability bridge, full-sequence corrected logarithmic/normalized/additive limits, realization of every phase in [0,1] by a StrictMono subsequence, exact cluster interval [1,exp(pi²/(4c³))] and nonconvergence. Integer heights have phase zero; the upper endpoint uses upIndex+1. The proof of additive convergence uses a fixed factor bound, without assuming factor convergence.
+
+The original-space module keeps the existing independent/IdentDistrib AE hypotheses and distinct sample/Brownian universes. It proves all-n probability and quotient equalities for the actual self-normalized and deterministic strict events, handles the empty positive-prefix event at n=0, and transports the full-sequence results and both exact quotient cluster/nonconvergence conclusions.
+
+The two exact source versions have independent context220 complete source-to-statement/proof/type/non-theorem-value review CORRECT and designated-server first-success kernel/all-owned recursive type-and-value axiom receipts. Counts and object identities are derived from the actual module-owned maps. Only propext, Classical.choice and Quot.sound occur. Prior qualified proofs and first objects are reused without new proof review or repeated checks; raw DAG/log/env/binary remain on the server. Existing review verifier interruption and failed proof attempts are preserved as failures.
+
+Stack base: PR266 exact head eb25ccf6832087bbf6d5b2c165196b463b15baa7. No merge. This is a fixed-law result, not a general distribution or uniform-window theorem; all original root groups OPEN. No novelty claim.

@@ -1,0 +1,94 @@
+import Shao.OQ4.RademacherStrictWeakBoundary
+import Shao.OQ4.RademacherOriginalStrictS4
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators Topology
+universe uX
+
+namespace Shao.OQ4.RademacherOriginalStrictWeakBoundary
+
+def sourceRatio {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ) (n : ℕ) (h : ℝ) : ℝ :=
+  μ.real (OriginalIIDWindow.sourceEvent n X (h / Real.sqrt (n : ℝ))) /
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+      (h / Real.sqrt (n : ℝ)))
+
+theorem source_probabilities
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (h : ℝ) (hh : 0 ≤ h) :
+    μ.real (OriginalIIDWindow.sourceEvent n X (h / Real.sqrt (n : ℝ))) =
+      RademacherS5Assembly.p n h ∧
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+      (h / Real.sqrt (n : ℝ))) = RademacherStrictCube.strictP n h
+
+theorem sourceRatio_eq
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (h : ℝ) (hh : 0 ≤ h) :
+    sourceRatio μ X n h = RademacherStrictWeakBoundary.ratio n h
+
+theorem original_main
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      2 ≤ h_ k ∧ 1 ≤ n_ k ∧
+      0 < μ.real (OriginalIIDWindow.sourceEvent (n_ k) X
+        (h_ k / Real.sqrt (n_ k : ℝ))) ∧
+      0 < μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent (n_ k) X
+        (h_ k / Real.sqrt (n_ k : ℝ))) ∧
+      0 < sourceRatio μ X (n_ k) (h_ k) ∧
+      Real.log (sourceRatio μ X (n_ k) (h_ k)) =
+        Real.log (μ.real (OriginalIIDWindow.sourceEvent (n_ k) X
+          (h_ k / Real.sqrt (n_ k : ℝ)))) -
+        Real.log (μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent
+          (n_ k) X (h_ k / Real.sqrt (n_ k : ℝ))))) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (sourceRatio μ X (n_ k) (h_ k)) -
+        (Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+          RademacherStrictWeakBoundary.integerIndicator (h_ k)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ => sourceRatio μ X (n_ k) (h_ k) /
+      Real.exp ((Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+        RademacherStrictWeakBoundary.integerIndicator (h_ k))) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun k : ℕ => sourceRatio μ X (n_ k) (h_ k) -
+      Real.exp ((Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+        RademacherStrictWeakBoundary.integerIndicator (h_ k))) atTop (𝓝 (0 : ℝ))
+
+theorem original_tendsto_iff
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) (L : ℝ) :
+    Tendsto (fun k : ℕ => sourceRatio μ X (n_ k) (h_ k)) atTop (𝓝 L) ↔
+      1 ≤ L ∧
+      Tendsto (fun k : ℕ =>
+        ((n_ k : ℝ) / (h_ k) ^ 3) *
+          RademacherStrictWeakBoundary.integerIndicator (h_ k))
+        atTop (𝓝 ((4 / Real.pi ^ 2) * Real.log L))
+
+end Shao.OQ4.RademacherOriginalStrictWeakBoundary
+end

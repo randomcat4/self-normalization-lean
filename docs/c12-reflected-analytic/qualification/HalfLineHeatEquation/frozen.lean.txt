@@ -1,0 +1,34 @@
+import Shao.C2.HalfLineReflectionFormula
+import Mathlib.Analysis.Calculus.Deriv.Inv
+
+noncomputable section
+namespace Shao.C2.HalfLineHeatEquation
+open Shao.C2.HalfLineReflectionFormula
+
+theorem upperReflection_second_hasDerivAt (a y T z : ℝ) :
+    HasDerivAt (deriv (fun u : ℝ => upperReflection a u T z))
+      (-((2 * (a - z) / T) ^ 2) * Real.exp (-2 * (a - y) * (a - z) / T)) y := by
+
+theorem lowerReflection_second_hasDerivAt (a y T z : ℝ) :
+    HasDerivAt (deriv (fun u : ℝ => lowerReflection a u T z))
+      (-((2 * (a + z) / T) ^ 2) * Real.exp (-2 * (a + y) * (a + z) / T)) y := by
+
+theorem upperReflection_time_hasDerivAt (a y T z : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun t : ℝ => upperReflection a y t z)
+      (-(2 * (a - y) * (a - z) / T ^ 2) * Real.exp (-2 * (a - y) * (a - z) / T)) T := by
+
+theorem lowerReflection_time_hasDerivAt (a y T z : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun t : ℝ => lowerReflection a y t z)
+      (-(2 * (a + y) * (a + z) / T ^ 2) * Real.exp (-2 * (a + y) * (a + z) / T)) T := by
+
+theorem upperReflection_heat_equation (a y T z : ℝ) (hT : 0 < T) :
+    deriv (fun t : ℝ => upperReflection a y t z) T =
+      (1 / 2 : ℝ) * deriv (deriv (fun u : ℝ => upperReflection a u T z)) y +
+        (z - y) / T * deriv (fun u : ℝ => upperReflection a u T z) y := by
+
+theorem lowerReflection_heat_equation (a y T z : ℝ) (hT : 0 < T) :
+    deriv (fun t : ℝ => lowerReflection a y t z) T =
+      (1 / 2 : ℝ) * deriv (deriv (fun u : ℝ => lowerReflection a u T z)) y +
+        (z - y) / T * deriv (fun u : ℝ => lowerReflection a u T z) y := by
+
+end Shao.C2.HalfLineHeatEquation

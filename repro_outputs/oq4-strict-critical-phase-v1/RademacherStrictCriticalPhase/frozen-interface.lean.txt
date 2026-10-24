@@ -1,0 +1,117 @@
+import Shao.OQ4.RademacherGeneralStrictS4
+import Shao.OQ4.RademacherCriticalPhase
+import Shao.OQ4.RademacherS5Assembly
+import Shao.OQ4.RademacherStrictCube
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped Topology NNReal
+universe uB
+
+namespace Shao.OQ4.RademacherStrictCriticalPhase
+
+def delta (c : ℝ) (n : ℕ) : ℝ :=
+  RademacherGeneralStrictS4.delta (RademacherCriticalPhase.height c n)
+
+def exponent (c : ℝ) (n : ℕ) : ℝ :=
+  RademacherCriticalPhase.q c * delta c n
+
+def factor (c : ℝ) (n : ℕ) : ℝ := Real.exp (exponent c n)
+
+-- The denominator is the literal c * n^(-1/6) Brownian probability.
+def Q {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (c : ℝ) (n : ℕ) : ℝ :=
+  RademacherStrictCube.strictP n (RademacherCriticalPhase.height c n) /
+    Shao.Probability.BrownianSup.probability B P hB
+      (RademacherS5Assembly.x c n)
+
+-- The upper endpoint differs materially from the old weak phaseIndex.
+def phaseIndex (c d : ℝ) (k : ℕ) : ℕ :=
+  letI : DecidableEq ℝ := Classical.decEq ℝ
+  if d = 0 then RademacherCriticalPhase.downIndex c k
+  else if d = 1 then RademacherCriticalPhase.upIndex c k + 1
+  else RademacherCriticalPhase.nearestIndex c (1 - d) k
+
+-- Frozen private mathematical helper.
+-- This is the one genuinely new root-perturbation estimate for route one.
+private theorem above_height_error {c : ℝ} (hc : 0 < c)
+    {k : ℕ} (hk : 1 ≤ k) :
+    0 < RademacherCriticalPhase.height c
+      (RademacherCriticalPhase.upIndex c k + 1) - (k : ℝ) ∧
+    RademacherCriticalPhase.height c
+      (RademacherCriticalPhase.upIndex c k + 1) - (k : ℝ) <
+      2 * c ^ 3 / (k : ℝ) ^ 2
+
+-- Public head 1: actual self-normalized event, all n with n=0 separate.
+theorem canonical_probability {c : ℝ} (hc : 0 < c) (n : ℕ) :
+    (RademacherS5Assembly.pathLaw n).real
+      (RademacherStrictCube.strictSelfNormalizedEvent n
+        (RademacherS5Assembly.x c n)) =
+      RademacherStrictCube.strictP n (RademacherCriticalPhase.height c n)
+
+-- Public head 2: strict range; integers give zero, never the old weak value 1.
+theorem phase_bounds {c : ℝ} (hc : 0 < c) (n : ℕ) :
+    0 ≤ delta c n ∧ delta c n < 1 ∧
+    0 < RademacherCriticalPhase.q c ∧
+    0 ≤ exponent c n ∧ exponent c n < RademacherCriticalPhase.q c ∧
+    1 ≤ factor c n ∧ factor c n < Real.exp (RademacherCriticalPhase.q c) ∧
+    (∀ z : ℤ, RademacherCriticalPhase.height c n = (z : ℝ) → delta c n = 0)
+
+-- Public head 3: actual closed-interval realization by a StrictMono map.
+-- The cutoff concerns the existing deterministic geometry, not positivity
+-- of the new probability ratio at every prefix; that is a tail output below.
+theorem phase_realization {c d : ℝ} (hc : 0 < c)
+    (hd : d ∈ Set.Icc (0 : ℝ) 1) :
+    ∃ K : ℕ, 2 ≤ K ∧
+      StrictMono (fun j : ℕ => phaseIndex c d (j + K)) ∧
+      (∀ j : ℕ, RademacherCriticalPhase.cutoff c ≤ phaseIndex c d (j + K)) ∧
+      Tendsto (fun j : ℕ => delta c (phaseIndex c d (j + K)))
+        atTop (𝓝 d) ∧
+      Tendsto (fun j : ℕ => exponent c (phaseIndex c d (j + K)))
+        atTop (𝓝 (RademacherCriticalPhase.q c * d)) ∧
+      Tendsto (fun j : ℕ => factor c (phaseIndex c d (j + K)))
+        atTop (𝓝 (Real.exp (RademacherCriticalPhase.q c * d)))
+
+-- Public head 4: whole-sequence critical correction, literal x in Q/b.
+-- Third scale and h/sqrt(n)=x are proved using existing positive-time APIs.
+theorem critical_main {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) {c : ℝ} (hc : 0 < c) :
+    (∀ᶠ n : ℕ in atTop,
+      0 < RademacherStrictCube.strictP n (RademacherCriticalPhase.height c n) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (RademacherS5Assembly.x c n) ∧
+      0 < Q B P hB c n) ∧
+    Tendsto (fun n : ℕ => Real.log (Q B P hB c n) - exponent c n)
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun n : ℕ => Q B P hB c n / factor c n)
+      atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun n : ℕ => Q B P hB c n - factor c n)
+      atTop (𝓝 (0 : ℝ))
+
+-- Public head 5: exact CP.Cluster definition, including both directions.
+theorem cluster_sets {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) {c : ℝ} (hc : 0 < c) :
+    RademacherCriticalPhase.Cluster (delta c) = Set.Icc (0 : ℝ) 1 ∧
+    RademacherCriticalPhase.Cluster (exponent c) =
+      Set.Icc (0 : ℝ) (RademacherCriticalPhase.q c) ∧
+    RademacherCriticalPhase.Cluster (factor c) =
+      Set.Icc (1 : ℝ) (Real.exp (RademacherCriticalPhase.q c)) ∧
+    RademacherCriticalPhase.Cluster (Q B P hB c) =
+      Set.Icc (1 : ℝ) (Real.exp (RademacherCriticalPhase.q c))
+
+-- Public head 6: each sequence has two distinct actual subsequential limits.
+theorem not_convergent {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) {c : ℝ} (hc : 0 < c) :
+    (¬ ∃ L : ℝ, Tendsto (delta c) atTop (𝓝 L)) ∧
+    (¬ ∃ L : ℝ, Tendsto (exponent c) atTop (𝓝 L)) ∧
+    (¬ ∃ L : ℝ, Tendsto (factor c) atTop (𝓝 L)) ∧
+    (¬ ∃ L : ℝ, Tendsto (Q B P hB c) atTop (𝓝 L))
+
+end Shao.OQ4.RademacherStrictCriticalPhase
+
+end

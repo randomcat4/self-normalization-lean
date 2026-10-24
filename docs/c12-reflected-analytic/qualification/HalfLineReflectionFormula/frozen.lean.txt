@@ -1,0 +1,41 @@
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity
+
+noncomputable section
+namespace Shao.C2.HalfLineReflectionFormula
+
+def upperReflection (a y T z : ℝ) : ℝ :=
+  1 - Real.exp (-2 * (a - y) * (a - z) / T)
+
+def lowerReflection (a y T z : ℝ) : ℝ :=
+  1 - Real.exp (-2 * (a + y) * (a + z) / T)
+
+theorem gaussian_linear_absorption (r : ℝ) :
+    r * Real.exp (-(r ^ 2)) ≤ 1 := by
+
+theorem positive_reflection_slope_bound (u v T : ℝ)
+    (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) :
+    (2 * v / T) * Real.exp (-2 * u * v / T) ≤
+      4 / Real.sqrt T * (1 + |u - v| / Real.sqrt T) := by
+
+theorem upperReflection_hasDerivAt (a y T z : ℝ) :
+    HasDerivAt (fun u : ℝ => upperReflection a u T z)
+      (-(2 * (a - z) / T) * Real.exp (-2 * (a - y) * (a - z) / T)) y := by
+
+theorem lowerReflection_hasDerivAt (a y T z : ℝ) :
+    HasDerivAt (fun u : ℝ => lowerReflection a u T z)
+      ((2 * (a + z) / T) * Real.exp (-2 * (a + y) * (a + z) / T)) y := by
+
+theorem upperReflection_deriv_bound (a y T z : ℝ) (hT : 0 < T) (hy : y < a) (hz : z < a) :
+    |deriv (fun u : ℝ => upperReflection a u T z) y| ≤
+      4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T) := by
+
+theorem lowerReflection_deriv_bound (a y T z : ℝ) (hT : 0 < T) (hy : -a < y) (hz : -a < z) :
+    |deriv (fun u : ℝ => lowerReflection a u T z) y| ≤
+      4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T) := by
+
+end Shao.C2.HalfLineReflectionFormula

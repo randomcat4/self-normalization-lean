@@ -1,0 +1,29 @@
+import Shao.C2.CompletedIntervalProcess
+import Shao.C1.PermutationEnergyEnvelope
+
+noncomputable section
+namespace Shao.C2.CompletedIntervalEnergy
+open Shao.C2.CompletedIntervalProcess Shao.C2.SourceIntervalCompletion
+open Shao.C2.BridgeDomination
+
+theorem raw_remaining_bounds (n : ℕ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (r : Fin n) :
+    0 ≤ Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) r.val ∧
+      (Shao.prefixSum z n - Shao.prefixSum (fun i => z (σ i)) r.val) ^ 2 ≤
+        (n - r.val : ℕ) * (Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) r.val) := by
+
+theorem raw_remaining_nonnegative (n : ℕ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n))
+    (k : ℕ) (hk : k ≤ n) :
+    0 ≤ Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) k := by
+
+theorem raw_zero_remaining_reachable (n : ℕ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n))
+    (k : ℕ) (hk : k ≤ n)
+    (hT : Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) k = 0) :
+    Shao.prefixSum (fun i => z (σ i)) k = Shao.prefixSum z n := by
+
+open scoped Classical in
+theorem completedValue_zero_remaining (n : ℕ) (ν : MeasureTheory.Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ) (hk : k ≤ n)
+    (hT : Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) k = 0) :
+    completedValue ν x z σ k = if 0 < Shao.energy z ∧ strictLive x z σ k then 1 else 0 := by
+
+end Shao.C2.CompletedIntervalEnergy

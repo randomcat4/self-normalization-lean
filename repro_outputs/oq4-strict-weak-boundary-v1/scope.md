@@ -1,0 +1,9 @@
+# General-scale strict/closed boundary quotient
+
+For actual finite Rademacher probabilities, ratio=p_weak/p_strict. The module proves the exact floor/ceil correction gap on h>=0 and, for h->infinity, n/h²->infinity with eventually bounded n/h³, the common positive tail, log quotient decomposition, corrected logarithmic limit, normalized ratio limit and additive error tending to zero. The correction is (pi²/4)*(n/h³)*integerIndicator(h). It also proves the full iff criterion for convergence to any real L, with L>=1 derived before using log continuity. No third-scale limit is assumed.
+
+The original-space module keeps the existing AE-iid/IdentDistrib assumptions. Its numerator and denominator are the actual original weak and strict self-normalized probabilities at h/sqrt(n), without a Brownian denominator. All-n nonnegative-height probability and quotient equalities explicitly handle n=0; common-tail equalities transfer every limit and the full convergence criterion.
+
+Both exact sources passed the designated server kernel and recursive type-and-value/all-actual-owner axiom audit; all27actual declarations and3non-theorem values received qualified context223 complete independent review CORRECT. Counts come from actual owner maps, including the generated GeneralStrictS4.delta.eq_1 owned by this new boundary module. Its actual name does not intersect the pending strict-critical-phase batch. Only the standard three axioms occur. First successful objects/receipts are preserved; no old producer/check replay.
+
+Published on accepted v74 main b4d91a9a6fb13105504747c452e45d804b43566e after the two direct new PR266 source blobs matched the base tree. PR266 is merged; PR269 is not a source dependency of this batch. Raw DAG/log/env/binary remain on the server. All original roots OPEN. The later rational/irrational critical arithmetic is explicitly a source-derived additional corollary and is not part of this accepted batch. No novelty claim.
