@@ -1,0 +1,7 @@
+# Actual intermediate zero-energy reachability
+
+Source main.tex896–909 and supplement.tex4200–4206 require coincident endpoints at a reachable zero-energy future, with interior value one. The previous completed-process unit established this at the terminal rank n only. This unit proves it at every actual k<=n using the genuine remaining square sum, not by imposing a new endpoint-equality premise.
+
+For k<n, the accepted remaining-population bound gives b²<=T and d²<=(n-k)T with T=Q-Qk and d=Sn-Sk. The first gives T>=0, and T=0 forces d=0. For k=n, the finite permutation sum/square-sum bijection gives the same endpoint and T=0 directly. Consequently, at any actual zero-remaining-energy rank, strict live survival through k implies the fixed terminal endpoint is interior, so the exact source extension gives V=1 on Q>0/live and zero otherwise.
+
+All four complete theorem heads were frozen before proof; there are no new definitions or extra moment/law assumptions. Failed attempt001 is preserved (over-eager prefix sum unfolding and a fixed-version Nat lemma name), repaired only in proofs. Attempt002 kernel and all four actual owned theorem transitive axioms pass; full actual types are recorded, zero non-theorem values. No successful check or accepted producer was replayed. Original root groups, analytic FY/kernel quotient/PDE/derivative bounds and complete stopped identity remain OPEN.

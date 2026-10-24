@@ -1,0 +1,69 @@
+import Shao.C2.SourceIntervalCompletion
+import Shao.C2.RawInitialCompletion
+import Shao.C1.PermutationCompensation
+
+noncomputable section
+namespace Shao.C2.CompletedIntervalProcess
+open MeasureTheory Set
+open Shao.C2.BridgeDomination Shao.C2.SourceIntervalCompletion
+
+def strictLive {n : ℕ} (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ) : Prop :=
+  ∀ j : ℕ, j ≤ k →
+    |Shao.prefixSum (fun i => z (σ i)) j| < x * Real.sqrt (Shao.energy z)
+
+def completedValue (ν : Measure BridgeNoise) (x : ℝ) {n : ℕ} (z : Shao.Path n)
+    (σ : Equiv.Perm (Fin n)) (k : ℕ) : ℝ := by
+  classical
+  exact if 0 < Shao.energy z ∧ strictLive x z σ k ∧
+      |Shao.prefixSum z n| < x * Real.sqrt (Shao.energy z) then
+    sourceIntervalCompletion ν (x * Real.sqrt (Shao.energy z))
+      (Shao.prefixSum (fun i => z (σ i)) k)
+      (Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) k)
+      (Shao.prefixSum z n)
+  else 0
+
+theorem measurableSet_strictLive (n : ℕ) (x : ℝ) (σ : Equiv.Perm (Fin n)) (k : ℕ) :
+    MeasurableSet {z : Shao.Path n | strictLive x z σ k} := by
+
+theorem measurable_completedValue (n : ℕ) (ν : Measure BridgeNoise) [SFinite ν]
+    (x : ℝ) (σ : Equiv.Perm (Fin n)) (k : ℕ) :
+    Measurable (fun z : Shao.Path n => completedValue ν x z σ k) := by
+
+theorem completedValue_bounds (n : ℕ) (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ) :
+    0 ≤ completedValue ν x z σ k ∧ completedValue ν x z σ k ≤ 1 := by
+
+theorem integrable_completedValue (n : ℕ) (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (σ : Equiv.Perm (Fin n)) (k : ℕ) :
+    Integrable (fun z => completedValue ν x z σ k) P := by
+
+theorem completedValue_initial (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (hx : 0 < x) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) :
+    completedValue ν x z σ 0 = RawInitialCompletion.rawInitial ν x z := by
+
+theorem completedValue_dead (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ)
+    (h : ¬ strictLive x z σ k) :
+    completedValue ν x z σ k = 0 := by
+
+theorem completedValue_exterior (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ)
+    (h : ¬ |Shao.prefixSum z n| < x * Real.sqrt (Shao.energy z)) :
+    completedValue ν x z σ k = 0 := by
+
+theorem completedValue_zero_energy (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (k : ℕ)
+    (h : Shao.energy z = 0) :
+    completedValue ν x z σ k = 0 := by
+
+theorem completedValue_terminal (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) :
+    completedValue ν x z σ n = if 0 < Shao.energy z ∧ strictLive x z σ n then 1 else 0 := by
+
+theorem completedValue_reveal_observable (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (k : ℕ) (σ τ : Equiv.Perm (Fin n))
+    (hστ : ∀ i : Fin n, i.val < k → σ i = τ i) :
+    completedValue ν x z σ k = completedValue ν x z τ k := by
+
+end Shao.C2.CompletedIntervalProcess
