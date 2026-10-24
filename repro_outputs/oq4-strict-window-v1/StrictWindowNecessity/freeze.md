@@ -1,0 +1,5 @@
+# StrictWindowNecessity exact lead freeze
+
+Freeze SHA256 5e0f8752a25678e10779220b956628b951e943e6f31030cd4c2b994597150244;8fullheads=3transparentdefinitions+5publictheorems,noprivate. Halfintegerheight oldceil(crootn)+1/2 hasstrictdelta1/2 andpositivegap exp(pi²/(8c³))−1. Originalweakintegerobstruction isnotreusedasastrictprobabilityclaim; oldwitnesssequencecanbereused.
+
+OnefixedRademacherlaw witnessesnecessity; sufficiencyappliedseparatelytoeachfixedlaw. AlloriginalrootsOPEN. Bodylocal details allowed underfullprelude/types/values exactfreeze. B servercheck mustconsumequalifiedAobject; no oldgate replays.
