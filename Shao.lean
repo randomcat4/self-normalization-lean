@@ -39,7 +39,11 @@ import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCharacteristicMoments
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
+import Shao.OQ3.CompactOpenDomainLogMomentApproximation
+import Shao.OQ3.CompactOpenDomainNormalizedIIDLogExponent
 import Shao.OQ3.CompactOpenDomainPairProbability
+import Shao.OQ3.CompactOpenDomainQuarticExponentialError
+import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
 import Shao.OQ3.CompactOpenDomainStandardizedFarFrequency
 import Shao.OQ3.CompactOpenDomainStandardizedGaussianError
 import Shao.OQ3.CompactOpenDomainStandardizedLocalGaussian
@@ -57,7 +61,9 @@ import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CompactTiltWhitenedFamily
+import Shao.OQ3.ComplexExpAddError
 import Shao.OQ3.ComplexLogTaylorPerturbation
+import Shao.OQ3.ComplexLogTaylorQuarticCorrection
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
@@ -77,6 +83,7 @@ import Shao.OQ3.GaussianCurveTube
 import Shao.OQ3.GaussianFiniteArcTube
 import Shao.OQ3.GlobalNegativeLayerBound
 import Shao.OQ3.ImaginaryExponentialTaylorRemainder
+import Shao.OQ3.ImaginaryRealExponentialQuadraticError
 import Shao.OQ3.InverseTilt
 import Shao.OQ3.JointNonlattice
 import Shao.OQ3.LocalBoundaryLowerBound
@@ -125,9 +132,11 @@ import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
 import Shao.OQ3.PairCharacteristicBoundedIntegral
 import Shao.OQ3.PairCharacteristicGaussianRemainder
+import Shao.OQ3.PairCharacteristicLowMomentPolynomial
 import Shao.OQ3.PairCharacteristicMomentRemainder
 import Shao.OQ3.PairCharacteristicQuadraticRemainder
 import Shao.OQ3.PairCharacteristicWeightedIntegral
+import Shao.OQ3.PairDirectionalMomentScaling
 import Shao.OQ3.PairProjectionAbsoluteMoments
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
@@ -200,6 +209,10 @@ import Shao.OQ3.StandardizedCellChangeOfMeasure
 import Shao.OQ3.StandardizedCellOscillation
 import Shao.OQ3.StandardizedFrontierTransport
 import Shao.OQ3.StandardizedGaussianCellOscillation
+import Shao.OQ3.StandardizedPairLogMomentApproximation
+import Shao.OQ3.StandardizedPairNormalizedLogExponent
+import Shao.OQ3.StandardizedPairQuarticExponentialError
+import Shao.OQ3.StandardizedPairQuarticLogRemainder
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
@@ -426,9 +439,12 @@ import Shao.OQ5.P53.SparseSignedAmplitude
 import Shao.OQ5.P53.SparseSignedLabelLaw
 import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ5.P53.SparseSourceWindows
+import Shao.OQ6.CanonicalOverlap
+import Shao.OQ6.CanonicalTilt
 import Shao.OQ6.FiniteRows
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.QuadraticTilt
+import Shao.OQ6.QuantitativeOverlap
 import Shao.OQ6.ResidualDeletion
 import Shao.OQ6.ResidualDeletionMeasurable
 import Shao.OQ6.ResidualRowExpansion
@@ -444,6 +460,8 @@ import Shao.Probability.CenteredQuadraticCharacteristic
 import Shao.Probability.CenteredQuadraticCharacteristicPower
 import Shao.Probability.ClockControl
 import Shao.Probability.ConditionalIID
+import Shao.Probability.EndpointRandomWindow
+import Shao.Probability.EndpointRelativeError
 import Shao.Probability.ExchangeableEvents
 import Shao.Probability.FiniteIID
 import Shao.Probability.FiniteIIDMoments
@@ -464,6 +482,7 @@ import Shao.Probability.QuadraticChordMoments
 import Shao.Probability.QuadraticChordNoise
 import Shao.Probability.QuadraticComplexCharacteristic
 import Shao.Probability.QuadraticComplexChord
+import Shao.Probability.QuadraticEnergyLowerTail
 import Shao.Probability.QuadraticFullNoise
 import Shao.Probability.QuadraticFullNoiseConeDerivatives
 import Shao.Probability.QuadraticFullNoiseDerivatives
@@ -516,6 +535,7 @@ import Shao.Probability.SourceNoiseCost
 import Shao.Probability.SourceNoiseSandwich
 import Shao.Probability.SourceOddEvenMarkedIBP
 import Shao.Probability.SourceOddEvenWholeLineIBP
+import Shao.Probability.SourceOneSidedRelativeError
 import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceShortTimeGrid
