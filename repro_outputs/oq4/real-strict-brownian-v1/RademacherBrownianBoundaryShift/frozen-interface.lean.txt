@@ -1,0 +1,38 @@
+import Shao.Probability.BrownianFirstTerm
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NormNum
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped NNReal Topology
+universe uB
+
+namespace Shao.OQ4.RademacherBrownianBoundaryShift
+
+theorem actual_brownian_boundary_shift
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x y : ℕ → ℝ)
+    (hx : Tendsto x atTop (𝓝 (0 : ℝ)))
+    (hy : Tendsto y atTop (𝓝 (0 : ℝ)))
+    (hxpos : ∀ᶠ k : ℕ in atTop, 0 < x k)
+    (hypos : ∀ᶠ k : ℕ in atTop, 0 < y k) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < Shao.Probability.BrownianSup.probability B P hB (x k) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB (y k) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB (y k) /
+        Shao.Probability.BrownianSup.probability B P hB (x k)) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (Shao.Probability.BrownianSup.probability B P hB (y k) /
+        Shao.Probability.BrownianSup.probability B P hB (x k)) -
+      (Real.pi ^ 2 / 8) * (1 / (x k) ^ 2 - 1 / (y k) ^ 2))
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      (Shao.Probability.BrownianSup.probability B P hB (y k) /
+        Shao.Probability.BrownianSup.probability B P hB (x k)) /
+      Real.exp ((Real.pi ^ 2 / 8) * (1 / (x k) ^ 2 - 1 / (y k) ^ 2)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RademacherBrownianBoundaryShift
+end
