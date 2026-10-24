@@ -1,0 +1,41 @@
+import Shao.C2.AuxiliaryMarkedRareRealSplit
+import Shao.C2.AuxiliaryUnmarkedBlockRealCauchy
+import Mathlib.MeasureTheory.Integral.Prod
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryMarkedRareFubini
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_actual_marked_rare_fubini
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (n : ℕ) (s x a : ℝ) (hs : 0 ≤ s) (hx : 1 ≤ x) (ha : 0 ≤ a)
+    (hHigherMark : Integrable (fun z : ℝ =>
+      Real.rpow |z| (3 + a) * Real.exp (-s * z ^ 2)) nu)
+    (hDamped : Integrable (fun w : Shao.Path n =>
+      Real.rpow |Shao.prefixSum w n| (2 * a) * Real.exp (-s * Shao.energy w))
+      (Measure.pi (fun _ : Fin n => nu))) :
+    let P : Measure (Shao.Path (n + 1)) := Measure.pi (fun _ : Fin (n + 1) => nu)
+    let Ptail : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+    let B : Set (Shao.Path (n + 1)) := {v |
+      ((3 / 2) * x) * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v (n + 1)|}
+    let A : Set (Shao.Path n) := {w | 0 < Shao.energy w ∧
+      Real.sqrt ((9 / 4) * x ^ 2 - 1) * Real.sqrt (Shao.energy w) ≤
+        |Shao.prefixSum w n|}
+    let W : Shao.Path n → ℝ := fun w => Real.exp (-s * Shao.energy w)
+    let F : Shao.Path (n + 1) → ℝ := fun v =>
+      |v 0| ^ 3 * Real.rpow |Shao.prefixSum v (n + 1)| a *
+        Real.exp (-s * Shao.energy v)
+    Integrable (B.indicator F) P ∧
+      (∫ v : Shao.Path (n + 1), B.indicator F v ∂P) ≤
+        Real.rpow 2 a *
+          ((∫ z : ℝ, Real.rpow |z| (3 + a) * Real.exp (-s * z ^ 2) ∂nu) *
+              (∫ w : Shao.Path n, A.indicator W w ∂Ptail) +
+            (∫ z : ℝ, |z| ^ 3 ∂nu) *
+              Real.sqrt (∫ w : Shao.Path n,
+                Real.rpow |Shao.prefixSum w n| (2 * a) * W w ∂Ptail) *
+              Real.sqrt (∫ w : Shao.Path n, A.indicator W w ∂Ptail)) := by
+
+end Shao.C2.AuxiliaryMarkedRareFubini
