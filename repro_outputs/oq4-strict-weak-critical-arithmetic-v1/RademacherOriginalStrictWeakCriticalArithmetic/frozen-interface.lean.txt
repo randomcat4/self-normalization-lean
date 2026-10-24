@@ -1,0 +1,81 @@
+import Shao.OQ4.RademacherStrictWeakCriticalArithmetic
+import Shao.OQ4.RademacherOriginalStrictWeakBoundary
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators Topology
+universe uX
+
+namespace Shao.OQ4.RademacherOriginalStrictWeakCriticalArithmetic
+
+def sourceRatio {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ) (c : ℝ) (n : ℕ) : ℝ :=
+  μ.real (OriginalIIDWindow.sourceEvent n X (RademacherS5Assembly.x c n)) /
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+      (RademacherS5Assembly.x c n))
+
+theorem source_probabilities
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) {c : ℝ} (hc : 0 < c) (n : ℕ) :
+    μ.real (OriginalIIDWindow.sourceEvent n X (RademacherS5Assembly.x c n)) =
+      RademacherS5Assembly.p n (RademacherCriticalPhase.height c n) ∧
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+      (RademacherS5Assembly.x c n)) =
+      RademacherStrictCube.strictP n (RademacherCriticalPhase.height c n)
+
+theorem sourceRatio_eq
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) {c : ℝ} (hc : 0 < c) (n : ℕ) :
+    sourceRatio μ X c n = RademacherStrictWeakBoundary.criticalRatio c n
+
+theorem original_main
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) {c : ℝ} (hc : 0 < c) :
+    (∀ᶠ n : ℕ in atTop,
+      0 < μ.real (OriginalIIDWindow.sourceEvent n X (RademacherS5Assembly.x c n)) ∧
+      0 < μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+        (RademacherS5Assembly.x c n)) ∧
+      0 < sourceRatio μ X c n) ∧
+    Tendsto (fun n : ℕ => Real.log (sourceRatio μ X c n) -
+      RademacherCriticalPhase.q c * RademacherStrictWeakBoundary.integerIndicator
+        (RademacherCriticalPhase.height c n)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun n : ℕ => sourceRatio μ X c n /
+      Real.exp (RademacherCriticalPhase.q c *
+        RademacherStrictWeakBoundary.integerIndicator
+          (RademacherCriticalPhase.height c n))) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun n : ℕ => sourceRatio μ X c n -
+      Real.exp (RademacherCriticalPhase.q c *
+        RademacherStrictWeakBoundary.integerIndicator
+          (RademacherCriticalPhase.height c n))) atTop (𝓝 (0 : ℝ))
+
+theorem original_arithmetic
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) {c : ℝ} (hc : 0 < c) :
+    ((∃ r : ℚ, (r : ℝ) = c ^ 3) →
+      RademacherCriticalPhase.Cluster (sourceRatio μ X c) =
+        ({(1 : ℝ), Real.exp (RademacherCriticalPhase.q c)} : Set ℝ) ∧
+      (¬ ∃ L : ℝ, Tendsto (sourceRatio μ X c) atTop (𝓝 L))) ∧
+    ((¬ ∃ r : ℚ, (r : ℝ) = c ^ 3) →
+      (∀ n : ℕ, 1 ≤ n →
+        μ.real (OriginalIIDWindow.sourceEvent n X (RademacherS5Assembly.x c n)) =
+          μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X
+            (RademacherS5Assembly.x c n))) ∧
+      (∀ᶠ n : ℕ in atTop, sourceRatio μ X c n = 1) ∧
+      Tendsto (sourceRatio μ X c) atTop (𝓝 (1 : ℝ)) ∧
+      RademacherCriticalPhase.Cluster (sourceRatio μ X c) = ({(1 : ℝ)} : Set ℝ))
+
+end Shao.OQ4.RademacherOriginalStrictWeakCriticalArithmetic
+end
