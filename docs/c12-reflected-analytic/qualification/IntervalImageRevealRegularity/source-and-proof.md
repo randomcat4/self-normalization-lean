@@ -1,0 +1,11 @@
+# Reveal path C3 regularity and second-order compensation
+
+Original read-only source: supplement.tex lines4298–4315, within complete source scope4192–4398; whole-fileSHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd.
+
+All five complete declarations, imports and context were frozen before implementation. Four public theorems and one private helper, no new definition values. The private finite-order successor theorem upgrades a derivative chain on an actual open set using pinned ContDiff.Deriv; its analytic-at-omega side condition is vacuous for a natural-number order. The explicit third path derivative is continuous by joint mixed-family continuity composed with the actual affine/parabolic coordinate pair. The genuine first/second/third derivative chain therefore gives C3 at every positive-time/interior-space point. No regularity premise is introduced.
+
+The true analytic image PDE identifies mixed time derivative M01 with one half M20 plus (z-y)/T M10. It yields exact cancellation of the first/second Taylor coefficients against the source compensation, leaving -b^3 M11 + b^4 M02/2. This is an exact coefficient identity, without a claimed bound on the full remainder.
+
+Kernel001 failure was solely proof-local ContinuousAt.comp map inference. Explicit f/x composition parameters fix kernel002; all five heads/context remain exact. Full failed source/log and successful source/log preserved. Successful server kernel002 and defining-module-owner recursive collectAxioms audit cover all5 owners, including the private helper, with only propext/Classical.choice/Quot.sound. Zero non-theorem owners and exact zero-byte value export. SourceUTF8/noBOM/LF before first gate. Native -M8192/-j4, CPU14–17, c12-heavy.lock, pinnedLean/mathlib, no old producer or sharedcache write.
+
+Only genuine interior-space C3 is proved. The closed-wall endpoint must use a separate one-sided limit argument; this module does not silently extend higher differentiability to that endpoint. Full compensated Taylor/remainder Gaussian bound, actual Brownian probability/analytic killed-kernel identification, hSmall and original roots remain OPEN. OQ3 stays user-paused; classical inputs and p54 repairs preserved. Independent complete final review pending.

@@ -1,0 +1,47 @@
+import Shao.C2.IntervalImageLagrangeRemainder
+
+noncomputable section
+namespace Shao.C2.IntervalImageGlobalProfiles
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedTerms Shao.C2.IntervalImageSmallTimeSum
+open Shao.C2.IntervalImageTaylorSegment Shao.C2.HalfLineTaylorSegment
+open Shao.C2.IntervalImageSineProfiles Shao.C2.IntervalSineHighTimeProfiles
+open Shao.C2.CompletionFirstProfile Shao.C2.IntervalGaussianLocal
+
+def globalMixedProfileConstant (j l : ℕ) : ℝ :=
+  4 * (4 : ℝ) ^ j * mixedTimeConstant j l + normalizedProfileConstant j l
+
+theorem globalMixedProfileConstant_nonneg (j l : ℕ) :
+    0 ≤ globalMixedProfileConstant j l := by
+
+theorem intervalImageCandidate_sub_one_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    iteratedDeriv l (fun S => iteratedDeriv j (fun w => intervalImageCandidate a z S w - 1) y) T =
+      mixedImageCandidate j l a z T y - (if j = 0 ∧ l = 0 then 1 else 0) := by
+
+theorem mixedImageCandidate_highTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T)
+    (hlarge : a ^ 2 ≤ T) (hy : |y| < a) :
+    |mixedImageCandidate j l a z T y - (if j = 0 ∧ l = 0 then 1 else 0)| ≤
+      normalizedProfileConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) *
+        (1 + |z - y| / Real.sqrt T) ^ j * intervalProfile a y T z := by
+
+theorem mixedImageCandidate_global_profile (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    |mixedImageCandidate j l a z T y - (if j = 0 ∧ l = 0 then 1 else 0)| ≤
+      globalMixedProfileConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) *
+        (1 + |z - y| / Real.sqrt T) ^ j * intervalProfile a y T z := by
+
+theorem mixedImageCandidate_segment_global_profile (j l : ℕ) (a y z T b θ : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) :
+    |mixedImageCandidate j l a z (T - θ * b ^ 2) (y + θ * b) -
+        (if j = 0 ∧ l = 0 then 1 else 0)| ≤
+      (globalMixedProfileConstant j l * (2 : ℝ) ^ (j + 2 * l) * (3 : ℝ) ^ j) *
+        (1 / Real.sqrt T) ^ (j + 2 * l) * (1 + |z - y| / Real.sqrt T) ^ j *
+          intervalIncrementProfile a y T z b := by
+
+end Shao.C2.IntervalImageGlobalProfiles
