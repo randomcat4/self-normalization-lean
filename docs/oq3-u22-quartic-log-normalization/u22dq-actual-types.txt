@@ -1,0 +1,29 @@
+DECL Shao.OQ3.pair_probability_directional_first_two_moments
+TYPE ∀ (law : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure law],
+  (∀ (j : Fin 2), MeasureTheory.MemLp (fun y => y j) 2 law) →
+    (∀ (j : Fin 2), ∫ (y : Fin 2 → ℝ), y j ∂law = 0) →
+      (∀ (j k : Fin 2), ProbabilityTheory.covariance (fun y => y j) (fun y => y k) law = if j = k then 1 else 0) →
+        ∀ (u v : ℝ),
+          have L := fun y => u * y 0 + v * y 1;
+          MeasureTheory.MemLp L 2 law ∧
+            MeasureTheory.Integrable L law ∧
+              MeasureTheory.Integrable (fun y => L y ^ 2) law ∧
+                ∫ (y : Fin 2 → ℝ), L y ∂law = 0 ∧ ∫ (y : Fin 2 → ℝ), L y ^ 2 ∂law = u ^ 2 + v ^ 2
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_probability_degree_four_moment_polynomial
+TYPE ∀ (law : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure law],
+  (∀ (j : Fin 2), MeasureTheory.MemLp (fun y => y j) 2 law) →
+    (∀ (j : Fin 2), ∫ (y : Fin 2 → ℝ), y j ∂law = 0) →
+      (∀ (j k : Fin 2), ProbabilityTheory.covariance (fun y => y j) (fun y => y k) law = if j = k then 1 else 0) →
+        MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) law →
+          MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 4) law →
+            ∀ (u v : ℝ),
+              have L := fun y => u * y 0 + v * y 1;
+              MeasureTheory.Integrable (fun y => L y ^ 3) law ∧
+                MeasureTheory.Integrable (fun y => L y ^ 4) law ∧
+                  ∑ j ∈ Finset.range 5, Complex.I ^ j / ↑j.factorial * ↑(∫ (y : Fin 2 → ℝ), L y ^ j ∂law) =
+                    1 - ↑(u ^ 2 + v ^ 2) / 2 - Complex.I * ↑(∫ (y : Fin 2 → ℝ), L y ^ 3 ∂law) / 6 +
+                      ↑(∫ (y : Fin 2 → ℝ), L y ^ 4 ∂law) / 24
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
