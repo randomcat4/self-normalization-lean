@@ -1,0 +1,23 @@
+import Shao.C2.AuxiliaryOwnC1Budget
+import Shao.Probability.FiniteIID
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliaryCenteredProductLaw
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_centered_product_law_and_endpoint
+    (rho : Measure ℝ) [IsProbabilityMeasure rho] (n : ℕ) (mu : ℝ) :
+    let chi : Measure ℝ := Measure.map (fun z : ℝ => z - mu) rho
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let Pc : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => chi)
+    Measure.map (fun v : Shao.Path n => (fun i => v i - mu)) P = Pc ∧
+      ∀ y : ℝ,
+        P.real {v : Shao.Path n |
+          y * Real.sqrt (Shao.energy (fun i => v i - mu)) ≤
+            |Shao.prefixSum (fun i => v i - mu) n|} =
+        Pc.real {w : Shao.Path n | y * Real.sqrt (Shao.energy w) ≤
+          |Shao.prefixSum w n|} := by
+
+end Shao.C2.AuxiliaryCenteredProductLaw

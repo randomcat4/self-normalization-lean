@@ -1,0 +1,40 @@
+import Shao.C2.AuxiliarySourceEvent
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliarySourceParameters
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_rare_parameter_payment
+    (beta L s : ℝ) (hBeta : 1 ≤ beta) (hL : 0 ≤ L) (hs : 0 ≤ s)
+    (n : ℕ) (x : ℝ) (hx : 1 ≤ x)
+    (hTime : s * (n : ℝ) ≤ L * x ^ 2)
+    (hRank : 4000000 * (1 + L) ^ 2 * beta ^ 2 * (1 + x) ^ 6 ≤ (n : ℝ)) :
+    0 < n ∧ 4 * x ^ 2 ≤ (n : ℝ) ∧ s * beta ^ 2 ≤ 1 / 128 ∧
+      Real.sqrt (n : ℝ) * (2 * s * beta) ≤ 1 / (1000 * (1 + x)) := by
+
+theorem auxiliary_source_mean_and_weak_event
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (L s : ℝ) (hL : 0 ≤ L) (hs : 0 ≤ s)
+    (n : ℕ) (x : ℝ) (hx : 1 ≤ x)
+    (hTime : s * (n : ℝ) ≤ L * x ^ 2)
+    (hRank : 4000000 * (1 + L) ^ 2 * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 *
+      (1 + x) ^ 6 ≤ (n : ℝ)) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let mu : ℝ := ∫ z : ℝ, z ∂rho
+    let a : ℝ := Real.sqrt ((9 / 4) * x ^ 2 - 1)
+    let y : ℝ := a - 1 / (100 * (1 + x))
+    0 < n ∧ 4 * x ^ 2 ≤ (n : ℝ) ∧ s * beta ^ 2 ≤ 1 / 128 ∧
+      Real.sqrt (n : ℝ) * |mu| ≤ 1 / (1000 * (1 + x)) ∧
+      ∀ v : Shao.Path n, (n : ℝ) / 8 ≤ Shao.energy v →
+        a * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v n| →
+        y * Real.sqrt (Shao.energy (fun i => v i - mu)) ≤
+          |Shao.prefixSum (fun i => v i - mu) n| := by
+
+end Shao.C2.AuxiliarySourceParameters

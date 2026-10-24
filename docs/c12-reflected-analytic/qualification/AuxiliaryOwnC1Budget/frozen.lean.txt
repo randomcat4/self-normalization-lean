@@ -1,0 +1,58 @@
+import Shao.C2.AuxiliarySourceParameters
+import Shao.Probability.TruncationIntegrals
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryOwnC1Budget
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_normalized_cubic_budget
+    (chi : Measure ℝ)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) chi)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) chi)
+    (hSecond : 1 / 2 ≤ ∫ z : ℝ, z ^ 2 ∂chi)
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (hThird : (∫ z : ℝ, |z| ^ 3 ∂chi) ≤ 12 * beta)
+    (n : ℕ) (hn : 0 < n) (y : ℝ) (hy : 0 ≤ y) :
+    let sigma : ℝ := Real.sqrt (∫ z : ℝ, z ^ 2 ∂chi)
+    let eta : Measure ℝ := Measure.map
+      (fun z : ℝ => z / (sigma * Real.sqrt (n : ℝ))) chi
+    Shao.truncationBudget eta n y ≤
+      48 * beta * (1 + y) ^ 3 / Real.sqrt (n : ℝ) := by
+
+theorem auxiliary_centered_law_and_own_budget
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s : ℝ) (hs : 0 ≤ s)
+    (hsmall : s * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 ≤ 1 / 128)
+    (n : ℕ) (hn : 0 < n) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let mu : ℝ := ∫ z : ℝ, z ∂rho
+    let chi : Measure ℝ := Measure.map (fun z : ℝ => z - mu) rho
+    let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂chi
+    let eta : Measure ℝ := Measure.map
+      (fun z : ℝ => z / (Real.sqrt sigmaSq * Real.sqrt (n : ℝ))) chi
+    IsProbabilityMeasure chi ∧
+      Integrable (id : ℝ → ℝ) chi ∧
+      (∫ z : ℝ, z ∂chi) = 0 ∧
+      Integrable (fun z : ℝ => z ^ 2) chi ∧
+      Integrable (fun z : ℝ => |z| ^ 3) chi ∧
+      sigmaSq = variance (id : ℝ → ℝ) rho ∧
+      1 / 2 ≤ sigmaSq ∧ sigmaSq ≤ 2 ∧
+      (∫ z : ℝ, |z| ^ 3 ∂chi) ≤ 12 * beta ∧
+      ∀ y : ℝ, 0 ≤ y → Shao.truncationBudget eta n y ≤
+        48 * beta * (1 + y) ^ 3 / Real.sqrt (n : ℝ) := by
+
+theorem auxiliary_own_budget_rank_payment
+    (beta rhoStar x y : ℝ) (hBeta : 0 ≤ beta) (hRho : 0 < rhoStar)
+    (hx : 0 ≤ x) (hy : 0 ≤ y) (hyx : y ≤ 2 * x)
+    (n : ℕ) (hn : 0 < n)
+    (hRank : (768 / rhoStar) ^ 2 * beta ^ 2 * (1 + x) ^ 6 ≤ (n : ℝ)) :
+    48 * beta * (1 + y) ^ 3 / Real.sqrt (n : ℝ) ≤ rhoStar / 2 := by
+
+end Shao.C2.AuxiliaryOwnC1Budget
