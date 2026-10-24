@@ -1,0 +1,7 @@
+# Termwise spatial differentiation of the image tails
+
+Read-only source supplement4298, formulas4255-4268. The actual grouped spatialTailBlock from55 has every-order spatial derivative, using54 entire-function affine exponential derivative identities. The new spatialTailSum is exactly the natural-number tsum of those blocks, not an abstract supplied smooth function.
+
+For fixed positive T use the open connected interval (-a,a) and55 majorant with H=U=T. The j+1 derivative blocks have a summable bound uniform in that interval; j blocks are summable at the evaluation point. The pinned SmoothSeries local connected-open-set theorem gives actual HasDerivAt of the tsum, with derivative equal to the next tsum. Induction and neighborhood function equality (not point equality) prove iteratedDeriv j of the zeroth tail sum equals the jth tail sum. Terminal z may be on either closed wall; spatial evaluation y is strictly interior. No time differentiation occurs.
+
+All6 heads/one full transparent value/import context frozen before proof. Kernel002 and all7-owner recursive axiom audit PASS. Failed001 source/log retained; only guarded proof simplification/normalization changes. Full7 actual types and sole full value exported. Independent final review pending;55 independent review ongoing,54 qualified. No original root closed. Still missing full finite-plus-tail/whole integer image representation, one-sided derivative trace, time/mixed profiles and convergence, killed-kernel/Brownian-bridge probability identification, high-time estimates, PDE and hSmall.
