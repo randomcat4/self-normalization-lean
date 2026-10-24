@@ -1,0 +1,27 @@
+import Mathlib.MeasureTheory.Measure.Tilted
+import Mathlib.Probability.Moments.Variance
+import Mathlib.Analysis.Calculus.Taylor
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliaryEnergyTilt
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_energy_tilt_normalizer_and_drift
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s : ℝ) (hs : 0 ≤ s) :
+    let V : ℝ → ℝ := fun z => Real.exp (-s * z ^ 2)
+    let Z : ℝ := ∫ z : ℝ, V z ∂nu
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu
+    Integrable V nu ∧ 0 < Z ∧ Real.exp (-s) ≤ Z ∧ Z ≤ 1 ∧
+      IsProbabilityMeasure rho ∧ Integrable (id : ℝ → ℝ) rho ∧
+      |(∫ z : ℝ, z ∂rho)| ≤ s * Real.exp s * beta := by
+
+end Shao.C2.AuxiliaryEnergyTilt

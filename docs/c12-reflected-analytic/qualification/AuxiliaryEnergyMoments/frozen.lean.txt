@@ -1,0 +1,30 @@
+import Shao.C2.AuxiliaryEnergyTilt
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliaryEnergyMoments
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_energy_tilt_moments_and_variance
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s : ℝ) (hs : 0 ≤ s) :
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu
+    let mu : ℝ := ∫ z : ℝ, z ∂rho
+    IsProbabilityMeasure rho ∧
+      Integrable (fun z : ℝ => z ^ 2) rho ∧
+      Integrable (fun z : ℝ => |z| ^ 3) rho ∧
+      1 - Real.sqrt s * beta ≤ (∫ z : ℝ, z ^ 2 ∂rho) ∧
+      (∫ z : ℝ, z ^ 2 ∂rho) ≤ Real.exp s ∧
+      (∫ z : ℝ, |z| ^ 3 ∂rho) ≤ Real.exp s * beta ∧
+      variance (id : ℝ → ℝ) rho = (∫ z : ℝ, z ^ 2 ∂rho) - mu ^ 2 ∧
+      1 - Real.sqrt s * beta - (s * Real.exp s * beta) ^ 2 ≤
+        variance (id : ℝ → ℝ) rho ∧
+      variance (id : ℝ → ℝ) rho ≤ Real.exp s := by
+
+end Shao.C2.AuxiliaryEnergyMoments

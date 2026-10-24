@@ -1,0 +1,1653 @@
+{
+  "schema": "c12-independent-complete-low-energy-review-v1",
+  "STATUS": "CORRECT",
+  "status": "COMPLETE_INDEPENDENT_REVIEW_CORRECT_PENDING_PARENT_ACCEPTANCE",
+  "qualifiedCompleteIndependentReview": true,
+  "atUTC": "2026-10-24T21:19:41.516158+00:00",
+  "units": [
+    154,
+    155
+  ],
+  "reviewer": "/root/auxiliary_low_energy_final_review",
+  "authorThread": "01a16c4c-25a6-7740-a10e-12635a13edae",
+  "freshContext": true,
+  "authorReviewerIndependent": true,
+  "authorProofAdviceOrProductionEdits": false,
+  "configuredModel": "gpt-6.1-sol",
+  "configuredEffort": "xhigh",
+  "actualBackendModelTelemetry": null,
+  "actualBackendEffortTelemetry": null,
+  "modelEffortProvenance": "Explicit dispatch configuration; actual backend telemetry unavailable. Configuration is not represented as measured backend telemetry.",
+  "usage": {
+    "input": null,
+    "cachedInput": null,
+    "output": null,
+    "reasoningSubset": null
+  },
+  "subscriptionPercentageAllocation": null,
+  "skill": "C:/Users/UIO/.agents/skills/math-theorem/SKILL.md",
+  "mathUltraUsed": false,
+  "additionalAgentsOrThreadsCreated": 0,
+  "soleWriteDirectory": "C:\\game\\shao lean\\drafts\\c12-lane\\auxiliary-low-energy-final-review-v1",
+  "aggregateDerivedCounts": {
+    "modules": 2,
+    "publicSourceTheorems": 4,
+    "actualOwnedConstants": 11,
+    "actualTheorems": 11,
+    "generatedTheorems": 7,
+    "privateSourceTheorems": 0,
+    "nonTheoremValues": 0,
+    "completeActualTypesBytes": 40311
+  },
+  "modules": {
+    "154": {
+      "unit": 154,
+      "module": "Shao.C2.AuxiliaryTiltedProductEnergy",
+      "verdict": "CORRECT",
+      "sourceSHA256": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+      "sourceBytes": 6221,
+      "objectSHA256": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+      "receiptSHA256": "488985bf93381287ba4d0b7f8626d8ee64759fa45b2a86fcd4d7d9c527e72fd4",
+      "frozenSHA256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+      "authorReleaseSHA256": "3e87bce02ccdef98725a364234727de48c45917b3c4742f8c8837862fdec1c09",
+      "completeActualTypesSHA256": "f0d234a84c5cc2aedb6cd9ef45f5a2b87d5a6e059516683bf487af075595e7cd",
+      "completeActualTypesBytes": 27488,
+      "nonTheoremValuesSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonTheoremValuesBytes": 0,
+      "counts": {
+        "publicSourceTheorems": 2,
+        "actualOwnedConstants": 9,
+        "actualTheorems": 9,
+        "generatedTheorems": 7,
+        "privateSourceTheorems": 0,
+        "nonTheoremValues": 0
+      },
+      "sourcePath": "C:\\game\\shao lean\\drafts\\c12-lane\\auxiliary-tilted-product-energy-v1\\AuxiliaryTiltedProductEnergy.lean",
+      "completeFrozenText": "import Shao.C2.AuxiliaryEnergyLaplace\nimport Shao.Probability.MeasurablePath\nimport Mathlib.MeasureTheory.Integral.Pi\n\nset_option autoImplicit false\nset_option maxHeartbeats 2000000\nnoncomputable section\nnamespace Shao.C2.AuxiliaryTiltedProductEnergy\nopen MeasureTheory ProbabilityTheory\nopen scoped BigOperators\n\ntheorem auxiliary_tilted_product_low_energy\n    (nu : Measure ℝ) [IsProbabilityMeasure nu]\n    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)\n    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)\n    (hmean : (∫ z : ℝ, z ∂nu) = 0)\n    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)\n    (s q : ℝ) (hs : 0 ≤ s) (hq : 0 ≤ q) (hsq : s ≤ q)\n    (hsmall : (s + q) * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 ≤ 1 / 64)\n    (n : ℕ) :\n    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)\n    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)\n    IsProbabilityMeasure P ∧\n      Integrable (fun v : Shao.Path n => Real.exp (-q * Shao.energy v)) P ∧\n      (∫ v : Shao.Path n, Real.exp (-q * Shao.energy v) ∂P) ≤\n        Real.exp (-(3 / 4) * q * (n : ℝ)) ∧\n      P.real {v : Shao.Path n | Shao.energy v ≤ (n : ℝ) / 8} ≤\n        Real.exp (-(5 / 8) * q * (n : ℝ)) := by\n\ntheorem auxiliary_tilted_source_low_energy\n    (nu : Measure ℝ) [IsProbabilityMeasure nu]\n    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)\n    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)\n    (hmean : (∫ z : ℝ, z ∂nu) = 0)\n    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)\n    (s : ℝ) (hs : 0 ≤ s)\n    (hsBound : s ≤ 1 / (128 * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2))\n    (n : ℕ) :\n    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu\n    let q : ℝ := 1 / (128 * beta ^ 2)\n    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)\n    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)\n    0 < q ∧ IsProbabilityMeasure P ∧\n      P.real {v : Shao.Path n | Shao.energy v ≤ (n : ℝ) / 8} ≤\n        Real.exp (-(5 * (n : ℝ) / (1024 * beta ^ 2))) := by\n\nend Shao.C2.AuxiliaryTiltedProductEnergy\n",
+      "perOwnerCoverage": [
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_5",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "In MonoidWithZero M with IsReduced, for every natural n and a!=0, (a^n=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "A vanishing natural power makes a nilpotent (including the degenerate zero-power case); IsReduced forces a=0, contrary to h. This is the denominator nonzero power obligation.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "541bfe66940b7efb66b450978c9e42a9793e447cd8fd86fedbdb74798e2f8cec",
+          "completeTypeBlockBytes": 1242,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_5 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}\n  [@IsReduced.{u_1} M₀\n      (@MulZeroClass.toZero.{u_1} M₀\n        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))\n      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]\n  (n : Nat)\n  (h :\n    @Ne.{u_1 + 1} M₀ a\n      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)\n        (@Zero.toOfNat0.{u_1} M₀\n          (@MulZeroClass.toZero.{u_1} M₀\n            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),\n  @Eq.{1} Prop\n    (@Eq.{u_1 + 1} M₀\n      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀\n        (@instHPow.{u_1, 0} M₀ Nat\n          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))\n        a n)\n      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)\n        (@Zero.toOfNat0.{u_1} M₀\n          (@MulZeroClass.toZero.{u_1} M₀\n            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_7",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "In AddMonoidWithOne R of characteristic zero, for every natural n, ((n:R)+1=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "Nat.cast_add_one identifies the left side with cast(n+1); injectivity of natural casting and n+1!=0 prove the obligation. No order or ring hypothesis is silently required.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "c7659ce2e33ce1d2e795eae08b953cd431eb1ebf92a7c7c097d88f955546eedf",
+          "completeTypeBlockBytes": 904,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_7 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),\n  @Eq.{1} Prop\n    (@Eq.{u_1 + 1} R\n      (@HAdd.hAdd.{u_1, u_1, u_1} R R R\n        (@instHAdd.{u_1} R\n          (@AddSemigroup.toAdd.{u_1} R\n            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))\n        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)\n        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))\n      (@OfNat.ofNat.{u_1} R (nat_lit 0)\n        (@Zero.toOfNat0.{u_1} R\n          (@AddZero.toZero.{u_1} R\n            (@AddZeroClass.toAddZero.{u_1} R\n              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_2",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "Explicit Zero α, numeral3 and NeZero3 imply (3=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "The field_simp simplification certificate uses the supplied NeZero3; it is a generic numeral nonzero fact.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "5374f1cd89021a7be5697554985f0694c854e94828961e4407ac466cb42d849d",
+          "completeTypeBlockBytes": 503,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_2 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {α : Type u_2} [inst : Zero.{u_2} α]\n  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]\n  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],\n  @Eq.{1} Prop\n    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)\n      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_4",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "In a type with multiplication, zero and NoZeroDivisors, a!=0 and b!=0 imply (a*b=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "If a*b=0, NoZeroDivisors gives a=0 or b=0, contradicting the explicit hypotheses; propext packages the proposition equality.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "125b12f42fe6f34d2fb0959c612281e35ea6ac2a53b387ff25954ece6d1c0489",
+          "completeTypeBlockBytes": 675,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_4 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1]\n  {a b : M₀} (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))\n  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),\n  @Eq.{1} Prop\n    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)\n      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy",
+          "kind": "theorem",
+          "visibility": "public source",
+          "semantic": "Under the same auxiliary law conditions, all s>=0 with s<=1/(128*beta²) and all deterministic natural n, beta is the original auxiliary absolute third moment, q is exactly1/(128*beta²), rho and P are the same literal tilt/product. Proves q>0, actual P probability, and weak rawenergy probability<=exp(-5*n/(1024*beta²)).",
+          "completeActualTypeReview": "Full unelided pp.all type read literally: identical auxiliary assumptions, s/hs/hsBound/n; exact beta integral absolute cube, source q inverse128beta², literal tilted rho and product P lets; q>0, actual P probability, weak energy event and exponent negative5*n/(1024beta²). No implicit positivity or reciprocal nonzero premise is hidden.",
+          "productionProofReview": [
+            "Exact accepted152 proves beta>=1 from probability,h2,h3,hnorm without an extra lower-bound assumption. Hence beta>0, beta²>0 and q>0.",
+            "Expand the actual q. field_simp with beta!=0 proves q*beta²=1/128. From s<=q, multiplication by beta²>=0 yields s*beta²<=q*beta². Distributivity and scalar arithmetic give (s+q)*beta²<=2/128=1/64. The attempt001 expression was replaced only by linear arithmetic at this step.",
+            "Apply the fully reviewed first154 theorem at the identical nu,s,q,n. Project actual probability and the final weak-event bound. After unfolding q, nonzero-denominator field simplification and ring identify -(5/8)*q*n with -(5*n/(1024*beta²)). No event or law is changed."
+          ],
+          "interfaces": [
+            "exact152 beta>=1",
+            "fully reviewed154 product theorem",
+            "field_simp nonzero beta",
+            "generated7 generic simplification obligations"
+          ],
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "completeTypeBlockSHA256": "14a9d3858b316f2f6607477aab0d7e32704ed60dfa27076d68c76396dda1d7d6",
+          "completeTypeBlockBytes": 10253,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu]\n  (h2 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      nu)\n  (h3 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@abs.{0} Real Real.lattice Real.instAddGroup z)\n          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n      nu)\n  (hmean :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) => z)\n      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))\n  (hnorm :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))\n  (s : Real)\n  (hs : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) s)\n  (hsBound :\n    @LE.le.{0} Real Real.instLE s\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@OfNat.ofNat.{0} Real (nat_lit 128)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 128) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 127) (instOfNatNat (nat_lit 127)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 126) (instOfNatNat (nat_lit 126)))))))\n          (@HPow.hPow.{0, 0, 0} Real Nat Real\n            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n            (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n              (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n              Real.measurableSpace nu fun (z : Real) =>\n              @HPow.hPow.{0, 0, 0} Real Nat Real\n                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n                (@abs.{0} Real Real.lattice Real.instAddGroup z)\n                (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))\n  (n : Nat),\n  have beta : Real :=\n    @MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n      (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n        (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n        (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n      Real.measurableSpace nu fun (z : Real) =>\n      @HPow.hPow.{0, 0, 0} Real Nat Real\n        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n        (@abs.{0} Real Real.lattice Real.instAddGroup z) (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)));\n  have q : Real :=\n    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n        (@OfNat.ofNat.{0} Real (nat_lit 128)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 128) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 127) (instOfNatNat (nat_lit 127)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 126) (instOfNatNat (nat_lit 126)))))))\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) beta\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))));\n  have rho : @MeasureTheory.Measure.{0} Real Real.measurableSpace :=\n    @MeasureTheory.Measure.tilted.{0} Real Real.measurableSpace nu fun (z : Real) =>\n      @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg s)\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))));\n  have P :\n    @MeasureTheory.Measure.{0} (Shao.Path n)\n      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) :=\n    @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)\n      (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => rho;\n  And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) q)\n    (And\n      (@MeasureTheory.IsProbabilityMeasure.{0} (Shao.Path n)\n        (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P)\n      (@LE.le.{0} Real Real.instLE\n        (@MeasureTheory.Measure.real.{0} (Shao.Path n)\n          (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P\n          (@Set.ofPred.{0} (Shao.Path n) fun (v : Shao.Path n) =>\n            @LE.le.{0} Real Real.instLE (@Shao.energy n v)\n              (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                (@Nat.cast.{0} Real Real.instNatCast n)\n                (@OfNat.ofNat.{0} Real (nat_lit 8)\n                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6))))))))))\n        (Real.exp\n          (@Neg.neg.{0} Real Real.instNeg\n            (@HDiv.hDiv.{0, 0, 0} Real Real Real\n              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@OfNat.ofNat.{0} Real (nat_lit 5)\n                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 5) Real.instNatCast\n                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))\n                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))))\n                (@Nat.cast.{0} Real Real.instNatCast n))\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@OfNat.ofNat.{0} Real (nat_lit 1024)\n                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 1024) Real.instNatCast\n                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1023) (instOfNatNat (nat_lit 1023)))\n                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1022) (instOfNatNat (nat_lit 1022)))))))\n                (@HPow.hPow.{0, 0, 0} Real Nat Real\n                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) beta\n                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))))\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_product_low_energy",
+          "kind": "theorem",
+          "visibility": "public source",
+          "semantic": "For every real probability law nu with integrable square and absolute cube, genuine mean0 and second moment1, all real0<=s<=q with(s+q)beta²<=1/64 and all deterministic natural n (including0), rho is literally nu.tilted(z↦-s*z²), P is its n-fold finite product. Conclusions are actual probability, genuine integrability of exp(-q*rawenergy), expectation<=exp(-3*q*n/4), and weak rawenergy<=n/8 probability<=exp(-5*q*n/8). No abstract probability oracle, centered-energy surrogate, positive-n premise or q>0 premise.",
+          "completeActualTypeReview": "Full unelided pp.all type read literally, including every universe, real measurable/normed/integral instance, explicit probability,h2,h3,hmean,hnorm,s,q,hs,hq,hsq,hsmall,n, both exact dependent lets, IsProbabilityMeasure/Integrable/actual Bochner integral/Measure.real conjunction, genuine energy and rational3/4,5/8,n/8. Every nonimplicit hypothesis matches the frozen source head.",
+          "productionProofReview": [
+            "Install the exact unit150 probability result at the identical nu,h2,h3,hmean,hnorm,s,hs using conjunction projection2.2.2.2.1. The local rho is definitionally its literal tilt. Native finite-product probability gives hP, installed at the exact P; probability supplies finite/sigma-finite requirements.",
+            "Consume exact unit153 tilted coordinate Laplace interface with identical s,q and all four smallness/order hypotheses. Its actual coordinate integral, not an assumed independent estimate, is <=exp(-3q/4).",
+            "For hInt, continuous rawenergy and the exponential give AEStronglyMeasurable of the actual integrand. The probability mass is finite, so constant1 is integrable. Since q>=0 and energy>=0, -q*energy<=0, and positivity of exp turns its norm into exp<=1. Native Integrable.mono' therefore proves genuine Bochner integrability, avoiding integral_undef.",
+            "For each actual path, native exp_sum and energy=Σ_i(v_i)² yield exp(-q*energy)=Π_i exp(-q*(v_i)²). The native finite-product integral factorization has all SigmaFinite component requirements from rho probability. Coordinate integrability is also available from153. Thus the actual P-integral is exactly the product of actual coordinate integrals.",
+            "Each coordinate integral is nonnegative by pointwise exponential positivity. Native prod_le_prod₀ needs just those nonnegative lower factors and their coordinate bounds, both provided. The constant exponential product is exp(-3*q*n/4), using cardinality Fin n=n. This includes the empty product.",
+            "The actual weak rawenergy event A is measurable from measurable_energy. Put c=exp(-q*n/8)>0. Native integral_indicator_const identifies c*P.real(A) with the integral of its constant indicator. The latter is integrable since c is a finite real constant and P finite. On A, q*(n/8-energy)>=0 gives c<=exp(-q*energy); outside A, zero<=exp(-q*energy). Both sides are integrable, so native integral_mono applies.",
+            "Combine the indicator bound with hMoment. Divide by the strictly positive c using le_div_iff₀. Real.exp_sub and ring give (-3/4+1/8)q*n=-5q*n/8. Return hP,hInt,hMoment,hTail in the exact right-associated conjunction."
+          ],
+          "interfaces": [
+            "unit150 probability projection",
+            "unit153 actual coordinate Laplace integral",
+            "accepted energy/continuous_energy/measurable_energy",
+            "native finite pi probability and sigma finiteness",
+            "Integrable.mono'",
+            "Real.exp_sum",
+            "integral_fintype_prod_eq_prod",
+            "Finset.prod_le_prod₀",
+            "integral_indicator_const",
+            "integral_mono",
+            "positive exponential division"
+          ],
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "completeTypeBlockSHA256": "823eb51e051f03fa932f9083820961e6b095ce4455de7c637c8edcce2530f308",
+          "completeTypeBlockBytes": 11760,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_product_low_energy KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu]\n  (h2 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      nu)\n  (h3 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@abs.{0} Real Real.lattice Real.instAddGroup z)\n          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n      nu)\n  (hmean :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) => z)\n      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))\n  (hnorm :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))\n  (s q : Real)\n  (hs : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) s)\n  (hq : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) q)\n  (hsq : @LE.le.{0} Real Real.instLE s q)\n  (hsmall :\n    @LE.le.{0} Real Real.instLE\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) s q)\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n            (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n              (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n            Real.measurableSpace nu fun (z : Real) =>\n            @HPow.hPow.{0, 0, 0} Real Nat Real\n              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n              (@abs.{0} Real Real.lattice Real.instAddGroup z)\n              (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@OfNat.ofNat.{0} Real (nat_lit 64)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 64) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 63) (instOfNatNat (nat_lit 63)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 62) (instOfNatNat (nat_lit 62)))))))))\n  (n : Nat),\n  have rho : @MeasureTheory.Measure.{0} Real Real.measurableSpace :=\n    @MeasureTheory.Measure.tilted.{0} Real Real.measurableSpace nu fun (z : Real) =>\n      @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg s)\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))));\n  have P :\n    @MeasureTheory.Measure.{0} (Shao.Path n)\n      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) :=\n    @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)\n      (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => rho;\n  And\n    (@MeasureTheory.IsProbabilityMeasure.{0} (Shao.Path n)\n      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P)\n    (And\n      (@MeasureTheory.Integrable.{0, 0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n          (@UniformSpace.toTopologicalSpace.{0} Real\n            (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n          (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n            (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n              (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n                (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                  (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                    (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n        (Shao.Path n)\n        (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)\n        (fun (v : Shao.Path n) =>\n          Real.exp\n            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg q)\n              (@Shao.energy n v)))\n        P)\n      (And\n        (@LE.le.{0} Real Real.instLE\n          (@MeasureTheory.integral.{0, 0} (Shao.Path n) Real Real.normedAddCommGroup\n            (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n              (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P\n            fun (v : Shao.Path n) =>\n            Real.exp\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg q)\n                (@Shao.energy n v)))\n          (Real.exp\n            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                    (@OfNat.ofNat.{0} Real (nat_lit 3)\n                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))\n                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))))\n                    (@OfNat.ofNat.{0} Real (nat_lit 4)\n                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))\n                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))))\n                q)\n              (@Nat.cast.{0} Real Real.instNatCast n))))\n        (@LE.le.{0} Real Real.instLE\n          (@MeasureTheory.Measure.real.{0} (Shao.Path n)\n            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P\n            (@Set.ofPred.{0} (Shao.Path n) fun (v : Shao.Path n) =>\n              @LE.le.{0} Real Real.instLE (@Shao.energy n v)\n                (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                  (@Nat.cast.{0} Real Real.instNatCast n)\n                  (@OfNat.ofNat.{0} Real (nat_lit 8)\n                    (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n                      (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n                        (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6))))))))))\n          (Real.exp\n            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                    (@OfNat.ofNat.{0} Real (nat_lit 5)\n                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 5) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))\n                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))))\n                    (@OfNat.ofNat.{0} Real (nat_lit 8)\n                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))))))\n                q)\n              (@Nat.cast.{0} Real Real.instNatCast n))))))\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_1",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "Explicit Zero α, numeral2 and NeZero2 imply (2=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "The field_simp simplification certificate uses the supplied NeZero2; no property of the probability law is added.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "dad848cf3c414b59a6c4469d668415b4d71438fa1012e637eeb3e5600c2fc2c8",
+          "completeTypeBlockBytes": 503,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_1 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {α : Type u_2} [inst : Zero.{u_2} α]\n  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]\n  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],\n  @Eq.{1} Prop\n    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)\n      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_3",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "Explicit Zero α, numeral4 and NeZero4 imply (4=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "The field_simp simplification certificate uses the supplied NeZero4; it is a generic numeral nonzero fact.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext"
+          ],
+          "completeTypeBlockSHA256": "dd9e902b72bc381095b27059bdc776df724f166fca4cf55ba5f5a54f89c5cf87",
+          "completeTypeBlockBytes": 503,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_3 KIND theorem AXIOMS [propext]\nACTUAL_TYPE ∀ {α : Type u_2} [inst : Zero.{u_2} α]\n  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]\n  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],\n  @Eq.{1} Prop\n    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)\n      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))\n    False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_6",
+          "kind": "theorem",
+          "visibility": "generated",
+          "semantic": "In GroupWithZero G, every integer n and a!=0 imply (a^n=0)=False.",
+          "completeActualTypeReview": "Full unelided pp.all generic type read literally, including its universe, every algebraic/OfNat/Zero/NeZero/IsReduced/CharZero instance, quantifier, nonzero hypothesis and proposition-equality target. No unlisted premise or non-theorem value.",
+          "productionProofReview": [
+            "Nonzero elements have nonzero integer powers, also at zero/negative exponent by group-with-zero inversion; it supplies field_simp reciprocal-power nonvanishing.",
+            "The actual complete generic type is reviewed individually here. It arises inside the two exact checked field_simp invocations in the source-q proof. The giant generated theorem proof term is not printed, as allowed by TEAM.md; its kernel certificate is bound by the exact source/object/audit artifacts and its own transitive axioms are checked."
+          ],
+          "interfaces": [
+            "generic algebraic simplification under explicitly printed instances",
+            "exact checked field_simp source invocation",
+            "propext for proposition equality"
+          ],
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "completeTypeBlockSHA256": "2dcb919de81285cb1e5e7fba1856d3c7db410461451c5b7890fabcd813afef77",
+          "completeTypeBlockBytes": 1145,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryTiltedProductEnergy.auxiliary_tilted_source_low_energy._simp_1_6 KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),\n  @Ne.{u_3 + 1} G₀ a\n      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)\n        (@Zero.toOfNat0.{u_3} G₀\n          (@MulZeroClass.toZero.{u_3} G₀\n            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀\n              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →\n    @Eq.{1} Prop\n      (@Eq.{u_3 + 1} G₀\n        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀\n          (@instHPow.{u_3, 0} G₀ Int\n            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))\n          a n)\n        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)\n          (@Zero.toOfNat0.{u_3} G₀\n            (@MulZeroClass.toZero.{u_3} G₀\n              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀\n                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))\n      False\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        }
+      ],
+      "sourceFreezeReceiptAndRelease": {
+        "freeze": {
+          "unit": 154,
+          "module": "Shao.C2.AuxiliaryTiltedProductEnergy",
+          "frozenAtUTC": "2026-10-24T21:04:36.952393+00:00",
+          "frozenSHA256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+          "completeImportsContextHeadsAndFullValues": true,
+          "publicHeads": 2,
+          "privateHeads": 0,
+          "newGlobalNonTheoremValues": 0,
+          "implementationStarted": false,
+          "sourcePaper": "supplement.tex5113–5120 deterministic original iid ranks auxiliary tilted low raw energy probability",
+          "scope": "Actual n-fold energy-tilted product probability, genuine exp(-q*sum raw squares) integrability/expectation<=exp(-3qn/4), weak rawenergy<=n/8 probability<=exp(-5qn/8), includingn0/q0. Specific source q=1/(128beta²)>0 yields boundexp(-5n/(1024beta²)). No replacing rawenergy by centered variance. No rare-budget/full-root claim.",
+          "plannedProof": "Install actual150tilted probability;153coordinate Laplace bound; true finite pi Fubini product and exponential sum give moment bound. Measurable weakrawenergy indicator dominated by trueexp observable gives Chernoff with positive exponential threshold. beta>=1from152 payspositive sourceq and(s+q)smallness.",
+          "projectDependencySourceSHA256": {
+            "Shao/C2/AuxiliaryEnergyLaplace.lean": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+            "Shao/Probability/MeasurablePath.lean": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+            "Shao/Basic/FinitePath.lean": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb"
+          },
+          "ownerCheckedAtUTC": "2026-10-24T21:04:36.952393+00:00",
+          "distinctRootScopes": [
+            {
+              "name": "/root/true_energy_strip_author",
+              "role": "C2_RESIDUAL_DOUBLE_MATHEMATICAL_CANDIDATE",
+              "actuallyRunning": true
+            }
+          ],
+          "next": "Implement two exact frozen heads; no proof/check yet."
+        },
+        "receipt": {
+          "status": "AUTHOR_KERNEL_AND_ALL_OWNED_AXIOM_PASS_INDEPENDENT_REVIEW_PENDING",
+          "module": "Shao.C2.AuxiliaryTiltedProductEnergy",
+          "sourceSHA256": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+          "objectSHA256": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+          "frozenSHA256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+          "kernelExit": 0,
+          "kernelAttempt": "attempt002",
+          "auditExit": 0,
+          "kernelCommand": "source /root/rivermind-data/shao-lean-20261021/activate.sh && cd /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71 && flock /root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock taskset -c 14-17 lake env lean -M8192 -j4 Shao/C2/AuxiliaryTiltedProductEnergy.lean -o /root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/AuxiliaryTiltedProductEnergy.olean",
+          "auditCommand": "same activation/cd/lock/affinity; lake env lean -M8192 -j4 /root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/OwnedAudit.lean",
+          "toolchain": "leanprover/lean4:v4.36.0-rc1",
+          "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+          "packages": "cache-overlays/shared-v34/packages",
+          "wholeOwnedCount": 9,
+          "wholeTheoremCount": 9,
+          "wholeNonTheoremCount": 0,
+          "publicTheorems": 2,
+          "allTypesComplete": true,
+          "allNonTheoremValues": "0 new global non-theorem values; complete empty value export",
+          "whitelist": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "CPUs": "14-17",
+          "memoryMiB": 8192,
+          "jobs": 4,
+          "sourceEncoding": "UTF-8 no BOM LF; CR count0",
+          "independentReview": "PENDING",
+          "scope": "Supplement5113–5120 actual finiteproduct of literal energytilted auxiliary law: alln>=0,0<=s<=q and(s+q)*beta²<=1/64 yield genuineexp(-q*rawenergy)integrability/moment<=exp(-3qn/4) and weakrawenergy<=n/8 probability<=exp(-5qn/8). Actualsourceq=1/(128beta²)>0 paid, yields exp(-5n/(1024beta²)). No extra original-law assumptions; rank-to-Gaussiantail/rare-budget/full roots remain open.",
+          "artifacts": {
+            "source-and-proof.md": {
+              "sha256": "5dcd9da62f5645fbb32b01d903e9769a3e66fb7d4758964200141bc2f339c92a",
+              "bytes": 3063,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/source-and-proof.md"
+            },
+            "freeze-record.json": {
+              "sha256": "a28d5c0b89c66bb3594ab2dc82d2cd4e3d53fb7393c57fe35dde921b696f1618",
+              "bytes": 1837,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/freeze-record.json"
+            },
+            "OwnedAudit.lean": {
+              "sha256": "c1dae467c90e04bef84cf2da3e414d7d902e8fc240fce778adbe83dd2ff1a129",
+              "bytes": 2933,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/OwnedAudit.lean"
+            },
+            "owned-audit.json": {
+              "sha256": "fd0141c381df67a411c3775db375d62a3bf4443edb2fe9dabce40959adb8f66b",
+              "bytes": 2320,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/owned-audit.json"
+            },
+            "actual-owned-types.txt": {
+              "sha256": "f0d234a84c5cc2aedb6cd9ef45f5a2b87d5a6e059516683bf487af075595e7cd",
+              "bytes": 27488,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/actual-owned-types.txt"
+            },
+            "actual-definition-values.txt": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "bytes": 0,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/actual-definition-values.txt"
+            },
+            "owned-audit.log": {
+              "sha256": "a87daf57e9d8ba97e104459aa0d3d52b9b0dcbf44402c285936d1556f9879267",
+              "bytes": 27713,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/owned-audit.log"
+            },
+            "frozen.lean.txt": {
+              "sha256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+              "bytes": 2038,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/frozen.lean.txt"
+            },
+            "attempt001/command.txt": {
+              "sha256": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+              "bytes": 422,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/command.txt"
+            },
+            "attempt001/kernel.log": {
+              "sha256": "1d9f51dd221edc2c0cd9c5d41df2ff8cf66f58be3dddc207779dad8c4d4f29c6",
+              "bytes": 1139,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/kernel.log"
+            },
+            "attempt001/source.lean": {
+              "sha256": "3fa0e20810d4b3f7610cf75d4b5be2b0a0449904a7270746881c9ab0ec0c51e7",
+              "bytes": 6231,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/source.lean"
+            },
+            "attempt002/command.txt": {
+              "sha256": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+              "bytes": 422,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/command.txt"
+            },
+            "attempt002/kernel.log": {
+              "sha256": "04f92e743368b015ceda7b8c3c98214c3279283a3fe8ea7e9f826b958ce5295a",
+              "bytes": 1857,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/kernel.log"
+            },
+            "attempt002/source.lean": {
+              "sha256": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+              "bytes": 6221,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/source.lean"
+            }
+          },
+          "branch": "author/c12-compact-relative-v71",
+          "baseHead": "9f7d39c69b78ae4436e5ed06d34e9d7efae5387e",
+          "failedAttemptsPreserved": "attempt001 source/command/kernel failure retained; only scalar addition-order proof expression replaced by linear arithmetic; frozen two heads unchanged. attempt002 kernel/all9actualownerAX PASS;2public source+7generated theorems,0private source/non-theorem values. Harmless style hints retained.",
+          "sourceSnapshot": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/source.lean",
+          "objectPath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/AuxiliaryTiltedProductEnergy.olean",
+          "sourcePath": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryTiltedProductEnergy.lean",
+          "dependencySourceSHA256": {
+            "Shao/C2/AuxiliaryEnergyTilt.lean": "8ea1547baf4beb388faea8d4d8ded12cab83c098f5bb41b2995d79675abd91ca",
+            "Shao/C2/AuxiliaryEnergyMoments.lean": "5a9b156d0f7ad1c41f15b361b1cea008e7f47716e23d86c0f57db04ac54498d3",
+            "Shao/C2/AuxiliaryEnergyCentered.lean": "465e3efe00bab80dea7207acb6da86198d6c28a4551908d035c51446aba8fd38",
+            "Shao/C2/AuxiliaryEnergyLaplace.lean": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+            "Shao/Probability/MeasurablePath.lean": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+            "Shao/Basic/FinitePath.lean": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb"
+          }
+        },
+        "release": {
+          "status": "AUTHOR_WRITER_AND_EXECUTION_RELEASED",
+          "author": "01a16c4c-25a6-7740-a10e-12635a13edae",
+          "sourceSHA256": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+          "objectSHA256": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+          "receiptSHA256": "488985bf93381287ba4d0b7f8626d8ee64759fa45b2a86fcd4d7d9c527e72fd4",
+          "frozenSHA256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+          "writerReleased": true,
+          "executionReleased": true,
+          "heavyInFlight": false,
+          "inFlight": [],
+          "next": "Fresh independent final complete review; no source edits or successful replay",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "usage": {
+            "input": null,
+            "cachedInput": null,
+            "output": null,
+            "reasoningSubset": null
+          }
+        }
+      },
+      "localAuthorArtifactBindings": {
+        "actual-definition-values.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "actual-owned-types.txt": {
+          "sha256": "f0d234a84c5cc2aedb6cd9ef45f5a2b87d5a6e059516683bf487af075595e7cd",
+          "bytes": 27488
+        },
+        "AuxiliaryTiltedProductEnergy.lean": {
+          "sha256": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+          "bytes": 6221
+        },
+        "finish-receipt.py": {
+          "sha256": "5fefd9b5a97c33958ee394b6fc75bedf7b656447e8b16d03ec5c2489f71c4065",
+          "bytes": 7483
+        },
+        "freeze-comparison.json": {
+          "sha256": "64f27c56cc91758201fa34acff9f46ed11477be3814c152d6fd954d5ad678647",
+          "bytes": 268
+        },
+        "freeze-record.json": {
+          "sha256": "a28d5c0b89c66bb3594ab2dc82d2cd4e3d53fb7393c57fe35dde921b696f1618",
+          "bytes": 1837
+        },
+        "frozen.lean.txt": {
+          "sha256": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+          "bytes": 2038
+        },
+        "owned-audit.json": {
+          "sha256": "fd0141c381df67a411c3775db375d62a3bf4443edb2fe9dabce40959adb8f66b",
+          "bytes": 2320
+        },
+        "OwnedAudit.lean": {
+          "sha256": "c1dae467c90e04bef84cf2da3e414d7d902e8fc240fce778adbe83dd2ff1a129",
+          "bytes": 2933
+        },
+        "receipt.json": {
+          "sha256": "488985bf93381287ba4d0b7f8626d8ee64759fa45b2a86fcd4d7d9c527e72fd4",
+          "bytes": 7476
+        },
+        "RELEASE.json": {
+          "sha256": "3e87bce02ccdef98725a364234727de48c45917b3c4742f8c8837862fdec1c09",
+          "bytes": 799
+        },
+        "source-and-proof.md": {
+          "sha256": "5dcd9da62f5645fbb32b01d903e9769a3e66fb7d4758964200141bc2f339c92a",
+          "bytes": 3063
+        }
+      },
+      "allOriginalAttemptLogsFullyRead": true,
+      "allOriginalAuditLogTextReadAndAccountedFor": true,
+      "originalLogEvidence": {
+        "auditLogPrefix": "warning: mathlib: repository has local changes:\n  /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib\n",
+        "auditLogSuffix": "AUDITED_TARGET_CONSTANTS 9 PUBLIC 2 THEOREMS 9 DEFINITIONS 0\n\nAUDIT_EXIT=0\n",
+        "auditTypeSegmentByteExact": true,
+        "auditLogAccountedBytes": 27713,
+        "attempts": [
+          "attempt001",
+          "attempt002"
+        ],
+        "attempt001To002CompleteDiff": "--- \n+++ \n@@ -129,7 +129,7 @@\n     have hh := mul_le_mul_of_nonneg_right hsBound (sq_nonneg beta)\n     calc\n       (s + q) * beta ^ 2 = s * beta ^ 2 + q * beta ^ 2 := by ring\n-      _ ≤ q * beta ^ 2 + q * beta ^ 2 := add_le_add_right hh _\n+      _ ≤ q * beta ^ 2 + q * beta ^ 2 := by linarith\n       _ = 1 / 64 := by rw [hQ]; norm_num\n   have hResult := auxiliary_tilted_product_low_energy nu h2 h3 hmean hnorm\n     s q hs hq.le hsBound hSmall n\n",
+        "forbiddenTokens": [],
+        "sourceEncoding": {
+          "BOM": false,
+          "CRcount": 0
+        },
+        "originalLogsFullyRead": {
+          "attempt001/command.txt": {
+            "bytes": 422,
+            "sha256": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+            "kernelExit1": false,
+            "kernelExit0": false
+          },
+          "attempt001/kernel.log": {
+            "bytes": 1139,
+            "sha256": "1d9f51dd221edc2c0cd9c5d41df2ff8cf66f58be3dddc207779dad8c4d4f29c6",
+            "kernelExit1": true,
+            "kernelExit0": false
+          },
+          "attempt002/command.txt": {
+            "bytes": 422,
+            "sha256": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+            "kernelExit1": false,
+            "kernelExit0": false
+          },
+          "attempt002/kernel.log": {
+            "bytes": 1857,
+            "sha256": "04f92e743368b015ceda7b8c3c98214c3279283a3fe8ea7e9f826b958ce5295a",
+            "kernelExit1": false,
+            "kernelExit0": true
+          }
+        }
+      },
+      "scope": "Supplement5113–5120 actual finiteproduct of literal energytilted auxiliary law: alln>=0,0<=s<=q and(s+q)*beta²<=1/64 yield genuineexp(-q*rawenergy)integrability/moment<=exp(-3qn/4) and weakrawenergy<=n/8 probability<=exp(-5qn/8). Actualsourceq=1/(128beta²)>0 paid, yields exp(-5n/(1024beta²)). No extra original-law assumptions; rank-to-Gaussiantail/rare-budget/full roots remain open."
+    },
+    "155": {
+      "unit": 155,
+      "module": "Shao.C2.AuxiliaryLowEnergyGaussian",
+      "verdict": "CORRECT",
+      "sourceSHA256": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+      "sourceBytes": 4051,
+      "objectSHA256": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+      "receiptSHA256": "253b957311c3248a50da2db8209ca81d55230a1804845cc720e442bea2d4066c",
+      "frozenSHA256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+      "authorReleaseSHA256": "b52914e1978363773117ddf276d6b60acfb02f626dc0bda794fc99e2b518f220",
+      "completeActualTypesSHA256": "6f8c9eaf9b95949875c8b26580e58caf9af01e84bd6f41cf5dab5e5e185b3bd6",
+      "completeActualTypesBytes": 12823,
+      "nonTheoremValuesSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonTheoremValuesBytes": 0,
+      "counts": {
+        "publicSourceTheorems": 2,
+        "actualOwnedConstants": 2,
+        "actualTheorems": 2,
+        "generatedTheorems": 0,
+        "privateSourceTheorems": 0,
+        "nonTheoremValues": 0
+      },
+      "sourcePath": "C:\\game\\shao lean\\drafts\\c12-lane\\auxiliary-low-energy-gaussian-v1\\AuxiliaryLowEnergyGaussian.lean",
+      "completeFrozenText": "import Shao.C2.AuxiliaryTiltedProductEnergy\nimport Shao.Probability.GaussianTail\n\nset_option autoImplicit false\nset_option maxHeartbeats 2000000\nnoncomputable section\nnamespace Shao.C2.AuxiliaryLowEnergyGaussian\nopen MeasureTheory ProbabilityTheory\n\ntheorem auxiliary_exponential_le_gaussian_tail\n    (y A : ℝ) (hy : 0 ≤ y) (hA : y + y ^ 2 / 2 ≤ A) :\n    Real.exp (-A) ≤ (8 / 3 : ℝ) * Shao.standardNormalTail y := by\n\ntheorem auxiliary_tilted_low_energy_gaussian\n    (nu : Measure ℝ) [IsProbabilityMeasure nu]\n    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)\n    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)\n    (hmean : (∫ z : ℝ, z ∂nu) = 0)\n    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)\n    (s : ℝ) (hs : 0 ≤ s)\n    (hsBound : s ≤ 1 / (128 * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2))\n    (n : ℕ) (x : ℝ) (hx : 0 ≤ x)\n    (hRank : 1024 * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 * (1 + x) ^ 6 ≤ (n : ℝ)) :\n    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)\n    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)\n    P.real {v : Shao.Path n | Shao.energy v ≤ (n : ℝ) / 8} ≤\n      (8 / 3 : ℝ) * Shao.standardNormalTail ((3 / 2) * x) := by\n\nend Shao.C2.AuxiliaryLowEnergyGaussian\n",
+      "perOwnerCoverage": [
+        {
+          "name": "Shao.C2.AuxiliaryLowEnergyGaussian.auxiliary_exponential_le_gaussian_tail",
+          "kind": "theorem",
+          "visibility": "public source",
+          "semantic": "For arbitrary real y,A with y>=0 and A>=y+y²/2, the actual accepted standardNormalTail satisfies exp(-A)<=8/3*tail(y). No bounded-y or implicit upper/lower restriction on A is inserted.",
+          "completeActualTypeReview": "Full unelided pp.all type read literally: exactly real y,A, hy0<=y, hAy+y²/2<=A and Real.exp(-A)<=real8/3*Shao.standardNormalTail y. Natural exponent2, real rational division and genuine accepted tail are the intended instances. No extra parameter or premise.",
+          "productionProofReview": [
+            "Read the exact accepted tail definition: (gaussianReal0,1)(Ioi y) converted to a real. Its exact basic interface supplies tail(y)>0 and tail(0)=1/2. Apply ratio_bound at its first argument y and second argument0; both nonnegativity premises are supplied. This is the correct orientation and gives1/2<=4/3*(1+y)*exp(y²/2)*tail(y). zero_pow uses the true natural exponent2!=0.",
+            "The exponential tangent inequality gives1+y<=exp(y). Multiply by the explicitly nonnegative coefficient4/3*exp(y²/2)*tail(y), then rearrange and use exp_add to get1/2<=4/3*exp(y+y²/2)*tail(y).",
+            "Multiply this inequality by exp(-A)>0. The product exp(y+y²/2)*exp(-A) equals exp(y+y²/2-A). The frozen premise hA makes that exponent<=0, so this factor<=1.",
+            "Because4/3*tail(y)>=0, the right hand side is <=4/3*tail(y). Combine the inequalities and multiply the remaining1/2 coefficient out by real linear arithmetic, obtaining exp(-A)<=8/3*tail(y). Every multiplication uses a proved nonnegative factor."
+          ],
+          "interfaces": [
+            "accepted tail definition",
+            "standardNormalTail_basic positivity/tail0",
+            "standardNormalTail_ratio_bound(y,0)",
+            "Real.add_one_le_exp",
+            "Real.exp_add",
+            "Real.exp_le_one_iff",
+            "nonnegative multiplication"
+          ],
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "completeTypeBlockSHA256": "2320663adfeea5fa45d69cff7b9a220c208bb18c6e54c5a4862bee44dc924922",
+          "completeTypeBlockBytes": 2036,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryLowEnergyGaussian.auxiliary_exponential_le_gaussian_tail KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ (y A : Real)\n  (hy : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) y)\n  (hA :\n    @LE.le.{0} Real Real.instLE\n      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) y\n        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n          (@HPow.hPow.{0, 0, 0} Real Nat Real\n            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y\n            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n          (@OfNat.ofNat.{0} Real (nat_lit 2)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))))\n      A),\n  @LE.le.{0} Real Real.instLE (Real.exp (@Neg.neg.{0} Real Real.instNeg A))\n    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 8)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))))\n        (@OfNat.ofNat.{0} Real (nat_lit 3)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))))))\n      (Shao.standardNormalTail y))\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        },
+        {
+          "name": "Shao.C2.AuxiliaryLowEnergyGaussian.auxiliary_tilted_low_energy_gaussian",
+          "kind": "theorem",
+          "visibility": "public source",
+          "semantic": "At exactly the auxiliary nu and literal tilted product P of154, if x>=0, s>=0, s<=1/(128*beta²), and deterministic n>=1024*beta²*(1+x)^6, then P.real{rawenergy<=n/8}<=8/3*actualstandardNormalTail(3*x/2). This is the source low-energy term only.",
+          "completeActualTypeReview": "Full unelided pp.all type read literally: all auxiliary integrability/mean/normalization assumptions, s>=0 and actual inverse128beta² bound, n natural and x real>=0, exact rank1024beta²(1+x)^6<=cast n; exact tilt/product lets and Measure.real weak rawenergy<=cast n/8; target8/3*actualtail((3/2)*x). No replacement variance or centered energy.",
+          "productionProofReview": [
+            "Exact152 again supplies beta>=1, hence beta>0 and the actual denominator1024*beta²>0. Re-express hRank at this beta; le_div_iff₀ and multiplication by5>=0 yield5*(1+x)^6<=5*n/(1024*beta²).",
+            "For x>=0, prove (3/2)x+((3/2)x)²/2<=5*(1+x)^6. The difference is5+(57/2)x+(591/8)x²+100x³+75x⁴+30x⁵+5x⁶, with every term nonnegative. The production nlinarith consumes hx, sq_nonneg x and nonnegative powers3,4,5,6, so this is a genuine all-real-x polynomial proof, not a finite check.",
+            "Project the exact154 source-q weak low-energy estimate, at the identical nu,s,n. Apply the fully reviewed155 scalar theorem with y=3*x/2>=0 and A=5*n/(1024*beta²). hPolynomial.trans hPower supplies precisely A>=y+y²/2. Transitivity gives the exact stated actual P.real bound."
+          ],
+          "interfaces": [
+            "exact152 beta>=1",
+            "exact154 source-q product estimate",
+            "fully reviewed155 scalar payment",
+            "positive division and all-x polynomial arithmetic"
+          ],
+          "axioms": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "completeTypeBlockSHA256": "db2988cc86d935ad7c2d450627bbbb70b21a7df1fe0ea81bfb4c6488ff26e1ca",
+          "completeTypeBlockBytes": 10787,
+          "actualTypeText": "TARGET_DECL Shao.C2.AuxiliaryLowEnergyGaussian.auxiliary_tilted_low_energy_gaussian KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu]\n  (h2 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      nu)\n  (h3 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@abs.{0} Real Real.lattice Real.instAddGroup z)\n          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n      nu)\n  (hmean :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) => z)\n      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))\n  (hnorm :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))\n  (s : Real)\n  (hs : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) s)\n  (hsBound :\n    @LE.le.{0} Real Real.instLE s\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@OfNat.ofNat.{0} Real (nat_lit 128)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 128) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 127) (instOfNatNat (nat_lit 127)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 126) (instOfNatNat (nat_lit 126)))))))\n          (@HPow.hPow.{0, 0, 0} Real Nat Real\n            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n            (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n              (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n              Real.measurableSpace nu fun (z : Real) =>\n              @HPow.hPow.{0, 0, 0} Real Nat Real\n                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n                (@abs.{0} Real Real.lattice Real.instAddGroup z)\n                (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))\n  (n : Nat) (x : Real)\n  (hx : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x)\n  (hRank :\n    @LE.le.{0} Real Real.instLE\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@OfNat.ofNat.{0} Real (nat_lit 1024)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 1024) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1023) (instOfNatNat (nat_lit 1023)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1022) (instOfNatNat (nat_lit 1022)))))))\n          (@HPow.hPow.{0, 0, 0} Real Nat Real\n            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n            (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n              (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n              Real.measurableSpace nu fun (z : Real) =>\n              @HPow.hPow.{0, 0, 0} Real Nat Real\n                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n                (@abs.{0} Real Real.lattice Real.instAddGroup z)\n                (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)\n            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) x)\n          (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))\n      (@Nat.cast.{0} Real Real.instNatCast n)),\n  have rho : @MeasureTheory.Measure.{0} Real Real.measurableSpace :=\n    @MeasureTheory.Measure.tilted.{0} Real Real.measurableSpace nu fun (z : Real) =>\n      @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg s)\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))));\n  have P :\n    @MeasureTheory.Measure.{0} (Shao.Path n)\n      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) :=\n    @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)\n      (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => rho;\n  @LE.le.{0} Real Real.instLE\n    (@MeasureTheory.Measure.real.{0} (Shao.Path n)\n      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P\n      (@Set.ofPred.{0} (Shao.Path n) fun (v : Shao.Path n) =>\n        @LE.le.{0} Real Real.instLE (@Shao.energy n v)\n          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n            (@Nat.cast.{0} Real Real.instNatCast n)\n            (@OfNat.ofNat.{0} Real (nat_lit 8)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6))))))))))\n    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 8)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))))\n        (@OfNat.ofNat.{0} Real (nat_lit 3)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))))))\n      (Shao.standardNormalTail\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n            (@OfNat.ofNat.{0} Real (nat_lit 3)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))))\n            (@OfNat.ofNat.{0} Real (nat_lit 2)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))\n          x)))\n",
+          "coverage": "COMPLETE_SOURCE_SEMANTIC_PROOF_ACTUAL_TYPE_INTERFACE_RECURSIVE_AXIOM"
+        }
+      ],
+      "sourceFreezeReceiptAndRelease": {
+        "freeze": {
+          "unit": 155,
+          "module": "Shao.C2.AuxiliaryLowEnergyGaussian",
+          "frozenAtUTC": "2026-10-24T21:08:16.292305+00:00",
+          "frozenSHA256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+          "completeImportsContextHeadsAndFullValues": true,
+          "publicHeads": 2,
+          "privateHeads": 0,
+          "newGlobalNonTheoremValues": 0,
+          "implementationStarted": false,
+          "sourcePaper": "supplement.tex5120–5122 low raw energy probability <=C*Psi(3x/2) at deterministic rank cutoff",
+          "scope": "Accepted actual standardNormalTail: exp(-A)<=8/3*tail(y) when y>=0 andA>=y+y²/2; actual tilted product weak lowrawenergy probability<=8/3*tail(3x/2) under source tiltparameter and explicit rank n>=1024*beta²*(1+x)^6. Source can increaseK once (K>=2048 when l>=K*beta²*(1+x)^6/2). No fullrare-budget/root claim.",
+          "plannedProof": "Reuse accepted GaussianTail ratio_bound at x=y,y=0 andtail0=1/2;1+y<=exp(y), multiplyexp(-A), exponent<=0 andpositive tail. Apply154sourceactualtail, prove5n/(1024beta²)>=5(1+x)^6>=(3x/2)+(3x/2)^2/2; beta>=1from152 paysdivision.",
+          "projectDependencySourceSHA256": {
+            "Shao/C2/AuxiliaryTiltedProductEnergy.lean": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+            "Shao/Probability/GaussianTail.lean": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922"
+          },
+          "ownerCheckedAtUTC": "2026-10-24T21:08:16.292305+00:00",
+          "distinctRootScopes": [
+            {
+              "name": "/root/true_energy_strip_author",
+              "role": "C2_RESIDUAL_DOUBLE_MATHEMATICAL_CANDIDATE",
+              "actuallyRunning": true
+            }
+          ],
+          "next": "Implement two exact frozen heads; no body/check yet."
+        },
+        "receipt": {
+          "status": "AUTHOR_KERNEL_AND_ALL_OWNED_AXIOM_PASS_INDEPENDENT_REVIEW_PENDING",
+          "module": "Shao.C2.AuxiliaryLowEnergyGaussian",
+          "sourceSHA256": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+          "objectSHA256": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+          "frozenSHA256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+          "kernelExit": 0,
+          "kernelAttempt": "attempt002",
+          "auditExit": 0,
+          "kernelCommand": "source /root/rivermind-data/shao-lean-20261021/activate.sh && cd /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71 && flock /root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock taskset -c 14-17 lake env lean -M8192 -j4 Shao/C2/AuxiliaryLowEnergyGaussian.lean -o /root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/AuxiliaryLowEnergyGaussian.olean",
+          "auditCommand": "same activation/cd/lock/affinity; lake env lean -M8192 -j4 /root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/OwnedAudit.lean",
+          "toolchain": "leanprover/lean4:v4.36.0-rc1",
+          "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+          "packages": "cache-overlays/shared-v34/packages",
+          "wholeOwnedCount": 2,
+          "wholeTheoremCount": 2,
+          "wholeNonTheoremCount": 0,
+          "publicTheorems": 2,
+          "allTypesComplete": true,
+          "allNonTheoremValues": "0 new global non-theorem values; complete empty value export",
+          "whitelist": [
+            "propext",
+            "Classical.choice",
+            "Quot.sound"
+          ],
+          "CPUs": "14-17",
+          "memoryMiB": 8192,
+          "jobs": 4,
+          "sourceEncoding": "UTF-8 no BOM LF; CR count0",
+          "independentReview": "PENDING",
+          "scope": "Supplement5120–5122 lowrawenergy Gaussian payment: exp(-A)<=8/3*actualstandardNormalTail(y) ify>=0,A>=y+y²/2; actualtiltedproductweakrawenergy<=n/8 probability<=8/3*tail(3x/2) underx>=0,source s bound,n>=1024beta²(1+x)^6. Explicit sourceK>=2048 pays rank. No original-law extra moment; centered event/C1budget/rare-suffix/fullroot remainopen.",
+          "artifacts": {
+            "source-and-proof.md": {
+              "sha256": "1f7b1a9221563e5d77fcba272e6854a8d0bdf2037f6826e05c5433b31f49f025",
+              "bytes": 2530,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/source-and-proof.md"
+            },
+            "freeze-record.json": {
+              "sha256": "33b6981dda821547d79d35d18270adb81d38f408943dc0fb3de56c4833d740a8",
+              "bytes": 1636,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/freeze-record.json"
+            },
+            "OwnedAudit.lean": {
+              "sha256": "19bb4124b3e5eb8cec2a0867ab7e92ae2bb9ffbb2317dabf2b23d3cc5f791794",
+              "bytes": 2928,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/OwnedAudit.lean"
+            },
+            "owned-audit.json": {
+              "sha256": "cff464fe300e9c6346709e402e02f61f1e22c57f9b27ed4c1ca798bd1b0b7faf",
+              "bytes": 881,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/owned-audit.json"
+            },
+            "actual-owned-types.txt": {
+              "sha256": "6f8c9eaf9b95949875c8b26580e58caf9af01e84bd6f41cf5dab5e5e185b3bd6",
+              "bytes": 12823,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/actual-owned-types.txt"
+            },
+            "actual-definition-values.txt": {
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "bytes": 0,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/actual-definition-values.txt"
+            },
+            "owned-audit.log": {
+              "sha256": "b21d50a196ed24f5295ca60abc1f580b51755dd42c8b51d42ace79a698920082",
+              "bytes": 13048,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/owned-audit.log"
+            },
+            "frozen.lean.txt": {
+              "sha256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+              "bytes": 1230,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/frozen.lean.txt"
+            },
+            "attempt001/command.txt": {
+              "sha256": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+              "bytes": 416,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/command.txt"
+            },
+            "attempt001/kernel.log": {
+              "sha256": "7b4e00e2087371b839f1e292a600137ad256e44d6856d4c8daa9039b3bbeaa8e",
+              "bytes": 644,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/kernel.log"
+            },
+            "attempt001/source.lean": {
+              "sha256": "99e71bbba83b712e53fe91c8abbc71fb9d954365fcc1aff108655b21c5598e9e",
+              "bytes": 4027,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/source.lean"
+            },
+            "attempt002/command.txt": {
+              "sha256": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+              "bytes": 416,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/command.txt"
+            },
+            "attempt002/kernel.log": {
+              "sha256": "aa2b08324af7c3d7df0c5e50003c55fd68857e46af54954a7e7e45e0a6d214f9",
+              "bytes": 165,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/kernel.log"
+            },
+            "attempt002/source.lean": {
+              "sha256": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+              "bytes": 4051,
+              "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/source.lean"
+            }
+          },
+          "branch": "author/c12-compact-relative-v71",
+          "baseHead": "9f7d39c69b78ae4436e5ed06d34e9d7efae5387e",
+          "failedAttemptsPreserved": "attempt001 source/command/kernel failure retained; only unavailable sq_zero replaced by native zero_pow and redundant ring removed after closing congr. Exact two heads unchanged. attempt002 kernel/all2actualownerAX PASS;2public theorems,0private/generated/non-theorem values.",
+          "sourceSnapshot": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/source.lean",
+          "objectPath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/AuxiliaryLowEnergyGaussian.olean",
+          "sourcePath": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryLowEnergyGaussian.lean",
+          "dependencySourceSHA256": {
+            "Shao/C2/AuxiliaryEnergyTilt.lean": "8ea1547baf4beb388faea8d4d8ded12cab83c098f5bb41b2995d79675abd91ca",
+            "Shao/C2/AuxiliaryEnergyMoments.lean": "5a9b156d0f7ad1c41f15b361b1cea008e7f47716e23d86c0f57db04ac54498d3",
+            "Shao/C2/AuxiliaryEnergyCentered.lean": "465e3efe00bab80dea7207acb6da86198d6c28a4551908d035c51446aba8fd38",
+            "Shao/C2/AuxiliaryEnergyLaplace.lean": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+            "Shao/C2/AuxiliaryTiltedProductEnergy.lean": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+            "Shao/Probability/GaussianTail.lean": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+            "Shao/Probability/MeasurablePath.lean": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+            "Shao/Basic/FinitePath.lean": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb"
+          }
+        },
+        "release": {
+          "status": "AUTHOR_WRITER_AND_EXECUTION_RELEASED",
+          "author": "01a16c4c-25a6-7740-a10e-12635a13edae",
+          "sourceSHA256": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+          "objectSHA256": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+          "receiptSHA256": "253b957311c3248a50da2db8209ca81d55230a1804845cc720e442bea2d4066c",
+          "frozenSHA256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+          "writerReleased": true,
+          "executionReleased": true,
+          "heavyInFlight": false,
+          "inFlight": [],
+          "next": "Fresh independent final complete review; no source edits or successful replay",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "usage": {
+            "input": null,
+            "cachedInput": null,
+            "output": null,
+            "reasoningSubset": null
+          }
+        }
+      },
+      "localAuthorArtifactBindings": {
+        "actual-definition-values.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "actual-owned-types.txt": {
+          "sha256": "6f8c9eaf9b95949875c8b26580e58caf9af01e84bd6f41cf5dab5e5e185b3bd6",
+          "bytes": 12823
+        },
+        "AuxiliaryLowEnergyGaussian.lean": {
+          "sha256": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+          "bytes": 4051
+        },
+        "finish-receipt.py": {
+          "sha256": "b185f7965d8ac8dac32112c578c1fdd0e49bc95aa6cc70aa9f53ee5d16276acd",
+          "bytes": 7434
+        },
+        "freeze-comparison.json": {
+          "sha256": "8b3b353d7cf0739475593c0b89cbb63258a3b03d9a0480c6cf770ebc47a977cb",
+          "bytes": 261
+        },
+        "freeze-record.json": {
+          "sha256": "33b6981dda821547d79d35d18270adb81d38f408943dc0fb3de56c4833d740a8",
+          "bytes": 1636
+        },
+        "frozen.lean.txt": {
+          "sha256": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+          "bytes": 1230
+        },
+        "owned-audit.json": {
+          "sha256": "cff464fe300e9c6346709e402e02f61f1e22c57f9b27ed4c1ca798bd1b0b7faf",
+          "bytes": 881
+        },
+        "OwnedAudit.lean": {
+          "sha256": "19bb4124b3e5eb8cec2a0867ab7e92ae2bb9ffbb2317dabf2b23d3cc5f791794",
+          "bytes": 2928
+        },
+        "receipt.json": {
+          "sha256": "253b957311c3248a50da2db8209ca81d55230a1804845cc720e442bea2d4066c",
+          "bytes": 7585
+        },
+        "RELEASE.json": {
+          "sha256": "b52914e1978363773117ddf276d6b60acfb02f626dc0bda794fc99e2b518f220",
+          "bytes": 799
+        },
+        "source-and-proof.md": {
+          "sha256": "1f7b1a9221563e5d77fcba272e6854a8d0bdf2037f6826e05c5433b31f49f025",
+          "bytes": 2530
+        }
+      },
+      "allOriginalAttemptLogsFullyRead": true,
+      "allOriginalAuditLogTextReadAndAccountedFor": true,
+      "originalLogEvidence": {
+        "auditLogPrefix": "warning: mathlib: repository has local changes:\n  /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib\n",
+        "auditLogSuffix": "AUDITED_TARGET_CONSTANTS 2 PUBLIC 2 THEOREMS 2 DEFINITIONS 0\n\nAUDIT_EXIT=0\n",
+        "auditTypeSegmentByteExact": true,
+        "auditLogAccountedBytes": 13048,
+        "attempts": [
+          "attempt001",
+          "attempt002"
+        ],
+        "attempt001To002CompleteDiff": "--- \n+++ \n@@ -14,7 +14,7 @@\n   have hRatio : (1 / 2 : ℝ) ≤\n       (4 / 3 : ℝ) * (1 + y) * Real.exp (y ^ 2 / 2) * Shao.standardNormalTail y := by\n     have hh := Shao.standardNormalTail_ratio_bound y 0 hy (by norm_num)\n-    simpa only [Shao.standardNormalTail_basic.2.1, add_zero, div_one, sq_zero, sub_zero]\n+    simpa only [Shao.standardNormalTail_basic.2.1, add_zero, div_one, zero_pow (by norm_num : (2 : ℕ) ≠ 0), sub_zero]\n       using hh\n   have hExp : 1 + y ≤ Real.exp y := by linarith [Real.add_one_le_exp y]\n   have hRatioExp : (1 / 2 : ℝ) ≤\n@@ -29,7 +29,6 @@\n       Real.exp (y + y ^ 2 / 2 - A) := by\n     rw [← Real.exp_add]\n     congr 1\n-    ring\n   have hExpBound : Real.exp (y + y ^ 2 / 2 - A) ≤ 1 :=\n     Real.exp_le_one_iff.mpr (sub_nonpos.mpr hA)\n   have hRHS : ((4 / 3 : ℝ) * Real.exp (y + y ^ 2 / 2) * Shao.standardNormalTail y) *\n",
+        "forbiddenTokens": [],
+        "sourceEncoding": {
+          "BOM": false,
+          "CRcount": 0
+        },
+        "originalLogsFullyRead": {
+          "attempt001/command.txt": {
+            "bytes": 416,
+            "sha256": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+            "kernelExit1": false,
+            "kernelExit0": false
+          },
+          "attempt001/kernel.log": {
+            "bytes": 644,
+            "sha256": "7b4e00e2087371b839f1e292a600137ad256e44d6856d4c8daa9039b3bbeaa8e",
+            "kernelExit1": true,
+            "kernelExit0": false
+          },
+          "attempt002/command.txt": {
+            "bytes": 416,
+            "sha256": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+            "kernelExit1": false,
+            "kernelExit0": false
+          },
+          "attempt002/kernel.log": {
+            "bytes": 165,
+            "sha256": "aa2b08324af7c3d7df0c5e50003c55fd68857e46af54954a7e7e45e0a6d214f9",
+            "kernelExit1": false,
+            "kernelExit0": true
+          }
+        }
+      },
+      "scope": "Supplement5120–5122 lowrawenergy Gaussian payment: exp(-A)<=8/3*actualstandardNormalTail(y) ify>=0,A>=y+y²/2; actualtiltedproductweakrawenergy<=n/8 probability<=8/3*tail(3x/2) underx>=0,source s bound,n>=1024beta²(1+x)^6. Explicit sourceK>=2048 pays rank. No original-law extra moment; centered event/C1budget/rare-suffix/fullroot remainopen."
+    }
+  },
+  "sourcePaper": {
+    "main.tex": {
+      "path": "C:/game/shao/current/c12/main.tex",
+      "sha256": "beb00f718487e36de433175c97f1d500cb48e7a92ce5bd5ad5d62bb132122d06",
+      "readRanges": [
+        [
+          149,
+          155
+        ],
+        [
+          233,
+          244
+        ],
+        [
+          1210,
+          1216
+        ]
+      ]
+    },
+    "supplement.tex": {
+      "path": "C:/game/shao/current/c12/supplement.tex",
+      "sha256": "b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd",
+      "readRanges": [
+        [
+          4978,
+          4983
+        ],
+        [
+          5078,
+          5136
+        ]
+      ],
+      "directTargetRanges": [
+        [
+          5113,
+          5122
+        ]
+      ]
+    }
+  },
+  "reusedQualifiedDependencies": {
+    "auxiliary-energy-tilt-final-review-v1": {
+      "units": [
+        150,
+        151
+      ],
+      "status": "QUALIFIED",
+      "exactEvidenceHashes": {
+        "full-review.json": "30fdf44aeba9ad1c27a38de2ba445bd2fb14f094644f4713f9bd73812dba0068",
+        "full-review.md": "47cd757107ad37b900e2cc5835fbc1c184f75cbbeadd490eb1fc06cf85d84dab",
+        "writer-release.json": "678c79bcb2fb4892c4657becf7e2c8b114757687299e9f3b726e847a8a10a825",
+        "parent-acceptance.json": "350c9695c57429eb7c17288da2672acae156a50a78e3e9bb21d943a8e77259d7"
+      },
+      "sourceObjectBindings": {
+        "150": {
+          "stem": "AuxiliaryEnergyTilt",
+          "packet": "auxiliary-energy-tilt-v1",
+          "source": "8ea1547baf4beb388faea8d4d8ded12cab83c098f5bb41b2995d79675abd91ca",
+          "frozen": "9ad91ee964dc78e31334a7ed40310874e6545974bea41a9d640ada7938693b60",
+          "object": "31ef9fa4d5bd0289a315e973c72ede5e7a222100e68e0fc622a59d0550de00ba",
+          "receipt": "a71f6b39db6270df21c9baccf0d1175b1711a9b38b85327e9f6296b1d0dd8039"
+        },
+        "151": {
+          "stem": "AuxiliaryEnergyMoments",
+          "packet": "auxiliary-energy-moments-v1",
+          "source": "5a9b156d0f7ad1c41f15b361b1cea008e7f47716e23d86c0f57db04ac54498d3",
+          "frozen": "78befb89d52d6d62818b667b54ad59254435440e81b586a26c2dbf6fde913b8d",
+          "object": "54613db5670afca311a3d37420c388ef5cc44773e48e0deabf39ff3e3481bff2",
+          "receipt": "3ef8b12465dfa20cc03765cee96bc41f37a58abecb90e4879443491e8ab482f5"
+        }
+      },
+      "fullUnchangedOldProofReviewsRepeated": false,
+      "coverageReuse": "Qualified exact-version complete review and parent acceptance reused; fresh current source/object hashes, consumed complete interfaces and mathematical interactions checked."
+    },
+    "auxiliary-energy-centered-final-review-v1": {
+      "units": [
+        152,
+        153
+      ],
+      "status": "QUALIFIED",
+      "exactEvidenceHashes": {
+        "full-review.json": "609093d86fb5a0483a87519b7a707e955670118dab82e1602f25ac4b686d7d25",
+        "full-review.md": "7d353fc5a2cce268e6a000d4f741472ccd4c4a6388584daac2ae210084c1ad44",
+        "writer-release.json": "62b9024d314101540133000573397ff104b36b6a8b1e16066c7a075335258818",
+        "parent-acceptance.json": "18e6ac494918c0fb7221e02cb81203602c29d982a152ba42c0f1126d46e302d5"
+      },
+      "sourceObjectBindings": {
+        "152": {
+          "module": "Shao.C2.AuxiliaryEnergyCentered",
+          "sourceSHA256": "465e3efe00bab80dea7207acb6da86198d6c28a4551908d035c51446aba8fd38",
+          "objectSHA256": "102b9e26587ecd4db4acd77030a6603afc6e776a4a13d754462e8ebb2882d505",
+          "receiptSHA256": "b9a41a3b0767a5c279478fb7c89f744d55083b7944aa3a1b219aaef3d6501572",
+          "frozenSHA256": "f6c3759a4593a2f16a8947da768e08ca5df25c45b72c63a5594db89ae5ed839e",
+          "actualTypesSHA256": "859e12ac5283cddf42f8eabf00e92bcfbfa35a0a2966d4c6a7e0822ac6313382"
+        },
+        "153": {
+          "module": "Shao.C2.AuxiliaryEnergyLaplace",
+          "sourceSHA256": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+          "objectSHA256": "74eaa6b29b63ff5d4b52e92278639a1b42d58a0fa6e7c820b92784e15fafc472",
+          "receiptSHA256": "46366b5c2e52f48636481123598a8005b809f36d5b1825c73902588697eee7a8",
+          "frozenSHA256": "c5c4ba5bbae140c9ebe3c863c8b7ea498a92f09c475efb01787fe4382cc30716",
+          "actualTypesSHA256": "72e6ff4a2df6865fab4cde293dc88f46cdb86662ff6e2045b26fce5025da1588"
+        }
+      },
+      "fullUnchangedOldProofReviewsRepeated": false,
+      "coverageReuse": "Qualified exact-version complete review and parent acceptance reused; fresh current source/object hashes, consumed complete interfaces and mathematical interactions checked."
+    }
+  },
+  "consumedInterfaces": {
+    "150": "Complete frozen interface reread; at the same explicit auxiliary law and nonnegative s, projection2.2.2.2.1 is exactly IsProbabilityMeasure of the literal tilted rho. Its normalizer/drift proof remains covered by the unchanged qualified independent150151 report; no duplicate full proof review.",
+    "152": "Complete beta>=1 interface reread with nu probability,h2,h3,hnorm. This pays beta positivity in154 and155. Complete centered small-s interface was also available but its variance/cube theorem is not used to replace raw energy here. Unchanged qualified152153 report reused.",
+    "153": "Complete exact tilted Laplace interface reread: genuine coordinate integrability and actual rho-integral<=exp(-3q/4) at the identical nu,s,q,hs,hq,hsq,hsmall. Both measure and observable are definitionally identical. No conclusion is installed as a hypothesis.",
+    "FinitePath": "Path n is literally Fin n→Real; energy is Σ_i(v_i)² and is nonnegative. The source and accepted original object match the common accepted-v83 export. No positivity/nonempty path assumption is used.",
+    "MeasurablePath": "continuous_energy and measurable_energy are for that same raw sum in the actual product Borel structure. Continuity supplies the genuine exponential measurability and measurableSet_le supplies the weak energy event. Exact accepted source/object reused.",
+    "GaussianTail": "Actual tail is (gaussianReal0 1)(Ioi x) converted to Real. basic gives tail0=1/2 and tail(y)>0 for every real y. ratio_bound x y for x,y>=0 bounds tail(y) by4/3*(1+x)/(1+y)*exp((x²-y²)/2)*tail(x);155 correctly calls x=its y and y=0. The same accepted source/object is used.",
+    "nativePi": "Fintype index Fin n, real coordinate measurable spaces and sigma-finite component measures. Probability rho supplies sigma finiteness; probability pi follows pi_univ including n0. integral_fintype_prod_eq_prod is a true factorization for actual Measure.pi. Actual global exponential integrability was independently proved, and the coordinate integrability is already supplied by153.",
+    "nativeIntegrals": "Integrable.mono' needs an integrable real dominator, AEStronglyMeasurable observable and AE norm bound;154 supplies constant1 and all three. integral_indicator_const returns actual finite Measure.real mass times c. integral_mono requires both sides integrable and pointwise ordering; both are proved. Thus no zero-of-nonintegrable or infinite-toReal loophole.",
+    "nativeExponentialAndProduct": "Real.exp_sum is for all finite sums, including empty. Finset.prod_le_prod₀ needs nonnegative lower factors plus each comparison, both supplied. Exponential positivity justifies all divisions; native exp_add/sub/le_one and elementary ring/linear arithmetic have the required exact sign premises."
+  },
+  "nativeExactPinnedSources": {
+    "Mathlib/MeasureTheory/Integral/Pi.lean": {
+      "sha256": "43c50a9d9a683b2050e145154410a7260c3dd84f3ec3010630cc6b90572afcd9",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/MeasureTheory/Constructions/Pi.lean": {
+      "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/MeasureTheory/Integral/Bochner/Set.lean": {
+      "sha256": "e4d90b9fde463a9123e1ac3321ce25c0714e19ce92e172f297e062d9de16be75",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/MeasureTheory/Integral/Bochner/Basic.lean": {
+      "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/MeasureTheory/Measure/Tilted.lean": {
+      "sha256": "355cce542b03dd9130d9511f80ae803cc11a12ba9e6a947e68402b124be2165f",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/MeasureTheory/Function/L1Space/Integrable.lean": {
+      "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/Analysis/Complex/Exponential.lean": {
+      "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+      "pinnedGitBytesEqual": true
+    },
+    "Mathlib/Algebra/Order/BigOperators/GroupWithZero/Finset.lean": {
+      "sha256": "00067a68ba76c56cebe5f2a04d5ef39e3615088ce275bd1a76a1a07cc82a4cb3",
+      "pinnedGitBytesEqual": true
+    }
+  },
+  "allCompleteProductionProofsReviewed": true,
+  "allFullActualTypesEveryBinderUniverseInstanceReviewed": true,
+  "allGeneratedObligationsIndividuallyReviewed": true,
+  "allNonTheoremValuesReviewed": true,
+  "actualTypeReviewMethod": "All complete unelided27488+12823 bytes were read literally in full, including all11 owners. JSON preserves each exact block and its hash. No structural summary substituted for the full types. Giant generated theorem certificate bodies were not printed, per TEAM; exact production proof invocations and every actual obligation were read, with kernel and recursiveAX evidence bound.",
+  "freezeReview": "Both exact imports/context/two complete heads and no non-theorem values were frozen substantively before implementation. Independent deterministic extraction matches the whole frozen text byte-for-byte for each final source. Preserved attempt001→002 diffs change only the recorded proof expressions; no head/assumption change.",
+  "auditSelection": "Every env.constants entry whose native env.getModuleIdxFor? owner equals the exact target module; no namespace/name-prefix/private/generated filter. All9+2 actual owners are theorems. No new non-theorem constants exist.",
+  "collectAxiomsSemantics": "Pinned Lean CollectAxioms implementation read in full. It traverses checked declaration types and proof/value dependencies, handles cycles by sentinel, and reuses recursively computed exported axiom entries for imports. Private environments expose bodies while computing/exporting. getModuleIdxFor? is actual const2ModIdx ownership. Thus the whitelist check is transitive for all11 owners, not a direct syntactic scan.",
+  "recursiveAxiomWhitelist": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "coreCollectorSourceSHA256": "b39bd22253a76816ee6d24284e69674d0b491be343fd71f9ee9376833d1485f6",
+  "coreEnvironmentSourceSHA256": "e7b97a029388b84c3f69c58e8df9e30064415e34a863781e1843e8c6c15e0e8f",
+  "boundaryReview": {
+    "n0": "154 quantifies all n including0: empty product is probability, energy0, exponential1, moment1 and weak-event mass1; both bounds equal1.155 has no extra n>0 premise, but its rank plus beta>=1 and x>=0 already excludes n0.",
+    "q0": "First154 permits q0; s<=q and s>=0 imply s0. Integrand1 and probability<=1 give correct endpoints. Second154 pays actual q>0 by beta>=1.",
+    "s0": "Native tilted zero is the original probability law; arguments still hold.",
+    "atomsAndEquality": "Weak energy<=n/8 is measurable and includes equality and zero-energy atoms. This is stronger than the source strict event, whose bound follows by finite-measure monotonicity. No continuity or density of the auxiliary law is assumed.",
+    "betaZero": "Excluded by proved beta>=1 from152, not an added assumption. All inverse beta² divisions are therefore legitimate.",
+    "x0Andy0": "Both155 statements include0 and use exact tail0=1/2; all arithmetic inequalities retain validity.",
+    "unboundedParameters": "No finite numerical sampling was used; all polynomial/exponential steps are exact real inequalities under their frozen bounds."
+  },
+  "sourceFidelity": {
+    "directFragment": "supplement5113–5122 with context5078–5136. Same deterministic original iid rank and bounded/preprocessed auxiliary centered unit-second-moment law.",
+    "rawEnergy": "Literal sum raw squares throughout. No centered variance/energy replacement.",
+    "sourceParameter": "The paper scalar nu is named q here; the Lean measure variable nu is the auxiliary law. q=1/(128beta²) and source s<=q are exact.",
+    "rankAndConstants": "The explicit hRank n>=1024beta²(1+x)^6 is paid by source l/beta²>=K(1+x)^6/2 once K>=2048. C=8/3 is universal. This does not choose K after seeing a law/sample and does not claim all other K requirements have been formalized.",
+    "finite3Scope": "Absolute cube integrability is on the bounded/preprocessed auxiliary law of main1210–1216/supplement5078–5080. Original main149–155 and233–244 laws retain only finite positive second moment. Units145147 are not strengthened.",
+    "strictVersusWeak": "Actual proved weak-event bound implies the displayed source strict-event low-energy estimate, preserving equality and atoms.",
+    "noRootClaim": "Only the low raw-energy term is paid. Centered-event implication, centered own-law C1 budget, full rare-suffix estimates and original roots remain open."
+  },
+  "originalLogs": "Complete attempt001/002 commands and kernel logs were read directly from server. Complete audit logs were accounted by an exact byte-identical actual-types segment plus all prefix/suffix text, read separately. Stored observations retain digests/exits/diffs, not copied full logs.",
+  "logFindings": {
+    "154": "001 failed only generic addition-order expression orientation;002 replaces it with linear arithmetic. Both original command/source/log attempts retained. Harmless instance/redundant-tactic warnings persist.",
+    "155": "001 failed unavailable sq_zero and redundant ring after already-closing congr.002 uses native zero_pow2!=0 and removes only that redundant ring. No frozen head changed.",
+    "mathlibWarning": "The original logs include repository-local-changes warning. Every consumed native source file checked here is byte-equal to the pinned mathlib git commit, and the accepted shared package view/pins are unchanged. The warning is not treated as a proof failure."
+  },
+  "environment": {
+    "head": "9f7d39c69b78ae4436e5ed06d34e9d7efae5387e",
+    "branch": "author/c12-compact-relative-v71",
+    "toolchain": "leanprover/lean4:v4.36.0-rc1",
+    "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+    "packagesResolved": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages"
+  },
+  "authorResourceGate": {
+    "CPUs": "14-17",
+    "lock": "/root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock",
+    "memoryMiB": 8192,
+    "jobs": 4,
+    "kernelAttempt": "attempt002 for each unit",
+    "kernelExit": 0,
+    "auditExit": 0
+  },
+  "operations": {
+    "serverWrites": 0,
+    "LeanOrAuditExecutions": 0,
+    "successfulGatesReplayed": 0,
+    "productionEdits": 0,
+    "cacheEdits": 0,
+    "newAgents": 0,
+    "newSidebarThreads": 0,
+    "goalsOrSchedules": 0
+  },
+  "serverBindings": [
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/source-and-proof.md",
+      "expected": "5dcd9da62f5645fbb32b01d903e9769a3e66fb7d4758964200141bc2f339c92a",
+      "actual": "5dcd9da62f5645fbb32b01d903e9769a3e66fb7d4758964200141bc2f339c92a",
+      "bytes": 3063,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/freeze-record.json",
+      "expected": "a28d5c0b89c66bb3594ab2dc82d2cd4e3d53fb7393c57fe35dde921b696f1618",
+      "actual": "a28d5c0b89c66bb3594ab2dc82d2cd4e3d53fb7393c57fe35dde921b696f1618",
+      "bytes": 1837,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/OwnedAudit.lean",
+      "expected": "c1dae467c90e04bef84cf2da3e414d7d902e8fc240fce778adbe83dd2ff1a129",
+      "actual": "c1dae467c90e04bef84cf2da3e414d7d902e8fc240fce778adbe83dd2ff1a129",
+      "bytes": 2933,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/owned-audit.json",
+      "expected": "fd0141c381df67a411c3775db375d62a3bf4443edb2fe9dabce40959adb8f66b",
+      "actual": "fd0141c381df67a411c3775db375d62a3bf4443edb2fe9dabce40959adb8f66b",
+      "bytes": 2320,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/actual-owned-types.txt",
+      "expected": "f0d234a84c5cc2aedb6cd9ef45f5a2b87d5a6e059516683bf487af075595e7cd",
+      "actual": "f0d234a84c5cc2aedb6cd9ef45f5a2b87d5a6e059516683bf487af075595e7cd",
+      "bytes": 27488,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/actual-definition-values.txt",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/owned-audit.log",
+      "expected": "a87daf57e9d8ba97e104459aa0d3d52b9b0dcbf44402c285936d1556f9879267",
+      "actual": "a87daf57e9d8ba97e104459aa0d3d52b9b0dcbf44402c285936d1556f9879267",
+      "bytes": 27713,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/frozen.lean.txt",
+      "expected": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+      "actual": "a553c49ac66344f91fcbd4c245bf0582723381643a739a6218834da01a1fafd4",
+      "bytes": 2038,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/command.txt",
+      "expected": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+      "actual": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+      "bytes": 422,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/kernel.log",
+      "expected": "1d9f51dd221edc2c0cd9c5d41df2ff8cf66f58be3dddc207779dad8c4d4f29c6",
+      "actual": "1d9f51dd221edc2c0cd9c5d41df2ff8cf66f58be3dddc207779dad8c4d4f29c6",
+      "bytes": 1139,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt001/source.lean",
+      "expected": "3fa0e20810d4b3f7610cf75d4b5be2b0a0449904a7270746881c9ab0ec0c51e7",
+      "actual": "3fa0e20810d4b3f7610cf75d4b5be2b0a0449904a7270746881c9ab0ec0c51e7",
+      "bytes": 6231,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/command.txt",
+      "expected": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+      "actual": "e205c92f070f56e8a69e19903ccdae42823035e7d8c85ef380b5b8bb943c6e90",
+      "bytes": 422,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/kernel.log",
+      "expected": "04f92e743368b015ceda7b8c3c98214c3279283a3fe8ea7e9f826b958ce5295a",
+      "actual": "04f92e743368b015ceda7b8c3c98214c3279283a3fe8ea7e9f826b958ce5295a",
+      "bytes": 1857,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/attempt002/source.lean",
+      "expected": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+      "actual": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+      "bytes": 6221,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/receipt.json",
+      "expected": "488985bf93381287ba4d0b7f8626d8ee64759fa45b2a86fcd4d7d9c527e72fd4",
+      "actual": "488985bf93381287ba4d0b7f8626d8ee64759fa45b2a86fcd4d7d9c527e72fd4",
+      "bytes": 7476,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/RELEASE.json",
+      "expected": "3e87bce02ccdef98725a364234727de48c45917b3c4742f8c8837862fdec1c09",
+      "actual": "3e87bce02ccdef98725a364234727de48c45917b3c4742f8c8837862fdec1c09",
+      "bytes": 799,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryTiltedProductEnergy.lean",
+      "expected": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+      "actual": "034312b3e8ec9b4f3f77f8c0d008216e1ba86df69f6951ba1073cb825fd5ccc3",
+      "bytes": 6221,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-tilted-product-energy-v71/AuxiliaryTiltedProductEnergy.olean",
+      "expected": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+      "actual": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+      "bytes": 363232,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryTiltedProductEnergy.olean",
+      "expected": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+      "actual": "ecf76a2967398b42e29342ad67036b0762d37324b2f2a4fd15a368df7531f6e9",
+      "bytes": 363232,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/source-and-proof.md",
+      "expected": "1f7b1a9221563e5d77fcba272e6854a8d0bdf2037f6826e05c5433b31f49f025",
+      "actual": "1f7b1a9221563e5d77fcba272e6854a8d0bdf2037f6826e05c5433b31f49f025",
+      "bytes": 2530,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/freeze-record.json",
+      "expected": "33b6981dda821547d79d35d18270adb81d38f408943dc0fb3de56c4833d740a8",
+      "actual": "33b6981dda821547d79d35d18270adb81d38f408943dc0fb3de56c4833d740a8",
+      "bytes": 1636,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/OwnedAudit.lean",
+      "expected": "19bb4124b3e5eb8cec2a0867ab7e92ae2bb9ffbb2317dabf2b23d3cc5f791794",
+      "actual": "19bb4124b3e5eb8cec2a0867ab7e92ae2bb9ffbb2317dabf2b23d3cc5f791794",
+      "bytes": 2928,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/owned-audit.json",
+      "expected": "cff464fe300e9c6346709e402e02f61f1e22c57f9b27ed4c1ca798bd1b0b7faf",
+      "actual": "cff464fe300e9c6346709e402e02f61f1e22c57f9b27ed4c1ca798bd1b0b7faf",
+      "bytes": 881,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/actual-owned-types.txt",
+      "expected": "6f8c9eaf9b95949875c8b26580e58caf9af01e84bd6f41cf5dab5e5e185b3bd6",
+      "actual": "6f8c9eaf9b95949875c8b26580e58caf9af01e84bd6f41cf5dab5e5e185b3bd6",
+      "bytes": 12823,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/actual-definition-values.txt",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/owned-audit.log",
+      "expected": "b21d50a196ed24f5295ca60abc1f580b51755dd42c8b51d42ace79a698920082",
+      "actual": "b21d50a196ed24f5295ca60abc1f580b51755dd42c8b51d42ace79a698920082",
+      "bytes": 13048,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/frozen.lean.txt",
+      "expected": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+      "actual": "558e2c8323d289fb4ae7e88d5a6a62c5d67804d50a74d941c9afa2beacbb54ef",
+      "bytes": 1230,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/command.txt",
+      "expected": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+      "actual": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+      "bytes": 416,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/kernel.log",
+      "expected": "7b4e00e2087371b839f1e292a600137ad256e44d6856d4c8daa9039b3bbeaa8e",
+      "actual": "7b4e00e2087371b839f1e292a600137ad256e44d6856d4c8daa9039b3bbeaa8e",
+      "bytes": 644,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt001/source.lean",
+      "expected": "99e71bbba83b712e53fe91c8abbc71fb9d954365fcc1aff108655b21c5598e9e",
+      "actual": "99e71bbba83b712e53fe91c8abbc71fb9d954365fcc1aff108655b21c5598e9e",
+      "bytes": 4027,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/command.txt",
+      "expected": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+      "actual": "0e00148c0d04b79729e71fc6bb436116edd61994bfbab3a38afacef60146e00b",
+      "bytes": 416,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/kernel.log",
+      "expected": "aa2b08324af7c3d7df0c5e50003c55fd68857e46af54954a7e7e45e0a6d214f9",
+      "actual": "aa2b08324af7c3d7df0c5e50003c55fd68857e46af54954a7e7e45e0a6d214f9",
+      "bytes": 165,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/attempt002/source.lean",
+      "expected": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+      "actual": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+      "bytes": 4051,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/receipt.json",
+      "expected": "253b957311c3248a50da2db8209ca81d55230a1804845cc720e442bea2d4066c",
+      "actual": "253b957311c3248a50da2db8209ca81d55230a1804845cc720e442bea2d4066c",
+      "bytes": 7585,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/RELEASE.json",
+      "expected": "b52914e1978363773117ddf276d6b60acfb02f626dc0bda794fc99e2b518f220",
+      "actual": "b52914e1978363773117ddf276d6b60acfb02f626dc0bda794fc99e2b518f220",
+      "bytes": 799,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryLowEnergyGaussian.lean",
+      "expected": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+      "actual": "ff30ad655aac87ab1241faa85f9eebecec4fe5a63eac6d4f6c71b85c21b3d724",
+      "bytes": 4051,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/c12-auxiliary-low-energy-gaussian-v71/AuxiliaryLowEnergyGaussian.olean",
+      "expected": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+      "actual": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+      "bytes": 488448,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryLowEnergyGaussian.olean",
+      "expected": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+      "actual": "1e9bb4608f810c7d94af58883769ef42c962914634cd8a5e95c6d9de2488ebfd",
+      "bytes": 488448,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryEnergyTilt.lean",
+      "expected": "8ea1547baf4beb388faea8d4d8ded12cab83c098f5bb41b2995d79675abd91ca",
+      "actual": "8ea1547baf4beb388faea8d4d8ded12cab83c098f5bb41b2995d79675abd91ca",
+      "bytes": 5979,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryEnergyMoments.lean",
+      "expected": "5a9b156d0f7ad1c41f15b361b1cea008e7f47716e23d86c0f57db04ac54498d3",
+      "actual": "5a9b156d0f7ad1c41f15b361b1cea008e7f47716e23d86c0f57db04ac54498d3",
+      "bytes": 7323,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryEnergyCentered.lean",
+      "expected": "465e3efe00bab80dea7207acb6da86198d6c28a4551908d035c51446aba8fd38",
+      "actual": "465e3efe00bab80dea7207acb6da86198d6c28a4551908d035c51446aba8fd38",
+      "bytes": 6584,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AuxiliaryEnergyLaplace.lean",
+      "expected": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+      "actual": "1c9e826d38c38ba5d7ec0938b05dd61dd60740db914ba96a7c39cdb0fb65c552",
+      "bytes": 7334,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Probability/MeasurablePath.lean",
+      "expected": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "actual": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "bytes": 6914,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Basic/FinitePath.lean",
+      "expected": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "actual": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "bytes": 10146,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Probability/GaussianTail.lean",
+      "expected": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "actual": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "bytes": 14106,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryEnergyTilt.olean",
+      "expected": "31ef9fa4d5bd0289a315e973c72ede5e7a222100e68e0fc622a59d0550de00ba",
+      "actual": "31ef9fa4d5bd0289a315e973c72ede5e7a222100e68e0fc622a59d0550de00ba",
+      "bytes": 245920,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryEnergyMoments.olean",
+      "expected": "54613db5670afca311a3d37420c388ef5cc44773e48e0deabf39ff3e3481bff2",
+      "actual": "54613db5670afca311a3d37420c388ef5cc44773e48e0deabf39ff3e3481bff2",
+      "bytes": 364656,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryEnergyCentered.olean",
+      "expected": "102b9e26587ecd4db4acd77030a6603afc6e776a4a13d754462e8ebb2882d505",
+      "actual": "102b9e26587ecd4db4acd77030a6603afc6e776a4a13d754462e8ebb2882d505",
+      "bytes": 743192,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AuxiliaryEnergyLaplace.olean",
+      "expected": "74eaa6b29b63ff5d4b52e92278639a1b42d58a0fa6e7c820b92784e15fafc472",
+      "actual": "74eaa6b29b63ff5d4b52e92278639a1b42d58a0fa6e7c820b92784e15fafc472",
+      "bytes": 485344,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+      "expected": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "actual": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "bytes": 977696,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Basic/FinitePath.lean",
+      "expected": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "actual": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "bytes": 10146,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+      "expected": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "actual": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "bytes": 284864,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+      "expected": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "actual": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "bytes": 284864,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/GaussianTail.lean",
+      "expected": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "actual": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "bytes": 14106,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+      "expected": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "actual": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "bytes": 977696,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/MeasurablePath.lean",
+      "expected": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "actual": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "bytes": 6914,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+      "expected": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "actual": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "bytes": 95664,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+      "expected": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "actual": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "bytes": 95664,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Pi.lean",
+      "expected": "43c50a9d9a683b2050e145154410a7260c3dd84f3ec3010630cc6b90572afcd9",
+      "actual": "43c50a9d9a683b2050e145154410a7260c3dd84f3ec3010630cc6b90572afcd9",
+      "bytes": 7770,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Constructions/Pi.lean",
+      "expected": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+      "actual": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+      "bytes": 47126,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Set.lean",
+      "expected": "e4d90b9fde463a9123e1ac3321ce25c0714e19ce92e172f297e062d9de16be75",
+      "actual": "e4d90b9fde463a9123e1ac3321ce25c0714e19ce92e172f297e062d9de16be75",
+      "bytes": 61504,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+      "expected": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+      "actual": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+      "bytes": 72547,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Tilted.lean",
+      "expected": "355cce542b03dd9130d9511f80ae803cc11a12ba9e6a947e68402b124be2165f",
+      "actual": "355cce542b03dd9130d9511f80ae803cc11a12ba9e6a947e68402b124be2165f",
+      "bytes": 16989,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Util/CollectAxioms.lean",
+      "expected": "b39bd22253a76816ee6d24284e69674d0b491be343fd71f9ee9376833d1485f6",
+      "actual": "b39bd22253a76816ee6d24284e69674d0b491be343fd71f9ee9376833d1485f6",
+      "bytes": 6654,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Environment.lean",
+      "expected": "e7b97a029388b84c3f69c58e8df9e30064415e34a863781e1843e8c6c15e0e8f",
+      "actual": "e7b97a029388b84c3f69c58e8df9e30064415e34a863781e1843e8c6c15e0e8f",
+      "bytes": 157148,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "expected": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "actual": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "bytes": 57371,
+      "status": "PASS"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/Complex/Exponential.lean",
+      "expected": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+      "actual": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+      "bytes": 28484,
+      "status": "PASS"
+    }
+  ],
+  "readonlyFinalObservationFile": "readonlyfinal-observation.json",
+  "readonlyFinalObservationSHA256": "ff484b0b301896fb6243a8f96fe679eefe227d51a7a4a3f8d881a534de35c3c9",
+  "freshRemoteBindingsPASS": 67,
+  "additionalNativePinnedByteComparisons": 2,
+  "commonAcceptedObjectProvenance": {
+    "rootExportReceipt": "coordination/root-cache-exports/c12-accepted-v83-original-brownian-comparison-20261025.json",
+    "expectedReceiptSHA256": "e4f13313c11ef8b2b03c1b4b5ede0068a7400a7f5f96c065b738b88719f9d4f9",
+    "rows": [
+      {
+        "module": "Shao.Basic.FinitePath",
+        "source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Basic/FinitePath.lean",
+        "source_sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+        "object_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+        "object_sha256": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+        "target_path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+        "existing": true,
+        "existing_sha256": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572"
+      },
+      {
+        "module": "Shao.Probability.GaussianTail",
+        "source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/GaussianTail.lean",
+        "source_sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+        "object_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+        "object_sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+        "target_path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+        "existing": true,
+        "existing_sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d"
+      },
+      {
+        "module": "Shao.Probability.MeasurablePath",
+        "source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/MeasurablePath.lean",
+        "source_sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+        "object_path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+        "object_sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+        "target_path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+        "existing": true,
+        "existing_sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8"
+      }
+    ]
+  },
+  "criticalGaps": [],
+  "uncoveredWithinFrozenTargets": [],
+  "acceptedScope": "Exactly units154155 auxiliary low raw-energy estimates; no extension.",
+  "originalC12Roots": "OPEN",
+  "otherOriginalRootGroups": "OPEN",
+  "OQ3": "PAUSED_BY_USER",
+  "p54RepairsAndExternalAttributionPreserved": true,
+  "mathematicalNovelty": "No new mathematical novelty claimed. These are source-faithful auxiliary Chernoff and Gaussian-tail payment formalizations, not root-theorem closure.",
+  "parentAcceptanceRequired": true,
+  "validationFile": "validation.json",
+  "releaseFile": "writer-release.json"
+}
