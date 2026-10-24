@@ -743,4 +743,290 @@ theorem sourceTruncation_odd_even_fullNoise_region5_actual_marked_postIBP :
         mul_le_mul_of_nonneg_left hgeb (by positivity)
       _ = _ := by ring
 
+/- BEGIN FIXED CUTOFF PUBLIC COMPANIONS.
+Additive export of the fixed one-sixteenth cutoff from the existing proof.
+The original source is recovered exactly by deleting this marked block.
+-/
+
+private lemma fixedCutoff_actualMarkedKernelData :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ aStar y w sigma : ℝ, 0 < aStar → 0 < y → y ≤ 2 →
+        aStar * y ≤ (1 / 16 : ℝ) → |w| ≤ y / 16 → |sigma| = 1 →
+        let a : ℝ → ℝ := fun r => sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2
+        let B : ℝ × ℝ → ℂ := fun p => ∫ r : ℝ,
+          ((a r * Real.sin (p.1 * (y * Real.sqrt r + sigma * w)) : ℝ) : ℂ) *
+            Complex.exp (-(((p.2 * r : ℝ) : ℂ) * Complex.I))
+        Measurable (fun p => ‖B p‖) ∧
+          (∀ u : ℝ, IntegrableOn (fun v => ‖B (u, v)‖) {v : ℝ | |u| / aStar < |v|}) ∧
+          ∀ u : ℝ, (∫ v in {v : ℝ | |u| / aStar < |v|}, ‖B (u, v)‖) ≤
+            C / (1 + |u| / aStar) ^ 31 := by
+  obtain ⟨C, hC, hkernel⟩ := sourceKernel_marked_outside_norms_fixed_sixteenth
+  refine ⟨C, hC, ?_⟩
+  intro aStar y w sigma ha hy hy2 hsmall hw hsigma
+  have hsw : |sigma * w| ≤ y / 16 := by simpa only [abs_mul, hsigma, one_mul] using hw
+  have ht : |sigma * w / y| ≤ (1 / 16 : ℝ) := by
+    rw [abs_div, abs_of_pos hy]
+    exact (div_le_iff₀ hy).mpr (by linarith)
+  obtain ⟨M, hM, hfamily⟩ := sourceKernel_marked_amplitude_family
+  have hfa := hfamily 2 (Or.inr rfl) (sigma * w / y) ht
+  have hac : HasCompactSupport (fun r => sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2) :=
+    isCompact_Icc.of_isClosed_subset (isClosed_tsupport _) hfa.2.1
+  refine ⟨(actualMarkedSine_continuous _ hfa.1.continuous hac y (sigma * w)).measurable.norm,
+    fun u => (hkernel 2 (Or.inr rfl) _ ht aStar y u _ ha hy.le hy2 hsmall hsw).2.2.1, ?_⟩
+  intro u
+  refine (hkernel 2 (Or.inr rfl) _ ht aStar y u _ ha hy.le hy2 hsmall hsw).2.2.2.2.2.2.1.trans ?_
+  exact div_le_div_of_nonneg_right
+    (by simpa only [mul_one] using mul_le_mul_of_nonneg_left (min_le_right (y * |u|) 1) hC.le)
+    (by positivity)
+
+theorem sourceTruncation_odd_even_fullNoise_region3_actual_marked_postIBP_fixed_sixteenth :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun z : ℝ => z ^ 2) ν0 →
+          (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂ν0) = 1 →
+          (∫ z : ℝ, z ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ 1 / 2 →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            ∀ i : ℕ, i ≤ n → ∀ h kappa y w sigma : ℝ,
+              epsilon / (1 + x) ≤ h → 0 < kappa → 0 < y → y ≤ 2 →
+                |w| ≤ y / 16 → |sigma| = 1 →
+                let ρ : Measure ℝ :=
+                  ProbabilityTheory.cond ν0 {z | |z| ≤ epsilon / (1 + x)}
+                let m : ℕ := n - i
+                let T : ℝ := (m : ℝ) * (∫ z : ℝ, z ^ 2 ∂ρ)
+                let gamma : ℝ := (∫ z : ℝ, |z| ^ 3 ∂ρ) / variance (id : ℝ → ℝ) ρ
+                let b : ℝ := gamma / kappa
+                b * y ≤ (1 / 16 : ℝ) →
+                let a : ℝ → ℝ := fun r =>
+                  sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2
+                let B : ℝ → ℝ → ℂ := fun u v =>
+                  ∫ r : ℝ, ((a r * Real.sin (u * (y * Real.sqrt r + sigma * w)) : ℝ) : ℂ) *
+                    Complex.exp (-(((v * r : ℝ) : ℂ) * Complex.I))
+                let D : ℝ → ℝ → ℂ := fun u v =>
+                  (quadraticChar ρ u v ^ m - quadraticChar ρ (-u) v ^ m) /
+                    2 * quadraticFullNoiseChar ρ u v
+                let E : ℝ → ℝ → ℂ := fun u v =>
+                  (quadraticChar ρ u v ^ m + quadraticChar ρ (-u) v ^ m) /
+                    2 * quadraticFullNoiseChar ρ u v
+                let W : ℝ → ℝ → ℂ := fun u v => (u : ℂ) * E u v
+                let R : Set (ℝ × ℝ) := {p | |p.1| ≤ kappa / gamma ∧ kappa * |p.1| / gamma < |p.2|}
+                let Iodd : ℝ × ℝ → ℝ := fun p =>
+                  ‖deriv (fun r : ℝ => deriv (fun t : ℝ => D t p.2) r) p.1‖ *
+                    ‖B p.1 p.2‖ / y ^ 2
+                let Ieven : ℝ × ℝ → ℝ := fun p =>
+                  ‖deriv (fun r : ℝ => deriv (fun t : ℝ => W t p.2) r) p.1‖ *
+                    ‖B p.1 p.2‖ / y ^ 2
+                IntegrableOn Iodd R ∧ IntegrableOn Ieven R ∧
+                  (∫ p in R, Iodd p) ≤ C / y ^ 2 * b * (T + h * gamma) ∧
+                  (∫ p in R, Ieven p) ≤ C / y ^ 2 * (b * (Real.sqrt T + gamma) + b ^ 2 * (T + h * gamma))
+ := by
+  obtain ⟨Cg, hCg, hglobal⟩ := sourceTruncation_odd_even_fullNoise_global_derivatives
+  obtain ⟨Ck, hCk, hkernel⟩ := fixedCutoff_actualMarkedKernelData
+  refine ⟨4 * Ck * Cg, by positivity, ?_⟩
+  intro ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hi h kappa y w sigma hh hk hy hy2 hw hsigma
+  dsimp only
+  intro hsmall
+  let := hp0
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {z | |z| ≤ epsilon / (1 + x)}
+  let m : ℕ := n - i
+  let T : ℝ := (m : ℝ) * (∫ z : ℝ, z ^ 2 ∂ρ)
+  let gamma : ℝ := (∫ z : ℝ, |z| ^ 3 ∂ρ) / variance (id : ℝ → ℝ) ρ
+  let b : ℝ := gamma / kappa
+  let N : ℝ := T + h * gamma
+  let S : ℝ := Real.sqrt T + gamma
+  let U : Set ℝ := {u | |u| ≤ kappa / gamma}
+  let R : Set (ℝ × ℝ) := {p | p.1 ∈ U ∧ kappa * |p.1| / gamma < |p.2|}
+  let a : ℝ → ℝ := fun r => sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2
+  let B : ℝ × ℝ → ℂ := fun p => ∫ r : ℝ,
+    ((a r * Real.sin (p.1 * (y * Real.sqrt r + sigma * w)) : ℝ) : ℂ) *
+      Complex.exp (-(((p.2 * r : ℝ) : ℂ) * Complex.I))
+  let K : ℝ × ℝ → ℝ := fun p => ‖B p‖
+  let D : ℝ → ℝ → ℂ := fun u v =>
+    (quadraticChar ρ u v ^ m - quadraticChar ρ (-u) v ^ m) / 2 * quadraticFullNoiseChar ρ u v
+  let W : ℝ → ℝ → ℂ := fun u v => (u : ℂ) *
+    ((quadraticChar ρ u v ^ m + quadraticChar ρ (-u) v ^ m) / 2 * quadraticFullNoiseChar ρ u v)
+  let Fo : ℝ × ℝ → ℝ := fun p => ‖deriv (fun r => deriv (fun t => D t p.2) r) p.1‖
+  let Fe : ℝ × ℝ → ℝ := fun p => ‖deriv (fun r => deriv (fun t => W t p.2) r) p.1‖
+  change IntegrableOn (fun p => Fo p * K p / y ^ 2) R ∧
+    IntegrableOn (fun p => Fe p * K p / y ^ 2) R ∧
+    (∫ p in R, Fo p * K p / y ^ 2) ≤ (4 * Ck * Cg) / y ^ 2 * b * N ∧
+    (∫ p in R, Fe p * K p / y ^ 2) ≤ (4 * Ck * Cg) / y ^ 2 * (b * S + b ^ 2 * N)
+  have hg : 0 < gamma := (Shao.sourceTruncation_gamma_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget).2.1
+  have hb : 0 < b := div_pos hg hk
+  have hhpos : 0 < h := (div_pos he (by linarith : 0 < 1 + x)).trans_le hh
+  have hT : 0 ≤ T := mul_nonneg (Nat.cast_nonneg m) (integral_nonneg fun z => sq_nonneg z)
+  have hN : 0 ≤ N := by dsimp [N]; positivity
+  have hS : 0 ≤ S := by dsimp [S]; positivity
+  obtain ⟨_, _, hp, hs, _, h2r, h3r, _⟩ := Shao.sourceTruncation_law_data ν0 n h2 hnorm x epsilon hx he hehalf hbudget
+  have : IsProbabilityMeasure ρ := hp
+  have hV : 0 < variance (id : ℝ → ℝ) ρ :=
+    (Shao.sourceTruncation_variance_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget).2.2.2.2.2.1
+  have hsupport : ∀ᵐ z : ℝ ∂ρ, |z| ≤ h := hs.mono fun _ hz => hz.trans hh
+  have : IsProbabilityMeasure (quadraticFullNoiseLaw ρ) :=
+    (quadraticFullNoise_law_data ρ h3r hV h hhpos hsupport).2.2.1
+  have hdata := hglobal ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hi h hh
+  have hcont := actualOddEven_continuous ρ m
+  have hFo : Measurable Fo := (jointSecondDerivative_measurable _ hcont.1.measurable
+    (fun p => ⟨(hdata p.1 p.2).1, (hdata p.1 p.2).2.1⟩)).norm
+  have hFe : Measurable Fe := (jointSecondDerivative_measurable _ hcont.2.measurable
+    (fun p => ⟨(hdata p.1 p.2).2.2.1, (hdata p.1 p.2).2.2.2.1⟩)).norm
+  have ho (u v : ℝ) : Fo (u, v) ≤ Cg * N := (hdata u v).2.2.2.2.1
+  have heven (u v : ℝ) : Fe (u, v) ≤ Cg * S + Cg * N * |u| := by
+    refine (hdata u v).2.2.2.2.2.trans_eq ?_
+    dsimp [S, N]
+    ring
+  have hU : MeasurableSet U := (isClosed_le continuous_abs continuous_const).measurableSet
+  obtain ⟨hK, hKi, hKb⟩ := hkernel b y w sigma hb hy hy2 hsmall hw hsigma
+  obtain ⟨hgo, hgob⟩ := profile_compare (fun _ => Cg * N) U b (Cg * N) 0 hb
+    (by positivity) (by norm_num) hU measurable_const (fun _ => by positivity) (by intro u hu; simp)
+  obtain ⟨hge, hgeb⟩ := profile_compare (fun u => Cg * S + Cg * N * |u|) U b (Cg * S) (Cg * N) hb
+    (by positivity) (by positivity) hU (by fun_prop) (fun _ => by positivity) (by intro u hu; rfl)
+  obtain ⟨hio, hiob⟩ := movingMarkedIntegral Fo K hFo hK (fun _ => norm_nonneg _)
+    (fun _ => norm_nonneg _) _ ho U hU b y Ck hy hCk.le hKi hKb hgo
+  obtain ⟨hie, hieb⟩ := movingMarkedIntegral Fe K hFe hK (fun _ => norm_nonneg _)
+    (fun _ => norm_nonneg _) _ heven U hU b y Ck hy hCk.le hKi hKb hge
+  have hReq : {p : ℝ × ℝ | p.1 ∈ U ∧ |p.1| / b < |p.2|} = R := by
+    ext p
+    have heq : |p.1| / b = kappa * |p.1| / gamma := by
+      dsimp only [b]
+      rw [div_div_eq_mul_div]
+      ring
+    simp only [R, heq, mem_ofPred_eq]
+  rw [hReq] at hio hiob hie hieb
+  refine ⟨hio, hie, hiob.trans ?_, hieb.trans ?_⟩
+  · calc
+      _ ≤ Ck / y ^ 2 * (4 * (Cg * N * b + 0 * b ^ 2)) :=
+        mul_le_mul_of_nonneg_left hgob (by positivity)
+      _ = _ := by ring
+  · calc
+      _ ≤ Ck / y ^ 2 * (4 * (Cg * S * b + Cg * N * b ^ 2)) :=
+        mul_le_mul_of_nonneg_left hgeb (by positivity)
+      _ = _ := by ring
+
+theorem sourceTruncation_odd_even_fullNoise_region5_actual_marked_postIBP_fixed_sixteenth :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun z : ℝ => z ^ 2) ν0 →
+          (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂ν0) = 1 →
+          (∫ z : ℝ, z ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ 1 / 2 →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            ∀ i : ℕ, i ≤ n → ∀ h kappa y w sigma : ℝ,
+              epsilon / (1 + x) ≤ h → 0 < kappa → 0 < y → y ≤ 2 →
+                |w| ≤ y / 16 → |sigma| = 1 →
+                let ρ : Measure ℝ :=
+                  ProbabilityTheory.cond ν0 {z | |z| ≤ epsilon / (1 + x)}
+                let m : ℕ := n - i
+                let T : ℝ := (m : ℝ) * (∫ z : ℝ, z ^ 2 ∂ρ)
+                let gamma : ℝ := (∫ z : ℝ, |z| ^ 3 ∂ρ) / variance (id : ℝ → ℝ) ρ
+                let b : ℝ := gamma / kappa
+                (4 * h) * y ≤ (1 / 16 : ℝ) →
+                let a : ℝ → ℝ := fun r =>
+                  sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2
+                let B : ℝ → ℝ → ℂ := fun u v =>
+                  ∫ r : ℝ, ((a r * Real.sin (u * (y * Real.sqrt r + sigma * w)) : ℝ) : ℂ) *
+                    Complex.exp (-(((v * r : ℝ) : ℂ) * Complex.I))
+                let D : ℝ → ℝ → ℂ := fun u v =>
+                  (quadraticChar ρ u v ^ m - quadraticChar ρ (-u) v ^ m) /
+                    2 * quadraticFullNoiseChar ρ u v
+                let E : ℝ → ℝ → ℂ := fun u v =>
+                  (quadraticChar ρ u v ^ m + quadraticChar ρ (-u) v ^ m) /
+                    2 * quadraticFullNoiseChar ρ u v
+                let W : ℝ → ℝ → ℂ := fun u v => (u : ℂ) * E u v
+                let R : Set (ℝ × ℝ) := {p | kappa / gamma < |p.1| ∧ |p.1| / (4 * h) < |p.2|}
+                let Iodd : ℝ × ℝ → ℝ := fun p =>
+                  ‖deriv (fun r : ℝ => deriv (fun t : ℝ => D t p.2) r) p.1‖ *
+                    ‖B p.1 p.2‖ / y ^ 2
+                let Ieven : ℝ × ℝ → ℝ := fun p =>
+                  ‖deriv (fun r : ℝ => deriv (fun t : ℝ => W t p.2) r) p.1‖ *
+                    ‖B p.1 p.2‖ / y ^ 2
+                IntegrableOn Iodd R ∧ IntegrableOn Ieven R ∧
+                  (∫ p in R, Iodd p) ≤ C / y ^ 2 * (4 * h) ^ 31 * b ^ 30 * (T + h * gamma) ∧
+                  (∫ p in R, Ieven p) ≤ C / y ^ 2 * (4 * h) ^ 31 * (b ^ 30 * (Real.sqrt T + gamma) + b ^ 29 * (T + h * gamma)) := by
+  obtain ⟨Cg, hCg, hglobal⟩ := sourceTruncation_odd_even_fullNoise_global_derivatives
+  obtain ⟨Ck, hCk, hkernel⟩ := fixedCutoff_actualMarkedKernelData
+  refine ⟨Ck * Cg, by positivity, ?_⟩
+  intro ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hi h kappa y w sigma hh hk hy hy2 hw hsigma
+  dsimp only
+  intro hsmall
+  let := hp0
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {z | |z| ≤ epsilon / (1 + x)}
+  let m : ℕ := n - i
+  let T : ℝ := (m : ℝ) * (∫ z : ℝ, z ^ 2 ∂ρ)
+  let gamma : ℝ := (∫ z : ℝ, |z| ^ 3 ∂ρ) / variance (id : ℝ → ℝ) ρ
+  let b : ℝ := gamma / kappa
+  let N : ℝ := T + h * gamma
+  let S : ℝ := Real.sqrt T + gamma
+  let U : Set ℝ := {u | kappa / gamma < |u|}
+  let R : Set (ℝ × ℝ) := {p | p.1 ∈ U ∧ |p.1| / (4 * h) < |p.2|}
+  let a : ℝ → ℝ := fun r => sourceKernelCutoff r / (Real.sqrt r + sigma * w / y) ^ 2
+  let B : ℝ × ℝ → ℂ := fun p => ∫ r : ℝ,
+    ((a r * Real.sin (p.1 * (y * Real.sqrt r + sigma * w)) : ℝ) : ℂ) *
+      Complex.exp (-(((p.2 * r : ℝ) : ℂ) * Complex.I))
+  let K : ℝ × ℝ → ℝ := fun p => ‖B p‖
+  let D : ℝ → ℝ → ℂ := fun u v =>
+    (quadraticChar ρ u v ^ m - quadraticChar ρ (-u) v ^ m) / 2 * quadraticFullNoiseChar ρ u v
+  let W : ℝ → ℝ → ℂ := fun u v => (u : ℂ) *
+    ((quadraticChar ρ u v ^ m + quadraticChar ρ (-u) v ^ m) / 2 * quadraticFullNoiseChar ρ u v)
+  let Fo : ℝ × ℝ → ℝ := fun p => ‖deriv (fun r => deriv (fun t => D t p.2) r) p.1‖
+  let Fe : ℝ × ℝ → ℝ := fun p => ‖deriv (fun r => deriv (fun t => W t p.2) r) p.1‖
+  change IntegrableOn (fun p => Fo p * K p / y ^ 2) R ∧
+    IntegrableOn (fun p => Fe p * K p / y ^ 2) R ∧
+    (∫ p in R, Fo p * K p / y ^ 2) ≤ (Ck * Cg) / y ^ 2 * (4 * h) ^ 31 * b ^ 30 * N ∧
+    (∫ p in R, Fe p * K p / y ^ 2) ≤ (Ck * Cg) / y ^ 2 * (4 * h) ^ 31 * (b ^ 30 * S + b ^ 29 * N)
+  have hg : 0 < gamma := (Shao.sourceTruncation_gamma_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget).2.1
+  have hb : 0 < b := div_pos hg hk
+  have hhpos : 0 < h := (div_pos he (by linarith : 0 < 1 + x)).trans_le hh
+  have hT : 0 ≤ T := mul_nonneg (Nat.cast_nonneg m) (integral_nonneg fun z => sq_nonneg z)
+  have hN : 0 ≤ N := by dsimp [N]; positivity
+  have hS : 0 ≤ S := by dsimp [S]; positivity
+  obtain ⟨_, _, hp, hs, _, h2r, h3r, _⟩ := Shao.sourceTruncation_law_data ν0 n h2 hnorm x epsilon hx he hehalf hbudget
+  have : IsProbabilityMeasure ρ := hp
+  have hV : 0 < variance (id : ℝ → ℝ) ρ :=
+    (Shao.sourceTruncation_variance_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget).2.2.2.2.2.1
+  have hsupport : ∀ᵐ z : ℝ ∂ρ, |z| ≤ h := hs.mono fun _ hz => hz.trans hh
+  have : IsProbabilityMeasure (quadraticFullNoiseLaw ρ) :=
+    (quadraticFullNoise_law_data ρ h3r hV h hhpos hsupport).2.2.1
+  have hdata := hglobal ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hi h hh
+  have hcont := actualOddEven_continuous ρ m
+  have hFo : Measurable Fo := (jointSecondDerivative_measurable _ hcont.1.measurable
+    (fun p => ⟨(hdata p.1 p.2).1, (hdata p.1 p.2).2.1⟩)).norm
+  have hFe : Measurable Fe := (jointSecondDerivative_measurable _ hcont.2.measurable
+    (fun p => ⟨(hdata p.1 p.2).2.2.1, (hdata p.1 p.2).2.2.2.1⟩)).norm
+  have ho (u v : ℝ) : Fo (u, v) ≤ Cg * N := (hdata u v).2.2.2.2.1
+  have heven (u v : ℝ) : Fe (u, v) ≤ Cg * S + Cg * N * |u| := by
+    refine (hdata u v).2.2.2.2.2.trans_eq ?_
+    dsimp [S, N]
+    ring
+  have hU : MeasurableSet U := (isOpen_lt continuous_const continuous_abs).measurableSet
+  obtain ⟨hK, hKi, hKb⟩ := hkernel (4 * h) y w sigma (by positivity) hy hy2 hsmall hw hsigma
+  have ha : 0 < kappa / gamma := div_pos hk hg
+  have hsub : U ⊆ {u : ℝ | kappa / gamma ≤ |u|} := by
+    intro u hu
+    change kappa / gamma < |u| at hu
+    exact le_of_lt hu
+  obtain ⟨hgo, hgob⟩ := tail_profile_compare (fun _ => Cg * N) U (kappa / gamma) (4 * h) (Cg * N) 0 ha
+    (by positivity) (by positivity) (by norm_num) hU hsub measurable_const
+    (fun _ => by positivity) (by intro u hu; simp)
+  obtain ⟨hge, hgeb⟩ := tail_profile_compare (fun u => Cg * S + Cg * N * |u|) U
+    (kappa / gamma) (4 * h) (Cg * S) (Cg * N) ha (by positivity)
+    (by positivity) (by positivity) hU hsub (by fun_prop) (fun _ => by positivity) (by intro u hu; rfl)
+  have hbinv : (kappa / gamma)⁻¹ = b := by simp [b, inv_div]
+  rw [hbinv] at hgob hgeb
+  obtain ⟨hio, hiob⟩ := movingMarkedIntegral Fo K hFo hK (fun _ => norm_nonneg _)
+    (fun _ => norm_nonneg _) _ ho U hU (4 * h) y Ck hy hCk.le hKi hKb hgo
+  obtain ⟨hie, hieb⟩ := movingMarkedIntegral Fe K hFe hK (fun _ => norm_nonneg _)
+    (fun _ => norm_nonneg _) _ heven U hU (4 * h) y Ck hy hCk.le hKi hKb hge
+  refine ⟨hio, hie, hiob.trans ?_, hieb.trans ?_⟩
+  · calc
+      _ ≤ Ck / y ^ 2 * ((4 * h) ^ 31 * (Cg * N * b ^ 30 + 0 * b ^ 29)) :=
+        mul_le_mul_of_nonneg_left hgob (by positivity)
+      _ = _ := by ring
+  · calc
+      _ ≤ Ck / y ^ 2 * ((4 * h) ^ 31 * (Cg * S * b ^ 30 + Cg * N * b ^ 29)) :=
+        mul_le_mul_of_nonneg_left hgeb (by positivity)
+      _ = _ := by ring
+
+/- END FIXED CUTOFF PUBLIC COMPANIONS. -/
+
 end Shao.Probability
