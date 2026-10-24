@@ -1,0 +1,32 @@
+import Shao.C2.BrownianBridgeLaw
+import Shao.Probability.GaussianTail
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.C2.ActualBrownianCrossingLower
+open MeasureTheory ProbabilityTheory
+open Shao.C2.BridgeDomination
+open scoped NNReal
+
+theorem brownian_weak_absolute_crossing_lower
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x : ℝ) :
+    Shao.standardNormalTail x ≤ PB.real {omegaB | ∃ t : BridgeTime,
+        x ≤ |B ⟨(t : ℝ), t.property.1⟩ omegaB|} := by
+
+theorem brownian_weak_absolute_crossing_pos
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x : ℝ) :
+    0 < PB.real {omegaB | ∃ t : BridgeTime,
+        x ≤ |B ⟨(t : ℝ), t.property.1⟩ omegaB|} := by
+
+theorem brownian_weak_absolute_crossing_small_window_lower
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x : ℝ) (hx : x ≤ 1) :
+    Shao.standardNormalTail 1 ≤ PB.real {omegaB | ∃ t : BridgeTime,
+        x ≤ |B ⟨(t : ℝ), t.property.1⟩ omegaB|} := by
+
+end Shao.C2.ActualBrownianCrossingLower
