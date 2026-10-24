@@ -1,0 +1,50 @@
+STATUS: CORRECT
+
+本结论只认证冻结的新模块 `Shao.Probability.SourceSeparatedOvershoot`。独立审查者 `/root/separated_overshoot_full_review` 未参与候选或实现，按 math-theorem 完整阅读了最终 1044 行源码、全部源证明、38 个实际模块归属声明的完整类型，以及全部 9 个非定理完整值；未发现关键数学缺口。使用的是明确指派的 fresh gpt-6.1-sol/xhigh 配置；平台未向本上下文暴露独立运行时型号/用量遥测，实际遥测字段与 input/cachedInput/output/reasoningSubset 均保留 null，不推算订阅比例。未使用 math-ultra，未下派。
+
+源码为 [SourceSeparatedOvershoot.lean](<C:/game/shao lean/drafts/c12-separated-overshoot-production/SourceSeparatedOvershoot.lean>)，SHA256 `8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623`，54845 字节。冻结 SHA256 `e38d76d35247131bce7065196d4d6ad393df00ebe09196449c5c9dd2cfd28980`；声明候选 SHA256 `27e906de1d36b07e76a320575477994224fc1908c156ca59911e488fb97424d0`。本审查独立去注释并逐项比较了 7 个完整定义、1 个完整局部实例值和 8 个公开定理完整头，全部一致；声明内 20 个 literal lets 完整一致。新增的异步关闭和心跳上限仅是 elaboration 设置，没有数学接口变化；没有额外显式 global/private helper。
+
+来源实际读取范围为 [main.tex](<C:/game/shao/current/c12/main.tex:957>) 957–1038（完整 cn:FD 与 cn:transfer），[supplement.tex](<C:/game/shao/current/c12/supplement.tex:4192>) 4192–4250、4319–4393、4536–4571，包含实际核/零时间约定、补偿余项、完整 S.8.17/18 投影证明、完整 S.8.19 局部 Gaussian 包络及原 selected L/负 overshoot 指标。另完整读取冻结、source-scope 与候选数学证明。原 main SHA256 `beb00f718487e36de433175c97f1d500cb48e7a92ce5bd5ad5d62bb132122d06`；supplement SHA256 `b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd`，均独立核实。
+
+**逐项数学审查**
+
+| 公开定理、最终源行 | 审查结论与完整承重推理 |
+|---|---|
+| `projection_increment_geometry`，74–131 | 上域只在 `w ≤ y+b` 投影至 `w-y`；下域只在 `y+b ≤ -w` 投影至 `-w-y`；区间先上后下。严格内部及正墙保证上穿 `0<p≤b`、下穿 `b≤p<0`，推出 min/max 和两个绝对值界。未跨监测墙时 p=b；改变投影时原新点和投影新点均非严格内部。所有三域分支完整。 |
+| `local_projection_remainder_decomposition`，133–163 | 非小能量分支 L=原余项、O=0；p=b 时恒等。p≠b 时两个 `completionExt` 先因空间在墙上/外侧取零，故差值仅来自补偿 `K(b)-K(p)=(b-p)(1-(b+p)(z-y)/T)`。没有要求投影 p 是剩余标签，也没有使用 Taylor、PDE 或导数假设。 |
+| `projected_negative_part_control`，165–334 | 监测墙与穿越给 ηb=B、0<u≤B、δ=B-u∈[0,B]；终点内部给 ηd<u。由 u²≤b²≤T/2 得 A≥1/2，且 `(B+u)ηd≤(B+u)u≤2B²≤T` 给 c≥0；B≤√T 给 c≤2D。实际投影恰为 ηu，O 恰为 -ηδcG。墙上 `Rp=-F-uA(ηG)`，实际 event completion 非负，故 `uA(ηG)≤|Rp|`。分 -O 正负两支得 `uA·max(-O,0)≤δc|Rp|`；用 `(B+u)A-uc=B≥0`、A>0 推出 `u²max(-O,0)≤δ(B+u)|Rp|`，加 u²|Rp| 后利用 `u²+δ(B+u)=B²` 闭合精确冻结不等式。没有除以可能为零的 u/T/A；使用处均已有正性。此头没有证明原 S.8.18 所需投影 Taylor 输入。 |
+| `source_selected_remainder_decomposition`，336–361 | 两部分与原 selected R 共享 `r<n`、`r<νσ`、`sourceAlive` 和 `T>0`。live 给 Q>0、当前 prefix 与终点内部，x>0 给实际墙 x√Q>0，直接应用局部分解。其它每一 guard 分支三项归零；没有丢掉 endpoint、Q 或停止指标。 |
+| `source_parts_uniform_bound`，363–461 | 只对真实下一个标签使用已接受几何 `b²≤T`、`d²≤(n-r)T`；得到 |b|≤√T 和 D²≤2(1+n)。投影给 |b-p|≤√T、|b+p|≤2√T，故补偿因子绝对值≤2D。与 KernelBounds 中的真实导数大小合同相乘得 |O|≤4C(1+n)。再由原余项界及 R=L+O 得 |L|≤1+6C(1+n)。大步/死状态 O=0；没有总体矩或有界人口假设。 |
+| `source_parts_measurable_integrable`，463–608 | 逐一建立严格域、extension 的正时间/真实零时间分支、有限 prefix 生存、实际能量/增量/投影、小步和停止 guard 的可测性。给定每个排列的 ν section 可测性后，有限排列的等值选择求和得到真正乘积空间可测性。局部 LabelPerm 可测空间是与原 revealLaw 相同的 ⊤，非零或未说明的默认实例。P 与独立均匀排列律均为概率律，上一个定理的确定常数界支付每个项的 Bochner 可积性，有限和再支付两个和。没有以目标 Integrable 作为前提，也没有把逐排列有限性冒充人口积分可积性。 |
+| `source_separated_overshoot_sign_domination`，610–766 | 对实际桥起点逐路径单调性，upperCompletion 反单调、lowerCompletion 单调；完整 `HasDerivAt` 将 G 识别为这些实际函数的导数，推出 G+≤0≤G−。区间内部按已接受 BridgeDomination 的完整实际类型得到 G+≤GI≤G−。正 δc 将一墙 O± 变成非负；区间上/下穿的 live/endpoint 事件分别包含于相应半域，且 w,T,d,b,ν/小步条件完全相同，因而 OI≤相应一墙 O。区间已死、endpoint 外侧、非选中、大步或无穿越时 OI=0。结论 OI≤O++O−、OI+≤O++O− 和 OD≥0 均覆盖整个状态空间，不要求 interval O 本身非负，也没有把导数顺序当输入。 |
+| `source_three_domain_overshoot_transfer`，768–1040 | F 固定为同一实际 bridge-noise 概率律 Q 的 eventCompletionKernel；可测性和 [0,1] 来自已接受 producer，FY 的实际 HasDerivAt/可测/大小合同保持明列。L/O/绝对值/负部/有限和、Vstop/Vinitial、所有有界人口 mask 积分先实际证明可积。877–899 用完整排列和/能量不变性证明剩余 T(n)=0，endpoint 相同且严格内部时 extension=1，因此 `sourceValue n=Afinal`，不是任意终点槽位。904–913 消费同一 H>0、同一 ν、揭示停秩和 energyCutoff 的 actual masked stopped telescope。以 m=1 和 R=L+O 得 EO=EVstop-EVinitial-EL；终值误差 E、一墙 gap G 和绝对 L 预算 B 给一墙 `0≤EΣO≤B+E+G`。再以 `|RI|≤|LI|+(OI)−+O++O−` 积分得 `3B+2E+2G`。最后实际 masked telescope 加绝对 terminal 误差给 `3B+3E+2G`。冻结的置换不变前提完整保留；该人口乘积律上的证明实际上无需使用它，不削弱结论或偷换为自然 iid 停时。 |
+
+真实测度及被消费接口已定向实读完整定义值和完整公共类型：`LabelPerm`、`BridgeKernel`、`remainingEnergy`、`compensationCoefficient`、`IsRevealStoppingRank`、`energyCutoff`、`MonitoredDomain`、`Interior`、`eventCompletionKernel`、`actualWall`、`completionExt`、`sourceAlive`、`sourceValue`、`localRemainder`、`sourceRemainder`、`stoppedRemainderSum`、`KernelBounds`、`PermutationInvariant`、`uniformPermutationLaw`、`revealLaw`，以及 `remaining_population_geometry`、`source_remainder_uniform_bound`、`eventCompletionKernel_data`、`source_stopped_integrability`、`source_masked_stopped_telescope_integral`。BridgeNoise/bridgePath/strict events/三个实际 completion 的完整值及 `bridgePath_mono`、`signed_derivative_domination_of_hasDerivAt` 完整接口也已读取。没有重新完整审查旧证明或重跑旧 Lean/AX；复用 accepted SourcePermutationReveal、BridgeDomination、PermutationEnergyEnvelope 的既有完整独立资格，所有直接进口 source/object hashes 与最终 receipt 一致。
+
+**全部归属类型和值**
+
+作者审计以 `env.getModuleIdxFor? name` 的真实模块归属选择，遍历整个环境，并对每个所属常量执行递归 `Lean.collectAxioms`。它没有使用命名空间前缀过滤。实际 38=29 theorem+9 definition，29=8 公开源定理+21 编译生成定理；没有 opaque/inductive/constructor/recursor 等未覆盖种类。特别包含由本模块生成、却命名于旧命名空间的 `Shao.Probability.SourcePermutationReveal.sourceAlive.eq_1`。
+
+9 个完整类型和完整非定理值逐项已读：`labelPermMeasurableSpace` 的值确为 `fun n => ⊤`；`projectionIncrement`；`localRetainedRemainder`；`localSeparatedOvershoot`；`sourceRetainedRemainder`；`sourceSeparatedOvershoot`；`retainedSum`；`separatedSum`；以及生成的 `projectionIncrement.match_1`。最后一项是以 MonitoredDomain 为 motive、上/下/区间三分支的 `casesOn`，完整值与源 match 一致。局部实例计 1 个实际 definition value，matcher 再计 1 个，绝不误记为只有 7 或 8 个值。
+
+21 个生成定理的完整实际类型逐项已读，核对其定义/简化语义并复用内核证明：`projectionIncrement.eq_1/eq_2/eq_3`；`localRetainedRemainder._proof_1/eq_1`；`localSeparatedOvershoot.eq_1`；`sourceRetainedRemainder.eq_1`；`sourceSeparatedOvershoot.eq_1`；异命名空间的 `SourcePermutationReveal.sourceAlive.eq_1`；`source_parts_uniform_bound._simp_1` 至 `_simp_7`；`source_parts_measurable_integrable._simp_1` 至 `_simp_3`；`source_separated_overshoot_sign_domination._simp_3`；`source_three_domain_overshoot_transfer._simp_1`。其中 `_proof_1` 仅为 numeral 2 的 AtLeastTwo 实例证明，`_simp` 依次为非零 numeral/乘积/幂/整数幂、Nat cast+1、有限插入/范围、反身序和有限和加法分配的已知合法等式。没有隐藏新数学假设或未经审计的辅助声明。结构化报告对 38 项均给出类型 SHA、完整阅读覆盖和 9 值 SHA。
+
+完整实际类型/值原件 SHA256 `8449956ba369e194392fd78255ed7ae037c5e952405531ff9b87e29c548dc8c3`，153588 字节，38 TYPE/9 VALUE blocks，无 printer omission。审查为降低重复显示，使用 [无损字典](<C:/game/shao lean/drafts/c12-separated-overshoot-full-review/actual-types-dictionary.txt>) 和 [encodedText](<C:/game/shao lean/drafts/c12-separated-overshoot-full-review/actual-types-encoded.txt>)：全部 106 字典项与全部 1166 行 encodedText 均完整实读；反向替换逐字节还原原件。进一步从原 audit log 的精确 warning header、完整原件和 count footer 重构，SHA256 恰为 `d05ea5877240bac77696bc7b3cf121fe2f9dcd79deca362c833d20407a5691e8`。因此读取覆盖与真实服务器审计 payload 精确相同，不是 head、摘要、扫描或仅哈希替代语义阅读。
+
+**边界、量词和范围**
+
+所有 n∈ℕ 和 r∈ℕ 均保留；r≥n 不制造 Fin n 标签，n=0/ν=0 的有限和与选择项归零。Q=0 时实际墙/strict 初始存活不被补成非零事件；sourceAlive 明含 Q>0。T≤0 的 source 两部分归零，而真实终值 T(n)=0 仍由 sourceValue/extension 的相同端点分支取正确的 0/1。T-b²=0、墙等号命中和 δ=0 被空间墙 trace/原定义覆盖；等号命中是 crossing，但 O=0。b=0 不会从严格内部跨墙；无穿越 p=b。大能量 crossing 完整保留在 L，没有扔掉原余项。interval 已死而另一半域仍存活、曾命中一壁或两壁、外终点、重复数值标签、原子人口律均在完整 guard/单调事件证明中覆盖。
+
+新证明没有 n 大、R 小、x≤1、无原子/密度或额外人口矩假设。冻结结论对任意 x>0 和任意满足明列合同的 B/E/G 成立；它没有声称替源文尚开放的 small-n/large-R 吸收或 CR 估计付费。所有除法的关键不等式使用正 T、正 √T、正 A；没有通过 totalized division 在零分支获得虚假结论。
+
+B/E/G 正是 main 992–995 明列的三个输入预算：三域 retained 绝对值加 interval 负 overshoot；各域 stopped-terminal 绝对误差；一墙 terminal-initial gap。输出为实际 one-wall、interval absolute 和 masked discrepancy 的消费者。既未把目标 O 积分或 masked 目标塞入输入，也未把这些条件消费者写成已证明 `B,E,G≤CR`。原 S.8.18 的投影 Taylor 输入、S.8.19 actual remainder-to-Gaussian 比较、Gaussian 包络到实际 L 的桥、actual Brownian 反射/核商识别、interval regularity、terminal stopped envelope、E/G/B 的 CR 实现及全部原 C1/C2/OQ3/OQ4/OQ56 根仍 OPEN；OQ3 继续 PAUSED_BY_USER。本审查不主张研究新颖性或原根完成。
+
+**精确机械与发布绑定**
+
+复用作者服务器 `attempt011` 全模块实际 exit 0，以及唯一整模块 all-owner recursive AX 实际 exit 0。原成功对象 `/root/rivermind-data/shao-lean-20261021/outputs/common-separated-overshoot-v74/attempt011.olean` SHA256 `46612a7954d8787a81d181670c44e21db533b8872a43d1553d18108ea25119bc`；被 audit import 的构建对象解析到同一个原成功对象。`owned-audit.json` SHA256 `590b4cc0b5ff81e414e5ca51c09a53f27f40b71e2ba47fcfaccf433b4173bd88`，所有 38 项递归 AX 仅为 `propext`、`Classical.choice`、`Quot.sound` 的子集。作者 gate 使用 Lean `leanprover/lean4:v4.36.0-rc1`、mathlib `807d3836b165983210ee2ecf3cd28f239436949c`、CPU10–13、root-heavy.lock、-M8192 -j4 与共享只读包视图。最终源独立确认 UTF-8 无 BOM、LF only、CR=0，代码中无 sorry/admit/新 axiom/unsafe/native_decide。原失败 attempt001–010 保留，未覆盖或重放。
+
+本审查只做了一次必要轻量只读服务器 source/object/log/Git 绑定，0 个新 Lean 命令、0 次新 AX walk、0 次 producer 重编、0 cache 写。完整日志、对象和缓存留在服务器，本地绑定只保存 hashes、短元数据与日志摘要。原 kernel log hash `43fad1830c45c0450f04bff2dfc90059f92ef13e80cfeaa9c6beb1cf2244a3c3`，0 error；弃用/未用变量等 warning 不改变证明或资格。具体绑定见 [server-binding.json](<C:/game/shao lean/drafts/c12-separated-overshoot-full-review/server-binding.json>) 与 [独立本地比对](<C:/game/shao lean/drafts/c12-separated-overshoot-full-review/local-evidence-verification.json>)。
+
+发布 [PR282](https://github.com/randomcat4/shao-lean/pull/282) 的精确 head `139d46ce97a77ffd8f4bc52b2c2c733c085d97b7`、tree `183ba46d7a7e36bf403ae049911a7891d68abdd5`、源 Git blob `c0f1eb822318a4e29deb1b2699a543c6a5a6b85e` 已由只读服务器 Git 与连接器核实。该提交父为 `b4d91a9a6fb13105504747c452e45d804b43566e`，唯一改源为本模块；工作树干净、发布源 blob 的 SHA256 与被检查源码相同。连接器观察 PR open/未 merge、1 commit/1 changed file/1044 additions/0 deletions；观察时 main base 已推进至 `dfd77e47531719055e73d2c680e66945b7c2288b`，与作者原父提交区分记录，不把动态 base 当成被冻结 head。没有执行 GitHub 写入、merge 或 PR 评论。
+
+作者最终 [receipt.json](<C:/game/shao lean/drafts/c12-separated-overshoot-production/receipt.json>) SHA256 `3c2b1ec038d395f358a114a063e3808954cd41094087fb398e7a4c2d37462a83`；[RELEASE.json](<C:/game/shao lean/drafts/c12-separated-overshoot-production/RELEASE.json>) SHA256 `c423e9a6b82a135c9a294403f8b1b74d9f244e76eb74e9dce4164b16a8bc0805`，相互绑定同源/head/tree，writer/execution 均释放、productionWriteAuthority=false、heavyActive=false、inflight=[]。报告只授予该精确冻结局部模块完整独立审查 CORRECT；根协调者可按精确 hashes/interfaces/interactions 复用此审查，不必再为相同证明重复完整复核。审查者完成后以本目录 RELEASE 释放全部审查写权/执行权，不继续充当下个新源的 fresh reviewer。
