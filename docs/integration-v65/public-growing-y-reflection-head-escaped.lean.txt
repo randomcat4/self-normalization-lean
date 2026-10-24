@@ -1,0 +1,167 @@
+/-
+CANDIDATE HEAD ONLY. No implementation, elaboration, kernel check, independent
+review, or acceptance is claimed. Root must select/freeze before implementation.
+
+Proposed module: Shao.Probability.SourceGrowingYReflection
+ONE public theorem; ZERO new global/private definition values.
+SourceGrowingKernelBounds source 8e68efa212b258aa13c0e1ca6750d99b20beab62e7ebcea12d7f6d8de7bfb2f1
+is now root-qualified after its fresh complete independent review, as recorded
+in coordination/common-growing-kernel-bounds-root-qualification.json with SHA
+e3c2482fc6776d50fd8d6576834e9cb020be445d2190e989e01ac2bb9208f8ca.
+No statement below assumes the desired probability conclusion.
+-/
+
+import Shao.Probability.SourceGrowingKernelBounds
+import Shao.Probability.SourceGrowingMicrotimeReflection
+import Shao.Probability.SourceLindleyRegulatorEnergyWeightedSecond
+import Shao.Probability.SourceLindleySurvival
+import Shao.Probability.SourceClockBridge
+import Shao.Probability.SourceFullNoiseBridge
+import Shao.Probability.LindleySignedBlock
+import Shao.Probability.GaussianTail
+
+set_option autoImplicit false
+
+namespace Shao.Probability
+
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators Topology
+
+theorem sourceTruncation_growing_y_reflection_probability_comparison :
+    let L : ℝ := 1600
+    let L2 : ℝ := 16384
+    let alpha : ℝ := 1 / 1024
+    let epsilon0 : ℝ := min (1 / (64 * Real.sqrt L2)) (alpha / (8 * L))
+    let t0 : ℝ := Real.exp (-(48 * alpha / epsilon0))
+    let eta0 : ℝ := min (1 / 16)
+      (min (Real.sqrt t0 / (2 * Real.sqrt L2))
+        (min ((epsilon0 / 20480) ^ 2)
+          (1 / (16384 * (1 + 3 / t0) *
+            Real.exp (24 * epsilon0 / t0)))))
+    let epsilon : ℝ := min (epsilon0 / 2)
+      (1 / (4 * (8 * (1 + L) + 1) * L))
+    0 < epsilon0 ∧ 0 < epsilon ∧ epsilon ≤ epsilon0 / 2 ∧
+      0 < t0 ∧ t0 < (3 / 8 : ℝ) ∧
+      ∃ C : ℝ, 0 < C ∧
+        ∀ (nu0 : Measure ℝ), IsProbabilityMeasure nu0 →
+          ∀ n : ℕ, Integrable (fun a : ℝ => a ^ 2) nu0 →
+            (n : ℝ) * (∫ a : ℝ, a ^ 2 ∂nu0) = 1 →
+            (∫ a : ℝ, a ∂nu0) = 0 →
+            ∀ x : ℝ, 0 ≤ x →
+              Shao.truncationBudget nu0 n x ≤ epsilon ^ 3 / 8 →
+              Shao.truncationBudget nu0 n x ≤ epsilon ^ 2 * eta0 / 40 →
+              let rho : Measure ℝ := ProbabilityTheory.cond nu0
+                {a : ℝ | |a| ≤ epsilon / (1 + x)}
+              let mu : ℝ := ∫ a : ℝ, a ∂rho
+              let raw2 : ℝ := ∫ a : ℝ, a ^ 2 ∂rho
+              let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂rho
+              let V : ℝ := variance (id : ℝ → ℝ) rho
+              let gamma : ℝ := m3 / V
+              let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+              let noise : Measure (ℝ × ℝ) := quadraticFullNoiseLaw rho
+              IsProbabilityMeasure rho ∧ IsProbabilityMeasure noise ∧
+                IndepFun (fun p : Shao.Path n × (ℝ × ℝ) => p.1)
+                  (fun p => p.2) (P.prod noise) ∧
+                (∀ᵐ z : ℝ × ℝ ∂noise,
+                  |z.1| + (1 + x) * |z.2| ≤ 100 * (epsilon / (1 + x))) ∧
+                (∫ z : ℝ × ℝ, |z.1| ∂noise) +
+                  (1 + x) * (∫ z : ℝ × ℝ, |z.2| ∂noise) ≤ 100 * gamma ∧
+                ∀ y : ℝ, 2 ≤ y → |y - x| ≤ 1 / (2 * (1 + x)) →
+                  let Lambda : ℝ := (1 + y) * (n : ℝ) * |mu| +
+                    (1 + y) ^ 3 * (n : ℝ) * m3
+                  let psi : ℝ × ℝ → ℝ := fun p =>
+                    ∫ z : ℝ × ℝ,
+                      sourceFourierTest y (p.1 + z.1, p.2 + z.2) ∂noise
+                  let k : ℕ := n / 2
+                  let E : Set (Shao.Path n) :=
+                    {a | Shao.prefixSquares a k < (1 / 16 : ℝ)}
+                  let T : Fin n → ℝ := fun j =>
+                    ((n - (j.val + 1) : ℕ) : ℝ) * raw2
+                  let Delta : Fin n → Shao.Path n → ℝ := fun j a =>
+                    lindleyDelta rho psi a j
+                  let G : Fin n → Shao.Path n → ℝ := fun j a =>
+                    if (1 / 16 : ℝ) ≤ Shao.prefixSquares a k then
+                      |Delta j a| else 0
+                  let early : Finset (Fin n) :=
+                    Finset.univ.filter (fun j : Fin n => j.val < k)
+                  let «macro» : Finset (Fin n) :=
+                    Finset.univ.filter (fun j : Fin n => k ≤ j.val ∧ t0 ≤ T j)
+                  let short : Finset (Fin n) :=
+                    Finset.univ.filter (fun j : Fin n =>
+                      k ≤ j.val ∧ L2 * gamma ^ 2 ≤ T j ∧ T j < t0)
+                  let micro : Finset (Fin n) :=
+                    Finset.univ.filter (fun j : Fin n =>
+                      k ≤ j.val ∧ T j < L2 * gamma ^ 2)
+                  let Cmax : ℝ := ∫ p : Shao.Path n × (ℝ × ℝ),
+                    sourceFourierTest y
+                      (Shao.maxWithZero p.1 + p.2.1, Shao.energy p.1 + p.2.2)
+                    ∂P.prod noise
+                  let Cend : ℝ := ∫ p : Shao.Path n × (ℝ × ℝ),
+                    sourceFourierTest y
+                      (Shao.prefixSum p.1 n + p.2.1, Shao.energy p.1 + p.2.2)
+                    ∂P.prod noise
+                  0 < gamma ∧ 0 ≤ Lambda ∧
+                    Measurable psi ∧ (∀ p, 0 ≤ psi p ∧ psi p ≤ 1) ∧
+                    (∀ w : ℝ, psi (w, 0) = 0) ∧
+                    (∀ j : Fin n,
+                      Integrable (Delta j) P ∧
+                        Integrable (fun a : Shao.Path n => |Delta j a|) P ∧
+                        Integrable (G j) P) ∧
+                    (∀ j : Fin n, n - (j.val + 1) = 0 →
+                      ∀ᵐ a : Shao.Path n ∂P, Delta j a = 0) ∧
+                    P.real E + P.real {a : Shao.Path n |
+                      Shao.energy a ∉ Set.Icc (1 / 4 : ℝ) 2} ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    (∑ j ∈ early, ∫ a : Shao.Path n, |Delta j a| ∂P) ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    |∫ a in E, (∑ j : Fin n,
+                      if k ≤ j.val then Delta j a else 0) ∂P| ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    (∑ j ∈ «macro», ∫ a : Shao.Path n, G j a ∂P) ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    (∑ j ∈ short, ∫ a : Shao.Path n, G j a ∂P) ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    (∑ j ∈ micro, ∫ a : Shao.Path n, G j a ∂P) ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    (∑ j ∈ Finset.univ.filter (fun j : Fin n => k ≤ j.val),
+                      ∫ a : Shao.Path n, G j a ∂P) ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    |∑ j : Fin n, ∫ a : Shao.Path n, Delta j a ∂P| ≤
+                      C * Lambda * Shao.standardNormalTail y ∧
+                    0 ≤ Cmax ∧ Cmax ≤ 1 ∧ 0 ≤ Cend ∧ Cend ≤ 1 ∧
+                    Cmax - Cend =
+                      ∑ j : Fin n, ∫ a : Shao.Path n, Delta j a ∂P ∧
+                    |Cmax - Cend| ≤ C * Lambda * Shao.standardNormalTail y ∧
+                    |Cmax - Cend| ≤
+                      (20 * Real.exp 2 * C / epsilon ^ 2) *
+                        Shao.truncationBudget nu0 n x * Shao.standardNormalTail x ∧
+                    (∀ (Omega : Type*) [MeasurableSpace Omega]
+                      (base : Measure Omega), IsProbabilityMeasure base →
+                      ∀ X : Fin n → Omega → ℝ,
+                        (∀ j, Measurable (X j)) → iIndepFun X base →
+                        (∀ j, IdentDistrib (X j) (id : ℝ → ℝ) base nu0) →
+                        let A : Set Omega := ⋂ j : Fin n,
+                          {omega | |X j omega| ≤ epsilon / (1 + x)}
+                        let conditioned : Measure Omega :=
+                          ProbabilityTheory.cond base A
+                        let CmaxX : ℝ := ∫ p : Omega × (ℝ × ℝ),
+                          sourceFourierTest y
+                            (Shao.maxWithZero (samplePath X p.1) + p.2.1,
+                              Shao.energy (samplePath X p.1) + p.2.2)
+                          ∂conditioned.prod noise
+                        let CendX : ℝ := ∫ p : Omega × (ℝ × ℝ),
+                          sourceFourierTest y
+                            (Shao.prefixSum (samplePath X p.1) n + p.2.1,
+                              Shao.energy (samplePath X p.1) + p.2.2)
+                          ∂conditioned.prod noise
+                        IsProbabilityMeasure conditioned ∧
+                          Measure.map (samplePath X) conditioned = P ∧
+                          CmaxX = Cmax ∧ CendX = Cend ∧
+                          |CmaxX - CendX| ≤
+                            C * Lambda * Shao.standardNormalTail y ∧
+                          |CmaxX - CendX| ≤
+                            (20 * Real.exp 2 * C / epsilon ^ 2) *
+                              Shao.truncationBudget nu0 n x *
+                                Shao.standardNormalTail x)
+
+end Shao.Probability
