@@ -1,0 +1,40 @@
+DECL Shao.OQ3.uniform_standardized_pair_log_moment_approximation
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure (Fin 2 → ℝ)),
+  (∀ (i : ι), MeasureTheory.IsProbabilityMeasure (law i)) →
+    (∀ (i : ι) (j : Fin 2), MeasureTheory.MemLp (fun y => y j) 2 (law i)) →
+      (∀ (i : ι) (j : Fin 2), ∫ (y : Fin 2 → ℝ), y j ∂law i = 0) →
+        (∀ (i : ι) (j k : Fin 2),
+            ProbabilityTheory.covariance (fun y => y j) (fun y => y k) (law i) = if j = k then 1 else 0) →
+          ∀ (m : ℕ),
+            1 ≤ m →
+              ∀ (M3 Mm : ℝ),
+                (∀ (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) (law i)) →
+                  (∀ (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ 3 ∂law i ≤ M3) →
+                    (∀ (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ m) (law i)) →
+                      (∀ (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ m ∂law i ≤ Mm) →
+                        have Phi := fun i u v =>
+                          ∫ (y : Fin 2 → ℝ), Complex.exp (↑(u * y 0 + v * y 1) * Complex.I) ∂law i;
+                        have P := fun i u v =>
+                          ∑ j ∈ Finset.range m,
+                            Complex.I ^ j / ↑j.factorial * ↑(∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ j ∂law i);
+                        have K2 := 2 + (Real.exp 1 + 4) * |M3|;
+                        have Km := 1 + (Real.exp 1 + ↑m + 1) * |Mm|;
+                        0 < K2 ∧
+                          0 < Km ∧
+                            ∃ delta,
+                              0 < delta ∧
+                                delta ≤ 1 ∧
+                                  ∀ (i : ι) (u v : ℝ),
+                                    √(u ^ 2 + v ^ 2) ≤ delta →
+                                      ‖Phi i u v - 1‖ ≤ 1 / 2 ∧
+                                        ‖P i u v - 1‖ ≤ 1 ∧
+                                          ∀ (q : ℕ),
+                                            ‖Complex.log (Phi i u v) - Complex.logTaylor (q + 1) (P i u v - 1)‖ ≤
+                                              2 * (K2 * (u ^ 2 + v ^ 2)) ^ (q + 1) / ↑(q + 1) +
+                                                ↑(q + 1) * Km * √(u ^ 2 + v ^ 2) ^ m
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.uniform_standardized_pair_log_moment_approximation._proof_1_1
+TYPE ∀ (m : ℕ), 1 ≤ m → m = 0 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
