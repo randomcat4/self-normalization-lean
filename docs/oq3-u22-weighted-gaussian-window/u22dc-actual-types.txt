@@ -1,0 +1,264 @@
+DECL Shao.OQ3.compact_open_domain_standardized_weighted_frequency_family
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (beta c R : ℝ),
+        0 ≤ beta →
+          beta < 2 / 5 →
+            0 < c →
+              0 ≤ R →
+                (∀ p ∈ Theta, 0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det) →
+                  (∀ p ∈ Theta,
+                      ∀ (xi eta : ℝ),
+                        R < √(xi ^ 2 + eta ^ 2) →
+                          ‖Shao.OQ3.jointCharacteristic (mu.tilted fun x => p.1 * x + p.2 * x ^ 2) xi eta‖ ≤
+                            1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                    have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                    have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+                    have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+                    have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+                    have A := fun p =>
+                      ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                        ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+                    have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+                    have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+                    have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+                    have Phi := fun p xi eta =>
+                      ∫ (y : Fin 2 → ℝ), Complex.exp (↑(xi * y 0 + eta * y 1) * Complex.I) ∂laws p;
+                    ∃ lo hi,
+                      0 < lo ∧
+                        0 < hi ∧
+                          (∀ p ∈ Theta,
+                              ∀ (xi eta : ℝ),
+                                lo * (xi ^ 2 + eta ^ 2) ≤
+                                    xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ∧
+                                  xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ≤
+                                    hi * (xi ^ 2 + eta ^ 2)) ∧
+                            ∃ E,
+                              (∀ (p : ↑Theta),
+                                  (∀ (w : ℝ × ℝ),
+                                      (E p) w =
+                                        (A (↑p) 0 0 * w.1 + A (↑p) 0 1 * w.2, A (↑p) 1 0 * w.1 + A (↑p) 1 1 * w.2)) ∧
+                                    ‖↑(E p)‖ ≤ 2 * (1 / √lo) ∧
+                                      ‖↑(E p).symm‖ ≤ 4 * hi * (1 / √lo) ∧
+                                        ∀ (x : ℝ),
+                                          (E p) ((x, x ^ 2) - (means (↑p) 0, means (↑p) 1)) =
+                                            (Y (↑p) x 0, Y (↑p) x 1)) ∧
+                                (∀ (delta : ℝ),
+                                    0 < delta →
+                                      ∃ C,
+                                        0 < C ∧
+                                          ∀ p ∈ Theta,
+                                            MeasureTheory.Integrable (fun y => (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta))
+                                                (laws p) ∧
+                                              0 ≤ ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta) ∂laws p ∧
+                                                ∫ (y : Fin 2 → ℝ), (√(y 0 ^ 2 + y 1 ^ 2)).rpow (8 + delta) ∂laws p ≤
+                                                  C) ∧
+                                  have L := 1 / √hi;
+                                  have U := 1 / √lo;
+                                  have cA := c * U.rpow (-beta);
+                                  have RA := R / L;
+                                  0 < L ∧
+                                    0 < U ∧
+                                      0 < cA ∧
+                                        0 ≤ RA ∧
+                                          (∀ p ∈ Theta,
+                                              0 < s p ∧
+                                                0 < t p ∧
+                                                  (A p).transpose = A p ∧
+                                                    A p * D p * A p = 1 ∧
+                                                      (∀ (xi eta : ℝ),
+                                                          xi ≠ 0 ∨ eta ≠ 0 →
+                                                            0 <
+                                                              xi * (A p).mulVec ![xi, eta] 0 +
+                                                                eta * (A p).mulVec ![xi, eta] 1) ∧
+                                                        MeasureTheory.IsProbabilityMeasure (laws p) ∧
+                                                          (∀ (i : Fin 2),
+                                                              MeasureTheory.MemLp (fun y => y i) 2 (laws p) ∧
+                                                                ∫ (y : Fin 2 → ℝ), y i ∂laws p = 0) ∧
+                                                            (∀ (i j : Fin 2),
+                                                                ProbabilityTheory.covariance (fun y => y i)
+                                                                    (fun y => y j) (laws p) =
+                                                                  if i = j then 1 else 0) ∧
+                                                              (∀ (xi eta : ℝ),
+                                                                  L * √(xi ^ 2 + eta ^ 2) ≤
+                                                                      √((xi * A p 0 0 + eta * A p 1 0) ^ 2 +
+                                                                          (xi * A p 0 1 + eta * A p 1 1) ^ 2) ∧
+                                                                    √((xi * A p 0 0 + eta * A p 1 0) ^ 2 +
+                                                                          (xi * A p 0 1 + eta * A p 1 1) ^ 2) ≤
+                                                                      U * √(xi ^ 2 + eta ^ 2)) ∧
+                                                                ∀ (xi eta : ℝ),
+                                                                  RA < √(xi ^ 2 + eta ^ 2) →
+                                                                    ‖Phi p xi eta‖ ≤
+                                                                      1 - cA * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) ∧
+                                            (∀ (k : ℕ),
+                                                ∃ C,
+                                                  0 < C ∧
+                                                    ∀ p ∈ Theta,
+                                                      MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k)
+                                                          (laws p) ∧
+                                                        0 ≤ ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ k ∂laws p ∧
+                                                          ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ k ∂laws p ≤ C) ∧
+                                              (∀ (delta H : ℝ),
+                                                  0 < delta →
+                                                    ∃ gamma,
+                                                      0 < gamma ∧
+                                                        gamma < 1 ∧
+                                                          (∀ p ∈ Theta,
+                                                              ∀ (xi eta : ℝ),
+                                                                delta ≤ √(xi ^ 2 + eta ^ 2) →
+                                                                  √(xi ^ 2 + eta ^ 2) ≤ H → ‖Phi p xi eta‖ ≤ gamma) ∧
+                                                            ∀ (q epsilon : ℝ),
+                                                              0 < epsilon →
+                                                                ∃ N,
+                                                                  1 ≤ N ∧
+                                                                    ∀ (n : ℕ),
+                                                                      N ≤ n →
+                                                                        ∀ (p : ↑Theta) (xi eta : ℝ),
+                                                                          delta ≤ √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) →
+                                                                            √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) ≤ H →
+                                                                              have nu := tilt ↑p;
+                                                                              have Q :=
+                                                                                MeasureTheory.Measure.pi fun x => nu;
+                                                                              have M := fun z =>
+                                                                                ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                                                              have T := fun z =>
+                                                                                √↑n •
+                                                                                  (E p)
+                                                                                    (M z -
+                                                                                      (means (↑p) 0, means (↑p) 1));
+                                                                              have rho := MeasureTheory.Measure.map T Q;
+                                                                              MeasureTheory.IsProbabilityMeasure rho ∧
+                                                                                (↑n).rpow q *
+                                                                                    ‖∫ (w : ℝ × ℝ),
+                                                                                        Complex.exp
+                                                                                          (↑(xi * w.1 + eta * w.2) *
+                                                                                            Complex.I) ∂rho‖ <
+                                                                                  epsilon) ∧
+                                                (∃ delta0,
+                                                    0 < delta0 ∧
+                                                      delta0 ≤ 1 ∧
+                                                        (∀ p ∈ Theta,
+                                                            ∀ (xi eta : ℝ),
+                                                              √(xi ^ 2 + eta ^ 2) ≤ delta0 →
+                                                                ‖Phi p xi eta‖ ≤ Real.exp (-(xi ^ 2 + eta ^ 2) / 4)) ∧
+                                                          ∀ (n : ℕ),
+                                                            1 ≤ n →
+                                                              ∀ (p : ↑Theta) (xi eta : ℝ),
+                                                                √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) ≤ delta0 →
+                                                                  have nu := tilt ↑p;
+                                                                  have Q := MeasureTheory.Measure.pi fun x => nu;
+                                                                  have M := fun z =>
+                                                                    ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                                                  have T := fun z =>
+                                                                    √↑n • (E p) (M z - (means (↑p) 0, means (↑p) 1));
+                                                                  have rho := MeasureTheory.Measure.map T Q;
+                                                                  MeasureTheory.IsProbabilityMeasure rho ∧
+                                                                    ‖∫ (w : ℝ × ℝ),
+                                                                          Complex.exp
+                                                                            (↑(xi * w.1 + eta * w.2) *
+                                                                              Complex.I) ∂rho‖ ≤
+                                                                      Real.exp (-(xi ^ 2 + eta ^ 2) / 4)) ∧
+                                                  (∃ delta B,
+                                                      0 < delta ∧
+                                                        delta ≤ 1 ∧
+                                                          0 < B ∧
+                                                            ∀ (n : ℕ),
+                                                              2 ≤ n →
+                                                                ∀ (p : ↑Theta) (xi eta : ℝ),
+                                                                  √((xi / √↑n) ^ 2 + (eta / √↑n) ^ 2) ≤ delta →
+                                                                    have nu := tilt ↑p;
+                                                                    have Q := MeasureTheory.Measure.pi fun x => nu;
+                                                                    have M := fun z =>
+                                                                      ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                                                    have T := fun z =>
+                                                                      √↑n • (E p) (M z - (means (↑p) 0, means (↑p) 1));
+                                                                    have rho := MeasureTheory.Measure.map T Q;
+                                                                    MeasureTheory.IsProbabilityMeasure rho ∧
+                                                                      ‖∫ (w : ℝ × ℝ),
+                                                                              Complex.exp
+                                                                                (↑(xi * w.1 + eta * w.2) *
+                                                                                  Complex.I) ∂rho -
+                                                                            ↑(Real.exp (-(xi ^ 2 + eta ^ 2) / 2))‖ ≤
+                                                                        B / √↑n * √(xi ^ 2 + eta ^ 2) ^ 3 *
+                                                                          Real.exp (-(xi ^ 2 + eta ^ 2) / 8)) ∧
+                                                    (∃ deltaInt,
+                                                        0 < deltaInt ∧
+                                                          deltaInt ≤ 1 ∧
+                                                            ∀ (k : ℕ),
+                                                              have envelope := fun z =>
+                                                                √(z.1 ^ 2 + z.2 ^ 2) ^ (k + 3) *
+                                                                  Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8);
+                                                              MeasureTheory.Integrable envelope MeasureTheory.volume ∧
+                                                                ∃ C,
+                                                                  0 < C ∧
+                                                                    ∀ (n : ℕ),
+                                                                      2 ≤ n →
+                                                                        ∀ (p : ↑Theta),
+                                                                          have nu := tilt ↑p;
+                                                                          have Q :=
+                                                                            MeasureTheory.Measure.pi fun x => nu;
+                                                                          have M := fun z =>
+                                                                            ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                                                          have T := fun z =>
+                                                                            √↑n •
+                                                                              (E p)
+                                                                                (M z - (means (↑p) 0, means (↑p) 1));
+                                                                          have rho := MeasureTheory.Measure.map T Q;
+                                                                          have small :=
+                                                                            {z |
+                                                                              √((z.1 / √↑n) ^ 2 + (z.2 / √↑n) ^ 2) ≤
+                                                                                deltaInt};
+                                                                          have error := fun z =>
+                                                                            ‖∫ (w : ℝ × ℝ),
+                                                                                  Complex.exp
+                                                                                    (↑(z.1 * w.1 + z.2 * w.2) *
+                                                                                      Complex.I) ∂rho -
+                                                                                ↑(Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 2))‖;
+                                                                          have weight := fun z =>
+                                                                            √(z.1 ^ 2 + z.2 ^ 2) ^ k;
+                                                                          MeasureTheory.IsProbabilityMeasure rho ∧
+                                                                            MeasureTheory.IntegrableOn
+                                                                                (fun z => weight z * error z) small
+                                                                                MeasureTheory.volume ∧
+                                                                              0 ≤
+                                                                                  ∫ (z : ℝ × ℝ) in small,
+                                                                                    weight z * error z ∧
+                                                                                ∫ (z : ℝ × ℝ) in small,
+                                                                                    weight z * error z ≤
+                                                                                  C / √↑n) ∧
+                                                      ∃ Hfar,
+                                                        0 ≤ Hfar ∧
+                                                          ∀ (k : ℕ) (q epsilon : ℝ),
+                                                            0 < epsilon →
+                                                              ∃ N,
+                                                                1 ≤ N ∧
+                                                                  ∀ (n : ℕ),
+                                                                    N ≤ n →
+                                                                      ∀ (p : ↑Theta),
+                                                                        have nu := tilt ↑p;
+                                                                        have Q := MeasureTheory.Measure.pi fun x => nu;
+                                                                        have M := fun z =>
+                                                                          ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                                                                        have T := fun z =>
+                                                                          √↑n •
+                                                                            (E p) (M z - (means (↑p) 0, means (↑p) 1));
+                                                                        have rho := MeasureTheory.Measure.map T Q;
+                                                                        have far :=
+                                                                          {z |
+                                                                            √↑n * Hfar < √(z.1 ^ 2 + z.2 ^ 2) ∧
+                                                                              √(z.1 ^ 2 + z.2 ^ 2) ≤ ↑n ^ 3};
+                                                                        have f := fun z =>
+                                                                          √(z.1 ^ 2 + z.2 ^ 2) ^ k *
+                                                                            ‖∫ (w : ℝ × ℝ),
+                                                                                Complex.exp
+                                                                                  (↑(z.1 * w.1 + z.2 * w.2) *
+                                                                                    Complex.I) ∂rho‖;
+                                                                        MeasureTheory.IsProbabilityMeasure rho ∧
+                                                                          MeasureTheory.IntegrableOn f far
+                                                                              MeasureTheory.volume ∧
+                                                                            0 ≤ ∫ (z : ℝ × ℝ) in far, f z ∧
+                                                                              (↑n).rpow q * ∫ (z : ℝ × ℝ) in far, f z <
+                                                                                epsilon
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

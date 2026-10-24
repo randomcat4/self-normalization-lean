@@ -44,6 +44,10 @@ import Shao.OQ3.CompactOpenDomainStandardizedGaussianError
 import Shao.OQ3.CompactOpenDomainStandardizedLocalGaussian
 import Shao.OQ3.CompactOpenDomainStandardizedMiddleFrequency
 import Shao.OQ3.CompactOpenDomainTiltedFrequencyGap
+import Shao.OQ3.CompactOpenDomainWeightedFarFrequency
+import Shao.OQ3.CompactOpenDomainWeightedGaussianWindow
+import Shao.OQ3.CompactOpenDomainWeightedLocalError
+import Shao.OQ3.CompactOpenDomainWeightedMiddleFrequency
 import Shao.OQ3.CompactOpenDomainWhitenedAnnulusGap
 import Shao.OQ3.CompactParabolaGaussianOscillation
 import Shao.OQ3.CompactParabolaRateProbability
@@ -55,6 +59,8 @@ import Shao.OQ3.CompactTiltWhitenedFamily
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
+import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
+import Shao.OQ3.EuclideanGaussianWeightedTail
 import Shao.OQ3.FarEnergyExponentialCover
 import Shao.OQ3.FiniteConstraints
 import Shao.OQ3.FiniteFarArc
@@ -114,8 +120,10 @@ import Shao.OQ3.OpenDomainSmoothMean
 import Shao.OQ3.OpenDomainTiltedFourierContinuity
 import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
+import Shao.OQ3.PairCharacteristicBoundedIntegral
 import Shao.OQ3.PairCharacteristicGaussianRemainder
 import Shao.OQ3.PairCharacteristicQuadraticRemainder
+import Shao.OQ3.PairCharacteristicWeightedIntegral
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
 import Shao.OQ3.ParabolaCellAveragedOscillation
@@ -407,8 +415,14 @@ import Shao.OQ5.P53.SparseSignedLabelLaw
 import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ5.P53.SparseSourceWindows
 import Shao.OQ6.FiniteRows
+import Shao.OQ6.ObservationProductTilt
+import Shao.OQ6.QuadraticTilt
+import Shao.OQ6.ResidualDeletion
+import Shao.OQ6.ResidualDeletionMeasurable
+import Shao.OQ6.ResidualRowExpansion
 import Shao.Probability.BerryEsseen
 import Shao.Probability.BivariateLegendre
+import Shao.Probability.BoundedGaussianTail
 import Shao.Probability.BoundedQuadraticTilt
 import Shao.Probability.BrownianFirstTerm
 import Shao.Probability.BrownianGridBridge
@@ -457,6 +471,7 @@ import Shao.Probability.SourceBoundedYReflection
 import Shao.Probability.SourceClockBridge
 import Shao.Probability.SourceComplexBoundaryAmplitude
 import Shao.Probability.SourceComplexBoundaryContour
+import Shao.Probability.SourceDesmoothing
 import Shao.Probability.SourceFourierParameterPayment
 import Shao.Probability.SourceFourierScale
 import Shao.Probability.SourceFourierTestKernel
