@@ -1,0 +1,69 @@
+import Shao.OQ4.RademacherGeneralStrictS4
+import Shao.OQ4.CanonicalBrownian
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped Topology
+
+namespace Shao.OQ4.RademacherStrictWeakBoundary
+
+def integerIndicator (h : ℝ) : ℝ :=
+  letI : Decidable (∃ z : ℤ, h = (z : ℝ)) := Classical.propDecidable _
+  if ∃ z : ℤ, h = (z : ℝ) then 1 else 0
+
+def ratio (n : ℕ) (h : ℝ) : ℝ :=
+  RademacherS5Assembly.p n h / RademacherStrictCube.strictP n h
+
+-- Nat.floor/Nat.ceil are used only on the explicitly nonnegative domain.
+theorem boundary_gap (h : ℝ) (hh : 0 ≤ h) :
+    ((Nat.floor h : ℝ) + 1 - h) -
+        RademacherGeneralStrictS4.delta h = integerIndicator h ∧
+    (integerIndicator h = 0 ∨ integerIndicator h = 1)
+
+-- One common positive tail gives the ordinary interpretation of log/div.
+-- No limit of the third scale is assumed.
+theorem boundary_main (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      2 ≤ h_ k ∧ 1 ≤ n_ k ∧
+      0 < RademacherS5Assembly.p (n_ k) (h_ k) ∧
+      0 < RademacherStrictCube.strictP (n_ k) (h_ k) ∧
+      0 < ratio (n_ k) (h_ k) ∧
+      Real.log (ratio (n_ k) (h_ k)) =
+        Real.log (RademacherS5Assembly.p (n_ k) (h_ k)) -
+          Real.log (RademacherStrictCube.strictP (n_ k) (h_ k))) ∧
+    Tendsto (fun k : ℕ =>
+      Real.log (ratio (n_ k) (h_ k)) -
+        (Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+          integerIndicator (h_ k)) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      ratio (n_ k) (h_ k) /
+        Real.exp ((Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+          integerIndicator (h_ k))) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun k : ℕ =>
+      ratio (n_ k) (h_ k) -
+        Real.exp ((Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+          integerIndicator (h_ k))) atTop (𝓝 (0 : ℝ))
+
+-- Exact whole-sequence limit criterion, including exclusion of L≤0.
+theorem boundary_tendsto_iff (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) (L : ℝ) :
+    Tendsto (fun k : ℕ => ratio (n_ k) (h_ k)) atTop (𝓝 L) ↔
+      1 ≤ L ∧
+      Tendsto (fun k : ℕ =>
+        ((n_ k : ℝ) / (h_ k) ^ 3) * integerIndicator (h_ k))
+        atTop (𝓝 ((4 / Real.pi ^ 2) * Real.log L))
+
+end Shao.OQ4.RademacherStrictWeakBoundary
+end
