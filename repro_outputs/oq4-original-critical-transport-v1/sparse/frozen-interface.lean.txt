@@ -1,0 +1,152 @@
+/-
+PROPOSAL ONLY: PARENT FULL READING AND FREEZE ARE PENDING.
+NOT AN IMPLEMENTATION, PARSED MODULE, OR FORMALLY ACCEPTED RESULT.
+Theorem signatures deliberately have no implementation/proof bodies.
+Proposed module: Shao.OQ4.SparseOriginalIIDTransport.
+All proposed top-level heads are public: 1 definition and 10 theorems.
+No private top-level heads, new instances, axioms, or hidden hypotheses.
+The imported SparseCriticalDenominator is an UNELABORATED current dependency.
+-/
+
+import Shao.OQ4.OriginalIIDWindow
+import Shao.OQ4.SparseCriticalDenominator
+
+set_option autoImplicit false
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+
+universe uX uB
+
+namespace Shao.OQ4.SparseOriginalIIDTransport
+
+variable {ΩX : Type uX} [MeasurableSpace ΩX]
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+-- P01 full value. Literal source maximum; only the denominator is deterministic.
+def sourceDetEvent (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) : Set ΩX :=
+  {ω | OriginalIIDWindow.sourceMaximum n X ω ≤ s * Real.sqrt (n : ℝ)}
+
+-- P02. The law assumption includes AE measurability of each positive coordinate.
+theorem sourcePath_identDistrib
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law)
+    (n : ℕ) :
+    IdentDistrib (OriginalIIDWindow.sourcePath n X)
+      (id : Shao.Path n → Shao.Path n) μ (SparseCriticalDenominator.pathLaw n)
+
+-- P03. Pointwise equalities, all n and all real s, with no probability premise.
+theorem source_event_pullbacks (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) :
+    OriginalIIDWindow.sourceEvent n X s =
+      OriginalIIDWindow.sourcePath n X ⁻¹' SparseCriticalDenominator.selfEvent n s ∧
+    sourceDetEvent n X s =
+      OriginalIIDWindow.sourcePath n X ⁻¹' SparseCriticalDenominator.detEvent n s
+
+-- P04. Actual original sums, with X_0 unused and the empty sample exact.
+theorem source_event_formulas (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) :
+    OriginalIIDWindow.sourceEvent n X s =
+      {ω | ∀ k : ℕ, k ≤ n →
+        |∑ i ∈ Finset.range k, X (i + 1) ω| ≤
+          s * Real.sqrt (∑ i ∈ Finset.range n, (X (i + 1) ω) ^ 2)} ∧
+    sourceDetEvent n X s =
+      {ω | ∀ k : ℕ, k ≤ n →
+        |∑ i ∈ Finset.range k, X (i + 1) ω| ≤ s * Real.sqrt (n : ℝ)} ∧
+    OriginalIIDWindow.sourceEvent 0 X s = Set.univ ∧
+    sourceDetEvent 0 X s = Set.univ
+
+-- P05. This weaker measurable interface does not need a law or independence.
+theorem nullMeasurableSet_sourceDetEvent
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (hX : ∀ i : ℕ, AEMeasurable (X (i + 1)) μ) (n : ℕ) (s : ℝ) :
+    NullMeasurableSet (sourceDetEvent n X s) μ
+
+-- P06. The actual fixed law supplies every moment premise; independence is unused.
+theorem source_moments
+    (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law) (i : ℕ) :
+    Integrable (fun ω => |X (i + 1) ω| ^ 3) μ ∧
+    (∫ ω, X (i + 1) ω ∂μ) = 0 ∧
+    (∫ ω, (X (i + 1) ω) ^ 2 ∂μ) = 1 ∧
+    (∫ ω, |X (i + 1) ω| ^ 3 ∂μ) = 2 ∧
+    variance (X (i + 1)) μ = 1
+
+-- P07. Exact finite probabilities for the actual original events, before limits.
+theorem source_probability_pair
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law)
+    (n : ℕ) (s : ℝ) :
+    μ.real (OriginalIIDWindow.sourceEvent n X s) =
+      (SparseCriticalDenominator.pathLaw n).real
+        (SparseCriticalDenominator.selfEvent n s) ∧
+    μ.real (sourceDetEvent n X s) =
+      (SparseCriticalDenominator.pathLaw n).real
+        (SparseCriticalDenominator.detEvent n s)
+
+-- P08. Pointwise zero/count equivalences do not require sparse support or any law.
+theorem source_zero_energy (n : ℕ) (X : ℕ → ΩX → ℝ) (ω : ΩX) :
+    (OriginalIIDWindow.sourceEnergy n X ω = 0 ↔
+      ∀ i : Fin n, X (i.val + 1) ω = 0) ∧
+    (SparseCriticalDenominator.count (OriginalIIDWindow.sourcePath n X ω) = 0 ↔
+      ∀ i : Fin n, X (i.val + 1) ω = 0) ∧
+    (OriginalIIDWindow.sourceEnergy n X ω = 0 →
+      OriginalIIDWindow.sourceMaximum n X ω = 0) ∧
+    (∀ s : ℝ, OriginalIIDWindow.sourceEnergy n X ω = 0 →
+      ω ∈ OriginalIIDWindow.sourceEvent n X s ∧
+      (0 ≤ s → ω ∈ sourceDetEvent n X s))
+
+-- P09. Includes k=0, k>n, and n=0; the zero path keeps its positive mass.
+theorem source_count_and_zero
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law) (n : ℕ) :
+    (∀ k : ℕ, μ.real
+      {ω | SparseCriticalDenominator.count (OriginalIIDWindow.sourcePath n X ω) = k} =
+        SparseCriticalDenominator.weight n k) ∧
+    (∀ᵐ ω ∂μ, OriginalIIDWindow.sourceEnergy n X ω =
+      4 * (SparseCriticalDenominator.count (OriginalIIDWindow.sourcePath n X ω) : ℝ)) ∧
+    μ.real {ω | OriginalIIDWindow.sourceEnergy n X ω = 0} = (3 / 4 : ℝ) ^ n
+
+-- P10. Genuine random denominator versus the deterministic denominator, same law.
+theorem source_exact_mixtures
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law)
+    (n : ℕ) (s : ℝ) (hs : 0 ≤ s) :
+    μ.real (OriginalIIDWindow.sourceEvent n X s) =
+      (∑ k ∈ Finset.range (n + 1), SparseCriticalDenominator.weight n k *
+        RademacherS4Assembly.p k (s * Real.sqrt (k : ℝ))) ∧
+    μ.real (sourceDetEvent n X s) =
+      (∑ k ∈ Finset.range (n + 1), SparseCriticalDenominator.weight n k *
+        RademacherS4Assembly.p k (s * Real.sqrt (n : ℝ) / 2))
+
+-- P11. Literal original subsequence/threshold. ΩX and ΩB have independent universes.
+theorem original_sparse_critical_limits
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law) :
+    Tendsto (fun m : ℕ =>
+      μ.real (OriginalIIDWindow.sourceEvent ((2 * m) ^ 3) X
+        (1 / Real.sqrt (2 * (m : ℝ)))) /
+      Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (2 * (m : ℝ)))) atTop
+      (𝓝 ((1 + Real.exp (Real.pi ^ 2 / 2)) / 2)) ∧
+    Tendsto (fun m : ℕ =>
+      μ.real (sourceDetEvent ((2 * m) ^ 3) X
+        (1 / Real.sqrt (2 * (m : ℝ)))) /
+      Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (2 * (m : ℝ)))) atTop
+      (𝓝 (Real.exp (Real.pi ^ 2 / 2)))
+
+end Shao.OQ4.SparseOriginalIIDTransport
