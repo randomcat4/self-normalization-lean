@@ -1,0 +1,41 @@
+import Shao.C2.PolygonalPrefixEvents
+import Mathlib.Algebra.Order.Floor.Ring
+
+noncomputable section
+namespace Shao.C2.PolygonalRademacherReflection
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.FiniteWalkReflection Shao.C2.FiniteWalkReflectionCount
+open Shao.C2.RademacherReflectionProbability Shao.C2.PolygonalPrefixEvents
+open Shao.C2.BrownianUpperJointLimit Shao.OQ4.PolygonalPathTightness
+
+private theorem measurable_prefix (n k : ℕ) :
+    Measurable (fun p : Shao.Path n => Shao.prefixSum p k) := by
+
+private theorem real_law_preimage (n : ℕ) (S : Set (Shao.Path n))
+    (hS : MeasurableSet S) :
+    (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real S =
+      (wordLaw n).real (realWord ⁻¹' S) := by
+
+theorem closed_prefix_reflection (n : ℕ) (a v : ℝ) (ha : 0 < a) (hv : v < a) :
+    (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path n | (∀ k : ℕ, k ≤ n → Shao.prefixSum p k ≤ a) ∧
+          Shao.prefixSum p n ≤ v} +
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path n | ((2 * (⌊a⌋ + 1) - ⌊v⌋ : ℤ) : ℝ) ≤ Shao.prefixSum p n} =
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path n | Shao.prefixSum p n ≤ v} := by
+
+theorem scaled_polygonal_reflection (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hsq : h ^ 2 = (n : ℝ)) (a v : ℝ) (ha : 0 < a) (hv : v < a) :
+    (polygonalPathLaw 1 n h Shao.OQ4.RademacherCosine.law).real (upperJointSet a v) +
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path n |
+          (((2 * (⌊a * h⌋ + 1) - ⌊v * h⌋ : ℤ) : ℝ) / h) ≤ Shao.prefixSum p n / h} =
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {p : Shao.Path n | Shao.prefixSum p n / h ≤ v} := by
+
+theorem scaled_reflected_cut_bounds (a v h : ℝ) (hh : 0 < h) :
+    0 ≤ (((2 * (⌊a * h⌋ + 1) - ⌊v * h⌋ : ℤ) : ℝ) / h) - (2 * a - v) ∧
+      (((2 * (⌊a * h⌋ + 1) - ⌊v * h⌋ : ℤ) : ℝ) / h) - (2 * a - v) ≤ 3 / h := by
+
+end Shao.C2.PolygonalRademacherReflection

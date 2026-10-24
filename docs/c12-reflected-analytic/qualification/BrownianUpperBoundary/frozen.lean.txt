@@ -1,0 +1,35 @@
+import Shao.C2.RademacherReflectionProbability
+
+noncomputable section
+namespace Shao.C2.BrownianUpperBoundary
+open MeasureTheory ProbabilityTheory Set
+open scoped NNReal ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+def upperTouch (a y T : ℝ) : Set (BridgeNoise × ℝ) :=
+  {p | (∀ t : BridgeTime, bridgePath y T (y + Real.sqrt T * p.2) p.1 t ≤ a) ∧
+    ∃ t : BridgeTime, bridgePath y T (y + Real.sqrt T * p.2) p.1 t = a}
+
+theorem upperTouch_section_subsingleton (a y T : ℝ) (g : BridgeNoise)
+    (hy : y < a) (hT : 0 < T) :
+    ({w : ℝ | (g, w) ∈ upperTouch a y T}).Subsingleton := by
+
+theorem measurableSet_upperTouch (a y T : ℝ) : MeasurableSet (upperTouch a y T) := by
+
+theorem product_upperTouch_zero (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T : ℝ) (hy : y < a) (hT : 0 < T) :
+    (ν.prod (gaussianReal 0 1)) (upperTouch a y T) = 0 := by
+
+theorem brownian_upperTouch_zero {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T : ℝ) (hy : y < a) (hT : 0 < T) :
+    P {ω | (∀ t : BridgeTime, y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω ≤ a) ∧
+      ∃ t : BridgeTime, y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω = a} = 0 := by
+
+theorem brownian_upper_strict_closed {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T : ℝ) (hy : y < a) (hT : 0 < T) :
+    P.real {ω | ∀ t : BridgeTime, y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω < a} =
+      P.real {ω | ∀ t : BridgeTime, y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω ≤ a} := by
+
+end Shao.C2.BrownianUpperBoundary

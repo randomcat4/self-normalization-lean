@@ -1,0 +1,21 @@
+import Shao.C2.RademacherBrownianEndpointLimit
+
+noncomputable section
+namespace Shao.C2.BrownianUpperJointReflection
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped Topology NNReal ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianUpperJointLimit
+open Shao.C2.PolygonalRademacherReflection Shao.C2.RademacherBrownianEndpointLimit
+open Shao.OQ4.PolygonalPathTightness
+
+private theorem gaussian_tail_from_right (b : ℝ) :
+    Tendsto (fun m : ℕ => (gaussianReal 0 1).real (Ici (b + 1 / ((m : ℝ) + 1))))
+      atTop (𝓝 ((gaussianReal 0 1).real (Ici b))) := by
+
+theorem brownian_upper_joint_reflection {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a v : ℝ) (ha : 0 < a) (hv : v < a) :
+    P.real {ω | (∀ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧ B 1 ω ≤ v} +
+      (gaussianReal 0 1).real (Ici (2 * a - v)) = (gaussianReal 0 1).real (Iic v) := by
+
+end Shao.C2.BrownianUpperJointReflection
