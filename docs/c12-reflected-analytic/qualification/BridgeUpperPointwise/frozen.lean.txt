@@ -1,0 +1,26 @@
+import Shao.C2.GaussianCDFBridgeDerivative
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+
+noncomputable section
+namespace Shao.C2.BridgeUpperPointwise
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped Topology NNReal ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeUpperIntegralReflection Shao.C2.GaussianCDFBridgeDerivative
+
+theorem antitone_centered_cdf_isLocalMax (μ : Measure ℝ) [IsProbabilityMeasure μ]
+    (f : ℝ → ℝ) (hf : Antitone f) (hi : Integrable f μ) (z : ℝ) :
+    IsLocalMax (fun v : ℝ => ∫ x : ℝ in Iic v, (f x - f z) ∂μ) z := by
+
+theorem antitone_cdf_derivative_identity (μ : Measure ℝ) [IsProbabilityMeasure μ]
+    (f : ℝ → ℝ) (hf : Antitone f) (hi : Integrable f μ) (z dF dM : ℝ)
+    (hF : HasDerivAt (fun v : ℝ => ∫ x : ℝ in Iic v, f x ∂μ) dF z)
+    (hM : HasDerivAt (fun v : ℝ => μ.real (Iic v)) dM z) :
+    dF = f z * dM := by
+
+theorem bridge_upper_unit_formula {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z : ℝ) (ha : 0 < a) (hz : z < a) :
+    upperCompletion (bridgeLaw B P) a 0 1 z = 1 - Real.exp (-2 * a * (a - z)) := by
+
+end Shao.C2.BridgeUpperPointwise

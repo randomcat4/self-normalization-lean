@@ -1,0 +1,48 @@
+import Shao.C2.BridgeLowerIdentification
+import Shao.C2.IntervalGaussianLargeStep
+
+noncomputable section
+namespace Shao.C2.BridgeIntervalActualBounds
+open MeasureTheory ProbabilityTheory Set
+open scoped NNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.SourceIntervalCompletion Shao.C2.IntervalGaussianLargeStep
+open Shao.C2.ActualIntervalProjection
+
+theorem actual_interval_deriv_bound
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (a y T z : ℝ) (hT : 0 < T) (hy : |y| < a) (hz : |z| < a)
+    (hRegular : DifferentiableAt ℝ (fun s : ℝ => intervalCompletion (bridgeLaw B P) a s T z) y) :
+    |deriv (fun s : ℝ => intervalCompletion (bridgeLaw B P) a s T z) y| ≤
+      4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T) := by
+
+theorem actual_interval_deriv_uniform_bound
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (a y T z H A : ℝ) (hH : 0 < H) (hHT : H ≤ T) (haA : a ≤ A)
+    (hy : |y| < a) (hz : |z| < a)
+    (hRegular : DifferentiableAt ℝ (fun s : ℝ => intervalCompletion (bridgeLaw B P) a s T z) y) :
+    |deriv (fun s : ℝ => intervalCompletion (bridgeLaw B P) a s T z) y| ≤
+      4 / Real.sqrt H * (1 + 2 * A / Real.sqrt H) := by
+
+theorem actual_completion_difference_envelope_bound {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → y + b = z) :
+    |sourceIntervalCompletion (bridgeLaw B P) a (y + b) (T - b ^ 2) z - sourceIntervalCompletion (bridgeLaw B P) a y T z| ≤
+      2 * intervalEnvelope a y T z b := by
+
+theorem actual_interval_large_gaussian_bound {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hb : b ^ 2 ≤ T) (hlarge : T / 2 < b ^ 2) (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion (bridgeLaw B P) a w T z) y) :
+    |sourceRemainder (bridgeLaw B P) a y T z b| ≤
+      40 * (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 * intervalEnvelope a y T z b := by
+
+end Shao.C2.BridgeIntervalActualBounds

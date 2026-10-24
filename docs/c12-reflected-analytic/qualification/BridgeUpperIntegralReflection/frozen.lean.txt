@@ -1,0 +1,26 @@
+import Shao.C2.BrownianUpperJointReflection
+import Shao.C2.BridgeHalfLineJointLaw
+
+noncomputable section
+namespace Shao.C2.BridgeUpperIntegralReflection
+open MeasureTheory ProbabilityTheory Set
+open scoped NNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeHalfLineJointLaw Shao.C2.BrownianUpperJointReflection
+
+theorem upperCompletion_antitone_endpoint (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T : ℝ) : Antitone (fun z : ℝ => upperCompletion ν a y T z) := by
+
+theorem upperCompletion_measurable_endpoint (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T : ℝ) : Measurable (fun z : ℝ => upperCompletion ν a y T z) := by
+
+theorem upperCompletion_integrable_gaussian (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T : ℝ) : Integrable (fun z : ℝ => upperCompletion ν a y T z) (gaussianReal 0 1) := by
+
+theorem bridge_upper_setIntegral_cdf_reflection {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a v : ℝ) (ha : 0 < a) (hv : v < a) :
+    (∫ w : ℝ in Iic v, upperCompletion (bridgeLaw B P) a 0 1 w ∂(gaussianReal 0 1)) +
+      (gaussianReal 0 1).real (Ici (2 * a - v)) = (gaussianReal 0 1).real (Iic v) := by
+
+end Shao.C2.BridgeUpperIntegralReflection
