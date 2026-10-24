@@ -1,0 +1,27 @@
+import Shao.C2.BrownianSineStoppedMesh
+import Mathlib.Analysis.Calculus.MeanValue
+
+noncomputable section
+namespace Shao.C2.SineStoppedWallBound
+open MeasureTheory Set Filter
+open scoped NNReal Topology BigOperators
+open Shao.C2.IntervalSineTerms Shao.C2.IntervalSineSeries Shao.C2.IntervalSpectralGaussian
+
+private theorem low_sineSeries_strip_bound (j : ℕ) (hj : j ≤ 1) (a z H : ℝ)
+    (ha : 0 < a) (hH : 0 < H) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ U : ℝ, H ≤ U → ∀ x : ℝ, ‖mixedSineSeries j 0 a z U x‖ ≤ C := by
+
+theorem sineSeries_zero_walls (a z U : ℝ) (ha : 0 < a) :
+    mixedSineSeries 0 0 a z U (-a) = 0 ∧ mixedSineSeries 0 0 a z U a = 0 := by
+
+theorem sineSeries_uniform_bounded_lipschitz (a z H : ℝ) (ha : 0 < a) (hH : 0 < H) :
+    ∃ M L : ℝ, 0 ≤ M ∧ 0 ≤ L ∧ ∀ U : ℝ, H ≤ U →
+      (∀ x : ℝ, |mixedSineSeries 0 0 a z U x| ≤ M) ∧
+      ∀ x y : ℝ, |mixedSineSeries 0 0 a z U x - mixedSineSeries 0 0 a z U y| ≤ L * |x - y| := by
+
+theorem sineSeries_uniform_wall_bound (a z H : ℝ) (ha : 0 < a) (hH : 0 < H) :
+    ∃ M L : ℝ, 0 ≤ M ∧ 0 ≤ L ∧ ∀ U : ℝ, H ≤ U → ∀ x : ℝ,
+      |mixedSineSeries 0 0 a z U x| ≤ M ∧
+      |mixedSineSeries 0 0 a z U x| ≤ L * abs (abs x - a) := by
+
+end Shao.C2.SineStoppedWallBound

@@ -1,0 +1,49 @@
+import Shao.C2.IntervalSineInitialLimit
+
+noncomputable section
+namespace Shao.C2.BrownianKilledSineIdentification
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BrownianKilledEndpointDensity Shao.C2.BrownianKilledKernel
+open Shao.C2.BrownianSineStoppedLimit Shao.C2.IntervalSineInitialLimit
+open Shao.C2.IntervalSineSeries Shao.C2.IntervalSineNormalizedDerivatives
+open Shao.C2.IntervalReciprocalDerivatives Shao.C2.IntervalImageSineIdentity
+open Shao.C2.IntervalImageCandidateSpatial
+
+private theorem killed_density_data {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    Continuous (fun x : ℝ => gaussianPDFReal y T x *
+      intervalCompletion (bridgeLaw B P) a y (T : ℝ) x) ∧
+    (∃ M : ℝ, ∀ x : ℝ, |gaussianPDFReal y T x *
+      intervalCompletion (bridgeLaw B P) a y (T : ℝ) x| ≤ M) ∧
+    (∀ x : ℝ, 0 ≤ gaussianPDFReal y T x *
+      intervalCompletion (bridgeLaw B P) a y (T : ℝ) x) ∧
+    ∀ x : ℝ, x ∉ Icc (-a) a → gaussianPDFReal y T x *
+      intervalCompletion (bridgeLaw B P) a y (T : ℝ) x = 0 := by
+
+theorem actualIntervalKernel_sine_action_density {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (hy : |y| < a) (T : ℝ≥0) (hT : T ≠ 0) :
+    Integrable (fun x : ℝ => mixedSineSeries 0 0 a z H x *
+      (gaussianPDFReal y T x * intervalCompletion (bridgeLaw B P) a y (T : ℝ) x)) volume ∧
+    (∫ x in Icc (-a) a, mixedSineSeries 0 0 a z H x *
+      (gaussianPDFReal y T x * intervalCompletion (bridgeLaw B P) a y (T : ℝ) x)) =
+      mixedSineSeries 0 0 a z (H + (T : ℝ)) y := by
+
+theorem actual_killed_density_eq_sine {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y z : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| < a)
+    (T : ℝ≥0) (hT : T ≠ 0) :
+    gaussianPDFReal y T z * intervalCompletion (bridgeLaw B P) a y (T : ℝ) z =
+      mixedSineSeries 0 0 a z (T : ℝ) y := by
+
+theorem bridge_interval_eq_image {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y U z : ℝ) (ha : 0 < a) (hy : |y| < a)
+    (hU : 0 < U) (hz : |z| < a) :
+    intervalCompletion (bridgeLaw B P) a y U z = intervalImageCandidate a z U y := by
+
+end Shao.C2.BrownianKilledSineIdentification

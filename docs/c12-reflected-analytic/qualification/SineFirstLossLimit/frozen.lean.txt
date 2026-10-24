@@ -1,0 +1,44 @@
+import Shao.C2.SineStoppedWallBound
+import Mathlib.Topology.UniformSpace.HeineCantor
+
+noncomputable section
+namespace Shao.C2.SineFirstLossLimit
+open MeasureTheory Set Filter
+open scoped NNReal Topology BigOperators
+open Shao.C2.IntervalSineSeries Shao.C2.SineStoppedWallBound
+
+private theorem first_loss_sum_abs_le (P : ℕ → Prop)
+    (hP : ∀ i j : ℕ, i ≤ j → P j → P i) (N : ℕ) (F : ℕ → ℝ)
+    (C : ℝ) (hC : 0 ≤ C)
+    (hF : ∀ k ∈ Finset.range N, P k ∧ ¬ P (k + 1) → |F k| ≤ C) :
+    |∑ k ∈ Finset.range N, {k : ℕ | P k ∧ ¬ P (k + 1)}.indicator F k| ≤ C := by
+
+theorem continuous_first_loss_wall_close (f : ℝ≥0 → ℝ) (hf : Continuous f)
+    (a : ℝ) (T : ℝ≥0) :
+    ∀ ε : ℝ, 0 < ε → ∃ δ : ℝ, 0 < δ ∧ ∀ t u : ℝ≥0,
+      t ≤ u → u ≤ T → (u : ℝ) - (t : ℝ) < δ →
+      (∀ s : ℝ≥0, s ≤ t → |f s| < a) →
+      ¬ (∀ s : ℝ≥0, s ≤ u → |f s| < a) → abs (abs (f u) - a) < ε := by
+
+theorem sine_first_loss_sums_bounded (a z H : ℝ) (ha : 0 < a) (hH : 0 < H) :
+    ∃ M : ℝ, 0 ≤ M ∧ ∀ (f : ℝ≥0 → ℝ) (N : ℕ) (τ : ℕ → ℝ≥0),
+      Monotone τ → ∀ R : ℕ → ℝ, (∀ k : ℕ, H ≤ R k) →
+      |∑ k ∈ Finset.range N,
+        {k : ℕ | (∀ s : ℝ≥0, s ≤ τ k → |f s| < a) ∧
+          ¬ (∀ s : ℝ≥0, s ≤ τ (k + 1) → |f s| < a)}.indicator
+          (fun k => mixedSineSeries 0 0 a z (R k) (f (τ (k + 1)))) k| ≤ M := by
+
+theorem sine_first_loss_sums_tendsto (f : ℝ≥0 → ℝ) (hf : Continuous f)
+    (a z H : ℝ) (ha : 0 < a) (hH : 0 < H) (T : ℝ≥0)
+    (N : ℕ → ℕ) (τ : ℕ → ℕ → ℝ≥0) (hτ : ∀ n : ℕ, Monotone (τ n))
+    (hT : ∀ n k : ℕ, k ≤ N n → τ n k ≤ T)
+    (R : ℕ → ℕ → ℝ) (hR : ∀ n k : ℕ, H ≤ R n k)
+    (hmesh : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, ∀ k ∈ Finset.range (N n),
+      (τ n (k + 1) : ℝ) - (τ n k : ℝ) < ε) :
+    Tendsto (fun n : ℕ => ∑ k ∈ Finset.range (N n),
+      {k : ℕ | (∀ s : ℝ≥0, s ≤ τ n k → |f s| < a) ∧
+        ¬ (∀ s : ℝ≥0, s ≤ τ n (k + 1) → |f s| < a)}.indicator
+        (fun k => mixedSineSeries 0 0 a z (R n k) (f (τ n (k + 1)))) k)
+      atTop (𝓝 0) := by
+
+end Shao.C2.SineFirstLossLimit

@@ -1,0 +1,43 @@
+import Shao.C2.IntervalImageInitialProfile
+import Shao.C2.IntervalImageSineIdentity
+
+noncomputable section
+namespace Shao.C2.IntervalSineInitialLimit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.IntervalSineSeries Shao.C2.IntervalSineNormalizedDerivatives
+open Shao.C2.IntervalReciprocalDerivatives Shao.C2.IntervalImageSineIdentity
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageInitialProfile
+open Shao.C2.BrownianKilledEndpointDensity
+
+private theorem normalizedSineCandidate_measurable (a z U : ℝ) (ha : 0 < a) (hU : 0 < U) :
+    Measurable (normalizedSineCandidate a z U) := by
+
+private theorem sine_gaussian_test_pointwise (a z w : ℝ) (ha : 0 < a) (hz : |z| < a)
+    (f : ℝ → ℝ) (hf : Continuous f) :
+    Tendsto (fun T : ℝ≥0 => (Icc (-a) a).indicator
+      (fun x => normalizedSineCandidate a z (T : ℝ) x * f x)
+      (z + Real.sqrt (T : ℝ) * w)) (𝓝[>] 0) (𝓝 (f z)) := by
+
+theorem sineSeries_action_standardGaussian (a z : ℝ) (ha : 0 < a) (hz : |z| ≤ a)
+    (T : ℝ≥0) (hT : T ≠ 0) (hsmall : (T : ℝ) ≤ a ^ 2)
+    (f : ℝ → ℝ) (hf : Measurable f) (M : ℝ) (hbound : ∀ x : ℝ, |f x| ≤ M) :
+    Integrable (fun x => mixedSineSeries 0 0 a z (T : ℝ) x * f x)
+      (volume.restrict (Icc (-a) a)) ∧
+    Integrable (fun w : ℝ => (Icc (-a) a).indicator
+      (fun x => normalizedSineCandidate a z (T : ℝ) x * f x)
+      (z + Real.sqrt (T : ℝ) * w)) (gaussianReal 0 1) ∧
+    (∀ w : ℝ, |(Icc (-a) a).indicator
+      (fun x => normalizedSineCandidate a z (T : ℝ) x * f x)
+      (z + Real.sqrt (T : ℝ) * w)| ≤ 17 * M) ∧
+    (∫ x in Icc (-a) a, mixedSineSeries 0 0 a z (T : ℝ) x * f x) =
+      ∫ w : ℝ, (Icc (-a) a).indicator
+        (fun x => normalizedSineCandidate a z (T : ℝ) x * f x)
+        (z + Real.sqrt (T : ℝ) * w) ∂(gaussianReal 0 1) := by
+
+theorem sineSeries_initial_limit (a z : ℝ) (ha : 0 < a) (hz : |z| < a)
+    (f : ℝ → ℝ) (hf : Continuous f) (hbound : ∃ M : ℝ, ∀ x : ℝ, |f x| ≤ M) :
+    Tendsto (fun T : ℝ≥0 => ∫ x in Icc (-a) a,
+      mixedSineSeries 0 0 a z (T : ℝ) x * f x) (𝓝[>] 0) (𝓝 (f z)) := by
+
+end Shao.C2.IntervalSineInitialLimit

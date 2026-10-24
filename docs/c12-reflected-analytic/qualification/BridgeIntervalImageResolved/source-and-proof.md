@@ -1,0 +1,9 @@
+# Unit142: resolve the actual interval image consumers
+
+Unit118 was explicitly conditional on the actual interval/image interface.141 now supplies that interface from actual Brownian law, positive-cutoff stopping and legitimate analytic approximate identity. This module instantiates each consumer with that actual theorem. All imports/context and4complete public heads,0private heads/values were frozen before implementation.
+
+The source completion at a closed new starting point equals the image candidate, retaining positive time and strict interior terminal endpoint. The spatial HasDerivAt conclusion holds at every strict interior starting point. The small source remainder bound uses the same explicit small-step b^2<=T/2 and closed new endpoint |y+b|<=a premises. Finally the full retained-remainder plus negative-overshoot bound holds for b^2<=T and the exact zero-remainder compatibility T-b^2=0->y+b=z. Every original numerical constant/profile/envelope and endpoint convention is inherited unchanged from qualified118.
+
+Each proof passes the exact universal interface fun U hU v hv => bridge_interval_eq_image B P hB a v U z ha hv hU hz to the appropriate qualified consumer. There is no new image, regularity or small-error oracle. The explicit step-domain hypothesis named hsmall is a geometric/time inequality, not the formerly unpaid analytic hSmall assumption. Author/reviewer independence remains required before qualification; a wrapper does not trigger re-review of unchanged old full proofs.
+
+Attempt001 kernel and all4actualowner recursive AX PASS:4public theorems0private/generated/values. Full freeze unchanged. Complete actual types and empty value export accompany the receipt. This resolves the retained actual interval budget interface; original C1/C2 root groups stay OPEN until all remaining source dependencies and assembly are qualified.

@@ -1,0 +1,33 @@
+import Shao.C2.IntervalSineGaussianAction
+
+noncomputable section
+namespace Shao.C2.BrownianSineMartingale
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology BigOperators
+open Shao.C2.BridgeDomination Shao.C2.IntervalSineTerms Shao.C2.IntervalSineSeries
+open Shao.C2.IntervalSpectralGaussian Shao.C2.IntervalSineGaussianAction
+open Shao.C2.BrownianPathWeakMarkov Shao.OQ4.PolygonalBrownianWeakLimit
+
+private theorem sineSeries_measurable_bounded (a z H : ℝ) (ha : 0 < a) (hH : 0 < H) :
+    Measurable (mixedSineSeries 0 0 a z H) ∧
+      ∃ M : ℝ, 0 ≤ M ∧ ∀ x : ℝ, |mixedSineSeries 0 0 a z H x| ≤ M := by
+
+theorem brownian_increment_past_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T S : ℝ≥0) :
+    HasLaw (fun ω => (B (T + S) ω - B T ω, brownianUnitPath B T ω))
+      ((gaussianReal 0 S).prod (brownianUnitPathLaw B T P)) P := by
+
+theorem brownian_sine_backward_weighted {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (T S : ℝ≥0) (F : C(BridgeTime, ℝ) → ℝ) (hF : Measurable F)
+    (hbound : ∃ M : ℝ, ∀ p, |F p| ≤ M) :
+    Integrable (fun ω => F (brownianUnitPath B T ω) *
+      mixedSineSeries 0 0 a z H (y + B (T + S) ω)) P ∧
+    Integrable (fun ω => F (brownianUnitPath B T ω) *
+      mixedSineSeries 0 0 a z (H + (S : ℝ)) (y + B T ω)) P ∧
+    (∫ ω, F (brownianUnitPath B T ω) * mixedSineSeries 0 0 a z H (y + B (T + S) ω) ∂P) =
+      ∫ ω, F (brownianUnitPath B T ω) * mixedSineSeries 0 0 a z (H + (S : ℝ)) (y + B T ω) ∂P := by
+
+end Shao.C2.BrownianSineMartingale

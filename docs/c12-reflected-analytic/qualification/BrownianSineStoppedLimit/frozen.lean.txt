@@ -1,0 +1,56 @@
+import Shao.C2.SineFirstLossLimit
+
+noncomputable section
+namespace Shao.C2.BrownianSineStoppedLimit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology BigOperators
+open Shao.C2.IntervalSineSeries Shao.C2.SineFirstLossLimit
+open Shao.C2.BrownianSineMartingale Shao.C2.BrownianSineStoppedMesh
+open Shao.C2.BrownianKilledKernel Shao.C2.BrownianKilledAction
+
+def sineFirstLossTerm (f : ℝ≥0 → ℝ) (a z H : ℝ) (δ : ℝ≥0) (N k : ℕ) : ℝ :=
+  {j : ℕ | (∀ s : ℝ≥0, s ≤ (j : ℝ≥0) * δ → |f s| < a) ∧
+    ¬ (∀ s : ℝ≥0, s ≤ ((j + 1 : ℕ) : ℝ≥0) * δ → |f s| < a)}.indicator
+    (fun j => mixedSineSeries 0 0 a z (H + ((N - (j + 1) : ℕ) : ℝ) * (δ : ℝ))
+      (f (((j + 1 : ℕ) : ℝ≥0) * δ))) k
+
+private theorem brownian_sine_endpoint_integrable {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H) (t : ℝ≥0) :
+    Integrable (fun ω => mixedSineSeries 0 0 a z H (y + B t ω)) P := by
+
+private theorem brownian_sine_loss_term_integrable {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (δ : ℝ≥0) (N k : ℕ) :
+    Integrable (fun ω => sineFirstLossTerm (fun s => y + B s ω) a z H δ N k) P := by
+
+private theorem uniform_mesh_width_tendsto (T : ℝ≥0) :
+    Tendsto (fun n : ℕ => ((T / ((n + 1 : ℕ) : ℝ≥0) : ℝ≥0) : ℝ)) atTop (𝓝 0) := by
+
+theorem brownian_sine_first_loss_error_tendsto {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H) (T : ℝ≥0) :
+    Tendsto (fun n : ℕ => ∫ ω,
+      ∑ k ∈ Finset.range (n + 1), sineFirstLossTerm (fun s => y + B s ω)
+        a z H (T / ((n + 1 : ℕ) : ℝ≥0)) (n + 1) k ∂P) atTop (𝓝 0) := by
+
+theorem brownian_sine_survival_action {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (hy : |y| < a) (T : ℝ≥0) :
+    Integrable (fun ω => mixedSineSeries 0 0 a z H (y + B T ω))
+      (P.restrict {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a}) ∧
+    (∫ ω in {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a},
+      mixedSineSeries 0 0 a z H (y + B T ω) ∂P) =
+        mixedSineSeries 0 0 a z (H + (T : ℝ)) y := by
+
+theorem actualIntervalKernel_sine_action {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z H y : ℝ) (ha : 0 < a) (hH : 0 < H)
+    (hy : |y| < a) (T : ℝ≥0) (hT : T ≠ 0) :
+    Integrable (mixedSineSeries 0 0 a z H) (actualIntervalKernel B P a T y) ∧
+    (∫ x : ℝ, mixedSineSeries 0 0 a z H x ∂actualIntervalKernel B P a T y) =
+      mixedSineSeries 0 0 a z (H + (T : ℝ)) y := by
+
+end Shao.C2.BrownianSineStoppedLimit
