@@ -1,0 +1,11 @@
+# Genuine compensated Lagrange remainder for the analytic image candidate
+
+Original read-only supplement.tex4192–4398, especially4298–4315; wholefileSHA b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd. All3 completeheads/imports/context, no new values, frozen before implementation.
+
+With positive wall/time, closed terminal endpoint, interior initial and new endpoints, and b²≤T/2, every point on the closed reveal segment has positive energy and interior start. Existing source-bound segment interior theorem plus endpoint equality handles the entire closed parameter interval. Genuine C3 at each point from113 yields C3 on the segment.
+
+Pinned classical Mathlib Lagrange Taylor at order2 produces a theta in the open unit interval. The true ordinary derivatives at0 agree with within-interval derivatives only at orders0/1/2, using genuine C3 at0 and unique differentiability of the interval. True first and second reveal derivatives and explicit third derivative are identified using112/76, while113 pays the PDE compensation. Thus F(T-b²,y+b)-F(T,y)-(b-b²(z-y)/T) deriv_yF equals pathThird(theta)/6-b³M11+b⁴M02/2. All signs and coefficients match the original reveal path; no differentiability premise is substituted for proof.
+
+Kernel001 only failed to normalize Taylor polynomial because the conditional iterated-derivative rewrite no longer matched after uIcc normalization. Proof-only explicit finite sum expansion then bounded-order rewrites gives kernel002 PASS; all3 heads/context unchanged. Full sources/logs retained. All3 actual owned constants are publictheorems, recursive collectAxioms whitelist propext/Classical.choice/Quot.sound, no non-theorem values. Existing cached-checkout and harmless unreachable ring style warnings preserved. CPU14–17/c12-heavy.lock, native-M8192/-j4, fixedpins, no oldproducercompile/sharedcachewrite.
+
+This is an exact analytic remainder representation with interior new endpoint. It does not prove the quantitative Gaussian bound or the closed-wall limit. Actual Brownian interval probability versus analytic image/killed-kernel identification, actual hSmall and original roots remain OPEN. No claim of C3 beyond the wall, no source assumption changed; classical attribution and p54 repairs preserved. Independent final complete review pending.

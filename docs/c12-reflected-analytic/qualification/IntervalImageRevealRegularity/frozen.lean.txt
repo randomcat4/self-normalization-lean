@@ -1,0 +1,38 @@
+import Shao.C2.IntervalImageRevealDerivatives
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+
+noncomputable section
+namespace Shao.C2.IntervalImageRevealRegularity
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageLocalRegularity Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageRevealDerivatives Shao.C2.IntervalImageJointDerivatives
+
+private theorem contDiffOn_succ_of_hasDerivAt (n : ℕ) (f g : ℝ → ℝ) (s : Set ℝ)
+    (hs : IsOpen s) (hd : ∀ x ∈ s, HasDerivAt f (g x) x) (hg : ContDiffOn ℝ n g s) :
+    ContDiffOn ℝ (n + 1 : ℕ) f s := by
+
+theorem pathThird_continuousAt (a z T y b θ : ℝ) (ha : 0 < a) (hz : |z| ≤ a)
+    (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    ContinuousAt (pathThird a z T y b) θ := by
+
+theorem intervalImageCandidate_path_contDiffAt_three (a z T y b θ : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < T - θ * b ^ 2) (hy : |y + θ * b| < a) :
+    ContDiffAt ℝ (3 : ℕ)
+      (fun t : ℝ => intervalImageCandidate a z (T - t * b ^ 2) (y + t * b)) θ := by
+
+theorem mixedImageCandidate_base_PDE (a z T y : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    mixedImageCandidate 0 1 a z T y =
+      (1 / 2 : ℝ) * mixedImageCandidate 2 0 a z T y +
+        (z - y) / T * mixedImageCandidate 1 0 a z T y := by
+
+theorem compensated_second_taylor_identity (a z T y b : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    pathFirst a z T y b 0 + (1 / 2 : ℝ) * pathSecond a z T y b 0 -
+      (b - b ^ 2 * (z - y) / T) * mixedImageCandidate 1 0 a z T y =
+      -b ^ 3 * mixedImageCandidate 1 1 a z T y +
+        (1 / 2 : ℝ) * b ^ 4 * mixedImageCandidate 0 2 a z T y := by
+
+end Shao.C2.IntervalImageRevealRegularity

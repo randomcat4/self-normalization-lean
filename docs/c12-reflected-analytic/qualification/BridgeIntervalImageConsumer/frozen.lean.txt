@@ -1,0 +1,59 @@
+import Shao.C2.IntervalImageWallLimit
+import Shao.C2.IntervalImageWallValues
+import Shao.C2.BridgeIntervalActualBounds
+import Shao.C2.IntervalGaussianLocal
+
+noncomputable section
+namespace Shao.C2.BridgeIntervalImageConsumer
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.SourceIntervalCompletion Shao.C2.ActualIntervalProjection
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageWallValues
+open Shao.C2.IntervalImageRevealBounds Shao.C2.IntervalImageWallLimit
+open Shao.C2.IntervalGaussianLocal Shao.C2.IntervalGaussianLargeStep
+
+theorem sourceIntervalCompletion_eq_image_of_interior (ν : Measure BridgeNoise)
+    (a z S w : ℝ) (ha : 0 < a) (hz : |z| ≤ a) (hS : 0 < S) (hw : |w| ≤ a)
+    (hImage : ∀ U : ℝ, 0 < U → ∀ v : ℝ, |v| < a →
+      intervalCompletion ν a v U z = intervalImageCandidate a z U v) :
+    sourceIntervalCompletion ν a w S z = intervalImageCandidate a z S w := by
+
+theorem sourceIntervalCompletion_spatial_hasDerivAt_of_image (ν : Measure BridgeNoise)
+    (a y T z : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a) (hT : 0 < T)
+    (hImage : ∀ U : ℝ, 0 < U → ∀ v : ℝ, |v| < a →
+      intervalCompletion ν a v U z = intervalImageCandidate a z U v) :
+    HasDerivAt (fun w => sourceIntervalCompletion ν a w T z)
+      (deriv (intervalImageCandidate a z T) y) y := by
+
+theorem sourceRemainder_eq_image_of_interior (ν : Measure BridgeNoise)
+    (a y T z b : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a) (hT : 0 < T)
+    (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a)
+    (hImage : ∀ U : ℝ, 0 < U → ∀ v : ℝ, |v| < a →
+      intervalCompletion ν a v U z = intervalImageCandidate a z U v) :
+    sourceRemainder ν a y T z b =
+      intervalImageCandidate a z (T - b ^ 2) (y + b) - intervalImageCandidate a z T y -
+        (b - b ^ 2 * (z - y) / T) * deriv (intervalImageCandidate a z T) y := by
+
+theorem sourceRemainder_small_bound_of_image (ν : Measure BridgeNoise)
+    (a y T z b : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| ≤ a) (hT : 0 < T)
+    (hsmall : b ^ 2 ≤ T / 2) (hnew : |y + b| ≤ a)
+    (hImage : ∀ U : ℝ, 0 < U → ∀ v : ℝ, |v| < a →
+      intervalCompletion ν a v U z = intervalImageCandidate a z U v) :
+    |sourceRemainder ν a y T z b| ≤
+      compensatedProfileConstant * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalIncrementProfile a y T z b := by
+
+theorem actual_interval_retained_bound_of_image
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (a y T z b : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hb : b ^ 2 ≤ T) (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hImage : ∀ U : ℝ, 0 < U → ∀ v : ℝ, |v| < a →
+      intervalCompletion (bridgeLaw B P) a v U z = intervalImageCandidate a z U v) :
+    |retainedRemainder (bridgeLaw B P) a y T z b| + negativeOvershoot (bridgeLaw B P) a y T z b ≤
+      (2 * compensatedProfileConstant + 40) * (|b| / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 * intervalEnvelope a y T z b := by
+
+end Shao.C2.BridgeIntervalImageConsumer
