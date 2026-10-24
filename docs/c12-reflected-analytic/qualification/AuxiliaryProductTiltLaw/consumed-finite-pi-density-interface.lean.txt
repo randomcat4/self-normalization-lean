@@ -1,0 +1,21 @@
+import Shao.OQ4.EnergyLinearTiltCentering
+import Shao.OQ4.KilledPathLaw
+import Shao.Probability.FiniteIID
+import Mathlib.MeasureTheory.Integral.Pi
+
+/-! The actual energy-tilted finite path identity, including empty paths. -/
+
+namespace Shao.OQ4
+
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators
+
+set_option backward.isDefEq.respectTransparency false
+
+theorem finitePi_withDensity (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (d : ℝ → ENNReal) (hd : Measurable d) [IsProbabilityMeasure (ν.withDensity d)]
+    (n : ℕ) :
+    Measure.pi (fun _ : Fin n => ν.withDensity d) =
+      (Measure.pi (fun _ : Fin n => ν)).withDensity (fun a => ∏ i, d (a i)) := by
+
+end Shao.OQ4

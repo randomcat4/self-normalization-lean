@@ -29,7 +29,13 @@ import Shao.C2.AuxiliaryEnergyMoments
 import Shao.C2.AuxiliaryEnergyTilt
 import Shao.C2.AuxiliaryLowEnergyGaussian
 import Shao.C2.AuxiliaryMarkedDeletion
+import Shao.C2.AuxiliaryOriginalCutoffRare
 import Shao.C2.AuxiliaryOwnC1Budget
+import Shao.C2.AuxiliaryProductC1Endpoint
+import Shao.C2.AuxiliaryProductTiltLaw
+import Shao.C2.AuxiliaryRareLaplace
+import Shao.C2.AuxiliaryRareTiltProbability
+import Shao.C2.AuxiliarySourceCutoffPayment
 import Shao.C2.AuxiliarySourceEvent
 import Shao.C2.AuxiliarySourceGaussian
 import Shao.C2.AuxiliarySourceParameters
@@ -623,6 +629,8 @@ import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ5.P53.SparseSourceWindows
 import Shao.OQ6.ActualMomentNormalization
 import Shao.OQ6.ActualPhysicalCompactCDF
+import Shao.OQ6.ActualPhysicalCompactRelative
+import Shao.OQ6.ActualPhysicalSignedCompact
 import Shao.OQ6.ActualQuadraticTiltMoments
 import Shao.OQ6.ActualRemainderEnvelope
 import Shao.OQ6.ActualUncenteredCompactCDF
@@ -656,6 +664,7 @@ import Shao.OQ6.ResidualDeletion
 import Shao.OQ6.ResidualDeletionMeasurable
 import Shao.OQ6.ResidualRowExpansion
 import Shao.OQ6.ScalarObservationCoding
+import Shao.OQ6.SignedCompactCDFBounds
 import Shao.OQ6.SourceAnalyticCost
 import Shao.OQ6.UntiltedCompactCost
 import Shao.OQ6.UntiltedCompactCostFoundation
