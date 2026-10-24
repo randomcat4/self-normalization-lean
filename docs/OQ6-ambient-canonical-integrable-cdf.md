@@ -1,0 +1,9 @@
+# AmbientCanonicalIntegrableCDF — exact-source qualified scope
+
+The two conditional closed-CDF bounds use the qualified canonical augmentation and normalized compact assembly on the original law. One uniform C and ordinary scalar CDF input precede the law, n and z. The literal original compact cost is retained and the original arbitrary measurable zero convention is paid p0 exactly once. Genuine full/every-deleted test integrability precedes cost transport. Pointwise envelope restrictions and unweighted L1 remain assumptions; unit161 is not a proof dependency.
+
+Source SHA256 7e1580b7c0a9a22fbd17f8ea974ad665a7c9f019531d83a330afe3209b888bf1; object SHA256 e0e48ee360e6f0f68998e00ea691d92240897a5bb3506c92eba7f033f2e24205; original import-only all-owned audit receipt SHA256 31542eba21b262f40ab26773ca3b18b1275d14fc0a5d434f0fa4143c626b897e. The adjacent qualification binds the original exit-zero kernel, full independent source-to-statement/proof review and complete actual type/value coverage. Derived inventory: 2 actual types, 304 literal type lines, zero non-theorem full values, 6 recursive axiom occurrences, all within propext, Classical.choice, Quot.sound. Retained warnings, strict-wrapper false flags and known Lake notice are visible; no successful check was replayed.
+
+The external Shao–Zhou probability engines remain ordinary supplied Prop hypotheses with unpaid proofs and existence. Weighted almost-everywhere162/166 extensions, distinct compact tail/reflection/parameter consumers, physical147 conversion, p54 actual G intersect C_n and repaired uniform conditional moments/concentration/rates, relative Gaussian-tail assembly and original root closure are separate obligations. OQ56/C12 remain OPEN; OQ3 is user-paused; root v81 separately accepted limited OQ4 scope and external attribution are preserved.
+
+Stacked on PR #317 immutable head55042200bb7318fe2d1c18fa2134701d3cac731d. Root alone retargets and integrates; no lane merge.
