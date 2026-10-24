@@ -1,0 +1,93 @@
+/- Frozen by successor OQ4 lead before implementation, 2026-10-24.
+   One definition, six theorems; no private heads or instances.
+   Body-local have/let permitted. All public/private top-level amendments
+   require the lead to freeze their complete types/values before writing.
+   No proof credit is claimed by this interface-only artifact. -/
+import Shao.OQ4.SparseOriginalIIDTransport
+import Shao.OQ4.RademacherS5Assembly
+
+set_option autoImplicit false
+
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.RademacherOriginalIIDTransport
+
+variable {ΩX : Type uX} [MeasurableSpace ΩX]
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+def sourceRatio
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (c : ℝ) (n : ℕ) : ℝ :=
+  μ.real (OriginalIIDWindow.sourceEvent n X
+    (c * Real.rpow (n : ℝ) (-((1 : ℝ) / 6)))) /
+    Shao.Probability.BrownianSup.probability B P hB
+      (c * Real.rpow (n : ℝ) (-((1 : ℝ) / 6)))
+
+theorem sourcePath_identDistrib
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) :
+    IdentDistrib (OriginalIIDWindow.sourcePath n X)
+      (id : Shao.Path n → Shao.Path n) μ (RademacherS5Assembly.pathLaw n)
+
+theorem source_probability_eq_product
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (s : ℝ) :
+    μ.real (OriginalIIDWindow.sourceEvent n X s) =
+      (RademacherS5Assembly.pathLaw n).real
+        (RademacherS5Assembly.selfNormalizedEvent n s)
+
+theorem source_ratio_eventually_eq
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (c : ℝ) (hc : 0 < c) :
+    sourceRatio B P hB μ X c =ᶠ[atTop] RademacherS5Assembly.Q B P hB c
+
+theorem original_critical_phase
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (c : ℝ) (hc : 0 < c) :
+    Tendsto (fun n : ℕ => Real.log (sourceRatio B P hB μ X c n) -
+      RademacherCriticalPhase.exponent c n) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun n : ℕ => sourceRatio B P hB μ X c n /
+      RademacherCriticalPhase.factor c n) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun n : ℕ => sourceRatio B P hB μ X c n -
+      RademacherCriticalPhase.factor c n) atTop (𝓝 (0 : ℝ))
+
+theorem original_critical_cluster
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (c : ℝ) (hc : 0 < c) :
+    RademacherCriticalPhase.Cluster (sourceRatio B P hB μ X c) =
+      Set.Icc (1 : ℝ) (Real.exp (Real.pi ^ 2 / (4 * c ^ 3))) ∧
+    (¬ ∃ L : ℝ, Tendsto (sourceRatio B P hB μ X c) atTop (𝓝 L))
+
+theorem original_cube_limits
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) :
+    Tendsto (fun j : ℕ => sourceRatio B P hB μ X 1 ((j + 1) ^ 3))
+      atTop (𝓝 (Real.exp (Real.pi ^ 2 / 4))) ∧
+    Tendsto (fun j : ℕ => sourceRatio B P hB μ X 1 ((j + 2) ^ 3 - 1))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RademacherOriginalIIDTransport

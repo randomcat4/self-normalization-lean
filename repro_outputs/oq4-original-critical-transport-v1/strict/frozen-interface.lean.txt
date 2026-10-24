@@ -1,0 +1,75 @@
+/- Exact lead freeze before implementation: 2 definitions, 3 theorems.
+   Body-local have/let permitted; no other top-level declaration.
+   Original source: oq4/c01/spectrum01.md section 4. -/
+import Shao.OQ4.RademacherOriginalIIDTransport
+import Shao.OQ4.RademacherStrictCube
+
+set_option autoImplicit false
+
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.RademacherOriginalStrictBoundary
+variable {ΩX : Type uX} [MeasurableSpace ΩX]
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+def sourceStrictEvent (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) : Set ΩX :=
+  {ω | ∀ k : ℕ, 1 ≤ k → k ≤ n →
+    |∑ i ∈ Finset.range k, X (i + 1) ω| <
+      s * Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)}
+
+def sourceStrictRatio
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (μ : Measure ΩX) (X : ℕ → ΩX → ℝ)
+    (j : ℕ) : ℝ :=
+  μ.real (sourceStrictEvent (RademacherStrictCube.n j) X
+    (RademacherStrictCube.x j)) /
+    Shao.Probability.BrownianSup.probability B P hB (RademacherStrictCube.x j)
+
+theorem source_strict_pullback (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) :
+    sourceStrictEvent n X s = OriginalIIDWindow.sourcePath n X ⁻¹'
+      RademacherStrictCube.strictSelfNormalizedEvent n s ∧
+    sourceStrictEvent 0 X s = Set.univ
+
+theorem source_strict_probability
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (s : ℝ) :
+    μ.real (sourceStrictEvent n X s) =
+      (RademacherS5Assembly.pathLaw n).real
+        (RademacherStrictCube.strictSelfNormalizedEvent n s)
+
+theorem original_strict_cube_comparison
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) :
+    Tendsto (sourceStrictRatio B P hB μ X) atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun j : ℕ => Real.log (sourceStrictRatio B P hB μ X j))
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun j : ℕ => RademacherOriginalIIDTransport.sourceRatio B P hB μ X 1
+      (RademacherStrictCube.n j)) atTop (𝓝 (Real.exp (Real.pi ^ 2 / 4))) ∧
+    Tendsto (fun j : ℕ =>
+      μ.real (OriginalIIDWindow.sourceEvent (RademacherStrictCube.n j) X
+        (RademacherStrictCube.x j)) /
+      μ.real (sourceStrictEvent (RademacherStrictCube.n j) X
+        (RademacherStrictCube.x j)))
+      atTop (𝓝 (Real.exp (Real.pi ^ 2 / 4))) ∧
+    Tendsto (fun j : ℕ =>
+      Real.log (μ.real (OriginalIIDWindow.sourceEvent (RademacherStrictCube.n j) X
+        (RademacherStrictCube.x j))) -
+      Real.log (μ.real (sourceStrictEvent (RademacherStrictCube.n j) X
+        (RademacherStrictCube.x j)))) atTop (𝓝 (Real.pi ^ 2 / 4)) ∧
+    Tendsto (fun j : ℕ => Real.log (sourceStrictRatio B P hB μ X j) /
+      RademacherStrictCube.mainRate j) atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun j : ℕ =>
+      Real.log (RademacherOriginalIIDTransport.sourceRatio B P hB μ X 1
+        (RademacherStrictCube.n j)) / RademacherStrictCube.mainRate j)
+      atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.RademacherOriginalStrictBoundary
