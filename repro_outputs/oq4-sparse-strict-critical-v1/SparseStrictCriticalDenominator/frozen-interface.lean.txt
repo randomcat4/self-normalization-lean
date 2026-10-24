@@ -1,0 +1,218 @@
+import Shao.OQ4.SparseCriticalDenominator
+import Shao.OQ4.RademacherStrictWeakBoundary
+
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+universe u
+
+namespace Shao.OQ4.SparseStrictCriticalDenominator
+
+-- Positive prefixes, including vacuous events at time zero.
+-- The qualified transparent V appearing here is sqrt(Shao.energy a).
+def selfEvent (n : ℕ) (s : ℝ) : Set (Shao.Path n) :=
+  RademacherStrictCube.strictSelfNormalizedEvent n s
+
+def detEvent (n : ℕ) (s : ℝ) : Set (Shao.Path n) :=
+  RademacherStrictCube.strictEvent n (s * Real.sqrt (n : ℝ))
+
+def randomRatio {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (m : ℕ) : ℝ :=
+  (SparseCriticalDenominator.pathLaw (SparseCriticalDenominator.time m)).real
+      (selfEvent (SparseCriticalDenominator.time m)
+        (SparseCriticalDenominator.criticalX m)) /
+    SparseCriticalDenominator.baseline B P hB m
+
+def detRatio {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (m : ℕ) : ℝ :=
+  (SparseCriticalDenominator.pathLaw (SparseCriticalDenominator.time m)).real
+      (detEvent (SparseCriticalDenominator.time m)
+        (SparseCriticalDenominator.criticalX m)) /
+    SparseCriticalDenominator.baseline B P hB m
+
+private def lowMass (m : ℕ) : ℝ :=
+  ∑ k ∈ (Finset.range (SparseCriticalDenominator.time m + 1)).filter
+      (fun k : ℕ => k < m ^ 3),
+    SparseCriticalDenominator.weight (SparseCriticalDenominator.time m) k
+
+-- integerIndicator has the qualified transparent value 1 at integers and 0
+-- elsewhere. This avoids introducing a new noncomputable filter definition.
+private def integerHitMass (m : ℕ) : ℝ :=
+  ∑ k ∈ Finset.range (SparseCriticalDenominator.time m + 1),
+    SparseCriticalDenominator.weight (SparseCriticalDenominator.time m) k *
+      RademacherStrictWeakBoundary.integerIndicator
+        (SparseCriticalDenominator.randomHeight m k)
+
+private def detTilt (m k : ℕ) : ℝ :=
+  Real.exp (-(Real.pi ^ 2 / 8) *
+    ((k : ℝ) - (SparseCriticalDenominator.meanIndex m : ℝ)) / (m : ℝ) ^ 2)
+
+private def tiltMoment (m : ℕ) : ℝ :=
+  ∑ k ∈ Finset.range (SparseCriticalDenominator.time m + 1),
+    SparseCriticalDenominator.weight (SparseCriticalDenominator.time m) k *
+      detTilt m k
+
+theorem measurable_events (n : ℕ) (s : ℝ) :
+    MeasurableSet (selfEvent n s) ∧ MeasurableSet (detEvent n s)
+
+theorem zero_time_events (s : ℝ) :
+    selfEvent 0 s = Set.univ ∧ detEvent 0 s = Set.univ
+
+theorem actual_event_bridges (n : ℕ) (hn : 0 < n)
+    (s : ℝ) (a : Shao.Path n) :
+    (a ∈ selfEvent n s ↔
+      Shao.absMax a hn < s * Real.sqrt (Shao.energy a)) ∧
+    (a ∈ detEvent n s ↔
+      Shao.absMax a hn < s * Real.sqrt (n : ℝ)) ∧
+    (Shao.energy a = 0 →
+      a ∉ selfEvent n s ∧ (0 < s → a ∈ detEvent n s))
+
+private theorem ae_even_prefixes (n : ℕ) :
+    ∀ᵐ a : Shao.Path n ∂SparseCriticalDenominator.pathLaw n,
+      ∀ j : ℕ, j ≤ n → ∃ z : ℤ, Shao.prefixSum a j = 2 * (z : ℝ)
+
+theorem zero_energy_mass (n : ℕ) :
+    (SparseCriticalDenominator.pathLaw n).real
+        {a : Shao.Path n | Shao.energy a = 0} =
+      SparseCriticalDenominator.weight n 0 ∧
+    SparseCriticalDenominator.weight n 0 = (3 / 4 : ℝ) ^ n
+
+theorem strict_conditional_strip_mass (n k : ℕ) (hk : k ≤ n)
+    (h : ℝ) (hh : 0 < h) :
+    (SparseCriticalDenominator.pathLaw n).real
+      ({a : Shao.Path n | SparseCriticalDenominator.count a = k} ∩
+        RademacherStrictCube.strictEvent n (2 * h)) =
+      SparseCriticalDenominator.weight n k * RademacherStrictCube.strictP k h
+
+-- Positive n and positive s are deliberate. The self formula explicitly
+-- subtracts the compressed time-zero term, which is not the original event.
+theorem exact_mixtures (n : ℕ) (hn : 0 < n) (s : ℝ) (hs : 0 < s) :
+    (SparseCriticalDenominator.pathLaw n).real (selfEvent n s) =
+      (∑ k ∈ Finset.range (n + 1),
+        SparseCriticalDenominator.weight n k *
+          RademacherStrictCube.strictP k (s * Real.sqrt (k : ℝ))) -
+        SparseCriticalDenominator.weight n 0 ∧
+    (SparseCriticalDenominator.pathLaw n).real (detEvent n s) =
+      (∑ k ∈ Finset.range (n + 1),
+        SparseCriticalDenominator.weight n k *
+          RademacherStrictCube.strictP k (s * Real.sqrt (n : ℝ) / 2))
+
+private theorem rade_comparison (n : ℕ) (h : ℝ) (hh : 0 ≤ h) :
+    0 ≤ RademacherStrictCube.strictP n h ∧
+    RademacherStrictCube.strictP n h ≤ RademacherS4Assembly.p n h ∧
+    RademacherS4Assembly.p n h ≤ 1 ∧
+    ((∀ z : ℤ, h ≠ (z : ℝ)) →
+      RademacherStrictCube.strictP n h = RademacherS4Assembly.p n h)
+
+private theorem weight_successor (n k : ℕ) (hk : k < n) :
+    (3 * ((k : ℝ) + 1)) * SparseCriticalDenominator.weight n (k + 1) =
+      ((n : ℝ) - (k : ℝ)) * SparseCriticalDenominator.weight n k
+
+private theorem central_adjacent_lower (m : ℕ) (hm : 2 ≤ m)
+    (r : ℕ) (hr : r ≤ m) :
+    (1 - (r : ℝ) / (2 * (m : ℝ))) *
+        SparseCriticalDenominator.weight (SparseCriticalDenominator.time m)
+          (SparseCriticalDenominator.meanIndex m) ≤
+      SparseCriticalDenominator.weight (SparseCriticalDenominator.time m)
+        (SparseCriticalDenominator.meanIndex m + r)
+
+private theorem central_atom_bound (m : ℕ) (hm : 2 ≤ m) :
+    SparseCriticalDenominator.weight (SparseCriticalDenominator.time m)
+        (SparseCriticalDenominator.meanIndex m) ≤
+      2 / ((m : ℝ) + 1)
+
+private theorem integer_height_iff (m : ℕ) (hm : 1 ≤ m) (k : ℕ) :
+    (∃ z : ℤ, SparseCriticalDenominator.randomHeight m k = (z : ℝ)) ↔
+      ∃ j : ℕ, k = 2 * m * j ^ 2
+
+private theorem integer_height_separation (m : ℕ) (hm : 1 ≤ m)
+    (k : ℕ)
+    (hhit : ∃ z : ℤ, SparseCriticalDenominator.randomHeight m k = (z : ℝ))
+    (hne : k ≠ SparseCriticalDenominator.meanIndex m) :
+    2 * (m : ℝ) ^ 2 ≤
+      |(k : ℝ) - (SparseCriticalDenominator.meanIndex m : ℝ)|
+
+private theorem integer_hit_mass_bound (m : ℕ) (hm : 2 ≤ m) :
+    0 ≤ integerHitMass m ∧
+    integerHitMass m ≤ 2 / ((m : ℝ) + 1) + 3 / (8 * (m : ℝ))
+
+private theorem brownian_baseline_lower {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∃ J : ℕ, 1 ≤ J ∧ ∀ m : ℕ, J ≤ m →
+      (2 / Real.pi) * Real.exp (-(Real.pi ^ 2 / 4) * (m : ℝ)) ≤
+        SparseCriticalDenominator.baseline B P hB m ∧
+      0 < SparseCriticalDenominator.baseline B P hB m
+
+private theorem rare_payments {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (fun m : ℕ =>
+      lowMass m / SparseCriticalDenominator.baseline B P hB m)
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun m : ℕ =>
+      SparseCriticalDenominator.weight (SparseCriticalDenominator.time m) 0 /
+        SparseCriticalDenominator.baseline B P hB m)
+      atTop (𝓝 (0 : ℝ))
+
+private theorem uniform_random_bound {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∃ J : ℕ, 1 ≤ J ∧ ∀ m : ℕ, J ≤ m →
+      ∀ k : ℕ, m ^ 3 ≤ k → k ≤ SparseCriticalDenominator.time m →
+        0 < SparseCriticalDenominator.baseline B P hB m ∧
+        RademacherS4Assembly.p k (SparseCriticalDenominator.randomHeight m k) /
+            SparseCriticalDenominator.baseline B P hB m ≤
+          Real.exp (1 + (Real.pi ^ 2 / 2) * Real.sqrt 2)
+
+private theorem random_boundary_payment {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (fun m : ℕ =>
+      SparseCriticalDenominator.randomRatio B P hB m - randomRatio B P hB m)
+      atTop (𝓝 (0 : ℝ))
+
+private theorem uniform_integer_boundary :
+    ∀ ε : ℝ, 0 < ε → ∃ J : ℕ, 1 ≤ J ∧
+      ∀ m : ℕ, J ≤ m →
+        ∀ k : ℕ, m ^ 3 ≤ k → k ≤ SparseCriticalDenominator.time m →
+          0 < RademacherS4Assembly.p k (m : ℝ) ∧
+          0 < RademacherStrictCube.strictP k (m : ℝ) ∧
+          |Real.log (RademacherS4Assembly.p k (m : ℝ) /
+              RademacherStrictCube.strictP k (m : ℝ)) -
+            (Real.pi ^ 2 / 4) * ((k : ℝ) / (m : ℝ) ^ 3)| < ε
+
+private theorem uniform_det_strict_log {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ ε : ℝ, 0 < ε → ∃ J : ℕ, 1 ≤ J ∧
+      ∀ m : ℕ, J ≤ m →
+        ∀ k : ℕ, m ^ 3 ≤ k → k ≤ SparseCriticalDenominator.time m →
+          0 < SparseCriticalDenominator.baseline B P hB m ∧
+          0 < RademacherStrictCube.strictP k (m : ℝ) ∧
+          |Real.log (RademacherStrictCube.strictP k (m : ℝ) /
+              SparseCriticalDenominator.baseline B P hB m) +
+            (Real.pi ^ 2 / 8) *
+              ((k : ℝ) - (SparseCriticalDenominator.meanIndex m : ℝ)) /
+                (m : ℝ) ^ 2| < ε
+
+private theorem tilt_payments :
+    Tendsto tiltMoment atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun m : ℕ =>
+      ∑ k ∈ (Finset.range (SparseCriticalDenominator.time m + 1)).filter
+          (fun k : ℕ => k < m ^ 3),
+        SparseCriticalDenominator.weight (SparseCriticalDenominator.time m) k *
+          detTilt m k) atTop (𝓝 (0 : ℝ))
+
+theorem critical_limits {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (randomRatio B P hB) atTop
+      (𝓝 ((1 + Real.exp (Real.pi ^ 2 / 2)) / 2)) ∧
+    Tendsto (detRatio B P hB) atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.SparseStrictCriticalDenominator
