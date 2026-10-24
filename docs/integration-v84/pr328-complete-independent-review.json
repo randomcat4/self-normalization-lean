@@ -1,0 +1,2224 @@
+{
+  "schema": "independent-complete-final-review-v1",
+  "status": "CORRECT",
+  "completedUTC": "2026-10-24T19:18:18.834679+00:00",
+  "reviewer": "/root/original_large_threshold_final_review",
+  "author": "/root/permutation_reveal_candidate",
+  "freshNonAuthorContext": true,
+  "authorReviewerSeparationPreserved": true,
+  "configuredModel": "gpt-6.1-sol",
+  "configuredEffort": "xhigh",
+  "actualTelemetry": {
+    "model": null,
+    "effort": null,
+    "input": null,
+    "cached_input": null,
+    "output": null,
+    "reasoning_subset": null
+  },
+  "module": "Shao.Probability.SourceOriginalLargeThreshold",
+  "source": {
+    "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\SourceOriginalLargeThreshold.lean",
+    "bytes": 38083,
+    "lines": 710,
+    "sha256": "13d3917b95fec82a10505f44b18832d20601ebd55e4713675a83061d15ec59cc",
+    "entireSourceReadVerbatim": true,
+    "UTF8NoBOM": true,
+    "LFonly": true,
+    "forbiddenTokens": []
+  },
+  "publication": {
+    "head": "bce03ca3d890ff2812a1b397afb3c6476913221e",
+    "tree": "22dcf8929c69129d5448f55afe99f04d20d38027",
+    "blob": "a8af38c23be89c7892a95b645b7b3fc151025743",
+    "sourceSHA256": "13d3917b95fec82a10505f44b18832d20601ebd55e4713675a83061d15ec59cc",
+    "branch": "author/common-original-large-threshold-v83",
+    "status": "",
+    "parent": "bd239fdb740a5b2c713d03f71e683309a5ddb069",
+    "diff": "A\tShao/Probability/SourceOriginalLargeThreshold.lean",
+    "pr": 328,
+    "url": "https://github.com/randomcat4/shao-lean/pull/328",
+    "onlyChangedSource": "Shao/Probability/SourceOriginalLargeThreshold.lean",
+    "mergePerformed": false,
+    "savedAPIFilesHashBound": true
+  },
+  "completeExactDeclarations": [
+    "private theorem olt_deterministic_double_crossing\n    (nu : Measure ℝ) [IsProbabilityMeasure nu]\n    (n : ℕ) (hn : 0 < n) (b a lam : ℝ)\n    (hb : 0 ≤ b) (ha : 0 < a) (hlam : 0 ≤ lam)\n    (hsupport : ∀ᵐ z : ℝ ∂nu, |z| ≤ b)\n    (hlamb : lam * b ≤ 1)\n    (hmean : (∫ z : ℝ, z ∂nu) = 0)\n    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1) :\n    let beta : ℝ := (n : ℝ) * (∫ z : ℝ, |z| ^ 3 ∂nu)\n    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)\n    Integrable (fun z : ℝ => z ^ 2) nu ∧\n      Integrable (fun z : ℝ => |z| ^ 3) nu ∧\n      P.real {w : Shao.Path n |\n        a ≤ Shao.upperMax w hn ∧ a ≤ Shao.lowerMax w hn} ≤\n        2 * Real.exp (-3 * lam * a + lam ^ 2 / 2 + lam ^ 3 * beta)",
+    "theorem source_centered_bounded_nonresidual_double_crossing :\n    ∀ cstar : ℝ, 0 < cstar →\n      let C : ℝ := Real.sqrt (2 * Real.pi) *\n        (2 + 4 * Real.exp 1 / cstar)\n      0 < C ∧\n        ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu]\n          (n : ℕ) (hn : 0 < n) (x : ℝ), 1 ≤ x →\n          (∀ᵐ z : ℝ ∂nu, |z| ≤ 1 / (4 * x)) →\n          (∫ z : ℝ, z ∂nu) = 0 →\n          (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →\n          let beta : ℝ := (n : ℝ) * (∫ z : ℝ, |z| ^ 3 ∂nu)\n          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)\n          let u : ℝ := beta * (1 + x) ^ 3\n          let D : Set (Shao.Path n) := Shao.C2.doubleCrossing hn x\n          Integrable (fun z : ℝ => z ^ 2) nu ∧\n            Integrable (fun z : ℝ => |z| ^ 3) nu ∧\n            0 < beta ∧ 16 * x ^ 2 ≤ (n : ℝ) ∧ MeasurableSet D ∧\n            Shao.truncationBudget nu n x = u ∧\n            P.real D ≤\n              Real.exp (-(1 / (5832 * beta ^ 2))) +\n                2 * Real.exp (-4 * x ^ 2 + 24 * beta * x ^ 3) ∧\n            (u ≤ 1 / 20000 → cstar * Real.exp (-3 * x ^ 2) ≤ u →\n              P.real D ≤ C * u * Shao.standardNormalTail x)"
+  ],
+  "allHeadLetsAndAssumptionsExactFrozen": true,
+  "publicSourceTheorems": 1,
+  "privateSourceTheorems": 1,
+  "generatedTheorems": 25,
+  "sourceDefinitions": 0,
+  "sourceGlobalInstances": 0,
+  "declarationHeadLocalInstances": 0,
+  "proofLocalLetICount": 3,
+  "sourceProofCoverage": [
+    {
+      "startLine": 1,
+      "endLine": 17,
+      "subject": "imports, exact namespace and source options",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 18,
+      "endLine": 115,
+      "subject": "frozen private head, real support-paid moments, Taylor and both signed MGF bounds",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 116,
+      "endLine": 165,
+      "subject": "real product support, finite past/current independence, F factorization and prefix clipping",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 166,
+      "endLine": 255,
+      "subject": "predictable signs, all process values, measurability, integrability and exact past dependence",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 256,
+      "endLine": 329,
+      "subject": "both signed past weights, exact Fubini integral formula, integrability and nonpositive mean delta",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 330,
+      "endLine": 397,
+      "subject": "finite telescoping and deterministic-wall hit/no-hit stopped-value identity",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 398,
+      "endLine": 432,
+      "subject": "original deterministic first-hit sign change and exact three-wall witness",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 433,
+      "endLine": 491,
+      "subject": "event measurability, stopped mean, indicator domination, true two-order probability union",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 492,
+      "endLine": 517,
+      "subject": "blank transition and exact complete public head",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 518,
+      "endLine": 560,
+      "subject": "constant order, legal parameters, accepted lower-tail invocation, beta positivity, length and measurability",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 561,
+      "endLine": 574,
+      "subject": "real truncationF integral budget identity from actual support",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 575,
+      "endLine": 611,
+      "subject": "true full-energy split, square-root wall, exponents and universal exponential probability bound",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 612,
+      "endLine": 667,
+      "subject": "positive u, low-energy exponent splitting, cubic correction and actual nonresidual rare payment",
+      "fullyRead": true,
+      "review": "CORRECT"
+    },
+    {
+      "startLine": 668,
+      "endLine": 710,
+      "subject": "actual Gaussian tail/density Mills payment, final uniform-law constant, end namespace",
+      "fullyRead": true,
+      "review": "CORRECT"
+    }
+  ],
+  "allProofLocalLiteralValues": [
+    {
+      "sourceStartLine": 35,
+      "sourceEndLine": 35,
+      "completeLiteralValue": "  letI : IsProbabilityMeasure P := by dsimp [P]; infer_instance",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 36,
+      "sourceEndLine": 37,
+      "completeLiteralValue": "  let clip : ℕ → Shao.Path n → Shao.Path n :=\n    fun k w j => if j.val < k then w j else 0",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 52,
+      "sourceEndLine": 53,
+      "completeLiteralValue": "  let q : ℝ := lam ^ 2 / 2 * (∫ z : ℝ, z ^ 2 ∂nu) +\n    lam ^ 3 * (∫ z : ℝ, |z| ^ 3 ∂nu)",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 130,
+      "sourceEndLine": 130,
+      "completeLiteralValue": "    let past : Finset (Fin n) := Finset.univ.filter (fun j => j.val < i.val)",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 131,
+      "sourceEndLine": 132,
+      "completeLiteralValue": "    let f : (past → ℝ) → ℝ := fun v =>\n      F (fun j => if hj : j ∈ past then v ⟨j, hj⟩ else 0)",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 170,
+      "sourceEndLine": 171,
+      "completeLiteralValue": "    let eps : Fin n → Shao.Path n → ℝ := fun i w =>\n      if ∃ j : Fin (i.val + 1), a ≤ eta * Shao.prefixSum w j.val then -eta else eta",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 172,
+      "sourceEndLine": 173,
+      "completeLiteralValue": "    let Y : ℕ → Shao.Path n → ℝ := fun k w =>\n      ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), eps i w * w i",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 174,
+      "sourceEndLine": 174,
+      "completeLiteralValue": "    let Z : ℕ → Shao.Path n → ℝ := fun k w => Real.exp (lam * Y k w - (k : ℝ) * q)",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 175,
+      "sourceEndLine": 176,
+      "completeLiteralValue": "    let live : ℕ → Shao.Path n → Prop := fun k w =>\n      ∀ j : Fin (k + 1), Y j.val w < 3 * a",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 177,
+      "sourceEndLine": 178,
+      "completeLiteralValue": "    let delta : ℕ → Shao.Path n → ℝ := fun k w =>\n      if live k w then Z (k + 1) w - Z k w else 0",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 179,
+      "sourceEndLine": 179,
+      "completeLiteralValue": "    let W : Shao.Path n → ℝ := fun w => 1 + ∑ k ∈ Finset.range n, delta k w",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 180,
+      "sourceEndLine": 181,
+      "completeLiteralValue": "    let E : Set (Shao.Path n) := {w | ∃ j k : Fin (n + 1), j.val ≤ k.val ∧\n      a ≤ eta * Shao.prefixSum w j.val ∧ eta * Shao.prefixSum w k.val ≤ -a}",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 257,
+      "sourceEndLine": 257,
+      "completeLiteralValue": "      let i : Fin n := ⟨k, hk⟩",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 258,
+      "sourceEndLine": 258,
+      "completeLiteralValue": "      let Hplus : Shao.Path n → ℝ := fun w => if live k w ∧ eps i w = 1 then Z k w else 0",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 259,
+      "sourceEndLine": 259,
+      "completeLiteralValue": "      let Hminus : Shao.Path n → ℝ := fun w => if live k w ∧ eps i w = -1 then Z k w else 0",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 339,
+      "sourceEndLine": 339,
+      "completeLiteralValue": "      · let j : ℕ := Nat.find hh",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 401,
+      "sourceEndLine": 401,
+      "completeLiteralValue": "      let tau : ℕ := Nat.find hex",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 520,
+      "sourceEndLine": 520,
+      "completeLiteralValue": "  letI : IsProbabilityMeasure nu := hnu",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 521,
+      "sourceEndLine": 521,
+      "completeLiteralValue": "  letI : IsProbabilityMeasure P := by dsimp [P]; infer_instance",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 523,
+      "sourceEndLine": 523,
+      "completeLiteralValue": "  let b : ℝ := 1 / (4 * x)",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 524,
+      "sourceEndLine": 524,
+      "completeLiteralValue": "  let a : ℝ := 2 * Real.sqrt 2 * x / 3",
+      "reviewedComplete": true,
+      "newAssumption": false
+    },
+    {
+      "sourceStartLine": 525,
+      "sourceEndLine": 525,
+      "completeLiteralValue": "  let lam : ℝ := 2 * Real.sqrt 2 * x",
+      "reviewedComplete": true,
+      "newAssumption": false
+    }
+  ],
+  "actualOwnershipSelection": "Original env.getModuleIdxFor? module-index equality; no namespace selection",
+  "actualTypes": {
+    "file": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+    "sha256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+    "bytes": 141574,
+    "lines": 2100,
+    "allReadVerbatim": true,
+    "allActualNamesMatchInventory": true,
+    "all27FullTypesReviewed": true,
+    "sourceProofsOfAllGeneratedDeclarationsReadComplete": true,
+    "count": 27,
+    "theoremCount": 27,
+    "nonTheoremValueCount": 0,
+    "nonTheoremValues": [],
+    "omissionMarkers": [],
+    "rows": [
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_1",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 1,
+        "typeStartLine": 4,
+        "blockStartLine": 1,
+        "blockEndLine": 10,
+        "fullBlockSHA256": "eeb5ec7ac880c8222beb2d5ebfb340c1d0e5a9760ad580e56551137a7d33a7aa",
+        "fullTypeSHA256": "2695873dc30647e93b6d07ef77b877a7139e430c70649d34966e0ef0edb6d8be",
+        "fullTypeBytes": 440,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 4,
+          "endLine": 10,
+          "textSHA256": "2695873dc30647e93b6d07ef77b877a7139e430c70649d34966e0ef0edb6d8be"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Disjoint finite set and singleton iff nonmembership",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hFactor/past disjointness",
+          "sourceStartLine": 124,
+          "sourceEndLine": 158
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_11",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 2,
+        "typeStartLine": 14,
+        "blockStartLine": 11,
+        "blockEndLine": 480,
+        "fullBlockSHA256": "39f89f51b34cdd94c1c67633a80f2d5415ebd892f06a0f74817a7cd129f44904",
+        "fullTypeSHA256": "941bbb78e52e004bd301f2dd3b7cae8e74b1b340504d6ccde430b30ae7731c30",
+        "fullTypeBytes": 32239,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 14,
+          "endLine": 480,
+          "textSHA256": "941bbb78e52e004bd301f2dd3b7cae8e74b1b340504d6ccde430b30ae7731c30"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "For first signed hit j=find hh, not k<j implies j<k+1 (full expanded hh/eps/Y retained)",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop/hLive forward index proof",
+          "sourceStartLine": 335,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "Shao.Probability.SourceOriginalLargeThreshold.source_centered_bounded_nonresidual_double_crossing._simp_2",
+        "kind": "theorem",
+        "axioms": [],
+        "index": 3,
+        "typeStartLine": 482,
+        "blockStartLine": 481,
+        "blockEndLine": 487,
+        "fullBlockSHA256": "5d913b6e03c933e5d3e6a4f03cbd88c67d5a6bb11c576713b3d4682f6d9b02e6",
+        "fullTypeSHA256": "956e0908e0650bac9b3db6d99ee990bf66e75f764eaf8087602d8eb7ce60f06f",
+        "fullTypeBytes": 457,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 482,
+          "endLine": 487,
+          "textSHA256": "956e0908e0650bac9b3db6d99ee990bf66e75f764eaf8087602d8eb7ce60f06f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Semigroup associativity orientation a*(b*c)=(a*b)*c",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "public hRare Gaussian exponential product rearrangement",
+          "sourceStartLine": 659,
+          "sourceEndLine": 667
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_18",
+        "kind": "theorem",
+        "axioms": [
+          "propext"
+        ],
+        "index": 4,
+        "typeStartLine": 489,
+        "blockStartLine": 488,
+        "blockEndLine": 493,
+        "fullBlockSHA256": "3021d622165b4a8f127c682ffa7e6282be3808ba2dfbc39023742cf9a8f6723b",
+        "fullTypeSHA256": "4cbc67e5bd856499582eeaa61b56efc68047ba697b2ab797925cc4c6a49cb78f",
+        "fullTypeBytes": 212,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 489,
+          "endLine": 493,
+          "textSHA256": "4cbc67e5bd856499582eeaa61b56efc68047ba697b2ab797925cc4c6a49cb78f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Empty set is measurable (proposition equality with True)",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hEM empty index-order branch",
+          "sourceStartLine": 433,
+          "sourceEndLine": 444
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_21",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 5,
+        "typeStartLine": 496,
+        "blockStartLine": 494,
+        "blockEndLine": 496,
+        "fullBlockSHA256": "aec2baeeeda1bec5811820dc5582bb013ee28b69639c40a53d2056f346049632",
+        "fullTypeSHA256": "fe81dc1205cd7dbe8cc101c016557104565866a8804e3f8fdd7140f49cec8106",
+        "fullTypeBytes": 107,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 496,
+          "endLine": 496,
+          "textSHA256": "fe81dc1205cd7dbe8cc101c016557104565866a8804e3f8fdd7140f49cec8106"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "not j<=k implies k<=j, stated as contradiction with not k<=j",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hsub reverse crossing order",
+          "sourceStartLine": 473,
+          "sourceEndLine": 487
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_12",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 6,
+        "typeStartLine": 500,
+        "blockStartLine": 497,
+        "blockEndLine": 968,
+        "fullBlockSHA256": "c139fbdc25243d1eb2be0aa3151dc0604151052b44833d4ba6859019a0c2f894",
+        "fullTypeSHA256": "0b7bf300e04acff5cd6afe49010de99d88f5916239630e6ef00449ddbf09084d",
+        "fullTypeBytes": 31909,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 500,
+          "endLine": 968,
+          "textSHA256": "0b7bf300e04acff5cd6afe49010de99d88f5916239630e6ef00449ddbf09084d"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "ell:Fin(k+1), k<first signed hit implies ell<first hit (full hh/eps/Y retained)",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop/hLive reverse index proof",
+          "sourceStartLine": 335,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_15",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 7,
+        "typeStartLine": 971,
+        "blockStartLine": 969,
+        "blockEndLine": 983,
+        "fullBlockSHA256": "ee40a0a4b6d59f09043c8e3f1bf16ad27dab2fb3856d4a49c8ec22f709f88ae0",
+        "fullTypeSHA256": "f5510815f63221048637523700616bd4b997036b10fc2c7a3d32bfe11d06a5c8",
+        "fullTypeBytes": 421,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 971,
+          "endLine": 983,
+          "textSHA256": "f5510815f63221048637523700616bd4b997036b10fc2c7a3d32bfe11d06a5c8"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "k:Fin(n+1) implies k.val<=n",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop no-hit contradiction",
+          "sourceStartLine": 335,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 8,
+        "typeStartLine": 987,
+        "blockStartLine": 984,
+        "blockEndLine": 1110,
+        "fullBlockSHA256": "70ea17dd885a0fbf582ce8601503fdba4035a784f62d5dcd31b9e0f37e7af51a",
+        "fullTypeSHA256": "29df2b13e4514a55111d67c61fd8a8388668df1953b5181fd0e3eb103039779f",
+        "fullTypeBytes": 8646,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 987,
+          "endLine": 1110,
+          "textSHA256": "29df2b13e4514a55111d67c61fd8a8388668df1953b5181fd0e3eb103039779f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Complete frozen private deterministic double-crossing theorem",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "private full proof",
+          "sourceStartLine": 18,
+          "sourceEndLine": 491
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_18",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 9,
+        "typeStartLine": 1114,
+        "blockStartLine": 1111,
+        "blockEndLine": 1164,
+        "fullBlockSHA256": "2589f2c8cca83bb4c38d3e42b3db81c4dfd85b51a7793da307f32484c7082ab7",
+        "fullTypeSHA256": "507f7b8ed5552c5737dc6fbfa634cbf4ba327a472dfb12dd0ee05d45b0e1f9a0",
+        "fullTypeBytes": 2269,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1114,
+          "endLine": 1164,
+          "textSHA256": "507f7b8ed5552c5737dc6fbfa634cbf4ba327a472dfb12dd0ee05d45b0e1f9a0"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "tau<=k implies (i<k and i<tau) iff i<tau with full original-wall Nat.find context",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hEhit finite-filter identity",
+          "sourceStartLine": 398,
+          "sourceEndLine": 432
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_9",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 10,
+        "typeStartLine": 1167,
+        "blockStartLine": 1165,
+        "blockEndLine": 1168,
+        "fullBlockSHA256": "6bb7c0c2b80c0c5254876b534ee0e5afa32ccf9139a6fa3cc5541ed27619306c",
+        "fullTypeSHA256": "6713620538aa868f927092c2fbffa47b0b09e7a83b5472333efdd45693eeffe4",
+        "fullTypeBytes": 177,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1167,
+          "endLine": 1168,
+          "textSHA256": "6713620538aa868f927092c2fbffa47b0b09e7a83b5472333efdd45693eeffe4"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "i<j<=k implies i<k",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYClip current-coordinate clipping",
+          "sourceStartLine": 245,
+          "sourceEndLine": 250
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_4",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 11,
+        "typeStartLine": 1171,
+        "blockStartLine": 1169,
+        "blockEndLine": 1177,
+        "fullBlockSHA256": "9a92fe86351cca3fd2249c708c68d7f6c6d5de08022a7ef0de6563c4e99fb8c8",
+        "fullTypeSHA256": "c48f6b4e701635585d18b857af22dbaec14e50c516d615da0921e48ae2e2894d",
+        "fullTypeBytes": 365,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1171,
+          "endLine": 1177,
+          "textSHA256": "c48f6b4e701635585d18b857af22dbaec14e50c516d615da0921e48ae2e2894d"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "j<i+1 and j!=i implies j<i",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep prefix finite-set identity",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_20",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 12,
+        "typeStartLine": 1180,
+        "blockStartLine": 1178,
+        "blockEndLine": 1185,
+        "fullBlockSHA256": "38f84040c239c55775db309312d4daa7b867dcbe1d0cf8a59d4b92b0e854861b",
+        "fullTypeSHA256": "ce648cd2c2f7578590ad90ef16f481d33962b278aac5faa12220f2c91337c357",
+        "fullTypeBytes": 259,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1180,
+          "endLine": 1185,
+          "textSHA256": "ce648cd2c2f7578590ad90ef16f481d33962b278aac5faa12220f2c91337c357"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "k<=n implies k<n+1",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hsub reverse crossing witness finite index",
+          "sourceStartLine": 473,
+          "sourceEndLine": 487
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_13",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 13,
+        "typeStartLine": 1189,
+        "blockStartLine": 1186,
+        "blockEndLine": 1193,
+        "fullBlockSHA256": "9495af5ff9c16eb4512fa68846259c72ea7019d50b020ab6e9a74bd5ffe49fab",
+        "fullTypeSHA256": "3215386b30faa068be429f39b4c9afebacb2c852bc7e2ea2d529f433adf384c3",
+        "fullTypeBytes": 226,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1189,
+          "endLine": 1193,
+          "textSHA256": "3215386b30faa068be429f39b4c9afebacb2c852bc7e2ea2d529f433adf384c3"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Membership of Finset.range n equals m<n",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop/hTel finite range reasoning",
+          "sourceStartLine": 330,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_16",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 14,
+        "typeStartLine": 1197,
+        "blockStartLine": 1194,
+        "blockEndLine": 1235,
+        "fullBlockSHA256": "0cff7f23ebba9d8d335d560ff520b29a5f5b4e9c1211282875e435d222c20906",
+        "fullTypeSHA256": "db54539afe1509caf54a94357af51bfad97294a8960e2dd285560ca75f0f0933",
+        "fullTypeBytes": 1684,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1197,
+          "endLine": 1235,
+          "textSHA256": "db54539afe1509caf54a94357af51bfad97294a8960e2dd285560ca75f0f0933"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "i<tau and ell:Fin(i+1) imply ell<tau, full original-wall Nat.find context",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hEhit pre-hit sign",
+          "sourceStartLine": 398,
+          "sourceEndLine": 432
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_13",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 15,
+        "typeStartLine": 1239,
+        "blockStartLine": 1236,
+        "blockEndLine": 1712,
+        "fullBlockSHA256": "475dbf8d67d78d6646e65aa653ce44d6c06420b498e3aa4b8e8ae4806109685d",
+        "fullTypeSHA256": "b7988da93c7bce7502699f7f2108016e30576cabca295d3486659474b49b3dd7",
+        "fullTypeBytes": 31625,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1239,
+          "endLine": 1712,
+          "textSHA256": "b7988da93c7bce7502699f7f2108016e30576cabca295d3486659474b49b3dd7"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "ell<first signed hit<=n implies ell<=n, full hh/eps/Y context retained",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop bounded candidate index",
+          "sourceStartLine": 335,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_3",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 16,
+        "typeStartLine": 1716,
+        "blockStartLine": 1713,
+        "blockEndLine": 1721,
+        "fullBlockSHA256": "e03a31aac0012f587ffb54eb562fcc5d170df809a1dbcfdedda967173f5dcc03",
+        "fullTypeSHA256": "2b33572543d2f8e99fe25c6eb8b1b7a1a00e4e3d6baa77c3a82f503e6b297d3c",
+        "fullTypeBytes": 266,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1716,
+          "endLine": 1721,
+          "textSHA256": "2b33572543d2f8e99fe25c6eb8b1b7a1a00e4e3d6baa77c3a82f503e6b297d3c"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Membership of finite univ equals True",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep filtered univ membership simplification",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "Shao.Probability.SourceOriginalLargeThreshold.source_centered_bounded_nonresidual_double_crossing",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 17,
+        "typeStartLine": 1725,
+        "blockStartLine": 1722,
+        "blockEndLine": 1967,
+        "fullBlockSHA256": "ca69023c891262583c400b8c4029d76a165c31ab413a9137629d2e390f3ca0a8",
+        "fullTypeSHA256": "f39754b5c5cb1dfc51376d669bf8ba3afa124313dad68ca46d5d7c6fa329db6f",
+        "fullTypeBytes": 19452,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1725,
+          "endLine": 1967,
+          "textSHA256": "f39754b5c5cb1dfc51376d669bf8ba3afa124313dad68ca46d5d7c6fa329db6f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Complete frozen public theorem including all 5 literal let values and full implication order",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "public full proof",
+          "sourceStartLine": 493,
+          "sourceEndLine": 708
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_19",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 18,
+        "typeStartLine": 1970,
+        "blockStartLine": 1968,
+        "blockEndLine": 1975,
+        "fullBlockSHA256": "42d49e4217b0be7bbce18920b707755765708cb706eb41728e24c5ee4461f62d",
+        "fullTypeSHA256": "bfe60c3eadad79c85479ef62b3c64986ca52a98ddbd45d92ebbd5019e543560f",
+        "fullTypeBytes": 267,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1970,
+          "endLine": 1975,
+          "textSHA256": "bfe60c3eadad79c85479ef62b3c64986ca52a98ddbd45d92ebbd5019e543560f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "j<=n implies j<n+1",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hsub forward crossing witness finite index",
+          "sourceStartLine": 473,
+          "sourceEndLine": 487
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_7",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 19,
+        "typeStartLine": 1978,
+        "blockStartLine": 1976,
+        "blockEndLine": 1990,
+        "fullBlockSHA256": "7687e5ada17dd7f5c961a30064bb79578ac8a1c0428fcf3f9d996cc0b7029859",
+        "fullTypeSHA256": "4c18d66f94e588c6c68fee7adf97ae1a3e668c80fa8c664d70212e98ea053e5d",
+        "fullTypeBytes": 510,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1978,
+          "endLine": 1990,
+          "textSHA256": "4c18d66f94e588c6c68fee7adf97ae1a3e668c80fa8c664d70212e98ea053e5d"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "i<=k and j:Fin(i+1) imply j.val<=k",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hEpsClip no current-coordinate leak",
+          "sourceStartLine": 237,
+          "sourceEndLine": 244
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_8",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 20,
+        "typeStartLine": 1993,
+        "blockStartLine": 1991,
+        "blockEndLine": 1994,
+        "fullBlockSHA256": "3854cdcccec5e19e5b719f82433ab62b3775a8cc667e25d31476bc9537100f7a",
+        "fullTypeSHA256": "f5742a34a2352e60660513edac2277b8967c8759183182cc7b2c78aedddd71af",
+        "fullTypeBytes": 177,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1993,
+          "endLine": 1994,
+          "textSHA256": "f5742a34a2352e60660513edac2277b8967c8759183182cc7b2c78aedddd71af"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "i<j<=k implies i<=k",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYClip epsilon past-dependence index",
+          "sourceStartLine": 245,
+          "sourceEndLine": 250
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_17",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 21,
+        "typeStartLine": 1998,
+        "blockStartLine": 1995,
+        "blockEndLine": 2031,
+        "fullBlockSHA256": "fd2c5f2c7091ddb92f2dbb2c39858e27a7e373554cad11e3403cc6f8ffe7b84d",
+        "fullTypeSHA256": "d2415d310fad4e568d6d752f6ce38d6c01a24c594aa7d16e0314e9f2c869c628",
+        "fullTypeBytes": 1500,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 1998,
+          "endLine": 2031,
+          "textSHA256": "d2415d310fad4e568d6d752f6ce38d6c01a24c594aa7d16e0314e9f2c869c628"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "not i<tau implies tau<i+1, full original-wall Nat.find context",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hEhit post-hit sign",
+          "sourceStartLine": 398,
+          "sourceEndLine": 432
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_5",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 22,
+        "typeStartLine": 2034,
+        "blockStartLine": 2032,
+        "blockEndLine": 2039,
+        "fullBlockSHA256": "6a5a40ec8d1c567015e3211e0f3ec9fa195b1491a1666cb4b2ef8ef5505c90c7",
+        "fullTypeSHA256": "d327c552560a8d2e71667b0b9e71ebea05a4adf79a7c76edd800f92a806cbac2",
+        "fullTypeBytes": 256,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2034,
+          "endLine": 2039,
+          "textSHA256": "d327c552560a8d2e71667b0b9e71ebea05a4adf79a7c76edd800f92a806cbac2"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "j.val<j.val+1",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep insertion and self-index",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_2",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 23,
+        "typeStartLine": 2043,
+        "blockStartLine": 2040,
+        "blockEndLine": 2051,
+        "fullBlockSHA256": "b453c5bfcd9272a5b7599b5760e478424fdf1a2796bec818809e318f2bb5df34",
+        "fullTypeSHA256": "3dcdc2fcbb934e2206b89cc0a6e8bc91cc17fb2e53303fded2445ba37868a264",
+        "fullTypeBytes": 495,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2043,
+          "endLine": 2051,
+          "textSHA256": "3dcdc2fcbb934e2206b89cc0a6e8bc91cc17fb2e53303fded2445ba37868a264"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Finite filter membership is source membership and predicate",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep membership simplification",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._simp_4",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "index": 24,
+        "typeStartLine": 2055,
+        "blockStartLine": 2052,
+        "blockEndLine": 2062,
+        "fullBlockSHA256": "51ffbfbf8770c15cec69868c7a34efdeaf201818737c861cd89a93311fe4e95c",
+        "fullTypeSHA256": "65f7de332b68769387b161b8dc208fd18f7ccaf08d535e6d1f32206e346f9e69",
+        "fullTypeBytes": 537,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2055,
+          "endLine": 2062,
+          "textSHA256": "65f7de332b68769387b161b8dc208fd18f7ccaf08d535e6d1f32206e346f9e69"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "Finite insert membership is equality or old membership",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep membership simplification",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_14",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 25,
+        "typeStartLine": 2065,
+        "blockStartLine": 2063,
+        "blockEndLine": 2077,
+        "fullBlockSHA256": "97abfe2459d2eb79706891be5941d0c430633c48ff6767b55e542cdaadb5db0e",
+        "fullTypeSHA256": "6be608694b47f56d58ff5c34e6e88217a194e32749aa69d0b964bd576e45af33",
+        "fullTypeBytes": 459,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2065,
+          "endLine": 2077,
+          "textSHA256": "6be608694b47f56d58ff5c34e6e88217a194e32749aa69d0b964bd576e45af33"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "k<n and j:Fin(k+1) imply j.val<=n",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hStop no-hit branch bound",
+          "sourceStartLine": 335,
+          "sourceEndLine": 397
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_6",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 26,
+        "typeStartLine": 2080,
+        "blockStartLine": 2078,
+        "blockEndLine": 2085,
+        "fullBlockSHA256": "f507e8d2110138ead370e421fbd250a00641585863694c33cd28dfd3d414a345",
+        "fullTypeSHA256": "53269bcdd3726e961eca9dd8316872dfc7ed7269fb495cd8a7d58bf38719d170",
+        "fullTypeBytes": 320,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2080,
+          "endLine": 2085,
+          "textSHA256": "53269bcdd3726e961eca9dd8316872dfc7ed7269fb495cd8a7d58bf38719d170"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "j<i implies j<i+1",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hYStep finite prefix union reverse implication",
+          "sourceStartLine": 201,
+          "sourceEndLine": 215
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      },
+      {
+        "owner": "Shao.Probability.SourceOriginalLargeThreshold",
+        "name": "_private.Shao.Probability.SourceOriginalLargeThreshold.0.Shao.Probability.SourceOriginalLargeThreshold.olt_deterministic_double_crossing._proof_10",
+        "kind": "theorem",
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "index": 27,
+        "typeStartLine": 2088,
+        "blockStartLine": 2086,
+        "blockEndLine": 2100,
+        "fullBlockSHA256": "d18b30801510ec73958cf29005b22de021daff3ec21dae684ce87ea178eb671b",
+        "fullTypeSHA256": "aa269c5c1e86fd34360aa9c2a46214b342e8a8cb2ca8f97b07ce6309c9f21e0f",
+        "fullTypeBytes": 423,
+        "valueRequired": false,
+        "fullActualTypeReference": {
+          "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+          "fileSHA256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+          "startLine": 2088,
+          "endLine": 2100,
+          "textSHA256": "aa269c5c1e86fd34360aa9c2a46214b342e8a8cb2ca8f97b07ce6309c9f21e0f"
+        },
+        "fullActualTypeReadVerbatim": true,
+        "semanticReview": "CORRECT",
+        "semanticContent": "j:Fin(k+1) implies j.val<=k",
+        "completeAssociatedSourceProofReviewed": {
+          "label": "hLiveClip full prefix comparison",
+          "sourceStartLine": 253,
+          "sourceEndLine": 255
+        },
+        "allDependentLetAndInstanceValuesRead": true,
+        "nonTheoremValue": null,
+        "theoremProofTermPrinted": false,
+        "theoremProofTermPrintingRequired": false,
+        "recursiveAxiomsReusedFromOriginalServerAudit": true
+      }
+    ]
+  },
+  "axioms": {
+    "auditSourcePath": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\OwnedAudit.lean",
+    "auditSourceSHA256": "bb08f10cd022bc2c35375e16b383b9c55e68d599a4981e4b982e8389d29ffff0",
+    "inventorySHA256": "f9044f5b456d15a7b03abdc85d66a69437671b348f874da43ee81b08b1e32f43",
+    "originalAuditLogSHA256": "75f073aab4db07fc27722120d15362f976942f0c7de3199c9c0d57798a57d45f",
+    "recursive": true,
+    "allActualOwnedConstants": true,
+    "allowed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "allWithinWhitelist": true,
+    "originalAuditExit": 0,
+    "newAuditRuns": 0,
+    "fullTypePayloadExactlyInsideOriginalLog": true
+  },
+  "sourceObjectServerReceipt": {
+    "kernelAttempts": [
+      {
+        "attempt": "001",
+        "scope": "private-only-partial",
+        "exit": 1,
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt001.source.lean",
+          "bytes": 24855,
+          "sha256": "96de3aee434a680b137b100a10a7b63a00faed745d5286f2993a184ccbac8200"
+        },
+        "log": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt001.log",
+          "bytes": 31468,
+          "sha256": "5d40fe6fb9423e68eca56fb3abc317eab3452cf9e63f271566fee26f0aa540f3"
+        }
+      },
+      {
+        "attempt": "002",
+        "scope": "private-only-partial",
+        "exit": 1,
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt002.source.lean",
+          "bytes": 25593,
+          "sha256": "58c895578813397d20e6a1b4bc6fac1cb5ec4394c9ba55f01eb1afa05c261cb6"
+        },
+        "log": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt002.log",
+          "bytes": 11688,
+          "sha256": "c086feaa7397e6bebcdd94f2be0f27abf719ae25934af1277ba70b2056bbe915"
+        }
+      },
+      {
+        "attempt": "003",
+        "scope": "whole-frozen-public-plus-private",
+        "exit": 1,
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt003.source.lean",
+          "bytes": 37704,
+          "sha256": "6fa9c77d49f6ded3521b63a23936b6a175b813783ce4966e29e7d99e7abbf61a"
+        },
+        "log": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt003.log",
+          "bytes": 14304,
+          "sha256": "f4f388c5056ca1c5cac1fd39f18a8597d9de3bca8f4556227e725812a927bad6"
+        }
+      },
+      {
+        "attempt": "004",
+        "scope": "whole-frozen-public-plus-private",
+        "exit": 0,
+        "source": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt004.source.lean",
+          "bytes": 38083,
+          "sha256": "13d3917b95fec82a10505f44b18832d20601ebd55e4713675a83061d15ec59cc"
+        },
+        "log": {
+          "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/attempt004.log",
+          "bytes": 10555,
+          "sha256": "c36fe32ac14157e84169410ddef603f676671ed7cede9dbdfb1604af68130d6a"
+        }
+      }
+    ],
+    "audit": {
+      "exit": 0,
+      "log": {
+        "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/owned-audit.log",
+        "bytes": 141797,
+        "sha256": "75f073aab4db07fc27722120d15362f976942f0c7de3199c9c0d57798a57d45f"
+      },
+      "json": {
+        "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/owned-audit.json",
+        "bytes": 8361,
+        "sha256": "f9044f5b456d15a7b03abdc85d66a69437671b348f874da43ee81b08b1e32f43"
+      },
+      "types": {
+        "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/actual-owned-types-and-values.txt",
+        "bytes": 141574,
+        "sha256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735"
+      }
+    },
+    "successfulObject": {
+      "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/producer004.olean",
+      "bytes": 3260616,
+      "sha256": "07c8756921fdd7b557cb0663d4c7f7cb29fedf5ca909e8f2f84de69790b7c1b4"
+    },
+    "kernelInvocations": 4,
+    "auditInvocations": 1,
+    "busyProbesWithoutLean": 1,
+    "oldProducerRecompiles": 0,
+    "oldKernelAXOrProofReviewReplays": 0
+  },
+  "originalObject": {
+    "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-large-threshold-v83/producer004.olean",
+    "sha256": "07c8756921fdd7b557cb0663d4c7f7cb29fedf5ca909e8f2f84de69790b7c1b4",
+    "matchesPhysicalOriginal": true
+  },
+  "authorRelease": {
+    "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\RELEASE.json",
+    "sha256": "94a3d3c98ff8512e1f14173dfa5831a67c466f3788302f901b91d0c6c18f1cc0",
+    "writerReleased": true,
+    "executionReleased": true,
+    "inflight": []
+  },
+  "frozenComparison": {
+    "publicExact": true,
+    "privateExact": true,
+    "publicLets": 5,
+    "privateLets": 2,
+    "lineCount": 710,
+    "bytes": 38083,
+    "crCount": 0,
+    "bom": false,
+    "forbidden": [],
+    "globalDeclarations": [
+      "private theorem olt_deterministic_double_crossing",
+      "theorem source_centered_bounded_nonresidual_double_crossing :"
+    ]
+  },
+  "allProductionAndFreezeArtifactHashes": [
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\SourceOriginalLargeThreshold.lean",
+      "sha256": "13d3917b95fec82a10505f44b18832d20601ebd55e4713675a83061d15ec59cc",
+      "bytes": 38083,
+      "expected": "13d3917b95fec82a10505f44b18832d20601ebd55e4713675a83061d15ec59cc",
+      "match": true,
+      "expectedBytes": 38083
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\private-body.lean.txt",
+      "sha256": "8df9b4bb0bdc02502123e6f48d1f6cdb5b74ca66322ab0a59de4226a910b0e89",
+      "bytes": 25058,
+      "expected": "8df9b4bb0bdc02502123e6f48d1f6cdb5b74ca66322ab0a59de4226a910b0e89",
+      "match": true,
+      "expectedBytes": 25058
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\public-body.lean.txt",
+      "sha256": "401b4a3a3c60e9b4822c0169f2532313ef912b076d45126fe5850458228cc009",
+      "bytes": 10316,
+      "expected": "401b4a3a3c60e9b4822c0169f2532313ef912b076d45126fe5850458228cc009",
+      "match": true,
+      "expectedBytes": 10316
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\private-heads-request.lean.txt",
+      "sha256": "d97608e800fcfd46def8ea07912b8b36a2ab484d3d6b7675eccc304177818ccd",
+      "bytes": 1323,
+      "expected": "d97608e800fcfd46def8ea07912b8b36a2ab484d3d6b7675eccc304177818ccd",
+      "match": true,
+      "expectedBytes": 1323
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\build-source.py",
+      "sha256": "7cc7cfb8b903a9f948ea92b3180f038e03d60b9f18309e34869923ff286a40b9",
+      "bytes": 1559,
+      "expected": "7cc7cfb8b903a9f948ea92b3180f038e03d60b9f18309e34869923ff286a40b9",
+      "match": true,
+      "expectedBytes": 1559
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\OwnedAudit.lean",
+      "sha256": "bb08f10cd022bc2c35375e16b383b9c55e68d599a4981e4b982e8389d29ffff0",
+      "bytes": 3435,
+      "expected": "bb08f10cd022bc2c35375e16b383b9c55e68d599a4981e4b982e8389d29ffff0",
+      "match": true,
+      "expectedBytes": 3435
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\owned-audit.json",
+      "sha256": "f9044f5b456d15a7b03abdc85d66a69437671b348f874da43ee81b08b1e32f43",
+      "bytes": 8361,
+      "expected": "f9044f5b456d15a7b03abdc85d66a69437671b348f874da43ee81b08b1e32f43",
+      "match": true,
+      "expectedBytes": 8361
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\actual-owned-types-and-values.txt",
+      "sha256": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+      "bytes": 141574,
+      "expected": "196a22a7d703167c6a7bef1ee87b9d52f3d4fdc919c63d60f4f39662c3b25735",
+      "match": true,
+      "expectedBytes": 141574
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\whole-kernel-binding.json",
+      "sha256": "592b111277b6ca495c1a5244a39cfabc680219bd26570240348801a98c873af1",
+      "bytes": 1060,
+      "expected": "592b111277b6ca495c1a5244a39cfabc680219bd26570240348801a98c873af1",
+      "match": true,
+      "expectedBytes": 1060
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\frozen-comparison.json",
+      "sha256": "c30db1104a26a2e72f6e367f3944494ad1d4cd66d8005ef1ce0480c4348a02f9",
+      "bytes": 456,
+      "expected": "c30db1104a26a2e72f6e367f3944494ad1d4cd66d8005ef1ce0480c4348a02f9",
+      "match": true,
+      "expectedBytes": 456
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\dependency-bindings.json",
+      "sha256": "52262a3832a94118cbb0a8bba8a8f5d7d5e4abf550a4110e0e83e00199e718cd",
+      "bytes": 4321,
+      "expected": "52262a3832a94118cbb0a8bba8a8f5d7d5e4abf550a4110e0e83e00199e718cd",
+      "match": true,
+      "expectedBytes": 4321
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\server-artifacts.json",
+      "sha256": "37b1af6d298261c8ce8b7117b6f82c0bd01ddd40e42d819f08060317b995076c",
+      "bytes": 3654,
+      "expected": "37b1af6d298261c8ce8b7117b6f82c0bd01ddd40e42d819f08060317b995076c",
+      "match": true,
+      "expectedBytes": 3654
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\runtime-ack.json",
+      "sha256": "ddf5ae13b1b535e0375f7b928330775c80800ffaae71a973d7b7d7ee8d2a01b1",
+      "bytes": 748,
+      "expected": "ddf5ae13b1b535e0375f7b928330775c80800ffaae71a973d7b7d7ee8d2a01b1",
+      "match": true,
+      "expectedBytes": 748
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\publication-api.json",
+      "sha256": "fe733cc0fc13e634b5d5da8887afb1e3f519db242b1e60b709e94ba81013a231",
+      "bytes": 1027,
+      "expected": "fe733cc0fc13e634b5d5da8887afb1e3f519db242b1e60b709e94ba81013a231",
+      "match": true,
+      "expectedBytes": 1027
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\pr-api.json",
+      "sha256": "3c237b941a8d2ac84c0af742431452f166286eec97e7ce6657a2b7a2dd9dc8e4",
+      "bytes": 2624,
+      "expected": "3c237b941a8d2ac84c0af742431452f166286eec97e7ce6657a2b7a2dd9dc8e4",
+      "match": true,
+      "expectedBytes": 2624
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\pr-body.md",
+      "sha256": "2fbbbb3aa7ffed50ce684caa94aecf4ea7b0eec835b70f4388b725da8f59d204",
+      "bytes": 1463,
+      "expected": "2fbbbb3aa7ffed50ce684caa94aecf4ea7b0eec835b70f4388b725da8f59d204",
+      "match": true,
+      "expectedBytes": 1463
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\pr-changed-files.json",
+      "sha256": "b54250488a563a80e02cb4c3ec2f62ca630764044fe46c69b2b7bf67a8588bb6",
+      "bytes": 201,
+      "expected": "b54250488a563a80e02cb4c3ec2f62ca630764044fe46c69b2b7bf67a8588bb6",
+      "match": true,
+      "expectedBytes": 201
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\evidence-summary.json",
+      "sha256": "ae43bfb2111c8d1407ce442e15673ef83c8c51d6e73eda77d4f63f5e092a9c7d",
+      "bytes": 1312,
+      "expected": "ae43bfb2111c8d1407ce442e15673ef83c8c51d6e73eda77d4f63f5e092a9c7d",
+      "match": true,
+      "expectedBytes": 1312
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\finalize-metadata.py",
+      "sha256": "1f7002e2ab61806c83066da6aa7a4574277a92fad1ea61b902dcfc0a896cdb0e",
+      "bytes": 11599,
+      "expected": "1f7002e2ab61806c83066da6aa7a4574277a92fad1ea61b902dcfc0a896cdb0e",
+      "match": true,
+      "expectedBytes": 11599
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\receipt.json",
+      "sha256": "de1a57755ae0411b5854beed69f3268de509253b8b0523c5be9dc0fba14a4bff",
+      "bytes": 19855,
+      "expected": "de1a57755ae0411b5854beed69f3268de509253b8b0523c5be9dc0fba14a4bff",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\RELEASE.json",
+      "sha256": "94a3d3c98ff8512e1f14173dfa5831a67c466f3788302f901b91d0c6c18f1cc0",
+      "bytes": 1191,
+      "expected": "94a3d3c98ff8512e1f14173dfa5831a67c466f3788302f901b91d0c6c18f1cc0",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-production\\final-publication-binding.json",
+      "sha256": "25b957f166316b92ddd7fb51db573811764d959a33c5f9be777fc9ff84b6cf86",
+      "bytes": 1404,
+      "expected": "25b957f166316b92ddd7fb51db573811764d959a33c5f9be777fc9ff84b6cf86",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\coordination\\original-large-threshold-production-activation.json",
+      "sha256": "ec012fae2fc96e6c30030707a80a51a6003f0672b57939647c54a517bfdd8016",
+      "bytes": 4049,
+      "expected": "ec012fae2fc96e6c30030707a80a51a6003f0672b57939647c54a517bfdd8016",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\coordination\\public-original-large-threshold-declaration-freeze.md",
+      "sha256": "aaef774e2ce3ac9cdfb0569833885c6a3d67197a6948982d629deddb1d4cbc66",
+      "bytes": 2260,
+      "expected": "aaef774e2ce3ac9cdfb0569833885c6a3d67197a6948982d629deddb1d4cbc66",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\coordination\\public-original-large-threshold-frozen.lean.txt",
+      "sha256": "6eea8c0585da2aafbc3cb7787f2fcd21a65ad089924bbca5a95361b371f96905",
+      "bytes": 1872,
+      "expected": "6eea8c0585da2aafbc3cb7787f2fcd21a65ad089924bbca5a95361b371f96905",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\coordination\\public-original-large-threshold-private-helper-frozen.lean.txt",
+      "sha256": "d97608e800fcfd46def8ea07912b8b36a2ab484d3d6b7675eccc304177818ccd",
+      "bytes": 1323,
+      "expected": "d97608e800fcfd46def8ea07912b8b36a2ab484d3d6b7675eccc304177818ccd",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\coordination\\original-large-threshold-production-amendment01.json",
+      "sha256": "6fb88dee68498e217683cca4e7d0db907a913f91ef21306521e0cea10310f60a",
+      "bytes": 1841,
+      "expected": "6fb88dee68498e217683cca4e7d0db907a913f91ef21306521e0cea10310f60a",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\candidate-declarations.lean.txt",
+      "sha256": "6eea8c0585da2aafbc3cb7787f2fcd21a65ad089924bbca5a95361b371f96905",
+      "bytes": 1872,
+      "expected": "6eea8c0585da2aafbc3cb7787f2fcd21a65ad089924bbca5a95361b371f96905",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\proof-candidate.md",
+      "sha256": "59e88ccb771310afa7017283d40065903f439e8b7602e05c16e74fad54c865bb",
+      "bytes": 8447,
+      "expected": "59e88ccb771310afa7017283d40065903f439e8b7602e05c16e74fad54c865bb",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\source-scope.md",
+      "sha256": "c93e7e2e75e860aa462df588cf48b33f8817a9ad2e137f70b1b4b21fc8c41c68",
+      "bytes": 7212,
+      "expected": "c93e7e2e75e860aa462df588cf48b33f8817a9ad2e137f70b1b4b21fc8c41c68",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\source-bindings.json",
+      "sha256": "953caaac10bbce01f106f114566275e18fb9514a331538ad815d7913b976d3ee",
+      "bytes": 9657,
+      "expected": "953caaac10bbce01f106f114566275e18fb9514a331538ad815d7913b976d3ee",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\consumed-interfaces-and-values.lean.txt",
+      "sha256": "87586baef2a4f5f8ca696019b0a065750ba781a6059e4585b6f902586d7cc4b0",
+      "bytes": 3284,
+      "expected": "87586baef2a4f5f8ca696019b0a065750ba781a6059e4585b6f902586d7cc4b0",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-candidate\\unpaid-interfaces.lean.txt",
+      "sha256": "a3b08150e13768cfd4c8f579c45629721613dff637d4b5ce96847be5d17dc74f",
+      "bytes": 4075,
+      "expected": "a3b08150e13768cfd4c8f579c45629721613dff637d4b5ce96847be5d17dc74f",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\QuadraticEnergyLowerTail.lean",
+      "sha256": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc",
+      "bytes": 10108,
+      "expected": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc",
+      "match": true,
+      "expectedBytes": 10108
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\GaussianTail.lean",
+      "sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "bytes": 14106,
+      "expected": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "match": true,
+      "expectedBytes": 14106
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\MeasurablePath.lean",
+      "sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "bytes": 6914,
+      "expected": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "match": true,
+      "expectedBytes": 6914
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\TruncationIntegrals.lean",
+      "sha256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "bytes": 15831,
+      "expected": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "match": true,
+      "expectedBytes": 15831
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\TruncationBudget.lean",
+      "sha256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+      "bytes": 8119,
+      "expected": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+      "match": true,
+      "expectedBytes": 8119
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\FinitePath.lean",
+      "sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "bytes": 10146,
+      "expected": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "match": true,
+      "expectedBytes": 10146
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\Events.lean",
+      "sha256": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+      "bytes": 3346,
+      "expected": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+      "match": true,
+      "expectedBytes": 3346
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\TwoSided.lean",
+      "sha256": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+      "bytes": 2477,
+      "expected": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+      "match": true,
+      "expectedBytes": 2477
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceGrowingYReflection.lean",
+      "sha256": "9604c7ffda7b2c2f375656de50811983b98818ccd6c8fc0f0f3f84c90ed34c3e",
+      "bytes": 65149,
+      "expected": "9604c7ffda7b2c2f375656de50811983b98818ccd6c8fc0f0f3f84c90ed34c3e",
+      "match": true,
+      "expectedBytes": 65149
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceDesmoothing.lean",
+      "sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "bytes": 42090,
+      "expected": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "match": true,
+      "expectedBytes": 42090
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceMomentDomain.lean",
+      "sha256": "38001730626dfcd13ffc6cee1b226dea9e1361b0f0514f663becfaaf7970eed2",
+      "bytes": 14172,
+      "expected": "38001730626dfcd13ffc6cee1b226dea9e1361b0f0514f663becfaaf7970eed2",
+      "match": true,
+      "expectedBytes": 14172
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\OriginalGaussianTail.lean",
+      "sha256": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+      "bytes": 35272,
+      "expected": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+      "match": true,
+      "expectedBytes": 35272
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\EndpointRelativeError.lean",
+      "sha256": "e9624ff50b79c8e41b749e4b6851870129797a38c692b809a90e81cda8699223",
+      "bytes": 126150,
+      "expected": "e9624ff50b79c8e41b749e4b6851870129797a38c692b809a90e81cda8699223",
+      "match": true,
+      "expectedBytes": 126150
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\OriginalCDFPullback.lean",
+      "sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+      "bytes": 22333,
+      "expected": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+      "match": true,
+      "expectedBytes": 22333
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "sha256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "bytes": 4604,
+      "expected": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "match": true,
+      "expectedBytes": 4604
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\verification\\receipt-v81.json",
+      "sha256": "6cef624d048543fdfac1b0b63ff094b06037ba215017afde9ff7fcf47f267f92",
+      "bytes": 137541,
+      "expected": "6cef624d048543fdfac1b0b63ff094b06037ba215017afde9ff7fcf47f267f92",
+      "match": true
+    },
+    {
+      "path": "C:\\game\\shao lean\\library\\verification\\receipt-v82.json",
+      "sha256": "5d9d32ffaf5f9616bcc308c53628aac79e8898da8cc00c281e4217259f5064ce",
+      "bytes": 119630,
+      "expected": "5d9d32ffaf5f9616bcc308c53628aac79e8898da8cc00c281e4217259f5064ce",
+      "match": true
+    }
+  ],
+  "priorCredit": {
+    "immutableV81ReceiptSHA256": "6cef624d048543fdfac1b0b63ff094b06037ba215017afde9ff7fcf47f267f92",
+    "immutableV82ReceiptSHA256": "5d9d32ffaf5f9616bcc308c53628aac79e8898da8cc00c281e4217259f5064ce",
+    "all15MathematicalInputsMatchBoth": true,
+    "mathematicalInputs": [
+      {
+        "path": "Shao/Probability/QuadraticEnergyLowerTail.lean",
+        "sha256": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc",
+        "v81": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc",
+        "v82": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc"
+      },
+      {
+        "path": "Shao/Probability/GaussianTail.lean",
+        "sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+        "v81": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+        "v82": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922"
+      },
+      {
+        "path": "Shao/Probability/MeasurablePath.lean",
+        "sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+        "v81": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+        "v82": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41"
+      },
+      {
+        "path": "Shao/Probability/TruncationIntegrals.lean",
+        "sha256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+        "v81": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+        "v82": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234"
+      },
+      {
+        "path": "Shao/Basic/TruncationBudget.lean",
+        "sha256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+        "v81": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+        "v82": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd"
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+        "v81": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+        "v82": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb"
+      },
+      {
+        "path": "Shao/Basic/Events.lean",
+        "sha256": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+        "v81": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+        "v82": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a"
+      },
+      {
+        "path": "Shao/C2/TwoSided.lean",
+        "sha256": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+        "v81": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+        "v82": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4"
+      },
+      {
+        "path": "Shao/Probability/SourceGrowingYReflection.lean",
+        "sha256": "9604c7ffda7b2c2f375656de50811983b98818ccd6c8fc0f0f3f84c90ed34c3e",
+        "v81": "9604c7ffda7b2c2f375656de50811983b98818ccd6c8fc0f0f3f84c90ed34c3e",
+        "v82": "9604c7ffda7b2c2f375656de50811983b98818ccd6c8fc0f0f3f84c90ed34c3e"
+      },
+      {
+        "path": "Shao/Probability/SourceDesmoothing.lean",
+        "sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+        "v81": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+        "v82": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240"
+      },
+      {
+        "path": "Shao/Probability/SourceMomentDomain.lean",
+        "sha256": "38001730626dfcd13ffc6cee1b226dea9e1361b0f0514f663becfaaf7970eed2",
+        "v81": "38001730626dfcd13ffc6cee1b226dea9e1361b0f0514f663becfaaf7970eed2",
+        "v82": "38001730626dfcd13ffc6cee1b226dea9e1361b0f0514f663becfaaf7970eed2"
+      },
+      {
+        "path": "Shao/Probability/OriginalGaussianTail.lean",
+        "sha256": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+        "v81": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+        "v82": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583"
+      },
+      {
+        "path": "Shao/Probability/EndpointRelativeError.lean",
+        "sha256": "e9624ff50b79c8e41b749e4b6851870129797a38c692b809a90e81cda8699223",
+        "v81": "e9624ff50b79c8e41b749e4b6851870129797a38c692b809a90e81cda8699223",
+        "v82": "e9624ff50b79c8e41b749e4b6851870129797a38c692b809a90e81cda8699223"
+      },
+      {
+        "path": "Shao/Probability/OriginalCDFPullback.lean",
+        "sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+        "v81": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+        "v82": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7"
+      },
+      {
+        "path": "Shao/C2/BrownianBridgeLaw.lean",
+        "sha256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+        "v81": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+        "v82": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd"
+      }
+    ],
+    "fullNecessaryHeadsAndValuesMatchOriginal": [
+      {
+        "path": "Shao/Probability/QuadraticEnergyLowerTail.lean",
+        "declaration": "finite_iid_energy_lower_tail",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Probability/GaussianTail.lean",
+        "declaration": "standardNormal_mills_bounds",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Probability/GaussianTail.lean",
+        "declaration": "standardNormalTail_basic",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "upperMax_ge_iff",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/TruncationBudget.lean",
+        "declaration": "truncationF_of_abs_le_one",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "Path",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "prefixSum",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "energy",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "upperMax",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/FinitePath.lean",
+        "declaration": "lowerMax",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/Events.lean",
+        "declaration": "upperCrossing",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/Events.lean",
+        "declaration": "lowerCrossing",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/C2/TwoSided.lean",
+        "declaration": "doubleCrossing",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Basic/TruncationBudget.lean",
+        "declaration": "truncationF",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Probability/TruncationIntegrals.lean",
+        "declaration": "truncationBudget",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Probability/GaussianTail.lean",
+        "declaration": "standardNormalDensity",
+        "fullHeadOrValueMatchesSource": true
+      },
+      {
+        "path": "Shao/Probability/GaussianTail.lean",
+        "declaration": "standardNormalTail",
+        "fullHeadOrValueMatchesSource": true
+      }
+    ],
+    "prior733ObjectReferencesExact": true,
+    "directDependencyPhysicalBindings": [
+      {
+        "module": "Shao.Probability.QuadraticEnergyLowerTail",
+        "kind": "source",
+        "sha256": "e0cffb4e4d3cea7213c3b92a8c3d8f0d5406014ea2bc76613ac3d4711d68d9fc",
+        "matches": true
+      },
+      {
+        "module": "Shao.Probability.QuadraticEnergyLowerTail",
+        "kind": "originalObject",
+        "sha256": "6a42ffb03b5e1a755fff036877956bff3b11b6162d1ad4df687143879bed9912",
+        "matches": true
+      },
+      {
+        "module": "Shao.Probability.GaussianTail",
+        "kind": "source",
+        "sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+        "matches": true
+      },
+      {
+        "module": "Shao.Probability.GaussianTail",
+        "kind": "originalObject",
+        "sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+        "matches": true
+      },
+      {
+        "module": "Shao.Probability.MeasurablePath",
+        "kind": "source",
+        "sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+        "matches": true
+      },
+      {
+        "module": "Shao.Probability.MeasurablePath",
+        "kind": "originalObject",
+        "sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+        "matches": true
+      },
+      {
+        "module": "Shao.C2.TwoSided",
+        "kind": "source",
+        "sha256": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+        "matches": true
+      },
+      {
+        "module": "Shao.C2.TwoSided",
+        "kind": "originalObject",
+        "sha256": "09c2d36a4314a0d9b77bb2173ea730949f6b36de0833ed9cea00e69b1d34a61f",
+        "matches": true
+      },
+      {
+        "module": "Mathlib.MeasureTheory.Integral.Pi",
+        "kind": "source",
+        "sha256": "43c50a9d9a683b2050e145154410a7260c3dd84f3ec3010630cc6b90572afcd9",
+        "matches": true
+      },
+      {
+        "module": "Mathlib.MeasureTheory.Integral.Pi",
+        "kind": "originalObject",
+        "sha256": "79906e1ca87983266fe62ff6294a416d9ed29691801087fc2e412d0aaaf794c4",
+        "matches": true
+      }
+    ],
+    "mutablePointerDifferenceHonestlyPreserved": {
+      "candidate": "908895c552f232af3ec480a57d8a9f4f922b53e977cf2628a7c32c3efab65dc7",
+      "current": "331dc3a00f4b4719cc28d4e9176656a23586d61d80201cf373a719e804dbe0af",
+      "activationDisclosesDifference": [
+        {
+          "path": "C:\\game\\shao lean\\library\\SNAPSHOT.json",
+          "originalCandidatePointerSHA256": "908895c552f232af3ec480a57d8a9f4f922b53e977cf2628a7c32c3efab65dc7",
+          "currentV82PointerSHA256": "331dc3a00f4b4719cc28d4e9176656a23586d61d80201cf373a719e804dbe0af",
+          "reason": "Root accepted v82 after candidate completed. Immutable accepted v81 receipt and every consumed mathematical source are byte-bound and retained in v82; original candidate manifest is preserved."
+        }
+      ]
+    },
+    "oldProofReviewReplays": 0,
+    "producerRecompiles": 0,
+    "oldKernelOrAxiomReplays": 0,
+    "cacheWrites": 0
+  },
+  "chronology": {
+    "localRecord": "local-freeze-chronology.json",
+    "originalRemoteRecord": "original-audit-framing.json",
+    "publicFreezeBeforeFormalBody": true,
+    "privateAmendmentBeforePrivateBody": true,
+    "sourceBuilderBoundBothFrozenHashes": true,
+    "frozenHeaderHasNoUnpaidOracle": true
+  },
+  "mathematicalReview": {
+    "supportPaysAllMomentsAndExponentials": true,
+    "realProductFubiniAndBothPredictableSigns": true,
+    "noSymmetryOrSignIIDAssumption": true,
+    "finiteDeterministicThreeWallStop": true,
+    "noStoppingAtRandomEnergyWall": true,
+    "acceptedActualFullEnergyLowerTailCalledKappa": "1/9",
+    "lowEnergyDenominator": 5832,
+    "a": "2*sqrt(2)*x/3",
+    "lambda": "2*sqrt(2)*x",
+    "lambdaB": "sqrt(2)/2 <= 1",
+    "cubicCoefficient": 24,
+    "actualTruncationBudgetIdentityProved": true,
+    "betaPositiveAndNGe16XSquaredAreConclusions": true,
+    "zeroEnergyAndEqualityAtomsPaid": true,
+    "constantOrder": "forall fixed cstar>0, C=sqrt(2*pi)*(2+4*exp(1)/cstar) before law,n,x",
+    "relativeConditionsAreConclusionInternal": [
+      "u <= 1/20000",
+      "cstar*exp(-3*x^2) <= u"
+    ],
+    "realNormalTailUsed": true,
+    "unpaidProbabilityOrIntegrabilityOracles": false,
+    "originalUnboundedLawThirdMomentAdded": false
+  },
+  "preciseScope": {
+    "proved": "Real centered bounded normalized iid double-crossing probability, universal exponential bound and explicit nonresidual C(cstar)*R_n(x)*Psi(x) bound",
+    "notProved": [
+      "Actual Brownian d(x) bound",
+      "abs(P(D)-d(x))",
+      "residual u<cstar*exp(-3*x^2)",
+      "original p-moment conditional truncation/centering backtransfer",
+      "full enlarged I_n assembly",
+      "original C1/C2 root closure"
+    ],
+    "roots": {
+      "C12": "OPEN",
+      "OQ56": "OPEN",
+      "OQ3": "PAUSED_BY_USER_ACCEPTED_COUNTEREXAMPLE_RETAINED",
+      "OQ4": "ONLY_PREVIOUSLY_SEPARATELY_ACCEPTED_SCOPE_COMPLETE"
+    },
+    "noveltyClaim": false,
+    "externalAndClassicalAttributionRetained": true,
+    "p54ScopeAndRepairsUnchanged": true
+  },
+  "nonblockingMetadataNotes": [
+    "checkpoint.failedActualChecks=1 is stale; failedCompletedActualChecks=3 and final receipt plus preserved original attempts show 3 failures, 1 successful whole kernel",
+    "candidate-only source header is frozen historical provenance; current activation and receipts establish formal production",
+    "audit TYPE file is full contiguous original log payload after 160-byte repository-dirty warning, not its byte-zero prefix"
+  ],
+  "criticalGaps": [],
+  "reviewActions": {
+    "newLean": 0,
+    "newAX": 0,
+    "newHeavyComputation": 0,
+    "newSubagents": 0,
+    "newSidebarChats": 0,
+    "goals": 0,
+    "automations": 0,
+    "sourceChanges": 0,
+    "sharedChanges": 0,
+    "merges": 0
+  },
+  "reportMarkdown": {
+    "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\full-review.md",
+    "sha256": "7fe4a558b1bf2dab525c9a77f2984035e1ab3fd6090c3c2103cf4b3c88871214"
+  },
+  "supportingEvidence": [
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\ACK.json",
+      "sha256": "b04e2946f27d1253001281726eb4b1bbe25e4d80d1ba2bfb4eee6dca5e5a55cc"
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\actual-owner-type-inventory.json",
+      "sha256": "6beaf394605de79f4e8545dfdae964108438ed3d893e8ef4823081b64d4a6013"
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\local-binding-verification.json",
+      "sha256": "d711e09d436cbd71c84ec9471f28af958bd6e5111795a673ba21fa12f52ca31f"
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\remote-binding-verification.json",
+      "sha256": "fb3ef03c240ee77bfd7019ae53fe22eefad5159da76ff83d0a4de441cee95c7b"
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\original-audit-framing.json",
+      "sha256": "b67a8d1e9cf235a0cef84ea747148941d8697af108fa2c44913c9a4e1073563f"
+    },
+    {
+      "path": "C:\\game\\shao lean\\drafts\\c12-original-large-threshold-final-review\\local-freeze-chronology.json",
+      "sha256": "26afef80b913cea5d092977f664577d6e0951e61de170d4c6ba06ff6d60ba3d7"
+    }
+  ]
+}
