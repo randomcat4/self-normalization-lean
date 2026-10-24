@@ -1,0 +1,74 @@
+import Shao.OQ4.RademacherOriginalStrictBoundary
+import Mathlib.Algebra.Order.Floor.Semiring
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators
+universe uX
+
+namespace Shao.OQ4.RademacherRealStrictBoundary
+
+def sourceDeterministicStrictEvent {ΩX : Type uX}
+    (n : ℕ) (X : ℕ → ΩX → ℝ) (h : ℝ) : Set ΩX :=
+  {ω | ∀ r : ℕ, 1 ≤ r → r ≤ n →
+    |∑ i ∈ Finset.range r, X (i + 1) ω| < h}
+
+theorem ceil_boundary_bridge (N : ℕ) (h : ℝ) (hh : 0 < h) :
+    1 ≤ Nat.ceil h ∧
+    (((Nat.ceil h - 1 : ℕ) : ℝ) = (Nat.ceil h : ℝ) - 1) ∧
+    ((Nat.ceil h - 1 : ℕ) : ℝ) < h ∧
+    h ≤ (Nat.ceil h : ℝ) ∧
+    (∀ v : Shao.Path N,
+      (∀ r : ℕ, r ≤ N → ∃ z : ℤ, Shao.prefixSum v r = (z : ℝ)) →
+      (v ∈ RademacherStrictCube.strictEvent N h ↔
+        v ∈ @Shao.closedStrip N ((Nat.ceil h - 1 : ℕ) : ℝ))) ∧
+    (∀ᵐ v ∂(RademacherS5Assembly.pathLaw N),
+      v ∈ RademacherStrictCube.strictEvent N h ↔
+        v ∈ @Shao.closedStrip N ((Nat.ceil h - 1 : ℕ) : ℝ)) ∧
+    RademacherStrictCube.strictP N h =
+      RademacherS5Assembly.p N ((Nat.ceil h - 1 : ℕ) : ℝ)
+
+theorem source_ceil_boundary_bridge
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (h : ℝ) (hh : 0 < h) :
+    sourceDeterministicStrictEvent n X h =
+      OriginalIIDWindow.sourcePath n X ⁻¹'
+        RademacherStrictCube.strictEvent n h ∧
+    (∀ᵐ ω ∂μ,
+      ω ∈ sourceDeterministicStrictEvent n X h ↔
+        ∀ r : ℕ, r ≤ n →
+          |∑ i ∈ Finset.range r, X (i + 1) ω| ≤
+            ((Nat.ceil h - 1 : ℕ) : ℝ)) ∧
+    μ.real (sourceDeterministicStrictEvent n X h) =
+      RademacherStrictCube.strictP n h ∧
+    μ.real (sourceDeterministicStrictEvent n X h) =
+      RademacherS5Assembly.p n ((Nat.ceil h - 1 : ℕ) : ℝ)
+
+theorem noninteger_boundary
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n : ℕ) (h : ℝ) (hh : 0 < h)
+    (hNoninteger : ∀ z : ℤ, h ≠ (z : ℝ)) :
+    (∀ᵐ v ∂(RademacherS5Assembly.pathLaw n),
+      v ∈ RademacherStrictCube.strictEvent n h ↔
+        v ∈ @Shao.closedStrip n h) ∧
+    RademacherStrictCube.strictP n h = RademacherS5Assembly.p n h ∧
+    (∀ᵐ ω ∂μ,
+      ω ∈ sourceDeterministicStrictEvent n X h ↔
+        ∀ r : ℕ, r ≤ n →
+          |∑ i ∈ Finset.range r, X (i + 1) ω| ≤ h) ∧
+    μ.real (sourceDeterministicStrictEvent n X h) =
+      μ.real {ω | ∀ r : ℕ, r ≤ n →
+        |∑ i ∈ Finset.range r, X (i + 1) ω| ≤ h} ∧
+    μ.real (sourceDeterministicStrictEvent n X h) =
+      RademacherS5Assembly.p n h
+
+end Shao.OQ4.RademacherRealStrictBoundary
+end
