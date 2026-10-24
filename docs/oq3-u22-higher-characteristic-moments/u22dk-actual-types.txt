@@ -1,0 +1,21 @@
+DECL Shao.OQ3.uniform_scalar_characteristic_moment_remainder_bound
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure ℝ),
+  (∀ (i : ι), MeasureTheory.IsProbabilityMeasure (law i)) →
+    ∀ (m : ℕ) (M : ℝ),
+      (∀ (i : ι), MeasureTheory.Integrable (fun x => |x| ^ m) (law i)) →
+        (∀ (i : ι), ∫ (x : ℝ), |x| ^ m ∂law i ≤ M) →
+          ∀ (i : ι) (t : ℝ),
+            ‖∫ (x : ℝ), Complex.exp (↑(t * x) * Complex.I) ∂law i -
+                  ∑ j ∈ Finset.range m, (↑t * Complex.I) ^ j / ↑j.factorial * ↑(∫ (x : ℝ), x ^ j ∂law i)‖ ≤
+              (Real.exp 1 + ↑m + 1) * M * |t| ^ m
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.scalar_characteristic_moment_remainder_bound
+TYPE ∀ (ν : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure ν] (m : ℕ),
+  MeasureTheory.Integrable (fun x => |x| ^ m) ν →
+    ∀ (t : ℝ),
+      ‖∫ (x : ℝ), Complex.exp (↑(t * x) * Complex.I) ∂ν -
+            ∑ j ∈ Finset.range m, (↑t * Complex.I) ^ j / ↑j.factorial * ↑(∫ (x : ℝ), x ^ j ∂ν)‖ ≤
+        (Real.exp 1 + ↑m + 1) * |t| ^ m * ∫ (x : ℝ), |x| ^ m ∂ν
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

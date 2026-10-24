@@ -1,0 +1,16 @@
+DECL Shao.OQ3.scalar_characteristic_integrated_taylor_remainder._simp_1_1
+TYPE ∀ {α : Type u_1} [inst : Preorder α] (a : α), (a ≤ a) = True
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.scalar_characteristic_integrated_taylor_remainder
+TYPE ∀ (ν : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure ν] (m : ℕ),
+  MeasureTheory.Integrable (fun x => |x| ^ m) ν →
+    ∀ (t : ℝ),
+      have e := fun x => Complex.exp (↑(t * x) * Complex.I);
+      have P := fun x => ∑ j ∈ Finset.range m, (↑(t * x) * Complex.I) ^ j / ↑j.factorial;
+      MeasureTheory.Integrable e ν ∧
+        MeasureTheory.Integrable P ν ∧
+          MeasureTheory.Integrable (fun x => e x - P x) ν ∧
+            ‖∫ (x : ℝ), e x ∂ν - ∫ (x : ℝ), P x ∂ν‖ ≤ (Real.exp 1 + ↑m + 1) * |t| ^ m * ∫ (x : ℝ), |x| ^ m ∂ν
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
