@@ -1,0 +1,50 @@
+import Shao.C2.BrownianBridgeProductKernel
+
+noncomputable section
+namespace Shao.C2.BrownianSurvivalSplit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.PhysicalBrownianEndpointDensity Shao.C2.ScaledBrownianIdentity
+open Shao.C2.BrownianBridgeProductKernel
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+def splitSurvivalEvent (a y S : ℝ) (A : Set ℝ) :
+    Set ((BridgeNoise × ℝ) × C(BridgeTime, ℝ)) :=
+  {p | ‖ContinuousMap.const BridgeTime y + p.2‖ < a ∧
+    p.1 ∈ scaledInitialSurvival a (y + p.2 1) S ∧
+      y + p.2 1 + Real.sqrt S * p.1.2 ∈ A}
+
+private theorem unit_survival_iff_physical (Z : ℝ≥0 → ℝ) (a : ℝ)
+    (U : ℝ≥0) (hU : U ≠ 0) :
+    (∀ s : ℝ≥0, s ≤ U → |Z s| < a) ↔
+      ∀ t : BridgeTime, |Z (U * ⟨(t : ℝ), t.property.1⟩)| < a := by
+
+theorem physical_survival_split {Ω : Type*} (B : ℝ≥0 → Ω → ℝ) (a y : ℝ)
+    (T S : ℝ≥0) (ω : Ω) :
+    (∀ s : ℝ≥0, s ≤ T + S → |y + B s ω| < a) ↔
+      (∀ t : ℝ≥0, t ≤ T → |y + B t ω| < a) ∧
+        ∀ u : ℝ≥0, u ≤ S → |y + B (T + u) ω| < a := by
+
+theorem measurableSet_splitSurvivalEvent (a y S : ℝ) (A : Set ℝ) (hA : MeasurableSet A) :
+    MeasurableSet (splitSurvivalEvent a y S A) := by
+
+private theorem actual_joint_ae_splitSurvivalEvent {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T S : ℝ≥0) (hT : T ≠ 0) (hS : S ≠ 0)
+    (A : Set ℝ) :
+    {ω | (∀ s : ℝ≥0, s ≤ T + S → |y + B s ω| < a) ∧ y + B (T + S) ω ∈ A} =ᵐ[P]
+      (fun ω =>
+        ((bridgeNoise (normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S) ω,
+          normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S 1 ω),
+          brownianUnitPath B T ω)) ⁻¹' splitSurvivalEvent a y (S : ℝ) A := by
+
+theorem brownian_split_event_probability {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T S : ℝ≥0) (hT : T ≠ 0) (hS : S ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    P.real {ω | (∀ s : ℝ≥0, s ≤ T + S → |y + B s ω| < a) ∧ y + B (T + S) ω ∈ A} =
+      (((bridgeLaw B P).prod (gaussianReal 0 1)).prod (brownianUnitPathLaw B T P)).real
+        (splitSurvivalEvent a y (S : ℝ) A) := by
+
+end Shao.C2.BrownianSurvivalSplit

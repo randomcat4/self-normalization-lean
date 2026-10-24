@@ -1,0 +1,26 @@
+import Shao.C2.BrownianKilledKernel
+
+noncomputable section
+namespace Shao.C2.BrownianKilledAction
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BrownianKilledKernel
+
+theorem actualIntervalKernel_row_eq_map_restrict {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    actualIntervalKernel B P a T y =
+      (P.restrict {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a}).map
+        (fun ω => y + B T ω) := by
+
+theorem actualIntervalKernel_action_bounded {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (f : ℝ → ℝ) (hf : Measurable f) (hbound : ∃ M : ℝ, ∀ z, |f z| ≤ M) :
+    Integrable f (actualIntervalKernel B P a T y) ∧
+      Integrable (fun ω => f (y + B T ω))
+        (P.restrict {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a}) ∧
+      (∫ z : ℝ, f z ∂actualIntervalKernel B P a T y) =
+        ∫ ω, f (y + B T ω) ∂P.restrict {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a} := by
+
+end Shao.C2.BrownianKilledAction

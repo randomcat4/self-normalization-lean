@@ -1,0 +1,54 @@
+import Shao.C2.BrownianPathWeakMarkov
+
+noncomputable section
+namespace Shao.C2.BrownianBridgeProductKernel
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.PhysicalBrownianEndpointDensity Shao.C2.BrownianBridgeLawUniversality
+open Shao.C2.BrownianKilledKernel Shao.C2.BrownianKilledAction
+open Shao.C2.BrownianPathWeakMarkov Shao.C2.ScaledBrownianIdentity
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+def bridgeProductEndpointMeasure (ν : Measure BridgeNoise) (a y T : ℝ) : Measure ℝ :=
+  ((ν.prod (gaussianReal 0 1)).restrict (scaledInitialSurvival a y T)).map
+    (fun p : BridgeNoise × ℝ => y + Real.sqrt T * p.2)
+
+private theorem physical_survival_iff_normalized {Ω : Type*}
+    (B : ℝ≥0 → Ω → ℝ) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) (ω : Ω) :
+    (∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a) ↔
+      ∀ t : BridgeTime, |y + Real.sqrt (T : ℝ) *
+        normalizedPhysicalBrownian B T ⟨(t : ℝ), t.property.1⟩ ω| < a := by
+
+private theorem physical_survival_ae_bridgeProduct {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a} =ᵐ[P]
+      (fun ω => (bridgeNoise (normalizedPhysicalBrownian B T) ω,
+        normalizedPhysicalBrownian B T 1 ω)) ⁻¹' scaledInitialSurvival a y (T : ℝ) := by
+
+theorem actualIntervalKernel_eq_bridgeProductEndpointMeasure {Ω : Type*}
+    [MeasurableSpace Ω] (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    actualIntervalKernel B P a T y =
+      bridgeProductEndpointMeasure (bridgeLaw B P) a y (T : ℝ) := by
+
+theorem bridgeProduct_initial_joint_real {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    ((bridgeLaw B P).prod (gaussianReal 0 1)).real
+      (scaledInitialSurvival a y (T : ℝ) ∩
+        {p : BridgeNoise × ℝ | y + Real.sqrt (T : ℝ) * p.2 ∈ A}) =
+      (actualIntervalKernel B P a T y).real A := by
+
+theorem normalized_future_past_hasLaw {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T S : ℝ≥0) (hS : S ≠ 0) :
+    HasLaw (fun ω =>
+      ((bridgeNoise (normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S) ω,
+        normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S 1 ω),
+        brownianUnitPath B T ω))
+      (((bridgeLaw B P).prod (gaussianReal 0 1)).prod (brownianUnitPathLaw B T P)) P := by
+
+end Shao.C2.BrownianBridgeProductKernel

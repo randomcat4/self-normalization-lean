@@ -1,0 +1,41 @@
+import Shao.C2.BrownianSurvivalSplit
+
+noncomputable section
+namespace Shao.C2.BrownianKilledSemigroup
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BrownianKilledKernel Shao.C2.BrownianKilledAction
+open Shao.C2.BrownianBridgeProductKernel Shao.C2.BrownianSurvivalSplit
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+private theorem product_real_section {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
+    (μ : Measure α) [IsFiniteMeasure μ] (ν : Measure β) [IsFiniteMeasure ν]
+    (E : Set (α × β)) (hE : MeasurableSet E) :
+    (μ.prod ν).real E = ∫ b : β, μ.real {a | (a, b) ∈ E} ∂ν := by
+
+private theorem physical_survival_ae_unitPath {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0) :
+    {ω | ∀ s : ℝ≥0, s ≤ T → |y + B s ω| < a} =ᵐ[P]
+      (brownianUnitPath B T) ⁻¹'
+        {p : C(BridgeTime, ℝ) | ‖ContinuousMap.const BridgeTime y + p‖ < a} := by
+
+private theorem past_path_restricted_action {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T : ℝ≥0) (hT : T ≠ 0)
+    (f : ℝ → ℝ) (hf : Measurable f) (hbound : ∃ M : ℝ, ∀ z, |f z| ≤ M) :
+    (∫ p : C(BridgeTime, ℝ) in {p | ‖ContinuousMap.const BridgeTime y + p‖ < a},
+        f (y + p 1) ∂brownianUnitPathLaw B T P) =
+      ∫ z : ℝ, f z ∂actualIntervalKernel B P a T y := by
+
+theorem actualIntervalKernel_semigroup_real {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y : ℝ) (T S : ℝ≥0) (hT : T ≠ 0) (hS : S ≠ 0)
+    (A : Set ℝ) (hA : MeasurableSet A) :
+    Integrable (fun z : ℝ => (actualIntervalKernel B P a S z).real A)
+      (actualIntervalKernel B P a T y) ∧
+    (actualIntervalKernel B P a (T + S) y).real A =
+      ∫ z : ℝ, (actualIntervalKernel B P a S z).real A ∂actualIntervalKernel B P a T y := by
+
+end Shao.C2.BrownianKilledSemigroup
