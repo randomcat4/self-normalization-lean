@@ -1,0 +1,43 @@
+import Shao.C2.ActualBridgeIntervalTelescope
+import Shao.C2.AdaptiveRevealCutoff
+import Shao.Probability.SourceActualLocalProfileBudget
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.C2.ActualAdaptiveIntervalTelescope
+open MeasureTheory ProbabilityTheory
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeUpperAffineIdentification Shao.C2.BridgeLowerIdentification
+open Shao.C2.HalfLineReflectionFormula Shao.C2.SourceIntervalCompletion
+open Shao.C2.BridgeIntervalImageResolved Shao.C2.CompletedIntervalProcess
+open Shao.C2.CompletedIntervalDerivative Shao.C2.CompletedIntervalUpdate
+open Shao.C2.SourceIntervalTelescope Shao.C2.ReflectedIntervalTelescope
+open Shao.C1.PermutationEnergyEnvelope Shao.C1.IntegratedPermutationTelescope
+
+open Shao.C2.ActualBridgeIntervalTelescope Shao.C2.AdaptiveRevealCutoff
+open Shao.Probability.SourcePermutationReveal Shao.Probability.SourceActualLocalProfileBudget
+
+theorem actual_adaptive_interval_stopped_expectation {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (W : Measure Ω) [IsProbabilityMeasure W] (hB : IsBrownianReal B W)
+    (n : ℕ) [MeasurableSpace (Equiv.Perm (Fin n))]
+    [MeasurableSingletonClass (Equiv.Perm (Fin n))]
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (H : ℝ) (hH : 0 < H)
+    (ell : ℕ)
+    (m : Shao.Path n → ℝ) (hmmeas : Measurable m) (hmabs : ∀ z, |m z| ≤ 1)
+    (hminvariant : ∀ (z : Shao.Path n) (τ : Equiv.Perm (Fin n)),
+      m (fun i => z (τ i)) = m z) :
+    let ν : Shao.Path n → Equiv.Perm (Fin n) → ℕ := fun z sigma =>
+      min (energyCutoff z H sigma) (n - ell)
+    Integrable (fun z => ∫ σ, m z *
+      (completedValue (bridgeLaw B W) x z σ (ν z σ) - RawInitialCompletion.rawInitial (bridgeLaw B W) x z)
+        ∂(uniformPermutationLaw n)) P ∧
+    Integrable (fun z => ∫ σ, m z * (∑ r : Fin n, sourceStoppedStep ν (bridgeLaw B W) x z σ r)
+      ∂(uniformPermutationLaw n)) P ∧
+    (∫ z, ∫ σ, m z * (completedValue (bridgeLaw B W) x z σ (ν z σ) - RawInitialCompletion.rawInitial (bridgeLaw B W) x z)
+      ∂(uniformPermutationLaw n) ∂P) =
+      ∫ z, ∫ σ, m z * (∑ r : Fin n, sourceStoppedStep ν (bridgeLaw B W) x z σ r)
+        ∂(uniformPermutationLaw n) ∂P := by
+
+end Shao.C2.ActualAdaptiveIntervalTelescope

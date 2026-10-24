@@ -1,0 +1,769 @@
+{
+  "schema": 1,
+  "STATUS": "CORRECT",
+  "status": "CORRECT",
+  "unit": 148,
+  "module": "Shao.C2.AdaptiveRevealCutoff",
+  "atUTC": "2026-10-24T20:27:18.053091+00:00",
+  "reviewer": "/root/actual_brownian_crossing_lower_final_review",
+  "configuredModel": "gpt-6.1-sol",
+  "configuredEffort": "xhigh",
+  "freshAuthorIndependentContext": true,
+  "boundedScopeExtensionBeforeSeal": true,
+  "authorWriterExecutionReleaseVerified": true,
+  "authorThread": "01a16c4c-25a6-7740-a10e-12635a13edae",
+  "soleWriteDirectory": "C:\\game\\shao lean\\drafts\\c12-lane\\actual-brownian-crossing-lower-final-review-v1",
+  "usage": {
+    "input": null,
+    "cachedInput": null,
+    "output": null,
+    "reasoningSubset": null
+  },
+  "skill": "math-theorem",
+  "mathUltraUsed": false,
+  "sourceSHA256": "aa83d298cd4b6249168fb66cb8d9b8e3e7b74aa8c07c082a0f26cdb7200dfb95",
+  "objectSHA256": "766f1be06611d45381bc4169ea52fdb448d5620d4edf4b41ef69ade3efbd68e7",
+  "frozenSHA256": "d10df464706229d966d0b79d86f234a6ca7efed938740c4c6a0c22d8895f4a29",
+  "receiptSHA256": "9f589ea5eaba88b8705445cac711b9b1606713ba27cb20dafbf3df5d04f796a5",
+  "authorReleaseSHA256": "836bdc1a9af400650c638fe69c799222871a8676db78fc9070938d022706201d",
+  "sourceLocalPath": "C:\\game\\shao lean\\drafts\\c12-lane\\adaptive-reveal-cutoff-v1\\AdaptiveRevealCutoff.lean",
+  "sourceServerPath": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/C2/AdaptiveRevealCutoff.lean",
+  "sourceSnapshot": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/attempt001/source.lean",
+  "objectPaths": [
+    "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/AdaptiveRevealCutoff.olean",
+    "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/C2/AdaptiveRevealCutoff.olean"
+  ],
+  "wholeOwnedCountDerived": 9,
+  "theoremCountDerived": 9,
+  "publicSourceTheoremsDerived": 3,
+  "generatedTheoremsDerived": 6,
+  "privateSourceTheoremsDerived": 0,
+  "nonTheoremCountDerived": 0,
+  "allOwnedSourceGeneratedTypeMapCoverageExact": true,
+  "contextBeforeDeclarations": "import Shao.Probability.SourcePermutationReveal\n\nset_option autoImplicit false\nnoncomputable section\nnamespace Shao.C2.AdaptiveRevealCutoff\nopen Shao.Probability.SourcePermutationReveal\n\n",
+  "frozenFullContextAndHeads": "import Shao.Probability.SourcePermutationReveal\n\nset_option autoImplicit false\nnoncomputable section\nnamespace Shao.C2.AdaptiveRevealCutoff\nopen Shao.Probability.SourcePermutationReveal\n\ntheorem before_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    r < min (energyCutoff a H sigma) (n - m) ↔\n      r < n - m ∧ H ≤ remainingEnergy a r sigma := by\n\ntheorem omitted_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    (min (energyCutoff a H sigma) (n - m) ≤ r ∧ r < energyCutoff a h0 sigma) ↔\n      h0 ≤ remainingEnergy a r sigma ∧\n        (remainingEnergy a r sigma < H ∨ n - r ≤ m) := by\n\ntheorem adaptive_cutoff_stopping_and_le\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (hh0H : h0 ≤ H) (m : ℕ) :\n    IsRevealStoppingRank (fun sigma => min (energyCutoff a H sigma) (n - m)) ∧\n      ∀ sigma : LabelPerm n,\n        min (energyCutoff a H sigma) (n - m) ≤ energyCutoff a h0 sigma := by\n\nend Shao.C2.AdaptiveRevealCutoff\n",
+  "completeProductionSource": "import Shao.Probability.SourcePermutationReveal\n\nset_option autoImplicit false\nnoncomputable section\nnamespace Shao.C2.AdaptiveRevealCutoff\nopen Shao.Probability.SourcePermutationReveal\n\ntheorem before_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    r < min (energyCutoff a H sigma) (n - m) ↔\n      r < n - m ∧ H ≤ remainingEnergy a r sigma := by\n  have hc := (energy_cutoff_data a H hH).2.1 sigma r hr\n  rw [lt_min_iff]\n  have he : r < energyCutoff a H sigma ↔ H ≤ remainingEnergy a r sigma := by\n    simpa only [not_le, not_lt] using not_congr hc\n  rw [he]\n  exact and_comm\n\ntheorem omitted_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    (min (energyCutoff a H sigma) (n - m) ≤ r ∧ r < energyCutoff a h0 sigma) ↔\n      h0 ≤ remainingEnergy a r sigma ∧\n        (remainingEnergy a r sigma < H ∨ n - r ≤ m) := by\n  have hcH := (energy_cutoff_data a H hH).2.1 sigma r hr\n  have hc0 := (energy_cutoff_data a h0 hh0).2.1 sigma r hr\n  have he0 : r < energyCutoff a h0 sigma ↔ h0 ≤ remainingEnergy a r sigma := by\n    simpa only [not_le, not_lt] using not_congr hc0\n  rw [min_le_iff, hcH, he0]\n  have hNat : n - m ≤ r ↔ n - r ≤ m := by omega\n  rw [hNat]\n  exact and_comm\n\ntheorem adaptive_cutoff_stopping_and_le\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (hh0H : h0 ≤ H) (m : ℕ) :\n    IsRevealStoppingRank (fun sigma => min (energyCutoff a H sigma) (n - m)) ∧\n      ∀ sigma : LabelPerm n,\n        min (energyCutoff a H sigma) (n - m) ≤ energyCutoff a h0 sigma := by\n  have hDataH := energy_cutoff_data a H hH\n  have hData0 := energy_cutoff_data a h0 hh0\n  constructor\n  · constructor\n    · intro sigma\n      exact (min_le_left _ _).trans (hDataH.1.1 sigma)\n    · intro r sigma tau hprefix\n      simp only [min_le_iff]\n      exact or_congr (hDataH.1.2 r sigma tau hprefix) Iff.rfl\n  · intro sigma\n    have hAt0 : remainingEnergy a (energyCutoff a h0 sigma) sigma < h0 :=\n      ((hData0.2.1 sigma (energyCutoff a h0 sigma) (hData0.1.1 sigma))).mp le_rfl\n    have hLe : energyCutoff a H sigma ≤ energyCutoff a h0 sigma :=\n      ((hDataH.2.1 sigma (energyCutoff a h0 sigma) (hData0.1.1 sigma))).mpr\n        (hAt0.trans_le hh0H)\n    exact (min_le_left _ _).trans hLe\n\nend Shao.C2.AdaptiveRevealCutoff\n",
+  "ownerCoverage": [
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._simp_1_1",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+      "actualType": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b : α},\n  @Eq.{1} Prop\n    (Not\n      (@LE.le.{u_1} α\n        (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a b))\n    (@LT.lt.{u_1} α\n      (@Preorder.toLT.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b a)\n",
+      "actualTypeSHA256": "f3c89d8cb630d3639df270f4a189b7789698f5e60a53ef0326cb5a8e5ee48a4d",
+      "typeExportBlockSHA256": "d968368a6b5901169b80fbe0704dcde006e567bf470c54b86a379b0b85710fd2",
+      "typeExportBlockBytes": 488,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Universal LinearOrder alpha, universe u_1, Eq Prop (not(a<=b)) (b<a), associated with the h0 cutoff negation. It is the standard not_le proposition equality and has only propext.",
+      "sourceStartLine": 20,
+      "sourceEndLine": 33,
+      "associatedFrozenHeadSHA256": "101fc8270f1eb4b03df0baaabe62239c959813413414d9b84d9348a4e73647a6",
+      "associatedProofBodySHA256": "da3536c39c086ef42affb0e9e19c512e9b01917291b0ca8454d46ea4740fa794",
+      "universeParameters": [
+        "u_1"
+      ],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": true,
+      "generated": false,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+      "actualType": "∀ {n : Nat} (a : Shao.Path n) (h0 H : Real)\n  (hh0 : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) h0)\n  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H)\n  (m r : Nat) (hr : @LE.le.{0} Nat instLENat r n) (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n),\n  Iff\n    (And\n      (@LE.le.{0} Nat instLENat\n        (@Min.min.{0} Nat instMinNat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H sigma)\n          (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m))\n        r)\n      (@LT.lt.{0} Nat instLTNat r (@Shao.Probability.SourcePermutationReveal.energyCutoff n a h0 sigma)))\n    (And (@LE.le.{0} Real Real.instLE h0 (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r sigma))\n      (Or (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r sigma) H)\n        (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n r) m)))\n",
+      "actualTypeSHA256": "20419467da3778beb03857f774f7107e0f0aebe00d14d1631cafd5051c3174d0",
+      "typeExportBlockSHA256": "fb361ee3528f0bcccd71cd2c49abf56905f053d4edbc5b04458692be6dfcc2a3",
+      "typeExportBlockBytes": 1223,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "whitelistPass": true,
+      "proofReview": "The same qualified producer gives cutoffH<=r iff remainingEnergy<H and, by negation at positive h0, r<cutoffh0 iff h0<=remainingEnergy. min_le_iff keeps both alternatives cutoffH<=r OR n-m<=r. The exact Nat subtraction equivalence n-m<=r iff n-r<=m is proved by omega; both sides are equivalent to n<=m+r, including saturated cases. After these rewrites, and_comm yields h0<=energy AND (energy<H OR n-r<=m). Both omitted-interval branches are present. No h0<=H assumption is needed for this Boolean identity, and none is hidden in the full actual type.",
+      "sourceStartLine": 20,
+      "sourceEndLine": 33,
+      "associatedFrozenHeadSHA256": "101fc8270f1eb4b03df0baaabe62239c959813413414d9b84d9348a4e73647a6",
+      "associatedProofBodySHA256": "da3536c39c086ef42affb0e9e19c512e9b01917291b0ca8454d46ea4740fa794",
+      "sourceDeclaration": "theorem omitted_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    (min (energyCutoff a H sigma) (n - m) ≤ r ∧ r < energyCutoff a h0 sigma) ↔\n      h0 ≤ remainingEnergy a r sigma ∧\n        (remainingEnergy a r sigma < H ∨ n - r ≤ m) := by\n  have hcH := (energy_cutoff_data a H hH).2.1 sigma r hr\n  have hc0 := (energy_cutoff_data a h0 hh0).2.1 sigma r hr\n  have he0 : r < energyCutoff a h0 sigma ↔ h0 ≤ remainingEnergy a r sigma := by\n    simpa only [not_le, not_lt] using not_congr hc0\n  rw [min_le_iff, hcH, he0]\n  have hNat : n - m ≤ r ↔ n - r ≤ m := by omega\n  rw [hNat]\n  exact and_comm\n",
+      "frozenHead": "theorem omitted_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    (min (energyCutoff a H sigma) (n - m) ≤ r ∧ r < energyCutoff a h0 sigma) ↔\n      h0 ≤ remainingEnergy a r sigma ∧\n        (remainingEnergy a r sigma < H ∨ n - r ≤ m) := by\n",
+      "frozenHeadSHA256": "101fc8270f1eb4b03df0baaabe62239c959813413414d9b84d9348a4e73647a6",
+      "proofBodySHA256": "da3536c39c086ef42affb0e9e19c512e9b01917291b0ca8454d46ea4740fa794",
+      "universeParameters": [],
+      "completeFrozenHeadAndContextMatch": true
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": true,
+      "generated": false,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le",
+      "actualType": "∀ {n : Nat} (a : Shao.Path n) (h0 H : Real)\n  (hh0 : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) h0)\n  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H)\n  (hh0H : @LE.le.{0} Real Real.instLE h0 H) (m : Nat),\n  And\n    (@Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank n\n      fun (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>\n      @Min.min.{0} Nat instMinNat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H sigma)\n        (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m))\n    (∀ (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n),\n      @LE.le.{0} Nat instLENat\n        (@Min.min.{0} Nat instMinNat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H sigma)\n          (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m))\n        (@Shao.Probability.SourcePermutationReveal.energyCutoff n a h0 sigma))\n",
+      "actualTypeSHA256": "b2ccd892ac5fef0dcad4d49f7d1094e27cdeb02f1c7dddd0b7e5745dc363dd5b",
+      "typeExportBlockSHA256": "a210e79759a9193996c1620035629cf7397859b02b78b02c8f48744fb2f53817",
+      "typeExportBlockBytes": 1184,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Unfolded IsRevealStoppingRank consists exactly of cutoff<=n for every seed and invariance of cutoff<=r under identical first-r labels. min(cutoffH,n-m)<=cutoffH<=n establishes the bound. min_le_iff rewrites the observation event to cutoffH<=r OR n-m<=r; producer prefix observability and or_congr with the identical deterministic branch establish the iff. For nesting, cutoffh0<=n permits applying the producer at that exact rank. Reflexivity yields energy(cutoffh0)<h0, and hh0H:h0<=H makes it <H. The H-cutoff equivalence then gives cutoffH<=cutoffh0. Transitivity with min_le_left proves the claimed adaptive bound. This is conditional reveal-prefix stopping rank, not an iid natural-filtration stopping time.",
+      "sourceStartLine": 35,
+      "sourceEndLine": 56,
+      "associatedFrozenHeadSHA256": "f1d8eec4c114a9e8df918c4227f60a64623c02f6515476dd028d1f18ce32dd09",
+      "associatedProofBodySHA256": "9790c61e1d0851bbb615f389f776c7089ccb117e2b90d59a2e29d061425534c0",
+      "sourceDeclaration": "theorem adaptive_cutoff_stopping_and_le\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (hh0H : h0 ≤ H) (m : ℕ) :\n    IsRevealStoppingRank (fun sigma => min (energyCutoff a H sigma) (n - m)) ∧\n      ∀ sigma : LabelPerm n,\n        min (energyCutoff a H sigma) (n - m) ≤ energyCutoff a h0 sigma := by\n  have hDataH := energy_cutoff_data a H hH\n  have hData0 := energy_cutoff_data a h0 hh0\n  constructor\n  · constructor\n    · intro sigma\n      exact (min_le_left _ _).trans (hDataH.1.1 sigma)\n    · intro r sigma tau hprefix\n      simp only [min_le_iff]\n      exact or_congr (hDataH.1.2 r sigma tau hprefix) Iff.rfl\n  · intro sigma\n    have hAt0 : remainingEnergy a (energyCutoff a h0 sigma) sigma < h0 :=\n      ((hData0.2.1 sigma (energyCutoff a h0 sigma) (hData0.1.1 sigma))).mp le_rfl\n    have hLe : energyCutoff a H sigma ≤ energyCutoff a h0 sigma :=\n      ((hDataH.2.1 sigma (energyCutoff a h0 sigma) (hData0.1.1 sigma))).mpr\n        (hAt0.trans_le hh0H)\n    exact (min_le_left _ _).trans hLe\n",
+      "frozenHead": "theorem adaptive_cutoff_stopping_and_le\n    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)\n    (hh0H : h0 ≤ H) (m : ℕ) :\n    IsRevealStoppingRank (fun sigma => min (energyCutoff a H sigma) (n - m)) ∧\n      ∀ sigma : LabelPerm n,\n        min (energyCutoff a H sigma) (n - m) ≤ energyCutoff a h0 sigma := by\n",
+      "frozenHeadSHA256": "f1d8eec4c114a9e8df918c4227f60a64623c02f6515476dd028d1f18ce32dd09",
+      "proofBodySHA256": "9790c61e1d0851bbb615f389f776c7089ccb117e2b90d59a2e29d061425534c0",
+      "universeParameters": [],
+      "completeFrozenHeadAndContextMatch": true
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff._simp_1_2",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff",
+      "actualType": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b : α},\n  @Eq.{1} Prop\n    (Not\n      (@LT.lt.{u_1} α\n        (@Preorder.toLT.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a b))\n    (@LE.le.{u_1} α\n      (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b a)\n",
+      "actualTypeSHA256": "01dc143859ab30d1fe3defea6510802fce077d47a11a5027f56e3ff3a4ba2597",
+      "typeExportBlockSHA256": "34290b9c97459007874acb04d490790944a76a2f04fbe46bcc7e64dc1faba0e2",
+      "typeExportBlockBytes": 487,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Universal LinearOrder alpha, universe u_1, Eq Prop (not(a<b)) (b<=a). This is the proposition equality produced from not_lt via propext, used to negate the real strict energy crossing.",
+      "sourceStartLine": 8,
+      "sourceEndLine": 18,
+      "associatedFrozenHeadSHA256": "04c407bdb2ec2fc91ce54a0cfac37b50bf07cf98c70165c3c5a9c8910be079ee",
+      "associatedProofBodySHA256": "1e12da5b7a9885bda148b06c2391f968a632d0cc371deb9be048dd77ba85fed7",
+      "universeParameters": [
+        "u_1"
+      ],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": true,
+      "generated": false,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff",
+      "actualType": "∀ {n : Nat} (a : Shao.Path n) (H : Real)\n  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H)\n  (m r : Nat) (hr : @LE.le.{0} Nat instLENat r n) (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n),\n  Iff\n    (@LT.lt.{0} Nat instLTNat r\n      (@Min.min.{0} Nat instMinNat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H sigma)\n        (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m)))\n    (And (@LT.lt.{0} Nat instLTNat r (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m))\n      (@LE.le.{0} Real Real.instLE H (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r sigma)))\n",
+      "actualTypeSHA256": "563656e8cf423cd7b77bf13ed8ba72599585c2ef777a412be95781bc7cb94938",
+      "typeExportBlockSHA256": "f4cac84f4848b09770b83f57a0cd3e6454ddc8af3b1dfbeaacb598b5ba175427",
+      "typeExportBlockBytes": 855,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "whitelistPass": true,
+      "proofReview": "energy_cutoff_data at the same a,H,hH,sigma,r,hr yields cutoffH<=r iff actual remainingEnergy<H. not_congr negates both sides; linear-order not_le/not_lt give r<cutoffH iff H<=remainingEnergy. lt_min_iff rewrites r<min(cutoffH,n-m) into the conjunction of both strict rank bounds, and and_comm puts the deterministic rank condition first. All thresholds use the same actual population and permutation. No assumption m<=n or H depending on a variance surrogate is added.",
+      "sourceStartLine": 8,
+      "sourceEndLine": 18,
+      "associatedFrozenHeadSHA256": "04c407bdb2ec2fc91ce54a0cfac37b50bf07cf98c70165c3c5a9c8910be079ee",
+      "associatedProofBodySHA256": "1e12da5b7a9885bda148b06c2391f968a632d0cc371deb9be048dd77ba85fed7",
+      "sourceDeclaration": "theorem before_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    r < min (energyCutoff a H sigma) (n - m) ↔\n      r < n - m ∧ H ≤ remainingEnergy a r sigma := by\n  have hc := (energy_cutoff_data a H hH).2.1 sigma r hr\n  rw [lt_min_iff]\n  have he : r < energyCutoff a H sigma ↔ H ≤ remainingEnergy a r sigma := by\n    simpa only [not_le, not_lt] using not_congr hc\n  rw [he]\n  exact and_comm\n",
+      "frozenHead": "theorem before_adaptive_cutoff_iff\n    {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H)\n    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :\n    r < min (energyCutoff a H sigma) (n - m) ↔\n      r < n - m ∧ H ≤ remainingEnergy a r sigma := by\n",
+      "frozenHeadSHA256": "04c407bdb2ec2fc91ce54a0cfac37b50bf07cf98c70165c3c5a9c8910be079ee",
+      "proofBodySHA256": "1e12da5b7a9885bda148b06c2391f968a632d0cc371deb9be048dd77ba85fed7",
+      "universeParameters": [],
+      "completeFrozenHeadAndContextMatch": true
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._simp_1_2",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+      "actualType": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b : α},\n  @Eq.{1} Prop\n    (Not\n      (@LT.lt.{u_1} α\n        (@Preorder.toLT.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a b))\n    (@LE.le.{u_1} α\n      (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b a)\n",
+      "actualTypeSHA256": "01dc143859ab30d1fe3defea6510802fce077d47a11a5027f56e3ff3a4ba2597",
+      "typeExportBlockSHA256": "b87934ac91bd5e37fda7e478ef10132b97476efbfc4b99194a98326cb78ac446",
+      "typeExportBlockBytes": 488,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Universal LinearOrder alpha, universe u_1, Eq Prop (not(a<b)) (b<=a), associated with the h0 strict-energy negation. It is the standard not_lt proposition equality and has only propext.",
+      "sourceStartLine": 20,
+      "sourceEndLine": 33,
+      "associatedFrozenHeadSHA256": "101fc8270f1eb4b03df0baaabe62239c959813413414d9b84d9348a4e73647a6",
+      "associatedProofBodySHA256": "da3536c39c086ef42affb0e9e19c512e9b01917291b0ca8454d46ea4740fa794",
+      "universeParameters": [
+        "u_1"
+      ],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff._simp_1_1",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff",
+      "actualType": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b : α},\n  @Eq.{1} Prop\n    (Not\n      (@LE.le.{u_1} α\n        (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a b))\n    (@LT.lt.{u_1} α\n      (@Preorder.toLT.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b a)\n",
+      "actualTypeSHA256": "f3c89d8cb630d3639df270f4a189b7789698f5e60a53ef0326cb5a8e5ee48a4d",
+      "typeExportBlockSHA256": "d0becd3473ff0c3f67ee63a4e2b128f025bafd45f2d9c89dd3cc31d2a60a2684",
+      "typeExportBlockBytes": 487,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Universal LinearOrder alpha, universe u_1, Eq Prop (not(a<=b)) (b<a). This is the proposition equality produced from not_le via propext, used to negate the Nat cutoff-order condition. No energy/cutoff premise is manufactured.",
+      "sourceStartLine": 8,
+      "sourceEndLine": 18,
+      "associatedFrozenHeadSHA256": "04c407bdb2ec2fc91ce54a0cfac37b50bf07cf98c70165c3c5a9c8910be079ee",
+      "associatedProofBodySHA256": "1e12da5b7a9885bda148b06c2391f968a632d0cc371deb9be048dd77ba85fed7",
+      "universeParameters": [
+        "u_1"
+      ],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le._simp_1_1",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le",
+      "actualType": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b c : α},\n  @Eq.{1} Prop\n    (@LE.le.{u_1} α\n      (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst)))\n      (@Min.min.{u_1} α (@LinearOrder.toMin.{u_1} α inst) a b) c)\n    (Or\n      (@LE.le.{u_1} α\n        (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a c)\n      (@LE.le.{u_1} α\n        (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b c))\n",
+      "actualTypeSHA256": "130f2865224c3d33f69679d2bc9a4f1835ec8406f8876863b049a9a240cdc676",
+      "typeExportBlockSHA256": "79634f0fd2d9ef3936bd89af502ff128317f3bab78df87c569858ab5d86eb7ef",
+      "typeExportBlockBytes": 698,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Universal LinearOrder alpha, universe u_1, Eq Prop (min a b<=c) (a<=c OR b<=c). This is min_le_iff converted to a proposition equality by propext; it underlies reveal-prefix observability of the min cutoff.",
+      "sourceStartLine": 35,
+      "sourceEndLine": 56,
+      "associatedFrozenHeadSHA256": "f1d8eec4c114a9e8df918c4227f60a64623c02f6515476dd028d1f18ce32dd09",
+      "associatedProofBodySHA256": "9790c61e1d0851bbb615f389f776c7089ccb117e2b90d59a2e29d061425534c0",
+      "universeParameters": [
+        "u_1"
+      ],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    },
+    {
+      "name": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._proof_1_3",
+      "actualOwner": "Shao.C2.AdaptiveRevealCutoff",
+      "kind": "theorem",
+      "publicSourceTheorem": false,
+      "generated": true,
+      "privateSource": false,
+      "associatedSourceDeclaration": "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+      "actualType": "∀ {n : Nat} (m r : Nat) (hr : @LE.le.{0} Nat instLENat r n),\n  Not\n      (Iff (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m) r)\n        (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n r) m)) →\n    False\n",
+      "actualTypeSHA256": "4a9bf74d9d146aca35b1df8dd2136ad083f87f16cd95b86506df290d62f80276",
+      "typeExportBlockSHA256": "c92d26f7075b1e2ab2cfb03a476050a534a8f1c71b8749488a845a6773197044",
+      "typeExportBlockBytes": 455,
+      "fullActualTypeEveryBinderUniverseInstanceReviewed": true,
+      "completeAssociatedSourceProofReviewed": true,
+      "sourceToStatementSemanticReview": "PASS",
+      "transitiveAxioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "whitelistPass": true,
+      "proofReview": "Complete generated arithmetic proof type: forall {n:Nat} (m r:Nat) (hr:r<=n), NOT((n-m<=r) IFF(n-r<=m)) -> False. This is the omega auxiliary theorem corresponding exactly to the source hNat. Each side of the iff is equivalent to n<=m+r using natural truncated subtraction and addition commutativity; it remains valid for m>=n and r=n. The source omega frontend builds and assigns a proof expression, with this auxiliary theorem kernel-checked and recursively audited. The actual type and all standard axioms were reviewed; no unsafe/native decision or sorry axiom is introduced.",
+      "sourceStartLine": 20,
+      "sourceEndLine": 33,
+      "associatedFrozenHeadSHA256": "101fc8270f1eb4b03df0baaabe62239c959813413414d9b84d9348a4e73647a6",
+      "associatedProofBodySHA256": "da3536c39c086ef42affb0e9e19c512e9b01917291b0ca8454d46ea4740fa794",
+      "universeParameters": [],
+      "generatedHeadFreezeStatus": "Generated kernel obligation is covered by the exact frozen associated public source head and reviewed complete actual type; no separate pre-implementation generated-head freeze is claimed"
+    }
+  ],
+  "definitionValues": {
+    "derivedCount": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "completeExportReviewed": true
+  },
+  "boundaryReview": {
+    "actualEnergy": "remainingEnergy a r sigma = Shao.energy a - Shao.prefixSquares (Spitzer.reorder a sigma) r, same labeled population/permutation, actual squared values, no centering or deterministic variance replacement.",
+    "firstPassage": "energyCutoff is first r<=n with strict T_r<H; positive thresholds guarantee existence through accepted producer. Thus before-cutoff energy is closed H<=T_r, not strict H<T_r.",
+    "quantifiers": "Every n, every finite path a, arbitrary natural m, every r<=n and every label permutation. Thresholds positive as explicit binders; h0<=H only in nesting theorem. No conditional probability assumption is added to deterministic statements.",
+    "nZero": "Then r=0 and remaining energy=0; both positive-threshold cutoffs and adaptive rank are0. Before and omitted intervals are empty, both right sides false; stopping/nesting hold.",
+    "mZero": "n-m=n; min with n leaves the H cutoff, with n bound supplied by producer. At r=n the positive h0<=remaining energy condition is false.",
+    "mAtLeastN": "Natural n-m=0, adaptive rank0; before interval empty and n-r<=m true for r<=n, so omitted iff h0<=T_r, exactly as derived.",
+    "rN": "Both thresholds cut off by n; r<cutoffh0 false and T_n=0<h0, no terminal off-by-one.",
+    "energyEquality": "T_r=H remains before energy cutoff; T_r=h0 remains before h0 cutoff. The proof uses closed lower inequalities and strict T<H exactly.",
+    "h0GreaterH": "Allowed for omitted identity; small-energy branch is then incompatible with h0<=T, but short-suffix branch may remain. Ordering is assumed only for nesting.",
+    "revealInformation": "IsRevealStoppingRank is pointwise invariance under first-r label agreement after conditioning on a full fixed labeled sample. No natural iid-filtration stopping-time or new seed independence theorem is claimed."
+  },
+  "sourcePaper": {
+    "path": "C:\\game\\shao\\current\\c12\\supplement.tex",
+    "sha256": "b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd",
+    "completeRangesRead": [
+      [
+        4687,
+        4707
+      ],
+      [
+        4958,
+        5000
+      ],
+      [
+        5010,
+        5019
+      ]
+    ],
+    "targetRange": [
+      4978,
+      4999
+    ],
+    "fidelity": "The exact tau=min(kappa_H,n-m), strict first passage, before event, full omitted interval with OR, and conditioned permutation stopping-rank interpretation match the source. Threshold H/h0 positivity is explicit; h0<=H is used only for nesting. Natural m is generalized without m<=n; saturation is handled exactly.",
+    "scopeNotClaimed": "No derivation of residual regime, H=K beta^2(1+x)^6, m=ceil H, m<=n/4, quantitative omitted-tail or terminal integrals, compensation expectation identity, growing/root theorem. The deterministic helper is not an original root result."
+  },
+  "primaryInterfacesRead": {
+    "qualifiedProducer": "SourcePermutationReveal complete imports/context, LabelPerm, remainingEnergy, IsRevealStoppingRank, energyCutoff full values and energy_cutoff_data full type; original accepted actual type/value blocks read and matched prior qualified hashes.",
+    "physicalPopulation": "FinitePath Path=Fin n->Real, actual energy/prefixSquares; Spitzer.reorder a sigma i=a(sigma i).",
+    "nativeBooleanOrder": "Mathlib/Order/Defs/LinearOrder.lean117-118,145-155; lt_min_iff is generated dual of max_lt_iff; min_le_left; Init/Core.lean and_comm/not_congr; Init/PropLemmas.lean or_congr.",
+    "nativeOmega": "Pinned Lean Omega overview and Frontend672-710; proof expression assignment and mkAuxTheorem account for generated _proof_1_3. Debug admit branch is not used: all owners have no sorryAx in the transitive audit.",
+    "consumedProducerBlocks": {
+      "Shao.Probability.SourcePermutationReveal.remainingEnergy": {
+        "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.remainingEnergy KIND definition AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE {n : Nat} →\n  (a : Shao.Path n) → (r : Nat) → (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) → Real\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.remainingEnergy\nVALUE fun {n : Nat} (a : Shao.Path n) (r : Nat) (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>\n  @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Shao.energy n a)\n    (@Shao.prefixSquares n (@Shao.Probability.Spitzer.reorder n a σ) r)\n",
+        "blockSHA256": "8d7a8e50073c4dc6154fc7eb7e12014371d373a6b99eb80d1462f17c1299dc8a"
+      },
+      "Shao.Probability.SourcePermutationReveal.energyCutoff": {
+        "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.energyCutoff KIND definition AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE {n : Nat} →\n  (a : Shao.Path n) → (H : Real) → (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) → Nat\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.energyCutoff\nVALUE fun {n : Nat} (a : Shao.Path n) (H : Real) (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>\n  @dite.{1} Nat\n    (@Exists.{1} Nat fun (r : Nat) =>\n      And (@LE.le.{0} Nat instLENat r n)\n        (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))\n    (@Nat.decidableExistsLE\n      (fun (r : Nat) =>\n        @LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H)\n      (fun (a_1 : Nat) => Real.decidableLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H) n)\n    (fun\n        (hex :\n          @Exists.{1} Nat fun (r : Nat) =>\n            And (@LE.le.{0} Nat instLENat r n)\n              (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H)) =>\n      @Nat.find\n        (fun (n_1 : Nat) =>\n          And (@LE.le.{0} Nat instLENat n_1 n)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a n_1 σ) H))\n        (fun (a_1 : Nat) =>\n          @instDecidableAnd (@LE.le.{0} Nat instLENat a_1 n)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H)\n            (Nat.decLe a_1 n)\n            (Real.decidableLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H))\n        hex)\n    fun\n      (hex :\n        Not\n          (@Exists.{1} Nat fun (r : Nat) =>\n            And (@LE.le.{0} Nat instLENat r n)\n              (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))) =>\n    n\n",
+        "blockSHA256": "82eab7140b1503f4fb80c73a072366251978332bc7c9f87b079eaedda81a3602"
+      },
+      "Shao.Probability.SourcePermutationReveal.energy_cutoff_data": {
+        "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.energy_cutoff_data KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ {n : Nat} (a : Shao.Path n) (H : Real)\n  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H),\n  And\n    (@Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank n\n      (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H))\n    (And\n      (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) (r : Nat),\n        @LE.le.{0} Nat instLENat r n →\n          Iff (@LE.le.{0} Nat instLENat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H σ) r)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))\n      (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) (r : Nat),\n        @LT.lt.{0} Nat instLTNat r (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H σ) →\n          And (@LT.lt.{0} Nat instLTNat r n)\n            (@LE.le.{0} Real Real.instLE H (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ))))\n",
+        "blockSHA256": "5f543b91cd5ea0c5f179f851476266a587773ce683aa53c9686fcb1140886c2a"
+      },
+      "Shao.Probability.SourcePermutationReveal.LabelPerm": {
+        "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.LabelPerm KIND definition AXIOMS []\nACTUAL_TYPE (n : Nat) → Type\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.LabelPerm\nVALUE fun (n : Nat) => Equiv.Perm.{1} (Fin n)\n",
+        "blockSHA256": "8cf74cc1c59146583992f98e66cfcdd8668b80fc8b1b8280a116c986748bb2f8"
+      },
+      "Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank": {
+        "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank KIND definition AXIOMS [Quot.sound]\nACTUAL_TYPE {n : Nat} → (ν : Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat) → Prop\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank\nVALUE fun {n : Nat} (ν : Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat) =>\n  And (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n), @LE.le.{0} Nat instLENat (ν σ) n)\n    (∀ (r : Nat) (σ τ : Shao.Probability.SourcePermutationReveal.LabelPerm n),\n      (∀ (i : Fin n),\n          @LT.lt.{0} Nat instLTNat (@Fin.val n i) r →\n            @Eq.{1} (Fin n)\n              (@DFunLike.coe.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n)\n                (fun (x : Fin n) => Fin n)\n                (@EquivLike.toFunLike.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n) (Fin n)\n                  (@Equiv.instEquivLike.{1, 1} (Fin n) (Fin n)))\n                σ i)\n              (@DFunLike.coe.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n)\n                (fun (x : Fin n) => Fin n)\n                (@EquivLike.toFunLike.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n) (Fin n)\n                  (@Equiv.instEquivLike.{1, 1} (Fin n) (Fin n)))\n                τ i)) →\n        Iff (@LE.le.{0} Nat instLENat (ν σ) r) (@LE.le.{0} Nat instLENat (ν τ) r))\n",
+        "blockSHA256": "512e090f9f3801faed7ed65b28ca1d6b5451049bf5aeb4fba6b2105c7aadd550"
+      }
+    }
+  },
+  "acceptedProducerEvidenceReuse": {
+    "sourceSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+    "objectSHA256": "83903b0cd75d5cdf839393b729c46ee5a3b5df1e617bbfa95cc65fe48372139d",
+    "originalExportSHA256": "33c63f7abc2e3007c36c09739e1ddc7ff5818834adec325d8ecea099556d7db1",
+    "priorAuthorReceiptSHA256": "02bf6a73157ac09cad6562ffcde77cc43b55642a47fac4102a97ccbb55855ae5",
+    "qualifiedReviewPath": "C:\\game\\shao lean\\coordination\\common-permutation-reveal-full-review.json",
+    "qualifiedReviewSHA256": "be7d72a5783495605cfcba4fba35c61ec36b2b666333c6863bceff96a613f08b",
+    "qualifiedReviewer": "/root/permutation_reveal_final_review",
+    "qualifiedReviewVerdict": "CORRECT",
+    "qualifiedReviewFreshIndependent": true,
+    "qualifiedReviewModelEffort": [
+      "gpt-6.1-sol",
+      "xhigh"
+    ],
+    "rootQualificationPath": "C:\\game\\shao lean\\coordination\\common-permutation-reveal-root-qualification.json",
+    "rootQualificationSHA256": "76628ffee23e7805e4f5dfc7677612783dc051c931f235b28322a2a59058343f",
+    "currentAcceptedOriginalObjectBindings": {
+      "module": "Shao.Probability.SourcePermutationReveal",
+      "currentSource": {
+        "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Probability/SourcePermutationReveal.lean",
+        "exists": false,
+        "sourceUse": "Accepted source map and curated source retained; current compiler imports accepted object in place"
+      },
+      "currentObject": {
+        "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/build/lib/lean/Shao/Probability/SourcePermutationReveal.olean",
+        "sha256": "83903b0cd75d5cdf839393b729c46ee5a3b5df1e617bbfa95cc65fe48372139d",
+        "bytes": 1454992,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/SourcePermutationReveal.olean"
+      },
+      "acceptedSource": {
+        "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/SourcePermutationReveal.lean",
+        "sha256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+        "bytes": 50583,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/Shao/Probability/SourcePermutationReveal.lean"
+      },
+      "acceptedObject": {
+        "path": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/SourcePermutationReveal.olean",
+        "sha256": "83903b0cd75d5cdf839393b729c46ee5a3b5df1e617bbfa95cc65fe48372139d",
+        "bytes": 1454992,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v83/.lake/build/lib/lean/Shao/Probability/SourcePermutationReveal.olean"
+      },
+      "originalObject": {
+        "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-permutation-reveal-v71/attempt012.olean",
+        "sha256": "83903b0cd75d5cdf839393b729c46ee5a3b5df1e617bbfa95cc65fe48372139d",
+        "bytes": 1454992,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/outputs/common-permutation-reveal-v71/attempt012.olean"
+      },
+      "originalExport": {
+        "path": "/root/rivermind-data/shao-lean-20261021/outputs/common-permutation-reveal-v71/actual-owned-types-and-values.txt",
+        "sha256": "33c63f7abc2e3007c36c09739e1ddc7ff5818834adec325d8ecea099556d7db1",
+        "bytes": 231437,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/outputs/common-permutation-reveal-v71/actual-owned-types-and-values.txt"
+      },
+      "consumedOriginalFullBlocks": {
+        "Shao.Probability.SourcePermutationReveal.remainingEnergy": {
+          "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.remainingEnergy KIND definition AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE {n : Nat} →\n  (a : Shao.Path n) → (r : Nat) → (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) → Real\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.remainingEnergy\nVALUE fun {n : Nat} (a : Shao.Path n) (r : Nat) (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>\n  @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Shao.energy n a)\n    (@Shao.prefixSquares n (@Shao.Probability.Spitzer.reorder n a σ) r)\n",
+          "blockSHA256": "8d7a8e50073c4dc6154fc7eb7e12014371d373a6b99eb80d1462f17c1299dc8a"
+        },
+        "Shao.Probability.SourcePermutationReveal.energyCutoff": {
+          "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.energyCutoff KIND definition AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE {n : Nat} →\n  (a : Shao.Path n) → (H : Real) → (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) → Nat\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.energyCutoff\nVALUE fun {n : Nat} (a : Shao.Path n) (H : Real) (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>\n  @dite.{1} Nat\n    (@Exists.{1} Nat fun (r : Nat) =>\n      And (@LE.le.{0} Nat instLENat r n)\n        (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))\n    (@Nat.decidableExistsLE\n      (fun (r : Nat) =>\n        @LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H)\n      (fun (a_1 : Nat) => Real.decidableLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H) n)\n    (fun\n        (hex :\n          @Exists.{1} Nat fun (r : Nat) =>\n            And (@LE.le.{0} Nat instLENat r n)\n              (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H)) =>\n      @Nat.find\n        (fun (n_1 : Nat) =>\n          And (@LE.le.{0} Nat instLENat n_1 n)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a n_1 σ) H))\n        (fun (a_1 : Nat) =>\n          @instDecidableAnd (@LE.le.{0} Nat instLENat a_1 n)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H)\n            (Nat.decLe a_1 n)\n            (Real.decidableLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a a_1 σ) H))\n        hex)\n    fun\n      (hex :\n        Not\n          (@Exists.{1} Nat fun (r : Nat) =>\n            And (@LE.le.{0} Nat instLENat r n)\n              (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))) =>\n    n\n",
+          "blockSHA256": "82eab7140b1503f4fb80c73a072366251978332bc7c9f87b079eaedda81a3602"
+        },
+        "Shao.Probability.SourcePermutationReveal.energy_cutoff_data": {
+          "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.energy_cutoff_data KIND theorem AXIOMS [propext,\n Classical.choice,\n Quot.sound]\nACTUAL_TYPE ∀ {n : Nat} (a : Shao.Path n) (H : Real)\n  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H),\n  And\n    (@Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank n\n      (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H))\n    (And\n      (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) (r : Nat),\n        @LE.le.{0} Nat instLENat r n →\n          Iff (@LE.le.{0} Nat instLENat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H σ) r)\n            (@LT.lt.{0} Real Real.instLT (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ) H))\n      (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n) (r : Nat),\n        @LT.lt.{0} Nat instLTNat r (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H σ) →\n          And (@LT.lt.{0} Nat instLTNat r n)\n            (@LE.le.{0} Real Real.instLE H (@Shao.Probability.SourcePermutationReveal.remainingEnergy n a r σ))))\n",
+          "blockSHA256": "5f543b91cd5ea0c5f179f851476266a587773ce683aa53c9686fcb1140886c2a"
+        },
+        "Shao.Probability.SourcePermutationReveal.LabelPerm": {
+          "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.LabelPerm KIND definition AXIOMS []\nACTUAL_TYPE (n : Nat) → Type\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.LabelPerm\nVALUE fun (n : Nat) => Equiv.Perm.{1} (Fin n)\n",
+          "blockSHA256": "8cf74cc1c59146583992f98e66cfcdd8668b80fc8b1b8280a116c986748bb2f8"
+        },
+        "Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank": {
+          "fullBlock": "TARGET_DECL Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank KIND definition AXIOMS [Quot.sound]\nACTUAL_TYPE {n : Nat} → (ν : Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat) → Prop\nDEFINITION_VALUE Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank\nVALUE fun {n : Nat} (ν : Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat) =>\n  And (∀ (σ : Shao.Probability.SourcePermutationReveal.LabelPerm n), @LE.le.{0} Nat instLENat (ν σ) n)\n    (∀ (r : Nat) (σ τ : Shao.Probability.SourcePermutationReveal.LabelPerm n),\n      (∀ (i : Fin n),\n          @LT.lt.{0} Nat instLTNat (@Fin.val n i) r →\n            @Eq.{1} (Fin n)\n              (@DFunLike.coe.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n)\n                (fun (x : Fin n) => Fin n)\n                (@EquivLike.toFunLike.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n) (Fin n)\n                  (@Equiv.instEquivLike.{1, 1} (Fin n) (Fin n)))\n                σ i)\n              (@DFunLike.coe.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n)\n                (fun (x : Fin n) => Fin n)\n                (@EquivLike.toFunLike.{1, 1, 1} (Shao.Probability.SourcePermutationReveal.LabelPerm n) (Fin n) (Fin n)\n                  (@Equiv.instEquivLike.{1, 1} (Fin n) (Fin n)))\n                τ i)) →\n        Iff (@LE.le.{0} Nat instLENat (ν σ) r) (@LE.le.{0} Nat instLENat (ν τ) r))\n",
+          "blockSHA256": "512e090f9f3801faed7ed65b28ca1d6b5451049bf5aeb4fba6b2105c7aadd550"
+        }
+      }
+    },
+    "consumedTypeAndValueHashesMatchPriorReview": [
+      {
+        "name": "Shao.Probability.SourcePermutationReveal.remainingEnergy",
+        "fullTypeSHA256": "04bacb4c7c9032f1734f7ee4fc57633b62b3c95c8b83e8b4651e8dd4f5934587",
+        "fullTypeMatchesQualifiedReview": true,
+        "originalBlockSHA256": "8d7a8e50073c4dc6154fc7eb7e12014371d373a6b99eb80d1462f17c1299dc8a",
+        "fullTypeRead": true,
+        "fullValueSHA256": "3ebe8e87bb3a31656ae6a1a8b5fd2a92d3ac4322f9e438e6d245c16a78b57c61",
+        "fullValueMatchesQualifiedReview": true,
+        "fullValueRead": true
+      },
+      {
+        "name": "Shao.Probability.SourcePermutationReveal.energyCutoff",
+        "fullTypeSHA256": "3b68c2549c09d3a09b0385b83885734cd5c7700940edc51d04eefb6b611a37c4",
+        "fullTypeMatchesQualifiedReview": true,
+        "originalBlockSHA256": "82eab7140b1503f4fb80c73a072366251978332bc7c9f87b079eaedda81a3602",
+        "fullTypeRead": true,
+        "fullValueSHA256": "9c42fb880dcd0c0a601337f86dcbc79777767074c16cabb8ea28ff2daae5703c",
+        "fullValueMatchesQualifiedReview": true,
+        "fullValueRead": true
+      },
+      {
+        "name": "Shao.Probability.SourcePermutationReveal.energy_cutoff_data",
+        "fullTypeSHA256": "cdefacdea3c15907bb2c0732d45a0e54a0d6d7439322609e062c197069901caf",
+        "fullTypeMatchesQualifiedReview": true,
+        "originalBlockSHA256": "5f543b91cd5ea0c5f179f851476266a587773ce683aa53c9686fcb1140886c2a",
+        "fullTypeRead": true
+      },
+      {
+        "name": "Shao.Probability.SourcePermutationReveal.LabelPerm",
+        "fullTypeSHA256": "f126dc63d5c492755981d991a9bf88486c318c365f2cd902054a60f6fbe94ccd",
+        "fullTypeMatchesQualifiedReview": true,
+        "originalBlockSHA256": "8cf74cc1c59146583992f98e66cfcdd8668b80fc8b1b8280a116c986748bb2f8",
+        "fullTypeRead": true,
+        "fullValueSHA256": "6621ebc170bc7907ce68098e752dc957929620915645cfc9f8c8c0d1481dd431",
+        "fullValueMatchesQualifiedReview": true,
+        "fullValueRead": true
+      },
+      {
+        "name": "Shao.Probability.SourcePermutationReveal.IsRevealStoppingRank",
+        "fullTypeSHA256": "febe7ade05aedf7fd70820e38c15ac2ae72f0814f81041d95c8df63a5f93e8ed",
+        "fullTypeMatchesQualifiedReview": true,
+        "originalBlockSHA256": "512e090f9f3801faed7ed65b28ca1d6b5451049bf5aeb4fba6b2105c7aadd550",
+        "fullTypeRead": true,
+        "fullValueSHA256": "2b68ebddbd690f901ac7fe0fb7baa593611191fe8a4f3b59cae2e6775137fe29",
+        "fullValueMatchesQualifiedReview": true,
+        "fullValueRead": true
+      }
+    ],
+    "currentWorktreeProducerSourceAbsent": true,
+    "sourceAbsenceExplanation": "Accepted source retained in curated library and integration-bearing-v83; worktree imports exact accepted producer .olean. The source path is absent, not falsely asserted present. Accepted/original object and accepted/curated source bindings are independently verified.",
+    "oldCompleteProofReviewsRecommissioned": 0,
+    "producerRecompiles": 0,
+    "oldLeafAuditReplays": 0
+  },
+  "metadataErratum": {
+    "status": "NONCRITICAL_DESCRIPTIVE_COUNT_ERROR_SEPARATELY_CORRECTED",
+    "erratum": {
+      "status": "DESCRIPTIVE_OWNER_COUNT_ERRATUM_ONLY_NO_SOURCE_OR_RECEIPT_CHANGE",
+      "atUTC": "2026-10-24T20:20:51.645741+00:00",
+      "receiptSHA256": "9f589ea5eaba88b8705445cac711b9b1606713ba27cb20dafbf3df5d04f796a5",
+      "sourceSHA256": "aa83d298cd4b6249168fb66cb8d9b8e3e7b74aa8c07c082a0f26cdb7200dfb95",
+      "objectSHA256": "766f1be06611d45381bc4169ea52fdb448d5620d4edf4b41ef69ade3efbd68e7",
+      "originalReceiptBoundProofNoteSHA256": "6e13eb6bee179f21e5af3170347d3fe879073f783f7060f1e7090a70ee7665c2",
+      "correctedProofNotePath": "C:\\game\\shao lean\\drafts\\c12-lane\\adaptive-reveal-cutoff-v1\\source-and-proof-count-correction.md",
+      "correctedProofNoteSHA256": "ea6cb4a2694786c58bef017407ad8e42174b7455345ab8cf3880e5e9252f4eae",
+      "actualOwnerCountsFromVerifiedMap": {
+        "owned": 9,
+        "theorems": 9,
+        "publicSourceTheorems": 3,
+        "privateSourceTheorems": 0,
+        "generatedTheorems": 6,
+        "definitions": 0
+      },
+      "explanation": "Original receipt-bound proof note retained its cloned descriptive3owner/0generated wording because corrected-note upload used an invalid relative local path and was rejected. Actual kernel/audit and final receipt already correctly report9actual owners. Preserve that original bound note; this separate corrected note supplies accurate descriptive counts. No proof/source/freeze/object/receipt/release edit or successful gate replay."
+    },
+    "erratumSHA256": "29fb76784c6234d8276bb08f4c57c5d95ffbd72bd69805d755384381bc52dace",
+    "correctedNoteSHA256": "ea6cb4a2694786c58bef017407ad8e42174b7455345ab8cf3880e5e9252f4eae",
+    "originalReceiptBoundNotePreserved": true,
+    "correctionOnlyCountSentence": true,
+    "receiptConstructionNote": {
+      "atUTC": "2026-10-24T20:20:12.952758+00:00",
+      "actualMapCounts": [
+        9,
+        9,
+        0,
+        3
+      ],
+      "initialFinishExpectedCounts": [
+        3,
+        3,
+        0,
+        3
+      ],
+      "correction": "Expected counts in cloned finish helper corrected from actual verified audit map. Source/kernel/audit unchanged; no successful gate replay. Failed assertion occurred before receipt/release creation.",
+      "generatedTheorems": 6,
+      "kernelOrAuditFailure": false
+    },
+    "receiptConstructionNoteSHA256": "f0cae0e3928f3d81c0114e8e81eede4c7fd64d25bf30967ca8268424b648ff8d",
+    "independentlyDerivedActualCounts": {
+      "owned": 9,
+      "theorems": 9,
+      "publicSourceTheorems": 3,
+      "privateSourceTheorems": 0,
+      "generatedTheorems": 6,
+      "definitions": 0
+    },
+    "assessment": "Final receipt and actual owner/axiom map correctly report9. Bound original proof note alone retains cloned3owner/0generated prose after rejected relative-path correction upload. Separate erratum and corrected note bind original and corrected bytes. Initial finish-helper expected-count assertion was corrected before final receipt/release; kernel/audit/source/object/freeze were unchanged. No mathematical/evidence gap or successful gate replay results.",
+    "originalSourceObjectFreezeReceiptReleaseEditedByReviewer": false
+  },
+  "serverEvidence": {
+    "status": "PASS_EXACT_AUTHOR_RECEIPT_REUSED",
+    "branch": "author/c12-actual-iid-v71",
+    "head": "ec86cff56094dfb7e3ac5f674818cc0cd9c1fd40",
+    "toolchain": "leanprover/lean4:v4.36.0-rc1",
+    "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+    "packages": "cache-overlays/shared-v34/packages",
+    "kernelAttempt": "attempt001",
+    "kernelExit": 0,
+    "auditExit": 0,
+    "kernelCommand": "source /root/rivermind-data/shao-lean-20261021/activate.sh && cd /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71 && flock /root/rivermind-data/shao-lean-20261021/locks/c12-heavy.lock taskset -c 14-17 lake env lean -M8192 -j4 Shao/C2/AdaptiveRevealCutoff.lean -o /root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/AdaptiveRevealCutoff.olean",
+    "auditCommand": "same activation/cd/lock/affinity; lake env lean -M8192 -j4 /root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/OwnedAudit.lean",
+    "CPUs": "14-17",
+    "memoryMiB": 8192,
+    "jobs": 4,
+    "allOriginalCommandKernelAuditLogsReadCompletely": true,
+    "attemptDirectories": [
+      "attempt001"
+    ],
+    "kernelAuditFailuresObserved": [],
+    "allReceiptArtifacts": {
+      "source-and-proof.md": {
+        "sha256": "6e13eb6bee179f21e5af3170347d3fe879073f783f7060f1e7090a70ee7665c2",
+        "bytes": 1802,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/source-and-proof.md"
+      },
+      "freeze-record.json": {
+        "sha256": "e7bfd9019bf59d2407677bc4f61870a22fc1229faba94bb7622b3474a52f8fcb",
+        "bytes": 586,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/freeze-record.json"
+      },
+      "OwnedAudit.lean": {
+        "sha256": "a805817d1d2229d9dfbd0396329ebc88fd4f01245ecba3444d3e17b93688275a",
+        "bytes": 2935,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/OwnedAudit.lean"
+      },
+      "owned-audit.json": {
+        "sha256": "ad0d6e80f23e5e869e49f864c1226301f4303d6f470273d21e57700bc463e39b",
+        "bytes": 2113,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/owned-audit.json"
+      },
+      "actual-owned-types.txt": {
+        "sha256": "0c6c50ae9fe28b628bc86a48ac66a8b52e9240656f862571a1ad2bc6c57fc6ee",
+        "bytes": 6365,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/actual-owned-types.txt"
+      },
+      "actual-definition-values.txt": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/actual-definition-values.txt"
+      },
+      "owned-audit.log": {
+        "sha256": "141a17f6f082bb5e8ff614340981f6c83ce5d4614d7caf974984189f62673377",
+        "bytes": 6590,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/owned-audit.log"
+      },
+      "frozen.lean.txt": {
+        "sha256": "d10df464706229d966d0b79d86f234a6ca7efed938740c4c6a0c22d8895f4a29",
+        "bytes": 1167,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/frozen.lean.txt"
+      },
+      "attempt001/command.txt": {
+        "sha256": "304055a19567a282563ff136d6bb7bf99dd557ef9e067a62681fb6f9ed5da1f5",
+        "bytes": 397,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/attempt001/command.txt"
+      },
+      "attempt001/kernel.log": {
+        "sha256": "aa2b08324af7c3d7df0c5e50003c55fd68857e46af54954a7e7e45e0a6d214f9",
+        "bytes": 165,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/attempt001/kernel.log"
+      },
+      "attempt001/source.lean": {
+        "sha256": "aa83d298cd4b6249168fb66cb8d9b8e3e7b74aa8c07c082a0f26cdb7200dfb95",
+        "bytes": 2465,
+        "remotePath": "/root/rivermind-data/shao-lean-20261021/outputs/c12-adaptive-reveal-cutoff-v71/attempt001/source.lean"
+      }
+    },
+    "all11Remote7LocalArtifactHashesExact": true,
+    "objectOutputInstalledAndReceiptLocalServerExact": true,
+    "logReconstruction": {
+      "rawBytes": 6590,
+      "typesBytes": 6365,
+      "valuesBytes": 0,
+      "residualBytes": 225,
+      "residualText": "warning: mathlib: repository has local changes:\n  /root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib\nAUDITED_TARGET_CONSTANTS 9 PUBLIC 3 THEOREMS 9 DEFINITIONS 0\n\nAUDIT_EXIT=0\n",
+      "residualSHA256": "0c0a03ead67a4ab75adae652678ed83e7545529fe5864906b6ce6dc1179b560e",
+      "exactByteAccounting": true,
+      "printedOwners": [
+        [
+          "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._simp_1_1",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff._simp_1_2",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._simp_1_2",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.before_adaptive_cutoff_iff._simp_1_1",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.adaptive_cutoff_stopping_and_le._simp_1_1",
+          "theorem"
+        ],
+        [
+          "Shao.C2.AdaptiveRevealCutoff.omitted_adaptive_cutoff_iff._proof_1_3",
+          "theorem"
+        ]
+      ],
+      "ownerPrintedSetsExact": true,
+      "truncationMarkersAbsent": true
+    },
+    "all9OwnerRecursiveAxiomsWhitelisted": true,
+    "axiomWhitelist": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "nativeSourceBindings": [
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Order/Defs/LinearOrder.lean",
+        "sha256": "80b40cffbc66b648612bd1195941e30e52d8309701d280a23dc2fc48047a9209",
+        "bytes": 11104,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/Order/Defs/LinearOrder.lean",
+        "matchesPinnedGitBlob": true
+      },
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/Core.lean",
+        "sha256": "c59ce725905c3878be557a5569ccbda9fa7affedfb28b2b930429eb245c1263c",
+        "bytes": 96268,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/Core.lean"
+      },
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/PropLemmas.lean",
+        "sha256": "fd1e5105ce5d47da84164126280c06b5b3e69756dc41e3287046c7d10c01e1bc",
+        "bytes": 45909,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/PropLemmas.lean"
+      },
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/Data/Nat/Basic.lean",
+        "sha256": "33ad9b6c54390d03b88774388f829f0871265ebcf926f11a9aa275c8bf98054d",
+        "bytes": 47083,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Init/Data/Nat/Basic.lean"
+      },
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Elab/Tactic/Omega.lean",
+        "sha256": "7a81cef2ff724f9f690993d01aef906b200ca11c36f72fb57f9e6e5eaf4ec45e",
+        "bytes": 9449,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Elab/Tactic/Omega.lean"
+      },
+      {
+        "path": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Elab/Tactic/Omega/Frontend.lean",
+        "sha256": "46ded66aa93b44f34c4f95efba3a01373ac45834a3828c7171e21acffbec02a4",
+        "bytes": 30256,
+        "resolvedPath": "/root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Elab/Tactic/Omega/Frontend.lean"
+      }
+    ],
+    "finalObservationUTC": "2026-10-24T20:25:36.453810+00:00",
+    "finalObservationSHA256": "25c79cdfe546e66568ecc523ec0de19b25eb046808a8d665be6f69ae7f8e7083"
+  },
+  "deterministicValidation": {
+    "status": "PASS",
+    "file": "unit148-deterministic-validation.json",
+    "sha256": "d1f825cf116babb6b8fe81ce4ba30b8ccb815aa0da880e16e7f842c4f86452c4"
+  },
+  "criticalGaps": [],
+  "mechanicalStatus": "LEAN_FULLY_CHECKED_FOR_UNIT148_FROZEN_LOCAL_TARGET_REUSED_EXACT_AUTHOR_RECEIPT",
+  "noveltyClaim": false,
+  "originalResearchRoots": "C12/OQ56 OPEN; OQ3 PAUSED_BY_USER; existing OQ4 limited acceptance unchanged; p54/external attribution preserved",
+  "reviewerLeanOrAuditCommands": 0,
+  "serverMutations": 0,
+  "successfulGateReplays": 0,
+  "authorPacketEdits": 0,
+  "productionEdits": 0,
+  "reviewerHeavyInFlight": false,
+  "releaseToBeWrittenLast": "writer-release.json"
+}

@@ -1,0 +1,42 @@
+import Shao.C2.AuxiliaryEnergyCentered
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.C2.AuxiliaryEnergyLaplace
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_energy_laplace_loss
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (a : ℝ) (ha : 0 ≤ a) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂nu
+    a - a * Real.sqrt a * beta ≤
+      1 - ∫ z : ℝ, Real.exp (-a * z ^ 2) ∂nu := by
+
+theorem auxiliary_energy_laplace_decay
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (a : ℝ) (ha : 0 ≤ a)
+    (hsmall : a * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 ≤ 1 / 64) :
+    (∫ z : ℝ, Real.exp (-a * z ^ 2) ∂nu) ≤ Real.exp (-(7 / 8) * a) := by
+
+theorem auxiliary_tilted_energy_laplace
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s q : ℝ) (hs : 0 ≤ s) (hq : 0 ≤ q) (hsq : s ≤ q)
+    (hsmall : (s + q) * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 ≤ 1 / 64) :
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    Integrable (fun z : ℝ => Real.exp (-q * z ^ 2)) rho ∧
+      (∫ z : ℝ, Real.exp (-q * z ^ 2) ∂rho) ≤ Real.exp (-(3 / 4) * q) := by
+
+end Shao.C2.AuxiliaryEnergyLaplace

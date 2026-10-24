@@ -1,0 +1,28 @@
+import Shao.Probability.SourcePermutationReveal
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.C2.AdaptiveRevealCutoff
+open Shao.Probability.SourcePermutationReveal
+
+theorem before_adaptive_cutoff_iff
+    {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H)
+    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :
+    r < min (energyCutoff a H sigma) (n - m) ↔
+      r < n - m ∧ H ≤ remainingEnergy a r sigma := by
+
+theorem omitted_adaptive_cutoff_iff
+    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)
+    (m r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :
+    (min (energyCutoff a H sigma) (n - m) ≤ r ∧ r < energyCutoff a h0 sigma) ↔
+      h0 ≤ remainingEnergy a r sigma ∧
+        (remainingEnergy a r sigma < H ∨ n - r ≤ m) := by
+
+theorem adaptive_cutoff_stopping_and_le
+    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)
+    (hh0H : h0 ≤ H) (m : ℕ) :
+    IsRevealStoppingRank (fun sigma => min (energyCutoff a H sigma) (n - m)) ∧
+      ∀ sigma : LabelPerm n,
+        min (energyCutoff a H sigma) (n - m) ≤ energyCutoff a h0 sigma := by
+
+end Shao.C2.AdaptiveRevealCutoff
