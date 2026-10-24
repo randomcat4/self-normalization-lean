@@ -1,0 +1,39 @@
+import Shao.C2.IntervalImageMixedIntSeries
+import Shao.C2.CompletionFirstProfile
+
+noncomputable section
+namespace Shao.C2.IntervalImageSmallTimeTails
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedIntSeries Shao.C2.CompletionFirstProfile
+
+theorem geometric_four_sum_bound :
+    Summable (fun n : ℕ => Real.exp (-4) ^ n) ∧ (∑' n : ℕ, Real.exp (-4) ^ n) ≤ 2 := by
+
+theorem half_exponent_le_geometric_wall (a C B T : ℝ) (n : ℕ) (hT : 0 < T)
+    (hSmall : T ≤ a ^ 2) (hC : B + 8 * (n : ℝ) ^ 2 * a ^ 2 ≤ C) :
+    Real.exp (-C / (2 * T)) ≤ Real.exp (-B / (2 * T)) * Real.exp (-4) ^ n := by
+
+theorem imageB_zero_half_exp (a y z T : ℝ) (hT : 0 < T) :
+    Real.exp (-imageB a y z 0 / (2 * T)) = lowerProfile a y T z := by
+
+theorem imageB_neg_one_half_exp (a y z T : ℝ) (hT : 0 < T) :
+    Real.exp (-imageB a y z (-1) / (2 * T)) = upperProfile a y T z := by
+
+theorem signed_image_half_exp_bounds (a y z T : ℝ) (n : ℕ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hT : 0 < T) (hSmall : T ≤ a ^ 2) :
+    Real.exp (-imageA a y z ((n : ℤ) + 1 : ℤ) / (2 * T)) ≤ lowerProfile a y T z * Real.exp (-4) ^ n ∧
+      Real.exp (-imageA a y z (-((n : ℤ) + 1) : ℤ) / (2 * T)) ≤ upperProfile a y T z * Real.exp (-4) ^ n ∧
+      Real.exp (-imageB a y z (n : ℤ) / (2 * T)) ≤ lowerProfile a y T z * Real.exp (-4) ^ n ∧
+      Real.exp (-imageB a y z (-((n : ℤ) + 1) : ℤ) / (2 * T)) ≤ upperProfile a y T z * Real.exp (-4) ^ n := by
+
+theorem mixedImageA_zero (j l : ℕ) (a z T y : ℝ) :
+    mixedImageA j l a z T y 0 = if j = 0 ∧ l = 0 then 1 else 0 := by
+
+end Shao.C2.IntervalImageSmallTimeTails

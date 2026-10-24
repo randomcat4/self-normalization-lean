@@ -1,0 +1,40 @@
+import Shao.C2.IntervalImageWallValues
+import Mathlib.Analysis.Normed.Group.FunctionSeries
+
+noncomputable section
+namespace Shao.C2.IntervalImageSpatialTraces
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageWallValues
+
+theorem spatialTailSum_continuousOn (j : ℕ) (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    ContinuousOn (spatialTailSum j a z T) (Icc (-a) a) := by
+
+theorem imageCandidateSpatial_continuousOn (j : ℕ) (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    ContinuousOn (imageCandidateSpatial j a z T) (Icc (-a) a) := by
+
+theorem intervalImageCandidate_lower_spatial_trace (j : ℕ) (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (iteratedDeriv j (intervalImageCandidate a z T)) (𝓝[Ioo (-a) a] (-a))
+      (𝓝 (imageCandidateSpatial j a z T (-a))) := by
+
+theorem intervalImageCandidate_upper_spatial_trace (j : ℕ) (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (iteratedDeriv j (intervalImageCandidate a z T)) (𝓝[Ioo (-a) a] a)
+      (𝓝 (imageCandidateSpatial j a z T a)) := by
+
+theorem intervalImageCandidate_lower_zero_trace (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (intervalImageCandidate a z T) (𝓝[Ioo (-a) a] (-a)) (𝓝 0) := by
+
+theorem intervalImageCandidate_upper_zero_trace (a z T : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (intervalImageCandidate a z T) (𝓝[Ioo (-a) a] a) (𝓝 0) := by
+
+end Shao.C2.IntervalImageSpatialTraces
+

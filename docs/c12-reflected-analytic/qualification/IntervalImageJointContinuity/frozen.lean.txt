@@ -1,0 +1,53 @@
+import Shao.C2.IntervalImageMixedTraces
+
+noncomputable section
+namespace Shao.C2.IntervalImageJointContinuity
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedIntSeries Shao.C2.IntervalImageMixedTraces
+
+local instance stripPointTopologicalSpace (a H U : ℝ) : TopologicalSpace (StripPoint a H U) :=
+  inferInstanceAs (TopologicalSpace {p : ℝ × ℝ // |p.1| ≤ a ∧ H ≤ p.2 ∧ p.2 ≤ U})
+
+theorem affineSpatial_mixed_strip_continuous (j l : ℕ) (a H U c k : ℝ)
+    (hl : l ≤ 3) (hH : 0 < H) :
+    Continuous (fun p : StripPoint a H U =>
+      iteratedDeriv l (fun S => iteratedDeriv j (affineImageTerm c k S) p.val.1) p.val.2) := by
+
+theorem mixedImageA_strip_continuous (j l : ℕ) (a z H U : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (hH : 0 < H) :
+    Continuous (fun p : StripPoint a H U => mixedImageA j l a z p.val.2 p.val.1 m) := by
+
+theorem mixedImageB_strip_continuous (j l : ℕ) (a z H U : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (hH : 0 < H) :
+    Continuous (fun p : StripPoint a H U => mixedImageB j l a z p.val.2 p.val.1 m) := by
+
+theorem mixedTailBlock_strip_continuous (j l : ℕ) (a z H U : ℝ) (n : ℕ)
+    (hl : l ≤ 3) (hH : 0 < H) :
+    Continuous (fun p : StripPoint a H U => mixedTailBlock j l a z p.val.2 p.val.1 n) := by
+
+theorem mixedTailSum_strip_continuous (j l : ℕ) (a z H U : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    Continuous (fun p : StripPoint a H U => mixedTailSum j l a z p.val.2 p.val.1) := by
+
+theorem mixedFiniteImages_strip_continuous (j l : ℕ) (a z H U : ℝ)
+    (hl : l ≤ 3) (hH : 0 < H) :
+    Continuous (fun p : StripPoint a H U => mixedFiniteImages j l a z p.val.2 p.val.1) := by
+
+theorem mixedImageCandidate_strip_continuous (j l : ℕ) (a z H U : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    Continuous (fun p : StripPoint a H U => mixedImageCandidate j l a z p.val.2 p.val.1) := by
+
+theorem mixedImageCandidate_joint_continuousOn (j l : ℕ) (a z H U : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    ContinuousOn (fun p : ℝ × ℝ => mixedImageCandidate j l a z p.2 p.1)
+      (Icc (-a) a ×ˢ Icc H U) := by
+
+end Shao.C2.IntervalImageJointContinuity
+
