@@ -1,0 +1,38 @@
+import Shao.C2.BrownianKilledAction
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
+
+noncomputable section
+namespace Shao.C2.BrownianPathWeakMarkov
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.PhysicalBrownianEndpointDensity
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+private theorem indepFun_continuousPaths_of_evaluations {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (F G : Ω → C(BridgeTime, ℝ))
+    (h : IndepFun (fun ω t : BridgeTime => F ω t) (fun ω t : BridgeTime => G ω t) P) :
+    IndepFun F G P := by
+
+private theorem indepFun_unitPaths_of_raw {Ω : Type*} [MeasurableSpace Ω]
+    (B C : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (hC : IsBrownianReal C P) (T U : ℝ≥0)
+    (h : IndepFun (fun ω t : ℝ≥0 => C t ω)
+      (fun ω (t : Iic T) => B t ω) P) :
+    IndepFun (brownianUnitPath C U) (brownianUnitPath B T) P := by
+
+theorem indepFun_shifted_unitPath {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T U : ℝ≥0) :
+    IndepFun (brownianUnitPath (fun t ω => B (T + t) ω - B T ω) U)
+      (brownianUnitPath B T) P := by
+
+theorem normalized_bridge_endpoint_indep_past {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (T S : ℝ≥0) (hS : S ≠ 0) :
+    IndepFun (fun ω =>
+      (bridgeNoise (normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S) ω,
+        normalizedPhysicalBrownian (fun t ω => B (T + t) ω - B T ω) S 1 ω))
+      (brownianUnitPath B T) P := by
+
+end Shao.C2.BrownianPathWeakMarkov
