@@ -1,0 +1,7 @@
+Unit84: genuine Leibniz assembly of the reciprocal-free-density times sine series (supplement.tex4292–4295).
+
+normalizedSineCandidate is the literal product of the reciprocal free density and the base sine series. normalizedMixedFamily is the exact finite double binomial convolution of their derivative families. Its complete value is a finite sum, with no table/default branch or hidden analytic hypothesis. For j+l<=3, ordinary product rules give genuine spatial/time HasDerivAt transitions for the next mixed order. Whole spatial equality and positive-time neighborhood equality then prove actual mixed iterated identities and commutation for the normalized sine candidate.
+
+All seven complete heads, two complete definition values and import/context bytes were frozen before implementation. First kernel001 and full actual defining-module ownership/transitive-axiom audit passed:18owners=16theoremconstants+2definitions, all axioms within propext/Classical.choice/Quot.sound. All actual types and both complete values are exported for independent final review. No failed attempt or successful-check replay.
+
+Author-checked pending independent complete final review. The consumed reciprocal derivative/bound units82/83 have server checks and are currently under their separate independent final review. This unit does not yet sum the high-time norm bound and does not identify the normalized sine candidate with the image/killed/Brownian probability kernel. Full compensated Taylor/hSmall and all original roots remain OPEN. P54 repairs/external attribution remain intact.

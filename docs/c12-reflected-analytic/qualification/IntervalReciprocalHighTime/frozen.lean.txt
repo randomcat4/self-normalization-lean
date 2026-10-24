@@ -1,0 +1,45 @@
+import Shao.C2.IntervalReciprocalDerivatives
+
+noncomputable section
+namespace Shao.C2.IntervalReciprocalHighTime
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalReciprocalDerivatives Shao.C2.IntervalHighTimeProfiles
+
+def reciprocalHighTimeConstant : ℝ := 32 * Real.sqrt (2 * Real.pi) * Real.exp 2
+
+theorem reciprocalCoefficient_scaling (j l : ℕ) (d T : ℝ)
+    (hjl : j + l ≤ 3) (hT : 0 < T) :
+    reciprocalCoefficient j l d T =
+      reciprocalCoefficient j l (d / Real.sqrt T) 1 *
+        (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem reciprocalCoefficient_unit_bound (j l : ℕ) (d : ℝ)
+    (hjl : j + l ≤ 3) (hd : |d| ≤ 2) :
+    |reciprocalCoefficient j l d 1| ≤ 32 := by
+
+theorem reciprocalFreeDensity_drift_bound (z T y : ℝ)
+    (hT : 0 < T) (hd : |z - y| ≤ 2 * Real.sqrt T) :
+    ‖reciprocalFreeDensity z T y‖ ≤
+      Real.sqrt (2 * Real.pi) * Real.exp 2 * Real.sqrt T := by
+
+theorem reciprocalMixedFamily_drift_bound (j l : ℕ) (z T y : ℝ)
+    (hjl : j + l ≤ 3) (hT : 0 < T) (hd : |z - y| ≤ 2 * Real.sqrt T) :
+    ‖reciprocalMixedFamily j l z T y‖ ≤
+      reciprocalHighTimeConstant * Real.sqrt T *
+        (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem reciprocalFreeDensity_mixed_drift_bound (j l : ℕ) (z T y : ℝ)
+    (hjl : j + l ≤ 3) (hT : 0 < T) (hd : |z - y| ≤ 2 * Real.sqrt T) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (reciprocalFreeDensity z S) y) T‖ ≤
+      reciprocalHighTimeConstant * Real.sqrt T *
+        (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem reciprocalFreeDensity_mixed_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (reciprocalFreeDensity z S) y) T‖ ≤
+      reciprocalHighTimeConstant * Real.sqrt T *
+        (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+end Shao.C2.IntervalReciprocalHighTime
