@@ -1,0 +1,80 @@
+import Shao.OQ4.SparseStrictCriticalDenominator
+import Shao.OQ4.SparseOriginalIIDTransport
+import Shao.OQ4.RademacherOriginalStrictBoundary
+
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.SparseOriginalStrictCritical
+variable {ΩX : Type uX} [MeasurableSpace ΩX]
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+-- The self event is reused, with no new definition:
+-- RademacherOriginalStrictBoundary.sourceStrictEvent n X s =
+-- {ω | ∀ r : ℕ, 1 ≤ r → r ≤ n →
+--   |∑ i ∈ Finset.range r, X (i+1) ω| <
+--     s * Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)}.
+-- Its definition and source_strict_pullback are generic; its old
+-- source_strict_probability is Rademacher-specific and MUST NOT be used.
+
+def sourceDetStrictEvent (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) : Set ΩX :=
+  {ω | ∀ r : ℕ, 1 ≤ r → r ≤ n →
+    |∑ i ∈ Finset.range r, X (i + 1) ω| < s * Real.sqrt (n : ℝ)}
+
+theorem source_event_pullbacks (n : ℕ) (X : ℕ → ΩX → ℝ) (s : ℝ) :
+    RademacherOriginalStrictBoundary.sourceStrictEvent n X s =
+      OriginalIIDWindow.sourcePath n X ⁻¹'
+        SparseStrictCriticalDenominator.selfEvent n s ∧
+    sourceDetStrictEvent n X s = OriginalIIDWindow.sourcePath n X ⁻¹'
+      SparseStrictCriticalDenominator.detEvent n s ∧
+    RademacherOriginalStrictBoundary.sourceStrictEvent 0 X s = Set.univ ∧
+    sourceDetStrictEvent 0 X s = Set.univ
+
+theorem source_event_bridges (n : ℕ) (hn : 0 < n)
+    (X : ℕ → ΩX → ℝ) (s : ℝ) (ω : ΩX) :
+    (ω ∈ RademacherOriginalStrictBoundary.sourceStrictEvent n X s ↔
+      OriginalIIDWindow.sourceMaximum n X ω <
+        s * Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)) ∧
+    (ω ∈ sourceDetStrictEvent n X s ↔
+      OriginalIIDWindow.sourceMaximum n X ω < s * Real.sqrt (n : ℝ)) ∧
+    (OriginalIIDWindow.sourceEnergy n X ω = 0 →
+      ω ∉ RademacherOriginalStrictBoundary.sourceStrictEvent n X s ∧
+        (0 < s → ω ∈ sourceDetStrictEvent n X s))
+
+theorem source_probability_pair
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law)
+    (n : ℕ) (s : ℝ) :
+    μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent n X s) =
+      (SparseCriticalDenominator.pathLaw n).real
+        (SparseStrictCriticalDenominator.selfEvent n s) ∧
+    μ.real (sourceDetStrictEvent n X s) =
+      (SparseCriticalDenominator.pathLaw n).real
+        (SparseStrictCriticalDenominator.detEvent n s)
+
+theorem original_sparse_strict_critical_limits
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ SparseCriticalDenominator.law) :
+    Tendsto (fun m : ℕ =>
+      μ.real (RademacherOriginalStrictBoundary.sourceStrictEvent ((2 * m) ^ 3) X
+        (1 / Real.sqrt (2 * (m : ℝ)))) /
+      Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (2 * (m : ℝ)))) atTop
+      (𝓝 ((1 + Real.exp (Real.pi ^ 2 / 2)) / 2)) ∧
+    Tendsto (fun m : ℕ =>
+      μ.real (sourceDetStrictEvent ((2 * m) ^ 3) X
+        (1 / Real.sqrt (2 * (m : ℝ)))) /
+      Shao.Probability.BrownianSup.probability B P hB
+        (1 / Real.sqrt (2 * (m : ℝ)))) atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.SparseOriginalStrictCritical

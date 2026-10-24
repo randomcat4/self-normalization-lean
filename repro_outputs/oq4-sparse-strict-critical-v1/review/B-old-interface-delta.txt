@@ -1,0 +1,84 @@
+===== Shao.OQ4.RademacherOriginalStrictBoundary.source_strict_pullback [theorem] =====
+TYPE
+∀ {ΩX : Type uX} [MeasurableSpace.{uX} ΩX] (n : Nat) (X : Nat → ΩX → Real) (s : Real),
+  And
+    (@Eq.{uX + 1} (Set.{uX} ΩX) (@Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent.{uX} ΩX n X s)
+      (@Set.preimage.{uX, 0} ΩX (Shao.Path n) (@Shao.OQ4.OriginalIIDWindow.sourcePath.{uX} ΩX n X)
+        (Shao.OQ4.RademacherStrictCube.strictSelfNormalizedEvent n s)))
+    (@Eq.{uX + 1} (Set.{uX} ΩX)
+      (@Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent.{uX} ΩX
+        (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) X s)
+      (@Set.univ.{uX} ΩX))
+
+===== Shao.OQ4.OriginalIIDWindow.sourceEnergy [definition] =====
+TYPE
+{ΩX : Type u_2} → (n : Nat) → (X : Nat → ΩX → Real) → (ω : ΩX) → Real
+FULL VALUE
+fun {ΩX : Type u_2} (n : Nat) (X : Nat → ΩX → Real) (ω : ΩX) =>
+  @Shao.energy n (@Shao.OQ4.OriginalIIDWindow.sourcePath.{u_2} ΩX n X ω)
+
+===== Shao.OQ4.OriginalIIDWindow.sourcePath [definition] =====
+TYPE
+{ΩX : Type u_2} → (n : Nat) → (X : Nat → ΩX → Real) → (ω : ΩX) → Shao.Path n
+FULL VALUE
+fun {ΩX : Type u_2} (n : Nat) (X : Nat → ΩX → Real) (ω : ΩX) (i : Fin n) =>
+  X
+    (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fin.val n i)
+      (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+    ω
+
+===== Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent [definition] =====
+TYPE
+{ΩX : Type uX} → (n : Nat) → (X : Nat → ΩX → Real) → (s : Real) → Set.{uX} ΩX
+FULL VALUE
+fun {ΩX : Type uX} (n : Nat) (X : Nat → ΩX → Real) (s : Real) =>
+  @Set.ofPred.{uX} ΩX fun (ω : ΩX) =>
+    ∀ (k : Nat),
+      @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) k →
+        @LE.le.{0} Nat instLENat k n →
+          @LT.lt.{0} Real Real.instLT
+            (@abs.{0} Real Real.lattice Real.instAddGroup
+              (@Finset.sum.{0, 0} Nat Real Real.instAddCommMonoid (Finset.range k) fun (i : Nat) =>
+                X
+                  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+                    (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+                  ω))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) s
+              (Real.sqrt (@Shao.OQ4.OriginalIIDWindow.sourceEnergy.{uX} ΩX n X ω)))
+
+===== Shao.OQ4.SparseOriginalIIDTransport.sourcePath_identDistrib [theorem] =====
+TYPE
+∀ {ΩX : Type uX} [inst : MeasurableSpace.{uX} ΩX] (μ : @MeasureTheory.Measure.{uX} ΩX inst)
+  [@MeasureTheory.IsProbabilityMeasure.{uX} ΩX inst μ] (X : Nat → ΩX → Real)
+  (hIndep :
+    @ProbabilityTheory.iIndepFun.{uX, 0, 0} ΩX Nat inst (fun (i : Nat) => Real) (fun (x : Nat) => Real.measurableSpace)
+      (fun (i : Nat) =>
+        X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      μ)
+  (hLaw :
+    ∀ (i : Nat),
+      @ProbabilityTheory.IdentDistrib.{uX, 0, 0} ΩX Real Real inst Real.measurableSpace Real.measurableSpace
+        (X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (@id.{1} Real) μ Shao.OQ4.SparseCriticalDenominator.law)
+  (n : Nat),
+  @ProbabilityTheory.IdentDistrib.{uX, 0, 0} ΩX (Shao.Path n) (Shao.Path n) inst
+    (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)
+    (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)
+    (@Shao.OQ4.OriginalIIDWindow.sourcePath.{uX} ΩX n X) (@id.{1} (Shao.Path n)) μ
+    (Shao.OQ4.SparseCriticalDenominator.pathLaw n)
+
+===== Shao.OQ4.OriginalIIDWindow.sourceMaximum [definition] =====
+TYPE
+{ΩX : Type u_2} → (n : Nat) → (X : Nat → ΩX → Real) → (ω : ΩX) → Real
+FULL VALUE
+fun {ΩX : Type u_2} (n : Nat) (X : Nat → ΩX → Real) (ω : ΩX) =>
+  @dite.{1} Real (@LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n)
+    (Nat.decLt (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n)
+    (fun (hn : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n) =>
+      @Shao.absMax n (@Shao.OQ4.OriginalIIDWindow.sourcePath.{u_2} ΩX n X ω) hn)
+    fun (hn : Not (@LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n)) =>
+    @OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)
