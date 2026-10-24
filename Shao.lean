@@ -442,6 +442,7 @@ import Shao.Probability.LindleySignedBlock
 import Shao.Probability.LindleyTelescoping
 import Shao.Probability.LowFrequencyDamping
 import Shao.Probability.MeasurablePath
+import Shao.Probability.OriginalGaussianTail
 import Shao.Probability.QuadraticCharacteristic
 import Shao.Probability.QuadraticCharacteristicOddPower
 import Shao.Probability.QuadraticCharacteristicPower

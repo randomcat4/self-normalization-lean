@@ -1209,4 +1209,470 @@ theorem sourceTruncation_futureNoise_early_long_kernel_bounds :
           hq.2.trans (mul_le_mul_of_nonneg_left hr.2 (by positivity))
         _ = _ := by dsimp [C]; ring
 
+/- BEGIN FIXED CUTOFF PUBLIC COMPANIONS.
+Additive export of the fixed one-sixteenth cutoff from the existing proof.
+The original source is recovered exactly by deleting this marked block.
+-/
+
+private lemma fixedCutoff_actual_mark_outside_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ a y u : ℝ, 0 < a → 0 ≤ y → y ≤ 2 → a * y ≤ (1 / 16 : ℝ) →
+        (∫ v in {v : ℝ | |u| / a < |v|},
+          ‖sourceMarkSine sourceKernelCutoff y u 0 v‖) ≤
+            C * y * |u| * tailProfile 31 a u := by
+  obtain ⟨C, hC, hb⟩ := sourceKernel_marked_outside_norms_fixed_sixteenth
+  refine ⟨C, hC, ?_⟩
+  intro a y u ha hy hy2 hay
+  have h := (hb 0 (Or.inl rfl) 0 (by norm_num) a y u 0 ha hy hy2 hay
+    (by simpa using div_nonneg hy (by norm_num : (0 : ℝ) ≤ 16))).2.2.2.2.2.2.1
+  simp only [pow_zero, div_one] at h
+  change (∫ v in {v : ℝ | |u| / a < |v|},
+    ‖sourceMarkSine sourceKernelCutoff y u 0 v‖) ≤
+      C * min (y * |u|) 1 / (1 + |u| / a) ^ 31 at h
+  calc
+    _ ≤ C * (y * |u|) / (1 + |u| / a) ^ 31 := h.trans
+      (div_le_div_of_nonneg_right
+        (mul_le_mul_of_nonneg_left (min_le_left _ _) hC.le) (by positivity))
+    _ = _ := by unfold tailProfile; ring
+
+private lemma fixedCutoff_actual_frequency_pair_budgets (Cfull : ℝ) (hCfull : 0 ≤ Cfull) :
+    ∃ K : ℝ, 0 < K ∧
+      ∀ (ν : Measure ℝ), IsProbabilityMeasure ν →
+        Integrable (fun a : ℝ => |a| ^ 3) ν →
+        0 < variance (id : ℝ → ℝ) ν →
+        ∀ h : ℝ, 0 < h → (∀ᵐ a : ℝ ∂ν, |a| ≤ h) →
+        ∀ n m : ℕ, m ≤ n → 6 ≤ m →
+        (3 / 4 : ℝ) ≤ (n : ℝ) * ∫ a : ℝ, a ^ 2 ∂ν →
+        (n : ℝ) * |∫ a : ℝ, a ∂ν| ≤ 1 →
+        (∫ a : ℝ, a ^ 2 ∂ν) ≤ 4 * variance (id : ℝ → ℝ) ν →
+        let μ : ℝ := ∫ a : ℝ, a ∂ν
+        let m2 : ℝ := ∫ a : ℝ, a ^ 2 ∂ν
+        let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ν
+        let γ : ℝ := m3 / variance (id : ℝ → ℝ) ν
+        let T : ℝ := (m : ℝ) * m2
+        0 < T → 0 < γ → ∀ y : ℝ, 0 ≤ y → y ≤ 2 →
+        (128 * γ) * y ≤ (1 / 16 : ℝ) → (4 * h) * y ≤ (1 / 16 : ℝ) →
+        (∀ u v : ℝ, 1 / (128 * γ) ≤ |u| → |v| ≤ |u| / (4 * h) →
+          ‖oddSpectrum ν m u v‖ ≤ Cfull / (T ^ 6 * |u| ^ 12) ∧
+          ‖evenSpectrum ν m u v‖ ≤ Cfull / (T ^ 6 * |u| ^ 12)) →
+        ∀ w q : ℝ,
+          ‖∫ ξ : ℝ × ℝ,
+            kernelMarkIntegrand 0 (fun ξ => oddSpectrum ν m ξ.1 ξ.2) y w q ξ‖ ≤
+            K * y * ((m : ℝ) * |μ| / (Real.sqrt T) ^ 3 +
+              (m : ℝ) * m3 * (1 / (Real.sqrt T) ^ 5 +
+                1 / (Real.sqrt T) ^ 3 + y / (Real.sqrt T) ^ 4) +
+              γ ^ 2 + γ ^ 10 / T ^ 6 + h ^ 31 * γ ^ 29) ∧
+          ‖∫ ξ : ℝ × ℝ,
+            kernelMarkIntegrand 1 (fun ξ => evenSpectrum ν m ξ.1 ξ.2) y w q ξ‖ ≤
+            K * y * (1 / (Real.sqrt T) ^ 3 + γ ^ 3 +
+              γ ^ 9 / T ^ 6 + h ^ 31 * γ ^ 28) := by
+  obtain ⟨A, hA, hmark⟩ := actual_mark_linear_budget
+  obtain ⟨D, hD, hout⟩ := fixedCutoff_actual_mark_outside_budget
+  obtain ⟨P, hP, hprof⟩ := tailProfile_budget
+  obtain ⟨G, hG, hgauss⟩ := gaussian_moments_budget
+  let R : ℝ := 2 ^ 31 * 128 ^ 31 * 4 ^ 31
+  let S : ℝ := A * G + A * Cfull * P + D * P + 1
+  let K : ℝ := R * S
+  have hR : 0 < R := by norm_num [R]
+  have hAG : 0 ≤ A * G := by positivity
+  have hAC : 0 ≤ A * Cfull * P := by positivity
+  have hDP : 0 ≤ D * P := by positivity
+  have hS : 0 < S := by dsimp [S]; linarith
+  have hcoef (z c : ℝ) (hz0 : 0 ≤ z) (hz : z ≤ S) (hc0 : 0 ≤ c) (hc : c ≤ R) :
+      z * c ≤ K := by
+    calc
+      _ ≤ S * R := mul_le_mul hz hc hc0 hS.le
+      _ = K := by dsimp [K]; ring
+  have c0 : A * G ≤ K := by
+    simpa using hcoef (A * G) 1 hAG (by dsimp [S]; linarith) (by norm_num) (by norm_num [R])
+  have c1 : A * Cfull * P * 2 ^ 11 * 128 ^ 10 ≤ K := by
+    convert hcoef (A * Cfull * P) (2 ^ 11 * 128 ^ 10) hAC
+      (by dsimp [S]; linarith) (by positivity) (by norm_num [R]) using 1 <;> ring
+  have c2 : D * P * 128 ^ 2 ≤ K := hcoef (D * P) (128 ^ 2) hDP
+    (by dsimp [S]; linarith) (by positivity) (by norm_num [R])
+  have c3 : D * P * 4 ^ 31 * 2 ^ 30 * 128 ^ 29 ≤ K := by
+    convert hcoef (D * P) (4 ^ 31 * 2 ^ 30 * 128 ^ 29) hDP
+      (by dsimp [S]; linarith) (by positivity) (by norm_num [R]) using 1 <;> ring
+  have c4 : A * Cfull * P * 2 ^ 10 * 128 ^ 9 ≤ K := by
+    convert hcoef (A * Cfull * P) (2 ^ 10 * 128 ^ 9) hAC
+      (by dsimp [S]; linarith) (by positivity) (by norm_num [R]) using 1 <;> ring
+  have c5 : D * P * 128 ^ 3 ≤ K := hcoef (D * P) (128 ^ 3) hDP
+    (by dsimp [S]; linarith) (by positivity) (by norm_num [R])
+  have c6 : D * P * 4 ^ 31 * 2 ^ 29 * 128 ^ 28 ≤ K := by
+    convert hcoef (D * P) (4 ^ 31 * 2 ^ 29 * 128 ^ 28) hDP
+      (by dsimp [S]; linarith) (by positivity) (by norm_num [R]) using 1 <;> ring
+  refine ⟨K, mul_pos hR hS, ?_⟩
+  intro ν hp h3 hV h hh hs n m hmn hm6 hscale hbias hcomp
+  dsimp only
+  intro hT hγ y hy hy2 hsmallA hsmallC hcone w q
+  letI := hp
+  let μ : ℝ := ∫ a : ℝ, a ∂ν
+  let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ν
+  let γ : ℝ := m3 / variance (id : ℝ → ℝ) ν
+  let T : ℝ := (m : ℝ) * ∫ a : ℝ, a ^ 2 ∂ν
+  let b : ℝ := 1 / (128 * γ)
+  have hb : 0 < b := by dsimp [b]; positivity
+  have hγ0 : 0 < γ := hγ
+  have hT0 : 0 < T := hT
+  have hm3 : 0 ≤ m3 := integral_nonneg fun a => by positivity
+  have hM0 : 0 ≤ (m : ℝ) * |μ| := by positivity
+  have hM3 : 0 ≤ (m : ℝ) * m3 := by positivity
+  let E : ℝ → ℝ := fun u => Real.exp (-T * u ^ 2 / 256)
+  let Lo : ℝ → ℝ := fun u => A * y * |u| *
+    (E u * ((m : ℝ) * |μ| * |u| + (m : ℝ) * m3 * |u| ^ 3) +
+      E u * ((m : ℝ) * m3) * |u| * (1 + y * |u|))
+  let Le : ℝ → ℝ := fun u => A * y * |u| ^ 2 * E u
+  have hLoLe := gaussian_low_envelopes G A y ((m : ℝ) * |μ|) ((m : ℝ) * m3) T
+    (hgauss T hT0) hA.le hy hM0 hM3 hT0
+  let Go : (ℝ × ℝ) → ℂ :=
+    kernelMarkIntegrand 0 (fun ξ => oddSpectrum ν m ξ.1 ξ.2) y w q
+  let Ge : (ℝ × ℝ) → ℂ :=
+    kernelMarkIntegrand 1 (fun ξ => evenSpectrum ν m ξ.1 ξ.2) y w q
+  have hf := actual_kernel_mark_formulas ν h3 hV h hh hs m y hy w q
+  have hGoi : Integrable Go := hf.2.1
+  have hGei : Integrable Ge := hf.2.2.1
+  have hGop : Integrable Go (volume.prod volume) := by
+    simpa only [← Measure.volume_eq_prod ℝ ℝ] using hGoi
+  have hGep : Integrable Ge (volume.prod volume) := by
+    simpa only [← Measure.volume_eq_prod ℝ ℝ] using hGei
+  have hao : 0 < 128 * γ := by positivity
+  have hco : 0 < 4 * h := by positivity
+  have hfreq (u : ℝ) : |u| / (128 * γ) = (1 / 128 : ℝ) * |u| / γ := by ring
+  have hbdef : b = (1 / 128 : ℝ) / γ := by dsimp [b]; ring
+  have hsliceO : ∀ᵐ u : ℝ, (∫ v : ℝ, ‖Go (u, v)‖) ≤ Lo u +
+      A * y * (Cfull / T ^ 6) * ((2 : ℝ) ^ 11 / b ^ 11) * tailProfile 11 b u +
+      D * y * (128 * γ) * tailProfile 30 (128 * γ) u +
+      D * y * (4 * h) ^ 31 * ((2 : ℝ) ^ 30 / b ^ 30) * tailProfile 30 b u := by
+    filter_upwards [(integrable_prod_iff hGop.aestronglyMeasurable).mp hGop |>.1] with u hi
+    obtain ⟨hmi, hvmi, hm0, hm1⟩ := hmark y u hy
+    have hs0 := actual_spectra_le_one ν h3 hV h hh hs m u
+    have ht := four_region_slice_bound (fun v => Go (u, v)) hi 1 (by norm_num) (by norm_num)
+      A D (128 * γ) b (4 * h) y u
+      (E u * ((m : ℝ) * |μ| * |u| + (m : ℝ) * m3 * |u| ^ 3))
+      (E u * ((m : ℝ) * m3) * |u|) (Cfull / T ^ 6)
+      hA.le hD.le hao hb hco hy (by dsimp [E]; positivity) (by dsimp [E]; positivity)
+      (by positivity) hmi hvmi hm0 hm1
+      (hout _ _ _ hao hy hy2 hsmallA) (hout _ _ _ hco hy hy2 hsmallC)
+      (fun v => by
+        simpa only [Go, Nat.reduceSub, pow_zero, one_mul, mul_one, mul_comm] using
+          kernelMarkIntegrand_bound 0 (fun ξ => oddSpectrum ν m ξ.1 ξ.2) y w q u v 1 (hs0 v).1)
+      (fun hu v hv => by
+        have hl := (actual_spectra_low_bounds ν h3 hV h hh hs n m hmn hm6 hscale hbias hcomp u v
+          (by simpa only [hbdef] using hu) (by simpa only [hfreq] using hv)).1
+        convert kernelMarkIntegrand_bound 0 (fun ξ => oddSpectrum ν m ξ.1 ξ.2) y w q u v _ hl using 1 <;>
+          dsimp [Go, E, μ, m3, T] <;> ring)
+      (fun hu v hv => by
+        convert kernelMarkIntegrand_bound 0 (fun ξ => oddSpectrum ν m ξ.1 ξ.2) y w q u v _
+          (hcone u v hu hv).1 using 1 <;> dsimp [Go] <;> ring)
+    simpa only [Nat.reduceSub, pow_zero, pow_one, Lo] using ht
+  have hsliceE : ∀ᵐ u : ℝ, (∫ v : ℝ, ‖Ge (u, v)‖) ≤ Le u +
+      A * y * (Cfull / T ^ 6) * ((2 : ℝ) ^ 10 / b ^ 10) * tailProfile 10 b u +
+      D * y * (128 * γ) ^ 2 * tailProfile 29 (128 * γ) u +
+      D * y * (4 * h) ^ 31 * ((2 : ℝ) ^ 29 / b ^ 29) * tailProfile 29 b u := by
+    filter_upwards [(integrable_prod_iff hGep.aestronglyMeasurable).mp hGep |>.1] with u hi
+    obtain ⟨hmi, hvmi, hm0, hm1⟩ := hmark y u hy
+    have hs0 := actual_spectra_le_one ν h3 hV h hh hs m u
+    have ht := four_region_slice_bound (fun v => Ge (u, v)) hi 2 (by norm_num) (by norm_num)
+      A D (128 * γ) b (4 * h) y u (E u) 0 (Cfull / T ^ 6)
+      hA.le hD.le hao hb hco hy (Real.exp_pos _).le le_rfl
+      (by positivity) hmi hvmi hm0 hm1
+      (hout _ _ _ hao hy hy2 hsmallA) (hout _ _ _ hco hy hy2 hsmallC)
+      (fun v => by
+        simpa only [Ge, Nat.reduceSub, pow_one, mul_one, mul_comm] using
+          kernelMarkIntegrand_bound 1 (fun ξ => evenSpectrum ν m ξ.1 ξ.2) y w q u v 1 (hs0 v).2)
+      (fun hu v hv => by
+        have hl := (actual_spectra_low_bounds ν h3 hV h hh hs n m hmn hm6 hscale hbias hcomp u v
+          (by simpa only [hbdef] using hu) (by simpa only [hfreq] using hv)).2
+        convert kernelMarkIntegrand_bound 1 (fun ξ => evenSpectrum ν m ξ.1 ξ.2) y w q u v _ hl using 1 <;>
+          dsimp [Ge, E, T] <;> ring)
+      (fun hu v hv => by
+        convert kernelMarkIntegrand_bound 1 (fun ξ => evenSpectrum ν m ξ.1 ξ.2) y w q u v _ (hcone u v hu hv).2 using 1 <;>
+          dsimp [Ge] <;> ring)
+    simpa only [Nat.reduceSub, pow_zero, pow_one, zero_mul, add_zero, Le] using ht
+  have hIntO := four_region_integral_bound Go hGoi 1 (by norm_num) (by norm_num)
+    A D P (128 * γ) b (4 * h) y (Cfull / T ^ 6) hA.le hD.le hao hb hco hy
+    (by positivity) hprof Lo hLoLe.1 (by simpa only [Nat.reduceSub, pow_one] using hsliceO)
+  have hIntE := four_region_integral_bound Ge hGei 2 (by norm_num) (by norm_num)
+    A D P (128 * γ) b (4 * h) y (Cfull / T ^ 6) hA.le hD.le hao hb hco hy
+    (by positivity) hprof Le hLoLe.2.1 hsliceE
+  simp only [Nat.reduceSub, pow_one] at hIntO hIntE
+  constructor
+  · calc
+      _ ≤ A * y * G * ((m : ℝ) * |μ| / (Real.sqrt T) ^ 3 +
+          (m : ℝ) * m3 * (1 / (Real.sqrt T) ^ 5 +
+            1 / (Real.sqrt T) ^ 3 + y / (Real.sqrt T) ^ 4)) +
+          A * y * (Cfull / T ^ 6) * ((2 : ℝ) ^ 11 / b ^ 11) * (P * b) +
+          D * y * (128 * γ) * (P * (128 * γ)) +
+          D * y * (4 * h) ^ 31 * ((2 : ℝ) ^ 30 / b ^ 30) * (P * b) := by
+        apply hIntO.trans
+        gcongr
+        exact hLoLe.2.2.1
+      _ = (A * G) * y * ((m : ℝ) * |μ| / (Real.sqrt T) ^ 3 +
+          (m : ℝ) * m3 * (1 / (Real.sqrt T) ^ 5 +
+            1 / (Real.sqrt T) ^ 3 + y / (Real.sqrt T) ^ 4)) +
+          (A * Cfull * P * 2 ^ 11 * 128 ^ 10) * y * (γ ^ 10 / T ^ 6) +
+          (D * P * 128 ^ 2) * y * γ ^ 2 +
+          (D * P * 4 ^ 31 * 2 ^ 30 * 128 ^ 29) * y * (h ^ 31 * γ ^ 29) := by
+        dsimp only [b]
+        field_simp <;> ring
+      _ ≤ _ := by
+        have hc := add_le_add (add_le_add (add_le_add
+          (mul_le_mul_of_nonneg_right c0 (by positivity : 0 ≤ y *
+            ((m : ℝ) * |μ| / (Real.sqrt T) ^ 3 + (m : ℝ) * m3 *
+              (1 / (Real.sqrt T) ^ 5 + 1 / (Real.sqrt T) ^ 3 + y / (Real.sqrt T) ^ 4))))
+          (mul_le_mul_of_nonneg_right c1 (by positivity : 0 ≤ y * (γ ^ 10 / T ^ 6))))
+          (mul_le_mul_of_nonneg_right c2 (by positivity : 0 ≤ y * γ ^ 2)))
+          (mul_le_mul_of_nonneg_right c3 (by positivity : 0 ≤ y * (h ^ 31 * γ ^ 29)))
+        convert hc using 1 <;> ring
+  · calc
+      _ ≤ A * y * G / (Real.sqrt T) ^ 3 +
+          A * y * (Cfull / T ^ 6) * ((2 : ℝ) ^ 10 / b ^ 10) * (P * b) +
+          D * y * (128 * γ) ^ 2 * (P * (128 * γ)) +
+          D * y * (4 * h) ^ 31 * ((2 : ℝ) ^ 29 / b ^ 29) * (P * b) := by
+        apply hIntE.trans
+        gcongr
+        exact hLoLe.2.2.2
+      _ = (A * G) * y * (1 / (Real.sqrt T) ^ 3) +
+          (A * Cfull * P * 2 ^ 10 * 128 ^ 9) * y * (γ ^ 9 / T ^ 6) +
+          (D * P * 128 ^ 3) * y * γ ^ 3 +
+          (D * P * 4 ^ 31 * 2 ^ 29 * 128 ^ 28) * y * (h ^ 31 * γ ^ 28) := by
+        dsimp only [b]
+        field_simp <;> ring
+      _ ≤ _ := by
+        have hc := add_le_add (add_le_add (add_le_add
+          (mul_le_mul_of_nonneg_right c0 (by positivity : 0 ≤ y * (1 / (Real.sqrt T) ^ 3)))
+          (mul_le_mul_of_nonneg_right c4 (by positivity : 0 ≤ y * (γ ^ 9 / T ^ 6))))
+          (mul_le_mul_of_nonneg_right c5 (by positivity : 0 ≤ y * γ ^ 3)))
+          (mul_le_mul_of_nonneg_right c6 (by positivity : 0 ≤ y * (h ^ 31 * γ ^ 28)))
+        convert hc using 1 <;> ring
+
+theorem sourceTruncation_futureNoise_early_long_kernel_bounds_fixed_cutoff :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (ν0 : Measure ℝ), IsProbabilityMeasure ν0 →
+        ∀ n : ℕ, Integrable (fun a : ℝ => a ^ 2) ν0 →
+          (n : ℝ) * (∫ a : ℝ, a ^ 2 ∂ν0) = 1 →
+          (∫ a : ℝ, a ∂ν0) = 0 →
+          ∀ x epsilon : ℝ, 0 ≤ x → 0 < epsilon → epsilon ≤ (1 / 16384 : ℝ) →
+            Shao.truncationBudget ν0 n x ≤ epsilon ^ 3 / 8 →
+            let ρ : Measure ℝ :=
+              ProbabilityTheory.cond ν0 {a | |a| ≤ epsilon / (1 + x)}
+            let mu : ℝ := ∫ a : ℝ, a ∂ρ
+            let m2 : ℝ := ∫ a : ℝ, a ^ 2 ∂ρ
+            let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+            let gamma : ℝ := m3 / variance (id : ℝ → ℝ) ρ
+            ∀ y : ℝ, gamma ≤ y → y ≤ 2 →
+              ∀ i : ℕ, 1 ≤ i → i ≤ n →
+                let m : ℕ := n - i
+                let T : ℝ := (m : ℝ) * m2
+                let f : ℝ → ℝ → ℝ := fun q w => sourceFutureNoiseKernel ρ m y (w, q)
+                let o : ℝ → ℝ → ℝ := fun q w => (f q w - f q (-w)) / 2
+                let e : ℝ → ℝ → ℝ := fun q w => (f q w + f q (-w)) / 2
+                (∀ w q : ℝ,
+                  DifferentiableAt ℝ (o q) w ∧
+                  DifferentiableAt ℝ (e q) w ∧
+                  DifferentiableAt ℝ (fun r : ℝ => deriv (e q) r) w) ∧
+                (i ≤ n / 2 → ∀ w q : ℝ,
+                  |deriv (o q) w| ≤ C * ((n : ℝ) * |mu| + (n : ℝ) * m3) ∧
+                  |deriv (fun r : ℝ => deriv (e q) r) w| ≤ C) ∧
+                (n / 2 < i → max ((16384 : ℝ) * gamma ^ 2) (y ^ 2) ≤ T →
+                  ∀ w q : ℝ,
+                    |deriv (o q) w| ≤ C * y *
+                      ((n : ℝ) * |mu| / Real.sqrt T +
+                        (n : ℝ) * m3 / (Real.sqrt T) ^ 3) ∧
+                    |deriv (fun r : ℝ => deriv (e q) r) w| ≤
+                      C * y / (Real.sqrt T) ^ 3) := by
+  obtain ⟨Cfull, hCfull, hfull⟩ := sourceTruncation_fullNoise_highFrequency_derivatives
+  obtain ⟨K, hK, hfrequency⟩ := fixedCutoff_actual_frequency_pair_budgets Cfull hCfull.le
+  let δ : ℝ := 1 / 16
+  have hδ : 0 < δ := by norm_num [δ]
+  have hδ16 : δ ≤ (1 / 16 : ℝ) := le_rfl
+  let epsilon0 : ℝ := min (δ / 1024) (1 / 1024)
+  let B : ℝ := ‖(2 * Complex.I / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ +
+    ‖(-2 / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ + 1
+  let C : ℝ := 512 * B * K
+  have hB : 0 < B := by dsimp [B]; positivity
+  have hBo : ‖(2 * Complex.I / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ ≤ B := by
+    dsimp [B]
+    linarith [norm_nonneg (-2 / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))]
+  have hBe : ‖(-2 / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ ≤ B := by
+    dsimp [B]
+    linarith [norm_nonneg (2 * Complex.I / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))]
+  have he0 : 0 < epsilon0 := lt_min (by positivity) (by norm_num)
+  have he01 : epsilon0 ≤ 1 / 1024 := min_le_right _ _
+  have he0δ : epsilon0 ≤ δ / 1024 := min_le_left _ _
+  have he0fixed : epsilon0 = (1 / 16384 : ℝ) := by norm_num [epsilon0, δ]
+  refine ⟨C, by dsimp [C]; positivity, ?_⟩
+  intro ν0 hp0 n h2 hnorm hmean x epsilon hx he heFixed hbudget
+  have he0bound : epsilon ≤ epsilon0 := by rw [he0fixed]; exact heFixed
+  dsimp only
+  intro y hγy hy2 i _hi1 hin
+  letI := hp0
+  let h : ℝ := epsilon / (1 + x)
+  let ρ : Measure ℝ := ProbabilityTheory.cond ν0 {a | |a| ≤ h}
+  let μ : ℝ := ∫ a : ℝ, a ∂ρ
+  let m2 : ℝ := ∫ a : ℝ, a ^ 2 ∂ρ
+  let m3 : ℝ := ∫ a : ℝ, |a| ^ 3 ∂ρ
+  let γ : ℝ := m3 / variance (id : ℝ → ℝ) ρ
+  let m : ℕ := n - i
+  let T : ℝ := (m : ℝ) * m2
+  let N0 : ℝ := (n : ℝ) * |μ|
+  let N3 : ℝ := (n : ℝ) * m3
+  let M0 : ℝ := (m : ℝ) * |μ|
+  let M3 : ℝ := (m : ℝ) * m3
+  let f : ℝ → ℝ → ℝ := fun q w => sourceFutureNoiseKernel ρ m y (w, q)
+  let o : ℝ → ℝ → ℝ := fun q w => (f q w - f q (-w)) / 2
+  let e : ℝ → ℝ → ℝ := fun q w => (f q w + f q (-w)) / 2
+  have hehalf : epsilon ≤ 1 / 2 := by linarith
+  have hh : 0 < h := div_pos he (by linarith)
+  have hhε : h ≤ epsilon := by
+    apply (div_le_iff₀ (by linarith : 0 < 1 + x)).mpr
+    nlinarith only [mul_nonneg he.le hx]
+  obtain ⟨_, _, hp, hs, _, h2r, h3r, _⟩ :=
+    Shao.sourceTruncation_law_data ν0 n h2 hnorm x epsilon hx he hehalf hbudget
+  have hprob : IsProbabilityMeasure ρ := hp
+  letI := hprob
+  have hsupport : ∀ᵐ a : ℝ ∂ρ, |a| ≤ h := hs
+  have hcube : Integrable (fun a : ℝ => |a| ^ 3) ρ := h3r
+  obtain ⟨hscale, hscaleHi, _, hVeq, _, hV, _, _⟩ :=
+    Shao.sourceTruncation_variance_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget
+  change (3 / 4 : ℝ) ≤ (n : ℝ) * m2 at hscale
+  change (n : ℝ) * m2 ≤ (4 / 3 : ℝ) at hscaleHi
+  change variance (id : ℝ → ℝ) ρ = m2 - μ ^ 2 at hVeq
+  change 0 < variance (id : ℝ → ℝ) ρ at hV
+  have hm2 : 0 < m2 := by nlinarith only [hV, hVeq, sq_nonneg μ]
+  obtain ⟨hm3pos, hγ, _, _, hγh, _, hγN, _, _⟩ :=
+    Shao.sourceTruncation_gamma_bounds ν0 n h2 hnorm hmean x epsilon hx he hehalf hbudget
+  change 0 < m3 at hm3pos
+  change 0 < γ at hγ
+  change γ ≤ 2 * h at hγh
+  replace hγN : γ ≤ 2 * N3 := by
+    dsimp only [N3]
+    nlinarith only [hγN]
+  have hy : 0 ≤ y := hγ.le.trans hγy
+  have hh1 : h ≤ 1 := by linarith
+  have hγ1 : γ ≤ 1 := by linarith
+  have hγsmall : γ ≤ 1 / 512 := by linarith
+  have hsmallA : (128 * γ) * y ≤ δ := by
+    have hp := mul_le_mul (hγh.trans (by linarith : 2 * h ≤ 2 * epsilon)) hy2 hy
+      (by positivity : 0 ≤ 2 * epsilon)
+    dsimp only [δ]
+    nlinarith only [hp, heFixed]
+  have hsmallC : (4 * h) * y ≤ δ := by
+    have hp := mul_le_mul hhε hy2 hy he.le
+    dsimp only [δ]
+    nlinarith only [hp, heFixed]
+  have hmn : m ≤ n := Nat.sub_le n i
+  have hmnR : (m : ℝ) ≤ n := Nat.cast_le.mpr hmn
+  have hThi : T ≤ 4 / 3 :=
+    (mul_le_mul_of_nonneg_right hmnR hm2.le).trans hscaleHi
+  have hN0 : 0 ≤ N0 := by dsimp [N0]; positivity
+  have hN3 : 0 ≤ N3 := by dsimp [N3]; positivity
+  have hM0 : 0 ≤ M0 := by dsimp [M0]; positivity
+  have hM3 : 0 ≤ M3 := by dsimp [M3]; positivity
+  have hM0N : M0 ≤ N0 := mul_le_mul_of_nonneg_right hmnR (abs_nonneg μ)
+  have hM3N : M3 ≤ N3 := mul_le_mul_of_nonneg_right hmnR hm3pos.le
+  have hratio : (m : ℝ) ≤ (4 / 3 : ℝ) * T * (n : ℝ) := by
+    have hp := mul_le_mul_of_nonneg_left hscale (Nat.cast_nonneg m)
+    dsimp [T]
+    nlinarith only [hp]
+  have hM0T : M0 ≤ (4 / 3 : ℝ) * T * N0 := by
+    convert mul_le_mul_of_nonneg_right hratio (abs_nonneg μ) using 1 <;> dsimp [M0, N0] <;> ring
+  have hM3T : M3 ≤ (4 / 3 : ℝ) * T * N3 := by
+    convert mul_le_mul_of_nonneg_right hratio hm3pos.le using 1 <;> dsimp [M3, N3] <;> ring
+  have hQuant (hguard : (16384 : ℝ) * γ ^ 2 ≤ T) (w q : ℝ) :
+      |deriv (o q) w| ≤ B * K * y * oddFrequencyBudget M0 M3 γ h T y ∧
+      |deriv (fun r : ℝ => deriv (e q) r) w| ≤ B * K * y * evenFrequencyBudget γ h T := by
+    have hTp : 0 < T := (mul_pos (by norm_num : (0 : ℝ) < 16384)
+      (sq_pos_of_pos hγ)).trans_le hguard
+    obtain ⟨_, hm6, _, hbias, hcomp⟩ :=
+      Shao.sourceTruncation_oddPower_scale_inputs ν0 n h2 hnorm hmean x epsilon hx he hehalf
+        hbudget i hin 16384 (by norm_num) hguard
+    have hcone (u v : ℝ) (hu : 1 / (128 * γ) ≤ |u|) (hv : |v| ≤ |u| / (4 * h)) :
+        ‖oddSpectrum ρ m u v‖ ≤ Cfull / (T ^ 6 * |u| ^ 12) ∧
+        ‖evenSpectrum ρ m u v‖ ≤ Cfull / (T ^ 6 * |u| ^ 12) := by
+      have hu0 : u ≠ 0 := by
+        have hp : 0 < |u| := (by positivity : 0 < 1 / (128 * γ)).trans_le hu
+        exact abs_pos.mp hp
+      have huf : (1 / 128 : ℝ) / γ ≤ |u| := by convert hu using 1 <;> ring
+      have hkL : 1 ≤ (1 / 128 : ℝ) * Real.sqrt 16384 := by
+        rw [show (16384 : ℝ) = 128 ^ 2 by norm_num, Real.sqrt_sq_eq_abs]
+        norm_num
+      have hp := hfull ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hin
+        h (1 / 128) 16384 le_rfl (by norm_num) (by norm_num) hkL hguard
+        1 u v (by norm_num) hu0 huf hv
+      have hn := hfull ν0 hp0 n h2 hnorm hmean x epsilon hx he hehalf hbudget i hin
+        h (1 / 128) 16384 le_rfl (by norm_num) (by norm_num) hkL hguard
+        (-1) u v (by norm_num) hu0 huf hv
+      apply half_spectra_bound
+      · simpa only [one_mul] using hp.2.2.1
+      · simpa only [neg_one_mul] using hn.2.2.1
+    obtain ⟨ho, he⟩ := hfrequency ρ hprob hcube hV h hh hsupport n m hmn hm6 hscale hbias hcomp
+      hTp hγ y hy hy2 hsmallA hsmallC hcone w q
+    change ‖∫ ξ, kernelMarkIntegrand 0 (fun ξ => oddSpectrum ρ m ξ.1 ξ.2) y w q ξ‖ ≤
+      K * y * oddFrequencyBudget M0 M3 γ h T y at ho
+    change ‖∫ ξ, kernelMarkIntegrand 1 (fun ξ => evenSpectrum ρ m ξ.1 ξ.2) y w q ξ‖ ≤
+      K * y * evenFrequencyBudget γ h T at he
+    have hf := actual_kernel_mark_formulas ρ hcube hV h hh hsupport m y hy w q
+    constructor
+    · calc
+        _ = ‖((deriv (o q) w : ℝ) : ℂ)‖ := by simp only [Complex.norm_real, Real.norm_eq_abs]
+        _ = ‖(2 * Complex.I / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ *
+            ‖∫ ξ, kernelMarkIntegrand 0 (fun ξ => oddSpectrum ρ m ξ.1 ξ.2) y w q ξ‖ := by
+          rw [hf.2.2.2.1, norm_mul]
+        _ ≤ B * (K * y * oddFrequencyBudget M0 M3 γ h T y) :=
+          mul_le_mul hBo ho (norm_nonneg _) hB.le
+        _ = _ := by ring
+    · calc
+        _ = ‖((deriv (fun r : ℝ => deriv (e q) r) w : ℝ) : ℂ)‖ := by
+          simp only [Complex.norm_real, Real.norm_eq_abs]
+        _ = ‖(-2 / (((2 * Real.pi) ^ 2 : ℝ) : ℂ))‖ *
+            ‖∫ ξ, kernelMarkIntegrand 1 (fun ξ => evenSpectrum ρ m ξ.1 ξ.2) y w q ξ‖ := by
+          rw [hf.2.2.2.2, norm_mul]
+        _ ≤ B * (K * y * evenFrequencyBudget γ h T) := mul_le_mul hBe he (norm_nonneg _) hB.le
+        _ = _ := by ring
+  refine ⟨fun w q => (actual_kernel_mark_formulas ρ hcube hV h hh hsupport m y hy w q).1, ?_, ?_⟩
+  · intro hiearly w q
+    have hne : n ≤ 2 * m := by dsimp [m]; omega
+    have hneR : (n : ℝ) ≤ 2 * (m : ℝ) := by exact_mod_cast hne
+    have hTearly : (3 / 8 : ℝ) ≤ T := by
+      have hp := mul_le_mul_of_nonneg_right hneR hm2.le
+      dsimp [T]
+      nlinarith only [hp, hscale]
+    have hγsquare := pow_le_pow_left₀ hγ.le hγsmall 2
+    have hguard : (16384 : ℝ) * γ ^ 2 ≤ T := by nlinarith only [hγsquare, hTearly]
+    have hTp : 0 < T := by linarith
+    have hγT : γ ^ 2 ≤ T := by nlinarith only [hguard, sq_nonneg γ]
+    have hr := (frequency_budget_scale_reduction N0 N3 M0 M3 γ h T y hN0 hN3 hM0 hM3 hM0N hM3N
+      hγ hγ1 hh.le hh1 hγN hTp hThi hγT hγy hy2).1 hTearly
+    have hq := hQuant hguard w q
+    constructor
+    · calc
+        _ ≤ B * K * (y * oddFrequencyBudget M0 M3 γ h T y) := by convert hq.1 using 1 <;> ring
+        _ ≤ B * K * (512 * (N0 + N3)) := mul_le_mul_of_nonneg_left hr.1 (by positivity)
+        _ = _ := by dsimp [C, N0, N3]; ring
+    · calc
+        _ ≤ B * K * (y * evenFrequencyBudget γ h T) := by convert hq.2 using 1 <;> ring
+        _ ≤ B * K * 512 := mul_le_mul_of_nonneg_left hr.2 (by positivity)
+        _ = _ := by dsimp [C]; ring
+  · intro _hilate hlong w q
+    have hguard : (16384 : ℝ) * γ ^ 2 ≤ T := (le_max_left _ _).trans hlong
+    have hyT : y ^ 2 ≤ T := (le_max_right _ _).trans hlong
+    have hTp : 0 < T := (mul_pos (by norm_num : (0 : ℝ) < 16384)
+      (sq_pos_of_pos hγ)).trans_le hguard
+    have hγT : γ ^ 2 ≤ T := by nlinarith only [hguard, sq_nonneg γ]
+    have hr := (frequency_budget_scale_reduction N0 N3 M0 M3 γ h T y hN0 hN3 hM0 hM3 hM0N hM3N
+      hγ hγ1 hh.le hh1 hγN hTp hThi hγT hγy hy2).2 hM0T hM3T hyT
+    have hq := hQuant hguard w q
+    constructor
+    · calc
+        _ ≤ B * K * y * (512 * (N0 / Real.sqrt T + N3 / (Real.sqrt T) ^ 3)) :=
+          hq.1.trans (mul_le_mul_of_nonneg_left hr.1 (by positivity))
+        _ = _ := by dsimp [C, N0, N3]; ring
+    · calc
+        _ ≤ B * K * y * (512 / (Real.sqrt T) ^ 3) :=
+          hq.2.trans (mul_le_mul_of_nonneg_left hr.2 (by positivity))
+        _ = _ := by dsimp [C]; ring
+
+/- END FIXED CUTOFF PUBLIC COMPANIONS. -/
+
 end Shao.Probability
