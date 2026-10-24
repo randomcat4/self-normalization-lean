@@ -1,0 +1,7 @@
+# Exact integer representation of the actual mixed candidate
+
+Read-only source4268/4298. mixedImageA/B are actual lth time iterated derivatives of spatialImageA/B j.63 mixed individual profiles and53/55 signed quadratic tails give a genuine norm-summable Gaussian majorant for each of the four tails separately, through time order3. The extra nonnegative order constant in the spatial strip prefactor is explicitly accounted for. Cancellation is not used to infer summability.
+
+The established pinned NatInt finite-prefix/positive-negative split reinserts exactly A0,A1,A-1,B0,B-1 and yields separate unconditional summability of both entire integer families. Tsum add/sub and exact finite/tail definitions identify mixedImageSeries with the complete mixedImageCandidate65. Combined with65 actual time-after-space mixed derivative identity in the strict interior this is precisely the integer sum of genuine mixed image derivatives for every natural j and l<=3. Series equality and summability permit closed y,z; actual spatial differentiation remains strict interior. No commutation of mixed derivative order or joint smoothness is inferred.
+
+All4 heads/3 full values/context frozen before proof. Kernel001/all9-owner recursive-axiom PASS; full9 actualtypes/3 values exported. No failures. Successful sourceSnapshot explicitly asserted against artifact map. Independent complete final review pending jointly with65 after63/64. Next low/high-time summed wall profiles, one-sided/joint Taylor requirements, actual probability identification and hSmall. All roots OPEN.

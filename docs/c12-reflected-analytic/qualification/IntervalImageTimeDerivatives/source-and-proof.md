@@ -1,0 +1,7 @@
+# Time derivative of each spatial image derivative
+
+Read-only supplement4268 and4300. For fixed affine spatial exponent C=cy+k, the genuine time derivative of (-c/T)^j exp(-C/T) is (C/T²-j/T)(-c/T)^j exp(-C/T) at every T>0. The function equality to the actual spatial iterated derivative is established for all variable times before differentiating. Natural order zero and successor are both handled; no assumption c!=0 is made.
+
+For both exact image families, C=c²/2-(z-y)c. Therefore every actual spatial derivative image has genuine HasDerivAt in time with coefficient 1/2*image_(j+2)+(z-y)/T*image_(j+1)-j/T*image_j. This holds for every integer image index and all real a,z,y at positive T. Finite linear combination gives the same exact formula for spatialTailBlock. The -j/T term is retained, as required when differentiating the drift coefficient in space.
+
+All4 full heads/sole transparent value and imports frozen before proof. Kernel003/all27-owner recursive-axiom PASS; full27 types/one value exported. Failed001/002 source/logs retained; only Pi function-application/extensionality and arithmetic normalization changed. Independent complete final review pending after58. No exchange of time differentiation with an infinite sum has been asserted; its uniform local justification and actual candidate PDE are next. Mixed profiles, one-sided traces, high-time estimates, actual killed-kernel/probability ID, hSmall and all roots remain OPEN.
