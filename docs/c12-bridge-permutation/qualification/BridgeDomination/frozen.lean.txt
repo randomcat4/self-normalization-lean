@@ -1,0 +1,107 @@
+import Mathlib.Topology.UnitInterval
+import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousMap
+import Mathlib.MeasureTheory.Measure.Real
+import Mathlib.Analysis.Calculus.Deriv.Slope
+import Mathlib.Topology.EMetricSpace.BoundedVariation
+
+noncomputable section
+namespace Shao.C2.BridgeDomination
+open MeasureTheory Set
+open scoped BigOperators ENNReal
+
+abbrev BridgeTime := unitInterval
+abbrev BridgeNoise := {g : C(BridgeTime, ℝ) // g 0 = 0 ∧ g 1 = 0}
+
+def bridgePath (y T z : ℝ) (g : BridgeNoise) : C(BridgeTime, ℝ) :=
+  ⟨fun t => (1 - (t : ℝ)) * y + (t : ℝ) * z + Real.sqrt T * g.val t,
+    by fun_prop⟩
+
+def strictUpper (a y T z : ℝ) : Set BridgeNoise :=
+  {g | ∀ t : BridgeTime, bridgePath y T z g t < a}
+
+def strictLower (a y T z : ℝ) : Set BridgeNoise :=
+  {g | ∀ t : BridgeTime, -a < bridgePath y T z g t}
+
+def strictInterval (a y T z : ℝ) : Set BridgeNoise :=
+  strictUpper a y T z ∩ strictLower a y T z
+
+def upperCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=
+  P.real (strictUpper a y T z)
+
+def lowerCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=
+  P.real (strictLower a y T z)
+
+def intervalCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=
+  P.real (strictInterval a y T z)
+
+theorem bridgePath_endpoints (y T z : ℝ) (g : BridgeNoise) :
+    bridgePath y T z g 0 = y ∧ bridgePath y T z g 1 = z
+
+theorem bridgePath_mono (y y' T z z' : ℝ) (hyy : y ≤ y') (hzz : z ≤ z')
+    (g : BridgeNoise) (t : BridgeTime) :
+    bridgePath y T z g t ≤ bridgePath y' T z' g t
+
+theorem measurableSet_strictUpper (a y T z : ℝ) :
+    MeasurableSet (strictUpper a y T z)
+
+theorem measurableSet_strictLower (a y T z : ℝ) :
+    MeasurableSet (strictLower a y T z)
+
+theorem measurableSet_strictInterval (a y T z : ℝ) :
+    MeasurableSet (strictInterval a y T z)
+
+theorem strictInterval_zero_time (a y z : ℝ) :
+    strictInterval a y 0 z =
+      if -a < y ∧ y < a ∧ -a < z ∧ z < a then Set.univ else ∅
+
+theorem strictInterval_exterior (a y T z : ℝ)
+    (h : y ≤ -a ∨ a ≤ y ∨ z ≤ -a ∨ a ≤ z) :
+    strictInterval a y T z = ∅
+
+theorem completion_bounds (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) :
+    0 ≤ upperCompletion P a y T z ∧ upperCompletion P a y T z ≤ 1 ∧
+    0 ≤ lowerCompletion P a y T z ∧ lowerCompletion P a y T z ≤ 1 ∧
+    0 ≤ intervalCompletion P a y T z ∧ intervalCompletion P a y T z ≤ 1
+
+theorem upper_deficit_eq (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) :
+    upperCompletion P a y T z - intervalCompletion P a y T z =
+      P.real (strictUpper a y T z \ strictLower a y T z)
+
+theorem lower_deficit_eq (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) :
+    lowerCompletion P a y T z - intervalCompletion P a y T z =
+      P.real (strictLower a y T z \ strictUpper a y T z)
+
+theorem upper_deficit_antitone (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y y' T z z' : ℝ) (hyy : y ≤ y') (hzz : z ≤ z') :
+    upperCompletion P a y' T z' - intervalCompletion P a y' T z' ≤
+      upperCompletion P a y T z - intervalCompletion P a y T z
+
+theorem lower_deficit_monotone (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y y' T z z' : ℝ) (hyy : y ≤ y') (hzz : z ≤ z') :
+    lowerCompletion P a y T z - intervalCompletion P a y T z ≤
+      lowerCompletion P a y' T z' - intervalCompletion P a y' T z'
+
+theorem signed_derivative_domination_of_hasDerivAt
+    (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z du di dl : ℝ)
+    (hu : HasDerivAt (fun s => upperCompletion P a s T z) du y)
+    (hi : HasDerivAt (fun s => intervalCompletion P a s T z) di y)
+    (hl : HasDerivAt (fun s => lowerCompletion P a s T z) dl y) :
+    du ≤ di ∧ di ≤ dl
+
+private theorem variation_le_two_of_antitone_difference
+    (f u v : ℝ → ℝ) (hu : Antitone u) (hv : Antitone v)
+    (hu0 : ∀ w, 0 ≤ u w) (hu1 : ∀ w, u w ≤ 1)
+    (hv0 : ∀ w, 0 ≤ v w) (hv1 : ∀ w, v w ≤ 1)
+    (h : ∀ w, f w = u w - v w) :
+    eVariationOn f Set.univ ≤ 2
+
+theorem initial_interval_variation (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a : ℝ) :
+    eVariationOn (fun w : ℝ => intervalCompletion P a 0 1 w) Set.univ ≤ 2
+
+end Shao.C2.BridgeDomination

@@ -7,6 +7,9 @@ import Shao.Basic.Lindley
 import Shao.Basic.OrderedSelection
 import Shao.Basic.TruncationBudget
 import Shao.C1.Normalization
+import Shao.C1.PermutationCompensation
+import Shao.C1.StoppedPermutationTelescope
+import Shao.C2.BridgeDomination
 import Shao.C2.TwoSided
 import Shao.Checks.Boundaries
 import Shao.OQ3.ActualStandardizedIIDCellTest
@@ -281,6 +284,8 @@ import Shao.OQ4.RademacherFiniteBasis
 import Shao.OQ4.RademacherFiniteS1
 import Shao.OQ4.RademacherIteration
 import Shao.OQ4.RademacherLatticeShift
+import Shao.OQ4.RademacherOriginalIIDTransport
+import Shao.OQ4.RademacherOriginalStrictBoundary
 import Shao.OQ4.RademacherRealThresholdBridge
 import Shao.OQ4.RademacherS2Assembly
 import Shao.OQ4.RademacherS3Assembly
@@ -297,6 +302,7 @@ import Shao.OQ4.ReflectedSurvival
 import Shao.OQ4.RowBlockGaussianLimit
 import Shao.OQ4.RowPolygonalFDD
 import Shao.OQ4.SparseCriticalDenominator
+import Shao.OQ4.SparseOriginalIIDTransport
 import Shao.OQ4.SpitzerKernelBounds
 import Shao.OQ4.TerminalNormalizedKernelLimit
 import Shao.OQ4.TruncatedEnergy
@@ -547,6 +553,7 @@ import Shao.Probability.SourceShortTimeGrid
 import Shao.Probability.SourceShortTimeKernelBounds
 import Shao.Probability.SourceShortTimeKernelTaylor
 import Shao.Probability.SourceSmallBoundary
+import Shao.Probability.SourceTrueEnergyStrip
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.SpitzerFinite
 import Shao.Probability.SpitzerLaplace
