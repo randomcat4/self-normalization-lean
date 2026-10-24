@@ -1,0 +1,246 @@
+/- V2 PROPOSAL ONLY, PARENT FREEZE PENDING. The following V1 introductory/roster comments are retained as historical text. V2 adds exactly the 13 PRIVATE heads in helper-heads-proposal.lean.txt, changes no original declaration, import, option, universe or context, and contains no implementation/proof bodies for theorems. -/
+
+/-
+DECLARATION PROPOSAL ONLY. NOT A LEAN IMPLEMENTATION OR A PARSED MODULE.
+The parent must freeze these complete types/values before proof implementation.
+The theorem/instance signatures intentionally have no proof bodies.
+No private top-level declarations are proposed. A later implementation must use
+local `have`/`let` or request a freeze amendment for any additional named head.
+No extra universes, context variables, local axioms, or options are implicit.
+Proposed module: Shao.OQ4.SparseCriticalDenominator.
+-/
+
+import Shao.OQ4.RademacherS4Assembly
+import Shao.Probability.BerryEsseen
+import Shao.Probability.BrownianFirstTerm
+import Shao.Probability.MeasurablePath
+import Shao.Basic.ClosedSurvival
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Topology.Algebra.Order.Floor
+
+set_option autoImplicit false
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators NNReal ENNReal Topology
+
+universe u
+
+namespace Shao.OQ4.SparseCriticalDenominator
+
+def law : Measure ℝ :=
+  (3 / 4 : ℝ≥0∞) • Measure.dirac (0 : ℝ) +
+    (1 / 8 : ℝ≥0∞) • Measure.dirac (2 : ℝ) +
+    (1 / 8 : ℝ≥0∞) • Measure.dirac (-2 : ℝ)
+
+instance law_isProbabilityMeasure : IsProbabilityMeasure law
+
+def pathLaw (n : ℕ) : Measure (Shao.Path n) :=
+  Measure.pi (fun _ : Fin n => law)
+
+def count {n : ℕ} (a : Shao.Path n) : ℕ :=
+  (Finset.univ.filter (fun i : Fin n => a i ≠ 0)).card
+
+def weight (n k : ℕ) : ℝ :=
+  (n.choose k : ℝ) * (1 / 4 : ℝ) ^ k * (3 / 4 : ℝ) ^ (n - k)
+
+def selfEvent (n : ℕ) (s : ℝ) : Set (Shao.Path n) :=
+  {a | ∀ j : ℕ, j ≤ n →
+    |Shao.prefixSum a j| ≤ s * Real.sqrt (Shao.energy a)}
+
+def detEvent (n : ℕ) (s : ℝ) : Set (Shao.Path n) :=
+  @Shao.closedStrip n (s * Real.sqrt (n : ℝ))
+
+def time (m : ℕ) : ℕ := (2 * m) ^ 3
+
+def meanIndex (m : ℕ) : ℕ := 2 * m ^ 3
+
+def criticalX (m : ℕ) : ℝ :=
+  Real.rpow (time m : ℝ) (-((1 : ℝ) / 6))
+
+def randomHeight (m k : ℕ) : ℝ :=
+  criticalX m * Real.sqrt (k : ℝ)
+
+def phaseExponent (m k : ℕ) : ℝ :=
+  (Real.pi ^ 2 / 4) * ((k : ℝ) / randomHeight m k ^ 3) *
+    ((⌊randomHeight m k⌋₊ : ℝ) + 1 - randomHeight m k)
+
+def baseline {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (m : ℕ) : ℝ :=
+  Shao.Probability.BrownianSup.probability B P hB (criticalX m)
+
+def randomRatio {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (m : ℕ) : ℝ :=
+  (pathLaw (time m)).real (selfEvent (time m) (criticalX m)) /
+    baseline B P hB m
+
+def detRatio {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (m : ℕ) : ℝ :=
+  (pathLaw (time m)).real (detEvent (time m) (criticalX m)) /
+    baseline B P hB m
+
+private def jointEvent (n k : ℕ) (h x : ℝ) : Set (Shao.Path n) :=
+  {a | count a = k ∧ |x| ≤ h ∧
+    a ∈ Shao.OQ4.shiftedClosedSurvival (n := n) (2 * h) (2 * x)}
+
+private def jointMass (n k : ℕ) (h x : ℝ) : ℝ :=
+  (pathLaw n).real (jointEvent n k h x)
+
+private def closedRadMass (h : ℝ) (k : ℕ) (x : ℝ) : ℝ :=
+  if |x| ≤ h then
+    Shao.OQ4.killedMass Shao.OQ4.RademacherCosine.law h k x
+  else 0
+
+private theorem measurable_count (n : ℕ) :
+    Measurable (@count n)
+
+private theorem count_cons (n : ℕ) (y : ℝ) (a : Shao.Path n) :
+    count (Fin.cons y a) = count a + (if y ≠ 0 then 1 else 0)
+
+private theorem pathLaw_real_cons (n : ℕ) (A : Set (Shao.Path (n + 1)))
+    (hA : MeasurableSet A) :
+    (pathLaw (n + 1)).real A =
+      (3 / 4 : ℝ) * (pathLaw n).real
+        ((fun a : Shao.Path n => Fin.cons (0 : ℝ) a) ⁻¹' A) +
+      (1 / 8 : ℝ) * (pathLaw n).real
+        ((fun a : Shao.Path n => Fin.cons (2 : ℝ) a) ⁻¹' A) +
+      (1 / 8 : ℝ) * (pathLaw n).real
+        ((fun a : Shao.Path n => Fin.cons (-2 : ℝ) a) ⁻¹' A)
+
+private theorem measurableSet_jointEvent (n k : ℕ) (h x : ℝ) :
+    MeasurableSet (jointEvent n k h x)
+
+private theorem jointEvent_cons (n k : ℕ) (y h x : ℝ) (a : Shao.Path n) :
+    Fin.cons y a ∈ jointEvent (n + 1) (k + (if y ≠ 0 then 1 else 0)) h x ↔
+      |x| ≤ h ∧ a ∈ jointEvent n k h (x + y / 2)
+
+private theorem jointMass_succ_zero (n : ℕ) (h x : ℝ) :
+    jointMass (n + 1) 0 h x = (3 / 4 : ℝ) * jointMass n 0 h x
+
+private theorem jointMass_succ (n k : ℕ) (h x : ℝ) :
+    jointMass (n + 1) (k + 1) h x =
+      if |x| ≤ h then
+        (3 / 4 : ℝ) * jointMass n (k + 1) h x +
+        (1 / 8 : ℝ) * jointMass n k h (x + 1) +
+        (1 / 8 : ℝ) * jointMass n k h (x - 1)
+      else 0
+
+private theorem closedRadMass_succ (h : ℝ) (k : ℕ) (x : ℝ) :
+    closedRadMass h (k + 1) x =
+      if |x| ≤ h then
+        (closedRadMass h k (x + 1) + closedRadMass h k (x - 1)) / 2
+      else 0
+
+private theorem weight_succ (n k : ℕ) :
+    weight (n + 1) (k + 1) =
+      (3 / 4 : ℝ) * weight n (k + 1) + (1 / 4 : ℝ) * weight n k
+
+private theorem jointMass_factorization (n k : ℕ) (h x : ℝ) :
+    jointMass n k h x = weight n k * closedRadMass h k x
+
+theorem law_moments :
+    Integrable (fun z : ℝ => |z| ^ 3) law ∧
+    (∫ z : ℝ, z ∂law) = 0 ∧
+    (∫ z : ℝ, z ^ 2 ∂law) = 1 ∧
+    (∫ z : ℝ, |z| ^ 3 ∂law) = 2 ∧
+    variance (id : ℝ → ℝ) law = 1
+
+theorem critical_scale (m : ℕ) (hm : 1 ≤ m) :
+    time m = 8 * m ^ 3 ∧
+    time m = 4 * meanIndex m ∧
+    0 < criticalX m ∧
+    criticalX m = 1 / Real.sqrt (2 * (m : ℝ)) ∧
+    criticalX m * Real.sqrt (time m : ℝ) / 2 = (m : ℝ)
+
+theorem actual_event_bridges (n : ℕ) (hn : 0 < n)
+    (s : ℝ) (hs : 0 ≤ s) (a : Shao.Path n) :
+    (a ∈ selfEvent n s ↔
+      Shao.absMax a hn ≤ s * Real.sqrt (Shao.energy a)) ∧
+    (a ∈ detEvent n s ↔
+      Shao.absMax a hn ≤ s * Real.sqrt (n : ℝ)) ∧
+    (Shao.energy a = 0 → a ∈ selfEvent n s ∧ a ∈ detEvent n s)
+
+theorem count_law (n : ℕ) :
+    (∀ k : ℕ, (pathLaw n).real {a : Shao.Path n | count a = k} =
+      weight n k) ∧
+    (∀ᵐ a : Shao.Path n ∂pathLaw n,
+      Shao.energy a = 4 * (count a : ℝ))
+
+theorem conditional_strip_mass (n k : ℕ) (hk : k ≤ n)
+    (h : ℝ) (hh : 0 ≤ h) :
+    (pathLaw n).real
+      ({a : Shao.Path n | count a = k} ∩ @Shao.closedStrip n (2 * h)) =
+    weight n k * RademacherS4Assembly.p k h
+
+theorem exact_mixtures (n : ℕ) (s : ℝ) (hs : 0 ≤ s) :
+    (pathLaw n).real (selfEvent n s) =
+      (∑ k ∈ Finset.range (n + 1),
+        weight n k * RademacherS4Assembly.p k (s * Real.sqrt (k : ℝ))) ∧
+    (pathLaw n).real (detEvent n s) =
+      (∑ k ∈ Finset.range (n + 1),
+        weight n k * RademacherS4Assembly.p k
+          (s * Real.sqrt (n : ℝ) / 2))
+
+theorem binomial_payments (m : ℕ) (hm : 1 ≤ m) :
+    (∀ k : ℕ, 0 ≤ weight (time m) k) ∧
+    (∑ k ∈ Finset.range (time m + 1), weight (time m) k) = 1 ∧
+    (∑ k ∈ Finset.range (time m + 1),
+      weight (time m) k * ((k : ℝ) - (meanIndex m : ℝ)) ^ 2) =
+        (3 / 2 : ℝ) * (m : ℝ) ^ 3 ∧
+    (∑ k ∈ (Finset.range (time m + 1)).filter (fun k : ℕ => k < m ^ 3),
+      weight (time m) k) ≤
+        Real.exp (-(1 - 2 / Real.exp 1) * (m : ℝ) ^ 3) ∧
+    (∀ t : ℝ, |t| ≤ 1 →
+      (∑ k ∈ Finset.range (time m + 1),
+        weight (time m) k * Real.exp (t * ((k : ℝ) - (meanIndex m : ℝ)))) ≤
+          Real.exp (2 * (time m : ℝ) * t ^ 2))
+
+theorem binomial_halves :
+    Tendsto (fun m : ℕ =>
+      ∑ k ∈ (Finset.range (time m + 1)).filter
+        (fun k : ℕ => k < meanIndex m), weight (time m) k)
+      atTop (𝓝 (1 / 2 : ℝ)) ∧
+    Tendsto (fun m : ℕ =>
+      ∑ k ∈ (Finset.range (time m + 1)).filter
+        (fun k : ℕ => meanIndex m ≤ k), weight (time m) k)
+      atTop (𝓝 (1 / 2 : ℝ))
+
+theorem uniform_log_pair {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ ε : ℝ, 0 < ε → ∃ J : ℕ, 1 ≤ J ∧
+      ∀ m : ℕ, J ≤ m → ∀ k : ℕ, m ^ 3 ≤ k → k ≤ time m →
+        0 < baseline B P hB m ∧
+        0 < RademacherS4Assembly.p k (randomHeight m k) ∧
+        0 < RademacherS4Assembly.p k (m : ℝ) ∧
+        |Real.log (RademacherS4Assembly.p k (randomHeight m k) /
+          baseline B P hB m) - phaseExponent m k| < ε ∧
+        |Real.log (RademacherS4Assembly.p k (m : ℝ) / baseline B P hB m) +
+          (Real.pi ^ 2 / 8) * ((k : ℝ) - (meanIndex m : ℝ)) / (m : ℝ) ^ 2 -
+          (Real.pi ^ 2 / 4) * ((k : ℝ) / (m : ℝ) ^ 3)| < ε
+
+theorem critical_limits {Ω : Type u} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    Tendsto (randomRatio B P hB) atTop
+      (𝓝 ((1 + Real.exp (Real.pi ^ 2 / 2)) / 2)) ∧
+    Tendsto (detRatio B P hB) atTop
+      (𝓝 (Real.exp (Real.pi ^ 2 / 2)))
+
+end Shao.OQ4.SparseCriticalDenominator
+
+/- Proposed explicit source heads: 14 definitions, 1 instance, 10 theorems.
+Definitions: law, pathLaw, count, weight, selfEvent, detEvent, time, meanIndex,
+criticalX, randomHeight, phaseExponent, baseline, randomRatio, detRatio.
+Instance: law_isProbabilityMeasure.
+Theorems: law_moments, critical_scale, actual_event_bridges, count_law,
+conditional_strip_mass, exact_mixtures, binomial_payments, binomial_halves,
+uniform_log_pair, critical_limits.
+Private top-level heads: NONE. Generated equation/instance auxiliaries will
+require actual server owner-map enumeration, not an assumed count here.
+-/
