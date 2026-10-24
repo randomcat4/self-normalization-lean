@@ -1,0 +1,94 @@
+import Shao.OQ4.RademacherStrictWeakBoundary
+import Shao.OQ4.RademacherCriticalPhase
+import Shao.OQ4.RademacherRealThresholdBridge
+
+set_option autoImplicit false
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped Topology
+
+namespace Shao.OQ4.RademacherStrictWeakBoundary
+
+def criticalRatio (c : ℝ) (n : ℕ) : ℝ :=
+  ratio n (RademacherCriticalPhase.height c n)
+
+-- n=0 is only a prefix: criticalRatio c 0=1 but the displayed factor
+-- there equals exp(q c), because integerIndicator (height c 0)=1.
+theorem critical_main {c : ℝ} (hc : 0 < c) :
+    (∀ᶠ n : ℕ in atTop,
+      0 < RademacherS5Assembly.p n (RademacherCriticalPhase.height c n) ∧
+      0 < RademacherStrictCube.strictP n
+        (RademacherCriticalPhase.height c n) ∧
+      0 < criticalRatio c n) ∧
+    Tendsto (fun n : ℕ =>
+      Real.log (criticalRatio c n) -
+        RademacherCriticalPhase.q c *
+          integerIndicator (RademacherCriticalPhase.height c n))
+      atTop (𝓝 (0 : ℝ)) ∧
+    Tendsto (fun n : ℕ =>
+      criticalRatio c n /
+        Real.exp (RademacherCriticalPhase.q c *
+          integerIndicator (RademacherCriticalPhase.height c n)))
+      atTop (𝓝 (1 : ℝ)) ∧
+    Tendsto (fun n : ℕ =>
+      criticalRatio c n -
+        Real.exp (RademacherCriticalPhase.q c *
+          integerIndicator (RademacherCriticalPhase.height c n)))
+      atTop (𝓝 (0 : ℝ))
+
+-- The +1 is essential. Every displayed tail probability is actual and
+-- positive. Exact equality of the quotient follows only on that tail.
+theorem noninteger_subsequence {c : ℝ} (hc : 0 < c) :
+    ∃ K : ℕ, 2 ≤ K ∧
+      StrictMono (fun j : ℕ => RademacherCriticalPhase.upIndex c (j + K) + 1) ∧
+      (∀ j : ℕ,
+        let n := RademacherCriticalPhase.upIndex c (j + K) + 1
+        RademacherCriticalPhase.cutoff c ≤ n ∧
+        ((j + K : ℕ) : ℝ) < RademacherCriticalPhase.height c n ∧
+        RademacherCriticalPhase.height c n < ((j + K : ℕ) : ℝ) + 1 ∧
+        0 < RademacherS5Assembly.p n (RademacherCriticalPhase.height c n) ∧
+        0 < RademacherStrictCube.strictP n
+          (RademacherCriticalPhase.height c n) ∧
+        criticalRatio c n = 1)
+
+-- d is a positive integer rational denominator; q c is the spectral
+-- coefficient. No coprimality premise or cancellation in Nat is needed.
+theorem rational_integer_subsequence {c : ℝ} (hc : 0 < c)
+    (p d : ℕ) (hp : 1 ≤ p) (hd : 1 ≤ d)
+    (hRat : c ^ 3 = (p : ℝ) / (d : ℝ)) :
+    ∃ K : ℕ, 2 ≤ K ∧
+      StrictMono (fun j : ℕ => d * p ^ 2 * (j + K) ^ 3) ∧
+      (∀ j : ℕ,
+        let n := d * p ^ 2 * (j + K) ^ 3
+        RademacherCriticalPhase.cutoff c ≤ n ∧
+        RademacherCriticalPhase.height c n = ((p * (j + K) : ℕ) : ℝ) ∧
+        0 < RademacherS5Assembly.p n (RademacherCriticalPhase.height c n) ∧
+        0 < RademacherStrictCube.strictP n
+          (RademacherCriticalPhase.height c n)) ∧
+      Tendsto (fun j : ℕ =>
+        criticalRatio c (d * p ^ 2 * (j + K) ^ 3))
+        atTop (𝓝 (Real.exp (RademacherCriticalPhase.q c)))
+
+-- Both set inclusions are required; outer inclusion is the finite-two-set
+-- distance argument in proof.md, not an appeal to generic cluster closure.
+theorem critical_rational {c : ℝ} (hc : 0 < c)
+    (hRat : ∃ r : ℚ, (r : ℝ) = c ^ 3) :
+    RademacherCriticalPhase.Cluster (criticalRatio c) =
+      ({(1 : ℝ), Real.exp (RademacherCriticalPhase.q c)} : Set ℝ) ∧
+    (¬ ∃ L : ℝ, Tendsto (criticalRatio c) atTop (𝓝 L))
+
+-- Do not strengthen the eventual quotient equality to all positive n:
+-- at a low threshold the equal probabilities can both be zero.
+theorem critical_irrational {c : ℝ} (hc : 0 < c)
+    (hIrr : ¬ ∃ r : ℚ, (r : ℝ) = c ^ 3) :
+    (∀ n : ℕ, 1 ≤ n →
+      (∀ z : ℤ, RademacherCriticalPhase.height c n ≠ (z : ℝ)) ∧
+      RademacherS5Assembly.p n (RademacherCriticalPhase.height c n) =
+        RademacherStrictCube.strictP n
+          (RademacherCriticalPhase.height c n)) ∧
+    (∀ᶠ n : ℕ in atTop, criticalRatio c n = 1) ∧
+    Tendsto (criticalRatio c) atTop (𝓝 (1 : ℝ)) ∧
+    RademacherCriticalPhase.Cluster (criticalRatio c) = ({(1 : ℝ)} : Set ℝ)
+
+end Shao.OQ4.RademacherStrictWeakBoundary
+end

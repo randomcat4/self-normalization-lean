@@ -1,0 +1,38 @@
+import Shao.C2.CompletionFirstProfile
+
+noncomputable section
+namespace Shao.C2.HalfLineSpatialProfiles
+open Shao.C2.HalfLineReflectionFormula Shao.C2.CompletionFirstProfile
+
+theorem scaled_reflection_slope (u v T M : ℝ)
+    (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) (hM : 1 ≤ M) :
+    (2 * v / T) * Real.exp (-2 * u * v / (M * T)) ≤
+      4 * M / Real.sqrt T * (1 + |u - v| / Real.sqrt T) := by
+
+theorem positive_reflection_power_profile (u v T : ℝ)
+    (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) (j : ℕ) (hj : 0 < j) :
+    (2 * v / T) ^ j * Real.exp (-2 * u * v / T) ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |u - v| / Real.sqrt T)) ^ j *
+        Real.exp (-u * v / T) := by
+
+theorem upperReflection_iteratedDeriv (j : ℕ) (a y T z : ℝ) :
+    iteratedDeriv j (fun u : ℝ => upperReflection a u T z - 1) y =
+      -((2 * (a - z) / T) ^ j) * Real.exp (-2 * (a - y) * (a - z) / T) := by
+
+theorem lowerReflection_iteratedDeriv (j : ℕ) (a y T z : ℝ) :
+    iteratedDeriv j (fun u : ℝ => lowerReflection a u T z - 1) y =
+      -((-(2 * (a + z) / T)) ^ j) * Real.exp (-2 * (a + y) * (a + z) / T) := by
+
+theorem upperReflection_iterated_profile (j : ℕ) (hj : 0 < j)
+    (a y T z : ℝ) (hT : 0 < T) (hy : y < a) (hz : z < a) :
+    |iteratedDeriv j (fun u : ℝ => upperReflection a u T z - 1) y| ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        upperProfile a y T z := by
+
+theorem lowerReflection_iterated_profile (j : ℕ) (hj : 0 < j)
+    (a y T z : ℝ) (hT : 0 < T) (hy : -a < y) (hz : -a < z) :
+    |iteratedDeriv j (fun u : ℝ => lowerReflection a u T z - 1) y| ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        lowerProfile a y T z := by
+
+end Shao.C2.HalfLineSpatialProfiles

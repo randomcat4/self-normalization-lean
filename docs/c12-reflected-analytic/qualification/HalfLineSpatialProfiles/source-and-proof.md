@@ -1,0 +1,11 @@
+# All spatial orders for the scalar halfline profile
+
+Readonly supplement.tex 4212–4253 requests fixed nonnegative spatial/time orders. This unit proves all positive integer spatial orders with time order zero for the two explicit halfline scalar formulas. It does not identify those formulas with actual survival probabilities or prove actual interval higher derivatives. All original roots OPEN.
+
+Six complete theorem heads and imports were frozen before proof implementation in frozen.lean.txt, SHA256 705827b18094d40f132b67051d1aeb215f50623a732ffb09099a30246964ab3f. No new transparent definition is introduced. Every hypothesis and conclusion remains unchanged.
+
+For scale M>=1, apply the accepted positive slope envelope at time M*T, bound its square-root factors by those at T, and multiply by M. For integer j>0 choose M=2j. Raising this nonnegative inequality to j and using exp(x)^j=exp(j*x) cancels j in the exponent. Multiplication by the remaining exp(-uv/T) yields (2v/T)^j exp(-2uv/T) <= (8j/sqrt(T)*(1+|u-v|/sqrt(T)))^j exp(-uv/T). No endpoint-distance lower bound is imposed.
+
+Both f-1 functions are exactly a fixed negative exponential factor times exp(c*y), with c=2(a-z)/T for the upper formula and c=-2(a+z)/T for the lower. The accepted mathlib real exponential iterated-derivative identity and the field constant-multiple identity give the exact j-th derivatives for every natural j and all real times, including total division at zero. Taking absolute values under T>0 and both interior endpoints, then applying the power-profile lemma, proves the source form with C_(j,0)=(8j)^j. The j=0 exact derivative formula is also included; its profile bound is already supplied by unit30. No time or mixed derivative estimate is claimed here.
+
+Server kernel attempt002 and all-actual-owner recursive-axiom audit pass, CPU14–17/c12-heavy.lock/-M8192 -j4 and pinned versions unchanged. Actual ownership is six theorems, zero definitions; all complete actual types are exported. Attempt001 source/log retained; only the fixed mathlib theorem's global namespace was corrected in the proof. No mathematical assumptions, frozen heads/imports or earlier accepted source changed; no successful gate replay or old producer build. Independent complete review pending.
