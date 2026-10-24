@@ -1,0 +1,9 @@
+# Quantized observation recovery
+
+This module proves the literal floor quantization in p37(8) and its deterministic positive-affine recovery interface. For every positive epsilon and measurable real xi with a full-observation code c in [1/3, 2/3], Y = epsilon * (Int.floor(xi / epsilon) + c) is measurable, stays within epsilon of xi, preserves the signed integer bin, and exactly recovers c through its Borel fractional-part decoder. The resulting comap is the entire specified observation measurable space. Every level-null code transfers level nullness to Y under any measure.
+
+For arbitrary known deterministic a and s > 0, eta = (Y - a) / s has the exposed inverse R(t) = s*t+a, the same full comap, and the same all-level nullness transfer. The theorem covers negative bins, integer endpoints, and the code-range endpoints. It adds no point-separation, StandardBorel, probability or higher-moment assumption at this generic layer.
+
+Exact-source server producer and original-object all-module-owner audit both exited zero. A fresh independent complete source/proof/source-fidelity review covers all 22 actual types, both complete definition values and all 42 recursive axiom occurrences. Only propext, Classical.choice and Quot.sound occur. The eleven nonfatal producer warnings, known Lake notice and false strict-wrapper fields remain preserved. Exact bindings and the complete review accompany this document.
+
+Actual expectation centering, variance-scale construction/positivity, centered unit-total-variance normalization, finite-vector errors and family assembly remain unpaid. This module does not close eta signed-distance/general projection p0 transport, cost limits, scalar probability engines, p54 repairs or any original root. Unit147 physical tau/R2-zero is distinct; all original roots remain OPEN.

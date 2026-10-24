@@ -1,0 +1,9 @@
+# Actual finite-family moment normalization
+
+This module proves the actual mean and total variance normalization required by p37 section 2(8)–(10). The coordinate mean is the defining integral of Y; the scale is the square root of the sum of actual centered second moments. From measurable, uniformly epsilon-close Y and centered original L2 coordinates with unit total energy, it derives Y/centered-family integrability, mean error, the scale-square identity and |s−1|≤2 epsilon sqrt(n). It assumes no coordinate independence or higher moments.
+
+For 0<epsilon<1/(4 sqrt(n)), it derives s>1/2, actual affine normalized coordinates with zero means and total second moment one, pointwise reconstruction, all three finite Euclidean/sum estimates in p37(10), and separate coordinate domination bounds. The finite norm is the explicit square root of the sum of squares. Individual zero variances and n=1 are permitted.
+
+The exact source received a successful original server kernel/object receipt, all-owned type/value/recursive-axiom audit, and a fresh complete independent source-to-statement/proof review. The inventory is six actual types, four definition values and eighteen standard-whitelist axiom occurrences; there are no generated owners. Seven harmless source linter warnings and the known Lake warning remain recorded with false strict-wrapper flags and direct Lean exit zero.
+
+This module supplies a deterministic normalization interface on one common probability space. Actual uniform augmentation, product laws and marginalization, independence, nonzero coded sample energy, full/deleted factorization assembly, eta event transport and original projection-zero costs remain separate dependencies. It does not supply the Shao–Zhou probability engine, analytic cost limits, p54 strict margins/actual C_n/Gaussian-tail division, or any original root theorem. All roots remain OPEN; OQ3 stays paused. See the companion exact qualification and complete review.
