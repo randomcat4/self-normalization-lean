@@ -1,0 +1,7 @@
+Unit85: high-time norm assembly for the normalized sine candidate (supplement.tex4292–4295).
+
+The frozen constant is the exact finite binomial convolution of the sine derivative constants, multiplied by the explicit reciprocal-density constant. It depends only on j,l and is nonnegative. For each product in84's Leibniz family,83 supplies the reciprocal derivative estimate and81 the sine-series estimate. One positive sqrt(T) cancels exactly against the extra inverse square-root power, leaving (1/sqrtT)^(j+2l). The finite sum triangle inequality then gives the genuine normalized candidate's actual mixed derivative estimate through j+l<=3, in either differentiation order, with closed wall endpoints and T>=a² explicit.
+
+All five complete theorem heads, the complete one-definition value and import/context bytes were frozen before implementation. First kernel001 and complete actual defining-module ownership/transitive-axiom audit passed:11owners=10theoremconstants+1definition. All axioms lie in propext/Classical.choice/Quot.sound; all actual types and the complete value are exported. No failed attempt or successful-check replay.
+
+Author-checked pending independent complete final qualification with84. The consumed reciprocal82/83 milestone remains under its separate fresh independent final review. No image/sine/killed/Brownian probability identification is claimed. Original-profile absorption for candidate-1, the full compensated Taylor/hSmall and root assembly remain OPEN. P54 repairs and external-result attribution are unchanged.

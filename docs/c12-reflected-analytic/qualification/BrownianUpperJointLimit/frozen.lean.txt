@@ -1,0 +1,68 @@
+import Shao.C2.BrownianUpperBoundary
+import Mathlib.MeasureTheory.Measure.Portmanteau
+
+noncomputable section
+namespace Shao.C2.BrownianUpperJointLimit
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal ENNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianUpperBoundary
+open Shao.OQ4.PolygonalBrownianWeakLimit
+
+def upperJointSet (a v : ℝ) : Set C(BridgeTime, ℝ) :=
+  {f | (∀ t : BridgeTime, f t ≤ a) ∧ f 1 ≤ v}
+
+def upperBoundarySet (a : ℝ) : Set C(BridgeTime, ℝ) :=
+  {f | ∀ t : BridgeTime, f t ≤ a} \ {f | ∀ t : BridgeTime, f t < a}
+
+private theorem ae_unitPath_eq {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ᵐ ω ∂P, ∀ t : BridgeTime,
+      brownianUnitPath B 1 ω t = B ⟨(t : ℝ), t.property.1⟩ ω := by
+
+theorem isClosed_upperJointSet (a v : ℝ) : IsClosed (upperJointSet a v) := by
+
+theorem measurableSet_upperBoundarySet (a : ℝ) : MeasurableSet (upperBoundarySet a) := by
+
+theorem frontier_upperJointSet_subset (a v : ℝ) :
+    frontier (upperJointSet a v) ⊆ upperBoundarySet a ∪ {f : C(BridgeTime, ℝ) | f 1 = v} := by
+
+theorem brownianUnitPathLaw_upperBoundary_zero {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a : ℝ) (ha : 0 < a) :
+    brownianUnitPathLaw B 1 P (upperBoundarySet a) = 0 := by
+
+theorem brownianUnitPathLaw_endpoint_zero {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (v : ℝ) :
+    brownianUnitPathLaw B 1 P {f : C(BridgeTime, ℝ) | f 1 = v} = 0 := by
+
+theorem brownianUnitPathLaw_joint_frontier_zero {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a v : ℝ) (ha : 0 < a) :
+    brownianUnitPathLaw B 1 P (frontier (upperJointSet a v)) = 0 := by
+
+theorem brownianUnitPathLaw_upperJoint_real {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a v : ℝ) (ha : 0 < a) :
+    (brownianUnitPathLaw B 1 P).real (upperJointSet a v) =
+      P.real {ω | (∀ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧ B 1 ω ≤ v} := by
+
+theorem row_upper_joint_tendsto_brownian {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ) [∀ j, IsProbabilityMeasure (νSeq j)]
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hbound : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (hSeq : ℕ → ℝ) (hpos : ∀ j, 0 < hSeq j)
+    (hh : Tendsto hSeq atTop atTop) (NSeq : ℕ → ℕ)
+    (hN : ∀ j, (hSeq j) ^ 2 ≤ (NSeq j : ℝ))
+    (a v : ℝ) (ha : 0 < a) :
+    Tendsto (fun j =>
+      (Shao.OQ4.PolygonalPathTightness.polygonalPathLaw 1 (NSeq j) (hSeq j) (νSeq j)).real
+        (upperJointSet a v)) atTop
+      (𝓝 (P.real {ω | (∀ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧ B 1 ω ≤ v})) := by
+
+end Shao.C2.BrownianUpperJointLimit

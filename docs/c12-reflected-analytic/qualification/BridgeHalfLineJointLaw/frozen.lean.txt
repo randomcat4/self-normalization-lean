@@ -1,0 +1,60 @@
+import Shao.C2.InitialBrownianIdentity
+
+open scoped NNReal
+noncomputable section
+namespace Shao.C2.BridgeHalfLineJointLaw
+open MeasureTheory ProbabilityTheory Set
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+def upperJointEvent (a y T v : ℝ) : Set (BridgeNoise × ℝ) :=
+  {p | p.1 ∈ strictUpper a y T (y + Real.sqrt T * p.2) ∧
+    y + Real.sqrt T * p.2 ≤ v}
+
+def lowerJointEvent (a y T v : ℝ) : Set (BridgeNoise × ℝ) :=
+  {p | p.1 ∈ strictLower a y T (y + Real.sqrt T * p.2) ∧
+    y + Real.sqrt T * p.2 ≤ v}
+
+theorem measurableSet_upperJointEvent (a y T v : ℝ) :
+    MeasurableSet (upperJointEvent a y T v) := by
+
+theorem measurableSet_lowerJointEvent (a y T v : ℝ) :
+    MeasurableSet (lowerJointEvent a y T v) := by
+
+private theorem product_real_section (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (ρ : Measure ℝ) [IsProbabilityMeasure ρ]
+    (S : Set (BridgeNoise × ℝ)) (hS : MeasurableSet S) :
+    (ν.prod ρ).real S = ∫ w : ℝ, ν.real {g | (g, w) ∈ S} ∂ρ := by
+
+theorem product_upper_joint (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T v : ℝ) :
+    (ν.prod (gaussianReal 0 1)).real (upperJointEvent a y T v) =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        upperCompletion ν a y T (y + Real.sqrt T * w) else 0) ∂(gaussianReal 0 1) := by
+
+theorem product_lower_joint (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T v : ℝ) :
+    (ν.prod (gaussianReal 0 1)).real (lowerJointEvent a y T v) =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        lowerCompletion ν a y T (y + Real.sqrt T * w) else 0) ∂(gaussianReal 0 1) := by
+
+theorem brownian_upper_joint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T v : ℝ) :
+    P.real {ω | (∀ t : BridgeTime,
+        y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧
+        y + Real.sqrt T * B 1 ω ≤ v} =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        upperCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+        ∂(gaussianReal 0 1) := by
+
+theorem brownian_lower_joint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T v : ℝ) :
+    P.real {ω | (∀ t : BridgeTime,
+        -a < y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω) ∧
+        y + Real.sqrt T * B 1 ω ≤ v} =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        lowerCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+        ∂(gaussianReal 0 1) := by
+
+end Shao.C2.BridgeHalfLineJointLaw

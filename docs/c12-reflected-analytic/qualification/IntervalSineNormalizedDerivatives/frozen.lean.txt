@@ -1,0 +1,48 @@
+import Shao.C2.IntervalReciprocalHighTime
+
+noncomputable section
+namespace Shao.C2.IntervalSineNormalizedDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalReciprocalDerivatives Shao.C2.IntervalSineSeries
+
+def normalizedSineCandidate (a z T y : ℝ) : ℝ :=
+  reciprocalFreeDensity z T y * mixedSineSeries 0 0 a z T y
+
+def normalizedMixedFamily (j l : ℕ) (a z T y : ℝ) : ℝ :=
+  ∑ i ∈ Finset.range (j + 1), ∑ k ∈ Finset.range (l + 1),
+    (Nat.choose j i : ℝ) * (Nat.choose l k : ℝ) *
+      reciprocalMixedFamily i k z T y * mixedSineSeries (j - i) (l - k) a z T y
+
+theorem normalizedMixedFamily_zero (a z T y : ℝ) :
+    normalizedMixedFamily 0 0 a z T y = normalizedSineCandidate a z T y := by
+
+theorem normalizedMixedFamily_spatial_hasDerivAt (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 2) (ha : 0 < a) (hT : 0 < T) :
+    HasDerivAt (normalizedMixedFamily j l a z T)
+      (normalizedMixedFamily (j + 1) l a z T y) y := by
+
+theorem normalizedMixedFamily_time_hasDerivAt (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 2) (ha : 0 < a) (hT : 0 < T) :
+    HasDerivAt (fun S => normalizedMixedFamily j l a z S y)
+      (normalizedMixedFamily j (l + 1) a z T y) T := by
+
+theorem normalizedMixedFamily_spatial_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (normalizedMixedFamily 0 l a z T) y = normalizedMixedFamily j l a z T y := by
+
+theorem normalizedSineCandidate_spatial_iteratedDeriv (j : ℕ) (a z T y : ℝ)
+    (hj : j ≤ 3) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (normalizedSineCandidate a z T) y = normalizedMixedFamily j 0 a z T y := by
+
+theorem normalizedSineCandidate_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv l (fun S => iteratedDeriv j (normalizedSineCandidate a z S) y) T =
+      normalizedMixedFamily j l a z T y := by
+
+theorem normalizedSineCandidate_mixed_commutation (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (fun w => iteratedDeriv l (fun S => normalizedSineCandidate a z S w) T) y =
+      iteratedDeriv l (fun S => iteratedDeriv j (normalizedSineCandidate a z S) y) T := by
+
+end Shao.C2.IntervalSineNormalizedDerivatives

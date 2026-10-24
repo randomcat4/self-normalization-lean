@@ -1,0 +1,60 @@
+import Shao.C2.IntervalSineHighTime
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+
+noncomputable section
+namespace Shao.C2.IntervalReciprocalDerivatives
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+
+def reciprocalFreeDensity (z T y : ℝ) : ℝ :=
+  Real.sqrt (2 * Real.pi) * Real.sqrt T * Real.exp ((z - y) ^ 2 / (2 * T))
+
+def reciprocalCoefficient (j l : ℕ) (d T : ℝ) : ℝ :=
+  match j, l with
+  | 0, 0 => 1
+  | 1, 0 => -d / T
+  | 2, 0 => 1 / T + d ^ 2 / T ^ 2
+  | 3, 0 => -(3 * d / T ^ 2 + d ^ 3 / T ^ 3)
+  | 0, 1 => 1 / (2 * T) - d ^ 2 / (2 * T ^ 2)
+  | 1, 1 => d / (2 * T ^ 2) + d ^ 3 / (2 * T ^ 3)
+  | 2, 1 => -1 / (2 * T ^ 2) - 2 * d ^ 2 / T ^ 3 - d ^ 4 / (2 * T ^ 4)
+  | 0, 2 => -1 / (4 * T ^ 2) + d ^ 2 / (2 * T ^ 3) + d ^ 4 / (4 * T ^ 4)
+  | 1, 2 => -(3 * d / (4 * T ^ 3) + 3 * d ^ 3 / (2 * T ^ 4) + d ^ 5 / (4 * T ^ 5))
+  | 0, 3 => 3 / (8 * T ^ 3) - 9 * d ^ 2 / (8 * T ^ 4) -
+      9 * d ^ 4 / (8 * T ^ 5) - d ^ 6 / (8 * T ^ 6)
+  | _, _ => 0
+
+def reciprocalMixedFamily (j l : ℕ) (z T y : ℝ) : ℝ :=
+  reciprocalCoefficient j l (z - y) T * reciprocalFreeDensity z T y
+
+theorem reciprocalFreeDensity_mul_free (z T y : ℝ) (hT : 0 < T) :
+    reciprocalFreeDensity z T y *
+      ((1 / Real.sqrt (2 * Real.pi * T)) * Real.exp (-(z - y) ^ 2 / (2 * T))) = 1 := by
+
+theorem reciprocalFreeDensity_spatial_hasDerivAt (z T y : ℝ) (hT : 0 < T) :
+    HasDerivAt (reciprocalFreeDensity z T)
+      ((-(z - y) / T) * reciprocalFreeDensity z T y) y := by
+
+theorem reciprocalFreeDensity_time_hasDerivAt (z T y : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun S => reciprocalFreeDensity z S y)
+      ((1 / (2 * T) - (z - y) ^ 2 / (2 * T ^ 2)) * reciprocalFreeDensity z T y) T := by
+
+theorem reciprocalMixedFamily_spatial_hasDerivAt (j l : ℕ) (z T y : ℝ)
+    (hjl : j + l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (reciprocalMixedFamily j l z T) (reciprocalMixedFamily (j + 1) l z T y) y := by
+
+theorem reciprocalMixedFamily_time_hasDerivAt (j l : ℕ) (z T y : ℝ)
+    (hjl : j + l ≤ 2) (hT : 0 < T) :
+    HasDerivAt (fun S => reciprocalMixedFamily j l z S y)
+      (reciprocalMixedFamily j (l + 1) z T y) T := by
+
+theorem reciprocalFreeDensity_spatial_iteratedDeriv (j : ℕ) (z T y : ℝ)
+    (hj : j ≤ 3) (hT : 0 < T) :
+    iteratedDeriv j (reciprocalFreeDensity z T) y = reciprocalMixedFamily j 0 z T y := by
+
+theorem reciprocalFreeDensity_mixed_iteratedDeriv (j l : ℕ) (z T y : ℝ)
+    (hjl : j + l ≤ 3) (hT : 0 < T) :
+    iteratedDeriv l (fun S => iteratedDeriv j (reciprocalFreeDensity z S) y) T =
+      reciprocalMixedFamily j l z T y := by
+
+end Shao.C2.IntervalReciprocalDerivatives

@@ -1,0 +1,27 @@
+import Shao.C2.FiniteWalkReflection
+import Mathlib.SetTheory.Cardinal.Finite
+
+noncomputable section
+namespace Shao.C2.FiniteWalkReflectionCount
+open Shao.C2.FiniteWalkReflection
+
+theorem reflectAtHit_hasHit {n : ℕ} (h : ℤ) (w : Fin n → Bool)
+    (hex : ∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h) :
+    ∃ k : ℕ, k ≤ n ∧ walkPrefix (reflectAtHit h w) k = h := by
+
+theorem strictBelow_iff_noHit {n : ℕ} (h : ℤ) (hh : 0 < h) (w : Fin n → Bool) :
+    (∀ k : ℕ, k ≤ n → walkPrefix w k < h) ↔
+      ¬∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h := by
+
+theorem hit_endpoint_cdf_card (n : ℕ) (h x : ℤ) (hh : 0 < h) (hx : x < h) :
+    Nat.card {w : Fin n → Bool //
+      (∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h) ∧ walkPrefix w n ≤ x} =
+      Nat.card {w : Fin n → Bool // 2 * h - x ≤ walkPrefix w n} := by
+
+theorem killed_endpoint_cdf_card (n : ℕ) (h x : ℤ) (hh : 0 < h) (hx : x < h) :
+    Nat.card {w : Fin n → Bool //
+        (∀ k : ℕ, k ≤ n → walkPrefix w k < h) ∧ walkPrefix w n ≤ x} +
+      Nat.card {w : Fin n → Bool // 2 * h - x ≤ walkPrefix w n} =
+        Nat.card {w : Fin n → Bool // walkPrefix w n ≤ x} := by
+
+end Shao.C2.FiniteWalkReflectionCount

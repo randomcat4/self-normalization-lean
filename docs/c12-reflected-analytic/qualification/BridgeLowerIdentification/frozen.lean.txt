@@ -1,0 +1,34 @@
+import Shao.C2.BridgeUpperAffineIdentification
+
+noncomputable section
+namespace Shao.C2.BridgeLowerIdentification
+open MeasureTheory ProbabilityTheory Set
+open scoped NNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeUpperAffineIdentification Shao.C2.SourceHalfLineCompletion
+
+theorem ae_bridgeNoise_neg {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) :
+    ∀ᵐ ω ∂P, ∀ t : BridgeTime, (bridgeNoise (-B) ω).val t = -(bridgeNoise B ω).val t := by
+
+theorem lowerCompletion_eq_upper_neg {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) :
+    lowerCompletion (bridgeLaw B P) a y T z =
+      upperCompletion (bridgeLaw (-B) P) a (-y) T (-z) := by
+
+theorem bridge_lower_formula {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ)
+    (hT : 0 < T) (hy : -a < y) (hz : -a < z) :
+    lowerCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * (a + y) * (a + z) / T) := by
+
+theorem source_lower_eq_scalar {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z : ℝ) (ha : 0 < a) (hz : -a < z) :
+    (fun y T : ℝ => sourceLowerCompletion (bridgeLaw B P) a y T z) =
+      (fun y T : ℝ => Shao.C2.HalfLinePhysicalGaussian.lowerCompletion a y T z) := by
+
+end Shao.C2.BridgeLowerIdentification

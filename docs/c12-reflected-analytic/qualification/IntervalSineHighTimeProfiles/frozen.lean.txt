@@ -1,0 +1,46 @@
+import Shao.C2.IntervalSineNormalizedHighTime
+
+noncomputable section
+namespace Shao.C2.IntervalSineHighTimeProfiles
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.CompletionFirstProfile Shao.C2.IntervalHighTimeProfiles
+open Shao.C2.IntervalSineNormalizedDerivatives Shao.C2.IntervalSineNormalizedHighTime
+
+def normalizedProfileConstant (j l : ℕ) : ℝ :=
+  (Real.exp 4 / 2) * (normalizedDerivativeConstant j l + 1)
+
+theorem normalizedProfileConstant_nonneg (j l : ℕ) :
+    0 ≤ normalizedProfileConstant j l := by
+
+theorem normalizedSineCandidate_sub_one_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (hpos : 0 < j + l) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv l (fun S => iteratedDeriv j (fun w => normalizedSineCandidate a z S w - 1) y) T =
+      normalizedMixedFamily j l a z T y := by
+
+theorem normalizedSineCandidate_sub_one_mixed_commutation (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (fun w => iteratedDeriv l (fun S => normalizedSineCandidate a z S w - 1) T) y =
+      iteratedDeriv l (fun S => iteratedDeriv j (fun w => normalizedSineCandidate a z S w - 1) y) T := by
+
+theorem normalizedSineCandidate_sub_one_highTime_norm_bound (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (fun w => normalizedSineCandidate a z S w - 1) y) T‖ ≤
+      (normalizedDerivativeConstant j l + 1) * (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem normalizedSineCandidate_sub_one_highTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (fun w => normalizedSineCandidate a z S w - 1) y) T‖ ≤
+      normalizedProfileConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) *
+        (1 + |z - y| / Real.sqrt T) ^ j * intervalProfile a y T z := by
+
+theorem normalizedSineCandidate_sub_one_commuted_highTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv j (fun w => iteratedDeriv l (fun S => normalizedSineCandidate a z S w - 1) T) y‖ ≤
+      normalizedProfileConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) *
+        (1 + |z - y| / Real.sqrt T) ^ j * intervalProfile a y T z := by
+
+end Shao.C2.IntervalSineHighTimeProfiles
