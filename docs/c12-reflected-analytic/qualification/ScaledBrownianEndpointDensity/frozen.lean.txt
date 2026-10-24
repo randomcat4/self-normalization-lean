@@ -1,0 +1,48 @@
+import Shao.C2.ScaledBrownianIdentity
+
+noncomputable section
+namespace Shao.C2.ScaledBrownianEndpointDensity
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeCompletionGlobalContinuity Shao.C2.ScaledBrownianIdentity
+
+theorem gaussianPDFReal_standard_affine_scale (y T z : ℝ) (hT : 0 < T) :
+    gaussianPDFReal 0 1 ((z - y) / Real.sqrt T) / Real.sqrt T =
+      gaussianPDFReal y ⟨T, hT.le⟩ z := by
+
+private theorem bounded_continuous_gaussian_density_integrable (f : ℝ → ℝ)
+    (hf : Continuous f) (hb : ∀ w : ℝ, 0 ≤ f w ∧ f w ≤ 1) :
+    Integrable (fun w : ℝ => gaussianPDFReal 0 1 w * f w) := by
+
+private theorem bounded_continuous_gaussian_integral_hasDerivAt (f : ℝ → ℝ)
+    (hf : Continuous f) (hb : ∀ w : ℝ, 0 ≤ f w ∧ f w ≤ 1) (z : ℝ) :
+    HasDerivAt (fun v : ℝ => ∫ w : ℝ in Iic v, f w ∂(gaussianReal 0 1))
+      (gaussianPDFReal 0 1 z * f z) z := by
+
+theorem bridge_scaled_integral_hasDerivAt {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun v : ℝ => ∫ w : ℝ,
+      (if y + Real.sqrt T * w ≤ v then
+        intervalCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+        ∂(gaussianReal 0 1))
+      (gaussianPDFReal y ⟨T, hT.le⟩ z * intervalCompletion (bridgeLaw B P) a y T z) z := by
+
+theorem brownian_scaled_interval_joint_hasDerivAt {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun v : ℝ => P.real {ω |
+      (∀ t : BridgeTime, |y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧
+        y + Real.sqrt T * B 1 ω ≤ v})
+      (gaussianPDFReal y ⟨T, hT.le⟩ z * intervalCompletion (bridgeLaw B P) a y T z) z := by
+
+theorem brownian_scaled_interval_density_ratio {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) (hT : 0 < T) :
+    deriv (fun v : ℝ => P.real {ω |
+      (∀ t : BridgeTime, |y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω| < a) ∧
+        y + Real.sqrt T * B 1 ω ≤ v}) z /
+      gaussianPDFReal y ⟨T, hT.le⟩ z = intervalCompletion (bridgeLaw B P) a y T z := by
+
+end Shao.C2.ScaledBrownianEndpointDensity

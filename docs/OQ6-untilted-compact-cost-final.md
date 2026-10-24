@@ -1,0 +1,11 @@
+# UntiltedCompactCost — exact-source qualified scope
+
+Derives genuine compact full and every deleted cost integrability and the actual source-cost bound for a symmetric centered L2 pair kernel with projection second moment one. For n >= 3 and z >= 0 it keeps the literal compact truncation cost, its bound by (1+z)^2, and the residual 16(1+C0)(1+z)(1+sqrt(v))/sqrt(n). It assumes no higher moments or scalar probability engine. The accepted Foundation module remains unchanged; the original complete independent proof review, exact split review and the eight compiler-affected proof ranges are bound in the final qualification.
+
+Source SHA256: a7ab6509e2008e568c8707d4d07b517bd94797218347589193e65f7242dca111. Object SHA256: 643acbb122ef62fec01dc715cdf347f5c19c8e377e3548aceee4862c4ab210ff. Import-only all-owned audit receipt SHA256: 8b4c109305c8c112a2f7e7ed493b7109824a6b5a006b2bf69107a823d1917e01.
+
+The adjacent qualification document binds the original kernel receipt, exact source/object, frozen interfaces, complete independent source-to-statement/proof review, all actual exported types and any full non-theorem values. The derived actual inventory is 9 types, 512 literal type lines, zero non-theorem values, and 15 recursive axiom occurrences, all within propext, Classical.choice, Quot.sound. Source warnings and the known Lake notice remain recorded, including strict-wrapper false flags alongside actual exit-zero successful checks; no accepted check was replayed for publication.
+
+The scalar Shao–Zhou tail/CDF engines used by the canonical consumers remain ordinary supplied Prop hypotheses: their proofs and existence are unpaid. Weighted almost-everywhere extensions 162/166, distinct compact parameter/tail/reflection consumers, physical147 conversion, p54 actual G intersect C_n and repaired uniform conditional moments/concentration/rates, relative Gaussian-tail assembly and original root closure are separate obligations. Unit145C supplies costs, not those probability or physical comparisons. OQ56 and C12 remain OPEN, OQ3 remains user-paused, and root v81 separately accepted limited OQ4 scope is preserved. External attribution and p54 repairs remain in force.
+
+This substantive milestone is stacked on PR #317 at immutable head 55042200bb7318fe2d1c18fa2134701d3cac731d. Root alone retargets and integrates; this lane does not merge.
