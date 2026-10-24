@@ -1,0 +1,9 @@
+# Finite weighted almost-everywhere compact upper tails
+
+For every nonnegative threshold, including zero, this consumer proves strict and weak upper multiplication errors at most C times the genuine original compact cost. The original arbitrary measurable ambient zero convention gives quotient errors at most the same cost plus the original projection-zero mass once. The constant and ordinary supplied scalar Shao-Zhou input precede the original law, n and threshold. Its proof/existence is not established here.
+
+The proof shifts the numerator, full envelope, EVERY genuine omitted envelope and original ambient kappa by one decreasing positive epsilon. The genuine full test gains exactly epsilon, every genuine capped deleted test is pointwise unchanged, and the actual cost is K+epsilon. Increasing closed-event unions yield the actual strict-event measure limits. This retains zero-zero atoms, threshold atoms and latent kappa atoms without statistic-CDF continuity, atomlessness or factorization of kappa. At threshold zero no unweighted B or omitted B_i integrability is imposed. Genuine combined full and EVERY capped-deleted integrability, the true omitted domains and all original almost-everywhere hypotheses remain explicit.
+
+The qualified original law/normalization/clipping inputs are reused. This result supplies neither an external scalar engine, an infinite-cost interpretation, physical centered Studentizer conversion, p54 concentration/uniform conditional moments/rates, relative Gaussian tails nor an original root closure. OQ56/C12 remain OPEN; OQ3 remains user-paused; separate limited OQ4 acceptance and external attribution remain unchanged.
+
+Adjacent qualification and complete final independent review bind the exact source, all24 frozen values, actual kernel/object and six actual owned complete types/recursive axioms. Warnings and the strict-wrapper flag are retained; the successful exact-source check was reused.
