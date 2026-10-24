@@ -1,0 +1,67 @@
+import Shao.C2.IntervalImageSmallTimeTails
+
+noncomputable section
+namespace Shao.C2.IntervalImageSmallTimeSum
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedIntSeries Shao.C2.CompletionFirstProfile
+open Shao.C2.IntervalImageSmallTimeTails
+
+def smallTimeMixedBlock (j l : ℕ) (a z T y : ℝ) (n : ℕ) : ℝ :=
+  mixedImageA j l a z T y ((n : ℤ) + 1) +
+    mixedImageA j l a z T y (-((n : ℤ) + 1)) -
+    mixedImageB j l a z T y (n : ℤ) -
+    mixedImageB j l a z T y (-((n : ℤ) + 1))
+
+theorem smallTimeMixedBlock_bound (j l : ℕ) (a z T y : ℝ) (n : ℕ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a)
+    (hSmall : T ≤ a ^ 2) :
+    ‖smallTimeMixedBlock j l a z T y n‖ ≤
+      (2 * (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        mixedTimeConstant j l / T ^ l * intervalProfile a y T z) * Real.exp (-4) ^ n := by
+
+theorem smallTimeMixedBlock_summable (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a)
+    (hSmall : T ≤ a ^ 2) :
+    Summable (smallTimeMixedBlock j l a z T y) := by
+
+theorem smallTimeMixedBlock_tsum_eq (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    (∑' n : ℕ, smallTimeMixedBlock j l a z T y n) =
+      mixedImageCandidate j l a z T y - (if j = 0 ∧ l = 0 then 1 else 0) := by
+
+theorem mixedImageCandidate_smallTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a)
+    (hSmall : T ≤ a ^ 2) :
+    |mixedImageCandidate j l a z T y - (if j = 0 ∧ l = 0 then 1 else 0)| ≤
+      4 * (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        mixedTimeConstant j l / T ^ l * intervalProfile a y T z := by
+
+theorem intervalImageCandidate_mixed_smallTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a)
+    (hSmall : T ≤ a ^ 2) :
+    |iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T -
+      (if j = 0 ∧ l = 0 then 1 else 0)| ≤
+      4 * (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        mixedTimeConstant j l / T ^ l * intervalProfile a y T z := by
+
+theorem intervalImageCandidate_nonzero_mixed_smallTime_profile (j l : ℕ) (a z T y : ℝ)
+    (hl : l ≤ 3) (hjl : 0 < j + l) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T)
+    (hy : |y| < a) (hSmall : T ≤ a ^ 2) :
+    |iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T| ≤
+      4 * (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        mixedTimeConstant j l / T ^ l * intervalProfile a y T z := by
+
+theorem intervalImageCandidate_sub_one_smallTime_profile (a z T y : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a)
+    (hSmall : T ≤ a ^ 2) :
+    |intervalImageCandidate a z T y - 1| ≤ 8 * intervalProfile a y T z := by
+
+end Shao.C2.IntervalImageSmallTimeSum
+

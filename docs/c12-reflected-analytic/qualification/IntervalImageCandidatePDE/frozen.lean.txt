@@ -1,0 +1,53 @@
+import Shao.C2.IntervalImageTimeDerivatives
+
+noncomputable section
+namespace Shao.C2.IntervalImageCandidatePDE
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives
+
+def spatialTailTimeSlope (j : ℕ) (a z T y : ℝ) (n : ℕ) : ℝ :=
+  1 / 2 * spatialTailBlock (j + 2) a z T y n +
+    (z - y) / T * spatialTailBlock (j + 1) a z T y n -
+      (j : ℝ) / T * spatialTailBlock j a z T y n
+
+def timeStripCoefficient (j : ℕ) (a H : ℝ) : ℝ :=
+  2 * spatialPrefactor (j + 2) a H +
+    (8 * a / H) * spatialPrefactor (j + 1) a H +
+      (4 * (j : ℝ) / H) * spatialPrefactor j a H
+
+theorem spatialTailTimeSlope_bound (j : ℕ) (a z H U : ℝ) (n : ℕ)
+    (p : StripPoint a H U) (ha : 0 < a) (hz : |z| ≤ a) (hH : 0 < H) (hHU : H ≤ U) :
+    ‖spatialTailTimeSlope j a z p.val.2 p.val.1 n‖ ≤
+      timeStripCoefficient j a H * gaussianMajorant a U n := by
+
+theorem spatialTailSum_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    HasDerivAt (fun S => spatialTailSum j a z S y)
+      (1 / 2 * spatialTailSum (j + 2) a z T y +
+        (z - y) / T * spatialTailSum (j + 1) a z T y -
+          (j : ℝ) / T * spatialTailSum j a z T y) T := by
+
+theorem finiteSpatialImages_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (hT : 0 < T) :
+    HasDerivAt (fun S => finiteSpatialImages j a z S y)
+      (1 / 2 * finiteSpatialImages (j + 2) a z T y +
+        (z - y) / T * finiteSpatialImages (j + 1) a z T y -
+          (j : ℝ) / T * finiteSpatialImages j a z T y) T := by
+
+theorem imageCandidateSpatial_time_hasDerivAt (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    HasDerivAt (fun S => imageCandidateSpatial j a z S y)
+      (1 / 2 * imageCandidateSpatial (j + 2) a z T y +
+        (z - y) / T * imageCandidateSpatial (j + 1) a z T y -
+          (j : ℝ) / T * imageCandidateSpatial j a z T y) T := by
+
+theorem intervalImageCandidate_time_hasDerivAt (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    HasDerivAt (fun S => intervalImageCandidate a z S y)
+      (1 / 2 * iteratedDeriv 2 (intervalImageCandidate a z T) y +
+        (z - y) / T * iteratedDeriv 1 (intervalImageCandidate a z T) y) T := by
+
+end Shao.C2.IntervalImageCandidatePDE

@@ -1,0 +1,415 @@
+Actual sparse-strict-critical-denominator owned interface: unfiltered environment difference
+
+===== Shao.OQ4.RademacherCorrectedBrownianBoundary.strictHeight [definition] =====
+TYPE
+(h : Real) → Real
+FULL DEFINITION VALUE
+fun (h : Real) =>
+  @Nat.cast.{0} Real Real.instNatCast
+    (@Nat.ceil.{0} Real Real.semiring Real.partialOrder
+      (@FloorRing.toFloorSemiring.{0} Real Real.instRing Real.linearOrder Real.instFloorRing) h)
+
+===== Shao.OQ4.RademacherCorrectedBrownianBoundary.strict_corrected_boundary [theorem] =====
+TYPE
+∀ {ΩB : Type uB} [inst : MeasurableSpace.{uB} ΩB] (B : NNReal → ΩB → Real) (P : @MeasureTheory.Measure.{uB} ΩB inst)
+  [inst_1 : @MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst P]
+  (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst B P) (n_ : Nat → Nat) (h_ : Nat → Real)
+  (hh :
+    @Filter.Tendsto.{0, 0} Nat Real h_ (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale2 :
+    @Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder) (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale3 :
+    @Exists.{1} Real fun (M : Real) =>
+      And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) M)
+        (@Exists.{1} Nat fun (K_M : Nat) =>
+          ∀ (k : Nat),
+            @LE.le.{0} Nat instLENat K_M k →
+              @LE.le.{0} Real Real.instLE
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+                    (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))
+                M)),
+  And
+    (@Filter.Eventually.{0} Nat
+      (fun (k : Nat) =>
+        And
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (Shao.OQ4.RademacherStrictCube.strictP (n_ k) (h_ k)))
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (Shao.OQ4.RademacherCorrectedBrownianBoundary.strictHeight (h_ k))
+                (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder))
+    (@Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (Shao.OQ4.RademacherStrictCube.strictP (n_ k) (h_ k))
+          (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (Shao.OQ4.RademacherCorrectedBrownianBoundary.strictHeight (h_ k))
+              (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@nhds.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+
+===== Shao.OQ4.RademacherCorrectedBrownianBoundary.weakHeight [definition] =====
+TYPE
+(h : Real) → Real
+FULL DEFINITION VALUE
+fun (h : Real) =>
+  @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+    (@Nat.cast.{0} Real Real.instNatCast
+      (@Nat.floor.{0} Real Real.semiring Real.partialOrder
+        (@FloorRing.toFloorSemiring.{0} Real Real.instRing Real.linearOrder Real.instFloorRing) h))
+    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+
+===== Shao.OQ4.RademacherCorrectedBrownianBoundary.weak_corrected_boundary [theorem] =====
+TYPE
+∀ {ΩB : Type uB} [inst : MeasurableSpace.{uB} ΩB] (B : NNReal → ΩB → Real) (P : @MeasureTheory.Measure.{uB} ΩB inst)
+  [inst_1 : @MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst P]
+  (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst B P) (n_ : Nat → Nat) (h_ : Nat → Real)
+  (hh :
+    @Filter.Tendsto.{0, 0} Nat Real h_ (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale2 :
+    @Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder) (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale3 :
+    @Exists.{1} Real fun (M : Real) =>
+      And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) M)
+        (@Exists.{1} Nat fun (K_M : Nat) =>
+          ∀ (k : Nat),
+            @LE.le.{0} Nat instLENat K_M k →
+              @LE.le.{0} Real Real.instLE
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+                    (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))
+                M)),
+  And
+    (@Filter.Eventually.{0} Nat
+      (fun (k : Nat) =>
+        And
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (Shao.OQ4.RademacherS4Assembly.p (n_ k) (h_ k)))
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (Shao.OQ4.RademacherCorrectedBrownianBoundary.weakHeight (h_ k))
+                (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder))
+    (@Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (Shao.OQ4.RademacherS4Assembly.p (n_ k) (h_ k))
+          (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (Shao.OQ4.RademacherCorrectedBrownianBoundary.weakHeight (h_ k))
+              (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@nhds.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.corrected_boundary_of_S4 [theorem] =====
+TYPE
+∀ {ΩB : Type uB} [inst : MeasurableSpace.{uB} ΩB] (B : NNReal → ΩB → Real) (P : @MeasureTheory.Measure.{uB} ΩB inst)
+  [inst_1 : @MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst P]
+  (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst B P) (n_ : Nat → Nat) (h_ H_ A_ : Nat → Real)
+  (hh :
+    @Filter.Tendsto.{0, 0} Nat Real h_ (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale2 :
+    @Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder) (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale3 :
+    @Exists.{1} Real fun (M : Real) =>
+      And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) M)
+        (@Exists.{1} Nat fun (K_M : Nat) =>
+          ∀ (k : Nat),
+            @LE.le.{0} Nat instLENat K_M k →
+              @LE.le.{0} Real Real.instLE
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+                    (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))
+                M))
+  (hwall :
+    @Filter.Eventually.{0} Nat
+      (fun (k : Nat) =>
+        And (@LE.le.{0} Real Real.instLE (h_ k) (H_ k))
+          (@LE.le.{0} Real Real.instLE (H_ k)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (h_ k)
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder))
+  (hApos :
+    @Filter.Eventually.{0} Nat
+      (fun (k : Nat) =>
+        @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (A_ k))
+      (@Filter.atTop.{0} Nat Nat.instPreorder))
+  (hS4 :
+    @Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+          (Real.log
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (A_ k)
+              (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                  (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) Real.pi
+                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+                (@OfNat.ofNat.{0} Real (nat_lit 4)
+                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+                  (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))))
+            (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (H_ k) (h_ k))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@nhds.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))),
+  And
+    (@Filter.Eventually.{0} Nat
+      (fun (k : Nat) =>
+        And
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (A_ k))
+          (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (H_ k)
+                (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder))
+    (@Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (A_ k)
+          (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst B P inst_1 hB
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (H_ k)
+              (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k))))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@nhds.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound [theorem] =====
+TYPE
+∀ (n : Nat) (h d : Real)
+  (hh : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) h)
+  (hd0 : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) d)
+  (hd1 : @LE.le.{0} Real Real.instLE d (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))),
+  @LE.le.{0} Real Real.instLE
+    (@abs.{0} Real Real.lattice Real.instAddGroup
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@HPow.hPow.{0, 0, 0} Real Nat Real
+              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) Real.pi
+              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+            (@OfNat.ofNat.{0} Real (nat_lit 8)
+              (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast
+                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))
+                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6))))))))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@Nat.cast.{0} Real Real.instNatCast n)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) h
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@Nat.cast.{0} Real Real.instNatCast n)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) h d)
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) Real.pi
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+              (@OfNat.ofNat.{0} Real (nat_lit 4)
+                (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                  (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+                    (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@Nat.cast.{0} Real Real.instNatCast n)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) h
+                (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))))
+          d)))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@OfNat.ofNat.{0} Real (nat_lit 3)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))))
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) Real.pi
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+          (@OfNat.ofNat.{0} Real (nat_lit 8)
+            (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast
+              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))
+                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))))))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@Nat.cast.{0} Real Real.instNatCast n)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) h
+          (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))))))
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_1 [theorem] =====
+TYPE
+∀ {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_2 [theorem] =====
+TYPE
+∀ {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_3 [theorem] =====
+TYPE
+∀ {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_4 [theorem] =====
+TYPE
+∀ {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_5 [theorem] =====
+TYPE
+∀ {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_6 [theorem] =====
+TYPE
+∀ {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+
+===== _private.Shao.OQ4.RademacherCorrectedBrownianBoundary.0.Shao.OQ4.RademacherCorrectedBrownianBoundary.inverse_square_remainder_bound._simp_1_7 [theorem] =====
+TYPE
+∀ {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False

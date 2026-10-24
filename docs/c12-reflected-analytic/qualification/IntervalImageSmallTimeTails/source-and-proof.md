@@ -1,0 +1,7 @@
+# Small-time wall-factored geometric image tails
+
+Read-only supplement4270-4283 with definitions4255-4259. For T>0,T<=a² and C>=B+8n²a², n²>=n yields exp(-C/(2T))<=exp(-B/(2T))*exp(-4)^n. The exact geometric series is summable with sum<=2, using exp(-4)<=1/2. The exact B0 and B-1 half exponentials are the already-qualified lowerProfile and upperProfile from30, with original argument order a,y,T,z.
+
+53 signed tails at A_(n+1),A_-(n+1),B_n,B_-(n+1) retain their B0/B-1 wall terms and dominate8n²a², including n0. Consequently all four half exponentials have the stated wall factor times the common geometric sequence. This supplies the missing wall decay rather than discarding it in a pure Gaussian-strip estimate. A separate whole-function constant proof shows mixedImageA j l at integer0 equals1 exactly when j=l=0 and0 otherwise, for all scalar parameters/times; this finite-term identity does not assert zero-time series convergence.
+
+All6 full theorem heads/importcontext frozen before proof; no new mathematical definitions. Kernel001/all6-owner recursive-axiom PASS. Complete6 actualtypes exported; actual value export correctly empty because exact owner map has zero definitions. No failures. SourceSnapshot explicitly verified against successful artifact map. Independent final review pending after65/66. Next summing mixed wall profiles/f-1 correction, then high-time/trace/joint-Taylor and actual probability gaps. All roots OPEN.

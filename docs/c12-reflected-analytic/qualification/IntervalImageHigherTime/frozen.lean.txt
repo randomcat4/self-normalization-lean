@@ -1,0 +1,64 @@
+import Shao.C2.IntervalImageTimeProfiles
+
+noncomputable section
+namespace Shao.C2.IntervalImageHigherTime
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles
+
+def affineSpatialTimeSecond (j : ℕ) (c k y T : ℝ) : ℝ :=
+  (((c * y + k) / T) ^ 2 - 2 * ((j : ℝ) + 1) * ((c * y + k) / T) +
+    (j : ℝ) * ((j : ℝ) + 1)) / T ^ 2 * (-c / T) ^ j * Real.exp (-(c * y + k) / T)
+
+def affineSpatialTimeThird (j : ℕ) (c k y T : ℝ) : ℝ :=
+  (((c * y + k) / T) ^ 3 - 3 * ((j : ℝ) + 2) * ((c * y + k) / T) ^ 2 +
+    3 * ((j : ℝ) + 1) * ((j : ℝ) + 2) * ((c * y + k) / T) -
+    (j : ℝ) * ((j : ℝ) + 1) * ((j : ℝ) + 2)) / T ^ 3 *
+      (-c / T) ^ j * Real.exp (-(c * y + k) / T)
+
+def mixedSecondConstant (j : ℕ) : ℝ :=
+  (1 + (2 : ℝ) ^ (j + 2) * (Nat.factorial (j + 2) : ℝ)) +
+    2 * ((j : ℝ) + 1) * (1 + (2 : ℝ) ^ (j + 1) * (Nat.factorial (j + 1) : ℝ)) +
+      (j : ℝ) * ((j : ℝ) + 1) * (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ))
+
+def mixedThirdConstant (j : ℕ) : ℝ :=
+  (1 + (2 : ℝ) ^ (j + 3) * (Nat.factorial (j + 3) : ℝ)) +
+    3 * ((j : ℝ) + 2) * (1 + (2 : ℝ) ^ (j + 2) * (Nat.factorial (j + 2) : ℝ)) +
+      3 * ((j : ℝ) + 1) * ((j : ℝ) + 2) *
+        (1 + (2 : ℝ) ^ (j + 1) * (Nat.factorial (j + 1) : ℝ)) +
+          (j : ℝ) * ((j : ℝ) + 1) * ((j : ℝ) + 2) *
+            (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ))
+
+theorem affineSpatialTimeSlope_hasDerivAt (j : ℕ) (c k y T : ℝ) (hT : 0 < T) :
+    HasDerivAt (affineSpatialTimeSlope j c k y) (affineSpatialTimeSecond j c k y T) T := by
+
+theorem affineSpatialTimeSecond_hasDerivAt (j : ℕ) (c k y T : ℝ) (hT : 0 < T) :
+    HasDerivAt (affineSpatialTimeSecond j c k y) (affineSpatialTimeThird j c k y T) T := by
+
+theorem affineSpatial_time_iteratedDeriv_two (j : ℕ) (c k y T : ℝ) (hT : 0 < T) :
+    iteratedDeriv 2 (fun S => iteratedDeriv j (affineImageTerm c k S) y) T =
+      affineSpatialTimeSecond j c k y T := by
+
+theorem affineSpatial_time_iteratedDeriv_three (j : ℕ) (c k y T : ℝ) (hT : 0 < T) :
+    iteratedDeriv 3 (fun S => iteratedDeriv j (affineImageTerm c k S) y) T =
+      affineSpatialTimeThird j c k y T := by
+
+theorem affineSpatialTimeSecond_profile (j : ℕ) (c k d y T : ℝ)
+    (hT : 0 < T) (hC : 0 ≤ c * y + k)
+    (hid : c * y + k = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |affineSpatialTimeSecond j c k y T| ≤
+      (4 / Real.sqrt T * (1 + |d| / Real.sqrt T)) ^ j * mixedSecondConstant j / T ^ 2 *
+        Real.exp (-(c * y + k) / (2 * T)) := by
+
+theorem affineSpatialTimeThird_profile (j : ℕ) (c k d y T : ℝ)
+    (hT : 0 < T) (hC : 0 ≤ c * y + k)
+    (hid : c * y + k = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |affineSpatialTimeThird j c k y T| ≤
+      (4 / Real.sqrt T * (1 + |d| / Real.sqrt T)) ^ j * mixedThirdConstant j / T ^ 3 *
+        Real.exp (-(c * y + k) / (2 * T)) := by
+
+end Shao.C2.IntervalImageHigherTime

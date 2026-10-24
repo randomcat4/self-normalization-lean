@@ -1,0 +1,112 @@
+import Shao.OQ4.RademacherS4Assembly
+import Shao.OQ4.RademacherGeneralStrictS4
+import Shao.OQ4.RademacherBrownianBoundaryShift
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped NNReal Topology
+universe uB
+
+namespace Shao.OQ4.RademacherCorrectedBrownianBoundary
+
+def weakHeight (h : ℝ) : ℝ := (Nat.floor h : ℝ) + 1
+
+def strictHeight (h : ℝ) : ℝ := (Nat.ceil h : ℝ)
+
+private theorem inverse_square_remainder_bound (n : ℕ) (h d : ℝ)
+    (hh : 0 < h) (hd0 : 0 ≤ d) (hd1 : d ≤ 1) :
+    |(Real.pi ^ 2 / 8) *
+        ((n : ℝ) / h ^ 2 - (n : ℝ) / (h + d) ^ 2) -
+      (Real.pi ^ 2 / 4) * ((n : ℝ) / h ^ 3) * d| ≤
+    (3 * (Real.pi ^ 2 / 8)) * ((n : ℝ) / h ^ 4)
+
+-- Body of the preceding head: proof.md §3, exact identity (2), bound (3).
+
+private theorem corrected_boundary_of_S4
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (n_ : ℕ → ℕ) (h_ H_ A_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M)
+    (hwall : ∀ᶠ k : ℕ in atTop,
+      h_ k ≤ H_ k ∧ H_ k ≤ h_ k + 1)
+    (hApos : ∀ᶠ k : ℕ in atTop, 0 < A_ k)
+    (hS4 : Tendsto (fun k : ℕ =>
+      Real.log (A_ k /
+        Shao.Probability.BrownianSup.probability B P hB
+          (h_ k / Real.sqrt (n_ k : ℝ))) -
+      (Real.pi ^ 2 / 4) * ((n_ k : ℝ) / (h_ k) ^ 3) *
+        (H_ k - h_ k)) atTop (𝓝 (0 : ℝ))) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < A_ k ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (H_ k / Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      A_ k / Shao.Probability.BrownianSup.probability B P hB
+        (H_ k / Real.sqrt (n_ k : ℝ))) atTop (𝓝 (1 : ℝ))
+
+-- Body of the preceding head: proof.md §§2--4. The log residual is established
+-- as an internal have; the theorem returns only positivity and the ratio.
+-- A_ is instantiated with an actual qualified finite probability in BOTH
+-- public wrappers below. hS4 is never a new public probability hypothesis.
+
+theorem weak_corrected_boundary
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < RademacherS4Assembly.p (n_ k) (h_ k) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (weakHeight (h_ k) / Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      RademacherS4Assembly.p (n_ k) (h_ k) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (weakHeight (h_ k) / Real.sqrt (n_ k : ℝ)))
+      atTop (𝓝 (1 : ℝ))
+
+-- Body of the preceding head: proof.md §5. Obtain floor-cell S4_EVENTUAL,
+-- its log residual, and actual p positivity, then instantiate the helper.
+
+theorem strict_corrected_boundary
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < RademacherStrictCube.strictP (n_ k) (h_ k) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (strictHeight (h_ k) / Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      RademacherStrictCube.strictP (n_ k) (h_ k) /
+        Shao.Probability.BrownianSup.probability B P hB
+          (strictHeight (h_ k) / Real.sqrt (n_ k : ℝ)))
+      atTop (𝓝 (1 : ℝ))
+
+-- Body of the preceding head: proof.md §6. Obtain strict_S4_EVENTUAL,
+-- unfold only its Q/correction/delta and strictHeight, instantiate helper.
+
+end Shao.OQ4.RademacherCorrectedBrownianBoundary
+end

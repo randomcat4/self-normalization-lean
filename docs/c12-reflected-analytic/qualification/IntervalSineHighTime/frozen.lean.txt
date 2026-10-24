@@ -1,0 +1,36 @@
+import Shao.C2.IntervalSineSeries
+
+noncomputable section
+namespace Shao.C2.IntervalSineHighTime
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalSineTerms Shao.C2.IntervalSineSeries Shao.C2.IntervalSpectralGaussian
+
+def sineDerivativeConstant (j l : ℕ) : ℝ :=
+  (Real.pi / 2) ^ j * (Real.pi ^ 2 / 8) ^ l *
+    spectralConstant (Real.pi ^ 2 / 8) (j + 2 * l)
+
+theorem sineDerivativeConstant_nonneg (j l : ℕ) : 0 ≤ sineDerivativeConstant j l := by
+
+theorem sine_scaling_identity (j l : ℕ) (a T : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) /
+        (Real.sqrt (T / a ^ 2)) ^ (j + 2 * l + 1) =
+      ((Real.pi / 2) ^ j * (Real.pi ^ 2 / 8) ^ l) *
+        (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by
+
+theorem mixedSineSeries_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :
+    ‖mixedSineSeries j l a z T y‖ ≤
+      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by
+
+theorem sineSeries_mixed_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T‖ ≤
+      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by
+
+theorem sineSeries_commuted_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T) :
+    ‖iteratedDeriv j (fun w => iteratedDeriv l (fun S => mixedSineSeries 0 0 a z S w) T) y‖ ≤
+      sineDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l + 1) := by
+
+end Shao.C2.IntervalSineHighTime

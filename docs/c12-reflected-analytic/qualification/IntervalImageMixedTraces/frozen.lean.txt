@@ -1,0 +1,65 @@
+import Shao.C2.IntervalImageSpatialTraces
+import Mathlib.Tactic.FunProp
+
+noncomputable section
+namespace Shao.C2.IntervalImageMixedTraces
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageTimeDerivatives Shao.C2.IntervalImageCandidatePDE
+open Shao.C2.IntervalImageTimeProfiles Shao.C2.IntervalImageHigherTime Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageMixedIntSeries Shao.C2.IntervalImageWallValues
+open Shao.C2.IntervalImageSpatialTraces
+
+theorem affineSpatial_mixed_continuous (j l : ℕ) (c k T : ℝ) (hl : l ≤ 3) (hT : 0 < T) :
+    Continuous (fun y => iteratedDeriv l (fun S => iteratedDeriv j (affineImageTerm c k S) y) T) := by
+
+theorem mixedImageA_continuous (j l : ℕ) (a z T : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (hT : 0 < T) :
+    Continuous (fun y => mixedImageA j l a z T y m) := by
+
+theorem mixedImageB_continuous (j l : ℕ) (a z T : ℝ) (m : ℤ)
+    (hl : l ≤ 3) (hT : 0 < T) :
+    Continuous (fun y => mixedImageB j l a z T y m) := by
+
+theorem mixedTailBlock_continuous (j l : ℕ) (a z T : ℝ) (n : ℕ)
+    (hl : l ≤ 3) (hT : 0 < T) :
+    Continuous (fun y => mixedTailBlock j l a z T y n) := by
+
+theorem mixedTailSum_continuousOn (j l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    ContinuousOn (mixedTailSum j l a z T) (Icc (-a) a) := by
+
+theorem mixedFiniteImages_continuous (j l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (hT : 0 < T) :
+    Continuous (mixedFiniteImages j l a z T) := by
+
+theorem mixedImageCandidate_continuousOn (j l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    ContinuousOn (mixedImageCandidate j l a z T) (Icc (-a) a) := by
+
+theorem intervalImageCandidate_lower_mixed_trace (j l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (fun y => iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T)
+      (𝓝[Ioo (-a) a] (-a)) (𝓝 (mixedImageCandidate j l a z T (-a))) := by
+
+theorem intervalImageCandidate_upper_mixed_trace (j l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (fun y => iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T)
+      (𝓝[Ioo (-a) a] a) (𝓝 (mixedImageCandidate j l a z T a)) := by
+
+theorem intervalImageCandidate_lower_time_zero_trace (l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (fun y => iteratedDeriv l (fun S => intervalImageCandidate a z S y) T)
+      (𝓝[Ioo (-a) a] (-a)) (𝓝 0) := by
+
+theorem intervalImageCandidate_upper_time_zero_trace (l : ℕ) (a z T : ℝ)
+    (hl : l ≤ 3) (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) :
+    Tendsto (fun y => iteratedDeriv l (fun S => intervalImageCandidate a z S y) T)
+      (𝓝[Ioo (-a) a] a) (𝓝 0) := by
+
+end Shao.C2.IntervalImageMixedTraces
+
