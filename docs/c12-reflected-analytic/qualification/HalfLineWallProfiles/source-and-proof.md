@@ -1,0 +1,9 @@
+# Closed-wall scalar reflection profiles
+
+Readonly supplement.tex4192–4253, especially4224–4230. First proves an elementary closed-order continuity extension from x>0 to x>=0: the set F<=G is closed, contains Ioi0, and therefore contains its closure Ici0. Complete closure assumptions explicitly Continuous F/G.
+
+Six complete theorem heads and full context/imports frozen before proof, no definitions. Exact scalar polynomial/exponential power profiles extend by that lemma to u>=0,v>0,T>0, for all positive naturalj and naturalm. No division byu or uniform endpoint distance lower bound. For actual mixed-time derivative expressions, their complete real HasDerivAt formulas from34 give continuous dependence onu atfixed v,T>0. Extend the three absolute-value inequalities through the closed order relation; no pointwise derivative differentiation or assumed continuity ofderiv in general.
+
+Upper/lower actual analytic iterated spatial derivative certificates from32 are validforally andT. Apply the new closed-u profile with u=a-y or a+y, then normalize u-v to plus/minus(z-y). Includes wall y=a or y=-a with strict terminalinterior andpositiveT. These are analytic-formula derivatives evaluated atwall; the theorem does NOT yet assert global differentiability of a zeroextended killedfunction acrosswall. Genuine one-sided zero-extension derivative interfaces are the nextdependency. Puretimeprofiles atwall already followfrom33 withC>=0. All originalroots/probabilityreflectionID/actualintervalregularityremainOPEN.
+
+Firstkernelattempt001PASS, firstallactual-ownerrecursiveaxiomPASS CPU14–17/c12-heavy.lock/-M8192-j4 pinnedversions unchanged. Actual7owners alltheorem,6public,0definitions; actual fulltypes/emptyvaluesexported. No successfulcheckreplay oroldproducerbuild. Independentcompletefinalreview pending onsolechildlease.

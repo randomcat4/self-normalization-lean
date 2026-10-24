@@ -1,0 +1,27 @@
+import Shao.C2.HalfLineSmallTaylor
+
+noncomputable section
+namespace Shao.C2.HalfLineCompensatedBounds
+open Shao.C2.HalfLineReflectionFormula Shao.C2.HalfLineSmallTaylor
+open Shao.C2.HalfLineTaylorPath Shao.C2.HalfLineTaylorSegment
+open Shao.C2.HalfLineMixedProfiles
+
+theorem upperReflection_small_taylor_bound (a y z T b : ℝ) (ha : 0 < a)
+    (hy : y < a) (hz : z < a) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hnew : y + b ≤ a) :
+    |upperReflection a (y + b) (T - b ^ 2) z - upperReflection a y T z -
+        (b - b ^ 2 * (z - y) / T) * deriv (fun x : ℝ => upperReflection a x T z) y| ≤
+      8000100 * |b| ^ 3 * (1 / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 *
+          Real.exp (-(max (a - y - |b|) 0) * (a - z) / T) := by
+
+theorem lowerReflection_small_taylor_bound (a y z T b : ℝ) (ha : 0 < a)
+    (hy : -a < y) (hz : -a < z) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hnew : -a ≤ y + b) :
+    |lowerReflection a (y + b) (T - b ^ 2) z - lowerReflection a y T z -
+        (b - b ^ 2 * (z - y) / T) * deriv (fun x : ℝ => lowerReflection a x T z) y| ≤
+      8000100 * |b| ^ 3 * (1 / Real.sqrt T) ^ 3 *
+        (1 + |z - y| / Real.sqrt T) ^ 3 *
+          Real.exp (-(max (a + y - |b|) 0) * (a + z) / T) := by
+
+end Shao.C2.HalfLineCompensatedBounds

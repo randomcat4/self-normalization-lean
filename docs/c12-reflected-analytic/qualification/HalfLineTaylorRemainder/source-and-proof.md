@@ -1,0 +1,11 @@
+# Exact compensated scalar Lagrange remainder and third-path decomposition
+
+Readonly supplement.tex4192–4253, specifically source4234–4242. All original roots OPEN. Explicit scalar halfline path g(theta)=1-exp(-2(u-theta*b)v/(T-theta*b²)); upper normalized b is physical b, lower normalized beta=-b with delta=-d. Source compensation uses -slope in normalized upper coordinate. This unit provides exact identities, not the final quantitative smallTaylor bound or actual Brownian reflection identification.
+
+Both complete theorem heads and full context/imports frozen before implementation. There are no definitions or changed transparent values. Entire final proof-stripped source equals frozen.lean.txt bytewise, UTF8noBOM LF. First kernelattempt001PASS and firstactual-owner recursive axiom auditPASS, CPU14–17/c12-heavy.lock/-M8192-j4, pinnedversions unchanged.
+
+First identity rewrites actual g''' via the independently qualified unit36 certificate, then actual curvatureTime_T, slopeTime_TT and timeCompletion_TTT via qualified33/34. Rational ring algebra yields g'''=-b³ B³ exp(q)-3b⁴ curvatureTime_T-3b⁵ slopeTime_TT-b⁶ timeCompletion_TTT with B=2v/E and q=-2Uv/E. All analytic substitutions occur at E>0; u,v remain arbitrary. This is the direct source multivariate chain rule with all cross/time terms retained.
+
+Second identity uses actual mathlib Taylor Lagrange theorem with n2 on [0,1]. b²<=T/2 and T>0 give E>=T/2 throughout the closed segment. Unit36 supplies ContDiffAt of every finite order; this gives ContDiffOn3 and converts all within derivatives at0 to actual iterated derivatives using uniqueDiffOn_uIcc. The full degree2 polynomial is evaluated exactly. Lagrange yields some theta in(0,1) with g1-g0-g'0-g''0/2=g'''theta/6. Adding the exact unit36 compensation identity gives the frozen source compensated remainder, including both residual time terms. No wall/interior condition on u/v is needed for this identity; newpointclosedwall assumptions will be added explicitly for the quantitative profile bound next.
+
+Actual owner map9 constants:9theorems including2public,0definitions; every owner type exported fully, non-theorem export empty. Full independent final review pending; no old producer build or successful gate replay.

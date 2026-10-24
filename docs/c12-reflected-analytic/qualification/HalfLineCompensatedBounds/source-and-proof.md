@@ -1,0 +1,9 @@
+# Physical upper and lower scalar compensated Taylor bounds
+
+Readonly supplement.tex4192–4253: source d=z-y and the two actual monitored walls. This module converts the normalized scalar estimate to the exact physical source expressions, including real spatial deriv of the explicit upper/lowerReflection formula. It does not identify those formulas with actual Brownian probability; all original roots OPEN.
+
+Both complete physical theorem heads and context/imports were frozen before proofs; no definitions. a>0 is retained explicitly from source, although the scalar algebra itself is valid more generally. Old y,z are strictly inside the relevant halfline; new y+b may be exactly at the wall. T>0,b²<=T/2 guarantee remaining energy>0; no zero-energy convention is invoked. Upper profile exp(-max(a-y-absb,0)(a-z)/T); lower profile exp(-max(a+y-absb,0)(a+z)/T); D=1+abs(z-y)/sqrtT; exact universalconstant8000100 and no wall-distance lower bound.
+
+Upper u=a-y,v=a-z,beta=b gives u-v=d, actual path equals upperReflection(a,y+theta*b,T-theta*b²,z) for every real theta, and the physical scalar derivative equals -slopeTime by the qualified global HasDerivAt. Lower u=a+y,v=a+z,beta=-b gives u-v=-d; exact wholepath identity, beta²=b² and absbeta=absb. Physical derivative is +slopeTime. Normalized compensation (beta-beta²(u-v)/T)*(-slope) becomes exactly (b-b²d/T)*physicalderiv. Lower abs displacement uses abs_sub_comm. Full path identities and compensation equations are algebraic for every real theta, not changes to the source path.
+
+First kernelattempt001PASS, firstwholeowner auditPASS under CPU14–17/c12-heavy.lock/-M8192-j4/pinnedversions, twoactualowners=twopublictheorems,0definitions. Successfulolddependencychecksreused, nooldproducerbuild; independent final review pending on solechildlease after unit38 qualifies. All fullfrozenheads unchanged, UTF8noBOM LF.

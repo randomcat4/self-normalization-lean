@@ -1,0 +1,44 @@
+import Shao.C2.HalfLineMixedProfiles
+
+noncomputable section
+namespace Shao.C2.HalfLineWallProfiles
+open Shao.C2.HalfLineReflectionFormula Shao.C2.CompletionFirstProfile
+open Shao.C2.HalfLineSpatialProfiles Shao.C2.HalfLineMixedProfiles
+
+theorem bound_on_nonneg_of_continuous (F G : ℝ → ℝ) (hF : Continuous F)
+    (hG : Continuous G) (hpos : ∀ x : ℝ, 0 < x → F x ≤ G x)
+    (u : ℝ) (hu : 0 ≤ u) : F u ≤ G u := by
+
+theorem reflection_power_profile_nonneg (u v T : ℝ)
+    (hu : 0 ≤ u) (hv : 0 < v) (hT : 0 < T) (j : ℕ) (hj : 0 < j) :
+    (2 * v / T) ^ j * Real.exp (-2 * u * v / T) ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |u - v| / Real.sqrt T)) ^ j *
+        Real.exp (-u * v / T) := by
+
+theorem reflection_power_monomial_profile_nonneg (u v T : ℝ)
+    (hu : 0 ≤ u) (hv : 0 < v) (hT : 0 < T) (j : ℕ) (hj : 0 < j) (m : ℕ) :
+    (2 * v / T) ^ j * (2 * u * v / T) ^ m * Real.exp (-2 * u * v / T) ≤
+      (16 * (j : ℝ) / Real.sqrt T * (1 + |u - v| / Real.sqrt T)) ^ j *
+        ((4 : ℝ) ^ m * (Nat.factorial m : ℝ)) * Real.exp (-u * v / T) := by
+
+theorem mixed_time_profiles_nonneg (u v T : ℝ) (hu : 0 ≤ u) (hv : 0 < v) (hT : 0 < T) :
+    |deriv (slopeTime u v) T| ≤
+      80 / (T * Real.sqrt T) * (1 + |u - v| / Real.sqrt T) * Real.exp (-u * v / T) ∧
+    |deriv (curvatureTime u v) T| ≤
+      6144 / T ^ 2 * (1 + |u - v| / Real.sqrt T) ^ 2 * Real.exp (-u * v / T) ∧
+    |deriv (deriv (slopeTime u v)) T| ≤
+      800 / (T ^ 2 * Real.sqrt T) * (1 + |u - v| / Real.sqrt T) * Real.exp (-u * v / T) := by
+
+theorem upperReflection_closed_iterated_profile (j : ℕ) (hj : 0 < j)
+    (a y T z : ℝ) (hT : 0 < T) (hy : y ≤ a) (hz : z < a) :
+    |iteratedDeriv j (fun x : ℝ => upperReflection a x T z - 1) y| ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        upperProfile a y T z := by
+
+theorem lowerReflection_closed_iterated_profile (j : ℕ) (hj : 0 < j)
+    (a y T z : ℝ) (hT : 0 < T) (hy : -a ≤ y) (hz : -a < z) :
+    |iteratedDeriv j (fun x : ℝ => lowerReflection a x T z - 1) y| ≤
+      (8 * (j : ℝ) / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        lowerProfile a y T z := by
+
+end Shao.C2.HalfLineWallProfiles
