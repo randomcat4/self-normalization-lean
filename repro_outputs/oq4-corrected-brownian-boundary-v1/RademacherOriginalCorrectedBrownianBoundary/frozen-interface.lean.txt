@@ -1,0 +1,108 @@
+import Shao.OQ4.RademacherCorrectedBrownianBoundary
+import Shao.OQ4.RademacherOriginalIIDTransport
+import Shao.OQ4.RademacherOriginalStrictS4
+import Shao.OQ4.StrictIIDWindow
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+open MeasureTheory ProbabilityTheory Filter
+open scoped NNReal ENNReal Topology
+universe uX uB
+
+namespace Shao.OQ4.RademacherOriginalCorrectedBrownianBoundary
+
+private theorem source_weak_probability
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (hn : 0 < n) (h : ℝ) :
+    μ.real (OriginalIIDWindow.sourceEvent n X (h / Real.sqrt (n : ℝ))) =
+      RademacherS4Assembly.p n h
+
+-- Proof: qualified original/product transport, actual_path_energy, sqrt n>0,
+-- and almost-everywhere equality with the actual closedStrip.
+
+private theorem source_strict_max_probability
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law) (n : ℕ) (hn : 0 < n) (h : ℝ) :
+    μ.real {ω | OriginalIIDWindow.sourceMaximum n X ω <
+      (h / Real.sqrt (n : ℝ)) *
+        Real.sqrt (OriginalIIDWindow.sourceEnergy n X ω)} =
+      RademacherStrictCube.strictP n h
+
+-- Proof: exact qualified deterministic positive-time max/prefix bridge,
+-- then qualified original strict probability identity.
+
+theorem original_weak_corrected_boundary
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < μ.real (OriginalIIDWindow.sourceEvent (n_ k) X
+        (h_ k / Real.sqrt (n_ k : ℝ))) ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (RademacherCorrectedBrownianBoundary.weakHeight (h_ k) /
+          Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      μ.real (OriginalIIDWindow.sourceEvent (n_ k) X
+        (h_ k / Real.sqrt (n_ k : ℝ))) /
+      Shao.Probability.BrownianSup.probability B P hB
+        (RademacherCorrectedBrownianBoundary.weakHeight (h_ k) /
+          Real.sqrt (n_ k : ℝ))) atTop (𝓝 (1 : ℝ))
+
+-- Proof: derive eventual n_>0 from hscale2; transfer qualified canonical
+-- positivity and ratio limit by the first finite identity on that tail.
+
+theorem original_strict_corrected_boundary
+    {ΩX : Type uX} [MeasurableSpace ΩX]
+    {ΩB : Type uB} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (μ : Measure ΩX) [IsProbabilityMeasure μ] (X : ℕ → ΩX → ℝ)
+    (hIndep : iIndepFun (fun i : ℕ => X (i + 1)) μ)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X (i + 1)) (id : ℝ → ℝ)
+      μ RademacherCosine.law)
+    (n_ : ℕ → ℕ) (h_ : ℕ → ℝ)
+    (hh : Tendsto h_ atTop atTop)
+    (hscale2 : Tendsto
+      (fun k : ℕ => (n_ k : ℝ) / (h_ k) ^ 2) atTop atTop)
+    (hscale3 : ∃ M : ℝ, 0 < M ∧
+      ∃ K_M : ℕ, ∀ k : ℕ, K_M ≤ k →
+        (n_ k : ℝ) / (h_ k) ^ 3 ≤ M) :
+    (∀ᶠ k : ℕ in atTop,
+      0 < μ.real {ω | OriginalIIDWindow.sourceMaximum (n_ k) X ω <
+        (h_ k / Real.sqrt (n_ k : ℝ)) *
+          Real.sqrt (OriginalIIDWindow.sourceEnergy (n_ k) X ω)} ∧
+      0 < Shao.Probability.BrownianSup.probability B P hB
+        (RademacherCorrectedBrownianBoundary.strictHeight (h_ k) /
+          Real.sqrt (n_ k : ℝ))) ∧
+    Tendsto (fun k : ℕ =>
+      μ.real {ω | OriginalIIDWindow.sourceMaximum (n_ k) X ω <
+        (h_ k / Real.sqrt (n_ k : ℝ)) *
+          Real.sqrt (OriginalIIDWindow.sourceEnergy (n_ k) X ω)} /
+      Shao.Probability.BrownianSup.probability B P hB
+        (RademacherCorrectedBrownianBoundary.strictHeight (h_ k) /
+          Real.sqrt (n_ k : ℝ))) atTop (𝓝 (1 : ℝ))
+
+-- Proof: derive eventual n_>0 from hscale2; transfer qualified canonical
+-- positivity and ratio limit by the second finite identity on that tail.
+
+end Shao.OQ4.RademacherOriginalCorrectedBrownianBoundary
+end

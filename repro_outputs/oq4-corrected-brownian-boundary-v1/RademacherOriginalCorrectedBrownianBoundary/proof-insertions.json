@@ -1,0 +1,18 @@
+[
+  {
+    "name": "source_weak_probability",
+    "text": " := by\n  rw [RademacherOriginalIIDTransport.source_probability_eq_product\n    μ X hIndep hLaw n (h / Real.sqrt (n : ℝ))]\n  have hsqrt : Real.sqrt (n : ℝ) ≠ 0 :=\n    (Real.sqrt_pos.mpr (Nat.cast_pos.mpr hn)).ne'\n  have hsets : RademacherS5Assembly.selfNormalizedEvent n\n      (h / Real.sqrt (n : ℝ)) =ᵐ[RademacherS5Assembly.pathLaw n]\n      @Shao.closedStrip n h := by\n    filter_upwards [(RademacherS5Assembly.actual_path_energy n).2] with a ha\n    have hv : RademacherS5Assembly.V a = Real.sqrt (n : ℝ) := ha.2.2\n    have hmul : (h / Real.sqrt (n : ℝ)) * RademacherS5Assembly.V a = h := by\n      rw [hv]\n      exact div_mul_cancel₀ h hsqrt\n    simp only [RademacherS5Assembly.selfNormalizedEvent, Shao.closedStrip,\n      Set.mem_setOf_eq, hmul]\n  change ((RademacherS5Assembly.pathLaw n)\n      (RademacherS5Assembly.selfNormalizedEvent n (h / Real.sqrt (n : ℝ)))).toReal =\n    ((RademacherS5Assembly.pathLaw n) (@Shao.closedStrip n h)).toReal\n  exact congrArg ENNReal.toReal (measure_congr hsets)"
+  },
+  {
+    "name": "source_strict_max_probability",
+    "text": " := by\n  rw [← StrictIIDWindow.source_strict_event_eq_max n hn X\n    (h / Real.sqrt (n : ℝ))]\n  exact RademacherOriginalStrictS4.source_strict_probability\n    μ X hIndep hLaw n h"
+  },
+  {
+    "name": "original_weak_corrected_boundary",
+    "text": " := by\n  have hnpos : ∀ᶠ k : ℕ in atTop, 0 < n_ k := by\n    filter_upwards [hscale2.eventually_gt_atTop (0 : ℝ)] with k hk\n    apply Nat.pos_of_ne_zero\n    intro hz\n    rw [hz, Nat.cast_zero, zero_div] at hk\n    exact (lt_irrefl (0 : ℝ)) hk\n  have hc := RademacherCorrectedBrownianBoundary.weak_corrected_boundary\n    B P hB n_ h_ hh hscale2 hscale3\n  refine ⟨?_, ?_⟩\n  · filter_upwards [hnpos, hc.1] with k hk hp\n    rw [source_weak_probability μ X hIndep hLaw (n_ k) hk (h_ k)]\n    exact hp\n  · apply hc.2.congr'\n    filter_upwards [hnpos] with k hk\n    rw [source_weak_probability μ X hIndep hLaw (n_ k) hk (h_ k)]"
+  },
+  {
+    "name": "original_strict_corrected_boundary",
+    "text": " := by\n  have hnpos : ∀ᶠ k : ℕ in atTop, 0 < n_ k := by\n    filter_upwards [hscale2.eventually_gt_atTop (0 : ℝ)] with k hk\n    apply Nat.pos_of_ne_zero\n    intro hz\n    rw [hz, Nat.cast_zero, zero_div] at hk\n    exact (lt_irrefl (0 : ℝ)) hk\n  have hc := RademacherCorrectedBrownianBoundary.strict_corrected_boundary\n    B P hB n_ h_ hh hscale2 hscale3\n  refine ⟨?_, ?_⟩\n  · filter_upwards [hnpos, hc.1] with k hk hp\n    rw [source_strict_max_probability μ X hIndep hLaw (n_ k) hk (h_ k)]\n    exact hp\n  · apply hc.2.congr'\n    filter_upwards [hnpos] with k hk\n    rw [source_strict_max_probability μ X hIndep hLaw (n_ k) hk (h_ k)]"
+  }
+]
