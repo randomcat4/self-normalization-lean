@@ -1,0 +1,10 @@
+# Next source-bound dependency: genuine Edgeworth characteristic polynomial
+DESIGN/INTAKE ONLY, NOT AN ACCEPTED RESULT. No next Lean declaration or implementation is frozen in this packet.
+
+For the SAME actual standardized law define S=u^2+v^2, r=sqrt(S), s=sqrt(n), true signed directional moments m3,m4, b=-m3/(6*s), and c=(m4-3*S^2)/(24*n). The actual quartic exponent is -S/2+i*b+c. The desired polynomial is exp(-S/2)*(1-I*m3/(6*s)+((m4-3*S^2)/24-m3^2/72)/n), equivalently exp(-S/2)*(1+i*b-b^2/2+c).
+
+Use EA212's qualified global phase/real bridge with its ACTUAL constants exp(1)+4 and exp(1)+2. DERIVE abs(m3)<=abs(M3)*r^3 and abs(m4)<=abs(M4)*r^4 from DJ195 genuine radial/projection absolute moments plus the actual Bochner integral norm bound and required genuine integrability. The quartic cumulant coefficient then satisfies abs(m4-3*S^2)<=(abs(M4)+3)*r^4. These are proof obligations, not new free coefficient or coherence assumptions.
+
+Choose a common positive radius before ALL n>=1/laws/frequencies r<=delta*s, so abs(c)<=S/8, using actual fourth-moment bounds and positive denominators. Gaussian multiplication yields cubic phase O(r^9/(n*sqrt(n))), cross term O(r^7/(n*sqrt(n))), and real remainder O(r^8/n^2)*exp(-S/2+abs(c)); since sqrt(n)>=1 it can be bounded with denominator n*sqrt(n) and exp(-S/8). Combine the qualified DY210 error C*r^5/(n*sqrt(n))*exp(-S/8). A candidate uniform envelope is C*(r^5+r^7+r^8+r^9)/(n*sqrt(n))*exp(-S/8). The complete exact declaration and every actual let-value must be frozen BEFORE implementation. No target-error/Gaussian/coefficient-coherence premise may be introduced.
+
+Then preserve the ENTIRE DZ211 canonical SAME E packet in an actual-rho consumer. Existing accepted Gaussian-polynomial integrability can support later weighted integral estimates. Whole-frequency inversion, exterior source estimates, new-rho Laplace, analytic cumulant derivative identification and all original OQ3 B/D remain OPEN. A finite quartic exponential result does not establish them. Root's unified 124 mechanism is not a prerequisite. No new long implementation is launched in this handoff window.
