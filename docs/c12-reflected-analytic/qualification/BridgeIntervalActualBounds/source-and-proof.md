@@ -1,0 +1,9 @@
+# Actual Brownian interval bounds after halfline identification — unit106
+
+Read-only supplement.tex4192–4315 (whole-file SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd) supplies the actual bridge interval completion, halfline reflection invocation4247 and compensated increment problem. Classical/external attribution and p54 repairs remain.
+
+Four complete targets/context frozen before implementation. The actual bridgeLaw B P probability instance and units103/104 genuine halfline formulas discharge all numerical hUpper/hLower premises in the qualified interval producers. The source interval completion remains the actual strict all-time survival probability at positive time and its exact existing reachable-zero/exterior extension.
+
+The two spatial derivative bounds retain their explicit actual interval DifferentiableAt premise. The completion-difference envelope theorem requires no interval differentiability, but retains b²≤T and zero-remaining-time endpoint reachability. The large-step compensated cubic Gaussian bound retains the actual source interval DifferentiableAt premise, T/2<b²≤T and reachability. Original constants4,2,40 and Gaussian intervalEnvelope remain unchanged. In particular the module does NOT prove interval differentiability, the small-step compensated Taylor estimate or hSmall.
+
+First kernel001 and complete all-owned recursive axiom audit pass; four actual theorem owners, zero non-theorem values, unchanged frozen context/heads and no failed attempt. Known cached-checkout and harmless letI style warnings retained; no old successful check replayed, old producer recompiled or cache written. Independent complete review pending. Killed/free identification, interval image/sine identity, joint regularity, complete Taylor/hSmall and all original root groups remain OPEN.

@@ -1,0 +1,9 @@
+# Actual Brownian halfline retained bounds — unit105
+
+Read-only supplement.tex4192–4315, whole-file SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd, supplies the strict-survival interpretation, halfline reflection and compensated/boundary remainder problem. Classical/external attribution and p54 repairs are retained.
+
+The two complete exact targets were frozen before implementation. They instantiate the already qualified SourceHalfLineCompletion upper/lower retained bounds at the actual bridgeLaw B P. Every former reflection premise is paid by the actual raw allpositive-time formulas proved in103/104. Constant8000100, cubic displacement/drift factors, Gaussian wall-distance decay, b²≤T, initial and terminal interior assumptions, zero-remaining-time reachability and small-step boundary truncation are unchanged. The genuine source completion and its full existing zero/exterior conventions remain inside the derivative and remainder; no numerical substitute is defined in this module. No extra transparent definitions or instances are introduced.
+
+The first actual Lean kernel and complete all-owned recursive axiom audit pass with unchanged source. Two actual owners are theorems and no non-theorem values exist. Before that actual kernel, a Python command-construction placeholder corrupted subprocess.STDOUT and raised AttributeError before subprocess launch. The empty kernel log/absent object were verified, a failure record retained, and the corrected helper launched the first actual kernel using the same immutable source snapshot. This is an execution interruption, not a failed mathematical check.
+
+Independent complete final review103–105 is pending. Scope is the retained halfline compensated estimates under their explicit assumptions, not the killed/free quotient, interval image/sine identity, general interval Taylor/hSmall or any original root closure. No old proof or successful gate was replayed.

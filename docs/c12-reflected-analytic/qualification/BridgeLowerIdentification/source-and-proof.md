@@ -1,0 +1,9 @@
+# Actual Brownian bridge lower halfline identification — unit104
+
+Original source: read-only supplement.tex4192–4315, especially halfline reflection4247; whole-file SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd. This is classical reflection attribution, not a novelty claim.
+
+Four complete declarations and their full context were frozen before implementation. The negation theorem applies the simultaneous almost-everywhere bridgeNoise identities to B and the actual negated Brownian process, whose Brownian property follows from pinned IsBrownianReal.neg. Lower strict path survival for the original bridge equals upper strict survival for the negated bridge by exact all-time path sign reversal and pushforward-measure congruence. No invariance of bridgeLaw under negation is assumed. Unit103 then supplies the upper exponential formula for the negated process, yielding the genuine raw lower event probability for every positive T and both endpoints above -a. The final theorem discharges the old sourceLower reflection premise and retains its exact existing zero-time and exterior conventions as a full function identity.
+
+Kernel001 failed solely to normalize a nested pointwise process negation in the first proof. Kernel002 uses an explicit definitionally equal scalar goal and ring; all four frozen heads, imports, premises, conclusions and transparent values remain unchanged. Both source snapshots and original logs are retained remotely. Kernel002 and complete all-owned recursive-axiom audit pass; four actual owners, all theorems and no non-theorem values. No old successful check replayed.
+
+Independent complete review is pending. Unit103 is separately author-checked and awaiting review. Interval killed/free identification, image/sine identity, full Taylor/hSmall and all original root groups remain OPEN; p54 repairs and external-result attribution are preserved.

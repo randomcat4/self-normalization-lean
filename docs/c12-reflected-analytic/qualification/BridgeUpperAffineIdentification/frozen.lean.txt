@@ -1,0 +1,28 @@
+import Shao.C2.BridgeUpperPointwise
+import Shao.C2.SourceHalfLineCompletion
+
+noncomputable section
+namespace Shao.C2.BridgeUpperAffineIdentification
+open MeasureTheory ProbabilityTheory Set
+open scoped NNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeUpperPointwise Shao.C2.SourceHalfLineCompletion
+
+theorem upperCompletion_affine (ν : Measure BridgeNoise) (a y T z : ℝ) (hT : 0 < T) :
+    upperCompletion ν a y T z =
+      upperCompletion ν ((a - y) / Real.sqrt T) 0 1 ((z - y) / Real.sqrt T) := by
+
+theorem bridge_upper_formula {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ)
+    (hT : 0 < T) (hy : y < a) (hz : z < a) :
+    upperCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * (a - y) * (a - z) / T) := by
+
+theorem source_upper_eq_scalar {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a z : ℝ) (ha : 0 < a) (hz : z < a) :
+    (fun y T : ℝ => sourceUpperCompletion (bridgeLaw B P) a y T z) =
+      (fun y T : ℝ => Shao.C2.HalfLinePhysicalGaussian.upperCompletion a y T z) := by
+
+end Shao.C2.BridgeUpperAffineIdentification

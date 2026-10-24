@@ -1,0 +1,11 @@
+# Actual positive-time upper bridge completion and source identification
+
+All three complete heads/imports/context were frozen before implementation. The exact actual strict-upper bridge event is transformed by the positive deterministic affine map x -> (x-y)/sqrt(T). This preserves the same pinned bridge noise and converts wall/start/end to (a-y)/sqrt(T),0,(z-y)/sqrt(T), with unit noise amplitude. The event equality holds for arbitrary bridge measure and all real a,y,z whenever T>0; it is not a samplewise Brownian time-change assertion.
+
+For the actual bridgeLaw of any proved real Brownian process, y<a and z<a make the transformed wall positive and endpoint below it. The proved unit bridge formula from102 therefore gives the actual raw half-line completion 1-exp(-2*(a-y)*(a-z)/T). The exponent identity uses positive sqrt(T) and its exact square; no hypothesis is changed and no conditioning version is chosen.
+
+The previously qualified sourceUpperCompletion_eq_scalar_of_reflection theorem is now applied with its formerly unpaid reflection premise fully discharged by this actual formula, for every positive T and interior y. Its already proved boundary/zero-time/exterior handling yields exact equality of the source upper-completion function in both y and T with the analytic HalfLinePhysicalGaussian function, for positive a and fixed z<a. This equality is not assumed as an interface premise. All original degenerate conventions are inherited exactly from that qualified source adapter.
+
+First source-bound kernel001 and complete defining-module recursive axiom audit pass for three actual public theorem constants, zero non-theorem owners. Full actual types exported, empty value export verified by owner map. Whitelist propext, Classical.choice, Quot.sound. No failures, old successful replays, standard producer recompilations or shared cache writes. Independent complete final review remains pending;102's complete independent review is separately underway.
+
+The lower half-line reflection/source identification remains unpaid here; next use the negated actual Brownian process and simultaneous AE bridge-noise identities. Actual interval killed/free and image/sine identification, complete joint Taylor/hSmall and every original root still remain OPEN. OQ3 pause, p54 repairs and external-result attribution preserved.
