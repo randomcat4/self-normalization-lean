@@ -1,0 +1,32 @@
+import Shao.C2.BridgeIntervalContinuity
+
+noncomputable section
+namespace Shao.C2.BridgeCompletionGlobalContinuity
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped NNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.BridgeIntervalContinuity
+
+theorem bridge_upper_formula_pospart {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) (hT : 0 < T) :
+    upperCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * max (a - y) 0 * max (a - z) 0 / T) := by
+
+theorem bridge_lower_formula_pospart {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ) (hT : 0 < T) :
+    lowerCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * max (a + y) 0 * max (a + z) 0 / T) := by
+
+theorem bridge_interval_continuous_start {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a T z : ℝ) (hT : 0 < T) :
+    Continuous (fun w : ℝ => intervalCompletion (bridgeLaw B P) a w T z) := by
+
+theorem bridge_interval_continuous_endpoint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T : ℝ) (hT : 0 < T) :
+    Continuous (fun w : ℝ => intervalCompletion (bridgeLaw B P) a y T w) := by
+
+end Shao.C2.BridgeCompletionGlobalContinuity

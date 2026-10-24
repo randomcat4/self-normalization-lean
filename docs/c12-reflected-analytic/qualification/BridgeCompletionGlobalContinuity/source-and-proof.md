@@ -1,0 +1,9 @@
+# Actual completion global endpoint continuity — unit108
+
+Read-only source supplement.tex4192–4315, SHA256 b99f2ac4d2f39dd39772d98a5702b7a923c2f10f8730a08fc1b4cd6bba4742bd. Full-support continuity is the interface needed to identify actual truncated Gaussian integrals and later recover the actual pointwise interval kernel.
+
+Four full heads/context frozen before implementation.103/104 identify the actual raw strict halfline event probabilities at interior endpoints. If either endpoint reaches or crosses its wall, the actual event is empty by the exact pinned bridge endpoints. This gives raw upper=1-exp(-2*max(a-y,0)*max(a-z,0)/T), and its lower analogue withplus. These formulas hold for positive T and every real a,y,z, including walls and exterior points. They concern raw event probability; they do not change or equate the sourceHalfLine function's forced nonpositive-wall convention.
+
+The positive-part formulas are globally continuous functions of either endpoint. Unit107's law-generic interval-increment bounds and metric squeeze give global separate endpoint continuity of the actual interval survival probability, at walls and exterior as well as the interior. The bridge probability instance is genuine. No interval continuity or differentiability premise, conditional-version substitution or AE-to-pointwise shortcut is used.
+
+First kernel001 andcomplete all-owned recursive-axiom auditPASS. Four theorem owners, zero non-theorem values; exact frozen context/heads unchanged. Known cached-checkout and unusedsimp/letI warnings retained. No successful old gate replayed, old producer recompiled or cache written. Independent complete review107–108 pending. Joint time regularity, interval differentiability, actual killed/free quotient, image/sine identity, full compensated small-step Taylor/hSmall and all original roots remain OPEN. Existing p54 repairs and classical/external attribution are preserved.
