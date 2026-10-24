@@ -36,6 +36,7 @@ import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
+import Shao.OQ3.CompactOpenDomainCharacteristicMoments
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainPairProbability
@@ -56,6 +57,7 @@ import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CompactTiltWhitenedFamily
+import Shao.OQ3.ComplexLogTaylorPerturbation
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
@@ -74,6 +76,7 @@ import Shao.OQ3.GaussianBoundaryLaplaceMixture
 import Shao.OQ3.GaussianCurveTube
 import Shao.OQ3.GaussianFiniteArcTube
 import Shao.OQ3.GlobalNegativeLayerBound
+import Shao.OQ3.ImaginaryExponentialTaylorRemainder
 import Shao.OQ3.InverseTilt
 import Shao.OQ3.JointNonlattice
 import Shao.OQ3.LocalBoundaryLowerBound
@@ -122,8 +125,10 @@ import Shao.OQ3.OpenDomainWeightedMoments
 import Shao.OQ3.OpenDomainWhitenedFamily
 import Shao.OQ3.PairCharacteristicBoundedIntegral
 import Shao.OQ3.PairCharacteristicGaussianRemainder
+import Shao.OQ3.PairCharacteristicMomentRemainder
 import Shao.OQ3.PairCharacteristicQuadraticRemainder
 import Shao.OQ3.PairCharacteristicWeightedIntegral
+import Shao.OQ3.PairProjectionAbsoluteMoments
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
 import Shao.OQ3.ParabolaCellAveragedOscillation
@@ -159,7 +164,10 @@ import Shao.OQ3.ResonantLimit
 import Shao.OQ3.SampleBoundary
 import Shao.OQ3.SampleChangeOfMeasure
 import Shao.OQ3.SampleParabolaTailDomain
+import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
+import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
+import Shao.OQ3.ScalarTaylorMomentPolynomial
 import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCanonicalRate
 import Shao.OQ3.SourceCanonicalSaddle
@@ -213,6 +221,7 @@ import Shao.OQ4.CanonicalBrownian
 import Shao.OQ4.ConditionalEnergyConcentration
 import Shao.OQ4.CosineCoefficients
 import Shao.OQ4.CosinePowers
+import Shao.OQ4.CriticalWindowNecessity
 import Shao.OQ4.DelayedRecurrence
 import Shao.OQ4.EnergyE1Bounds
 import Shao.OQ4.EnergyE2Bounds
@@ -240,12 +249,15 @@ import Shao.OQ4.KilledPathLaw
 import Shao.OQ4.LaplaceGenerating
 import Shao.OQ4.LaplaceTail
 import Shao.OQ4.OccupationPayment
+import Shao.OQ4.OriginalIIDWindow
+import Shao.OQ4.OriginalWindowProduct
 import Shao.OQ4.OvershootMoment
 import Shao.OQ4.OvershootSum
 import Shao.OQ4.PolygonalBrownianWeakLimit
 import Shao.OQ4.PolygonalKilledFunctionalLimit
 import Shao.OQ4.PolygonalPathTightness
 import Shao.OQ4.PolygonalThirdMomentB3
+import Shao.OQ4.PositiveBoundaryStudentized
 import Shao.OQ4.RademacherAdjacentLog
 import Shao.OQ4.RademacherAdjacentLogFinite
 import Shao.OQ4.RademacherAllModes
@@ -499,6 +511,7 @@ import Shao.Probability.SourceLindleySurvival
 import Shao.Probability.SourceLocalizedMicrotimeDerivatives
 import Shao.Probability.SourceLongKernelBounds
 import Shao.Probability.SourceMarkFourierNorms
+import Shao.Probability.SourceMomentDomain
 import Shao.Probability.SourceNoiseCost
 import Shao.Probability.SourceNoiseSandwich
 import Shao.Probability.SourceOddEvenMarkedIBP
@@ -508,6 +521,7 @@ import Shao.Probability.SourceScalarNoise
 import Shao.Probability.SourceShortTimeGrid
 import Shao.Probability.SourceShortTimeKernelBounds
 import Shao.Probability.SourceShortTimeKernelTaylor
+import Shao.Probability.SourceSmallBoundary
 import Shao.Probability.SourceTruncationBridge
 import Shao.Probability.SpitzerFinite
 import Shao.Probability.SpitzerLaplace

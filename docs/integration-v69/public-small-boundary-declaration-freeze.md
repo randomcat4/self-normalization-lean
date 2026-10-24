@@ -1,0 +1,5 @@
+# Actual SmallBoundary declaration freeze
+
+Root selects exactly the two complete public heads in drafts/c12-small-boundary-candidate/candidate-declarations.lean.txt for Shao.Probability.SourceSmallBoundary. Zero new global/private/generated definitions. Complete proof-candidate.md now uses qualified FiniteSurvival, SourceNoiseCost, SourceDesmoothing and OriginalCDFPullback only, removing END/full-y dependence. Old smoothing-route files and upperMax textual-order error are preserved, no old candidate Lean was run. Mathematical assumptions and public ranges are unchanged.
+
+Any necessary private theorem must have its entire head/quantifiers/let literals recorded before body implementation. No silent assumptions changes, sorry/admit/axiom/unsafe/native_decide. Actual root server lane only: CPU10–13/root-heavy.lock/native -M8192 -j4 -DautoImplicit=false. Preserve first whole same-o/log/directrc and all failure snapshots; no producer rerun after success. Actual module-owner all-type/value/transitive AX audit and independent complete fresh review mandatory; old qualified evidence reused. All original roots remain OPEN.

@@ -1,0 +1,2593 @@
+{
+  "status": "CORRECT",
+  "at": "2026-10-24T01:48:05.001646+00:00",
+  "module": "Shao.Probability.SourceSmallBoundary",
+  "source_sha256": "2200c2f1e14ad2b76a5ebcc64b57e2a205b52ffd59e73057d425985ec8d2e94d",
+  "source_bytes": 20224,
+  "source_lines": 402,
+  "full_source_and_every_new_proof_read": true,
+  "line_coverage_complete": true,
+  "proof_groups": [
+    {
+      "lines": [
+        1,
+        17
+      ],
+      "complete_read": true,
+      "finding": "模块说明、四个真实依赖、原概率及路径约定；无结论性输入"
+    },
+    {
+      "lines": [
+        18,
+        34
+      ],
+      "complete_read": true,
+      "finding": "完整漂移数值证明：正方差、N|mu| 和 NV 的守卫到平方根比值"
+    },
+    {
+      "lines": [
+        35,
+        108
+      ],
+      "complete_read": true,
+      "finding": "小预算私有完整头及条件概率律、原/中心第三矩、方差、gamma、漂移与分母下界"
+    },
+    {
+      "lines": [
+        109,
+        128
+      ],
+      "complete_read": true,
+      "finding": "真实噪声加坏时钟费用，非负积分与 tail(0)=1/2"
+    },
+    {
+      "lines": [
+        129,
+        143
+      ],
+      "complete_read": true,
+      "finding": "完整 PB 接口、真实全坐标条件事件、p 与保留概率、可测性"
+    },
+    {
+      "lines": [
+        144,
+        178
+      ],
+      "complete_read": true,
+      "finding": "完整 n 的有限闭生存界，min 与真实非零漂移指数，统一 S"
+    },
+    {
+      "lines": [
+        179,
+        195
+      ],
+      "complete_read": true,
+      "finding": "真实正能量严格随机墙的 Q≤2/坏时钟分割与概率并集界"
+    },
+    {
+      "lines": [
+        196,
+        215
+      ],
+      "complete_read": true,
+      "finding": "真实条件测度乘积身份、严格事件分割、不假设独立的原律回拉"
+    },
+    {
+      "lines": [
+        216,
+        233
+      ],
+      "complete_read": true,
+      "finding": "参考 G 在 [0,1/2] 的范围及局部 Lipschitz 界"
+    },
+    {
+      "lines": [
+        234,
+        282
+      ],
+      "complete_read": true,
+      "finding": "第一完整公开头，先于 nu/n/t 选择的统一正常数及所有局部字面值"
+    },
+    {
+      "lines": [
+        283,
+        300
+      ],
+      "complete_read": true,
+      "finding": "大预算分支由概率和 G 均在 [0,1] 支付，含预算等号"
+    },
+    {
+      "lines": [
+        301,
+        329
+      ],
+      "complete_read": true,
+      "finding": "小预算归一化蕴含 R>0；真正 upperMax<0 到正阈值 R 的正能量严格事件"
+    },
+    {
+      "lines": [
+        330,
+        338
+      ],
+      "complete_read": true,
+      "finding": "所有 0≤t≤1/2 的双边 CDF 误差；无无原子假设"
+    },
+    {
+      "lines": [
+        339,
+        379
+      ],
+      "complete_read": true,
+      "finding": "第二完整公开头、先选正常数、正 t 补事件精确恒等式与 tail(1/2) 除法守卫"
+    },
+    {
+      "lines": [
+        380,
+        400
+      ],
+      "complete_read": true,
+      "finding": "零 t 真正弱穿越补负最大值，全部零能量及等号原子保留"
+    },
+    {
+      "lines": [
+        401,
+        402
+      ],
+      "complete_read": true,
+      "finding": "模块结束；无额外定义或声明"
+    }
+  ],
+  "full_frozen_heads": [
+    {
+      "name": "original_maximum_near_zero_cdf",
+      "equal_mod_whitespace": true,
+      "actual_head_sha256": "2b116b28cc0c55f9664ea4b435fbe830b13b83953f51ba7c0313e82c97f98f36",
+      "frozen_head_sha256": "2b116b28cc0c55f9664ea4b435fbe830b13b83953f51ba7c0313e82c97f98f36",
+      "complete_source_head": "theorem original_maximum_near_zero_cdf :\n    ∃ C : ℝ, 0 < C ∧\n      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu]\n        (n : ℕ) (hn : 0 < n),\n        Integrable (fun z : ℝ => z ^ 2) nu →\n        (∫ z : ℝ, z ∂nu) = 0 →\n        (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →\n        let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)\n        let r0 : ℝ := Shao.truncationBudget nu n 0\n        let G : ℝ → ℝ := fun t =>\n          if 0 < t then 1 - 2 * Shao.standardNormalTail t else 0\n        P0.real {v : Shao.Path n | Shao.upperMax v hn < 0} ≤ C * r0 ∧\n          ∀ t : ℝ, 0 ≤ t → t ≤ 1 / 2 →\n            |P0.real {v : Shao.Path n |\n              0 < Shao.energy v ∧\n                Shao.maxWithZero v < t * Real.sqrt (Shao.energy v)} - G t| ≤\n              C * (t + r0) ",
+      "complete_head_read": true
+    },
+    {
+      "name": "original_maximum_near_zero_weak_crossing",
+      "equal_mod_whitespace": true,
+      "actual_head_sha256": "9f0cec5b8cecaa1454939155fab4e5b5600c56ead2c266e597385cfbc262354d",
+      "frozen_head_sha256": "9f0cec5b8cecaa1454939155fab4e5b5600c56ead2c266e597385cfbc262354d",
+      "complete_source_head": "theorem original_maximum_near_zero_weak_crossing :\n    ∃ C : ℝ, 0 < C ∧\n      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu]\n        (n : ℕ) (hn : 0 < n),\n        Integrable (fun z : ℝ => z ^ 2) nu →\n        (∫ z : ℝ, z ∂nu) = 0 →\n        (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →\n        ∀ t : ℝ, 0 ≤ t → t ≤ 1 / 2 →\n          |(Measure.pi (fun _ : Fin n => nu)).real (Shao.upperCrossing hn t) /\n              Shao.standardNormalTail t - 2| ≤\n            C * (t + Shao.truncationBudget nu n 0) ",
+      "complete_head_read": true
+    },
+    {
+      "name": "sb_drift_bound",
+      "equal_mod_whitespace": true,
+      "actual_head_sha256": "f302444fa6b527fa895ac9f69eedd00417baaff16970052ed54c427e7d78bc83",
+      "frozen_head_sha256": "f302444fa6b527fa895ac9f69eedd00417baaff16970052ed54c427e7d78bc83",
+      "complete_source_head": "private theorem sb_drift_bound\n    (N : ℕ) (mu V : ℝ) (hN : 0 < (N : ℝ)) (hV : 0 < V)\n    (hmu : (N : ℝ) * |mu| ≤ 1 / 8)\n    (hNV : (1 / 2 : ℝ) ≤ (N : ℝ) * V) :\n    |mu| * Real.sqrt (N : ℝ) / Real.sqrt V ≤ 1 / 4 ",
+      "complete_head_read": true
+    },
+    {
+      "name": "sb_small_cdf",
+      "equal_mod_whitespace": true,
+      "actual_head_sha256": "1f8aed960d5952e107f4fe143f9c96b1762e9ec1d29b26964c994c493134f819",
+      "frozen_head_sha256": "1f8aed960d5952e107f4fe143f9c96b1762e9ec1d29b26964c994c493134f819",
+      "complete_source_head": "private theorem sb_small_cdf\n    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n)\n    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)\n    (hmean : (∫ z : ℝ, z ∂nu) = 0)\n    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)\n    (hR : Shao.truncationBudget nu n 0 ≤ (1 / 800 : ℝ) ^ 3 / 8) :\n    let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))\n    let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600\n    let B : ℝ := S + D + 1 / (1 / 800 : ℝ) ^ 3\n    ∀ t : ℝ, 0 ≤ t →\n      (Measure.pi (fun _ : Fin n => nu)).real {v : Shao.Path n |\n        0 < Shao.energy v ∧ Shao.maxWithZero v < t * Real.sqrt (Shao.energy v)} ≤\n        B * (t + Shao.truncationBudget nu n 0) ",
+      "complete_head_read": true
+    },
+    {
+      "name": "sb_reference_bounds",
+      "equal_mod_whitespace": true,
+      "actual_head_sha256": "09509b9d71d928a7428bc82fe027f183541fa35cdfa307b0ad81fc75472a9b85",
+      "frozen_head_sha256": "09509b9d71d928a7428bc82fe027f183541fa35cdfa307b0ad81fc75472a9b85",
+      "complete_source_head": "private theorem sb_reference_bounds (t : ℝ) (ht : 0 ≤ t) (htHalf : t ≤ 1 / 2) :\n    let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0\n    0 ≤ G t ∧ G t ≤ 1 ∧\n      G t ≤ (2 * Real.exp 2 * Shao.standardNormalDensity 0) * t ",
+      "complete_head_read": true
+    }
+  ],
+  "all_local_let_letI_full_literals": [
+    {
+      "line": 42,
+      "literal": "    let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "sha256": "c7560c4c89de06ba30bd6a146a8d0937e12ecbb8d4bd1170f7432d11ae394b19"
+    },
+    {
+      "line": 43,
+      "literal": "    let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "sha256": "2b748c4050698a1836f92d5bd06560bf68fd24c2ff8cdeb4d8892d5d29bb234d"
+    },
+    {
+      "line": 44,
+      "literal": "    let B : ℝ := S + D + 1 / (1 / 800 : ℝ) ^ 3",
+      "sha256": "def39052b5990e03ddaceb7d8105a8992b95407fe6de58d88d07ff01be75817b"
+    },
+    {
+      "line": 50,
+      "literal": "  let e : ℝ := 1 / 800",
+      "sha256": "6b8f78470008dc6842e273ca99d2c91d70455fb1eaf4afbea25e44efccb87022"
+    },
+    {
+      "line": 51,
+      "literal": "  let R : ℝ := Shao.truncationBudget nu n 0",
+      "sha256": "22bd5d12a088a20ecdd49a6bf13223b108c18ccf5d3c3e6ce1568fe8b4cd6c48"
+    },
+    {
+      "line": 52,
+      "literal": "  let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "sha256": "d1aed30ef11e26da6106d665558cd4763ce93242c9d971a473d5644075a5ebc5"
+    },
+    {
+      "line": 53,
+      "literal": "  let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "sha256": "bf16add493fb43c12c1d7c99d425ae9d53727913f31730170e38b73d1f759fb9"
+    },
+    {
+      "line": 54,
+      "literal": "  let B : ℝ := S + D + 1 / e ^ 3",
+      "sha256": "f96b3b6389ce0263360a89eac7d38781a337902f5ed792d0343f7cd818f6c621"
+    },
+    {
+      "line": 55,
+      "literal": "  let rho : Measure ℝ := cond nu {z : ℝ | |z| ≤ e}",
+      "sha256": "fff365a18c8b9b8d059eabfa15b56a4a5ba33de73853d6637ecdcdda80c644ae"
+    },
+    {
+      "line": 56,
+      "literal": "  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)",
+      "sha256": "624a98bfc7a9b47bcd62103d297c68ce32a9bfe337d39f736de0b9005347828a"
+    },
+    {
+      "line": 57,
+      "literal": "  let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "c64653d79378548cee4e4788ff9194f44afadc798ad015431955e73cef2c69a1"
+    },
+    {
+      "line": 58,
+      "literal": "  let mu : ℝ := ∫ z : ℝ, z ∂rho",
+      "sha256": "4316f06eed0c64a95d1f52f862b2fd3b2900e578041ac0bc3970407fd6cd1a8a"
+    },
+    {
+      "line": 59,
+      "literal": "  let V : ℝ := variance (id : ℝ → ℝ) rho",
+      "sha256": "187e950cefd26514dea4bfa23e6f52e3dee650ca63a658fd2a31bbc206e5dcdc"
+    },
+    {
+      "line": 60,
+      "literal": "  let m3 : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho",
+      "sha256": "032b482fb2e04f96f68b199600ef6eaf3f8e00ccd497656d94c054d2cd70a590"
+    },
+    {
+      "line": 61,
+      "literal": "  let m3c : ℝ := ∫ z : ℝ, |z - mu| ^ 3 ∂rho",
+      "sha256": "2d318a6db682d9113526002827c68aba784e1224f2ca0b69453b86aeb6ab8abc"
+    },
+    {
+      "line": 72,
+      "literal": "  letI : IsProbabilityMeasure rho := hp",
+      "sha256": "61af0aaebc9f116389cbd5f27419c1aa48cb94895e03883081ae84f8b85ca855"
+    },
+    {
+      "line": 132,
+      "literal": "  let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ e}",
+      "sha256": "058bcceaab7327ca14d5cb29a5be743fa9c3247fa58d0cf986435a2ef5fd82f6"
+    },
+    {
+      "line": 133,
+      "literal": "  let p : ℝ := P0.real N",
+      "sha256": "6914f8e9dece3d637806716427c125c8839ea89257a63be23ca5152b264c0048"
+    },
+    {
+      "line": 179,
+      "literal": "  let A : Set (Shao.Path n) := {v | 0 < Shao.energy v ∧\n    Shao.maxWithZero v < t * Real.sqrt (Shao.energy v)}",
+      "sha256": "e8b494c0a3deece7a3d0d569d3e807c177cb1e4d06a8d19207cd19cdf6aafb93"
+    },
+    {
+      "line": 218,
+      "literal": "    let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0",
+      "sha256": "aa068aa5f696c743cc8051ddba45ae930e0f2c9bac90ac317d8e930f5f2680c9"
+    },
+    {
+      "line": 242,
+      "literal": "        let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "511c14ebefe42fade226033346ce425404e6ae5d71bec674c6a38c49ab8b46dc"
+    },
+    {
+      "line": 243,
+      "literal": "        let r0 : ℝ := Shao.truncationBudget nu n 0",
+      "sha256": "3da85182d40ff73be7dc9b6a2442023da2c74ec6a10977cb51f3b71d89cf837b"
+    },
+    {
+      "line": 244,
+      "literal": "        let G : ℝ → ℝ := fun t =>\n          if 0 < t then 1 - 2 * Shao.standardNormalTail t else 0",
+      "sha256": "6502799d5f789447c665bea212f9cdda02a13d1dcd92d45dc271a210c3385a04"
+    },
+    {
+      "line": 253,
+      "literal": "  let e : ℝ := 1 / 800",
+      "sha256": "6b8f78470008dc6842e273ca99d2c91d70455fb1eaf4afbea25e44efccb87022"
+    },
+    {
+      "line": 254,
+      "literal": "  let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "sha256": "d1aed30ef11e26da6106d665558cd4763ce93242c9d971a473d5644075a5ebc5"
+    },
+    {
+      "line": 255,
+      "literal": "  let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "sha256": "bf16add493fb43c12c1d7c99d425ae9d53727913f31730170e38b73d1f759fb9"
+    },
+    {
+      "line": 256,
+      "literal": "  let B : ℝ := S + D + 1 / e ^ 3",
+      "sha256": "f96b3b6389ce0263360a89eac7d38781a337902f5ed792d0343f7cd818f6c621"
+    },
+    {
+      "line": 257,
+      "literal": "  let g : ℝ := 2 * Real.exp 2 * Shao.standardNormalDensity 0",
+      "sha256": "187bb552489d6b1ffb11279c3861d444a906d677ba5e94df1ff801a794c5d2f4"
+    },
+    {
+      "line": 258,
+      "literal": "  let C : ℝ := 2 * B + g + 8 / e ^ 3 + 1",
+      "sha256": "b52dcccdcaaedf5d20a3e40d10fa0d7ebf05d3c4d4b58a8f542b38e4df2f4bcd"
+    },
+    {
+      "line": 275,
+      "literal": "  letI : IsProbabilityMeasure nu := hnu",
+      "sha256": "9c92848bc9009cfba000999bf9dfa448a4247d1ffb3d639f0bdb15a90dc7472e"
+    },
+    {
+      "line": 276,
+      "literal": "  let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "c64653d79378548cee4e4788ff9194f44afadc798ad015431955e73cef2c69a1"
+    },
+    {
+      "line": 277,
+      "literal": "  let R : ℝ := Shao.truncationBudget nu n 0",
+      "sha256": "22bd5d12a088a20ecdd49a6bf13223b108c18ccf5d3c3e6ce1568fe8b4cd6c48"
+    },
+    {
+      "line": 278,
+      "literal": "  let G : ℝ → ℝ := fun t => if 0 < t then 1 - 2 * Shao.standardNormalTail t else 0",
+      "sha256": "e70abcc3799bb87c6f1ae51b06bb8d0b280f73fb9d3ef26ab031a522ac407ed3"
+    },
+    {
+      "line": 353,
+      "literal": "  let T : ℝ := Shao.standardNormalTail (1 / 2)",
+      "sha256": "f4a5faa016e16b4711048256916673e67672248937fa521cee94f4c75f5ad9dd"
+    },
+    {
+      "line": 357,
+      "literal": "  letI : IsProbabilityMeasure nu := hnu",
+      "sha256": "9c92848bc9009cfba000999bf9dfa448a4247d1ffb3d639f0bdb15a90dc7472e"
+    },
+    {
+      "line": 358,
+      "literal": "  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "sha256": "2c77e69e0c466c747e60d438d6d8604c2be663dfea3521e57c86c93dc3041fbf"
+    },
+    {
+      "line": 359,
+      "literal": "  let R : ℝ := Shao.truncationBudget nu n 0",
+      "sha256": "22bd5d12a088a20ecdd49a6bf13223b108c18ccf5d3c3e6ce1568fe8b4cd6c48"
+    }
+  ],
+  "local_literal_count": 37,
+  "all_source_proof_index_rows": [
+    {
+      "line": 18,
+      "source": "private theorem sb_drift_bound",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 23,
+      "source": "have hmusq := pow_le_pow_left₀ (mul_nonneg hN.le (abs_nonneg mu)) hmu 2",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 25,
+      "source": "have hsmall : 16 * mu ^ 2 * (N : ℝ) ≤ V := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 27,
+      "source": "have hpos := mul_pos hN (sub_pos.mpr (lt_of_not_ge hh))",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 29,
+      "source": "have hroot : 0 < Real.sqrt V := Real.sqrt_pos.2 hV",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 36,
+      "source": "private theorem sb_small_cdf",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 42,
+      "source": "let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 43,
+      "source": "let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 44,
+      "source": "let B : ℝ := S + D + 1 / (1 / 800 : ℝ) ^ 3",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 50,
+      "source": "let e : ℝ := 1 / 800",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 51,
+      "source": "let R : ℝ := Shao.truncationBudget nu n 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 52,
+      "source": "let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 53,
+      "source": "let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 54,
+      "source": "let B : ℝ := S + D + 1 / e ^ 3",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 55,
+      "source": "let rho : Measure ℝ := cond nu {z : ℝ | |z| ≤ e}",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 56,
+      "source": "let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 57,
+      "source": "let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 58,
+      "source": "let mu : ℝ := ∫ z : ℝ, z ∂rho",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 59,
+      "source": "let V : ℝ := variance (id : ℝ → ℝ) rho",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 60,
+      "source": "let m3 : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 61,
+      "source": "let m3c : ℝ := ∫ z : ℝ, |z - mu| ^ 3 ∂rho",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 62,
+      "source": "have he : 0 < e := by norm_num [e]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 63,
+      "source": "have heHalf : e ≤ 1 / 2 := by norm_num [e]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 64,
+      "source": "have he800 : e ≤ 1 / 800 := le_rfl",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 65,
+      "source": "have hR' : R ≤ e ^ 3 / 8 := hR",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 66,
+      "source": "have hR0 : 0 ≤ R := Shao.truncationBudget_nonneg nu n h2 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 67,
+      "source": "have hNp : 0 < (n : ℝ) := by exact_mod_cast hn",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 68,
+      "source": "have hlaw := Shao.sourceTruncation_law_data nu n h2 hnorm 0 e (by norm_num)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 71,
+      "source": "have hp : IsProbabilityMeasure rho := hlaw.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 72,
+      "source": "letI : IsProbabilityMeasure rho := hp",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 73,
+      "source": "have h3r : Integrable (fun z : ℝ => |z| ^ 3) rho := hlaw.2.2.2.2.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 74,
+      "source": "have hpaid := Shao.sourceTruncation_paid_moments nu n h2 hnorm hmean 0 e",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 77,
+      "source": "have hmu : (n : ℝ) * |mu| ≤ 2 * R / e ^ 2 := hpaid.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 78,
+      "source": "have hcentered : m3c ≤ 8 * m3 := hpaid.2.2.2.2",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 79,
+      "source": "have hvdata := Shao.sourceTruncation_variance_bounds nu n h2 hnorm hmean 0 e",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 82,
+      "source": "have hV : 0 < V := hvdata.2.2.2.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 83,
+      "source": "have hNV : (1 / 2 : ℝ) ≤ (n : ℝ) * V := hvdata.2.2.2.2.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 84,
+      "source": "have hgdata := Shao.sourceTruncation_gamma_bounds nu n h2 hnorm hmean 0 e",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 87,
+      "source": "have hgamma : m3 / V ≤ 4 * R := hgdata.2.2.2.2.2.2.2.2",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 88,
+      "source": "have hmuN : (n : ℝ) * |mu| ≤ 1 / 8 := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 93,
+      "source": "have hdrift := sb_drift_bound n mu V hNp hV hmuN hNV",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 94,
+      "source": "have hden : 0 < Real.sqrt V * Real.sqrt ((n + 1 : ℕ) : ℝ) := by positivity",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 95,
+      "source": "have hdenLo : (1 / 2 : ℝ) ≤ Real.sqrt V * Real.sqrt ((n + 1 : ℕ) : ℝ) := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 100,
+      "source": "have hc : m3c / V ≤ 32 * R := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 101,
+      "source": "have hh := div_le_div_of_nonneg_right hcentered hV.le",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 105,
+      "source": "have hsqrt2 : Real.sqrt 2 ≤ 2 := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 109,
+      "source": "have hD : 0 ≤ D := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 110,
+      "source": "have ht := (Shao.standardNormalTail_basic.2.2.1 2).1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 113,
+      "source": "have hS : 0 ≤ S := by dsimp [S]; positivity",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 114,
+      "source": "have hclock := (Shao.sourceTruncation_noise_badClock_weighted_cost nu n h2 hnorm",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 117,
+      "source": "have hnoise0 : 0 ≤ Shao.standardNormalDensity 0 *",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 122,
+      "source": "have hbad : P.real {v : Shao.Path n | Shao.energy v ∉ Set.Icc (1 / 4 : ℝ) 2} ≤ D * R := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 129,
+      "source": "obtain ⟨_, _, hPB⟩ := sourceTruncation_original_max_cdf_pullback",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 130,
+      "source": "have hpb := hPB nu n hn h2 hmean hnorm 0 e (by norm_num) he he800 hR'",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 132,
+      "source": "let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ e}",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 133,
+      "source": "let p : ℝ := P0.real N",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 134,
+      "source": "have hp0 : 0 ≤ p := measureReal_nonneg",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 135,
+      "source": "have hp1 : p ≤ 1 := hpb.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 136,
+      "source": "have hcomp : 1 - p ≤ R / e ^ 3 := hpb.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 137,
+      "source": "have hcond : cond P0 N = P := hpb.2.2.2.2.2.1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 138,
+      "source": "have hNm : MeasurableSet N := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 139,
+      "source": "have hset : N = ⋂ i : Fin n, {v : Shao.Path n | |v i| ≤ e} := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 147,
+      "source": "have hsurv := iid_closed_survival_nonzero_drift rho h3r hV n (t * Real.sqrt 2)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 154,
+      "source": "have hratio : (t * Real.sqrt 2 + m3c / V) /",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 157,
+      "source": "have hnumer : t * Real.sqrt 2 + m3c / V ≤ 2 * t + 32 * R := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 159,
+      "source": "have hh := mul_le_mul_of_nonneg_left hdenLo",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 162,
+      "source": "have hmin := (min_le_right 1 _).trans hratio",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 163,
+      "source": "have hexp : Real.exp (4 * (|mu| * Real.sqrt (n : ℝ) / Real.sqrt V)) ≤ Real.exp 1 :=",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 165,
+      "source": "have heq : Real.exp (6 + 3 * (1024 : ℝ)) * Real.exp 1 =",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 167,
+      "source": "have hsurv' : P.real {v : Shao.Path n | Shao.maxWithZero v ≤ t * Real.sqrt 2} ≤",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 179,
+      "source": "let A : Set (Shao.Path n) := {v | 0 < Shao.energy v ∧",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 181,
+      "source": "have hsub : A ⊆ {v : Shao.Path n | Shao.maxWithZero v ≤ t * Real.sqrt 2} ∪",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 190,
+      "source": "have hF : P.real A ≤ (S + D) * (t + R) := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 196,
+      "source": "have hmul : P.real A * p = P0.real (N ∩ A) := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 199,
+      "source": "have hsplit := measureReal_inter_add_sdiff (μ := P0) (s := A) hNm",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 200,
+      "source": "have hrem : P0.real (A \\ N) ≤ 1 - p := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 201,
+      "source": "have hh := measureReal_mono (μ := P0) (show A \\ N ⊆ Nᶜ from fun _ hv => hv.2)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 204,
+      "source": "have hpF : P.real A * p ≤ P.real A := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 212,
+      "source": "have hh : 0 ≤ t / e ^ 3 := div_nonneg ht (pow_pos he 3).le",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 217,
+      "source": "private theorem sb_reference_bounds (t : ℝ) (ht : 0 ≤ t) (htHalf : t ≤ 1 / 2) :",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 218,
+      "source": "let G : ℝ → ℝ := fun u => if 0 < u then 1 - 2 * Shao.standardNormalTail u else 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 222,
+      "source": "have htail := Shao.standardNormalTail_basic.1 ht",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 224,
+      "source": "have hT := (Shao.standardNormalTail_basic.2.2.1 t).1.le",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 225,
+      "source": "have hlip := sourceReferenceG_local_lipschitz 0 0 t (by norm_num)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 228,
+      "source": "have hG0 : 0 ≤ (if 0 < t then 1 - 2 * Shao.standardNormalTail t else 0) := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 235,
+      "source": "theorem original_maximum_near_zero_cdf :",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 242,
+      "source": "let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 243,
+      "source": "let r0 : ℝ := Shao.truncationBudget nu n 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 244,
+      "source": "let G : ℝ → ℝ := fun t =>",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 253,
+      "source": "let e : ℝ := 1 / 800",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 254,
+      "source": "let S : ℝ := 128 * Real.exp (7 + 3 * (1024 : ℝ))",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 255,
+      "source": "let D : ℝ := 32768 * Real.sqrt (2 * Real.pi) + 1 / Shao.standardNormalTail 2 + 1600",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 256,
+      "source": "let B : ℝ := S + D + 1 / e ^ 3",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 257,
+      "source": "let g : ℝ := 2 * Real.exp 2 * Shao.standardNormalDensity 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 258,
+      "source": "let C : ℝ := 2 * B + g + 8 / e ^ 3 + 1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 259,
+      "source": "have he : 0 < e := by norm_num [e]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 260,
+      "source": "have hB : 0 < B := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 261,
+      "source": "have hT := (Shao.standardNormalTail_basic.2.2.1 2).1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 264,
+      "source": "have hg : 0 < g := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 265,
+      "source": "have hd : 0 < Shao.standardNormalDensity 0 :=",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 268,
+      "source": "have hC : 0 < C := by dsimp [C]; positivity",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 269,
+      "source": "have h8 : 0 < 8 / e ^ 3 := by positivity",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 270,
+      "source": "have hBC : 2 * B ≤ C := by dsimp [C]; linarith only [hg, h8]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 271,
+      "source": "have hBgC : B + g ≤ C := by dsimp [C]; linarith only [hB, h8]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 272,
+      "source": "have hlargeC : 8 / e ^ 3 ≤ C := by dsimp [C]; linarith only [hB, hg]",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 275,
+      "source": "letI : IsProbabilityMeasure nu := hnu",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 276,
+      "source": "let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 277,
+      "source": "let R : ℝ := Shao.truncationBudget nu n 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 278,
+      "source": "let G : ℝ → ℝ := fun t => if 0 < t then 1 - 2 * Shao.standardNormalTail t else 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 279,
+      "source": "have hR0 : 0 ≤ R := Shao.truncationBudget_nonneg nu n h2 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 285,
+      "source": "have hh : 1 ≤ (8 / e ^ 3) * R := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 291,
+      "source": "obtain ⟨hG0, hG1, _⟩ := sb_reference_bounds t ht hth",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 292,
+      "source": "have hF0 : 0 ≤ P0.real {v : Shao.Path n | 0 < Shao.energy v ∧",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 294,
+      "source": "have hF1 : P0.real {v : Shao.Path n | 0 < Shao.energy v ∧",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 296,
+      "source": "have herr : |P0.real {v : Shao.Path n | 0 < Shao.energy v ∧",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 302,
+      "source": "have hF := sb_small_cdf nu n hn h2 hmean hnorm hsmall",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 305,
+      "source": "have hsecond : 0 < ∫ z : ℝ, z ^ 2 ∂nu := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 307,
+      "source": "have hh := mul_nonpos_of_nonneg_of_nonpos (Nat.cast_nonneg n) (le_of_not_gt h)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 310,
+      "source": "have hRp : 0 < R := Shao.truncationBudget_pos nu n h2 hn hsecond 0 (by norm_num)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 311,
+      "source": "have hsub : {v : Shao.Path n | Shao.upperMax v hn < 0} ⊆",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 316,
+      "source": "have hQ : 0 < Shao.energy v := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 318,
+      "source": "have hz := le_antisymm (le_of_not_gt h) (Shao.energy_nonneg v)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 331,
+      "source": "obtain ⟨hG0, _, hG⟩ := sb_reference_bounds t ht hth",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 332,
+      "source": "have hFt := hF t ht",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 333,
+      "source": "have hF0 : 0 ≤ P0.real {v : Shao.Path n | 0 < Shao.energy v ∧",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 336,
+      "source": "have hCg := mul_le_mul_of_nonneg_right hBgC (show 0 ≤ t + R by positivity)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 337,
+      "source": "have hgR := mul_nonneg hg.le hR0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 340,
+      "source": "theorem original_maximum_near_zero_weak_crossing :",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 352,
+      "source": "obtain ⟨C, hC, hbound⟩ := original_maximum_near_zero_cdf",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 353,
+      "source": "let T : ℝ := Shao.standardNormalTail (1 / 2)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 354,
+      "source": "have hT : 0 < T := (Shao.standardNormalTail_basic.2.2.1 (1 / 2)).1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 357,
+      "source": "letI : IsProbabilityMeasure nu := hnu",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 358,
+      "source": "let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 359,
+      "source": "let R : ℝ := Shao.truncationBudget nu n 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 360,
+      "source": "have hR : 0 ≤ R := Shao.truncationBudget_nonneg nu n h2 0",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 361,
+      "source": "obtain ⟨hzero, hnear⟩ := hbound nu n hn h2 hmean hnorm",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 365,
+      "source": "have hid := (sourcePositiveCDF_weak_tail_error_identity hn P t htp).2",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 366,
+      "source": "have htail : T ≤ Shao.standardNormalTail t := Shao.standardNormalTail_basic.1 hth",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 367,
+      "source": "have htailp := (Shao.standardNormalTail_basic.2.2.1 t).1",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 376,
+      "source": "have hh := mul_nonneg (show 0 ≤ 2 * C by positivity) (show 0 ≤ t + R by positivity)",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 382,
+      "source": "have heq : {v : Shao.Path n | Shao.upperMax v hn < 0} = (Shao.upperCrossing hn 0)ᶜ := by",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 385,
+      "source": "have hprob : P.real {v : Shao.Path n | Shao.upperMax v hn < 0} =",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 388,
+      "source": "have hneg : 0 ≤ P.real {v : Shao.Path n | Shao.upperMax v hn < 0} := measureReal_nonneg",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 389,
+      "source": "have herr : |P.real (Shao.upperCrossing hn 0) / Shao.standardNormalTail 0 - 2| =",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 392,
+      "source": "have hexpr : P.real (Shao.upperCrossing hn 0) / (1 / 2 : ℝ) - 2 =",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    },
+    {
+      "line": 399,
+      "source": "have hh := mul_nonneg (show 0 ≤ C / T by positivity) hR",
+      "exact_source_row_verified": true,
+      "complete_read_with_surrounding_proof": true
+    }
+  ],
+  "source_proof_index_count": 146,
+  "owner_selection": "env.getModuleIdxFor? actual module equality; no namespace filter",
+  "actual_declarations": [
+    {
+      "name": "_private.Shao.Probability.SourceSmallBoundary.0.Shao.Probability.sb_small_cdf",
+      "kind": "theorem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "actual_type": "∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu] (n : Nat)\n  (hn : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n)\n  (h2 :\n    @MeasureTheory.Integrable.{0, 0} Real\n      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n      Real Real.measurableSpace\n      (fun (z : Real) =>\n        @HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n      nu)\n  (hmean :\n    @Eq.{1} Real\n      (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n        Real.measurableSpace nu fun (z : Real) => z)\n      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))\n  (hnorm :\n    @Eq.{1} Real\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Nat.cast.{0} Real Real.instNatCast n)\n        (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n          (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n            (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n            (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n          Real.measurableSpace nu fun (z : Real) =>\n          @HPow.hPow.{0, 0, 0} Real Nat Real\n            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))\n  (hR :\n    @LE.le.{0} Real Real.instLE\n      (Shao.truncationBudget nu n (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n            (@OfNat.ofNat.{0} Real (nat_lit 800)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 800) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 799) (instOfNatNat (nat_lit 799)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 798) (instOfNatNat (nat_lit 798))))))))\n          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))))\n        (@OfNat.ofNat.{0} Real (nat_lit 8)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6))))))))),\n  have S : Real :=\n    @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n      (@OfNat.ofNat.{0} Real (nat_lit 128)\n        (@instOfNatAtLeastTwo.{0} Real (nat_lit 128) Real.instNatCast\n          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 127) (instOfNatNat (nat_lit 127)))\n            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 126) (instOfNatNat (nat_lit 126)))))))\n      (Real.exp\n        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)\n          (@OfNat.ofNat.{0} Real (nat_lit 7)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 7) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 5) (instOfNatNat (nat_lit 5)))))))\n          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n            (@OfNat.ofNat.{0} Real (nat_lit 3)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 3) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))))\n            (@OfNat.ofNat.{0} Real (nat_lit 1024)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 1024) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1023) (instOfNatNat (nat_lit 1023)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1022) (instOfNatNat (nat_lit 1022))))))))));\n  have D : Real :=\n    @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)\n      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@OfNat.ofNat.{0} Real (nat_lit 32768)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 32768) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 32767) (instOfNatNat (nat_lit 32767)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 32766) (instOfNatNat (nat_lit 32766)))))))\n          (Real.sqrt\n            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n              (@OfNat.ofNat.{0} Real (nat_lit 2)\n                (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                  (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                    (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))\n              Real.pi)))\n        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n          (Shao.standardNormalTail\n            (@OfNat.ofNat.{0} Real (nat_lit 2)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))))\n      (@OfNat.ofNat.{0} Real (nat_lit 1600)\n        (@instOfNatAtLeastTwo.{0} Real (nat_lit 1600) Real.instNatCast\n          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1599) (instOfNatNat (nat_lit 1599)))\n            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 1598) (instOfNatNat (nat_lit 1598)))))));\n  have B : Real :=\n    @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)\n      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) S D)\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n            (@OfNat.ofNat.{0} Real (nat_lit 800)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 800) Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 799) (instOfNatNat (nat_lit 799)))\n                  (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 798) (instOfNatNat (nat_lit 798))))))))\n          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))));\n  ∀ (t : Real),\n    @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) t →\n      @LE.le.{0} Real Real.instLE\n        (@MeasureTheory.Measure.real.{0} ((i : Fin n) → Real)\n          (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (x : Fin n) => Real) fun (i : Fin n) => Real.measurableSpace)\n          (@MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (x : Fin n) => Real) (Fin.fintype n)\n            (fun (i : Fin n) => Real.measurableSpace) fun (x : Fin n) => nu)\n          (@Set.ofPred.{0} ((i : Fin n) → Real) fun (v : Shao.Path n) =>\n            And\n              (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n                (@Shao.energy n v))\n              (@LT.lt.{0} Real Real.instLT (@Shao.maxWithZero n v)\n                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) t\n                  (Real.sqrt (@Shao.energy n v))))))\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) B\n          (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) t\n            (Shao.truncationBudget nu n (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "5ab45c9be2ee8d765dfb2642cd64a0cbfee06c47f13eaf25a2a79946e5159fc0",
+      "type_bytes": 9959,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整小预算原律严格 CDF，所有 t≥0；完整 let S/D/B 与真实 P0、正能量事件全部已读。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "_private.Shao.Probability.SourceSmallBoundary.0.Shao.Probability.sb_reference_bounds._simp_1",
+      "kind": "theorem",
+      "axioms": [
+        "propext"
+      ],
+      "actual_type": "∀ {α : Type u_2} [inst : Preorder.{u_2} α] (x : α),\n  @Eq.{1} Prop (@LT.lt.{u_2} α (@Preorder.toLT.{u_2} α inst) x x) False",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "3620549d57e1b3579752fd4f9664fa694576cc51424771110f6be87b446c19da",
+      "type_bytes": 130,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整生成类型为任意 Preorder 的 x<x 与 False 的命题相等。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "Shao.Probability.original_maximum_near_zero_weak_crossing",
+      "kind": "theorem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "actual_type": "@Exists.{1} Real fun (C : Real) =>\n  And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) C)\n    (∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n      [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu] (n : Nat)\n      (hn : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n),\n      @MeasureTheory.Integrable.{0, 0} Real\n          (@UniformSpace.toTopologicalSpace.{0} Real\n            (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n          (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n            (@UniformSpace.toTopologicalSpace.{0} Real\n              (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n            (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n              (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n                (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n                  (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                    (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                      (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n          Real Real.measurableSpace\n          (fun (z : Real) =>\n            @HPow.hPow.{0, 0, 0} Real Nat Real\n              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n          nu →\n        @Eq.{1} Real\n            (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n              (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n              Real.measurableSpace nu fun (z : Real) => z)\n            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) →\n          @Eq.{1} Real\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@Nat.cast.{0} Real Real.instNatCast n)\n                (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n                  (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                    (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                    (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n                  Real.measurableSpace nu fun (z : Real) =>\n                  @HPow.hPow.{0, 0, 0} Real Nat Real\n                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n                    (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))\n              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →\n            ∀ (t : Real),\n              @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n                  t →\n                @LE.le.{0} Real Real.instLE t\n                    (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                      (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n                      (@OfNat.ofNat.{0} Real (nat_lit 2)\n                        (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))) →\n                  @LE.le.{0} Real Real.instLE\n                    (@abs.{0} Real Real.lattice Real.instAddGroup\n                      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)\n                        (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                          (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                          (@MeasureTheory.Measure.real.{0} ((i : Fin n) → Real)\n                            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (x : Fin n) => Real) fun (i : Fin n) =>\n                              Real.measurableSpace)\n                            (@MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (x : Fin n) => Real) (Fin.fintype n)\n                              (fun (i : Fin n) => Real.measurableSpace) fun (x : Fin n) => nu)\n                            (@Shao.upperCrossing n hn t))\n                          (Shao.standardNormalTail t))\n                        (@OfNat.ofNat.{0} Real (nat_lit 2)\n                          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))))\n                    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) C\n                      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) t\n                        (Shao.truncationBudget nu n\n                          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "c456949f4c1fe863e781a78297f482f34c32fc48e48995aba81018036e4cef1d",
+      "type_bytes": 5488,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "存在统一正常数在 nu/n/t 之前；仅原二阶、零均值及 n 原二阶=1；真实弱穿越相对尾界。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "_private.Shao.Probability.SourceSmallBoundary.0.Shao.Probability.sb_small_cdf._simp_1",
+      "kind": "theorem",
+      "axioms": [
+        "propext"
+      ],
+      "actual_type": "∀ {α : Type u} {ι : Sort v} {x : α} {s : ι → Set.{u} α},\n  @Eq.{1} Prop\n    (@Membership.mem.{u, u} α (Set.{u} α) (@Set.instMembership.{u} α) (@Set.iInter.{u, v} α ι fun (i : ι) => s i) x)\n    (∀ (i : ι), @Membership.mem.{u, u} α (Set.{u} α) (@Set.instMembership.{u} α) (s i) x)",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "b5a8454b0dc39e00fb3a5060e2b0f1765c3e24fea4dbc7bb7c4d3e738d222082",
+      "type_bytes": 299,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整生成类型为任意索引集合族的交集成员与逐项成员的命题相等。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "_private.Shao.Probability.SourceSmallBoundary.0.Shao.Probability.sb_drift_bound",
+      "kind": "theorem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "actual_type": "∀ (N : Nat) (mu V : Real)\n  (hN :\n    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n      (@Nat.cast.{0} Real Real.instNatCast N))\n  (hV : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) V)\n  (hmu :\n    @LE.le.{0} Real Real.instLE\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Nat.cast.{0} Real Real.instNatCast N)\n        (@abs.{0} Real Real.lattice Real.instAddGroup mu))\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@OfNat.ofNat.{0} Real (nat_lit 8)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 8) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 7) (instOfNatNat (nat_lit 7)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 6) (instOfNatNat (nat_lit 6)))))))))\n  (hNV :\n    @LE.le.{0} Real Real.instLE\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@OfNat.ofNat.{0} Real (nat_lit 2)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Nat.cast.{0} Real Real.instNatCast N)\n        V)),\n  @LE.le.{0} Real Real.instLE\n    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n        (@abs.{0} Real Real.lattice Real.instAddGroup mu) (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast N)))\n      (Real.sqrt V))\n    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n      (@OfNat.ofNat.{0} Real (nat_lit 4)\n        (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast\n          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))\n            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "17dfe47ed4e0478f3f3842635a2bc911c4928917327c35a00f635630403f6f36",
+      "type_bytes": 2590,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整 N/mu/V 与四个数值守卫，结论为绝对均值的平方根漂移比。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "Shao.Probability.original_maximum_near_zero_weak_crossing._simp_1",
+      "kind": "theorem",
+      "axioms": [
+        "propext"
+      ],
+      "actual_type": "∀ {α : Type u} (s : Set.{u} α) (x : α),\n  @Eq.{1} Prop\n    (@Membership.mem.{u, u} α (Set.{u} α) (@Set.instMembership.{u} α)\n      (@Compl.compl.{u} (Set.{u} α) (@Set.instCompl.{u} α) s) x)\n    (Not (@Membership.mem.{u, u} α (Set.{u} α) (@Set.instMembership.{u} α) s x))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "3802b8957e02d6acf6247cf339922b59ec21b90378107e1c467135d235f66cd7",
+      "type_bytes": 283,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整生成类型为补集成员与非成员的命题相等。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "_private.Shao.Probability.SourceSmallBoundary.0.Shao.Probability.sb_reference_bounds",
+      "kind": "theorem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "actual_type": "∀ (t : Real)\n  (ht : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) t)\n  (htHalf :\n    @LE.le.{0} Real Real.instLE t\n      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@OfNat.ofNat.{0} Real (nat_lit 2)\n          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))),\n  have G : Real → Real := fun (u : Real) =>\n    @ite.{1} Real\n      (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) u)\n      (Real.decidableLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) u)\n      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)\n        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@OfNat.ofNat.{0} Real (nat_lit 2)\n            (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))\n          (Shao.standardNormalTail u)))\n      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero));\n  And (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (G t))\n    (And (@LE.le.{0} Real Real.instLE (G t) (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))\n      (@LE.le.{0} Real Real.instLE (G t)\n        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n              (@OfNat.ofNat.{0} Real (nat_lit 2)\n                (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                  (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                    (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))\n              (Real.exp\n                (@OfNat.ofNat.{0} Real (nat_lit 2)\n                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))))\n            (Shao.standardNormalDensity (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))\n          t)))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "fb1f7d339de59179a94570bb1cdceebd7d7f064fb1393ded0a3a1d56371fb2e1",
+      "type_bytes": 3035,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整 t 守卫和 G 的 if 字面值；包含 0≤G≤1 及 2 exp2 density0*t。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "Shao.Probability.original_maximum_near_zero_weak_crossing._simp_2",
+      "kind": "theorem",
+      "axioms": [
+        "propext"
+      ],
+      "actual_type": "∀ {α : Type u_1} [inst : LinearOrder.{u_1} α] {a b : α},\n  @Eq.{1} Prop\n    (Not\n      (@LE.le.{u_1} α\n        (@Preorder.toLE.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) a b))\n    (@LT.lt.{u_1} α\n      (@Preorder.toLT.{u_1} α (@PartialOrder.toPreorder.{u_1} α (@LinearOrder.toPartialOrder.{u_1} α inst))) b a)",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "d7a81e702843530468f48d9160c0f62a6ad0abff0780fe18e82b7a05fa11ccc7",
+      "type_bytes": 366,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整生成类型为任意 LinearOrder 的 not(a≤b) 与 b<a 的命题相等。",
+      "status": "CORRECT"
+    },
+    {
+      "name": "Shao.Probability.original_maximum_near_zero_cdf",
+      "kind": "theorem",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "actual_type": "@Exists.{1} Real fun (C : Real) =>\n  And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) C)\n    (∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)\n      [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu] (n : Nat)\n      (hn : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n),\n      @MeasureTheory.Integrable.{0, 0} Real\n          (@UniformSpace.toTopologicalSpace.{0} Real\n            (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n          (@ESeminormedAddMonoid.toContinuousENorm.{0} Real\n            (@UniformSpace.toTopologicalSpace.{0} Real\n              (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))\n            (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real\n              (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real\n                (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real\n                  (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real\n                    (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real\n                      (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))\n          Real Real.measurableSpace\n          (fun (z : Real) =>\n            @HPow.hPow.{0, 0, 0} Real Nat Real\n              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))\n          nu →\n        @Eq.{1} Real\n            (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n              (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n              Real.measurableSpace nu fun (z : Real) => z)\n            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) →\n          @Eq.{1} Real\n              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                (@Nat.cast.{0} Real Real.instNatCast n)\n                (@MeasureTheory.integral.{0, 0} Real Real Real.normedAddCommGroup\n                  (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike\n                    (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)\n                    (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))\n                  Real.measurableSpace nu fun (z : Real) =>\n                  @HPow.hPow.{0, 0, 0} Real Nat Real\n                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) z\n                    (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))\n              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →\n            have P0 :\n              @MeasureTheory.Measure.{0} (Shao.Path n)\n                (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) =>\n                  Real.measurableSpace) :=\n              @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)\n                (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => nu;\n            have r0 : Real :=\n              Shao.truncationBudget nu n (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero));\n            have G : Real → Real := fun (t : Real) =>\n              @ite.{1} Real\n                (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n                  t)\n                (Real.decidableLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) t)\n                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)\n                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)\n                    (@OfNat.ofNat.{0} Real (nat_lit 2)\n                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))\n                    (Shao.standardNormalTail t)))\n                (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero));\n            And\n              (@LE.le.{0} Real Real.instLE\n                (@MeasureTheory.Measure.real.{0} (Shao.Path n)\n                  (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)\n                  P0\n                  (@Set.ofPred.{0} (Shao.Path n) fun (v : Shao.Path n) =>\n                    @LT.lt.{0} Real Real.instLT (@Shao.upperMax n v hn)\n                      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))\n                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) C r0))\n              (∀ (t : Real),\n                @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n                    t →\n                  @LE.le.{0} Real Real.instLE t\n                      (@HDiv.hDiv.{0, 0, 0} Real Real Real\n                        (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))\n                        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))\n                        (@OfNat.ofNat.{0} Real (nat_lit 2)\n                          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast\n                            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))\n                              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))) →\n                    @LE.le.{0} Real Real.instLE\n                      (@abs.{0} Real Real.lattice Real.instAddGroup\n                        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)\n                          (@MeasureTheory.Measure.real.{0} (Shao.Path n)\n                            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) =>\n                              Real.measurableSpace)\n                            P0\n                            (@Set.ofPred.{0} (Shao.Path n) fun (v : Shao.Path n) =>\n                              And\n                                (@LT.lt.{0} Real Real.instLT\n                                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))\n                                  (@Shao.energy n v))\n                                (@LT.lt.{0} Real Real.instLT (@Shao.maxWithZero n v)\n                                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) t\n                                    (Real.sqrt (@Shao.energy n v))))))\n                          (G t)))\n                      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) C\n                        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) t r0))))",
+      "value": null,
+      "value_reason": "Theorem constant; no definition or generated matcher exists.",
+      "one_original_log_row": true,
+      "raw_equal_export": true,
+      "type_sha256": "094458eb05d79238ff2975adce628941a7ba74a50ff9f286db20585218ba6238",
+      "type_bytes": 7430,
+      "value_is_null": true,
+      "no_elision": true,
+      "complete_type_read": true,
+      "semantic_review": "完整统一存在量词和原律前提；P0/r0/G 的全部 let；真正负最大值与严格正能量 CDF 两个结论。",
+      "status": "CORRECT"
+    }
+  ],
+  "actual_theorems": 9,
+  "public_source_theorems": 2,
+  "private_source_theorems": 3,
+  "generated_theorems": 4,
+  "actual_non_theorem_constants": 0,
+  "definition_values": [],
+  "type_elision_count": 0,
+  "lossy_compression": false,
+  "original_source_sha256": "beb00f718487e36de433175c97f1d500cb48e7a92ce5bd5ad5d62bb132122d06",
+  "original_source_ranges": [
+    {
+      "path": "C:\\game\\shao\\current\\c12\\main.tex",
+      "read_lines": [
+        110,
+        180
+      ],
+      "segment_text_sha256": "638870d2c52ba78321badf1a873d0dc2f2db517c336ff0d7f20751d077ecb937",
+      "scope": "来源归属、数值常数先于 law/n/level/p、最大值不含时间零、弱乘法穿越、真实截断预算",
+      "full_range_read": true
+    },
+    {
+      "path": "C:\\game\\shao\\current\\c12\\main.tex",
+      "read_lines": [
+        290,
+        430
+      ],
+      "segment_text_sha256": "ba250928d4ab3f074c5e80722bc5aa6e93f042d26247bd343662e3ef1b8a66dd",
+      "scope": "正阈值补事件、preliminary 近零界、t=0 支付、D2 与 D3 的实际分界及条件化",
+      "full_range_read": true
+    }
+  ],
+  "accepted_dependency_interfaces": [
+    {
+      "module": "Shao.Probability.FiniteSurvival",
+      "name": "iid_closed_survival_nonzero_drift",
+      "full_head_lines": [
+        454,
+        467
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "155b8865c55e392f27b07a65caad1ea3aac542a70fea4ae491251ee1b3a3d816",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.OriginalCDFPullback",
+      "name": "sourceTruncation_original_max_cdf_pullback",
+      "full_head_lines": [
+        253,
+        290
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceDesmoothing",
+      "name": "sourceReferenceG_local_lipschitz",
+      "full_head_lines": [
+        15,
+        22
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceDesmoothing",
+      "name": "sourcePositiveCDF_weak_tail_error_identity",
+      "full_head_lines": [
+        786,
+        794
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceFourierScale",
+      "name": "sourceTruncation_gamma_bounds",
+      "full_head_lines": [
+        52,
+        72
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "5f31eb92eff8ded33b91f55a59a16de4e58cdd7a9e0514d082a2c4932f5feff0",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceNoiseCost",
+      "name": "sourceTruncation_noise_badClock_weighted_cost",
+      "full_head_lines": [
+        11,
+        30
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "531e2ab17798c7ba7db49d19bd08af7cc1c7cf5ae29b0d23af4873fe30dcda20",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceTruncationBridge",
+      "name": "sourceTruncation_law_data",
+      "full_head_lines": [
+        207,
+        222
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "05321c22d1b2ea178fbc116178af345f4186bfce51011c8242b4ccfd2e0dd7d1",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceTruncationBridge",
+      "name": "sourceTruncation_paid_moments",
+      "full_head_lines": [
+        370,
+        388
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "05321c22d1b2ea178fbc116178af345f4186bfce51011c8242b4ccfd2e0dd7d1",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.SourceTruncationBridge",
+      "name": "sourceTruncation_variance_bounds",
+      "full_head_lines": [
+        447,
+        466
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "05321c22d1b2ea178fbc116178af345f4186bfce51011c8242b4ccfd2e0dd7d1",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.GaussianTail",
+      "name": "standardNormalTail_basic",
+      "full_head_lines": [
+        91,
+        95
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.TruncationIntegrals",
+      "name": "truncationBudget_nonneg",
+      "full_head_lines": [
+        115,
+        117
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Probability.TruncationRegularity",
+      "name": "truncationBudget_pos",
+      "full_head_lines": [
+        56,
+        59
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "1d2fb3de5a6e1cb15ccbf083d483cfca5d7c42768ce19e845d590ef52c2a87ad",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Basic.FinitePath",
+      "name": "maxWithZero_eq",
+      "full_head_lines": [
+        142,
+        143
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    },
+    {
+      "module": "Shao.Basic.FinitePath",
+      "name": "upperMax_eq_zero_of_energy_eq_zero",
+      "full_head_lines": [
+        167,
+        168
+      ],
+      "complete_head_and_all_lets_read": true,
+      "source_sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "old_proof_reread": false,
+      "qualification": "root-authorized exact source/object reuse"
+    }
+  ],
+  "accepted_dependency_old_proofs_reread": 0,
+  "accepted_dependency_old_axiom_audits_rerun": 0,
+  "exact_dependencies": [
+    {
+      "module": "Shao.Probability.SourceDesmoothing",
+      "source_sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceDesmoothing.olean",
+      "object_sha256": "ae8e9426e44823c222ac026cf63508ddf9693c14b34c420e985db726a0eed967",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceDesmoothing.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceDesmoothing.lean",
+      "actual_source_sha256": "8947e669f554a7d4aaefe04250a90b4deed2ec909da260f13ac5f58925790240",
+      "actual_original_sha256": "ae8e9426e44823c222ac026cf63508ddf9693c14b34c420e985db726a0eed967",
+      "actual_alias_sha256": "ae8e9426e44823c222ac026cf63508ddf9693c14b34c420e985db726a0eed967",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/common-short-kernel-v51/.lake/build/lib/lean/Shao/Probability/SourceDesmoothing.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/common-short-kernel-v51/.lake/build/lib/lean/Shao/Probability/SourceDesmoothing.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.MeasurablePath",
+      "source_sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+      "object_sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/MeasurablePath.lean",
+      "actual_source_sha256": "827dc47b74dae67101a4d874f412e4cb55bafe1e67b9ba767c6896c0b7e58b41",
+      "actual_original_sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "actual_alias_sha256": "8f8cae0273f3b20cf08377c049b4c93e87396a05609c76a4885ab5b2df620de8",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/MeasurablePath.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/MeasurablePath.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.C2.TwoSided",
+      "source_sha256": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/C2/TwoSided.olean",
+      "object_sha256": "09c2d36a4314a0d9b77bb2173ea730949f6b36de0833ed9cea00e69b1d34a61f",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/C2/TwoSided.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/C2/TwoSided.lean",
+      "actual_source_sha256": "125cb4f9b13e05fed36118f9c614b4aad76c3ef912b0c153d3fa94fff0400cf4",
+      "actual_original_sha256": "09c2d36a4314a0d9b77bb2173ea730949f6b36de0833ed9cea00e69b1d34a61f",
+      "actual_alias_sha256": "09c2d36a4314a0d9b77bb2173ea730949f6b36de0833ed9cea00e69b1d34a61f",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/C2/TwoSided.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/C2/TwoSided.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.Events",
+      "source_sha256": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/Events.olean",
+      "object_sha256": "6d0e876c12deb6a2efdf4e269e65eb41e7dc365ba2509571c89db0198179cc9c",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/Events.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/Events.lean",
+      "actual_source_sha256": "58a243902a660defc28e8a0625a93f6098a1d80c770037460f205ee615799a3a",
+      "actual_original_sha256": "6d0e876c12deb6a2efdf4e269e65eb41e7dc365ba2509571c89db0198179cc9c",
+      "actual_alias_sha256": "6d0e876c12deb6a2efdf4e269e65eb41e7dc365ba2509571c89db0198179cc9c",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/Events.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/Events.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.FinitePath",
+      "source_sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+      "object_sha256": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/FinitePath.lean",
+      "actual_source_sha256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "actual_original_sha256": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "actual_alias_sha256": "14238ea05500cb0e3d6b105253aaeca80c5744612687a1054906de7dd64f2572",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/FinitePath.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/FinitePath.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.C1.Normalization",
+      "source_sha256": "fef196ff1358ca597a4ddeec652d537744be62c77e0e5829b63c61283c12734d",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/C1/Normalization.olean",
+      "object_sha256": "2f8e80196b8f4efcfa8b2aecb5723ec7f0d47bc98e99afa02968b13138363637",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/C1/Normalization.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/C1/Normalization.lean",
+      "actual_source_sha256": "fef196ff1358ca597a4ddeec652d537744be62c77e0e5829b63c61283c12734d",
+      "actual_original_sha256": "2f8e80196b8f4efcfa8b2aecb5723ec7f0d47bc98e99afa02968b13138363637",
+      "actual_alias_sha256": "2f8e80196b8f4efcfa8b2aecb5723ec7f0d47bc98e99afa02968b13138363637",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/C1/Normalization.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/C1/Normalization.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.TruncationRegularity",
+      "source_sha256": "1d2fb3de5a6e1cb15ccbf083d483cfca5d7c42768ce19e845d590ef52c2a87ad",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/TruncationRegularity.olean",
+      "object_sha256": "ddeb717aa3d5fc87c7d61714e24dc25421e62378630147c256a57928214f1d56",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/TruncationRegularity.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/TruncationRegularity.lean",
+      "actual_source_sha256": "1d2fb3de5a6e1cb15ccbf083d483cfca5d7c42768ce19e845d590ef52c2a87ad",
+      "actual_original_sha256": "ddeb717aa3d5fc87c7d61714e24dc25421e62378630147c256a57928214f1d56",
+      "actual_alias_sha256": "ddeb717aa3d5fc87c7d61714e24dc25421e62378630147c256a57928214f1d56",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/TruncationRegularity.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/TruncationRegularity.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.TruncationIntegrals",
+      "source_sha256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/TruncationIntegrals.olean",
+      "object_sha256": "3badf67e4cf9f6f299f3618a072aed6582eb26a81d5c95a22190e3339b123c7e",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/TruncationIntegrals.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/TruncationIntegrals.lean",
+      "actual_source_sha256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "actual_original_sha256": "3badf67e4cf9f6f299f3618a072aed6582eb26a81d5c95a22190e3339b123c7e",
+      "actual_alias_sha256": "3badf67e4cf9f6f299f3618a072aed6582eb26a81d5c95a22190e3339b123c7e",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/TruncationIntegrals.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/TruncationIntegrals.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.TruncationBudget",
+      "source_sha256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/TruncationBudget.olean",
+      "object_sha256": "e5e28c3aaed49b4ac35bed42a6433c154d625e205f5a1c4f868176933eac07d5",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/TruncationBudget.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/TruncationBudget.lean",
+      "actual_source_sha256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+      "actual_original_sha256": "e5e28c3aaed49b4ac35bed42a6433c154d625e205f5a1c4f868176933eac07d5",
+      "actual_alias_sha256": "e5e28c3aaed49b4ac35bed42a6433c154d625e205f5a1c4f868176933eac07d5",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/TruncationBudget.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/TruncationBudget.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceFourierScale",
+      "source_sha256": "5f31eb92eff8ded33b91f55a59a16de4e58cdd7a9e0514d082a2c4932f5feff0",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceFourierScale.olean",
+      "object_sha256": "181f3e96c2cde028a900a0d7c167ca7e521e1a19b28ac97427b9530e6433ab8b",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceFourierScale.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceFourierScale.lean",
+      "actual_source_sha256": "5f31eb92eff8ded33b91f55a59a16de4e58cdd7a9e0514d082a2c4932f5feff0",
+      "actual_original_sha256": "181f3e96c2cde028a900a0d7c167ca7e521e1a19b28ac97427b9530e6433ab8b",
+      "actual_alias_sha256": "181f3e96c2cde028a900a0d7c167ca7e521e1a19b28ac97427b9530e6433ab8b",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/SourceFourierScale.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/SourceFourierScale.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceTruncationBridge",
+      "source_sha256": "05321c22d1b2ea178fbc116178af345f4186bfce51011c8242b4ccfd2e0dd7d1",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceTruncationBridge.olean",
+      "object_sha256": "3a23c563b69b9316b50d14f3b008ad26575d4c547602f4abd13e9c1718295c7a",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceTruncationBridge.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceTruncationBridge.lean",
+      "actual_source_sha256": "05321c22d1b2ea178fbc116178af345f4186bfce51011c8242b4ccfd2e0dd7d1",
+      "actual_original_sha256": "3a23c563b69b9316b50d14f3b008ad26575d4c547602f4abd13e9c1718295c7a",
+      "actual_alias_sha256": "3a23c563b69b9316b50d14f3b008ad26575d4c547602f4abd13e9c1718295c7a",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/SourceTruncationBridge.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/SourceTruncationBridge.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.GaussianTail",
+      "source_sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+      "object_sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/GaussianTail.lean",
+      "actual_source_sha256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "actual_original_sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "actual_alias_sha256": "37aa119d788f35dd21146e35116823ae689204c91553c3f5f43a386d2234013d",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/GaussianTail.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/GaussianTail.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.RetainedVariance",
+      "source_sha256": "5361ad40f82d6c273135729df66c056d01a9cf090d1e9f80cffce44f61296fa6",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/RetainedVariance.olean",
+      "object_sha256": "b51909a90a59524c0a5ac401d0cfa1b9d31ee4ac568801efbe31665c8c283a22",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/RetainedVariance.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/RetainedVariance.lean",
+      "actual_source_sha256": "5361ad40f82d6c273135729df66c056d01a9cf090d1e9f80cffce44f61296fa6",
+      "actual_original_sha256": "b51909a90a59524c0a5ac401d0cfa1b9d31ee4ac568801efbe31665c8c283a22",
+      "actual_alias_sha256": "b51909a90a59524c0a5ac401d0cfa1b9d31ee4ac568801efbe31665c8c283a22",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/RetainedVariance.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/RetainedVariance.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.RetainedSample",
+      "source_sha256": "a507e549e2973dd04ce25f22e2c6973e0e6c491433a1d7fd2d88fbb082e86ca4",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/RetainedSample.olean",
+      "object_sha256": "ae1ee5d070032b24f58e24eaa3ddad660857e47ff6fce9f9ea07e1396c0eedcd",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/RetainedSample.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/RetainedSample.lean",
+      "actual_source_sha256": "a507e549e2973dd04ce25f22e2c6973e0e6c491433a1d7fd2d88fbb082e86ca4",
+      "actual_original_sha256": "ae1ee5d070032b24f58e24eaa3ddad660857e47ff6fce9f9ea07e1396c0eedcd",
+      "actual_alias_sha256": "ae1ee5d070032b24f58e24eaa3ddad660857e47ff6fce9f9ea07e1396c0eedcd",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/RetainedSample.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/RetainedSample.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.RetainedMoments",
+      "source_sha256": "512cf7a51125f18f94f42b4ef855e21290a28f7a3185865a3d375bde8100d6cb",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/RetainedMoments.olean",
+      "object_sha256": "94ff2bf7ef5610f88eafdb4ffb4817d4a0a4cf4dcd6ae63706164cd74ce06fdb",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/RetainedMoments.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/RetainedMoments.lean",
+      "actual_source_sha256": "512cf7a51125f18f94f42b4ef855e21290a28f7a3185865a3d375bde8100d6cb",
+      "actual_original_sha256": "94ff2bf7ef5610f88eafdb4ffb4817d4a0a4cf4dcd6ae63706164cd74ce06fdb",
+      "actual_alias_sha256": "94ff2bf7ef5610f88eafdb4ffb4817d4a0a4cf4dcd6ae63706164cd74ce06fdb",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/RetainedMoments.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/RetainedMoments.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.TruncationSampleSize",
+      "source_sha256": "017a62c7f2e9e8ed43259d28d145e67b7010152a0c233d671680fcc5a01635de",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/TruncationSampleSize.olean",
+      "object_sha256": "41ffad6a8bf156f84ab06752b01f823890c4315f20b0e9cb39f0737357f2e73e",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/TruncationSampleSize.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/TruncationSampleSize.lean",
+      "actual_source_sha256": "017a62c7f2e9e8ed43259d28d145e67b7010152a0c233d671680fcc5a01635de",
+      "actual_original_sha256": "41ffad6a8bf156f84ab06752b01f823890c4315f20b0e9cb39f0737357f2e73e",
+      "actual_alias_sha256": "41ffad6a8bf156f84ab06752b01f823890c4315f20b0e9cb39f0737357f2e73e",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/TruncationSampleSize.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/TruncationSampleSize.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceNoiseCost",
+      "source_sha256": "531e2ab17798c7ba7db49d19bd08af7cc1c7cf5ae29b0d23af4873fe30dcda20",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceNoiseCost.olean",
+      "object_sha256": "3a083bfb23605cfffc4118ecaeefd5d544b2db18e18defc73ca614d2facd925b",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceNoiseCost.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceNoiseCost.lean",
+      "actual_source_sha256": "531e2ab17798c7ba7db49d19bd08af7cc1c7cf5ae29b0d23af4873fe30dcda20",
+      "actual_original_sha256": "3a083bfb23605cfffc4118ecaeefd5d544b2db18e18defc73ca614d2facd925b",
+      "actual_alias_sha256": "3a083bfb23605cfffc4118ecaeefd5d544b2db18e18defc73ca614d2facd925b",
+      "alias_is_symlink": false,
+      "alias_link_literal": null,
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceNoiseCost.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceClockBridge",
+      "source_sha256": "ced48edd68d62919d066dd1bd964374a166bd5ccb47c309849ccbe6009f1fe65",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceClockBridge.olean",
+      "object_sha256": "9481602308b7f875edadc19bbd5de1a4d78bb63edc55880ab75db65d59786a7f",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceClockBridge.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceClockBridge.lean",
+      "actual_source_sha256": "ced48edd68d62919d066dd1bd964374a166bd5ccb47c309849ccbe6009f1fe65",
+      "actual_original_sha256": "9481602308b7f875edadc19bbd5de1a4d78bb63edc55880ab75db65d59786a7f",
+      "actual_alias_sha256": "9481602308b7f875edadc19bbd5de1a4d78bb63edc55880ab75db65d59786a7f",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/SourceClockBridge.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/SourceClockBridge.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.ConditionalIID",
+      "source_sha256": "855c2eb0e560ac9372505f8b41551a9895b9eb753be3ce2b3f3752be845af787",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/ConditionalIID.olean",
+      "object_sha256": "1dc6d4552d0dc9a05ece12f9bc4054a96974977de8d7e31b2114bab7ebb0d1ca",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/ConditionalIID.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/ConditionalIID.lean",
+      "actual_source_sha256": "855c2eb0e560ac9372505f8b41551a9895b9eb753be3ce2b3f3752be845af787",
+      "actual_original_sha256": "1dc6d4552d0dc9a05ece12f9bc4054a96974977de8d7e31b2114bab7ebb0d1ca",
+      "actual_alias_sha256": "1dc6d4552d0dc9a05ece12f9bc4054a96974977de8d7e31b2114bab7ebb0d1ca",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/ConditionalIID.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/ConditionalIID.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.FiniteIID",
+      "source_sha256": "d1b565489199d55af70a27c31a0f803a2b7433e78c9197a361b3c10c0598845b",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/FiniteIID.olean",
+      "object_sha256": "751221ecc043004a49a0905626c512b878ba2621a797ff7b6466b2a7ae60fb5c",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/FiniteIID.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/FiniteIID.lean",
+      "actual_source_sha256": "d1b565489199d55af70a27c31a0f803a2b7433e78c9197a361b3c10c0598845b",
+      "actual_original_sha256": "751221ecc043004a49a0905626c512b878ba2621a797ff7b6466b2a7ae60fb5c",
+      "actual_alias_sha256": "751221ecc043004a49a0905626c512b878ba2621a797ff7b6466b2a7ae60fb5c",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/FiniteIID.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/FiniteIID.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.OrderedSelection",
+      "source_sha256": "4b6a4e86583455813c59ce0a64754416a01913b442047abd5c581699ac6a70b6",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/OrderedSelection.olean",
+      "object_sha256": "9af91bd313c82b1591ba0c8accf537a145321d8f86d205edef536f0115a1d656",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/OrderedSelection.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/OrderedSelection.lean",
+      "actual_source_sha256": "4b6a4e86583455813c59ce0a64754416a01913b442047abd5c581699ac6a70b6",
+      "actual_original_sha256": "9af91bd313c82b1591ba0c8accf537a145321d8f86d205edef536f0115a1d656",
+      "actual_alias_sha256": "9af91bd313c82b1591ba0c8accf537a145321d8f86d205edef536f0115a1d656",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/OrderedSelection.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/OrderedSelection.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.ClockControl",
+      "source_sha256": "c7782d17c1b6dec827cde84d1d44f9b6cb7a7d8dd166bee2183cac4d2dd5cdba",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/ClockControl.olean",
+      "object_sha256": "e419b21026c05fd487bf08e7f45caa95d3f00dae557dcb7c9e5973ad66a5ebba",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/ClockControl.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/ClockControl.lean",
+      "actual_source_sha256": "c7782d17c1b6dec827cde84d1d44f9b6cb7a7d8dd166bee2183cac4d2dd5cdba",
+      "actual_original_sha256": "e419b21026c05fd487bf08e7f45caa95d3f00dae557dcb7c9e5973ad66a5ebba",
+      "actual_alias_sha256": "e419b21026c05fd487bf08e7f45caa95d3f00dae557dcb7c9e5973ad66a5ebba",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/ClockControl.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/ClockControl.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceNoiseSandwich",
+      "source_sha256": "f972d6271477f37751d8b5b1bfcf74ef55348d00426e8a83b21942f3fd332d79",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceNoiseSandwich.olean",
+      "object_sha256": "71cc730b05fbd4582076af890a4405ab48cabaa98b05e9d41f34a1116fc7ca91",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceNoiseSandwich.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceNoiseSandwich.lean",
+      "actual_source_sha256": "f972d6271477f37751d8b5b1bfcf74ef55348d00426e8a83b21942f3fd332d79",
+      "actual_original_sha256": "71cc730b05fbd4582076af890a4405ab48cabaa98b05e9d41f34a1116fc7ca91",
+      "actual_alias_sha256": "71cc730b05fbd4582076af890a4405ab48cabaa98b05e9d41f34a1116fc7ca91",
+      "alias_is_symlink": false,
+      "alias_link_literal": null,
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceNoiseSandwich.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceFourierTestKernel",
+      "source_sha256": "151fe42cda5414873ea9c9ea3359d256e971132073ea9d1c714ea0105af234d3",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceFourierTestKernel.olean",
+      "object_sha256": "f3d751f7a84fa991841a6a005e009b1d6ee28cb2347f55a0280417637adaaeba",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceFourierTestKernel.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceFourierTestKernel.lean",
+      "actual_source_sha256": "151fe42cda5414873ea9c9ea3359d256e971132073ea9d1c714ea0105af234d3",
+      "actual_original_sha256": "f3d751f7a84fa991841a6a005e009b1d6ee28cb2347f55a0280417637adaaeba",
+      "actual_alias_sha256": "f3d751f7a84fa991841a6a005e009b1d6ee28cb2347f55a0280417637adaaeba",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v60/.lake/build/lib/lean/Shao/Probability/SourceFourierTestKernel.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v60/.lake/build/lib/lean/Shao/Probability/SourceFourierTestKernel.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceFullNoiseBridge",
+      "source_sha256": "0e9f7a1615ff4aad1231647639794485a2a93cb62ddf9ce490a29641e208db91",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceFullNoiseBridge.olean",
+      "object_sha256": "5a2a718060800b8881ddb72232ee4faca3df322b5bc6cdfeba9e1fd529e04fa2",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceFullNoiseBridge.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceFullNoiseBridge.lean",
+      "actual_source_sha256": "0e9f7a1615ff4aad1231647639794485a2a93cb62ddf9ce490a29641e208db91",
+      "actual_original_sha256": "5a2a718060800b8881ddb72232ee4faca3df322b5bc6cdfeba9e1fd529e04fa2",
+      "actual_alias_sha256": "5a2a718060800b8881ddb72232ee4faca3df322b5bc6cdfeba9e1fd529e04fa2",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/SourceFullNoiseBridge.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/SourceFullNoiseBridge.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.QuadraticFullNoise",
+      "source_sha256": "a280ff36549f2c59356fd4fa89b3e442eece91f2a0e3bb4eea553d3605e1a116",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/QuadraticFullNoise.olean",
+      "object_sha256": "a20353eed627f86a10e8cc03d6c231345dc1518e8ae80009423662e71b6c3dbf",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/QuadraticFullNoise.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/QuadraticFullNoise.lean",
+      "actual_source_sha256": "a280ff36549f2c59356fd4fa89b3e442eece91f2a0e3bb4eea553d3605e1a116",
+      "actual_original_sha256": "a20353eed627f86a10e8cc03d6c231345dc1518e8ae80009423662e71b6c3dbf",
+      "actual_alias_sha256": "a20353eed627f86a10e8cc03d6c231345dc1518e8ae80009423662e71b6c3dbf",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/QuadraticFullNoise.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/QuadraticFullNoise.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceScalarNoise",
+      "source_sha256": "d2c8c0aed4fbd8bbc16970a493ddf6658e37fe51b09e0e29fac88a27d0c274dc",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceScalarNoise.olean",
+      "object_sha256": "8c3ab8978a7d5a07443b5d2523f4b941a96823afe60063bdd821fff6bf119d73",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceScalarNoise.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceScalarNoise.lean",
+      "actual_source_sha256": "d2c8c0aed4fbd8bbc16970a493ddf6658e37fe51b09e0e29fac88a27d0c274dc",
+      "actual_original_sha256": "8c3ab8978a7d5a07443b5d2523f4b941a96823afe60063bdd821fff6bf119d73",
+      "actual_alias_sha256": "8c3ab8978a7d5a07443b5d2523f4b941a96823afe60063bdd821fff6bf119d73",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/SourceScalarNoise.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/SourceScalarNoise.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.QuadraticChordNoise",
+      "source_sha256": "75069c06d5794a5e530e99260e6e3308656623ea39944ac70f1d958ffd40d275",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/QuadraticChordNoise.olean",
+      "object_sha256": "a11b4c8c4638f5692916b5bbe9b6c395480fd1144e898119160aab40c0458341",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/QuadraticChordNoise.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/QuadraticChordNoise.lean",
+      "actual_source_sha256": "75069c06d5794a5e530e99260e6e3308656623ea39944ac70f1d958ffd40d275",
+      "actual_original_sha256": "a11b4c8c4638f5692916b5bbe9b6c395480fd1144e898119160aab40c0458341",
+      "actual_alias_sha256": "a11b4c8c4638f5692916b5bbe9b6c395480fd1144e898119160aab40c0458341",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/QuadraticChordNoise.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/QuadraticChordNoise.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.LowFrequencyDamping",
+      "source_sha256": "ffdeace2421a3c0fdf63def48eb96b882f9dc98014e5614d226a07f87a02bb65",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/LowFrequencyDamping.olean",
+      "object_sha256": "4b5f211ae6890720d20f3c0b48f4cf71f14b600d266ee4d884e1a882f373e3d8",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/LowFrequencyDamping.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/LowFrequencyDamping.lean",
+      "actual_source_sha256": "ffdeace2421a3c0fdf63def48eb96b882f9dc98014e5614d226a07f87a02bb65",
+      "actual_original_sha256": "4b5f211ae6890720d20f3c0b48f4cf71f14b600d266ee4d884e1a882f373e3d8",
+      "actual_alias_sha256": "4b5f211ae6890720d20f3c0b48f4cf71f14b600d266ee4d884e1a882f373e3d8",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/LowFrequencyDamping.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/LowFrequencyDamping.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.QuadraticCharacteristic",
+      "source_sha256": "8fd7815191dbd1ba9180159effe8c353d8b82d998d4d0d50bb6f957355b628f5",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/QuadraticCharacteristic.olean",
+      "object_sha256": "cbbc6775d6c16f31fc9621fb2312679865232f96c70697bcae9209d84863abe2",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/QuadraticCharacteristic.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/QuadraticCharacteristic.lean",
+      "actual_source_sha256": "8fd7815191dbd1ba9180159effe8c353d8b82d998d4d0d50bb6f957355b628f5",
+      "actual_original_sha256": "cbbc6775d6c16f31fc9621fb2312679865232f96c70697bcae9209d84863abe2",
+      "actual_alias_sha256": "cbbc6775d6c16f31fc9621fb2312679865232f96c70697bcae9209d84863abe2",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/QuadraticCharacteristic.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/QuadraticCharacteristic.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.QuadraticChordMoments",
+      "source_sha256": "3d65daa0be959673b089975d10e134505323bcdc2068b20cf7479f3da5f3fc1b",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/QuadraticChordMoments.olean",
+      "object_sha256": "3e6f270fdeb59df63b4f91cffcabef86f164428fdbf15e62c6935f06aa45e8cb",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/QuadraticChordMoments.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/QuadraticChordMoments.lean",
+      "actual_source_sha256": "3d65daa0be959673b089975d10e134505323bcdc2068b20cf7479f3da5f3fc1b",
+      "actual_original_sha256": "3e6f270fdeb59df63b4f91cffcabef86f164428fdbf15e62c6935f06aa45e8cb",
+      "actual_alias_sha256": "3e6f270fdeb59df63b4f91cffcabef86f164428fdbf15e62c6935f06aa45e8cb",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/QuadraticChordMoments.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/QuadraticChordMoments.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceLindleySurvival",
+      "source_sha256": "433313fd12cfacfae54bb0ec1366d05aa47844b12fc18585fd326aae81590178",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleySurvival.olean",
+      "object_sha256": "5eb0dd2b431314562b2ff0866addd250ae940a83fbcfedb8c8e1fe28ae8f2f48",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceLindleySurvival.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceLindleySurvival.lean",
+      "actual_source_sha256": "433313fd12cfacfae54bb0ec1366d05aa47844b12fc18585fd326aae81590178",
+      "actual_original_sha256": "5eb0dd2b431314562b2ff0866addd250ae940a83fbcfedb8c8e1fe28ae8f2f48",
+      "actual_alias_sha256": "5eb0dd2b431314562b2ff0866addd250ae940a83fbcfedb8c8e1fe28ae8f2f48",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleySurvival.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleySurvival.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SourceLindleyRegulatorSecondMoment",
+      "source_sha256": "a0316591ef49be19c0372ce80a87a8eaca4608b1fae6dbf57780e89359fc9310",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleyRegulatorSecondMoment.olean",
+      "object_sha256": "b2b629c25b22fda402fb989bd016d4b1cb607e20a82d68bc308c57c39ca453e3",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SourceLindleyRegulatorSecondMoment.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SourceLindleyRegulatorSecondMoment.lean",
+      "actual_source_sha256": "a0316591ef49be19c0372ce80a87a8eaca4608b1fae6dbf57780e89359fc9310",
+      "actual_original_sha256": "b2b629c25b22fda402fb989bd016d4b1cb607e20a82d68bc308c57c39ca453e3",
+      "actual_alias_sha256": "b2b629c25b22fda402fb989bd016d4b1cb607e20a82d68bc308c57c39ca453e3",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleyRegulatorSecondMoment.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SourceLindleyRegulatorSecondMoment.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.LindleyTelescoping",
+      "source_sha256": "518b7029d435ddd3b32a414f8893d6c49e26910cff18117d8da0cc6eb67bc93c",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/LindleyTelescoping.olean",
+      "object_sha256": "119be1bf43e1c5b04d9a09992b47286d7f68c521cf1049b0636d125c052237d5",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/LindleyTelescoping.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/LindleyTelescoping.lean",
+      "actual_source_sha256": "518b7029d435ddd3b32a414f8893d6c49e26910cff18117d8da0cc6eb67bc93c",
+      "actual_original_sha256": "119be1bf43e1c5b04d9a09992b47286d7f68c521cf1049b0636d125c052237d5",
+      "actual_alias_sha256": "119be1bf43e1c5b04d9a09992b47286d7f68c521cf1049b0636d125c052237d5",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/LindleyTelescoping.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/LindleyTelescoping.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.LindleyLaw",
+      "source_sha256": "e661e493559b19537800ba432538aa053bd6ce742ddf2d0571bd152a4bcbea25",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/LindleyLaw.olean",
+      "object_sha256": "f23e252d413e33b158639bc2e2d8eeea3e1e21a3e82b7515a118a503dc6958ec",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/LindleyLaw.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/LindleyLaw.lean",
+      "actual_source_sha256": "e661e493559b19537800ba432538aa053bd6ce742ddf2d0571bd152a4bcbea25",
+      "actual_original_sha256": "f23e252d413e33b158639bc2e2d8eeea3e1e21a3e82b7515a118a503dc6958ec",
+      "actual_alias_sha256": "f23e252d413e33b158639bc2e2d8eeea3e1e21a3e82b7515a118a503dc6958ec",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/LindleyLaw.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/LindleyLaw.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.Lindley",
+      "source_sha256": "81c0b9cea36513e456c4867dd0478a370eb4ef881c8aff9f0bab69009136eef7",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/Lindley.olean",
+      "object_sha256": "f5065c7359dc04563d6d7c1469386cbbeca5be1523c6149bdf220b19a65f803b",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/Lindley.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/Lindley.lean",
+      "actual_source_sha256": "81c0b9cea36513e456c4867dd0478a370eb4ef881c8aff9f0bab69009136eef7",
+      "actual_original_sha256": "f5065c7359dc04563d6d7c1469386cbbeca5be1523c6149bdf220b19a65f803b",
+      "actual_alias_sha256": "f5065c7359dc04563d6d7c1469386cbbeca5be1523c6149bdf220b19a65f803b",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/Lindley.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/Lindley.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.FiniteSurvival",
+      "source_sha256": "155b8865c55e392f27b07a65caad1ea3aac542a70fea4ae491251ee1b3a3d816",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/FiniteSurvival.olean",
+      "object_sha256": "b0037ea1068ddd216c6cea03781efae10b06bfeb967e95a5207f9a4fe248935a",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/FiniteSurvival.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/FiniteSurvival.lean",
+      "actual_source_sha256": "155b8865c55e392f27b07a65caad1ea3aac542a70fea4ae491251ee1b3a3d816",
+      "actual_original_sha256": "b0037ea1068ddd216c6cea03781efae10b06bfeb967e95a5207f9a4fe248935a",
+      "actual_alias_sha256": "b0037ea1068ddd216c6cea03781efae10b06bfeb967e95a5207f9a4fe248935a",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/FiniteSurvival.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/FiniteSurvival.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SpitzerLaplace",
+      "source_sha256": "2faaf41caf7b0025e7171b764b468803688802f0177f02bfa0d4645a7c4890fb",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerLaplace.olean",
+      "object_sha256": "86fd91edc877ed88c94de93f109bb92ee01a5b74e36f8eb946714f98766d2f9b",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SpitzerLaplace.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SpitzerLaplace.lean",
+      "actual_source_sha256": "2faaf41caf7b0025e7171b764b468803688802f0177f02bfa0d4645a7c4890fb",
+      "actual_original_sha256": "86fd91edc877ed88c94de93f109bb92ee01a5b74e36f8eb946714f98766d2f9b",
+      "actual_alias_sha256": "86fd91edc877ed88c94de93f109bb92ee01a5b74e36f8eb946714f98766d2f9b",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerLaplace.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerLaplace.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.OQ4.FiniteSurvivalLaplace",
+      "source_sha256": "49241958f2ae692b56db5fe0aa021a5e88b0020ac6487ddb463d05efb69518cb",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/OQ4/FiniteSurvivalLaplace.olean",
+      "object_sha256": "df9ab033d57981e61c4774e59cb26f5b4e4b4d37ed0fe24e3896885b8afbd71c",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/OQ4/FiniteSurvivalLaplace.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/OQ4/FiniteSurvivalLaplace.lean",
+      "actual_source_sha256": "49241958f2ae692b56db5fe0aa021a5e88b0020ac6487ddb463d05efb69518cb",
+      "actual_original_sha256": "df9ab033d57981e61c4774e59cb26f5b4e4b4d37ed0fe24e3896885b8afbd71c",
+      "actual_alias_sha256": "df9ab033d57981e61c4774e59cb26f5b4e4b4d37ed0fe24e3896885b8afbd71c",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/OQ4/FiniteSurvivalLaplace.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/OQ4/FiniteSurvivalLaplace.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.ClosedSurvival",
+      "source_sha256": "bb6f334d2a7956ebf2d727d2feabd0765c30af33da4e8b4197f1fd658921811f",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/ClosedSurvival.olean",
+      "object_sha256": "fd69a2cf8467f7c52dc60122d46e0f9f9a81b72cf22211b07163eec0b6a3cb52",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/ClosedSurvival.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/ClosedSurvival.lean",
+      "actual_source_sha256": "bb6f334d2a7956ebf2d727d2feabd0765c30af33da4e8b4197f1fd658921811f",
+      "actual_original_sha256": "fd69a2cf8467f7c52dc60122d46e0f9f9a81b72cf22211b07163eec0b6a3cb52",
+      "actual_alias_sha256": "fd69a2cf8467f7c52dc60122d46e0f9f9a81b72cf22211b07163eec0b6a3cb52",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/ClosedSurvival.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/ClosedSurvival.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.OQ4.LaplaceGenerating",
+      "source_sha256": "eab53afb87248fc0f9b94ddf84e986eedae51f2446e9b7ea176e517c4a861ed8",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/OQ4/LaplaceGenerating.olean",
+      "object_sha256": "6a691992eef9110e6ccdb35d8009d1f9a50df206c8dee50d28281a07b375fd49",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/OQ4/LaplaceGenerating.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/OQ4/LaplaceGenerating.lean",
+      "actual_source_sha256": "eab53afb87248fc0f9b94ddf84e986eedae51f2446e9b7ea176e517c4a861ed8",
+      "actual_original_sha256": "6a691992eef9110e6ccdb35d8009d1f9a50df206c8dee50d28281a07b375fd49",
+      "actual_alias_sha256": "6a691992eef9110e6ccdb35d8009d1f9a50df206c8dee50d28281a07b375fd49",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/OQ4/LaplaceGenerating.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/OQ4/LaplaceGenerating.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.OQ4.LaplaceTail",
+      "source_sha256": "664df6aa0c3221b9a0212580a20b141b7f0a0eea1d8adbeb4af15d486dcf68e2",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/OQ4/LaplaceTail.olean",
+      "object_sha256": "ec73adeae3d4a4a3febff1ed583ac1132d38d29a6410f72a32f2b5d948646506",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/OQ4/LaplaceTail.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/OQ4/LaplaceTail.lean",
+      "actual_source_sha256": "664df6aa0c3221b9a0212580a20b141b7f0a0eea1d8adbeb4af15d486dcf68e2",
+      "actual_original_sha256": "ec73adeae3d4a4a3febff1ed583ac1132d38d29a6410f72a32f2b5d948646506",
+      "actual_alias_sha256": "ec73adeae3d4a4a3febff1ed583ac1132d38d29a6410f72a32f2b5d948646506",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/OQ4/LaplaceTail.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/OQ4/LaplaceTail.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.OQ4.IntervalConcentration",
+      "source_sha256": "491e088fccc4457f18701ab7440da8cc9811183d462e3f3b7f22b096ccbf0875",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/OQ4/IntervalConcentration.olean",
+      "object_sha256": "28b1b4463996ab9fb521de2847bff6928e3f98633d47460b1b27dfa6976d3c31",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/OQ4/IntervalConcentration.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/OQ4/IntervalConcentration.lean",
+      "actual_source_sha256": "491e088fccc4457f18701ab7440da8cc9811183d462e3f3b7f22b096ccbf0875",
+      "actual_original_sha256": "28b1b4463996ab9fb521de2847bff6928e3f98633d47460b1b27dfa6976d3c31",
+      "actual_alias_sha256": "28b1b4463996ab9fb521de2847bff6928e3f98633d47460b1b27dfa6976d3c31",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/OQ4/IntervalConcentration.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/OQ4/IntervalConcentration.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.SpitzerFinite",
+      "source_sha256": "59ee31957ffec68aaff56d4eee5e833ef28fcb549bdce5f0649bf83216b1224c",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerFinite.olean",
+      "object_sha256": "4835dbd16604620afe282ac4cd5e4f75db74acb7fadffa3dae778875946db067",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/SpitzerFinite.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/SpitzerFinite.lean",
+      "actual_source_sha256": "59ee31957ffec68aaff56d4eee5e833ef28fcb549bdce5f0649bf83216b1224c",
+      "actual_original_sha256": "4835dbd16604620afe282ac4cd5e4f75db74acb7fadffa3dae778875946db067",
+      "actual_alias_sha256": "4835dbd16604620afe282ac4cd5e4f75db74acb7fadffa3dae778875946db067",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerFinite.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/SpitzerFinite.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.BerryEsseen",
+      "source_sha256": "8bf02df1210d69a2934746987d0022a85166d17c9850fa4fd27656eb88bb2af9",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/BerryEsseen.olean",
+      "object_sha256": "d67df1b97eddcde16ee7d9fedc6e6e7e4af11e22e04732a69dbd0b5883b76b57",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/BerryEsseen.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/BerryEsseen.lean",
+      "actual_source_sha256": "8bf02df1210d69a2934746987d0022a85166d17c9850fa4fd27656eb88bb2af9",
+      "actual_original_sha256": "d67df1b97eddcde16ee7d9fedc6e6e7e4af11e22e04732a69dbd0b5883b76b57",
+      "actual_alias_sha256": "d67df1b97eddcde16ee7d9fedc6e6e7e4af11e22e04732a69dbd0b5883b76b57",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v62/.lake/build/lib/lean/Shao/Probability/BerryEsseen.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v62/.lake/build/lib/lean/Shao/Probability/BerryEsseen.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.OriginalCDFPullback",
+      "source_sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/check005.olean",
+      "object_sha256": "5e5060b82bb52b278e9c1ffda3d1875420bd41f74a2e01c3091f0de6c7e84745",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/OriginalCDFPullback.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/OriginalCDFPullback.lean",
+      "actual_source_sha256": "e8d7c5c67118f31dfb05bbb47313326e0c8a1815fcaeb1db91f5869ab582a1e7",
+      "actual_original_sha256": "5e5060b82bb52b278e9c1ffda3d1875420bd41f74a2e01c3091f0de6c7e84745",
+      "actual_alias_sha256": "5e5060b82bb52b278e9c1ffda3d1875420bd41f74a2e01c3091f0de6c7e84745",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/check005.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-cdf-pullback/check005.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.OriginalGaussianTail",
+      "source_sha256": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-gaussian-tail/check008.olean",
+      "object_sha256": "ddf6815a43d250a2d4f8cd6ebd9afcf40ce5faf40977504086a279ab87c2a337",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/OriginalGaussianTail.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/OriginalGaussianTail.lean",
+      "actual_source_sha256": "f6b3df97e75be79ffcad5d0cb0cd9479e919dabad096796a16d3e54e1576a583",
+      "actual_original_sha256": "ddf6815a43d250a2d4f8cd6ebd9afcf40ce5faf40977504086a279ab87c2a337",
+      "actual_alias_sha256": "ddf6815a43d250a2d4f8cd6ebd9afcf40ce5faf40977504086a279ab87c2a337",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-gaussian-tail/check008.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/outputs/common-original-gaussian-tail/check008.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.Deletion",
+      "source_sha256": "2bb43cdec4e7ccce21e0ca2981d1ca4178d791970c0b983665653543bee69687",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/Deletion.olean",
+      "object_sha256": "8b15d4f4d4c5adb810533dc99a1727a4688b8af58ef579f2368516b626bc43be",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/Deletion.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/Deletion.lean",
+      "actual_source_sha256": "2bb43cdec4e7ccce21e0ca2981d1ca4178d791970c0b983665653543bee69687",
+      "actual_original_sha256": "8b15d4f4d4c5adb810533dc99a1727a4688b8af58ef579f2368516b626bc43be",
+      "actual_alias_sha256": "8b15d4f4d4c5adb810533dc99a1727a4688b8af58ef579f2368516b626bc43be",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/Deletion.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/Deletion.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Basic.DeletionNumeric",
+      "source_sha256": "725b90e3e8e63e311906d506b77f16f5976959b9a680080215415110e74927fe",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Basic/DeletionNumeric.olean",
+      "object_sha256": "42bac55185bb2dcebf82914b132a728bb856cff49ed5aad0529224bebb4a1fea",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Basic/DeletionNumeric.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Basic/DeletionNumeric.lean",
+      "actual_source_sha256": "725b90e3e8e63e311906d506b77f16f5976959b9a680080215415110e74927fe",
+      "actual_original_sha256": "42bac55185bb2dcebf82914b132a728bb856cff49ed5aad0529224bebb4a1fea",
+      "actual_alias_sha256": "42bac55185bb2dcebf82914b132a728bb856cff49ed5aad0529224bebb4a1fea",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Basic/DeletionNumeric.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Basic/DeletionNumeric.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.RetentionEvent",
+      "source_sha256": "e27ec2b7f94d55cba013b1cc578dafba25b0056172a6d5c930eb62228c59bb43",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/RetentionEvent.olean",
+      "object_sha256": "2ee95508d3a453b85d029a990a0e07c46296002422da9dbca20f4ac017d77619",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/RetentionEvent.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/RetentionEvent.lean",
+      "actual_source_sha256": "e27ec2b7f94d55cba013b1cc578dafba25b0056172a6d5c930eb62228c59bb43",
+      "actual_original_sha256": "2ee95508d3a453b85d029a990a0e07c46296002422da9dbca20f4ac017d77619",
+      "actual_alias_sha256": "2ee95508d3a453b85d029a990a0e07c46296002422da9dbca20f4ac017d77619",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/./Shao/Probability/RetentionEvent.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v43/.lake/build/lib/lean/Shao/Probability/RetentionEvent.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.BoundedGaussianTail",
+      "source_sha256": "876559b2921ffe0e23c8c3a2c55d00c458985ace6036de4b8bc7f6a6aa24f4bd",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/BoundedGaussianTail.olean",
+      "object_sha256": "8b618278b77c7dd6dc43be42a207aebd18f6a5fb3092ab9fe217e1bdd736d098",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/BoundedGaussianTail.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/BoundedGaussianTail.lean",
+      "actual_source_sha256": "876559b2921ffe0e23c8c3a2c55d00c458985ace6036de4b8bc7f6a6aa24f4bd",
+      "actual_original_sha256": "8b618278b77c7dd6dc43be42a207aebd18f6a5fb3092ab9fe217e1bdd736d098",
+      "actual_alias_sha256": "8b618278b77c7dd6dc43be42a207aebd18f6a5fb3092ab9fe217e1bdd736d098",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/outputs/common-bounded-gaussian-tail/check031.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/outputs/common-bounded-gaussian-tail/check031.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    },
+    {
+      "module": "Shao.Probability.BoundedQuadraticTilt",
+      "source_sha256": "93c302d9de61bc4bf0cb238e82a4ed5b7f66e0ddbd2e833fec5bc6bbb25a8257",
+      "original_object": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v67/.lake/build/lib/lean/Shao/Probability/BoundedQuadraticTilt.olean",
+      "object_sha256": "cd1e326090a3fce3ecab7d8b38c14d7239c6b4fcedb600f8bb8dffb14d3dc2ec",
+      "execution_alias": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/.lake/build/lib/lean/Shao/Probability/BoundedQuadraticTilt.olean",
+      "actual_source_path": "/root/rivermind-data/shao-lean-20261021/workspaces/common-scalar-fourier-v44/Shao/Probability/BoundedQuadraticTilt.lean",
+      "actual_source_sha256": "93c302d9de61bc4bf0cb238e82a4ed5b7f66e0ddbd2e833fec5bc6bbb25a8257",
+      "actual_original_sha256": "cd1e326090a3fce3ecab7d8b38c14d7239c6b4fcedb600f8bb8dffb14d3dc2ec",
+      "actual_alias_sha256": "cd1e326090a3fce3ecab7d8b38c14d7239c6b4fcedb600f8bb8dffb14d3dc2ec",
+      "alias_is_symlink": true,
+      "alias_link_literal": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v62/.lake/build/lib/lean/Shao/Probability/BoundedQuadraticTilt.olean",
+      "alias_resolved": "/root/rivermind-data/shao-lean-20261021/workspaces/integration-bearing-v62/.lake/build/lib/lean/Shao/Probability/BoundedQuadraticTilt.olean",
+      "source_match": true,
+      "original_match": true,
+      "alias_match": true
+    }
+  ],
+  "dependency_count_from_verified_module_map": 52,
+  "source_boundaries": [
+    {
+      "case": "constants",
+      "result": "e/S/D/B/g/C 与第二尾分母常数均在 nu/n/t 之前；实际有限实数且正"
+    },
+    {
+      "case": "original_moments",
+      "result": "原 nu 只有有限二阶、零均值及 nE[z²]=1；rho 的三阶矩由真实条件律接口供应"
+    },
+    {
+      "case": "conditional_mean",
+      "result": "真实 mu 未设为零；原矩预算给出的真实漂移费进入完整生存界"
+    },
+    {
+      "case": "n",
+      "result": "n>0，含 n=1；完整 Fin n 生存，未改为 k<n 或删末坐标"
+    },
+    {
+      "case": "cutoff",
+      "result": "固定原锚点0的 e=1/800 条件律；t 变化时未悄然重新截断"
+    },
+    {
+      "case": "Q",
+      "result": "随机 Q 真正 split Q≤2；Q>2 由真实 bad-clock 付款；未假设原律 Q>0"
+    },
+    {
+      "case": "conditioning",
+      "result": "cond P0 N=P 和 cond_mul_eq_inter 支付严格 A；未假设 A 与 N 独立"
+    },
+    {
+      "case": "R",
+      "result": "R≥e³/8 的大预算及 R<e³/8 的小预算均覆盖；归一化保证 R>0"
+    },
+    {
+      "case": "t=0 strict CDF",
+      "result": "Q>0 且 maxWithZero<0 的事件为空，G(0)=0"
+    },
+    {
+      "case": "upperMax<0",
+      "result": "可能非空；Q>0 且 maxWithZero=0，归约到正阈值 R 的严格事件支付"
+    },
+    {
+      "case": "t=0 weak crossing",
+      "result": "真正补事件为 upperMax<0；tail0=1/2 给误差恰为其概率两倍"
+    },
+    {
+      "case": "t>0",
+      "result": "精确正能量 strict-CDF/weak-crossing 恒等式；tail(t)≥tail(1/2)>0"
+    },
+    {
+      "case": "atoms",
+      "result": "全部零能量与阈值等号原子保留；无对称或无原子前提"
+    },
+    {
+      "case": "range",
+      "result": "仅 0≤t≤1/2；没有声称已形式化 preliminary 的完整 [0,1] 范围"
+    },
+    {
+      "case": "root_scope",
+      "result": "归一化原律 D2/零阈值辅助生产者；未完成原 X 缩放、p 域、D3、C1/C2"
+    },
+    {
+      "case": "unpaid_inputs",
+      "result": "无 END/FullYReflection/平滑比较/nearzero 目标假设"
+    }
+  ],
+  "source_or_original_logs_mutated": false,
+  "original_large_logs_and_objects_retained_on_server": true,
+  "evidence_verification": "C:\\game\\shao lean\\drafts\\c12-small-boundary-review\\evidence-verification.json",
+  "evidence_verification_sha256": "6a25fe6b34b1f6372f59af64c2458e817e87f05a886bdb5b940adaf217a44529"
+}

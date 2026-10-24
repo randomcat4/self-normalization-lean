@@ -1,0 +1,19 @@
+DECL Shao.OQ3.integrable_scalar_power_of_absolute_moment._simp_1_1
+TYPE ∀ {α : Type u_1} [inst : Preorder α] (a : α), (a ≤ a) = True
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.integrable_scalar_power_of_absolute_moment
+TYPE ∀ (ν : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure ν] (m : ℕ),
+  MeasureTheory.Integrable (fun x => |x| ^ m) ν →
+    ∀ j ≤ m, MeasureTheory.Integrable (fun x => |x| ^ j) ν ∧ MeasureTheory.Integrable (fun x => x ^ j) ν
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.scalar_integral_taylor_polynomial_eq_moments
+TYPE ∀ (ν : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure ν] (m : ℕ),
+  MeasureTheory.Integrable (fun x => |x| ^ m) ν →
+    ∀ (t : ℝ),
+      have P := fun x => ∑ j ∈ Finset.range m, (↑(t * x) * Complex.I) ^ j / ↑j.factorial;
+      MeasureTheory.Integrable P ν ∧
+        ∫ (x : ℝ), P x ∂ν = ∑ j ∈ Finset.range m, (↑t * Complex.I) ^ j / ↑j.factorial * ↑(∫ (x : ℝ), x ^ j ∂ν)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
