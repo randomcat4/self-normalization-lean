@@ -1,0 +1,205 @@
+Actual RademacherOriginalStrictS4 complete owned interface
+Shao.OQ4.RademacherOriginalStrictS4.original_strict_S4
+TYPE
+∀ {ΩX : Type uX} [inst : MeasurableSpace.{uX} ΩX] {ΩB : Type uB} [inst_1 : MeasurableSpace.{uB} ΩB]
+  (B : NNReal → ΩB → Real) (P : @MeasureTheory.Measure.{uB} ΩB inst_1)
+  [inst_2 : @MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst_1 P]
+  (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst_1 B P) (μ : @MeasureTheory.Measure.{uX} ΩX inst)
+  [@MeasureTheory.IsProbabilityMeasure.{uX} ΩX inst μ] (X : Nat → ΩX → Real)
+  (hIndep :
+    @ProbabilityTheory.iIndepFun.{uX, 0, 0} ΩX Nat inst (fun (i : Nat) => Real) (fun (x : Nat) => Real.measurableSpace)
+      (fun (i : Nat) =>
+        X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      μ)
+  (hLaw :
+    ∀ (i : Nat),
+      @ProbabilityTheory.IdentDistrib.{uX, 0, 0} ΩX Real Real inst Real.measurableSpace Real.measurableSpace
+        (X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (@id.{1} Real) μ Shao.OQ4.RademacherCosine.law)
+  (n_ : Nat → Nat) (h_ : Nat → Real)
+  (hh :
+    @Filter.Tendsto.{0, 0} Nat Real h_ (@Filter.atTop.{0} Nat Nat.instPreorder)
+      (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale2 :
+    @Filter.Tendsto.{0, 0} Nat Real
+      (fun (k : Nat) =>
+        @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+      (@Filter.atTop.{0} Nat Nat.instPreorder) (@Filter.atTop.{0} Real Real.instPreorder))
+  (hscale3 :
+    @Exists.{1} Real fun (M : Real) =>
+      And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) M)
+        (@Exists.{1} Nat fun (K_M : Nat) =>
+          ∀ (k : Nat),
+            @LE.le.{0} Nat instLENat K_M k →
+              @LE.le.{0} Real Real.instLE
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@Nat.cast.{0} Real Real.instNatCast (n_ k))
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (h_ k)
+                    (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))))
+                M)),
+  And
+    (∀ (k : Nat),
+      @Eq.{1} Real
+        (@Shao.OQ4.RademacherOriginalStrictS4.sourceQ.{uX, uB} ΩX inst ΩB inst_1 B P inst_2 hB μ X (n_ k) (h_ k))
+        (@Shao.OQ4.RademacherGeneralStrictS4.Q.{uB} ΩB inst_1 B P inst_2 hB (n_ k) (h_ k)))
+    (And
+      (@Filter.Eventually.{0} Nat
+        (fun (k : Nat) =>
+          And
+            (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+              (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+                (@Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent.{uX} ΩX (n_ k) X
+                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                    (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+            (And
+              (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+                  (@Shao.OQ4.RademacherRealStrictBoundary.sourceDeterministicStrictEvent.{uX} ΩX (n_ k) X (h_ k))))
+              (And
+                (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                  (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst_1 B P inst_2 hB
+                    (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                      (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                      (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k))))))
+                (And
+                  (@LT.lt.{0} Real Real.instLT
+                    (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                    (@Shao.OQ4.RademacherOriginalStrictS4.sourceQ.{uX, uB} ΩX inst ΩB inst_1 B P inst_2 hB μ X (n_ k)
+                      (h_ k)))
+                  (@LT.lt.{0} Real Real.instLT
+                    (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                    (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                      (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                      (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+                        (@Shao.OQ4.RademacherRealStrictBoundary.sourceDeterministicStrictEvent.{uX} ΩX (n_ k) X (h_ k)))
+                      (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst_1 B P inst_2 hB
+                        (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                          (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                          (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))))))
+        (@Filter.atTop.{0} Nat Nat.instPreorder))
+      (And
+        (@Filter.Tendsto.{0, 0} Nat Real
+          (fun (k : Nat) =>
+            @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+              (Real.log
+                (@Shao.OQ4.RademacherOriginalStrictS4.sourceQ.{uX, uB} ΩX inst ΩB inst_1 B P inst_2 hB μ X (n_ k)
+                  (h_ k)))
+              (Shao.OQ4.RademacherGeneralStrictS4.correction (n_ k) (h_ k)))
+          (@Filter.atTop.{0} Nat Nat.instPreorder)
+          (@nhds.{0} Real
+            (@UniformSpace.toTopologicalSpace.{0} Real
+              (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+        (And
+          (@Filter.Tendsto.{0, 0} Nat Real
+            (fun (k : Nat) =>
+              @HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (@Shao.OQ4.RademacherOriginalStrictS4.sourceQ.{uX, uB} ΩX inst ΩB inst_1 B P inst_2 hB μ X (n_ k)
+                  (h_ k))
+                (Real.exp (Shao.OQ4.RademacherGeneralStrictS4.correction (n_ k) (h_ k))))
+            (@Filter.atTop.{0} Nat Nat.instPreorder)
+            (@nhds.{0} Real
+              (@UniformSpace.toTopologicalSpace.{0} Real
+                (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+          (And
+            (@Filter.Tendsto.{0, 0} Nat Real
+              (fun (k : Nat) =>
+                @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (Real.log
+                    (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                      (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                      (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+                        (@Shao.OQ4.RademacherRealStrictBoundary.sourceDeterministicStrictEvent.{uX} ΩX (n_ k) X (h_ k)))
+                      (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst_1 B P inst_2 hB
+                        (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                          (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                          (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k)))))))
+                  (Shao.OQ4.RademacherGeneralStrictS4.correction (n_ k) (h_ k)))
+              (@Filter.atTop.{0} Nat Nat.instPreorder)
+              (@nhds.{0} Real
+                (@UniformSpace.toTopologicalSpace.{0} Real
+                  (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+            (@Filter.Tendsto.{0, 0} Nat Real
+              (fun (k : Nat) =>
+                @HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                    (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+                      (@Shao.OQ4.RademacherRealStrictBoundary.sourceDeterministicStrictEvent.{uX} ΩX (n_ k) X (h_ k)))
+                    (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst_1 B P inst_2 hB
+                      (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                        (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (h_ k)
+                        (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (n_ k))))))
+                  (Real.exp (Shao.OQ4.RademacherGeneralStrictS4.correction (n_ k) (h_ k))))
+              (@Filter.atTop.{0} Nat Nat.instPreorder)
+              (@nhds.{0} Real
+                (@UniformSpace.toTopologicalSpace.{0} Real
+                  (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))))))
+
+Shao.OQ4.RademacherOriginalStrictS4.sourceQ
+TYPE
+{ΩX : Type uX} →
+  [inst : MeasurableSpace.{uX} ΩX] →
+    {ΩB : Type uB} →
+      [inst_1 : MeasurableSpace.{uB} ΩB] →
+        (B : NNReal → ΩB → Real) →
+          (P : @MeasureTheory.Measure.{uB} ΩB inst_1) →
+            [@MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst_1 P] →
+              (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst_1 B P) →
+                (μ : @MeasureTheory.Measure.{uX} ΩX inst) → (X : Nat → ΩX → Real) → (n : Nat) → (h : Real) → Real
+FULL VALUE
+fun {ΩX : Type uX} [inst : MeasurableSpace.{uX} ΩX] {ΩB : Type uB} [inst_1 : MeasurableSpace.{uB} ΩB]
+    (B : NNReal → ΩB → Real) (P : @MeasureTheory.Measure.{uB} ΩB inst_1)
+    [inst_2 : @MeasureTheory.IsProbabilityMeasure.{uB} ΩB inst_1 P]
+    (hB : @ProbabilityTheory.IsBrownianReal.{uB} ΩB inst_1 B P) (μ : @MeasureTheory.Measure.{uX} ΩX inst)
+    (X : Nat → ΩX → Real) (n : Nat) (h : Real) =>
+  @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+    (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+      (@Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent.{uX} ΩX n X
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) h
+          (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast n)))))
+    (@Shao.Probability.BrownianSup.probability.{uB} ΩB inst_1 B P inst_2 hB
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) h
+        (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast n))))
+
+Shao.OQ4.RademacherOriginalStrictS4.source_strict_probability
+TYPE
+∀ {ΩX : Type uX} [inst : MeasurableSpace.{uX} ΩX] (μ : @MeasureTheory.Measure.{uX} ΩX inst)
+  [@MeasureTheory.IsProbabilityMeasure.{uX} ΩX inst μ] (X : Nat → ΩX → Real)
+  (hIndep :
+    @ProbabilityTheory.iIndepFun.{uX, 0, 0} ΩX Nat inst (fun (i : Nat) => Real) (fun (x : Nat) => Real.measurableSpace)
+      (fun (i : Nat) =>
+        X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      μ)
+  (hLaw :
+    ∀ (i : Nat),
+      @ProbabilityTheory.IdentDistrib.{uX, 0, 0} ΩX Real Real inst Real.measurableSpace Real.measurableSpace
+        (X
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (@id.{1} Real) μ Shao.OQ4.RademacherCosine.law)
+  (n : Nat) (h : Real),
+  @Eq.{1} Real
+    (@MeasureTheory.Measure.real.{uX} ΩX inst μ
+      (@Shao.OQ4.RademacherOriginalStrictBoundary.sourceStrictEvent.{uX} ΩX n X
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) h
+          (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast n)))))
+    (Shao.OQ4.RademacherStrictCube.strictP n h)

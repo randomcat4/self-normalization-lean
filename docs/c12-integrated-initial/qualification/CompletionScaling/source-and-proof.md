@@ -1,0 +1,9 @@
+# Completion scaling: exact source scope and proof
+
+Source: main.tex 871–956 raw wall/remaining-energy bridge mechanism and 1038–1076 initial normalized completion; supplement.tex 4192–4252 completion conventions. This unit proves same-noise algebraic scaling of the actual continuous bridge path, and therefore exactly equal strict upper, lower and interval events. The scale is strictly positive and remaining time is nonnegative. No transformation of the noise law is invoked; the same g and same arbitrary measure ν occur on both sides.
+
+The path proof uses sqrt(c²T)=c sqrt(T), pointwise affine expansion and ring equality. Each event proof cancels a strictly positive factor inside every strict inequality, including the lower wall -a. Measure.toReal then preserves the identical event. The final theorem chooses c=sqrt(Q), Q>0, T=1 and endpoint S/sqrt(Q); it gives the raw wall x sqrt(Q), initial ordinate 0 and remaining energy Q completion as the standardized initial completion.
+
+All five complete heads were frozen before implementation and remain token-identical. Attempt001 and its exact failed source/log are preserved. Its errors concerned the fixed-version positive-multiplication API and final simplification only. Attempt002 passes. No successful source bytes were later changed. All 19 actual module-owned constants (including generated/private theorems), complete types and transitive collectAxioms are audited; there are no owned non-theorem values.
+
+This does not prove a killed heat-kernel quotient, PDE, derivative bounds, the special a=0 half-line completion assignment, a generic T=0 terminal extension, the complete stopped V/FY instance, scalar Pinelis/Shao, or a C1/C2 root theorem. Natural T=0 path scaling is only an algebraic identity. Source terminal use remains restricted to reachable y=z with the source killing conventions. Original root groups remain OPEN.

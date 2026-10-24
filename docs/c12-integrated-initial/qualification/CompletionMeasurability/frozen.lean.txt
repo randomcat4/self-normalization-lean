@@ -1,0 +1,36 @@
+import Shao.C2.BridgeDomination
+import Mathlib.MeasureTheory.Measure.Prod
+
+noncomputable section
+namespace Shao.C2.CompletionMeasurability
+open MeasureTheory Set
+open Shao.C2.BridgeDomination
+
+abbrev CompletionParameters := ℝ × ℝ × ℝ × ℝ
+
+theorem continuous_bridgePath_parameters :
+    Continuous (fun q : BridgeNoise × CompletionParameters =>
+      bridgePath q.2.2.1 q.2.2.2.1 q.2.2.2.2 q.1)
+
+theorem isOpen_strictUpper_parameters :
+    IsOpen {q : BridgeNoise × CompletionParameters |
+      q.1 ∈ strictUpper q.2.1 q.2.2.1 q.2.2.2.1 q.2.2.2.2}
+
+theorem isOpen_strictLower_parameters :
+    IsOpen {q : BridgeNoise × CompletionParameters |
+      q.1 ∈ strictLower q.2.1 q.2.2.1 q.2.2.2.1 q.2.2.2.2}
+
+theorem isOpen_strictInterval_parameters :
+    IsOpen {q : BridgeNoise × CompletionParameters |
+      q.1 ∈ strictInterval q.2.1 q.2.2.1 q.2.2.2.1 q.2.2.2.2}
+
+theorem measurable_upperCompletion_parameters (ν : Measure BridgeNoise) [SFinite ν] :
+    Measurable (fun p : CompletionParameters => upperCompletion ν p.1 p.2.1 p.2.2.1 p.2.2.2)
+
+theorem measurable_lowerCompletion_parameters (ν : Measure BridgeNoise) [SFinite ν] :
+    Measurable (fun p : CompletionParameters => lowerCompletion ν p.1 p.2.1 p.2.2.1 p.2.2.2)
+
+theorem measurable_intervalCompletion_parameters (ν : Measure BridgeNoise) [SFinite ν] :
+    Measurable (fun p : CompletionParameters => intervalCompletion ν p.1 p.2.1 p.2.2.1 p.2.2.2)
+
+end Shao.C2.CompletionMeasurability
