@@ -1,0 +1,11 @@
+# Genuine one-sided spatial-zeroextension derivatives
+
+Readonly supplement.tex4192–4253, especiallypositive-energy extension4200–4206 andone-sidedestimates4230. Two full spatial cut definitions: upper ify<a then explicitreflection else0, lower if-a<y thenexplicitreflection else0. These are spatial extensions at fixeda,T,z; physicalinterpretation alwaysunder a>0,T>0,terminalinterior. They do NOT declare a source T0 or a0 completion law. No actual Brownian probability identification and alloriginalrootsOPEN.
+
+Both complete transparent values, full8heads/imports/context frozen beforeproof. Onclosedallowedhalfline these spatialcuts equal analyticreflection: strictinterior byif_pos, boundary by1-exp0=0 for allrealT underLean totaldivision. Outsidechosenwall theyarezero bydefinition. This exact setwise equality alsoholds aftersubtracting1.
+
+For every naturalj andpointinclwall, iteratedDerivWithin_congr transfers repeatedwithin derivatives onIic a orIci(-a) fromspatialcut-minus1 toanalyticformula-minus1. UniqueDiffOntheseclosedintervals and actualanalytic ContDiffAt (affineexponential withconstanttime division) identifywithin derivatives withtheactualiteratedDeriv. This requiresfullneighborhoodsmoothness ofanalyticformula, notglobal smoothness ofzeroextension. Consuming qualified40 closedwallspatialprofiles gives genuineone-sidedallpositivej profiles includingwall, sameCj andD/P. j0withinidentityalsovalid, butprofiletheoremsrequirej>0.
+
+Finally qualified26 globalfirstHasDerivAt atwall simplifiesexponent0; restrict toclosedhalfline andtransfer by exactsetwise equality pluswallmembership. Thus actual HasDerivWithinAt ofspatialcut upperwall derivative -2(a-z)/T, lowerwall +2(a+z)/T. No derivativecrossingoutsidewall claimed.
+
+Importsboth39and40 checkedtogetherbythisnewsourcegate, exposing no collision in generatedownerconstants. Firstsuccesskernelattempt003 andall14actualownerrecursiveaxiomPASS CPU14–17/c12-heavy.lock/-M8192-j4 pinnedversions.12theorems(8public),2definitions; completeactualtypesandbothfullvaluesexported. Failed001/002 retainedonlybeta-reduction/setmembershipelaboration fixes; frozenallheads/valuesunchanged. No oldproducerbuild/successfulcheckreplay. Independentcompletefinalreview pendingsolechildlease/39+40qualification.
