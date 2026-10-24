@@ -1,0 +1,28 @@
+import Shao.C2.AuxiliaryOwnC1Budget
+import Shao.Probability.SourceOriginalFullRelative
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryProductC1Endpoint
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators
+
+theorem actual_product_absolute_endpoint_c1 :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ rhoStar : ℝ, 0 < rhoStar → rhoStar ≤ 1 / 16 →
+        ∀ (chi : Measure ℝ) [IsProbabilityMeasure chi],
+          Integrable (fun z : ℝ => z ^ 2) chi →
+          (∫ z : ℝ, z ∂chi) = 0 →
+          (0 < ∫ z : ℝ, z ^ 2 ∂chi) →
+          Integrable (fun z : ℝ => |z| ^ 3) chi →
+          ∀ (n : ℕ) (hn : 0 < n) (y : ℝ), 0 ≤ y →
+            let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂chi
+            let eta : Measure ℝ := Measure.map
+              (fun z : ℝ => z / (Real.sqrt sigmaSq * Real.sqrt (n : ℝ))) chi
+            Shao.truncationBudget eta n y ≤ rhoStar →
+            (Measure.pi (fun _ : Fin n => chi)).real
+              {v : Shao.Path n | y * Real.sqrt (Shao.energy v) ≤
+                |Shao.prefixSum v n|} ≤ C * Shao.standardNormalTail y := by
+
+end Shao.C2.AuxiliaryProductC1Endpoint

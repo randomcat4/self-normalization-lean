@@ -1,0 +1,38 @@
+import Shao.C2.AuxiliaryOriginalCutoffRare
+import Shao.C2.AuxiliaryProductTiltLaw
+import Shao.C2.AuxiliaryEnergyLaplace
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryRareLaplace
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_original_cutoff_rare_laplace :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ rhoStar : ℝ, 0 < rhoStar → rhoStar ≤ 1 / 16 →
+        ∀ L : ℝ, 0 ≤ L →
+          ∀ K : ℝ, 8000000 * (1 + L) ^ 2 ≤ K →
+            2 * (768 / rhoStar) ^ 2 ≤ K →
+            ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+              Integrable (fun z : ℝ => z ^ 2) nu →
+              Integrable (fun z : ℝ => |z| ^ 3) nu →
+              (∫ z : ℝ, z ∂nu) = 0 →
+              (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+              ∀ s : ℝ, 0 ≤ s →
+                ∀ x : ℝ, 1 ≤ x →
+                  ∀ t n : ℕ,
+                    Nat.ceil (K * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 * (1 + x) ^ 6) ≤ t →
+                    (n = t ∨ n = t - 1) →
+                    s * (t : ℝ) ≤ L * x ^ 2 →
+                    let Praw : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+                    let a : ℝ := Real.sqrt ((9 / 4) * x ^ 2 - 1)
+                    let A : Set (Shao.Path n) := {v | 0 < Shao.energy v ∧
+                      a * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v n|}
+                    let W : Shao.Path n → ℝ := fun v => Real.exp (-s * Shao.energy v)
+                    Integrable (A.indicator W) Praw ∧
+                      (∫ v : Shao.Path n, A.indicator W v ∂Praw) ≤
+                        C * Real.exp (-(7 / 8) * s * (n : ℝ)) *
+                          Shao.standardNormalTail ((3 / 2) * x) := by
+
+end Shao.C2.AuxiliaryRareLaplace

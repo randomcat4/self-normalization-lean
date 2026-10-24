@@ -1,0 +1,44 @@
+import Shao.C2.AuxiliaryEnergyTilt
+import Shao.OQ4.EnergyPathLaw
+import Mathlib.MeasureTheory.Integral.Pi
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryProductTiltLaw
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators
+
+theorem auxiliary_actual_product_tilt_law
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s : ℝ) (hs : 0 ≤ s) (n : ℕ) :
+    let Z : ℝ := ∫ z : ℝ, Real.exp (-s * z ^ 2) ∂nu
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let Praw : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+    let Ptilt : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let W : Shao.Path n → ℝ := fun v => Real.exp (-s * Shao.energy v)
+    0 < Z ∧ IsProbabilityMeasure Ptilt ∧ Integrable W Praw ∧
+      (∫ v : Shao.Path n, W v ∂Praw) = Z ^ n ∧
+      Ptilt = Praw.tilted (fun v => -s * Shao.energy v) := by
+
+theorem auxiliary_actual_event_laplace_identity
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (s : ℝ) (hs : 0 ≤ s) (n : ℕ)
+    (A : Set (Shao.Path n)) (hA : MeasurableSet A) :
+    let Z : ℝ := ∫ z : ℝ, Real.exp (-s * z ^ 2) ∂nu
+    let rho : Measure ℝ := nu.tilted (fun z => -s * z ^ 2)
+    let Praw : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+    let Ptilt : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let W : Shao.Path n → ℝ := fun v => Real.exp (-s * Shao.energy v)
+    Integrable (A.indicator W) Praw ∧
+      (∫ v : Shao.Path n, A.indicator W v ∂Praw) = Z ^ n * Ptilt.real A := by
+
+end Shao.C2.AuxiliaryProductTiltLaw

@@ -1,0 +1,9 @@
+# Original source cutoff to the actual rare tilted probability
+
+Source: supplement.tex4984 and5094–5139. The source cutoff is m=Nat.ceil(K*beta²*(1+x)^6), with the same actual auxiliary beta=integral |z|³. Both remaining ranks n=t and n=t−1 are included. The public quantifiers choose a single universal C first, then legal rhoStar, L, and K before the auxiliary law, s,x,t,n. K satisfies two source-compatible universal lower bounds; it is not chosen using the law or x.
+
+The actual auxiliary law is a probability with zero mean and unit finite second moment, and an auxiliary finite third moment only. Qualified152 pays beta>=1 from those actual integrals. Qualified165 then pays the two explicit n-rank conditions and the time constraint needed by new163 from t>=m, n=t/t−1, and s*t<=L*x². The consumer applies163 with exactly those paid facts and the unchanged actual native tilted product, actual energy, and weak threshold sqrt((9/4)*x²−1). The constant is the universal163 constant without any parameter dependence. No supplied probability, drift, positive-energy implication, or source-domain oracle is added.
+
+The result is the literal auxiliary deterministic-rank probability ingredient under the original source selection order. It does not claim the marked rare Laplace bound, inverse moment, weighted record/circular witness, or original C2 root. All atom, zero-energy, and equality conventions are inherited unchanged.
+
+Frozen imports/context/complete public head are unchanged. The upstream163 source bytes are unchanged from the freeze record. Attempt001 passed the server kernel and all actual module-owned transitive axiom checks. There is one public actual theorem, no private/generated theorems and no new global values. Independent complete review is pending with161 and163; the accepted165 proof/review is reused without replay.
