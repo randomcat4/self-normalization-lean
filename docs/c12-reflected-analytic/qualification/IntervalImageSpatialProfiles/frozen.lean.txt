@@ -1,0 +1,52 @@
+import Shao.C2.IntervalImageExponents
+import Shao.C2.HalfLineTimeProfiles
+
+noncomputable section
+namespace Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageExponents Shao.C2.HalfLineTimeProfiles
+
+def affineImageTerm (c k T y : ℝ) : ℝ := Real.exp (-(c * y + k) / T)
+
+theorem normalized_affine_slope (C c d T : ℝ) (hT : 0 < T) (hC : 0 ≤ C)
+    (hid : C = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |c| / Real.sqrt T ≤ 2 * (1 + |d| / Real.sqrt T) * (1 + C / T) := by
+
+theorem nonneg_shifted_monomial_profile (q : ℝ) (hq : 0 ≤ q) (j m : ℕ) :
+    (1 + q) ^ j * q ^ m * Real.exp (-q) ≤
+      (2 : ℝ) ^ j * (1 + (2 : ℝ) ^ (j + m) * (Nat.factorial (j + m) : ℝ)) *
+        Real.exp (-q / 2) := by
+
+theorem affine_monomial_profile (C c d T : ℝ) (hT : 0 < T) (hC : 0 ≤ C)
+    (hid : C = (c - d) ^ 2 / 2 - d ^ 2 / 2) (j m : ℕ) :
+    (|c| / T) ^ j * (C / T) ^ m * Real.exp (-C / T) ≤
+      (4 / Real.sqrt T * (1 + |d| / Real.sqrt T)) ^ j *
+        (1 + (2 : ℝ) ^ (j + m) * (Nat.factorial (j + m) : ℝ)) *
+          Real.exp (-C / (2 * T)) := by
+
+theorem affineImageTerm_iteratedDeriv (j : ℕ) (c k T y : ℝ) :
+    iteratedDeriv j (affineImageTerm c k T) y =
+      (-c / T) ^ j * Real.exp (-(c * y + k) / T) := by
+
+theorem affineImageTerm_spatial_profile (j : ℕ) (c k d T y : ℝ)
+    (hT : 0 < T) (hC : 0 ≤ c * y + k)
+    (hid : c * y + k = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |iteratedDeriv j (affineImageTerm c k T) y| ≤
+      (4 / Real.sqrt T * (1 + |d| / Real.sqrt T)) ^ j *
+        (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)) *
+          Real.exp (-(c * y + k) / (2 * T)) := by
+
+theorem imageA_spatial_profile (j : ℕ) (a y z T : ℝ) (m : ℤ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hT : 0 < T) :
+    |iteratedDeriv j (fun w => Real.exp (-imageA a w z (m : ℝ) / T)) y| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)) *
+          Real.exp (-imageA a y z (m : ℝ) / (2 * T)) := by
+
+theorem imageB_spatial_profile (j : ℕ) (a y z T : ℝ) (m : ℤ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hT : 0 < T) :
+    |iteratedDeriv j (fun w => Real.exp (-imageB a w z (m : ℝ) / T)) y| ≤
+      (4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T)) ^ j *
+        (1 + (2 : ℝ) ^ j * (Nat.factorial j : ℝ)) *
+          Real.exp (-imageB a y z (m : ℝ) / (2 * T)) := by
+
+end Shao.C2.IntervalImageSpatialProfiles

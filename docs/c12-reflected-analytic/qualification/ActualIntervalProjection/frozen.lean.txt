@@ -1,0 +1,54 @@
+import Shao.C2.ProjectionOvershoot
+import Shao.C2.SourceIntervalCompletion
+
+noncomputable section
+namespace Shao.C2.ActualIntervalProjection
+open MeasureTheory
+open Shao.C2.BridgeDomination Shao.C2.SourceIntervalCompletion
+open Shao.C2.ProjectionOvershoot
+
+def sourceRemainder (ν : Measure BridgeNoise) (a y T z b : ℝ) : ℝ :=
+  sourceIntervalCompletion ν a (y + b) (T - b ^ 2) z - sourceIntervalCompletion ν a y T z -
+    (b - b ^ 2 * (z - y) / T) * deriv (fun w => sourceIntervalCompletion ν a w T z) y
+
+def upperOvershoot (ν : Measure BridgeNoise) (a y T z b : ℝ) : ℝ :=
+  projectionOvershoot b (a - y) T (z - y)
+    (deriv (fun w => sourceIntervalCompletion ν a w T z) y)
+
+def lowerOvershoot (ν : Measure BridgeNoise) (a y T z b : ℝ) : ℝ :=
+  projectionOvershoot (-b) (a + y) T (y - z)
+    (-deriv (fun w => sourceIntervalCompletion ν a w T z) y)
+
+theorem source_upper_projection_identity (ν : Measure BridgeNoise) (a y T z b : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hcross : a ≤ y + b)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y) :
+    sourceRemainder ν a y T z b =
+      sourceRemainder ν a y T z (a - y) + upperOvershoot ν a y T z b := by
+
+theorem source_lower_projection_identity (ν : Measure BridgeNoise) (a y T z b : ℝ)
+    (ha : 0 < a) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hcross : y + b ≤ -a)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y) :
+    sourceRemainder ν a y T z b =
+      sourceRemainder ν a y T z (-a - y) + lowerOvershoot ν a y T z b := by
+
+theorem source_upper_projection_negative_budget (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b K : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| < a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hcross : a ≤ y + b) (hK : 0 ≤ K)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y)
+    (hProjected : |sourceRemainder ν a y T z (a - y)| ≤ K * |a - y| ^ 3) :
+    |sourceRemainder ν a y T z (a - y)| + max (-upperOvershoot ν a y T z b) 0 ≤
+        K * (a - y) * b ^ 2 ∧
+      K * (a - y) * b ^ 2 ≤ K * |b| ^ 3 := by
+
+theorem source_lower_projection_negative_budget (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b K : ℝ) (ha : 0 < a) (hy : |y| < a) (hz : |z| < a)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hcross : y + b ≤ -a) (hK : 0 ≤ K)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y)
+    (hProjected : |sourceRemainder ν a y T z (-a - y)| ≤ K * |-a - y| ^ 3) :
+    |sourceRemainder ν a y T z (-a - y)| + max (-lowerOvershoot ν a y T z b) 0 ≤
+        K * (a + y) * b ^ 2 ∧
+      K * (a + y) * b ^ 2 ≤ K * |b| ^ 3 := by
+
+end Shao.C2.ActualIntervalProjection

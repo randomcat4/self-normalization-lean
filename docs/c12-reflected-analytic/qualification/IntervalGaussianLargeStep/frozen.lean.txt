@@ -1,0 +1,72 @@
+import Shao.C2.ActualIntervalProjection
+import Shao.C2.HalfLineGaussianStep
+import Shao.C2.IntervalDerivativeBound
+
+noncomputable section
+namespace Shao.C2.IntervalGaussianLargeStep
+open MeasureTheory Set
+open Shao.C2.BridgeDomination Shao.C2.SourceIntervalCompletion
+open Shao.C2.ActualIntervalProjection Shao.C2.GaussianWallEnvelope
+open Shao.C2.HalfLineReflectionFormula Shao.C2.HalfLineMixedProfiles
+open Shao.C2.IntervalDerivativeBound
+
+def intervalEnvelope (a y T z b : ℝ) : ℝ :=
+  wallEnvelope (a - y) |b| (z - y) T + wallEnvelope (a + y) |b| (y - z) T
+
+theorem intervalEnvelope_nonneg (a y T z b : ℝ) (hT : 0 < T) :
+    0 ≤ intervalEnvelope a y T z b := by
+
+theorem intervalEnvelope_crossing (a y T z b : ℝ) (hy : |y| < a) (hT : 0 < T)
+    (hcross : ¬ |y + b| < a) : 1 ≤ intervalEnvelope a y T z b := by
+
+theorem interval_deficit_le_halfline_deficits (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z : ℝ) :
+    1 - intervalCompletion ν a y T z ≤
+      (1 - upperCompletion ν a y T z) + (1 - lowerCompletion ν a y T z) := by
+
+theorem initial_deficit_envelope_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hUpper : upperCompletion ν a y T z = upperReflection a y T z)
+    (hLower : lowerCompletion ν a y T z = lowerReflection a y T z) :
+    1 - sourceIntervalCompletion ν a y T z ≤ intervalEnvelope a y T z b := by
+
+theorem future_deficit_envelope_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hb : b ^ 2 ≤ T) (hnew : |y + b| < a)
+    (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hUpper : ∀ S : ℝ, 0 < S → ∀ w : ℝ, w < a →
+      upperCompletion ν a w S z = upperReflection a w S z)
+    (hLower : ∀ S : ℝ, 0 < S → ∀ w : ℝ, -a < w →
+      lowerCompletion ν a w S z = lowerReflection a w S z) :
+    1 - sourceIntervalCompletion ν a (y + b) (T - b ^ 2) z ≤ intervalEnvelope a y T z b := by
+
+theorem completion_difference_envelope_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hUpper : ∀ S : ℝ, 0 < S → ∀ w : ℝ, w < a →
+      upperCompletion ν a w S z = upperReflection a w S z)
+    (hLower : ∀ S : ℝ, 0 < S → ∀ w : ℝ, -a < w →
+      lowerCompletion ν a w S z = lowerReflection a w S z) :
+    |sourceIntervalCompletion ν a (y + b) (T - b ^ 2) z - sourceIntervalCompletion ν a y T z| ≤
+      2 * intervalEnvelope a y T z b := by
+
+theorem compensation_envelope_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T) (hb : b ^ 2 ≤ T)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y)
+    (hUpper : ∀ w : ℝ, w < a → upperCompletion ν a w T z = upperReflection a w T z)
+    (hLower : ∀ w : ℝ, -a < w → lowerCompletion ν a w T z = lowerReflection a w T z) :
+    |(b - b ^ 2 * (z - y) / T) * deriv (fun w => sourceIntervalCompletion ν a w T z) y| ≤
+      8 * (|b| / Real.sqrt T) * (1 + |z - y| / Real.sqrt T) ^ 2 * intervalEnvelope a y T z b := by
+
+theorem actual_interval_large_gaussian_bound (ν : Measure BridgeNoise) [IsProbabilityMeasure ν]
+    (a y T z b : ℝ) (hy : |y| < a) (hz : |z| < a) (hT : 0 < T)
+    (hb : b ^ 2 ≤ T) (hlarge : T / 2 < b ^ 2) (hzero : T - b ^ 2 = 0 → y + b = z)
+    (hRegular : DifferentiableAt ℝ (fun w => sourceIntervalCompletion ν a w T z) y)
+    (hUpper : ∀ S : ℝ, 0 < S → ∀ w : ℝ, w < a →
+      upperCompletion ν a w S z = upperReflection a w S z)
+    (hLower : ∀ S : ℝ, 0 < S → ∀ w : ℝ, -a < w →
+      lowerCompletion ν a w S z = lowerReflection a w S z) :
+    |sourceRemainder ν a y T z b| ≤
+      40 * (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 * intervalEnvelope a y T z b := by
+
+end Shao.C2.IntervalGaussianLargeStep

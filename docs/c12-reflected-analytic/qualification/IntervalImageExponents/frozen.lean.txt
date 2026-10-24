@@ -1,0 +1,53 @@
+import Shao.C2.HalfLineSpatialProfiles
+import Lean.Elab.Tactic.Omega
+
+noncomputable section
+namespace Shao.C2.IntervalImageExponents
+
+def imageA (a y z m : ℝ) : ℝ := 8 * m ^ 2 * a ^ 2 + 4 * m * a * (z - y)
+def imageB (a y z m : ℝ) : ℝ := 2 * (y + (2 * m + 1) * a) * (z + (2 * m + 1) * a)
+
+theorem int_abs_ge_one (m : ℤ) (hm : m ≠ 0) : 1 ≤ |(m : ℝ)| := by
+
+theorem imageA_zero (a y z : ℝ) : imageA a y z 0 = 0 := by
+
+theorem imageA_nonneg (a y z : ℝ) (m : ℤ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) : 0 ≤ imageA a y z (m : ℝ) := by
+
+theorem imageB_nonneg (a y z : ℝ) (m : ℤ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) : 0 ≤ imageB a y z (m : ℝ) := by
+
+theorem imageA_affine_identity (a y z m : ℝ) :
+    imageA a y z m = ((-4 * m * a - (z - y)) ^ 2) / 2 - (z - y) ^ 2 / 2 := by
+
+theorem imageB_affine_identity (a y z m : ℝ) :
+    imageB a y z m = ((2 * (z + (2 * m + 1) * a) - (z - y)) ^ 2) / 2 -
+      (z - y) ^ 2 / 2 := by
+
+theorem imageA_hasDerivAt (a y z m : ℝ) :
+    HasDerivAt (fun w => imageA a w z m) (-4 * m * a) y := by
+
+theorem imageB_hasDerivAt (a y z m : ℝ) :
+    HasDerivAt (fun w => imageB a w z m) (2 * (z + (2 * m + 1) * a)) y := by
+
+theorem imageB_positive_tail (a y z m : ℝ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hm : 0 ≤ m) :
+    imageB a y z 0 + 8 * m ^ 2 * a ^ 2 ≤ imageB a y z m := by
+
+theorem imageB_negative_tail (a y z m : ℝ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hm : 0 ≤ m) :
+    imageB a y z (-1) + 8 * m ^ 2 * a ^ 2 ≤ imageB a y z (-m - 1) := by
+
+theorem imageA_positive_tail (a y z m : ℝ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hm : 1 ≤ m) :
+    imageB a y z 0 + 8 * m * (m - 1) * a ^ 2 ≤ imageA a y z m := by
+
+theorem imageA_negative_tail (a y z m : ℝ) (ha : 0 < a)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) (hm : 1 ≤ m) :
+    imageB a y z (-1) + 8 * m * (m - 1) * a ^ 2 ≤ imageA a y z (-m) := by
+
+theorem affine_slope_abs_bound (C c d : ℝ) (hC : 0 ≤ C)
+    (hid : C = (c - d) ^ 2 / 2 - d ^ 2 / 2) :
+    |c| ≤ 2 * |d| + Real.sqrt (2 * C) := by
+
+end Shao.C2.IntervalImageExponents

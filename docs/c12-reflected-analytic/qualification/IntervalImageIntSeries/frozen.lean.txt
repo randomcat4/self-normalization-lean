@@ -1,0 +1,48 @@
+import Shao.C2.IntervalImageCandidateSpatial
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+
+noncomputable section
+namespace Shao.C2.IntervalImageIntSeries
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageSpatialProfiles
+open Shao.C2.IntervalImageSpatialConvergence Shao.C2.IntervalImageSpatialDerivatives
+open Shao.C2.IntervalImageCandidateSpatial
+
+def spatialImageA (j : ℕ) (a z T y : ℝ) (m : ℤ) : ℝ :=
+  iteratedDeriv j (fun w => Real.exp (-imageA a w z (m : ℝ) / T)) y
+
+def spatialImageB (j : ℕ) (a z T y : ℝ) (m : ℤ) : ℝ :=
+  iteratedDeriv j (fun w => Real.exp (-imageB a w z (m : ℝ) / T)) y
+
+def imageSeriesSpatial (j : ℕ) (a z T y : ℝ) : ℝ :=
+  ∑' m : ℤ, (spatialImageA j a z T y m - spatialImageB j a z T y m)
+
+theorem image_spatial_tails_summable (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    Summable (fun n : ℕ => spatialImageA j a z T y ((n : ℤ) + 2)) ∧
+      Summable (fun n : ℕ => spatialImageA j a z T y (-((n : ℤ) + 2))) ∧
+      Summable (fun n : ℕ => spatialImageB j a z T y ((n : ℤ) + 1)) ∧
+      Summable (fun n : ℕ => spatialImageB j a z T y (-((n : ℤ) + 2))) := by
+
+theorem image_spatial_summable (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    Summable (spatialImageA j a z T y) ∧ Summable (spatialImageB j a z T y) := by
+
+theorem imageSeriesSpatial_eq_candidate (j : ℕ) (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    imageSeriesSpatial j a z T y = imageCandidateSpatial j a z T y := by
+
+theorem intervalImageCandidate_eq_intSeries (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    intervalImageCandidate a z T y =
+      ∑' m : ℤ, (Real.exp (-imageA a y z (m : ℝ) / T) -
+        Real.exp (-imageB a y z (m : ℝ) / T)) := by
+
+theorem intervalImageCandidate_iteratedDeriv_eq_intSeries (j : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    iteratedDeriv j (intervalImageCandidate a z T) y =
+      ∑' m : ℤ, (iteratedDeriv j (fun w => Real.exp (-imageA a w z (m : ℝ) / T)) y -
+        iteratedDeriv j (fun w => Real.exp (-imageB a w z (m : ℝ) / T)) y) := by
+
+end Shao.C2.IntervalImageIntSeries

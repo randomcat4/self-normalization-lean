@@ -1,0 +1,11 @@
+# Actual interval large-step Gaussian wall envelope
+
+Readonly supplement4360-4393. Pi is exactly the two-wall sum with w+=a-y,e+=z-y and w-=a+y,e-=y-z,M=|b|+e_+. Actual source interval completion and actual source derivative are used, no scalar interval proxy. The sourceRemainder definition is50. Every analytic assertion keeps explicit raw halfline reflection identities; compensation/large-step assertions additionally keep actual interval source differentiability at the old point.
+
+The actual probability union/intersection identity bounds interval deficit by the two raw halfline deficits. At positive time, explicit reflection identities and46 bound each wall deficit by its Gaussian summand. At reachable future zero energy, source18 completion equals1 and deficit0. Crossings including equality hits have source future completion0 and one crossed-wall summand equal1. Consequently |Ffuture-Fold|<=2Pi for every b²<=T, with explicit reachability.
+
+Full compensation is bounded by signed derivative domination of the actual interval derivative between actual upper/lower derivatives. Whole positive-time spatial function equality source18=rawinterval transfers actual differentiability. Qualified27 reflection derivative transfer plus26 formulas give the two slopes. Qualified47 supplies each oriented halfline compensation bound; lower direction b->-b,e->y-z is preserved exactly. Their sum is8qD²Pi. No new higher interval regularity or Taylor theorem is assumed implicitly.
+
+For large steps T/2<b²<=T, q²>1/2,q<=1 imply1<=4q³; D>=1 then deficits+compensation<=10D³Pi<=40q³D³Pi. This includes large internal, crossing, boundary/equality and reachable zero-energy branches. Small interval Taylor and full small-step local assembly remain OPEN;50 supplies only conditional projection budget.
+
+All8 completeheads, sole complete transparent value/imports frozen before proof, UTF8LFnoBOM. Kernel002/all9 actualowners=8theoremconstants+1definition recursiveaxiomPASS; complete9types/1value exported. Failed001 only positivity/local copied-name correction; unchanged freezes.50 under finalreviewqueue;47/27 andoldprobabilityinterfaces qualified evidence reused without oldLeanchecks. Actual Brownian reflection identity and all original rootgroups remain OPEN. Independent complete final review of this exact source pending.
