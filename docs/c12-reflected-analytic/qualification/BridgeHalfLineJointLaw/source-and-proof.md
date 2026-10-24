@@ -1,0 +1,13 @@
+# Actual Brownian half-line survival and endpoint joint laws
+
+Read-only supplement4192–4315 fixes the standard bridge and the half-line survival interpretation. This module proves the missing joint-probability disintegration endpoint, rather than assuming the reflection value. It is a standard auxiliary, not a research novelty or a literal separate displayed source formula.
+
+Two complete joint-event values and seven complete theorem heads, including the private Fubini helper, were frozen before implementation. Six source theorems are public. The actual qualified independence law of bridgeNoise B and B1 has distribution bridgeLaw B P times gaussianReal01. The exact path identity is bridgePath(y,T,y+sqrtT*B1,bridgeNoiseB)=y+sqrtT*B(t), almost surely simultaneously for all BridgeTime. It supplies actual upper/lower survival events intersected with the physical endpoint CDF event. Measurable joint events and finite-product Fubini then yield Gaussian integrals of the genuine upperCompletion/lowerCompletion.
+
+The private product-section proof uses the same short indicator/Fubini argument as the existing private InitialBrownianIdentity helper; that old private constant cannot be imported as a public interface. It is frozen and fully audited here, rather than modifying/rechecking the accepted old module. The joint events vary both the bridge noise and physical endpoint, so the previous initial symmetric-interval event does not supply this result directly.
+
+Statements hold for all real a,y,T,v; sqrtT determines the scaling even at nonpositive T. No assertion about Brownian elapsed negative time is made. For positive T this is the actual physical Brownian scaling used in the source. Endpoint conditions remain explicit. No regular conditional distribution at a null endpoint or unproved pointwise conditioning rule is invoked.
+
+Kernel001 failed only because the section-integral target retained a beta-redex around its conditional. Explicitly normalizing the whole RHS fixes the rewrite. All frozen heads/values/context and mathematical arguments are unchanged; failed source/log preserved. Kernel002 and the exact defining-module recursive axiom audit passed:13actualowners=11theoremconstants+2definitions,6publictheorems; complete actual types and both full values exported. Allowed axioms propext, Classical.choice, Quot.sound. Independent complete review pending.
+
+The numerical Brownian joint reflection formula and subsequent pointwise identification with upperReflection/lowerReflection are still OPEN. This module does not discharge hUpper/hLower, killed/image/sine identity, Taylor/hSmall or any original root. Existing p54 repairs and external attribution are unchanged.
