@@ -1,0 +1,40 @@
+import Shao.C2.CompletedIntervalDerivative
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+
+noncomputable section
+namespace Shao.C2.InteriorDerivativeMeasurability
+open MeasureTheory Set Filter
+open scoped Topology
+open Shao.C2.BridgeDomination Shao.C2.CompletionMeasurability
+open Shao.C2.CompletedIntervalProcess Shao.C2.CompletedIntervalDerivative
+
+def interiorSpatialDerivative (ν : Measure BridgeNoise) (a y T z : ℝ) : ℝ := by
+  classical
+  exact if 0 < T ∧ |y| < a ∧ |z| < a then spatialDerivative ν a y T z else 0
+
+theorem measurable_interiorSpatialDerivative (ν : Measure BridgeNoise) [SFinite ν]
+    (hRegular : ∀ a y T z : ℝ, 0 < a → 0 < T → |y| < a → |z| < a →
+      HasDerivAt (fun u : ℝ => intervalCompletion ν a u T z) (spatialDerivative ν a y T z) y) :
+    Measurable (fun p : CompletionParameters =>
+      interiorSpatialDerivative ν p.1 p.2.1 p.2.2.1 p.2.2.2) := by
+
+theorem completedDerivative_eq_interior (n : ℕ) (ν : Measure BridgeNoise)
+    (x : ℝ) (z : Shao.Path n) (σ : Equiv.Perm (Fin n)) (r : Fin n) :
+    completedDerivative ν x z σ r =
+      if 0 < Shao.energy z ∧ strictLive x z σ r.val ∧
+          |Shao.prefixSum z n| < x * Real.sqrt (Shao.energy z) then
+        interiorSpatialDerivative ν (x * Real.sqrt (Shao.energy z))
+          (Shao.prefixSum (fun i => z (σ i)) r.val)
+          (Shao.energy z - Shao.prefixSquares (fun i => z (σ i)) r.val)
+          (Shao.prefixSum z n)
+      else 0 := by
+
+theorem measurable_completedDerivative_of_regular (n : ℕ)
+    (ν : Measure BridgeNoise) [SFinite ν]
+    (hRegular : ∀ a y T z : ℝ, 0 < a → 0 < T → |y| < a → |z| < a →
+      HasDerivAt (fun u : ℝ => intervalCompletion ν a u T z) (spatialDerivative ν a y T z) y)
+    (x : ℝ) (σ : Equiv.Perm (Fin n)) (r : Fin n) :
+    Measurable (fun z : Shao.Path n => completedDerivative ν x z σ r) := by
+
+end Shao.C2.InteriorDerivativeMeasurability

@@ -1,0 +1,40 @@
+import Shao.C2.BridgeDomination
+import Shao.C2.HalfLineReflectionFormula
+
+noncomputable section
+namespace Shao.C2.IntervalDerivativeBound
+open MeasureTheory Set
+open Shao.C2.BridgeDomination Shao.C2.HalfLineReflectionFormula
+
+theorem upperCompletion_hasDerivAt_of_reflection
+    (P : Measure BridgeNoise) (a y T z : ℝ) (hy : y < a)
+    (hReflection : ∀ s : ℝ, s < a → upperCompletion P a s T z = upperReflection a s T z) :
+    HasDerivAt (fun s : ℝ => upperCompletion P a s T z)
+      (deriv (fun s : ℝ => upperReflection a s T z) y) y := by
+
+theorem lowerCompletion_hasDerivAt_of_reflection
+    (P : Measure BridgeNoise) (a y T z : ℝ) (hy : -a < y)
+    (hReflection : ∀ s : ℝ, -a < s → lowerCompletion P a s T z = lowerReflection a s T z) :
+    HasDerivAt (fun s : ℝ => lowerCompletion P a s T z)
+      (deriv (fun s : ℝ => lowerReflection a s T z) y) y := by
+
+theorem interval_deriv_bound_of_reflection
+    (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z : ℝ) (hT : 0 < T) (hy : |y| < a) (hz : |z| < a)
+    (hUpper : ∀ s : ℝ, s < a → upperCompletion P a s T z = upperReflection a s T z)
+    (hLower : ∀ s : ℝ, -a < s → lowerCompletion P a s T z = lowerReflection a s T z)
+    (hRegular : DifferentiableAt ℝ (fun s : ℝ => intervalCompletion P a s T z) y) :
+    |deriv (fun s : ℝ => intervalCompletion P a s T z) y| ≤
+      4 / Real.sqrt T * (1 + |z - y| / Real.sqrt T) := by
+
+theorem interval_deriv_uniform_bound_of_reflection
+    (P : Measure BridgeNoise) [IsProbabilityMeasure P]
+    (a y T z H A : ℝ) (hH : 0 < H) (hHT : H ≤ T) (haA : a ≤ A)
+    (hy : |y| < a) (hz : |z| < a)
+    (hUpper : ∀ s : ℝ, s < a → upperCompletion P a s T z = upperReflection a s T z)
+    (hLower : ∀ s : ℝ, -a < s → lowerCompletion P a s T z = lowerReflection a s T z)
+    (hRegular : DifferentiableAt ℝ (fun s : ℝ => intervalCompletion P a s T z) y) :
+    |deriv (fun s : ℝ => intervalCompletion P a s T z) y| ≤
+      4 / Real.sqrt H * (1 + 2 * A / Real.sqrt H) := by
+
+end Shao.C2.IntervalDerivativeBound
