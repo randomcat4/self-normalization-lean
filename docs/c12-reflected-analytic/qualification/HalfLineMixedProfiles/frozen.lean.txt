@@ -1,0 +1,51 @@
+import Shao.C2.HalfLineSpatialProfiles
+import Shao.C2.HalfLineTimeProfiles
+
+noncomputable section
+namespace Shao.C2.HalfLineMixedProfiles
+open Shao.C2.HalfLineReflectionFormula Shao.C2.HalfLineHeatEquation
+open Shao.C2.CompletionFirstProfile Shao.C2.HalfLineSpatialProfiles Shao.C2.HalfLineTimeProfiles
+
+def slopeTime (u v T : ℝ) : ℝ := (2 * v / T) * Real.exp (-2 * u * v / T)
+def curvatureTime (u v T : ℝ) : ℝ := -((2 * v / T) ^ 2) * Real.exp (-2 * u * v / T)
+
+theorem positive_reflection_power_monomial_profile (u v T : ℝ)
+    (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) (j : ℕ) (hj : 0 < j) (m : ℕ) :
+    (2 * v / T) ^ j * (2 * u * v / T) ^ m * Real.exp (-2 * u * v / T) ≤
+      (16 * (j : ℝ) / Real.sqrt T * (1 + |u - v| / Real.sqrt T)) ^ j *
+        ((4 : ℝ) ^ m * (Nat.factorial m : ℝ)) * Real.exp (-u * v / T) := by
+
+theorem slopeTime_hasDerivAt (u v T : ℝ) (hT : 0 < T) :
+    HasDerivAt (slopeTime u v)
+      ((2 * v / T ^ 2) * (2 * u * v / T - 1) * Real.exp (-2 * u * v / T)) T := by
+
+theorem slopeTime_second_hasDerivAt (u v T : ℝ) (hT : 0 < T) :
+    HasDerivAt (deriv (slopeTime u v))
+      ((2 * v / T ^ 3) * (2 - 4 * (2 * u * v / T) + (2 * u * v / T) ^ 2) *
+        Real.exp (-2 * u * v / T)) T := by
+
+theorem curvatureTime_hasDerivAt (u v T : ℝ) (hT : 0 < T) :
+    HasDerivAt (curvatureTime u v)
+      ((2 * v / T) ^ 2 / T * (2 - 2 * u * v / T) * Real.exp (-2 * u * v / T)) T := by
+
+theorem mixed_time_profiles (u v T : ℝ) (hu : 0 < u) (hv : 0 < v) (hT : 0 < T) :
+    |deriv (slopeTime u v) T| ≤
+      80 / (T * Real.sqrt T) * (1 + |u - v| / Real.sqrt T) * Real.exp (-u * v / T) ∧
+    |deriv (curvatureTime u v) T| ≤
+      6144 / T ^ 2 * (1 + |u - v| / Real.sqrt T) ^ 2 * Real.exp (-u * v / T) ∧
+    |deriv (deriv (slopeTime u v)) T| ≤
+      800 / (T ^ 2 * Real.sqrt T) * (1 + |u - v| / Real.sqrt T) * Real.exp (-u * v / T) := by
+
+theorem upperReflection_mixed_functions (a y z : ℝ) :
+    (fun t : ℝ => deriv (fun w : ℝ => upperReflection a w t z) y) =
+      (fun t : ℝ => -slopeTime (a - y) (a - z) t) ∧
+    (fun t : ℝ => deriv (deriv (fun w : ℝ => upperReflection a w t z)) y) =
+      (fun t : ℝ => curvatureTime (a - y) (a - z) t) := by
+
+theorem lowerReflection_mixed_functions (a y z : ℝ) :
+    (fun t : ℝ => deriv (fun w : ℝ => lowerReflection a w t z) y) =
+      (fun t : ℝ => slopeTime (a + y) (a + z) t) ∧
+    (fun t : ℝ => deriv (deriv (fun w : ℝ => lowerReflection a w t z)) y) =
+      (fun t : ℝ => curvatureTime (a + y) (a + z) t) := by
+
+end Shao.C2.HalfLineMixedProfiles
