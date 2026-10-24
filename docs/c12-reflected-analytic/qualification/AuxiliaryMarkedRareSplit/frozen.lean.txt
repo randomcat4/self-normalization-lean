@@ -1,0 +1,24 @@
+import Shao.C2.AuxiliaryMarkedDeletion
+import Shao.OQ4.KilledPathLaw
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryMarkedRareSplit
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_actual_marked_rare_polynomial_split
+    {n : ℕ} (w : Shao.Path n) (z x s : ℝ) (p : ℕ) (hx : 1 ≤ x) :
+    let B : Set (Shao.Path (n + 1)) := {v |
+      ((3 / 2) * x) * Real.sqrt (Shao.energy v) ≤ |Shao.prefixSum v (n + 1)|}
+    let A : Set (Shao.Path n) := {u | 0 < Shao.energy u ∧
+      Real.sqrt ((9 / 4) * x ^ 2 - 1) * Real.sqrt (Shao.energy u) ≤
+        |Shao.prefixSum u n|}
+    let F : Shao.Path (n + 1) → ℝ := fun v =>
+      |v 0| ^ 3 * |Shao.prefixSum v (n + 1)| ^ p * Real.exp (-s * Shao.energy v)
+    B.indicator F (Fin.cons z w) ≤
+      (2 : ℝ) ^ p * (|z| ^ (3 + p) + |z| ^ 3 * |Shao.prefixSum w n| ^ p) *
+        Real.exp (-s * z ^ 2) *
+        A.indicator (fun u => Real.exp (-s * Shao.energy u)) w := by
+
+end Shao.C2.AuxiliaryMarkedRareSplit
