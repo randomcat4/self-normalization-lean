@@ -1,0 +1,52 @@
+import Shao.C2.FiniteWalkReflectionCount
+import Shao.OQ4.RademacherCosine
+import Mathlib.MeasureTheory.Measure.Count
+import Mathlib.MeasureTheory.Constructions.Pi
+
+noncomputable section
+namespace Shao.C2.RademacherReflectionProbability
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators ENNReal
+open Shao.C2.FiniteWalkReflection Shao.C2.FiniteWalkReflectionCount
+
+def boolCoin : Measure Bool :=
+  (1 / 2 : ℝ≥0∞) • Measure.dirac true + (1 / 2 : ℝ≥0∞) • Measure.dirac false
+
+def wordLaw (n : ℕ) : Measure (Fin n → Bool) :=
+  Measure.pi (fun _ : Fin n => boolCoin)
+
+def realWord {n : ℕ} (w : Fin n → Bool) : Shao.Path n :=
+  fun i => (boolStep (w i) : ℝ)
+
+theorem boolCoin_isProbabilityMeasure : IsProbabilityMeasure boolCoin := by
+
+theorem boolCoin_singleton (b : Bool) : boolCoin {b} = (1 / 2 : ℝ≥0∞) := by
+
+theorem boolCoin_map_step :
+    boolCoin.map (fun b : Bool => (boolStep b : ℝ)) = Shao.OQ4.RademacherCosine.law := by
+
+theorem wordLaw_isProbabilityMeasure (n : ℕ) : IsProbabilityMeasure (wordLaw n) := by
+
+theorem wordLaw_eq_count (n : ℕ) :
+    wordLaw n = (1 / 2 : ℝ≥0∞) ^ n • (Measure.count : Measure (Fin n → Bool)) := by
+
+theorem wordLaw_real_card (n : ℕ) (S : Set (Fin n → Bool)) :
+    (wordLaw n).real S = (Nat.card S : ℝ) / (2 : ℝ) ^ n := by
+
+theorem realWord_map_eq (n : ℕ) :
+    (wordLaw n).map realWord =
+      Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law) := by
+
+theorem realWord_prefix {n : ℕ} (w : Fin n → Bool) (k : ℕ) :
+    Shao.prefixSum (realWord w) k = (walkPrefix w k : ℝ) := by
+
+theorem killed_endpoint_cdf_probability (n : ℕ) (h x : ℤ) (hh : 0 < h) (hx : x < h) :
+    (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {a : Shao.Path n | (∀ k : ℕ, k ≤ n → Shao.prefixSum a k < (h : ℝ)) ∧
+          Shao.prefixSum a n ≤ (x : ℝ)} +
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {a : Shao.Path n | ((2 * h - x : ℤ) : ℝ) ≤ Shao.prefixSum a n} =
+      (Measure.pi (fun _ : Fin n => Shao.OQ4.RademacherCosine.law)).real
+        {a : Shao.Path n | Shao.prefixSum a n ≤ (x : ℝ)} := by
+
+end Shao.C2.RademacherReflectionProbability

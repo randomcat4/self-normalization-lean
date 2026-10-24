@@ -1,0 +1,36 @@
+import Shao.C2.IntervalSineHighTimeProfiles
+
+noncomputable section
+namespace Shao.C2.IntervalSineCosineSeries
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalSineTerms Shao.C2.IntervalSineSeries Shao.C2.IntervalSpectralGaussian
+
+def integerCosineTerm (a T u : ℝ) (n : ℤ) : ℝ :=
+  Real.exp (-(Real.pi ^ 2 * T / (8 * a ^ 2)) * (n : ℝ) ^ 2) *
+    Real.cos (Real.pi * (n : ℝ) * u / (2 * a))
+
+theorem integerCosineTerm_neg (a T u : ℝ) (n : ℤ) :
+    integerCosineTerm a T u (-n) = integerCosineTerm a T u n := by
+
+theorem integerCosineTerm_pos_summable (a T u : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    Summable (fun n : ℕ => integerCosineTerm a T u ((n : ℤ) + 1)) := by
+
+theorem integerCosineTerm_hasSum (a T u : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    HasSum (integerCosineTerm a T u)
+      (1 + 2 * (∑' n : ℕ, integerCosineTerm a T u ((n : ℤ) + 1))) := by
+
+theorem integerCosineTerm_summable (a T u : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    Summable (integerCosineTerm a T u) := by
+
+theorem sineTerm_cosine_difference (a z T y : ℝ) (n : ℕ) (ha : 0 < a) :
+    sineTerm a z T y n = (1 / (2 * a)) *
+      (integerCosineTerm a T (z - y) ((n : ℤ) + 1) -
+        integerCosineTerm a T (z + y + 2 * a) ((n : ℤ) + 1)) := by
+
+theorem sineSeries_eq_integer_cosine (a z T y : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    mixedSineSeries 0 0 a z T y = (1 / (4 * a)) *
+      ((∑' n : ℤ, integerCosineTerm a T (z - y) n) -
+        (∑' n : ℤ, integerCosineTerm a T (z + y + 2 * a) n)) := by
+
+end Shao.C2.IntervalSineCosineSeries

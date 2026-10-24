@@ -1,0 +1,69 @@
+import Shao.C2.BridgeHalfLineJointLaw
+
+noncomputable section
+namespace Shao.C2.FiniteWalkReflection
+
+def boolStep (b : Bool) : ℤ := if b then 1 else -1
+
+def walkPrefix {n : ℕ} (w : Fin n → Bool) : ℕ → ℤ
+  | 0 => 0
+  | k + 1 => walkPrefix w k + if hk : k < n then boolStep (w ⟨k, hk⟩) else 0
+
+def reflectAfter {n : ℕ} (k : ℕ) (w : Fin n → Bool) : Fin n → Bool :=
+  fun i => if k ≤ i.val then !(w i) else w i
+
+def firstHit {n : ℕ} (h : ℤ) (w : Fin n → Bool) : ℕ :=
+  if hex : ∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h then Nat.find hex else n + 1
+
+def reflectAtHit {n : ℕ} (h : ℤ) (w : Fin n → Bool) : Fin n → Bool :=
+  reflectAfter (firstHit h w) w
+
+theorem boolStep_not (b : Bool) : boolStep (!b) = -boolStep b := by
+
+theorem walkPrefix_zero {n : ℕ} (w : Fin n → Bool) : walkPrefix w 0 = 0 := by
+
+theorem walkPrefix_step_le_one {n : ℕ} (w : Fin n → Bool) (k : ℕ) :
+    walkPrefix w (k + 1) ≤ walkPrefix w k + 1 := by
+
+theorem walkPrefix_reaches_level {n : ℕ} (w : Fin n → Bool) (h : ℤ) (hh : 0 < h)
+    (k : ℕ) (hk : k ≤ n) (hend : h ≤ walkPrefix w k) :
+    ∃ j : ℕ, j ≤ k ∧ walkPrefix w j = h := by
+
+theorem reflectAfter_involutive {n : ℕ} (k : ℕ) :
+    Function.Involutive (reflectAfter (n := n) k) := by
+
+theorem reflectAfter_eq_self_of_length_le {n : ℕ} (w : Fin n → Bool)
+    (k : ℕ) (hk : n ≤ k) : reflectAfter k w = w := by
+
+theorem walkPrefix_reflectAfter_of_le {n : ℕ} (w : Fin n → Bool)
+    (k j : ℕ) (hj : j ≤ k) : walkPrefix (reflectAfter k w) j = walkPrefix w j := by
+
+theorem walkPrefix_reflectAfter_of_ge {n : ℕ} (w : Fin n → Bool)
+    (k j : ℕ) (hj : k ≤ j) :
+    walkPrefix (reflectAfter k w) j = 2 * walkPrefix w k - walkPrefix w j := by
+
+theorem firstHit_spec {n : ℕ} (h : ℤ) (w : Fin n → Bool)
+    (hex : ∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h) :
+    firstHit h w ≤ n ∧ walkPrefix w (firstHit h w) = h := by
+
+theorem firstHit_le_of_hit {n : ℕ} (h : ℤ) (w : Fin n → Bool)
+    (j : ℕ) (hj : j ≤ n) (hreach : walkPrefix w j = h) : firstHit h w ≤ j := by
+
+theorem firstHit_min {n : ℕ} (h : ℤ) (w : Fin n → Bool)
+    (hex : ∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h)
+    (j : ℕ) (hj : j < firstHit h w) : walkPrefix w j ≠ h := by
+
+theorem firstHit_reflectAtHit {n : ℕ} (h : ℤ) (w : Fin n → Bool) :
+    firstHit h (reflectAtHit h w) = firstHit h w := by
+
+theorem reflectAtHit_involutive {n : ℕ} (h : ℤ) :
+    Function.Involutive (reflectAtHit (n := n) h) := by
+
+theorem reflectAtHit_endpoint {n : ℕ} (h : ℤ) (w : Fin n → Bool)
+    (hex : ∃ k : ℕ, k ≤ n ∧ walkPrefix w k = h) :
+    walkPrefix (reflectAtHit h w) n = 2 * h - walkPrefix w n := by
+
+theorem reflectAtHit_bijective {n : ℕ} (h : ℤ) :
+    Function.Bijective (reflectAtHit (n := n) h) := by
+
+end Shao.C2.FiniteWalkReflection

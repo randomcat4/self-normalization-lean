@@ -1,0 +1,33 @@
+import Shao.C2.IntervalSineCosineSeries
+import Shao.C2.IntervalImageIntSeries
+
+noncomputable section
+namespace Shao.C2.IntervalImagePeriodization
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageExponents Shao.C2.IntervalImageIntSeries
+open Shao.C2.IntervalImageSpatialDerivatives
+
+def periodGaussian (a T u : ℝ) (m : ℤ) : ℝ :=
+  Real.exp (-(u + 4 * (m : ℝ) * a) ^ 2 / (2 * T))
+
+theorem imageA_eq_periodGaussian (a z T y : ℝ) (m : ℤ) (hT : 0 < T) :
+    Real.exp (-imageA a y z (m : ℝ) / T) =
+      Real.exp ((z - y) ^ 2 / (2 * T)) * periodGaussian a T (z - y) m := by
+
+theorem imageB_eq_periodGaussian (a z T y : ℝ) (m : ℤ) (hT : 0 < T) :
+    Real.exp (-imageB a y z (m : ℝ) / T) =
+      Real.exp ((z - y) ^ 2 / (2 * T)) * periodGaussian a T (z + y + 2 * a) m := by
+
+theorem periodGaussian_summable (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    Summable (periodGaussian a T (z - y)) ∧
+      Summable (periodGaussian a T (z + y + 2 * a)) := by
+
+theorem intervalImageCandidate_eq_periodization (a z T y : ℝ) (ha : 0 < a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| ≤ a) :
+    intervalImageCandidate a z T y = Real.exp ((z - y) ^ 2 / (2 * T)) *
+      ((∑' m : ℤ, periodGaussian a T (z - y) m) -
+        ∑' m : ℤ, periodGaussian a T (z + y + 2 * a) m) := by
+
+end Shao.C2.IntervalImagePeriodization
