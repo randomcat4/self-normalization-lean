@@ -1,0 +1,11 @@
+# Actual product endpoint from original C1
+
+Source: read-only supplement.tex 5110–5111 and 5133–5138; original p3 C1 applied to the actual centered auxiliary law, with both reflected signs. This leaf only supplies the endpoint C1 consumer, not the original-law C2 root.
+
+The universal constant is chosen before rhoStar, law, n, and y. The law is an actual probability measure with true zero mean, positive finite second moment, and finite absolute third moment. The budget uses its own second moment and the literal normalized map by sqrt(second)*sqrt(n). The legal same rhoStar is positive and at most 1/16. No symmetry, atomlessness, supplied tail, or zero-energy exclusion is assumed.
+
+Actual iid product coordinates have their native independent family and actual IdentDistrib with id. The p3 real-power moment is explicitly identified with the natural cubic power. The accepted full C1 theorem at p=3 has its original domain paid by the actual budget branch. The consumed fourth conjunction component bounds each weak signed maximum crossing relative to twice the actual Gaussian tail. Since the budget is at most rhoStar<=1/16<=1, each signed probability is at most (2+C0)*tail. The true absolute endpoint event is contained in the union of the positive and negative weak maximum events using the full-length positive prefix. The native real-measure union inequality gives (4+2*C0)*tail. This includes atoms, equality boundaries, y=0, and raw-energy zero according to the accepted conventions.
+
+The complete consumed actual C1 type and root source qualification are bound in consumed-interface-read.json. Accepted old proof evidence is reused; the independent final review must cover this new interaction and the complete new source/proof/type.
+
+Execution history: attempt001 stopped during import before proof processing. Root exported the six exact accepted objects; hashes were observed before attempt002. Attempts002–003 failed only at explicit real-power rewriting and set-membership unfolding; all old source/command/failure bytes remain remote. Attempt004 passed the kernel, then the established all-module-owner recursive axiom audit passed. The frozen imports, context, and complete single public head are unchanged; no private declarations or global non-theorem values were introduced. Harmless lint warnings are preserved.
