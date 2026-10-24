@@ -1,0 +1,27 @@
+import Shao.C2.HalfLineTaylorPath
+
+noncomputable section
+namespace Shao.C2.HalfLineTaylorRemainder
+open Shao.C2.HalfLineTaylorSegment Shao.C2.HalfLineTaylorPath
+open Shao.C2.HalfLineMixedProfiles Shao.C2.HalfLineTimeProfiles
+
+theorem third_path_derivative_decomposition (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) :
+    deriv (deriv (deriv (completionAlongSegment u v T b))) θ =
+      -b ^ 3 * ((2 * v / segmentEnergy T b θ) ^ 3 *
+        Real.exp (-2 * segmentDistance u b θ * v / segmentEnergy T b θ)) -
+      3 * b ^ 4 * deriv (curvatureTime (segmentDistance u b θ) v) (segmentEnergy T b θ) -
+      3 * b ^ 5 * deriv (deriv (slopeTime (segmentDistance u b θ) v)) (segmentEnergy T b θ) -
+      b ^ 6 * deriv (deriv (deriv (timeCompletion (2 * segmentDistance u b θ * v))))
+        (segmentEnergy T b θ) := by
+
+theorem compensated_lagrange_remainder (u v T b : ℝ) (hT : 0 < T)
+    (hsmall : b ^ 2 ≤ T / 2) :
+    ∃ θ ∈ Set.Ioo (0 : ℝ) 1,
+      completionAlongSegment u v T b 1 - completionAlongSegment u v T b 0 -
+          (b - b ^ 2 * (u - v) / T) * (-slopeTime u v T) =
+        (1 / 6 : ℝ) * deriv (deriv (deriv (completionAlongSegment u v T b))) θ +
+          b ^ 3 * deriv (slopeTime u v) T +
+          (1 / 2 : ℝ) * b ^ 4 * deriv (deriv (timeCompletion (2 * u * v))) T := by
+
+end Shao.C2.HalfLineTaylorRemainder

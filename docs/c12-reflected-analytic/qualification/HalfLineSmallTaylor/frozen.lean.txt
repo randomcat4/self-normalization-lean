@@ -1,0 +1,42 @@
+import Shao.C2.HalfLineTaylorRemainder
+
+noncomputable section
+namespace Shao.C2.HalfLineSmallTaylor
+open Shao.C2.HalfLineTaylorSegment Shao.C2.HalfLineTaylorPath
+open Shao.C2.HalfLineTaylorRemainder Shao.C2.HalfLineMixedProfiles
+open Shao.C2.HalfLineTimeProfiles Shao.C2.HalfLineSpatialProfiles
+
+theorem normalized_power_domination (q D : ℝ) (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
+    (hD : 1 ≤ D) (k j : ℕ) (hj : j ≤ 3) :
+    q ^ (3 + k) * D ^ j ≤ q ^ 3 * D ^ 3 := by
+
+theorem third_path_profile_at (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) (hU : 0 < segmentDistance u b θ) (hv : 0 < v)
+    (hb : b ^ 2 ≤ segmentEnergy T b θ) :
+    |deriv (deriv (deriv (completionAlongSegment u v T b))) θ| ≤
+      34764 * |b| ^ 3 * (1 / Real.sqrt (segmentEnergy T b θ)) ^ 3 *
+        (1 + |segmentDistance u b θ - v| / Real.sqrt (segmentEnergy T b θ)) ^ 3 *
+          Real.exp (-segmentDistance u b θ * v / segmentEnergy T b θ) := by
+
+theorem third_path_segment_bound (u v T b θ : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) :
+    |deriv (deriv (deriv (completionAlongSegment u v T b))) θ| ≤
+      8000000 * |b| ^ 3 * (1 / Real.sqrt T) ^ 3 *
+        (1 + |u - v| / Real.sqrt T) ^ 3 * incrementProfile u v T b := by
+
+theorem compensation_correction_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b) :
+    |b ^ 3 * deriv (slopeTime u v) T +
+        (1 / 2 : ℝ) * b ^ 4 * deriv (deriv (timeCompletion (2 * u * v))) T| ≤
+      86 * |b| ^ 3 * (1 / Real.sqrt T) ^ 3 *
+        (1 + |u - v| / Real.sqrt T) ^ 3 * incrementProfile u v T b := by
+
+theorem compensated_small_taylor_bound (u v T b : ℝ) (hu : 0 < u) (hv : 0 < v)
+    (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2) (hnew : 0 ≤ u - b) :
+    |completionAlongSegment u v T b 1 - completionAlongSegment u v T b 0 -
+        (b - b ^ 2 * (u - v) / T) * (-slopeTime u v T)| ≤
+      8000100 * |b| ^ 3 * (1 / Real.sqrt T) ^ 3 *
+        (1 + |u - v| / Real.sqrt T) ^ 3 * incrementProfile u v T b := by
+
+end Shao.C2.HalfLineSmallTaylor

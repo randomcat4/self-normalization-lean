@@ -1,0 +1,46 @@
+import Shao.C2.HalfLineTaylorSegment
+import Shao.C2.HalfLineMixedProfiles
+import Mathlib.Analysis.Calculus.Taylor
+
+noncomputable section
+namespace Shao.C2.HalfLineTaylorPath
+open Shao.C2.HalfLineTaylorSegment Shao.C2.HalfLineMixedProfiles
+open Shao.C2.HalfLineTimeProfiles
+
+def completionAlongSegment (u v T b θ : ℝ) : ℝ :=
+  1 - Real.exp (-2 * segmentDistance u b θ * v / segmentEnergy T b θ)
+def exponentSlope (u v T b : ℝ) : ℝ := 2 * v * b * (T - u * b)
+
+theorem completionAlongSegment_hasDerivAt (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) :
+    HasDerivAt (completionAlongSegment u v T b)
+      (-exponentSlope u v T b / (segmentEnergy T b θ) ^ 2 *
+        Real.exp (-2 * segmentDistance u b θ * v / segmentEnergy T b θ)) θ := by
+
+theorem completionAlongSegment_second_hasDerivAt (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) :
+    HasDerivAt (deriv (completionAlongSegment u v T b))
+      (-(exponentSlope u v T b ^ 2 / (segmentEnergy T b θ) ^ 4 +
+          2 * exponentSlope u v T b * b ^ 2 / (segmentEnergy T b θ) ^ 3) *
+        Real.exp (-2 * segmentDistance u b θ * v / segmentEnergy T b θ)) θ := by
+
+theorem completionAlongSegment_third_hasDerivAt (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) :
+    HasDerivAt (deriv (deriv (completionAlongSegment u v T b)))
+      (-(exponentSlope u v T b ^ 3 / (segmentEnergy T b θ) ^ 6 +
+          6 * exponentSlope u v T b ^ 2 * b ^ 2 / (segmentEnergy T b θ) ^ 5 +
+          6 * exponentSlope u v T b * b ^ 4 / (segmentEnergy T b θ) ^ 4) *
+        Real.exp (-2 * segmentDistance u b θ * v / segmentEnergy T b θ)) θ := by
+
+theorem completionAlongSegment_contDiffAt (u v T b θ : ℝ)
+    (hE : 0 < segmentEnergy T b θ) (n : ℕ) :
+    ContDiffAt ℝ n (completionAlongSegment u v T b) θ := by
+
+theorem compensated_second_taylor_identity (u v T b : ℝ) (hT : 0 < T) :
+    (deriv (completionAlongSegment u v T b) 0 +
+        (1 / 2 : ℝ) * deriv (deriv (completionAlongSegment u v T b)) 0) -
+      (b - b ^ 2 * (u - v) / T) * (-slopeTime u v T) =
+    b ^ 3 * deriv (slopeTime u v) T +
+      (1 / 2 : ℝ) * b ^ 4 * deriv (deriv (timeCompletion (2 * u * v))) T := by
+
+end Shao.C2.HalfLineTaylorPath
