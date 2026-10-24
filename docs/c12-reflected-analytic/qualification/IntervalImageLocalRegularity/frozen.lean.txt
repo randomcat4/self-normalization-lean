@@ -1,0 +1,32 @@
+import Shao.C2.IntervalImageMixedSpatialDerivatives
+
+noncomputable section
+namespace Shao.C2.IntervalImageLocalRegularity
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageCandidateSpatial Shao.C2.IntervalImageMixedTerms
+open Shao.C2.IntervalImageMixedConvergence Shao.C2.IntervalImageMixedCandidate
+open Shao.C2.IntervalImageJointContinuity Shao.C2.IntervalImageMixedSpatialDerivatives
+
+theorem mixedImageCandidate_continuousAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 3)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    ContinuousAt (fun p : ℝ × ℝ => mixedImageCandidate j l a z p.2 p.1) (y, T) := by
+
+theorem intervalImageCandidate_mixed_continuousAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 3)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    ContinuousAt (fun p : ℝ × ℝ =>
+      iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) p.1) p.2) (y, T) := by
+
+theorem intervalImageCandidate_mixed_continuousOn (j l : ℕ) (a z : ℝ) (hl : l ≤ 3)
+    (ha : 0 < a) (hz : |z| ≤ a) :
+    ContinuousOn (fun p : ℝ × ℝ =>
+      iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) p.1) p.2)
+      (Ioo (-a) a ×ˢ Ioi 0) := by
+
+theorem intervalImageCandidate_mixed_time_hasDerivAt (j l : ℕ) (a z T y : ℝ) (hl : l ≤ 2)
+    (ha : 0 < a) (hz : |z| ≤ a) (hT : 0 < T) (hy : |y| < a) :
+    HasDerivAt (iteratedDeriv l (fun S => iteratedDeriv j (intervalImageCandidate a z S) y))
+      (iteratedDeriv (l + 1) (fun S => iteratedDeriv j (intervalImageCandidate a z S) y) T) T := by
+
+end Shao.C2.IntervalImageLocalRegularity
+

@@ -1,0 +1,52 @@
+import Shao.C2.IntervalSineTerms
+
+noncomputable section
+namespace Shao.C2.IntervalSineSeries
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalSineTerms Shao.C2.IntervalSpectralGaussian
+
+def mixedSineSeries (j l : ℕ) (a z T y : ℝ) : ℝ :=
+  ∑' n : ℕ, mixedSineTerm j l a z T y n
+
+theorem mixedSineTerm_strip_bound (j l : ℕ) (a z H T y : ℝ) (n : ℕ)
+    (ha : 0 < a) (hHT : H ≤ T) :
+    ‖mixedSineTerm j l a z T y n‖ ≤
+      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *
+        weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (H / a ^ 2) n := by
+
+theorem mixedSineSeries_spatial_hasDerivAt (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    HasDerivAt (mixedSineSeries j l a z T) (mixedSineSeries (j + 1) l a z T y) y := by
+
+theorem mixedSineSeries_time_hasDerivAt (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    HasDerivAt (fun S => mixedSineSeries j l a z S y)
+      (mixedSineSeries j (l + 1) a z T y) T := by
+
+theorem mixedSineSeries_spatial_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (mixedSineSeries 0 l a z T) y = mixedSineSeries j l a z T y := by
+
+theorem mixedSineSeries_time_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv l (fun S => mixedSineSeries j 0 a z S y) T =
+      mixedSineSeries j l a z T y := by
+
+theorem sineSeries_mixed_iteratedDeriv (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T =
+      mixedSineSeries j l a z T y := by
+
+theorem sineSeries_mixed_commutation (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    iteratedDeriv j (fun w => iteratedDeriv l (fun S => mixedSineSeries 0 0 a z S w) T) y =
+      iteratedDeriv l (fun S => iteratedDeriv j (mixedSineSeries 0 0 a z S) y) T := by
+
+theorem mixedSineSeries_weighted_bound (j l : ℕ) (a z T y : ℝ)
+    (ha : 0 < a) (hT : 0 < T) :
+    ‖mixedSineSeries j l a z T y‖ ≤
+      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *
+        (∑' n : ℕ, weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (T / a ^ 2) n) := by
+
+end Shao.C2.IntervalSineSeries

@@ -1,0 +1,58 @@
+import Shao.C2.IntervalHighTimeProfiles
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+noncomputable section
+namespace Shao.C2.IntervalSineTerms
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalImageSpatialProfiles Shao.C2.IntervalSpectralGaussian
+
+def frequency (a : ℝ) (n : ℕ) : ℝ := ((n : ℝ) + 1) * Real.pi / (2 * a)
+
+def sineTerm (a z T y : ℝ) (n : ℕ) : ℝ :=
+  (1 / a) * Real.exp (-(frequency a n) ^ 2 * T / 2) *
+    Real.sin (frequency a n * (y + a)) * Real.sin (frequency a n * (z + a))
+
+def mixedSineTerm (j l : ℕ) (a z T y : ℝ) (n : ℕ) : ℝ :=
+  iteratedDeriv l (fun S => iteratedDeriv j (fun w => sineTerm a z S w n) y) T
+
+theorem frequency_pos (a : ℝ) (n : ℕ) (ha : 0 < a) : 0 < frequency a n := by
+
+theorem affine_sin_iteratedDeriv (j : ℕ) (ω q y : ℝ) :
+    iteratedDeriv j (fun w => Real.sin (ω * w + q)) y =
+      ω ^ j * Real.sin (ω * y + q + (j : ℝ) * Real.pi / 2) := by
+
+theorem sineTerm_spatial_iteratedDeriv (j : ℕ) (a z T y : ℝ) (n : ℕ) :
+    iteratedDeriv j (fun w => sineTerm a z T w n) y =
+      (1 / a) * Real.exp (-(frequency a n) ^ 2 * T / 2) * (frequency a n) ^ j *
+        Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2) *
+          Real.sin (frequency a n * (z + a)) := by
+
+theorem mixedSineTerm_formula (j l : ℕ) (a z T y : ℝ) (n : ℕ) :
+    mixedSineTerm j l a z T y n =
+      (1 / a) * (frequency a n) ^ j * (-(frequency a n) ^ 2 / 2) ^ l *
+        Real.exp (-(frequency a n) ^ 2 * T / 2) *
+          Real.sin (frequency a n * (y + a) + (j : ℝ) * Real.pi / 2) *
+            Real.sin (frequency a n * (z + a)) := by
+
+theorem mixedSineTerm_spatial_hasDerivAt (j l : ℕ) (a z T y : ℝ) (n : ℕ) :
+    HasDerivAt (fun w => mixedSineTerm j l a z T w n) (mixedSineTerm (j + 1) l a z T y n) y := by
+
+theorem mixedSineTerm_time_hasDerivAt (j l : ℕ) (a z T y : ℝ) (n : ℕ) :
+    HasDerivAt (fun S => mixedSineTerm j l a z S y n) (mixedSineTerm j (l + 1) a z T y n) T := by
+
+theorem mixedSineTerm_norm_bound (j l : ℕ) (a z T y : ℝ) (n : ℕ) (ha : 0 < a) :
+    ‖mixedSineTerm j l a z T y n‖ ≤
+      (1 / a) * (frequency a n) ^ j * ((frequency a n) ^ 2 / 2) ^ l *
+        Real.exp (-(frequency a n) ^ 2 * T / 2) := by
+
+theorem mixedSineTerm_weighted_bound (j l : ℕ) (a z T y : ℝ) (n : ℕ) (ha : 0 < a) :
+    ‖mixedSineTerm j l a z T y n‖ ≤
+      ((1 / a) * (Real.pi / (2 * a)) ^ j * (Real.pi ^ 2 / (8 * a ^ 2)) ^ l) *
+        weightedGaussian (Real.pi ^ 2 / 8) (j + 2 * l) (T / a ^ 2) n := by
+
+theorem mixedSineTerm_summable (j l : ℕ) (a z T y : ℝ) (ha : 0 < a) (hT : 0 < T) :
+    Summable (fun n : ℕ => mixedSineTerm j l a z T y n) := by
+
+end Shao.C2.IntervalSineTerms
+

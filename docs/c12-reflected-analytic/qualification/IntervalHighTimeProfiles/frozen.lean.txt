@@ -1,0 +1,35 @@
+import Shao.C2.IntervalSpectralGaussian
+
+noncomputable section
+namespace Shao.C2.IntervalHighTimeProfiles
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.CompletionFirstProfile Shao.C2.HalfLineTaylorSegment Shao.C2.IntervalGaussianLocal
+
+theorem highTime_drift_bound (a y z T : ℝ) (ha : 0 < a) (hy : |y| ≤ a) (hz : |z| ≤ a)
+    (hT : 0 < T) (hHigh : a ^ 2 ≤ T) :
+    |z - y| / Real.sqrt T ≤ 2 ∧ 1 + |z - y| / Real.sqrt T ≤ 3 := by
+
+theorem highTime_wall_products (a y z T : ℝ) (ha : 0 < a) (hy : |y| ≤ a) (hz : |z| ≤ a)
+    (hHigh : a ^ 2 ≤ T) :
+    (0 ≤ (a - y) * (a - z) ∧ (a - y) * (a - z) ≤ 4 * T) ∧
+      (0 ≤ (a + y) * (a + z) ∧ (a + y) * (a + z) ≤ 4 * T) := by
+
+theorem intervalProfile_le_increment (a y z T b : ℝ) (hy : |y| ≤ a) (hz : |z| ≤ a)
+    (hT : 0 < T) :
+    intervalProfile a y T z ≤ intervalIncrementProfile a y T z b := by
+
+theorem intervalProfile_highTime_lower (a y z T : ℝ) (ha : 0 < a) (hy : |y| ≤ a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hHigh : a ^ 2 ≤ T) :
+    2 * Real.exp (-4) ≤ intervalProfile a y T z := by
+
+theorem intervalIncrementProfile_highTime_lower (a y z T b : ℝ) (ha : 0 < a) (hy : |y| ≤ a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hHigh : a ^ 2 ≤ T) :
+    2 * Real.exp (-4) ≤ intervalIncrementProfile a y T z b := by
+
+theorem highTime_bound_to_profile (a y z T R B : ℝ) (ha : 0 < a) (hy : |y| ≤ a)
+    (hz : |z| ≤ a) (hT : 0 < T) (hHigh : a ^ 2 ≤ T) (hB : 0 ≤ B) (hR : |R| ≤ B) :
+    |R| ≤ (Real.exp 4 / 2 * B) * intervalProfile a y T z := by
+
+end Shao.C2.IntervalHighTimeProfiles
+
