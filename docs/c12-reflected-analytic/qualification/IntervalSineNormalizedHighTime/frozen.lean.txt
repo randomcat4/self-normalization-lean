@@ -1,0 +1,44 @@
+import Shao.C2.IntervalSineNormalizedDerivatives
+
+noncomputable section
+namespace Shao.C2.IntervalSineNormalizedHighTime
+open MeasureTheory Set Filter
+open scoped BigOperators Topology
+open Shao.C2.IntervalReciprocalDerivatives Shao.C2.IntervalReciprocalHighTime
+open Shao.C2.IntervalSineSeries Shao.C2.IntervalSineHighTime
+open Shao.C2.IntervalSineNormalizedDerivatives
+
+def normalizedDerivativeConstant (j l : ℕ) : ℝ :=
+  reciprocalHighTimeConstant *
+    (∑ i ∈ Finset.range (j + 1), ∑ k ∈ Finset.range (l + 1),
+      (Nat.choose j i : ℝ) * (Nat.choose l k : ℝ) * sineDerivativeConstant (j - i) (l - k))
+
+theorem normalizedDerivativeConstant_nonneg (j l : ℕ) :
+    0 ≤ normalizedDerivativeConstant j l := by
+
+theorem reciprocal_sine_product_highTime_bound (i k p q : ℕ) (a z T y : ℝ)
+    (hik : i + k ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖reciprocalMixedFamily i k z T y * mixedSineSeries p q a z T y‖ ≤
+      (reciprocalHighTimeConstant * sineDerivativeConstant p q) *
+        (1 / Real.sqrt T) ^ (i + p + 2 * (k + q)) := by
+
+theorem normalizedMixedFamily_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖normalizedMixedFamily j l a z T y‖ ≤
+      normalizedDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem normalizedSineCandidate_mixed_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv l (fun S => iteratedDeriv j (normalizedSineCandidate a z S) y) T‖ ≤
+      normalizedDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+theorem normalizedSineCandidate_commuted_highTime_bound (j l : ℕ) (a z T y : ℝ)
+    (hjl : j + l ≤ 3) (ha : 0 < a) (hT : 0 < T) (hlarge : a ^ 2 ≤ T)
+    (hy : |y| ≤ a) (hz : |z| ≤ a) :
+    ‖iteratedDeriv j (fun w => iteratedDeriv l (fun S => normalizedSineCandidate a z S w) T) y‖ ≤
+      normalizedDerivativeConstant j l * (1 / Real.sqrt T) ^ (j + 2 * l) := by
+
+end Shao.C2.IntervalSineNormalizedHighTime
