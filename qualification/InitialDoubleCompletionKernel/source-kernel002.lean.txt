@@ -1,0 +1,836 @@
+import Shao.C2.BrownianKilledSineIdentification
+import Shao.C2.BridgeUpperAffineIdentification
+import Shao.C2.BridgeLowerIdentification
+import Shao.C2.InitialCompletionVariation
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.InitialDoubleCompletionKernel
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+def doubleCompletion (nu : Measure BridgeNoise) (x w : ℝ) : ℝ :=
+  nu.real ((strictUpper x 0 1 w)ᶜ ∩ (strictLower x 0 1 w)ᶜ)
+
+private theorem doubleCompletion_eq (nu : Measure BridgeNoise) [IsProbabilityMeasure nu]
+    (x w : ℝ) :
+    doubleCompletion nu x w =
+      1 - upperCompletion nu x 0 1 w - lowerCompletion nu x 0 1 w +
+        intervalCompletion nu x 0 1 w := by
+  classical
+  let A : Set BridgeNoise := strictUpper x 0 1 w
+  let B : Set BridgeNoise := strictLower x 0 1 w
+  have hA : MeasurableSet A := measurableSet_strictUpper x 0 1 w
+  have hB : MeasurableSet B := measurableSet_strictLower x 0 1 w
+  have h0 := measureReal_inter_add_sdiff (μ := nu) (s := Set.univ) hA
+  have h0' : nu.real A + nu.real Aᶜ = 1 := by
+    simpa only [Set.univ_inter, ← Set.compl_eq_univ_sdiff, probReal_univ] using h0
+  have h1 := measureReal_inter_add_sdiff (μ := nu) (s := Aᶜ) hB
+  have h2 := measureReal_inter_add_sdiff (μ := nu) (s := B) hA
+  have hBA : B \ A = Aᶜ ∩ B := by
+    ext g
+    simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_compl_iff]
+    exact and_comm
+  rw [show B ∩ A = A ∩ B from Set.inter_comm B A, hBA] at h2
+  change nu.real (Aᶜ ∩ B) + nu.real (Aᶜ ∩ Bᶜ) = nu.real Aᶜ at h1
+  change nu.real (Aᶜ ∩ Bᶜ) = 1 - nu.real A - nu.real B + nu.real (A ∩ B)
+  linarith
+
+private theorem doubleCompletion_bounds (nu : Measure BridgeNoise) [IsProbabilityMeasure nu]
+    (x w : ℝ) :
+    0 ≤ doubleCompletion nu x w ∧ doubleCompletion nu x w ≤ 1 := by
+  refine ⟨measureReal_nonneg, ?_⟩
+  unfold doubleCompletion
+  calc
+    _ ≤ nu.real Set.univ := measureReal_mono (Set.subset_univ _) (by finiteness)
+    _ = 1 := probReal_univ
+
+private theorem measurable_doubleCompletion (nu : Measure BridgeNoise) [IsProbabilityMeasure nu]
+    (x : ℝ) : Measurable (doubleCompletion nu x) := by
+  let p : ℝ → Shao.C2.CompletionMeasurability.CompletionParameters :=
+    fun w => (x, 0, 1, w)
+  have hp : Measurable p := by
+    dsimp only [p]
+    fun_prop
+  have hU : Measurable (fun w : ℝ => upperCompletion nu x 0 1 w) := by
+    simpa only [Function.comp_def, p] using
+      (Shao.C2.CompletionMeasurability.measurable_upperCompletion_parameters nu).comp hp
+  have hL : Measurable (fun w : ℝ => lowerCompletion nu x 0 1 w) := by
+    simpa only [Function.comp_def, p] using
+      (Shao.C2.CompletionMeasurability.measurable_lowerCompletion_parameters nu).comp hp
+  have hI : Measurable (fun w : ℝ => intervalCompletion nu x 0 1 w) := by
+    simpa only [Function.comp_def, p] using
+      (Shao.C2.CompletionMeasurability.measurable_intervalCompletion_parameters nu).comp hp
+  have heq : doubleCompletion nu x = fun w : ℝ =>
+      1 - upperCompletion nu x 0 1 w - lowerCompletion nu x 0 1 w +
+        intervalCompletion nu x 0 1 w := by
+    funext w
+    exact doubleCompletion_eq nu x w
+  rw [heq]
+  exact ((measurable_const.sub hU).sub hL).add hI
+
+private theorem doubleCompletion_exterior
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x)
+    (w : ℝ) (hw : x ≤ |w|) :
+    doubleCompletion (bridgeLaw B P) x w = Real.exp (-2 * x * (x + |w|)) := by
+  classical
+  letI : IsProbabilityMeasure (bridgeLaw B P) := isProbabilityMeasure_bridgeLaw B P hB
+  by_cases hw0 : 0 ≤ w
+  · have hxw : x ≤ w := by simpa only [abs_of_nonneg hw0] using hw
+    have hdead : strictUpper x 0 1 w = ∅ := by
+      apply Set.eq_empty_iff_forall_notMem.mpr
+      intro g hg
+      have ht := hg (1 : BridgeTime)
+      rw [(bridgePath_endpoints 0 1 w g).2] at ht
+      linarith
+    have hU : upperCompletion (bridgeLaw B P) x 0 1 w = 0 := by
+      simp only [upperCompletion, hdead, measureReal_empty]
+    have hI : intervalCompletion (bridgeLaw B P) x 0 1 w = 0 := by
+      simp [intervalCompletion, strictInterval, hdead]
+    have hL := Shao.C2.BridgeLowerIdentification.bridge_lower_formula B P hB x 0 1 w
+      (by norm_num) (by linarith) (by linarith)
+    have hj : doubleCompletion (bridgeLaw B P) x w = Real.exp (-2 * x * (x + w)) := by
+      rw [doubleCompletion_eq, hU, hI, hL]
+      simp only [add_zero, div_one]
+      ring
+    simpa only [abs_of_nonneg hw0] using hj
+  · have hwneg : w < 0 := lt_of_not_ge hw0
+    have hwx : w ≤ -x := by
+      have hh : x ≤ -w := by simpa only [abs_of_neg hwneg] using hw
+      linarith
+    have hdead : strictLower x 0 1 w = ∅ := by
+      apply Set.eq_empty_iff_forall_notMem.mpr
+      intro g hg
+      have ht := hg (1 : BridgeTime)
+      rw [(bridgePath_endpoints 0 1 w g).2] at ht
+      linarith
+    have hL : lowerCompletion (bridgeLaw B P) x 0 1 w = 0 := by
+      simp only [lowerCompletion, hdead, measureReal_empty]
+    have hI : intervalCompletion (bridgeLaw B P) x 0 1 w = 0 := by
+      simp [intervalCompletion, strictInterval, hdead]
+    have hU := Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula B P hB x 0 1 w
+      (by norm_num) hx (by linarith)
+    have hj : doubleCompletion (bridgeLaw B P) x w = Real.exp (-2 * x * (x - w)) := by
+      rw [doubleCompletion_eq, hL, hI, hU]
+      simp only [sub_zero, div_one]
+      ring
+    simpa only [abs_of_neg hwneg, sub_eq_add_neg] using hj
+
+
+private theorem doubleCompletion_interior_images
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x)
+    (w : ℝ) (hw : |w| < x) :
+    doubleCompletion (bridgeLaw B P) x w =
+      Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w 1) +
+        Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w (-1)) +
+          ∑' n : ℕ, Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock 0 x w 1 0 n := by
+  classical
+  letI : IsProbabilityMeasure (bridgeLaw B P) := isProbabilityMeasure_bridgeLaw B P hB
+  have hU := Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula B P hB x 0 1 w
+    (by norm_num) hx (abs_lt.mp hw).2
+  have hL := Shao.C2.BridgeLowerIdentification.bridge_lower_formula B P hB x 0 1 w
+    (by norm_num) (by linarith) (abs_lt.mp hw).1
+  have hI := Shao.C2.BrownianKilledSineIdentification.bridge_interval_eq_image B P hB x 0 1 w hx
+    (by simpa only [abs_zero] using hx) (by norm_num) hw
+  have hB0 : Shao.C2.IntervalImageExponents.imageB x 0 w 0 = 2 * x * (x + w) := by
+    unfold Shao.C2.IntervalImageExponents.imageB
+    ring
+  have hBm : Shao.C2.IntervalImageExponents.imageB x 0 w (-1) = 2 * x * (x - w) := by
+    unfold Shao.C2.IntervalImageExponents.imageB
+    ring
+  have he0 : -(2 * x * (x + w)) = -2 * x * (x + w) := by ring
+  have hem : -(2 * x * (x - w)) = -2 * x * (x - w) := by ring
+  rw [doubleCompletion_eq, hU, hL, hI,
+    Shao.C2.IntervalImageCandidateSpatial.intervalImageCandidate_eq_images]
+  simp only [sub_zero, add_zero, div_one]
+  rw [hB0, hBm, he0, hem]
+  ring
+
+
+private theorem initial_image_tail_eq (x w : ℝ) (n : ℕ) :
+    Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock 0 x w 1 0 n =
+      Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 + 4 * ((n : ℝ) + 2) * x * w)) +
+        Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 - 4 * ((n : ℝ) + 2) * x * w)) -
+        Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 + 2 * (2 * (n : ℝ) + 3) * x * w)) -
+        Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 - 2 * (2 * (n : ℝ) + 3) * x * w)) := by
+  have ha : Shao.C2.IntervalImageExponents.imageA x 0 w ((n : ℤ) + 2 : ℤ) =
+      8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 + 4 * ((n : ℝ) + 2) * x * w := by
+    unfold Shao.C2.IntervalImageExponents.imageA
+    push_cast
+    ring
+  have ham : Shao.C2.IntervalImageExponents.imageA x 0 w (-((n : ℤ) + 2) : ℤ) =
+      8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 - 4 * ((n : ℝ) + 2) * x * w := by
+    unfold Shao.C2.IntervalImageExponents.imageA
+    push_cast
+    ring
+  have hb : Shao.C2.IntervalImageExponents.imageB x 0 w ((n : ℤ) + 1 : ℤ) =
+      2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 + 2 * (2 * (n : ℝ) + 3) * x * w := by
+    unfold Shao.C2.IntervalImageExponents.imageB
+    push_cast
+    ring
+  have hbm : Shao.C2.IntervalImageExponents.imageB x 0 w (-((n : ℤ) + 2) : ℤ) =
+      2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 - 2 * (2 * (n : ℝ) + 3) * x * w := by
+    unfold Shao.C2.IntervalImageExponents.imageB
+    push_cast
+    ring
+  simp only [Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock,
+    iteratedDeriv_zero, div_one]
+  rw [ha, ham, hb, hbm]
+
+private theorem antitoneOn_variation_le (f : ℝ → ℝ) (S : Set ℝ) (C : ℝ)
+    (hf : AntitoneOn f S) (hf0 : ∀ w ∈ S, 0 ≤ f w) (hfC : ∀ w ∈ S, f w ≤ C) :
+    eVariationOn f S ≤ ENNReal.ofReal C := by
+  apply iSup_le
+  rintro ⟨n, w, hw, hmem⟩
+  have ht (m : ℕ) :
+      (∑ i ∈ Finset.range m, (f (w i) - f (w (i + 1)))) = f (w 0) - f (w m) := by
+    induction m with
+    | zero => simp
+    | succ m ih => rw [Finset.sum_range_succ, ih]; ring
+  calc
+    _ = ∑ i ∈ Finset.range n, ENNReal.ofReal (f (w i) - f (w (i + 1))) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      have hh := hf (hmem i) (hmem (i + 1)) (hw (Nat.le_succ i))
+      rw [edist_dist, Real.dist_eq, abs_of_nonpos (sub_nonpos.mpr hh)]
+      congr 1
+      ring
+    _ = ENNReal.ofReal (∑ i ∈ Finset.range n, (f (w i) - f (w (i + 1)))) := by
+      rw [ENNReal.ofReal_sum_of_nonneg]
+      intro i hi
+      exact sub_nonneg.mpr (hf (hmem i) (hmem (i + 1)) (hw (Nat.le_succ i)))
+    _ = ENNReal.ofReal (f (w 0) - f (w n)) := by rw [ht]
+    _ ≤ ENNReal.ofReal C := by
+      apply ENNReal.ofReal_le_ofReal
+      linarith [hfC (w 0) (hmem 0), hf0 (w n) (hmem n)]
+
+
+private theorem monotoneOn_variation_le (f : ℝ → ℝ) (S : Set ℝ) (C : ℝ)
+    (hf : MonotoneOn f S) (hf0 : ∀ w ∈ S, 0 ≤ f w) (hfC : ∀ w ∈ S, f w ≤ C) :
+    eVariationOn f S ≤ ENNReal.ofReal C := by
+  apply iSup_le
+  rintro ⟨n, w, hw, hmem⟩
+  have ht (m : ℕ) :
+      (∑ i ∈ Finset.range m, (f (w (i + 1)) - f (w i))) = f (w m) - f (w 0) := by
+    induction m with
+    | zero => simp
+    | succ m ih => rw [Finset.sum_range_succ, ih]; ring
+  calc
+    _ = ∑ i ∈ Finset.range n, ENNReal.ofReal (f (w (i + 1)) - f (w i)) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      have hh := hf (hmem i) (hmem (i + 1)) (hw (Nat.le_succ i))
+      rw [edist_dist, Real.dist_eq, abs_of_nonneg (sub_nonneg.mpr hh)]
+    _ = ENNReal.ofReal (∑ i ∈ Finset.range n, (f (w (i + 1)) - f (w i))) := by
+      rw [ENNReal.ofReal_sum_of_nonneg]
+      intro i hi
+      exact sub_nonneg.mpr (hf (hmem i) (hmem (i + 1)) (hw (Nat.le_succ i)))
+    _ = ENNReal.ofReal (f (w n) - f (w 0)) := by rw [ht]
+    _ ≤ ENNReal.ofReal C := by
+      apply ENNReal.ofReal_le_ofReal
+      linarith [hfC (w n) (hmem n), hf0 (w 0) (hmem 0)]
+
+private theorem variation_add_le (f g : ℝ → ℝ) (S : Set ℝ) :
+    eVariationOn (fun w => f w + g w) S ≤ eVariationOn f S + eVariationOn g S := by
+  apply iSup_le
+  rintro ⟨n, w, hw, hmem⟩
+  calc
+    _ ≤ ∑ i ∈ Finset.range n,
+        (edist (f (w (i + 1))) (f (w i)) + edist (g (w (i + 1))) (g (w i))) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      simp only [edist_dist, Real.dist_eq]
+      rw [← ENNReal.ofReal_add (abs_nonneg _) (abs_nonneg _)]
+      apply ENNReal.ofReal_le_ofReal
+      have he : (f (w (i + 1)) + g (w (i + 1))) - (f (w i) + g (w i)) =
+          (f (w (i + 1)) - f (w i)) + (g (w (i + 1)) - g (w i)) := by ring
+      rw [he]
+      exact abs_add_le _ _
+    _ = (∑ i ∈ Finset.range n, edist (f (w (i + 1))) (f (w i))) +
+        ∑ i ∈ Finset.range n, edist (g (w (i + 1))) (g (w i)) := by
+      rw [Finset.sum_add_distrib]
+    _ ≤ eVariationOn f S + eVariationOn g S :=
+      add_le_add (eVariationOn.sum_le (f := f) (n := n) hw hmem)
+        (eVariationOn.sum_le (f := g) (n := n) hw hmem)
+
+
+private theorem variation_neg_eq (f : ℝ → ℝ) (S : Set ℝ) :
+    eVariationOn (fun w => -f w) S = eVariationOn f S := by
+  unfold eVariationOn
+  simp only [edist_neg_neg]
+
+
+private theorem variation_le_of_pointwise_limit (F : ℕ → ℝ → ℝ) (f : ℝ → ℝ)
+    (S : Set ℝ) (C : ENNReal)
+    (hconv : ∀ w ∈ S, Tendsto (fun N : ℕ => F N w) atTop (nhds (f w)))
+    (hbound : ∀ N : ℕ, eVariationOn (F N) S ≤ C) :
+    eVariationOn f S ≤ C := by
+  apply iSup_le
+  rintro ⟨n, w, hw, hmem⟩
+  have hlim : Tendsto
+      (fun N : ℕ => ∑ i ∈ Finset.range n, edist (F N (w (i + 1))) (F N (w i)))
+      atTop (nhds (∑ i ∈ Finset.range n, edist (f (w (i + 1))) (f (w i)))) := by
+    apply tendsto_finsetSum (Finset.range n)
+    intro i hi
+    exact (hconv (w (i + 1)) (hmem (i + 1))).edist (hconv (w i) (hmem i))
+  apply le_of_tendsto hlim
+  exact Filter.Eventually.of_forall fun N =>
+    (eVariationOn.sum_le (f := F N) (n := n) hw hmem).trans (hbound N)
+
+private theorem initial_image_geometric_majorants (x v k : ℝ)
+    (hx : 0 ≤ x) (hk : 1 ≤ k) (hv : |v| ≤ x) :
+    Real.exp (-(8 * k ^ 2 * x ^ 2 + 4 * k * x * v)) ≤ Real.exp (-4 * k * x ^ 2) ∧
+      Real.exp (-(8 * k ^ 2 * x ^ 2 - 4 * k * x * v)) ≤ Real.exp (-4 * k * x ^ 2) ∧
+      Real.exp (-(2 * (2 * k + 1) ^ 2 * x ^ 2 + 2 * (2 * k + 1) * x * v)) ≤
+        Real.exp (-4 * k * x ^ 2) ∧
+      Real.exp (-(2 * (2 * k + 1) ^ 2 * x ^ 2 - 2 * (2 * k + 1) * x * v)) ≤
+        Real.exp (-4 * k * x ^ 2) := by
+  have hk0 : 0 ≤ k := by linarith
+  have hkm : 0 ≤ k - 1 := by linarith
+  have hcA : 0 ≤ 4 * k * x := by positivity
+  have hAL := mul_le_mul_of_nonneg_left (abs_le.mp hv).1 hcA
+  have hAR := mul_le_mul_of_nonneg_left (abs_le.mp hv).2 hcA
+  have hgapA : 0 ≤ 8 * k * (k - 1) * x ^ 2 := by positivity
+  have hq : 0 ≤ 2 * k + 1 := by linarith
+  have hcB : 0 ≤ 2 * (2 * k + 1) * x := by positivity
+  have hBL := mul_le_mul_of_nonneg_left (abs_le.mp hv).1 hcB
+  have hBR := mul_le_mul_of_nonneg_left (abs_le.mp hv).2 hcB
+  have hgapB : 0 ≤ 8 * (k * x) ^ 2 := by positivity
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> apply Real.exp_le_exp.mpr
+  all_goals nlinarith only [hAL, hAR, hgapA, hBL, hBR, hgapB]
+
+
+private theorem initial_geometric_ratio_bound (x : ℝ) (hx : 1 ≤ x) :
+    0 < Real.exp (-4 * x ^ 2) ∧ Real.exp (-4 * x ^ 2) ≤ 1 / 2 := by
+  have hx0 : 0 ≤ x := by linarith
+  have hxx : 1 ≤ x ^ 2 := by nlinarith [sq_nonneg (x - 1)]
+  have he : 2 ≤ Real.exp (4 * x ^ 2) := by
+    nlinarith [Real.add_one_le_exp (4 * x ^ 2)]
+  refine ⟨Real.exp_pos _, ?_⟩
+  have hinv : 1 / Real.exp (4 * x ^ 2) ≤ (1 / 2 : ℝ) :=
+    one_div_le_one_div_of_le (by norm_num) he
+  have hneg : -4 * x ^ 2 = -(4 * x ^ 2) := by ring
+  rw [hneg, Real.exp_neg]
+  simpa only [one_div] using hinv
+
+private theorem initial_geometric_series_budget (r : ℝ) (hr0 : 0 < r) (hr : r ≤ 1 / 2) :
+    Summable (fun n : ℕ => 2 * r ^ (n + 2) + 2 * r ^ (n + 1)) ∧
+      (∑' n : ℕ, (2 * r ^ (n + 2) + 2 * r ^ (n + 1))) ≤ 6 * r ∧
+      ∀ N : ℕ, 2 * r + (∑ n ∈ Finset.range N, (2 * r ^ (n + 2) + 2 * r ^ (n + 1))) ≤ 8 * r := by
+  have habs : |r| < 1 := by rw [abs_of_pos hr0]; linarith
+  have hg : Summable (fun n : ℕ => r ^ n) := summable_geometric_of_abs_lt_one habs
+  have hfun : (fun n : ℕ => 2 * r ^ (n + 2) + 2 * r ^ (n + 1)) =
+      (fun n : ℕ => (2 * r ^ 2 + 2 * r) * r ^ n) := by
+    funext n
+    simp only [pow_add, pow_one]
+    ring
+  have hu : Summable (fun n : ℕ => 2 * r ^ (n + 2) + 2 * r ^ (n + 1)) := by
+    rw [hfun]
+    exact hg.mul_left _
+  have hsum : (∑' n : ℕ, (2 * r ^ (n + 2) + 2 * r ^ (n + 1))) =
+      (2 * r ^ 2 + 2 * r) / (1 - r) := by
+    rw [hfun, tsum_mul_left, tsum_geometric_of_abs_lt_one habs, div_eq_mul_inv]
+  have hden : 0 < 1 - r := by linarith
+  have hmain : (2 * r ^ 2 + 2 * r) / (1 - r) ≤ 6 * r := by
+    apply (div_le_iff₀ hden).2
+    have hp : 0 ≤ r * (1 - 2 * r) := mul_nonneg hr0.le (by linarith)
+    nlinarith only [hp]
+  refine ⟨hu, ?_, ?_⟩
+  · rw [hsum]
+    exact hmain
+  · intro N
+    have hfinite := Summable.sum_le_tsum (Finset.range N)
+      (fun n _ => add_nonneg (mul_nonneg (by norm_num) (pow_nonneg hr0.le _))
+        (mul_nonneg (by norm_num) (pow_nonneg hr0.le _))) hu
+    calc
+      _ ≤ 2 * r + ∑' n : ℕ, (2 * r ^ (n + 2) + 2 * r ^ (n + 1)) :=
+        add_le_add le_rfl hfinite
+      _ = 2 * r + (2 * r ^ 2 + 2 * r) / (1 - r) := by rw [hsum]
+      _ ≤ 8 * r := by linarith only [hmain]
+
+theorem actual_initial_double_completion_kernel
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 1 ≤ x) :
+    let f : ℝ → ℝ := doubleCompletion (bridgeLaw B P) x
+    let r : ℝ := Real.exp (-4 * x ^ 2)
+    Continuous f ∧
+      (∀ w : ℝ, 0 ≤ f w ∧ f w ≤ 8 * r) ∧
+      eVariationOn f Set.univ ≤ ENNReal.ofReal (10 * r) ∧
+      Tendsto f atTop (nhds 0) ∧ Tendsto f atBot (nhds 0) := by
+  classical
+  letI : IsProbabilityMeasure (bridgeLaw B P) := isProbabilityMeasure_bridgeLaw B P hB
+  let f : ℝ → ℝ := doubleCompletion (bridgeLaw B P) x
+  let r : ℝ := Real.exp (-4 * x ^ 2)
+  change Continuous f ∧ (∀ w, 0 ≤ f w ∧ f w ≤ 8 * r) ∧
+    eVariationOn f Set.univ ≤ ENNReal.ofReal (10 * r) ∧
+    Tendsto f atTop (nhds 0) ∧ Tendsto f atBot (nhds 0)
+  have hx0 : 0 ≤ x := by linarith
+  have hxp : 0 < x := by linarith
+  have hr0 : 0 < r := (initial_geometric_ratio_bound x hx).1
+  have hrhalf : r ≤ 1 / 2 := (initial_geometric_ratio_bound x hx).2
+  have hr1 : r < 1 := by linarith
+  let c : ℝ → ℝ := fun w => max (-x) (min x w)
+  have hc : Continuous c := by dsimp [c]; fun_prop
+  have hcmono : Monotone c := by
+    intro v w hvw
+    exact max_le_max_left (-x) (min_le_min_left x hvw)
+  have hcrange (w : ℝ) : |c w| ≤ x := by
+    apply abs_le.mpr
+    constructor
+    · exact le_max_left _ _
+    · exact max_le (by linarith) (min_le_left _ _)
+  have hcx : c x = x := by simp [c, max_eq_right (by linarith : -x ≤ x)]
+  have hcmx : c (-x) = -x := by simp [c, min_eq_right (by linarith : -x ≤ x)]
+  let I : ℝ → ℝ → ℝ → ℝ := fun a b w => Real.exp (-(a + b * c w))
+  have hIpos (a b w : ℝ) : 0 < I a b w := Real.exp_pos _
+  have hIcont (a b : ℝ) : Continuous (I a b) := by dsimp [I]; fun_prop
+  have hIvar (a b C : ℝ) (hb : ∀ w, I a b w ≤ C) :
+      eVariationOn (I a b) Set.univ ≤ ENNReal.ofReal C := by
+    rcases le_total 0 b with hb0 | hb0
+    · apply antitoneOn_variation_le (I a b) Set.univ C
+      · intro v hv w hw hvw
+        change Real.exp (-(a + b * c w)) ≤ Real.exp (-(a + b * c v))
+        apply Real.exp_le_exp.mpr
+        have hh := mul_le_mul_of_nonneg_left (hcmono hvw) hb0
+        linarith
+      · intro w hw; exact (hIpos a b w).le
+      · intro w hw; exact hb w
+    · apply monotoneOn_variation_le (I a b) Set.univ C
+      · intro v hv w hw hvw
+        change Real.exp (-(a + b * c v)) ≤ Real.exp (-(a + b * c w))
+        apply Real.exp_le_exp.mpr
+        have hh := mul_le_mul_of_nonpos_left (hcmono hvw) hb0
+        linarith
+      · intro w hw; exact (hIpos a b w).le
+      · intro w hw; exact hb w
+  let A : ℕ → ℝ → ℝ := fun k => I (8 * (k : ℝ) ^ 2 * x ^ 2) (4 * (k : ℝ) * x)
+  let D : ℕ → ℝ → ℝ := fun k => I (8 * (k : ℝ) ^ 2 * x ^ 2) (-(4 * (k : ℝ) * x))
+  let J : ℕ → ℝ → ℝ := fun k =>
+    I (2 * (2 * (k : ℝ) + 1) ^ 2 * x ^ 2) (2 * (2 * (k : ℝ) + 1) * x)
+  let K : ℕ → ℝ → ℝ := fun k =>
+    I (2 * (2 * (k : ℝ) + 1) ^ 2 * x ^ 2) (-(2 * (2 * (k : ℝ) + 1) * x))
+  have hexp (k : ℕ) : Real.exp (-4 * (k : ℝ) * x ^ 2) = r ^ k := by
+    dsimp [r]
+    rw [← Real.exp_nat_mul]
+    congr 1
+    ring
+  have hAbound (k : ℕ) (hk : 1 ≤ k) (w : ℝ) :
+      A k w ≤ r ^ k ∧ D k w ≤ r ^ k := by
+    have hk' : (1 : ℝ) ≤ (k : ℝ) := by exact_mod_cast hk
+    have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+    constructor
+    · simpa only [A, I, hexp] using hh.1
+    · simpa only [D, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.1
+  have hJbound (k : ℕ) (hk : 1 ≤ k) (w : ℝ) :
+      J k w ≤ r ^ k ∧ K k w ≤ r ^ k := by
+    have hk' : (1 : ℝ) ≤ (k : ℝ) := by exact_mod_cast hk
+    have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+    constructor
+    · simpa only [J, I, hexp] using hh.2.2.1
+    · simpa only [K, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.2.2
+  have hAvar (k : ℕ) (hk : 1 ≤ k) :
+      eVariationOn (A k) Set.univ ≤ ENNReal.ofReal (r ^ k) ∧
+        eVariationOn (D k) Set.univ ≤ ENNReal.ofReal (r ^ k) := by
+    exact ⟨hIvar _ _ _ (fun w => (hAbound k hk w).1),
+      hIvar _ _ _ (fun w => (hAbound k hk w).2)⟩
+  have hJvar (k : ℕ) (hk : 1 ≤ k) :
+      eVariationOn (J k) Set.univ ≤ ENNReal.ofReal (r ^ k) ∧
+        eVariationOn (K k) Set.univ ≤ ENNReal.ofReal (r ^ k) := by
+    exact ⟨hIvar _ _ _ (fun w => (hJbound k hk w).1),
+      hIvar _ _ _ (fun w => (hJbound k hk w).2)⟩
+  let T : ℕ → ℝ → ℝ := fun n w =>
+    A (n + 2) w + D (n + 2) w - J (n + 1) w - K (n + 1) w
+  let u : ℕ → ℝ := fun n => 2 * r ^ (n + 2) + 2 * r ^ (n + 1)
+  have hu0 (n : ℕ) : 0 ≤ u n := by dsimp [u]; positivity
+  have hu : Summable u := (initial_geometric_series_budget r hr0 hrhalf).1
+  have hbudget (N : ℕ) : 2 * r + (∑ n ∈ Finset.range N, u n) ≤ 8 * r :=
+    (initial_geometric_series_budget r hr0 hrhalf).2.2 N
+  have hTnorm (n : ℕ) (w : ℝ) : ‖T n w‖ ≤ u n := by
+    have hA := hAbound (n + 2) (by omega) w
+    have hJ := hJbound (n + 1) (by omega) w
+    rw [Real.norm_eq_abs]
+    dsimp only [T]
+    calc
+      _ ≤ |A (n + 2) w + D (n + 2) w - J (n + 1) w| + |K (n + 1) w| := abs_sub _ _
+      _ ≤ (|A (n + 2) w + D (n + 2) w| + |J (n + 1) w|) + |K (n + 1) w| :=
+        add_le_add (abs_sub (A (n + 2) w + D (n + 2) w) (J (n + 1) w)) le_rfl
+      _ ≤ ((|A (n + 2) w| + |D (n + 2) w|) + |J (n + 1) w|) + |K (n + 1) w| :=
+        add_le_add (add_le_add (abs_add_le (A (n + 2) w) (D (n + 2) w)) le_rfl) le_rfl
+      _ ≤ u n := by
+        rw [abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _),
+          abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _)]
+        dsimp [u]
+        linarith only [hA.1, hA.2, hJ.1, hJ.2]
+  have hsub (p q : ℝ → ℝ) :
+      eVariationOn (fun w => p w - q w) Set.univ ≤
+        eVariationOn p Set.univ + eVariationOn q Set.univ := by
+    simpa only [sub_eq_add_neg, variation_neg_eq] using
+      variation_add_le p (fun w => -q w) Set.univ
+  have hTvar (n : ℕ) : eVariationOn (T n) Set.univ ≤ ENNReal.ofReal (u n) := by
+    have hA := hAvar (n + 2) (by omega)
+    have hJ := hJvar (n + 1) (by omega)
+    change eVariationOn
+      (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w - K (n + 1) w)
+      Set.univ ≤ ENNReal.ofReal (u n)
+    calc
+      _ ≤ eVariationOn (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w) Set.univ +
+          eVariationOn (K (n + 1)) Set.univ :=
+        hsub (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w) (K (n + 1))
+      _ ≤ (eVariationOn (fun w => A (n + 2) w + D (n + 2) w) Set.univ +
+          eVariationOn (J (n + 1)) Set.univ) + eVariationOn (K (n + 1)) Set.univ :=
+        add_le_add (hsub (fun w => A (n + 2) w + D (n + 2) w) (J (n + 1))) le_rfl
+      _ ≤ ((eVariationOn (A (n + 2)) Set.univ + eVariationOn (D (n + 2)) Set.univ) +
+          eVariationOn (J (n + 1)) Set.univ) + eVariationOn (K (n + 1)) Set.univ :=
+        add_le_add (add_le_add (variation_add_le (A (n + 2)) (D (n + 2)) Set.univ) le_rfl) le_rfl
+      _ ≤ ((ENNReal.ofReal (r ^ (n + 2)) + ENNReal.ofReal (r ^ (n + 2))) +
+          ENNReal.ofReal (r ^ (n + 1))) + ENNReal.ofReal (r ^ (n + 1)) :=
+        add_le_add (add_le_add (add_le_add hA.1 hA.2) hJ.1) hJ.2
+      _ = ENNReal.ofReal (u n) := by
+        rw [← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity)]
+        congr 1
+        dsimp [u]
+        ring
+  let q : ℕ → ℝ → ℝ := fun N w => ∑ n ∈ Finset.range N, T n w
+  have hqvar (N : ℕ) :
+      eVariationOn (q N) Set.univ ≤ ENNReal.ofReal (∑ n ∈ Finset.range N, u n) := by
+    induction N with
+    | zero => simp [q, eVariationOn]
+    | succ N ih =>
+      have heq : q (N + 1) = fun w => q N w + T N w := by
+        funext w
+        exact Finset.sum_range_succ _ N
+      rw [heq, Finset.sum_range_succ]
+      calc
+        _ ≤ eVariationOn (q N) Set.univ + eVariationOn (T N) Set.univ :=
+          variation_add_le (q N) (T N) Set.univ
+        _ ≤ ENNReal.ofReal (∑ n ∈ Finset.range N, u n) + ENNReal.ofReal (u N) :=
+          add_le_add ih (hTvar N)
+        _ = ENNReal.ofReal ((∑ n ∈ Finset.range N, u n) + u N) := by
+          rw [ENNReal.ofReal_add (Finset.sum_nonneg (fun n hn => hu0 n)) (hu0 N)]
+  let S : ℕ → ℝ → ℝ := fun N w => A 1 w + D 1 w + q N w
+  have hSvar (N : ℕ) : eVariationOn (S N) Set.univ ≤ ENNReal.ofReal (8 * r) := by
+    have hA := hAvar 1 (by omega)
+    change eVariationOn (fun w => A 1 w + D 1 w + q N w) Set.univ ≤
+      ENNReal.ofReal (8 * r)
+    calc
+      _ ≤ eVariationOn (fun w => A 1 w + D 1 w) Set.univ + eVariationOn (q N) Set.univ :=
+        variation_add_le (fun w => A 1 w + D 1 w) (q N) Set.univ
+      _ ≤ (eVariationOn (A 1) Set.univ + eVariationOn (D 1) Set.univ) +
+          eVariationOn (q N) Set.univ :=
+        add_le_add (variation_add_le (A 1) (D 1) Set.univ) le_rfl
+      _ ≤ (ENNReal.ofReal (r ^ 1) + ENNReal.ofReal (r ^ 1)) +
+          ENNReal.ofReal (∑ n ∈ Finset.range N, u n) := add_le_add (add_le_add hA.1 hA.2) (hqvar N)
+      _ = ENNReal.ofReal (2 * r + ∑ n ∈ Finset.range N, u n) := by
+        simp only [pow_one]
+        rw [← ENNReal.ofReal_add hr0.le hr0.le,
+          ← ENNReal.ofReal_add (by positivity) (Finset.sum_nonneg (fun n hn => hu0 n))]
+        congr 1
+        ring
+      _ ≤ ENNReal.ofReal (8 * r) := ENNReal.ofReal_le_ofReal (hbudget N)
+  have hSnorm (N : ℕ) (w : ℝ) : |S N w| ≤ 8 * r := by
+    have hA := hAbound 1 (by omega) w
+    have hqnorm : |q N w| ≤ ∑ n ∈ Finset.range N, u n := by
+      calc
+        _ ≤ ∑ n ∈ Finset.range N, |T n w| := Finset.abs_sum_le_sum_abs _ _
+        _ ≤ ∑ n ∈ Finset.range N, u n := by
+          apply Finset.sum_le_sum
+          intro n hn
+          simpa only [Real.norm_eq_abs] using hTnorm n w
+    calc
+      _ ≤ |A 1 w + D 1 w| + |q N w| := abs_add_le (A 1 w + D 1 w) (q N w)
+      _ ≤ (|A 1 w| + |D 1 w|) + |q N w| :=
+        add_le_add (abs_add_le (A 1 w) (D 1 w)) le_rfl
+      _ ≤ 2 * r + ∑ n ∈ Finset.range N, u n := by
+        rw [abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _)]
+        simp only [pow_one] at hA
+        linarith only [hA.1, hA.2, hqnorm]
+      _ ≤ 8 * r := hbudget N
+  have hTsummable (w : ℝ) : Summable (fun n => T n w) := by
+    exact (Summable.of_nonneg_of_le (fun n => norm_nonneg (T n w))
+      (fun n => hTnorm n w) hu).of_norm
+  let F : ℝ → ℝ := fun w => A 1 w + D 1 w + ∑' n : ℕ, T n w
+  have hSconv (w : ℝ) : Tendsto (fun N => S N w) atTop (nhds (F w)) := by
+    exact tendsto_const_nhds.add (hTsummable w).hasSum.tendsto_sum_nat
+  have hFcont : Continuous F := by
+    apply Continuous.add
+    · exact (hIcont _ _).add (hIcont _ _)
+    · apply continuous_tsum _ hu hTnorm
+      intro n
+      exact (((hIcont _ _).add (hIcont _ _)).sub (hIcont _ _)).sub (hIcont _ _)
+  have hFvar : eVariationOn F Set.univ ≤ ENNReal.ofReal (8 * r) :=
+    variation_le_of_pointwise_limit S F Set.univ (ENNReal.ofReal (8 * r))
+      (fun w hw => hSconv w) hSvar
+  have hFbound (w : ℝ) : |F w| ≤ 8 * r := by
+    apply le_of_tendsto (hSconv w).abs
+    exact Filter.Eventually.of_forall fun N => hSnorm N w
+  have hFc (v w : ℝ) (hvw : c v = c w) : F v = F w := by
+    dsimp only [F, T, A, D, J, K, I]
+    simp only [hvw]
+  -- The native spatialTailBlock truncation has wall value r + s_(N+1).
+  let s : ℕ → ℝ := fun k => Real.exp (-4 * (k : ℝ) * (2 * (k : ℝ) + 1) * x ^ 2)
+  have hA_wall (k : ℕ) : A k x = s k := by
+    dsimp only [A, I, s]
+    rw [hcx]
+    congr 1
+    ring
+  have hK_wall (k : ℕ) : K k x = s k := by
+    dsimp only [K, I, s]
+    rw [hcx]
+    congr 1
+    ring
+  have hDJ_wall (n : ℕ) : D (n + 2) x = J (n + 1) x := by
+    dsimp only [D, J, I]
+    rw [hcx]
+    congr 1
+    push_cast
+    ring
+  have hT_wall (n : ℕ) : T n x = s (n + 2) - s (n + 1) := by
+    dsimp only [T]
+    rw [hA_wall, hK_wall, hDJ_wall]
+    ring
+  have hD1_wall : D 1 x = r := by
+    dsimp only [D, I, r]
+    rw [hcx]
+    congr 1
+    norm_num <;> ring
+  have hS_wall (N : ℕ) : S N x = r + s (N + 1) := by
+    induction N with
+    | zero => simp [S, q, hA_wall, hD1_wall, add_comm]
+    | succ N ih =>
+      have heq : S (N + 1) x = S N x + T N x := by
+        dsimp only [S, q]
+        rw [Finset.sum_range_succ]
+        ring
+      rw [heq, ih, hT_wall]
+      ring
+  have hsbound (N : ℕ) : s (N + 1) ≤ r ^ (N + 1) := by
+    rw [← hexp]
+    apply Real.exp_le_exp.mpr
+    dsimp only [s]
+    have hp : 0 ≤ 8 * ((N + 1 : ℕ) : ℝ) ^ 2 * x ^ 2 := by positivity
+    nlinarith only [hp]
+  have hpow : Tendsto (fun N : ℕ => r ^ (N + 1)) atTop (nhds 0) := by
+    simpa only [pow_succ, zero_mul] using
+      (tendsto_pow_atTop_nhds_zero_of_lt_one hr0.le hr1).mul_const r
+  have hsconv : Tendsto (fun N => s (N + 1)) atTop (nhds 0) :=
+    squeeze_zero (fun N => (Real.exp_pos _).le) hsbound hpow
+  have hFx : F x = r := by
+    apply tendsto_nhds_unique (hSconv x)
+    have hh := (tendsto_const_nhds (x := r)).add hsconv
+    simpa only [hS_wall, add_zero] using hh
+  have hflip (a b : ℝ) : I a b (-x) = I a (-b) x := by
+    dsimp only [I]
+    rw [hcmx, hcx]
+    congr 1
+    ring
+  have hFmx : F (-x) = r := by
+    have heq : F (-x) = F x := by
+      have ha (k : ℕ) : A k (-x) + D k (-x) = A k x + D k x := by
+        dsimp only [A, D]
+        rw [hflip, hflip]
+        simp only [neg_neg]
+        ring
+      have hj (k : ℕ) : J k (-x) + K k (-x) = J k x + K k x := by
+        dsimp only [J, K]
+        rw [hflip, hflip]
+        simp only [neg_neg]
+        ring
+      have ht (n : ℕ) : T n (-x) = T n x := by
+        dsimp only [T]
+        have hh := ha (n + 2)
+        have hh' := hj (n + 1)
+        linarith
+      dsimp only [F]
+      rw [ha]
+      congr 1
+      exact tsum_congr ht
+    exact heq.trans hFx
+  let L : ℝ → ℝ := fun w => r - Real.exp (-2 * x * (x - min w (-x)))
+  let R : ℝ → ℝ := fun w => r - Real.exp (-2 * x * (x + max w x))
+  have hLcont : Continuous L := by dsimp [L]; fun_prop
+  have hRcont : Continuous R := by dsimp [R]; fun_prop
+  have hLbounds (w : ℝ) : 0 ≤ L w ∧ L w ≤ r := by
+    have hh := mul_le_mul_of_nonneg_left (min_le_right w (-x)) (by positivity : 0 ≤ 2 * x)
+    have he : Real.exp (-2 * x * (x - min w (-x))) ≤ r := by
+      apply Real.exp_le_exp.mpr
+      dsimp only [r]
+      nlinarith only [hh]
+    dsimp only [L]
+    constructor <;> linarith [Real.exp_pos (-2 * x * (x - min w (-x)))]
+  have hRbounds (w : ℝ) : 0 ≤ R w ∧ R w ≤ r := by
+    have hh := mul_le_mul_of_nonneg_left (le_max_right w x) (by positivity : 0 ≤ 2 * x)
+    have he : Real.exp (-2 * x * (x + max w x)) ≤ r := by
+      apply Real.exp_le_exp.mpr
+      dsimp only [r]
+      nlinarith only [hh]
+    dsimp only [R]
+    constructor <;> linarith [Real.exp_pos (-2 * x * (x + max w x))]
+  have hLmono : Antitone L := by
+    intro v w hvw
+    have hh := mul_le_mul_of_nonneg_left (min_le_min hvw le_rfl) (by positivity : 0 ≤ 2 * x)
+    have he : Real.exp (-2 * x * (x - min v (-x))) ≤
+        Real.exp (-2 * x * (x - min w (-x))) := by
+      apply Real.exp_le_exp.mpr
+      nlinarith only [hh]
+    dsimp only [L]
+    linarith
+  have hRmono : Monotone R := by
+    intro v w hvw
+    have hh := mul_le_mul_of_nonneg_left (max_le_max hvw le_rfl) (by positivity : 0 ≤ 2 * x)
+    have he : Real.exp (-2 * x * (x + max w x)) ≤
+        Real.exp (-2 * x * (x + max v x)) := by
+      apply Real.exp_le_exp.mpr
+      nlinarith only [hh]
+    dsimp only [R]
+    linarith
+  have hLvar : eVariationOn L Set.univ ≤ ENNReal.ofReal r :=
+    antitoneOn_variation_le L Set.univ r hLmono.antitoneOn
+      (fun w hw => (hLbounds w).1) (fun w hw => (hLbounds w).2)
+  have hRvar : eVariationOn R Set.univ ≤ ENNReal.ofReal r :=
+    monotoneOn_variation_le R Set.univ r hRmono.monotoneOn
+      (fun w hw => (hRbounds w).1) (fun w hw => (hRbounds w).2)
+  have hLzero (w : ℝ) (hw : -x ≤ w) : L w = 0 := by
+    dsimp only [L]
+    rw [min_eq_right hw]
+    have he : -2 * x * (x - -x) = -4 * x ^ 2 := by ring
+    rw [he]
+    exact sub_self r
+  have hRzero (w : ℝ) (hw : w ≤ x) : R w = 0 := by
+    dsimp only [R]
+    rw [max_eq_right hw]
+    have he : -2 * x * (x + x) = -4 * x ^ 2 := by ring
+    rw [he]
+    exact sub_self r
+  -- This is equality at every endpoint, including both walls.
+  have hfidentity (w : ℝ) : f w = F w - L w - R w := by
+    by_cases hwleft : w ≤ -x
+    · have hwx : w ≤ x := by linarith
+      have hcw : c w = -x := by simp only [c, min_eq_right hwx, max_eq_left hwleft]
+      have hFw : F w = r := (hFc w (-x) (hcw.trans hcmx.symm)).trans hFmx
+      have habs : |w| = -w := abs_of_nonpos (by linarith)
+      have hfx := doubleCompletion_exterior B P hB x hxp w (by rw [habs]; linarith)
+      dsimp only [f]
+      rw [hfx, hFw, hRzero w hwx]
+      dsimp only [L]
+      rw [min_eq_left hwleft, habs]
+      simp only [sub_eq_add_neg]
+      ring
+    · by_cases hwright : x ≤ w
+      · have hwl : -x ≤ w := by linarith
+        have hcw : c w = x := by simp only [c, min_eq_left hwright, max_eq_right (by linarith : -x ≤ x)]
+        have hFw : F w = r := (hFc w x (hcw.trans hcx.symm)).trans hFx
+        have habs : |w| = w := abs_of_nonneg (by linarith)
+        have hfx := doubleCompletion_exterior B P hB x hxp w (by rw [habs]; exact hwright)
+        dsimp only [f]
+        rw [hfx, hFw, hLzero w hwl]
+        dsimp only [R]
+        rw [max_eq_left hwright, habs]
+        ring
+      · have hwl : -x < w := lt_of_not_ge hwleft
+        have hwr : w < x := lt_of_not_ge hwright
+        have hcw : c w = w := by simp only [c, min_eq_right hwr.le, max_eq_right hwl.le]
+        have hA1 : Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w 1) = A 1 w := by
+          dsimp only [A, I]
+          rw [hcw]
+          congr 1
+          unfold Shao.C2.IntervalImageExponents.imageA
+          norm_num <;> ring
+        have hD1 : Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w (-1)) = D 1 w := by
+          dsimp only [D, I]
+          rw [hcw]
+          congr 1
+          unfold Shao.C2.IntervalImageExponents.imageA
+          norm_num <;> ring
+        have htail (n : ℕ) :
+            Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock 0 x w 1 0 n = T n w := by
+          have ha : Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 +
+              4 * ((n : ℝ) + 2) * x * w)) = A (n + 2) w := by
+            dsimp only [A, I]
+            rw [hcw]
+            congr 1
+            push_cast <;> ring
+          have hd : Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 -
+              4 * ((n : ℝ) + 2) * x * w)) = D (n + 2) w := by
+            dsimp only [D, I]
+            rw [hcw]
+            congr 1
+            push_cast <;> ring
+          have hj : Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 +
+              2 * (2 * (n : ℝ) + 3) * x * w)) = J (n + 1) w := by
+            dsimp only [J, I]
+            rw [hcw]
+            congr 1
+            push_cast <;> ring
+          have hk : Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 -
+              2 * (2 * (n : ℝ) + 3) * x * w)) = K (n + 1) w := by
+            dsimp only [K, I]
+            rw [hcw]
+            congr 1
+            push_cast <;> ring
+          rw [initial_image_tail_eq, ha, hd, hj, hk]
+        dsimp only [f]
+        rw [doubleCompletion_interior_images B P hB x hxp w (abs_lt.mpr ⟨hwl, hwr⟩),
+          hA1, hD1, hLzero w hwl.le, hRzero w hwr.le, sub_zero, sub_zero]
+        dsimp only [F]
+        congr 1
+        exact tsum_congr htail
+  have hfeq : f = fun w => F w - L w - R w := funext hfidentity
+  have hfcont : Continuous f := by rw [hfeq]; exact (hFcont.sub hLcont).sub hRcont
+  have hfbounds (w : ℝ) : 0 ≤ f w ∧ f w ≤ 8 * r := by
+    refine ⟨(doubleCompletion_bounds (bridgeLaw B P) x w).1, ?_⟩
+    rw [hfidentity]
+    have hh := (le_abs_self (F w)).trans (hFbound w)
+    linarith [(hLbounds w).1, (hRbounds w).1]
+  have hfvar : eVariationOn f Set.univ ≤ ENNReal.ofReal (10 * r) := by
+    rw [hfeq]
+    calc
+      _ ≤ eVariationOn (fun w => F w - L w) Set.univ + eVariationOn R Set.univ :=
+        hsub (fun w => F w - L w) R
+      _ ≤ (eVariationOn F Set.univ + eVariationOn L Set.univ) + eVariationOn R Set.univ :=
+        add_le_add (hsub F L) le_rfl
+      _ ≤ (ENNReal.ofReal (8 * r) + ENNReal.ofReal r) + ENNReal.ofReal r :=
+        add_le_add (add_le_add hFvar hLvar) hRvar
+      _ = ENNReal.ofReal (10 * r) := by
+        rw [← ENNReal.ofReal_add (by positivity) hr0.le,
+          ← ENNReal.ofReal_add (by positivity) hr0.le]
+        congr 1
+        ring
+  have h2x : 0 < 2 * x := by positivity
+  have hargtop : Tendsto (fun w : ℝ => -2 * x * (x + w)) atTop atBot := by
+    apply tendsto_atBot.2
+    intro a
+    filter_upwards [eventually_ge_atTop ((-a) / (2 * x) - x)] with w hw
+    have hh : (-a) / (2 * x) ≤ x + w := by linarith
+    have hh' := (div_le_iff₀ h2x).mp hh
+    nlinarith only [hh']
+  have hargbot : Tendsto (fun w : ℝ => -2 * x * (x - w)) atBot atBot := by
+    apply tendsto_atBot.2
+    intro a
+    filter_upwards [eventually_le_atBot (x + a / (2 * x))] with w hw
+    have hh : w - x ≤ a / (2 * x) := by linarith
+    have hh' := (le_div_iff₀ h2x).mp hh
+    nlinarith only [hh']
+  have hftop : Tendsto f atTop (nhds 0) := by
+    apply (Real.tendsto_exp_atBot.comp hargtop).congr'
+    filter_upwards [eventually_ge_atTop x] with w hw
+    have hw0 : 0 ≤ w := hx0.trans hw
+    have hh := doubleCompletion_exterior B P hB x hxp w (by simpa only [abs_of_nonneg hw0] using hw)
+    simpa only [f, Function.comp_def, abs_of_nonneg hw0] using hh.symm
+  have hfbot : Tendsto f atBot (nhds 0) := by
+    apply (Real.tendsto_exp_atBot.comp hargbot).congr'
+    filter_upwards [eventually_le_atBot (-x)] with w hw
+    have hw0 : w ≤ 0 := by linarith
+    have hh := doubleCompletion_exterior B P hB x hxp w (by rw [abs_of_nonpos hw0]; linarith)
+    simpa only [f, Function.comp_def, abs_of_nonpos hw0, sub_eq_add_neg] using hh.symm
+  exact ⟨hfcont, hfbounds, hfvar, hftop, hfbot⟩
+end Shao.C2.InitialDoubleCompletionKernel
