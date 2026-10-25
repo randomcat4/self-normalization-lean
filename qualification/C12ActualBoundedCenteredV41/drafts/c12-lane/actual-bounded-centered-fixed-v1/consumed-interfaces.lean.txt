@@ -1,0 +1,861 @@
+/- Unit219 read-only consumed public theorem HEADS and complete transparent VALUES.
+No old theorem proof bodies are copied. This is an intake transcript, not new source. -/
+
+
+-- SOURCE Shao/C2/ActualRetainedResidualBudgets.lean SHA256 031b7fd150cd13b268d17fdd085b64616849f8a1f84af7edbadc2796344c18f0; accepted v101
+
+def actualRetainedAbsoluteRank {n : ℕ} (Q : Measure BridgeNoise)
+    (a : Shao.Path n) (x : ℝ) (nu : LabelPerm n → ℕ)
+    (r : Fin n) (sigma : LabelPerm n) : ℝ :=
+  |sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r.val sigma| +
+  |sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r.val sigma| +
+  |sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r.val sigma| +
+  max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+      a x nu r.val sigma) 0
+
+theorem actual_retained_absolute_rank_gaussian_domination
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (a : Shao.Path n) (H x : ℝ) (hH : 0 < H) (hx : 0 < x)
+    (nu : LabelPerm n → ℕ) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a H sigma) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    0 ≤ actualRetainedAbsoluteRank Q a x nu r sigma ∧
+    actualRetainedAbsoluteRank Q a x nu r sigma ≤
+      (8000100 + (2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40)) *
+        (Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1} false
+            (Shao.Probability.Spitzer.reorder a sigma) r +
+         Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {-1} false
+            (Shao.Probability.Spitzer.reorder a sigma) r)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/C2/ActualSignedDoubleTelescope.lean SHA256 a05fc009d513978b9605af7ca384579c0a409db49cd68a7b3940685b12ac45d0; accepted v98,v101
+
+def actualDerivativeFamily (Q : Measure BridgeNoise) : MonitoredDomain → BridgeKernel :=
+  fun J => match J with
+    | .upper => halflineDerivative .upper
+    | .lower => halflineDerivative .lower
+    | .interval => intervalDerivative Q
+
+def actualDoubleRetained {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r sigma -
+    sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r sigma -
+    sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r sigma
+
+def doubleCrossingEvent {n : ℕ} (x : ℝ) : Set (Shao.Path n) :=
+  {a | (∃ r : ℕ, r ≤ n ∧ actualWall a x ≤ Shao.prefixSum a r) ∧
+    (∃ r : ℕ, r ≤ n ∧ Shao.prefixSum a r ≤ -actualWall a x)}
+
+theorem actual_double_value_boundary
+    {n : ℕ} (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (x : ℝ) (hx : 0 < x) (a : Shao.Path n) (sigma : LabelPerm n) :
+    (∀ r : ℕ, r ≤ n →
+      0 ≤ actualDoubleValue Q x a r sigma ∧ actualDoubleValue Q x a r sigma ≤ 1) ∧
+    actualDoubleValue Q x a 0 sigma =
+      Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a ∧
+    actualDoubleValue Q x a n sigma =
+      if Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x then 1 else 0
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourcePermutationReveal.lean SHA256 eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a; accepted v98,v101
+
+abbrev LabelPerm (n : ℕ) := Equiv.Perm (Fin n)
+
+abbrev BridgeKernel := (ℝ × ℝ × ℝ × ℝ) → ℝ
+
+def remainingSum {n : ℕ} (a : Shao.Path n) (r : ℕ) (σ : LabelPerm n) : ℝ :=
+  Shao.prefixSum a n - Shao.prefixSum (Spitzer.reorder a σ) r
+
+def remainingEnergy {n : ℕ} (a : Shao.Path n) (r : ℕ)
+    (σ : LabelPerm n) : ℝ :=
+  Shao.energy a - Shao.prefixSquares (Spitzer.reorder a σ) r
+
+def IsRevealStoppingRank {n : ℕ} (ν : LabelPerm n → ℕ) : Prop :=
+  (∀ σ, ν σ ≤ n) ∧
+  ∀ (r : ℕ) (σ τ : LabelPerm n),
+    (∀ i : Fin n, i.val < r → σ i = τ i) → (ν σ ≤ r ↔ ν τ ≤ r)
+
+def energyCutoff {n : ℕ} (a : Shao.Path n) (H : ℝ)
+    (σ : LabelPerm n) : ℕ := by
+  classical
+  exact if hex : ∃ r : ℕ, r ≤ n ∧ remainingEnergy a r σ < H then Nat.find hex else n
+
+inductive MonitoredDomain : Type
+  | upper
+  | lower
+  | interval
+  deriving DecidableEq
+
+def Interior (J : MonitoredDomain) (w y : ℝ) : Prop :=
+  match J with
+  | .upper => y < w
+  | .lower => -w < y
+  | .interval => -w < y ∧ y < w
+
+def eventCompletionKernel (J : MonitoredDomain)
+    (P : Measure Shao.C2.BridgeDomination.BridgeNoise) : BridgeKernel :=
+  match J with
+  | .upper => fun p => Shao.C2.BridgeDomination.upperCompletion P
+      p.1 p.2.1 p.2.2.1 p.2.2.2
+  | .lower => fun p => Shao.C2.BridgeDomination.lowerCompletion P
+      p.1 p.2.1 p.2.2.1 p.2.2.2
+  | .interval => fun p => Shao.C2.BridgeDomination.intervalCompletion P
+      p.1 p.2.1 p.2.2.1 p.2.2.2
+
+def actualWall {n : ℕ} (a : Shao.Path n) (x : ℝ) : ℝ :=
+  x * Real.sqrt (Shao.energy a)
+
+def completionExt (J : MonitoredDomain) (F : BridgeKernel)
+    (w y T z : ℝ) : ℝ := by
+  classical
+  exact if 0 < w ∧ Interior J w y ∧ Interior J w z then
+    if 0 < T then F (w, y, T, z)
+    else if T = 0 ∧ y = z then 1 else 0
+  else 0
+
+def sourceAlive {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (x : ℝ) (r : ℕ) (σ : LabelPerm n) : Prop :=
+  0 < Shao.energy a ∧
+    Interior J (actualWall a x) (Shao.prefixSum a n) ∧
+    ∀ k : ℕ, k ≤ r →
+      Interior J (actualWall a x) (Shao.prefixSum (Spitzer.reorder a σ) k)
+
+def sourceValue {n : ℕ} (J : MonitoredDomain) (F : BridgeKernel)
+    (a : Shao.Path n) (x : ℝ) (r : ℕ) (σ : LabelPerm n) : ℝ := by
+  classical
+  exact if sourceAlive J a x r σ then
+    completionExt J F (actualWall a x)
+      (Shao.prefixSum (Spitzer.reorder a σ) r)
+      (remainingEnergy a r σ) (Shao.prefixSum a n)
+  else 0
+
+def uniformPermutationLaw (n : ℕ) : Measure (LabelPerm n) :=
+  ((Fintype.card (LabelPerm n) : ENNReal)⁻¹) • Measure.count
+
+def revealLaw {n : ℕ} (P : Measure (Shao.Path n)) :
+    Measure (Shao.Path n × LabelPerm n) :=
+  P.prod (uniformPermutationLaw n)
+
+def randomReorder {n : ℕ} (p : Shao.Path n × LabelPerm n) : Shao.Path n :=
+  Spitzer.reorder p.1 p.2
+
+theorem energy_cutoff_data {n : ℕ} (a : Shao.Path n) (H : ℝ) (hH : 0 < H) :
+    IsRevealStoppingRank (energyCutoff a H) ∧
+      (∀ (σ : LabelPerm n) (r : ℕ), r ≤ n →
+        (energyCutoff a H σ ≤ r ↔ remainingEnergy a r σ < H)) ∧
+      ∀ (σ : LabelPerm n) (r : ℕ), r < energyCutoff a H σ →
+        r < n ∧ H ≤ remainingEnergy a r σ
+-- END CONSUMED HEAD
+
+theorem iid_randomPermutation_map_eq_pi {n : ℕ} {Ω : Type*}
+    [MeasurableSpace Ω] (μ : Measure Ω) (ρ : Measure ℝ)
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ρ]
+    (X : Fin n → Ω → ℝ) (hX : ∀ i, Measurable (X i))
+    (hIndep : iIndepFun X μ)
+    (hLaw : ∀ i, IdentDistrib (X i) (id : ℝ → ℝ) μ ρ) :
+    Measure.map
+      (fun p : Ω × LabelPerm n => Spitzer.reorder (samplePath X p.1) p.2)
+      (μ.prod (uniformPermutationLaw n)) = Measure.pi (fun _ : Fin n => ρ)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceSeparatedOvershoot.lean SHA256 8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623; accepted v98,v101
+
+def localRetainedRemainder (J : MonitoredDomain) (F G : BridgeKernel)
+    (w y T z b : ℝ) : ℝ :=
+  if 0 < T ∧ b ^ 2 ≤ T / 2 then
+    localRemainder J F G w y T z (projectionIncrement J w y b)
+  else localRemainder J F G w y T z b
+
+def localSeparatedOvershoot (J : MonitoredDomain) (G : BridgeKernel)
+    (w y T z b : ℝ) : ℝ :=
+  if 0 < T ∧ b ^ 2 ≤ T / 2 then
+    -(b - projectionIncrement J w y b) *
+      (1 - (b + projectionIncrement J w y b) * (z - y) / T) *
+      G (w, y, T, z)
+  else 0
+
+def sourceRetainedRemainder {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)
+    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ)
+    (r : ℕ) (σ : LabelPerm n) : ℝ :=
+  if hr : r < n then
+    if r < ν σ ∧ sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then
+      localRetainedRemainder J F G (actualWall a x)
+        (Shao.prefixSum (Spitzer.reorder a σ) r)
+        (remainingEnergy a r σ) (Shao.prefixSum a n) (a (σ ⟨r, hr⟩))
+    else 0
+  else 0
+
+def sourceSeparatedOvershoot {n : ℕ} (J : MonitoredDomain) (G : BridgeKernel)
+    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ)
+    (r : ℕ) (σ : LabelPerm n) : ℝ :=
+  if hr : r < n then
+    if r < ν σ ∧ sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then
+      localSeparatedOvershoot J G (actualWall a x)
+        (Shao.prefixSum (Spitzer.reorder a σ) r)
+        (remainingEnergy a r σ) (Shao.prefixSum a n) (a (σ ⟨r, hr⟩))
+    else 0
+  else 0
+
+theorem source_parts_measurable_integrable
+    {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)
+    (hFm : Measurable F) (hGm : Measurable G)
+    (C : ℝ) (hK : KernelBounds J F G C)
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (ν : Shao.Path n → LabelPerm n → ℕ)
+    (hνm : ∀ σ, Measurable (fun a => ν a σ)) :
+    (∀ (σ : LabelPerm n) (r : ℕ),
+      Measurable (fun a => sourceRetainedRemainder J F G a x (ν a) r σ) ∧
+      Measurable (fun a => sourceSeparatedOvershoot J G a x (ν a) r σ)) ∧
+    (∀ r : ℕ,
+      Integrable (fun p : Shao.Path n × LabelPerm n =>
+        sourceRetainedRemainder J F G p.1 x (ν p.1) r p.2) (revealLaw P) ∧
+      Integrable (fun p : Shao.Path n × LabelPerm n =>
+        sourceSeparatedOvershoot J G p.1 x (ν p.1) r p.2) (revealLaw P)) ∧
+    Integrable (fun p : Shao.Path n × LabelPerm n =>
+      retainedSum J F G p.1 x (ν p.1) p.2) (revealLaw P) ∧
+    Integrable (fun p : Shao.Path n × LabelPerm n =>
+      separatedSum J G p.1 x (ν p.1) p.2) (revealLaw P)
+-- END CONSUMED HEAD
+
+theorem source_three_domain_overshoot_transfer
+    {n : ℕ} (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (FY : MonitoredDomain → BridgeKernel)
+    (hFYm : ∀ J, Measurable (FY J))
+    (C : ℝ) (hC : 0 ≤ C)
+    (hFYbound : ∀ (J : MonitoredDomain) (w y T z : ℝ),
+      0 < w → 0 < T → Interior J w y → Interior J w z →
+      |FY J (w, y, T, z)| ≤ C / Real.sqrt T * (1 + |z - y| / Real.sqrt T))
+    (hDeriv : ∀ (J : MonitoredDomain) (w y T z : ℝ),
+      0 < w → 0 < T → Interior J w y → Interior J w z →
+      HasDerivAt (fun s : ℝ => eventCompletionKernel J Q (w, s, T, z))
+        (FY J (w, y, T, z)) y)
+    (x : ℝ) (hx : 0 < x) (H : ℝ) (hH : 0 < H)
+    (ν : Shao.Path n → LabelPerm n → ℕ)
+    (hνm : ∀ σ, Measurable (fun a => ν a σ))
+    (hν : ∀ a, IsRevealStoppingRank (ν a))
+    (hcap : ∀ a σ, ν a σ ≤ energyCutoff a H σ) :
+    let F : MonitoredDomain → BridgeKernel := fun J => eventCompletionKernel J Q
+    let L : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℕ → ℝ :=
+      fun J p r => sourceRetainedRemainder J (F J) (FY J) p.1 x (ν p.1) r p.2
+    let O : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℕ → ℝ :=
+      fun J p r => sourceSeparatedOvershoot J (FY J) p.1 x (ν p.1) r p.2
+    let Vstop : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ :=
+      fun J p => sourceValue J (F J) p.1 x (ν p.1 p.2) p.2
+    let Vinitial : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ :=
+      fun J p => sourceValue J (F J) p.1 x 0 p.2
+    let Afinal : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ :=
+      fun J p => if sourceAlive J p.1 x n p.2 then 1 else 0
+    ∀ B E G : ℝ,
+      ((∫ p, ∑ r ∈ Finset.range n, |L .upper p r| ∂revealLaw P) +
+        (∫ p, ∑ r ∈ Finset.range n, |L .lower p r| ∂revealLaw P) +
+        (∫ p, ∑ r ∈ Finset.range n, |L .interval p r| ∂revealLaw P) +
+        (∫ p, ∑ r ∈ Finset.range n, max (-O .interval p r) 0 ∂revealLaw P) ≤ B) →
+      (∀ J : MonitoredDomain, (∫ p, |Vstop J p - Afinal J p| ∂revealLaw P) ≤ E) →
+      (∀ J : MonitoredDomain, J = .upper ∨ J = .lower →
+        |(∫ p, Afinal J p ∂revealLaw P) - (∫ p, Vinitial J p ∂revealLaw P)| ≤ G) →
+      (∀ J : MonitoredDomain, J = .upper ∨ J = .lower →
+        0 ≤ (∫ p, ∑ r ∈ Finset.range n, O J p r ∂revealLaw P) ∧
+        (∫ p, ∑ r ∈ Finset.range n, O J p r ∂revealLaw P) ≤ B + E + G) ∧
+      (∫ p, ∑ r ∈ Finset.range n,
+        |if r < ν p.1 p.2 then sourceRemainder .interval (F .interval) (FY .interval)
+          p.1 x r p.2 else 0| ∂revealLaw P) ≤ 3 * B + 2 * E + 2 * G ∧
+      ∀ (m : Shao.Path n → ℝ), Measurable m → (∀ a, |m a| ≤ 1) →
+        PermutationInvariant m →
+        |(∫ p, m p.1 * (Afinal .interval p - Vinitial .interval p) ∂revealLaw P)| ≤
+          3 * B + 3 * E + 2 * G
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceIIDGaussianProfileBudget.lean SHA256 44960de7f98cd219860b8619b8f07ecfc52369a678fcb73331d8c9838ce1b8c7; accepted v98,v101
+
+def firstValue {t : ℕ} (u : Shao.Path t) : ℝ :=
+  if ht : 0 < t then u ⟨0, ht⟩ else 0
+
+def prefixSurvival {r t : ℕ} (x : ℝ) (signs : Finset ℝ) (closed : Bool)
+    (v : Shao.Path r) (u : Shao.Path t) : Prop :=
+  ∀ s ∈ signs,
+    if closed = true then
+      Shao.maxWithZero (s • v) ≤ x * Real.sqrt (Shao.energy u + Shao.energy v)
+    else
+      Shao.maxWithZero (s • v) < x * Real.sqrt (Shao.energy u + Shao.energy v)
+
+def gaussianProfiles {r t : ℕ} (x : ℝ) (signs : Finset ℝ)
+    (v : Shao.Path r) (u : Shao.Path t) : ℝ :=
+  if 0 < Shao.energy u then
+    ∑ s ∈ signs, Real.exp
+      (-((max (x * Real.sqrt (Shao.energy u + Shao.energy v) -
+        s * Shao.prefixSum v r -
+        (|firstValue u| + max (s * Shao.prefixSum u t) 0)) 0) ^ 2) / Shao.energy u)
+  else 0
+
+def fixedGaussianWeight {r t : ℕ} (H x : ℝ) (signs : Finset ℝ) (closed : Bool)
+    (v : Shao.Path r) (u : Shao.Path t) : ℝ :=
+  if 0 < Shao.energy u ∧ H ≤ Shao.energy u ∧ prefixSurvival x signs closed v u then
+    |firstValue u| ^ 3 / (Shao.energy u * Real.sqrt (Shao.energy u)) *
+      SourceMarkedSuffixAveraging.suffixD u ^ 3 * gaussianProfiles x signs v u
+  else 0
+
+def rankGaussianWeight {n : ℕ} (H x : ℝ) (signs : Finset ℝ) (closed : Bool)
+    (a : Shao.Path n) (r : Fin n) : ℝ :=
+  fixedGaussianWeight H x signs closed
+    (Spitzer.head a r.val (Nat.le_of_lt r.is_lt))
+    (Spitzer.tail a r.val (Nat.le_of_lt r.is_lt))
+
+theorem fixed_gaussian_weight_measurable_bound
+    (r t : ℕ) (H x : ℝ) (signs : Finset ℝ) (closed : Bool) :
+    Measurable (fun p : Shao.Path r × Shao.Path t =>
+      fixedGaussianWeight H x signs closed p.1 p.2) ∧
+    (∀ (v : Shao.Path r) (u : Shao.Path t),
+      0 ≤ fixedGaussianWeight H x signs closed v u ∧
+      |fixedGaussianWeight H x signs closed v u| ≤
+        (signs.card : ℝ) * (1 + Real.sqrt (t : ℝ)) ^ 3) ∧
+    (∀ (v : Shao.Path r) (u : Shao.Path t), Shao.energy u = 0 →
+      gaussianProfiles x signs v u = 0 ∧ fixedGaussianWeight H x signs closed v u = 0)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceMarkedSuffixAveraging.lean SHA256 879023fb756a2b6ea31fea61ffe159ffe6053aa94221302d1f09a4e2762e01c9; accepted v98,v101
+
+def suffixD {t : ℕ} (a : Shao.Path t) : ℝ :=
+  if 0 < Shao.energy a then
+    1 + |Shao.prefixSum a t| / Real.sqrt (Shao.energy a)
+  else 1
+
+theorem iid_product_reorder_map
+    {t : ℕ} (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (σ : Equiv.Perm (Fin t)) :
+    Measure.map (fun a : Shao.Path t => Spitzer.reorder a σ)
+      (Measure.pi (fun _ : Fin t => nu)) =
+      Measure.pi (fun _ : Fin t => nu)
+-- END CONSUMED HEAD
+
+theorem iid_product_late_marked_integral_eq_average
+    {t : ℕ} (ht : 0 < t) (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (H V R : ℝ) (hH : 0 < H) (hV : 0 < V) (j : Fin t) :
+    Integrable (fun a : Shao.Path t => lateMarkedWeight H V R a j)
+      (Measure.pi (fun _ : Fin t => nu)) ∧
+    Integrable (lateAveragedWeight H V R : Shao.Path t → ℝ)
+      (Measure.pi (fun _ : Fin t => nu)) ∧
+    (∫ a : Shao.Path t, lateMarkedWeight H V R a j
+      ∂Measure.pi (fun _ : Fin t => nu)) =
+      ∫ a : Shao.Path t, lateAveragedWeight H V R a
+        ∂Measure.pi (fun _ : Fin t => nu)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceSuffixMomentBudgets.lean SHA256 c0457040fec0cee18355f5028c7731e0ad8525deee28185aa0cf3b7a088d3c7b; accepted v98,v101
+
+theorem iid_early_cubic_suffix_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → 0 < (∫ z : ℝ, z ^ 2 ∂nu) →
+        let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂nu
+        let scale : ℝ := Real.sqrt ((n : ℝ) * sigmaSq)
+        let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / scale) nu
+        let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+        let h : ℝ := 4 * (n : ℝ) * sigmaSq * R ^ 2
+        let P : (t : ℕ) → Measure (Shao.Path t) := fun t => Measure.pi (fun _ : Fin t => nu)
+        let firstCube : (t : ℕ) → Shao.Path t → ℝ := fun t v =>
+          if ht : 0 < t then |v ⟨0, ht⟩| ^ 3 else 0
+        let early : (t : ℕ) → Shao.Path t → ℝ := fun t v =>
+          if 0 < Shao.energy v ∧ h ≤ Shao.energy v then
+            firstCube t v / (Shao.energy v * Real.sqrt (Shao.energy v)) *
+              (1 + |Shao.prefixSum v t| ^ 3 /
+                (Shao.energy v * Real.sqrt (Shao.energy v)))
+          else 0
+        (∀ t ∈ Finset.Icc ((n + 1) / 2) n, Integrable (early t) (P t)) ∧
+          (∑ t ∈ Finset.Icc ((n + 1) / 2) n, ∫ v, early t v ∂P t) ≤ C * R
+-- END CONSUMED HEAD
+
+theorem iid_late_fifth_and_cubic_suffix_budgets :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → 0 < (∫ z : ℝ, z ^ 2 ∂nu) →
+        let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂nu
+        let scale : ℝ := Real.sqrt ((n : ℝ) * sigmaSq)
+        let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / scale) nu
+        let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+        let h : ℝ := 4 * (n : ℝ) * sigmaSq * R ^ 2
+        let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+        let suffix : (t : ℕ) → Shao.Path n → Shao.Path (n - (n - t)) := fun t v =>
+          Spitzer.tail v (n - t) (Nat.sub_le n t)
+        let T : ℕ → Shao.Path n → ℝ := fun t v => Shao.energy (suffix t v)
+        let d : ℕ → Shao.Path n → ℝ := fun t v =>
+          Shao.prefixSum (suffix t v) (n - (n - t))
+        let beta : ℕ → Shao.Path n → ℝ := fun t v =>
+          if 0 < T t v then
+            (∑ i : Fin (n - (n - t)), |suffix t v i| ^ 3) /
+              (T t v * Real.sqrt (T t v))
+          else 0
+        let D : ℕ → Shao.Path n → ℝ := fun t v =>
+          if 0 < T t v then 1 + |d t v| / Real.sqrt (T t v) else 1
+        let Rprefix : ℕ → ℝ := fun t =>
+          Shao.truncationBudget
+            (Measure.map (fun z : ℝ => z /
+              Real.sqrt (((n - t : ℕ) : ℝ) * sigmaSq)) nu) (n - t) 0
+        let late : ℕ → ℕ → Shao.Path n → ℝ := fun p t v =>
+          if 0 < T t v ∧ h ≤ T t v then
+            (beta t v / (t : ℝ)) * D t v ^ p *
+              (T t v / (((n - t : ℕ) : ℝ) * sigmaSq) + Rprefix t ^ 2)
+          else 0
+        ∀ p : ℕ, (p = 3 ∨ p = 5) →
+          (∀ t ∈ Finset.Icc 1 (n / 2), Integrable (late p t) P) ∧
+            (∑ t ∈ Finset.Icc 1 (n / 2), ∫ v, late p t v ∂P) ≤ C * R
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceTerminalEnvelope.lean SHA256 5a76818ca654409719ab3a7ba00bc254605f135678eb5dd4e9f12102b44abd80; accepted v98,v101
+
+theorem actual_backward_stopped_suffix_integral
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 4 ≤ n)
+    (H : ℝ) (hH : 0 < H) (m : ℕ) (hm : m ≤ n / 2) :
+    let L : ℕ := n / 2
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+    let rev : Shao.Path n → Shao.Path n := fun a i => a (Fin.rev i)
+    let Qrev : Shao.Path n → ℕ → ℝ := fun a k => Shao.prefixSquares (rev a) k
+    let NH : Shao.Path n → ℕ := fun a =>
+      @dite ℕ (∃ k : ℕ, k ≤ L ∧ H ≤ Qrev a k) (Classical.propDecidable _)
+        (fun he => @Nat.find (fun k : ℕ => k ≤ L ∧ H ≤ Qrev a k)
+          (fun k => Classical.propDecidable _) he)
+        (fun _ => L)
+    let N : Shao.Path n → ℕ := fun a => max m (NH a)
+    ∀ (t : ℕ) (ht : t ≤ L),
+      let «prefix» : Shao.Path n → Shao.Path (n - t) := fun a i =>
+        a ⟨i.val, lt_of_lt_of_le i.is_lt (Nat.sub_le n t)⟩
+      let suffix : Shao.Path n → Shao.Path t := fun a i =>
+        a ⟨n - t + i.val, by have htn : t ≤ n := ht.trans (Nat.div_le_self n 2); omega⟩
+      let previousEnergy : Shao.Path t → ℝ := fun b =>
+        Shao.prefixSquares (fun i : Fin t => b (Fin.rev i)) (t - 1)
+      let selectedSuffix : Set (Shao.Path t) := {b |
+        if t < m then False
+        else if t = m then (if t = L then True else H ≤ Shao.energy b)
+        else if t < L then previousEnergy b < H ∧ H ≤ Shao.energy b
+        else previousEnergy b < H}
+      ∀ Phi : Shao.Path (n - t) × Shao.Path t → ℝ,
+        Measurable Phi → (∀ p, |Phi p| ≤ 1) →
+        let selected : Shao.Path n → ℝ := fun a =>
+          if N a = t then Phi («prefix» a, suffix a) else 0
+        let suffixIntegral : Shao.Path t → ℝ := fun b =>
+          if b ∈ selectedSuffix then
+            ∫ v : Shao.Path (n - t), Phi (v, b)
+              ∂Measure.pi (fun _ : Fin (n - t) => nu)
+          else 0
+        (∀ a, N a = t ↔ suffix a ∈ selectedSuffix) ∧
+          Integrable selected P ∧
+          Integrable suffixIntegral (Measure.pi (fun _ : Fin t => nu)) ∧
+          (∫ a, selected a ∂P) =
+            ∫ b : Shao.Path t, suffixIntegral b ∂Measure.pi (fun _ : Fin t => nu)
+-- END CONSUMED HEAD
+
+theorem actual_source_terminal_corridor_envelope
+    {Ω : Type*} [MeasurableSpace Ω]
+    (PB : Measure Ω) [IsProbabilityMeasure PB]
+    (B : ℝ≥0 → Ω → ℝ) (hB : IsBrownianReal B PB)
+    (n : ℕ) (a : Shao.Path n) (r : ℕ) (hr : r ≤ n)
+    (x : ℝ) (hx : 0 ≤ x) (I : MonitoredDomain) :
+    let F : BridgeKernel := eventCompletionKernel I (bridgeLaw B PB)
+    let signs : Finset ℝ := match I with
+      | .upper => {1}
+      | .lower => {-1}
+      | .interval => {1, -1}
+    let wall : ℝ := actualWall a x
+    let U : ℝ := remainingEnergy a r (Equiv.refl (Fin n))
+    let J : ℝ := (Finset.Icc 0 (n - r)).sup'
+      (by exact ⟨0, Finset.mem_Icc.mpr ⟨le_rfl, Nat.zero_le _⟩⟩)
+      (fun l => |Shao.prefixSum a (r + l) - Shao.prefixSum a r|)
+    let w : ℝ → ℝ := fun eta => wall - eta * Shao.prefixSum a r
+    let terminal : ℝ := if sourceAlive I a x n (Equiv.refl (Fin n)) then 1 else 0
+    let discrepancy : ℝ := (Finset.Icc r n).sup'
+      (by exact ⟨r, Finset.mem_Icc.mpr ⟨le_rfl, hr⟩⟩)
+      (fun j => |sourceValue I F a x j (Equiv.refl (Fin n)) - terminal|)
+    0 ≤ discrepancy ∧ discrepancy ≤ 1 ∧
+      (U = 0 → discrepancy = 0) ∧
+      (x = 0 → discrepancy = 0) ∧
+      discrepancy ≤
+        if 0 < U ∧ sourceAlive I a x r (Equiv.refl (Fin n)) then
+          ∑ eta ∈ signs,
+            ((if 0 < w eta ∧ w eta ≤ 2 * J then 1 else 0) +
+            (if 2 * J < w eta then 2 * Real.exp (-(w eta ^ 2) / (32 * U)) else 0))
+        else 0
+-- END CONSUMED HEAD
+
+theorem actual_backward_terminal_raw_data
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 4 ≤ n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (hsecond : 0 < ∫ z : ℝ, z ^ 2 ∂nu) :
+    let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂nu
+    let normalizedLaw : Measure ℝ :=
+      Measure.map (fun z : ℝ => z / Real.sqrt ((n : ℝ) * sigmaSq)) nu
+    let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+    let h : ℝ := 4 * (n : ℝ) * sigmaSq * R ^ 2
+    R ≤ 1 / 2 → ∀ H : ℝ, h ≤ H →
+      let L : ℕ := n / 2
+      let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+      let rev : Shao.Path n → Shao.Path n := fun a i => a (Fin.rev i)
+      let Qrev : Shao.Path n → ℕ → ℝ := fun a k => Shao.prefixSquares (rev a) k
+      let NH : Shao.Path n → ℕ := fun a =>
+        @dite ℕ (∃ k : ℕ, k ≤ L ∧ H ≤ Qrev a k) (Classical.propDecidable _)
+          (fun he => @Nat.find (fun k : ℕ => k ≤ L ∧ H ≤ Qrev a k)
+            (fun k => Classical.propDecidable _) he)
+          (fun _ => L)
+      ∀ m : ℕ, m ≤ L → (m : ℝ) ≤ 3 * H / sigmaSq →
+        let N : Shao.Path n → ℕ := fun a => max m (NH a)
+        let r : Shao.Path n → ℕ := fun a => n - N a
+        let U : Shao.Path n → ℝ := fun a => Shao.energy a - Shao.prefixSquares a (r a)
+        let J : Shao.Path n → ℝ := fun a =>
+          (Finset.Icc 0 (N a)).sup'
+            (by exact ⟨0, Finset.mem_Icc.mpr ⟨le_rfl, Nat.zero_le _⟩⟩)
+            (fun l => |Shao.prefixSum a (r a + l) - Shao.prefixSum a (r a)|)
+        let exceptional : Set (Shao.Path n) := {a | Qrev a L < H}
+        let kappa : Shao.Path n → ℕ := fun a => energyCutoff a H (Equiv.refl (Fin n))
+        let tau : Shao.Path n → ℕ := fun a => min (kappa a) (n - m)
+        0 < H ∧
+          Integrable (fun z : ℝ => min (z ^ 2) H) nu ∧
+          sigmaSq / 2 ≤ (∫ z : ℝ, min (z ^ 2) H ∂nu) ∧
+          Measurable NH ∧ Measurable N ∧ Measurable U ∧ Measurable J ∧ Measurable tau ∧
+          (∀ a, 1 ≤ NH a ∧ NH a ≤ N a ∧ N a ≤ L ∧
+            U a = Qrev a (N a) ∧
+            (a ∉ exceptional → tau a = if NH a ≤ m then r a else r a + 1)) ∧
+          Integrable (fun a => (NH a : ℝ)) P ∧
+          Integrable (fun a => (N a : ℝ)) P ∧ Integrable U P ∧
+          Integrable (fun a => J a ^ 2) P ∧
+          (∫ a, (NH a : ℝ) ∂P) ≤ 4 * H / sigmaSq ∧
+          (∫ a, (N a : ℝ) ∂P) ≤ 7 * H / sigmaSq ∧
+          P.real exceptional ≤ 12 * H / ((n : ℝ) * sigmaSq) ∧
+          (∫ a, U a ∂P) = sigmaSq * (∫ a, (N a : ℝ) ∂P) ∧
+          (∫ a, J a ^ 2 ∂P) ≤ 16 * sigmaSq * (∫ a, (N a : ℝ) ∂P)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceActualLocalProfileBudget.lean SHA256 76d9019141bf7548e38b58fac1f7a7a5fc36e52f86f33951a7fdd8d185b9d587; accepted v98,v101
+
+def halflineDerivative (J : MonitoredDomain) : BridgeKernel :=
+  match J with
+  | .upper => fun p => -Shao.C2.HalfLineMixedProfiles.slopeTime
+      (p.1 - p.2.1) (p.1 - p.2.2.2) p.2.2.1
+  | .lower => fun p => Shao.C2.HalfLineMixedProfiles.slopeTime
+      (p.1 + p.2.1) (p.1 + p.2.2.2) p.2.2.1
+  | .interval => fun _ => 0
+
+def HalflineReflectionIdentities (Q : Measure BridgeNoise) : Prop :=
+  (∀ w y T z : ℝ, 0 < w → 0 < T → y < w → z < w →
+    upperCompletion Q w y T z = Shao.C2.HalfLineReflectionFormula.upperReflection w y T z) ∧
+  (∀ w y T z : ℝ, 0 < w → 0 < T → -w < y → -w < z →
+    lowerCompletion Q w y T z = Shao.C2.HalfLineReflectionFormula.lowerReflection w y T z)
+
+theorem actual_halfline_kernel_data
+    (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (hReflection : HalflineReflectionIdentities Q)
+    (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower) :
+    Measurable (halflineDerivative J) ∧
+    KernelBounds J (eventCompletionKernel J Q) (halflineDerivative J) 4 ∧
+    (∀ w y T z : ℝ, 0 < w → 0 < T → Interior J w y → Interior J w z →
+      HasDerivAt (fun s : ℝ => eventCompletionKernel J Q (w, s, T, z))
+        (halflineDerivative J (w, y, T, z)) y)
+-- END CONSUMED HEAD
+
+theorem actual_energy_cutoff_measurable
+    {n : ℕ} (H : ℝ) (hH : 0 < H) (σ : LabelPerm n) :
+    Measurable (fun a : Shao.Path n => energyCutoff a H σ)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceActualIntervalProfileBudget.lean SHA256 58eef62954931c95be1228accb921de6db3092a4d681184d6e1fef4ab2d20ef6; accepted v98,v101
+
+def intervalDerivative (Q : Measure BridgeNoise) : BridgeKernel := fun p =>
+  if 0 < p.1 ∧ 0 < p.2.2.1 ∧ |p.2.1| < p.1 ∧ |p.2.2.2| < p.1 then
+    deriv (fun y : ℝ => eventCompletionKernel .interval Q
+      (p.1, y, p.2.2.1, p.2.2.2)) p.2.1
+  else 0
+
+theorem actual_interval_kernel_data
+    (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (hReflection : HalflineReflectionIdentities Q)
+    (hRegular : ∀ w y T z : ℝ, 0 < w → 0 < T → |y| < w → |z| < w →
+      DifferentiableAt ℝ
+        (fun s : ℝ => Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w s T z) y) :
+    Measurable (intervalDerivative Q) ∧
+    KernelBounds .interval (eventCompletionKernel .interval Q) (intervalDerivative Q) 4 ∧
+    (∀ w y T z : ℝ, 0 < w → 0 < T → |y| < w → |z| < w →
+      HasDerivAt (fun s : ℝ => eventCompletionKernel .interval Q (w, s, T, z))
+        (intervalDerivative Q (w, y, T, z)) y)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceOneSidedRelativeError.lean SHA256 1422e5fea0fe097e7610b75603e666fb9cf86dbcfa8b767e09199cff4dd03546; accepted v98,v101
+
+theorem original_one_sided_relative_error_iid :
+    ∃ rhoStar C : ℝ, 0 < rhoStar ∧ rhoStar ≤ 1 / 16 ∧ 0 < C ∧
+      ∀ p : ℝ, 2 < p → p ≤ 3 →
+        ∀ {Ω : Type*} [MeasurableSpace Ω]
+          (P : Measure Ω) [IsProbabilityMeasure P]
+          (n : ℕ) (hn : 0 < n)
+          (X : Fin n → Ω → ℝ),
+          (∀ i : Fin n, Measurable (X i)) →
+          iIndepFun X P →
+          (∀ i : Fin n, IdentDistrib (X i) (X ⟨0, hn⟩) P P) →
+          let Y : Ω → ℝ := X ⟨0, hn⟩
+          Integrable (fun omega : Ω => (Y omega) ^ 2) P →
+          (∫ omega : Ω, Y omega ∂P) = 0 →
+          (0 < ∫ omega : Ω, (Y omega) ^ 2 ∂P) →
+          Integrable (fun omega : Ω => Real.rpow |Y omega| p) P →
+          let sigma : ℝ := Real.sqrt (∫ omega : Ω, (Y omega) ^ 2 ∂P)
+          let nu : Measure ℝ := Measure.map
+            (fun omega : Ω => Y omega / (sigma * Real.sqrt (n : ℝ))) P
+          let beta : ℝ := (∫ omega : Ω, Real.rpow |Y omega| p ∂P) /
+            (Real.rpow sigma p * Real.rpow (n : ℝ) ((p - 2) / 2))
+          ∀ x : ℝ, 0 ≤ x →
+            (x ≤ Real.rpow beta (-1 / p) ∨
+              Shao.truncationBudget nu n x ≤ rhoStar) →
+            ∀ s : ℝ, (s = 1 ∨ s = -1) →
+              |P.real {omega : Ω |
+                x * Real.sqrt (Shao.energy (samplePath X omega)) ≤
+                  Shao.upperMax (s • samplePath X omega) hn} /
+                    Shao.standardNormalTail x - 2| ≤
+                C * Shao.truncationBudget nu n x
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceScalarInitialBudget.lean SHA256 2731effd3fbb3487bef30090699d675ce387d0258ad5a93800e9ba324330a459; accepted v98,v101
+
+theorem finite_second_scalar_closed_cdf_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (mu : Measure ℝ) [IsProbabilityMeasure mu]
+        (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) mu →
+        (∫ z : ℝ, z ∂mu) = 0 →
+        (0 < ∫ z : ℝ, z ^ 2 ∂mu) →
+        let sigma : ℝ := Real.sqrt (∫ z : ℝ, z ^ 2 ∂mu)
+        let normalizedLaw : Measure ℝ := Measure.map
+          (fun z : ℝ => z / (sigma * Real.sqrt (n : ℝ))) mu
+        let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+        let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+        let W : Shao.Path n → ℝ := Shao.C1.normalizedEndpoint
+        ∀ v : ℝ,
+          |P.real {a : Shao.Path n | W a ≤ v} -
+            (gaussianReal 0 1).real (Set.Iic v)| ≤ C * R
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceActualIntervalInitialCDF.lean SHA256 fe46483816c5314c459bc77e313b902d933c96a717bb1dea22e883951594fd29; accepted v98,v101
+
+theorem original_iid_actual_interval_initial_cdf_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {Ω ΩB : Type*} [MeasurableSpace Ω] [MeasurableSpace ΩB]
+        (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+        IsBrownianReal B PB →
+        ∀ (mu : Measure Ω) (rho : Measure ℝ)
+          [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+          (n : ℕ) (hn : 0 < n) (X : Fin n → Ω → ℝ),
+          (∀ i, AEMeasurable (X i) mu) →
+          iIndepFun X mu →
+          (∀ i, IdentDistrib (X i) (id : ℝ → ℝ) mu rho) →
+          Integrable (fun z : ℝ => z ^ 2) rho →
+          (∫ z : ℝ, z ∂rho) = 0 →
+          (0 < ∫ z : ℝ, z ^ 2 ∂rho) →
+          let population : Ω → Shao.Path n := Shao.Probability.samplePath X
+          let rawEnergy : Ω → ℝ := fun omega => ∑ i : Fin n, (X i omega) ^ 2
+          let rawTerminal : Ω → ℝ := fun omega => ∑ i : Fin n, X i omega
+          let W : Ω → ℝ := fun omega => Shao.C1.normalizedEndpoint (population omega)
+          let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂rho
+          let scale : ℝ := Real.sqrt ((n : ℝ) * sigmaSq)
+          let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / scale) rho
+          let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+          let Q : Measure BridgeNoise := bridgeLaw B PB
+          ∀ x : ℝ, 0 ≤ x →
+            let V0 : LabelPerm n → Ω → ℝ := fun sigma omega =>
+              sourceValue .interval (eventCompletionKernel .interval Q)
+                (population omega) x 0 sigma
+            (∀ omega : Ω,
+              Shao.energy (population omega) = rawEnergy omega ∧
+              Shao.prefixSum (population omega) n = rawTerminal omega ∧
+              W omega = if 0 < rawEnergy omega then
+                rawTerminal omega / Real.sqrt (rawEnergy omega) else 0) ∧
+            (∀ sigma : LabelPerm n,
+              (∀ omega : Ω,
+                V0 sigma omega = Shao.C2.RawInitialCompletion.rawInitial Q x (population omega) ∧
+                V0 sigma omega = if 0 < rawEnergy omega then
+                  intervalCompletion Q x 0 1 (W omega) else 0) ∧
+              Integrable (V0 sigma) mu ∧
+              |(∫ omega : Ω, V0 sigma omega ∂mu) -
+                PB.real {omegaB : ΩB | ∀ t : BridgeTime,
+                  |B ⟨(t : ℝ), t.property.1⟩ omegaB| < x}| ≤ C * R ∧
+              ∀ v : ℝ,
+                Integrable (fun omega : Ω => if W omega ≤ v then V0 sigma omega else 0) mu ∧
+                |(∫ omega : Ω, (if W omega ≤ v then V0 sigma omega else 0) ∂mu) -
+                  PB.real {omegaB : ΩB |
+                    (∀ t : BridgeTime, |B ⟨(t : ℝ), t.property.1⟩ omegaB| < x) ∧
+                      B 1 omegaB ≤ v}| ≤ C * R)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/Probability/SourceOriginalZeroEnergyBudget.lean SHA256 9e4380fc2e70a64b6ff7661f5f34cde9c18c1e5537e24b4165faeb46c74aee45; accepted v98,v101
+
+theorem original_iid_zero_energy_budget
+    {Ω : Type*} [MeasurableSpace Ω]
+    (mu : Measure Ω) (rho : Measure ℝ)
+    [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (n : ℕ) (hn : 0 < n) (X : Fin n → Ω → ℝ)
+    (hX : ∀ i, AEMeasurable (X i) mu)
+    (hIndep : iIndepFun X mu)
+    (hLaw : ∀ i, IdentDistrib (X i) (id : ℝ → ℝ) mu rho)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) rho)
+    (hsecond : 0 < ∫ z : ℝ, z ^ 2 ∂rho) :
+    let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂rho
+    let scale : ℝ := Real.sqrt ((n : ℝ) * sigmaSq)
+    let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / scale) rho
+    let R : ℝ := Shao.truncationBudget normalizedLaw n 0
+    let rawEnergy : Ω → ℝ := fun omega => ∑ i : Fin n, (X i omega) ^ 2
+    mu.real {omega : Ω | rawEnergy omega = 0} ≤ 16 * R
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/C2/BridgeHalfLineJointLaw.lean SHA256 24f57360865e681d281d6c24bd1c79b493bd33694fa5601b1758aea753095e34; accepted v98,v101
+
+theorem brownian_upper_joint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T v : ℝ) :
+    P.real {ω | (∀ t : BridgeTime,
+        y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω < a) ∧
+        y + Real.sqrt T * B 1 ω ≤ v} =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        upperCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+        ∂(gaussianReal 0 1)
+-- END CONSUMED HEAD
+
+theorem brownian_lower_joint {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T v : ℝ) :
+    P.real {ω | (∀ t : BridgeTime,
+        -a < y + Real.sqrt T * B ⟨(t : ℝ), t.property.1⟩ ω) ∧
+        y + Real.sqrt T * B 1 ω ≤ v} =
+      ∫ w : ℝ, (if y + Real.sqrt T * w ≤ v then
+        lowerCompletion (bridgeLaw B P) a y T (y + Real.sqrt T * w) else 0)
+        ∂(gaussianReal 0 1)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/C2/BridgeUpperAffineIdentification.lean SHA256 8a91221945798ec1aefa956b8a5b51aa5edec9c47b0df5c55012958346a689b5; accepted v98,v101
+
+theorem bridge_upper_formula {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ)
+    (hT : 0 < T) (hy : y < a) (hz : z < a) :
+    upperCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * (a - y) * (a - z) / T)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/C2/BridgeLowerIdentification.lean SHA256 11c9d4e293b15a15b038b4df200c2eb716943861f8b42604faf7054987bac622; accepted v98,v101
+
+theorem bridge_lower_formula {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (a y T z : ℝ)
+    (hT : 0 < T) (hy : -a < y) (hz : -a < z) :
+    lowerCompletion (bridgeLaw B P) a y T z =
+      1 - Real.exp (-2 * (a + y) * (a + z) / T)
+-- END CONSUMED HEAD
+
+
+-- SOURCE Shao/C2/ActualBridgeIntervalTelescope.lean SHA256 c66a73c3b12783d5615e98dc4a74e8d63857c28f1bbf47db1f3bc90d0fadb4be; accepted v98,v101
+
+theorem actual_interval_spatial_hasDerivAt {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (W : Measure Ω) [IsProbabilityMeasure W]
+    (hB : IsBrownianReal B W) (a y T z : ℝ) (ha : 0 < a) (hy : |y| < a)
+    (hz : |z| < a) (hT : 0 < T) :
+    HasDerivAt (fun w => intervalCompletion (bridgeLaw B W) a w T z)
+      (spatialDerivative (bridgeLaw B W) a y T z) y
+-- END CONSUMED HEAD
+
+theorem actual_source_interval_differentiable {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (W : Measure Ω) [IsProbabilityMeasure W]
+    (hB : IsBrownianReal B W) (a y T z : ℝ) (ha : 0 < a) (hy : |y| < a)
+    (hz : |z| < a) (hT : 0 < T) :
+    DifferentiableAt ℝ (fun w => sourceIntervalCompletion (bridgeLaw B W) a w T z) y
+-- END CONSUMED HEAD
+
+
+-- CANDIDATE SOURCE (FINAL FORMAL QUALIFICATION PENDING) drafts/c12-lane/actual-auxiliary-level-closed-strip-v1/ActualBadIntervalNegativeBudget.lean
+theorem actual_auxiliary_level_true_energy_closed_strip :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
+            ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
+              let wall : Shao.Path r → ℝ := fun a =>
+                x * Real.sqrt (q + Shao.energy a)
+              (Measure.pi (fun _ : Fin r => rho)).real
+                {a : Shao.Path r |
+                  Shao.maxWithZero (s • a) ≤ wall a ∧
+                  wall a - v ≤ s * Shao.prefixSum a r ∧
+                  s * Shao.prefixSum a r ≤ wall a} ≤
+                C * (v + beta) ^ 2 / (r : ℝ)
+-- END CONSUMED CANDIDATE HEAD
+
+-- ADDITIONAL DIRECT SEMANTIC VALUES: exact extraction, no old theorem proofs.
+
+
+-- SOURCE Shao/C2/ActualSignedDoubleTelescope.lean SHA256 a05fc009d513978b9605af7ca384579c0a409db49cd68a7b3940685b12ac45d0; accepted v98,v101
+
+def actualDoubleValue {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  1 - sourceValue .upper (eventCompletionKernel .upper Q) a x r sigma -
+    sourceValue .lower (eventCompletionKernel .lower Q) a x r sigma +
+    sourceValue .interval (eventCompletionKernel .interval Q) a x r sigma
+
+
+-- SOURCE Shao/Probability/SourcePermutationReveal.lean SHA256 eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a; accepted v98,v101
+
+def compensationCoefficient (b d T : ℝ) : ℝ := b - b ^ 2 * d / T
+
+def localRemainder (J : MonitoredDomain) (F G : BridgeKernel)
+    (w y T z b : ℝ) : ℝ :=
+  completionExt J F w (y + b) (T - b ^ 2) z - F (w, y, T, z) -
+    compensationCoefficient b (z - y) T * G (w, y, T, z)
+
+
+-- SOURCE Shao/Probability/SourceSeparatedOvershoot.lean SHA256 8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623; accepted v98,v101
+
+def projectionIncrement (J : MonitoredDomain) (w y b : ℝ) : ℝ :=
+  match J with
+  | .upper => if w ≤ y + b then w - y else b
+  | .lower => if y + b ≤ -w then -w - y else b
+  | .interval => if w ≤ y + b then w - y else
+      if y + b ≤ -w then -w - y else b
+
+
+-- SOURCE Shao/Basic/TruncationBudget.lean SHA256 70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd; accepted v98,v101
+
+def truncationF (z : ℝ) : ℝ := z ^ 2 * min |z| 1
+
+
+-- SOURCE Shao/Probability/TruncationIntegrals.lean SHA256 d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234; accepted v98,v101
+
+noncomputable def truncationBudget (ν : Measure ℝ) (n : ℕ) (t : ℝ) : ℝ :=
+  (n : ℝ) * ∫ z : ℝ, truncationF ((1 + t) * z) ∂ν
+
+
+-- SOURCE Shao/Probability/GaussianTail.lean SHA256 f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922; accepted v98,v101
+
+noncomputable def standardNormalTail (x : ℝ) : ℝ :=
+  ((ProbabilityTheory.gaussianReal 0 1) (Set.Ioi x)).toReal

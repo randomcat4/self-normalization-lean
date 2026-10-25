@@ -1,0 +1,44 @@
+/- Unit219 additional mathematical helper proposals, DECLARATIONS ONLY.
+   Same namespace, imports, open declarations and existing private values as the
+   frozen primary module. No body may be written until the lead freezes this file.
+   These factor actual finite-future/append/reorder identities needed by P5/public2.
+   They do not alter any frozen public/private head, add distribution assumptions,
+   change fixed16, or touch Root strip work. -/
+
+private theorem abcf_masked_future_eq_Icc
+    {n : ℕ} (J : MonitoredDomain) (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (r : ℕ) (hr : r ≤ n) (sigma : LabelPerm n) :
+    abcf_futureAt J Q x r (a, sigma) =
+      (Finset.Icc r n).sup' ⟨r, Finset.mem_Icc.mpr ⟨le_rfl, hr⟩⟩
+        (fun j => |sourceValue J (eventCompletionKernel J Q) a x j sigma -
+          (if sourceAlive J a x n sigma then 1 else 0)|)
+-- END H9 HEAD: no body.
+
+private theorem abcf_append_future_corridor
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB) (r t : ℕ)
+    (v : Shao.Path r) (u : Shao.Path t) (x : ℝ) (hx : 0 ≤ x) (J : MonitoredDomain) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let U : ℝ := Shao.energy u
+    let Jmax : ℝ := (Finset.range (t + 1)).sup'
+      ⟨0, Finset.mem_range.mpr (Nat.zero_lt_succ t)⟩ (fun l => |Shao.prefixSum u l|)
+    let wall : ℝ := x * Real.sqrt (U + Shao.energy v)
+    let w : ℝ → ℝ := fun s => wall - s * Shao.prefixSum v r
+    let D : ℝ := abcf_futureAt J Q x r (Fin.append v u, Equiv.refl (Fin (r + t)))
+    (U = 0 → D = 0) ∧
+      D ≤ if 0 < U then
+        ∑ s ∈ Shao.Probability.SourceActualLocalProfileBudget.wallSigns J,
+          (if Shao.maxWithZero (s • v) ≤ wall then
+            (if 0 < w s ∧ w s ≤ 2 * Jmax then 1 else 0) +
+            (if 2 * Jmax < w s then 2 * Real.exp (-(w s ^ 2) / (32 * U)) else 0)
+          else 0)
+      else 0
+-- END H10 HEAD: no body.
+
+private theorem abcf_h0_future_reorder
+    {n : ℕ} (J : MonitoredDomain) (Q : Measure BridgeNoise) (H x : ℝ)
+    (a : Shao.Path n) (sigma : LabelPerm n) :
+    abcf_h0Future J Q H x (a, sigma) =
+      abcf_h0Future J Q H x (Shao.Probability.Spitzer.reorder a sigma, Equiv.refl (Fin n))
+-- END H11 HEAD: no body.

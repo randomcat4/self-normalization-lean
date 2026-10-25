@@ -1,0 +1,346 @@
+/-
+UNIT 219, PHASE 1: EXACT DECLARATION DESIGN ONLY.
+Proposed module: Shao.C2.ActualBoundedCenteredFixed.
+This is a text artifact, deliberately without theorem bodies. It is not a
+compilable Lean source and has no kernel or axiom qualification.
+The lane lead must read and freeze every proposed head/value before bodies.
+The three public heads below retain the independently reviewed fixed-16 scope.
+The candidate all-level strip import still requires final formal qualification.
+-/
+import Shao.C2.ActualRetainedResidualBudgets
+import Shao.Probability.SourceTerminalEnvelope
+import Shao.Probability.SourceOneSidedRelativeError
+import Shao.Probability.SourceScalarInitialBudget
+import Shao.Probability.SourceActualIntervalInitialCDF
+import Shao.Probability.SourceOriginalZeroEnergyBudget
+import Shao.C2.BridgeHalfLineJointLaw
+
+set_option autoImplicit false
+noncomputable section
+namespace Shao.C2.ActualBoundedCenteredFixed
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators Classical NNReal ENNReal
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.ActualSignedDoubleTelescope
+open Shao.C2.ActualRetainedResidualBudgets
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceIIDGaussianProfileBudget
+open Shao.Probability.SourceMarkedSuffixAveraging
+
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+/- Five proposed transparent private values. No theorem proof occurs here.
+   Existing firstValue, suffixD, actualRetainedAbsoluteRank and actualDoubleRetained
+   are reused, with their complete old transparent values in consumed-interfaces. -/
+private def abcf_suffixCubic (H : ℝ) {t : ℕ} (u : Shao.Path t) : ℝ :=
+  if 0 < Shao.energy u ∧ H ≤ Shao.energy u then
+    |firstValue u| ^ 3 / (Shao.energy u * Real.sqrt (Shao.energy u)) * suffixD u ^ 3
+  else 0
+
+private def abcf_suffixLate (H beta : ℝ) (n k : ℕ) {t : ℕ}
+    (u : Shao.Path t) : ℝ :=
+  if 0 < Shao.energy u ∧ H ≤ Shao.energy u then
+    |firstValue u| ^ 3 / (Shao.energy u * Real.sqrt (Shao.energy u)) * suffixD u ^ k *
+      (Shao.energy u / ((n - t : ℕ) : ℝ) + beta ^ 2 / ((n - t : ℕ) : ℝ))
+  else 0
+
+private def abcf_jointBill {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (nu : Shao.Path n → LabelPerm n → ℕ) (p : Shao.Path n × LabelPerm n) : ℝ :=
+  ∑ r : Fin n, actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2
+
+private def abcf_futureAt {n : ℕ} (J : MonitoredDomain) (Q : Measure BridgeNoise)
+    (x : ℝ) (r : ℕ) (p : Shao.Path n × LabelPerm n) : ℝ :=
+  (Finset.range (n + 1)).sup'
+    ⟨0, Finset.mem_range.mpr (Nat.zero_lt_succ n)⟩
+    (fun j => if r ≤ j then
+      |sourceValue J (eventCompletionKernel J Q) p.1 x j p.2 -
+        (if sourceAlive J p.1 x n p.2 then 1 else 0)| else 0)
+
+private def abcf_h0Future {n : ℕ} (J : MonitoredDomain) (Q : Measure BridgeNoise)
+    (H x : ℝ) (p : Shao.Path n × LabelPerm n) : ℝ :=
+  abcf_futureAt J Q x (energyCutoff p.1 H p.2) p
+
+/- PRIVATE HEAD P1. Own-law identities and all moment/positivity obligations.
+   n >= 2500 is a derived conclusion, never an added public assumption. -/
+private theorem abcf_bounded_own_budget_identities
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (bound : ℝ) (hb : 0 < bound) (hsupport : ∀ᵐ z : ℝ ∂rho, |z| ≤ bound)
+    (hmean : (∫ z : ℝ, z ∂rho) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (n : ℕ) (hn : 0 < n) (x : ℝ) (hx : (1 / 2 : ℝ) ≤ x)
+    (hscale : bound ≤ Real.sqrt (n : ℝ) / (100 * x)) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    let delta : ℝ := beta / Real.sqrt (n : ℝ)
+    let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+    Integrable (fun z : ℝ => z) rho ∧
+      Integrable (fun z : ℝ => z ^ 2) rho ∧ Integrable (fun z : ℝ => |z| ^ 3) rho ∧
+      1 ≤ bound ∧ 1 ≤ beta ∧ 0 < delta ∧ 0 < 4 * beta ^ 2 ∧ 2500 ≤ n ∧
+      Shao.truncationBudget normalizedLaw n 0 = delta ∧
+      Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+      4 * (n : ℝ) * (Shao.truncationBudget normalizedLaw n 0) ^ 2 = 4 * beta ^ 2 ∧
+      ∀ t ∈ Finset.Icc 1 (n / 2),
+        Shao.truncationBudget
+          (Measure.map (fun z : ℝ => z / Real.sqrt ((n - t : ℕ) : ℝ)) rho)
+          (n - t) 0 = beta / Real.sqrt ((n - t : ℕ) : ℝ)
+-- END P1 HEAD: no body.
+
+/- PRIVATE HEAD P2. Unit215 transport of existing early/late producers.
+   Mark averaging is performed after removing the arbitrary cap. -/
+private theorem abcf_suffix_grid_payment :
+    ∃ CE CL : ℝ, 0 < CE ∧ 0 < CL ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          let H : ℝ := 4 * beta ^ 2
+          let Pt : (t : ℕ) → Measure (Shao.Path t) := fun t => Measure.pi (fun _ : Fin t => rho)
+          (∀ t ∈ Finset.Icc (n / 2 + 1) n,
+            Measurable (@abcf_suffixCubic H t) ∧ Integrable (@abcf_suffixCubic H t) (Pt t) ∧
+              ∀ u : Shao.Path t, 0 ≤ abcf_suffixCubic H u) ∧
+          (∑ t ∈ Finset.Icc (n / 2 + 1) n, ∫ u, abcf_suffixCubic H u ∂Pt t) ≤ CE * delta ∧
+          ∀ k : ℕ, (k = 3 ∨ k = 5) →
+            (∀ t ∈ Finset.Icc 1 (n / 2),
+              Measurable (@abcf_suffixLate H beta n k t) ∧
+              Integrable (@abcf_suffixLate H beta n k t) (Pt t) ∧
+              ∀ u : Shao.Path t, 0 ≤ abcf_suffixLate H beta n k u) ∧
+            (∑ t ∈ Finset.Icc 1 (n / 2), ∫ u, abcf_suffixLate H beta n k u ∂Pt t) ≤ CL * delta
+-- END P2 HEAD: no body.
+
+/- PRIVATE HEAD P3. New all-level layer integration only: consume the candidate
+   public actual_auxiliary_level_true_energy_closed_strip; do not prove a new strip. -/
+private theorem abcf_two_sign_gaussian_all_level_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          let G : Shao.Path n → ℝ := fun a => ∑ r : Fin n,
+            (rankGaussianWeight (4 * beta ^ 2) x {1} false a r +
+              rankGaussianWeight (4 * beta ^ 2) x {-1} false a r)
+          Measurable G ∧ Integrable G P ∧ (∀ a, 0 ≤ G a) ∧
+            (∫ a, G a ∂P) ≤ C * delta
+-- END P3 HEAD: no body.
+
+/- PRIVATE HEAD P4. New finite-future packaging, with real L1 established by [0,1]. -/
+private theorem abcf_future_measurable_integrable
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB) (n : ℕ)
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (H x : ℝ) (hH : 0 < H) (hx : 0 ≤ x) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    (∀ (J : MonitoredDomain) (r : ℕ), r ≤ n →
+      Measurable (abcf_futureAt J Q x r) ∧
+      Integrable (abcf_futureAt J Q x r) (revealLaw P) ∧
+      ∀ p, 0 ≤ abcf_futureAt J Q x r p ∧ abcf_futureAt J Q x r p ≤ 1) ∧
+    ∀ J : MonitoredDomain,
+      Measurable (abcf_h0Future J Q H x) ∧ Integrable (abcf_h0Future J Q H x) (revealLaw P) ∧
+      Measurable (fun a => abcf_h0Future J Q H x (a, Equiv.refl (Fin n))) ∧
+      Integrable (fun a => abcf_h0Future J Q H x (a, Equiv.refl (Fin n))) P ∧
+      ∀ p, 0 ≤ abcf_h0Future J Q H x p ∧ abcf_h0Future J Q H x p ≤ 1
+-- END P4 HEAD: no body.
+
+/- PRIVATE HEAD P5. Unit217's genuinely fixed full suffix, before applying the
+   old stopped-suffix identity. Constants retain the actual 2 and 32U corridor. -/
+private theorem abcf_fixed_suffix_terminal_all_level :
+    ∃ Ccorr : ℝ, 0 < Ccorr ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (r t : ℕ), 0 < r → 0 < t → r + t ≤ 2 * r →
+          ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+            bound ≤ Real.sqrt (r + t : ℝ) / (100 * x) →
+            ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+              (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+              IsBrownianReal Bm PB →
+              let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+              let H : ℝ := 4 * beta ^ 2
+              let Q : Measure BridgeNoise := bridgeLaw Bm PB
+              ∀ (J : MonitoredDomain) (u : Shao.Path t),
+                let U : ℝ := Shao.energy u
+                let Jmax : ℝ := (Finset.range (t + 1)).sup'
+                  ⟨0, Finset.mem_range.mpr (Nat.zero_lt_succ t)⟩ (fun l => |Shao.prefixSum u l|)
+                let Phi : Shao.Path r → ℝ := fun v =>
+                  abcf_futureAt J Q x r (Fin.append v u, Equiv.refl (Fin (r + t)))
+                Integrable Phi (Measure.pi (fun _ : Fin r => rho)) ∧
+                  (∫ v, Phi v ∂Measure.pi (fun _ : Fin r => rho)) ≤
+                    Ccorr / (r + t : ℝ) * (8 * Jmax ^ 2 + 128 * U + 2 * H)
+-- END P5 HEAD: no body.
+
+/- PRIVATE HEAD P6. Unit218 all-positive halfline initial extension, using actual
+   closed CDF + explicit layer integral; never extend the old x<=1 host-gap head. -/
+private theorem abcf_halfline_initial_all_positive :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → bound ≤ Real.sqrt (n : ℝ) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB → ∀ (x : ℝ), 0 < x →
+              let Q : Measure BridgeNoise := bridgeLaw Bm PB
+              (∀ J : MonitoredDomain, (J = .upper ∨ J = .lower) →
+                let V0 : Shao.Path n → ℝ := fun a =>
+                  sourceValue J (eventCompletionKernel J Q) a x 0 (Equiv.refl (Fin n))
+                Integrable V0 P ∧ |(∫ a, V0 a ∂P) - (1 - 2 * Shao.standardNormalTail x)| ≤ C * delta) ∧
+              ∀ s : ℝ, (s = 1 ∨ s = -1) →
+                PB.real {omegaB | ∃ t : BridgeTime,
+                  x ≤ s * Bm ⟨(t : ℝ), t.property.1⟩ omegaB} = 2 * Shao.standardNormalTail x
+-- END P6 HEAD: no body.
+
+/- PRIVATE HEAD P7. Legal p=3 C1 application with the current law's Rx, not a
+   target-budget premise. rhoStar, epsilonF and both constants precede the law. -/
+private theorem abcf_legal_c1_fixed_segment :
+    ∃ rhoStar epsilonF C1 K1 : ℝ,
+      0 < rhoStar ∧ rhoStar ≤ 1 / 16 ∧
+      epsilonF = min (rhoStar / 27) (1 / 8) ∧ 0 < epsilonF ∧ 0 < C1 ∧ 0 < K1 ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ) (hn : 0 < n) (x : ℝ), (1 / 2 : ℝ) ≤ x → x ≤ 16 →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonF →
+          let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+          Shao.truncationBudget normalizedLaw n x ≤ rhoStar ∧ delta ≤ 1 ∧
+          ∀ s : ℝ, (s = 1 ∨ s = -1) →
+            let U : Set (Shao.Path n) := {a | x * Real.sqrt (Shao.energy a) ≤ Shao.upperMax (s • a) hn}
+            |P.real U - 2 * Shao.standardNormalTail x| ≤ C1 * delta * (1 + x) ^ 3 * Shao.standardNormalTail x ∧
+            |P.real U - 2 * Shao.standardNormalTail x| ≤ K1 * delta
+-- END P7 HEAD: no body.
+
+/- PRIVATE HEAD P8. Unit218 actual three-domain assembly; exact cutoff chosen
+   as nu, first public bill, second public terminal, own-law C1/initial gaps. -/
+private theorem abcf_fixed_absolute_comparison :
+    ∃ epsilonF CA : ℝ, 0 < epsilonF ∧ epsilonF ≤ 1 / 8 ∧ 0 < CA ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ) (hn : 0 < n) (x : ℝ), (1 / 2 : ℝ) ≤ x → x ≤ 16 →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonF →
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            |P.real {a | x * Real.sqrt (Shao.energy a) ≤ Shao.absMax a hn} -
+              PB.real {omegaB | ∃ t : BridgeTime,
+                x ≤ |Bm ⟨(t : ℝ), t.property.1⟩ omegaB|}| ≤ CA * delta
+-- END P8 HEAD: no body.
+
+/- PUBLIC HEAD 1. Actual I/U/D + own negative interval bill, all x>=1/2.
+   No stopping-rank assumption, no residual condition, no target budget premise. -/
+theorem iid_actual_all_level_retained_negative_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            let Q : Measure BridgeNoise := bridgeLaw Bm PB
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            ∀ (nu : Shao.Path n → LabelPerm n → ℕ),
+              (∀ sigma, Measurable (fun a : Shao.Path n => nu a sigma)) →
+              (∀ a sigma, nu a sigma ≤ energyCutoff a (4 * beta ^ 2) sigma) →
+              let bill : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+                ∑ r : Fin n, actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2
+              let absoluteDouble : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+                ∑ r : Fin n, |actualDoubleRetained Q x p.1 (nu p.1) r.val p.2|
+              let signedDouble : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+                ∑ r : Fin n, actualDoubleRetained Q x p.1 (nu p.1) r.val p.2
+              Measurable bill ∧ Integrable bill (revealLaw P) ∧ (∀ p, 0 ≤ bill p) ∧
+                0 ≤ (∫ p, bill p ∂revealLaw P) ∧ (∫ p, bill p ∂revealLaw P) ≤ C * delta ∧
+                Measurable absoluteDouble ∧ Integrable absoluteDouble (revealLaw P) ∧
+                (∀ p, absoluteDouble p ≤ bill p) ∧
+                (∫ p, absoluteDouble p ∂revealLaw P) ≤ C * delta ∧
+                Measurable signedDouble ∧ Integrable signedDouble (revealLaw P) ∧
+                |(∫ p, signedDouble p ∂revealLaw P)| ≤ C * delta
+-- END PUBLIC HEAD 1: no body.
+
+/- PUBLIC HEAD 2. Real h0 cutoff; complete future supremum for all three domains.
+   The masked range maximum equals max_{cutoff<=j<=n}; deleted slots are zero. -/
+theorem iid_actual_all_level_h0_terminal_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          let H : ℝ := 4 * beta ^ 2
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            let Q : Measure BridgeNoise := bridgeLaw Bm PB
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let future : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+              (Finset.range (n + 1)).sup'
+                ⟨0, Finset.mem_range.mpr (Nat.zero_lt_succ n)⟩
+                (fun j => if energyCutoff p.1 H p.2 ≤ j then
+                  |sourceValue J (eventCompletionKernel J Q) p.1 x j p.2 -
+                    (if sourceAlive J p.1 x n p.2 then 1 else 0)| else 0)
+            ∀ J : MonitoredDomain,
+              let identityFuture : Shao.Path n → ℝ := fun a => future J (a, Equiv.refl (Fin n))
+              Measurable identityFuture ∧ Integrable identityFuture P ∧
+                (∀ a, 0 ≤ identityFuture a ∧ identityFuture a ≤ 1) ∧
+                0 ≤ (∫ a, identityFuture a ∂P) ∧ (∫ a, identityFuture a ∂P) ≤ C * delta ^ 2 ∧
+                Measurable (future J) ∧ Integrable (future J) (revealLaw P) ∧
+                (∀ p, 0 ≤ future J p ∧ future J p ≤ 1) ∧
+                0 ≤ (∫ p, future J p ∂revealLaw P) ∧
+                (∫ p, future J p ∂revealLaw P) ≤ C * delta ^ 2
+-- END PUBLIC HEAD 2: no body.
+
+/- PUBLIC HEAD 3. Fixed [1/2,16] ONLY; source218 is the reviewed mathematics.
+   Constants and epsilon are chosen before rho, bound, n, x and the Brownian law.
+   The only smallness premise is delta*x^3<=epsilonF; Rx is an output identity.
+   doubleCrossingEvent uses weak hits of both actual walls, including zero energy. -/
+theorem iid_actual_bounded_centered_fixed_comparison :
+    ∃ epsilonF CF CA : ℝ, 0 < epsilonF ∧ epsilonF ≤ 1 / 8 ∧ 0 < CF ∧ 0 < CA ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ) (hn : 0 < n) (x : ℝ), (1 / 2 : ℝ) ≤ x → x ≤ 16 →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonF →
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+            let brownianDouble : Set ΩB := {omegaB |
+              (∃ t : BridgeTime, x ≤ Bm ⟨(t : ℝ), t.property.1⟩ omegaB) ∧
+              (∃ t : BridgeTime, Bm ⟨(t : ℝ), t.property.1⟩ omegaB ≤ -x)}
+            Shao.truncationBudget normalizedLaw n 0 = delta ∧
+              Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+              |P.real (doubleCrossingEvent x) - PB.real brownianDouble| ≤
+                CF * delta * (1 + x) ^ 3 * Shao.standardNormalTail x ∧
+              |P.real {a | x * Real.sqrt (Shao.energy a) ≤ Shao.absMax a hn} -
+                PB.real {omegaB | ∃ t : BridgeTime,
+                  x ≤ |Bm ⟨(t : ℝ), t.property.1⟩ omegaB|}| ≤ CA * delta
+-- END PUBLIC HEAD 3: no body.
+
+end Shao.C2.ActualBoundedCenteredFixed
