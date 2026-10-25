@@ -1,0 +1,987 @@
+--- source-c7eb34c3587f.lean.txt
++++ ActualBadIntervalNegativeBudget.lean
+@@ -49,7 +49,9 @@
+     · exact (integrable_const (bound ^ p)).mono' (by fun_prop)
+         (by simpa only [Real.norm_eq_abs, abs_pow] using hb)
+     · exact (integrable_const (bound ^ p)).mono' (by fun_prop)
+-        (by simpa only [Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (abs_nonneg _) p)] using hb)
++        (by
++          filter_upwards [hb] with z hz
++          simpa only [Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (abs_nonneg z) p)] using hz)
+   have h2 := (hp 2).1
+   have h3 := (hp 3).2
+   have h4 := (hp 4).1
+@@ -64,6 +66,7 @@
+       nlinarith only [hh, sq_abs z]
+     have hi := integral_mono (h2.const_mul 3)
+       ((h3.const_mul 2).add (integrable_const 1)) hpoint
++    change (∫ z : ℝ, 3 * z ^ 2 ∂rho) ≤ ∫ z : ℝ, 2 * |z| ^ 3 + 1 ∂rho at hi
+     rw [integral_const_mul, integral_add (h3.const_mul 2) (integrable_const 1),
+       integral_const_mul, hsecond] at hi
+     simp only [integral_const, probReal_univ, one_smul] at hi
+@@ -75,8 +78,10 @@
+       have hh := mul_le_mul_of_nonneg_right hz (pow_nonneg (abs_nonneg z) 3)
+       calc
+         z ^ 4 = |z| * |z| ^ 3 := by
+-          rw [show |z| ^ 3 = |z| ^ 2 * |z| by ring, sq_abs z]
+-          ring
++          calc
++            z ^ 4 = (z ^ 2) ^ 2 := by ring
++            _ = (|z| ^ 2) ^ 2 := by rw [sq_abs]
++            _ = _ := by ring
+         _ ≤ bound * |z| ^ 3 := hh)
+   simpa only [integral_const_mul] using hi
+ 
+@@ -91,10 +96,12 @@
+   have hc : |clip t - clip s| ≤ |t - s| := by
+     have hmax := abs_max_sub_max_le_max (-bound) t (-bound) s
+     have hmin := abs_min_sub_min_le_max bound (max (-bound) t) bound (max (-bound) s)
+-    simp only [sub_self, abs_zero, max_eq_right (abs_nonneg _)] at hmax hmin
++    simp only [sub_self, abs_zero] at hmax hmin
++    rw [max_eq_right (abs_nonneg (t - s))] at hmax
++    rw [max_eq_right (abs_nonneg (max (-bound) t - max (-bound) s))] at hmin
+     exact hmin.trans hmax
+   calc
+-    _ = |clip t - clip s| * |clip t + clip s| := by rw [← abs_mul]; congr 1; ring
++    _ = |clip t - clip s| * |clip t + clip s| := by rw [← abs_mul]; congr 1 <;> ring
+     _ ≤ |t - s| * (2 * bound) :=
+       mul_le_mul hc ((abs_add_le _ _).trans (by linarith only [hcb t, hcb s]))
+         (abs_nonneg _) (abs_nonneg _)
+@@ -123,8 +130,7 @@
+       bound * Real.sqrt (2 / (k : ℝ)) := by
+     rw [Real.sqrt_div (by positivity), Real.sqrt_div (by positivity)]
+     have ht := Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)
+-    field_simp
+-    nlinarith only [ht]
++    field_simp <;> nlinarith only [ht]
+   have hlip (c s t : ℝ) :
+       |Real.sqrt (max ((k : ℝ) / 2) (c + clip t ^ 2)) -
+         Real.sqrt (max ((k : ℝ) / 2) (c + clip s ^ 2))| ≤
+@@ -140,7 +146,8 @@
+     have hAB : |A - B| ≤ 2 * bound * |t - s| := by
+       have hh := abs_max_sub_max_le_max ((k : ℝ) / 2) (c + clip t ^ 2)
+         ((k : ℝ) / 2) (c + clip s ^ 2)
+-      simp only [sub_self, abs_zero, max_eq_right (abs_nonneg _), add_sub_add_left_eq_sub] at hh
++      simp only [sub_self, abs_zero, add_sub_add_left_eq_sub] at hh
++      rw [max_eq_right (abs_nonneg (clip t ^ 2 - clip s ^ 2))] at hh
+       exact hh.trans (anib_clipped_square_lipschitz bound hbound s t)
+     have hp : |Real.sqrt A - Real.sqrt B| * (Real.sqrt A + Real.sqrt B) = |A - B| := by
+       rw [← abs_of_nonneg (add_nonneg (Real.sqrt_nonneg A) (Real.sqrt_nonneg B)), ← abs_mul]
+@@ -149,13 +156,18 @@
+     have hh : |Real.sqrt A - Real.sqrt B| ≤ bound / Real.sqrt ((k : ℝ) / 2) * |t - s| := by
+       have hm := mul_le_mul_of_nonneg_left (show 2 * Real.sqrt ((k : ℝ) / 2) ≤
+           Real.sqrt A + Real.sqrt B by linarith only [haR, hbR]) (abs_nonneg (Real.sqrt A - Real.sqrt B))
+-      have hh := hm.trans (by rw [hp]; exact hAB)
++      have hh : |Real.sqrt A - Real.sqrt B| * (2 * Real.sqrt ((k : ℝ) / 2)) ≤
++          2 * bound * |t - s| := by
++        calc
++          _ ≤ |Real.sqrt A - Real.sqrt B| * (Real.sqrt A + Real.sqrt B) := hm
++          _ = |A - B| := hp
++          _ ≤ _ := hAB
+       have hd := (le_div_iff₀ (mul_pos (by norm_num : (0 : ℝ) < 2) hfroot)).2 hh
+       calc
+         _ ≤ (2 * bound * |t - s|) / (2 * Real.sqrt ((k : ℝ) / 2)) := hd
+-        _ = _ := by field_simp; ring
++        _ = _ := by field_simp <;> ring
+     simpa only [hrootfactor] using hh
+-  refine ⟨by dsimp [H, F, clip]; fun_prop, ?_⟩
++  refine ⟨by dsimp [H, F, clip]; simp only [Shao.prefixSum_length]; fun_prop, ?_⟩
+   intro a i s t hst
+   let v : Shao.Path k := fun j => Real.sqrt (k : ℝ) * a j
+   have hupdate (w : ℝ) :
+@@ -179,12 +191,18 @@
+   rw [abs_of_nonneg hnonneg] at hh
+   have hup := mul_le_mul_of_nonneg_left ((le_abs_self _).trans hh) hx
+   have hsl := mul_le_mul_of_nonneg_right hslope hnonneg
+-  dsimp only [H, F]
++  change 2 * F (fun j : Fin k => Real.sqrt (k : ℝ) * Function.update a i s j) / Real.sqrt (k : ℝ) - s ≤
++    2 * F (fun j : Fin k => Real.sqrt (k : ℝ) * Function.update a i t j) / Real.sqrt (k : ℝ) - t
+   rw [hupdate s, hupdate t]
+-  simp only [Shao.prefixSum_length, hsum, ← add_assoc]
++  dsimp only [F]
++  have hS (w : ℝ) : Shao.prefixSum (Function.update v i w) k =
++      (∑ j ∈ (Finset.univ : Finset (Fin k)).erase i, v j) + w := by
++    simpa only [Shao.prefixSum_length, id_eq] using hsum id w
++  rw [hS, hS, hsum (fun z => clip z ^ 2), hsum (fun z => clip z ^ 2)]
++  simp only [← add_assoc]
+   have hden : ∀ A t : ℝ, 2 * A / Real.sqrt (k : ℝ) - t =
+       (2 * A - t * Real.sqrt (k : ℝ)) / Real.sqrt (k : ℝ) := by
+-    intro A t; field_simp; ring
++    intro A t; field_simp <;> ring
+   simp_rw [hden]
+   exact (div_le_div_iff_of_pos_right hs).2 (by nlinarith only [hup, hsl])
+ 
+@@ -248,7 +266,7 @@
+     calc
+       _ ≤ (k : ℝ) * (beta / scale ^ 3) := by
+         rw [← hIe]; exact mul_le_mul_of_nonneg_left hi hkp.le
+-      _ = _ := by rw [← hs2]; field_simp; ring
++      _ = _ := by rw [← hs2]; field_simp <;> ring
+   exact ⟨hs, inferInstance, he2, hme, hnorm, hR,
+     Measure.pi_map_pi (fun _ : Fin k => hm.aemeasurable)⟩
+ 
+@@ -275,11 +293,15 @@
+     memLp_finsetSum Finset.univ (fun i _ => hLp.comp_measurePreserving
+       (measurePreserving_eval (fun _ : Fin k => rho) i))
+   have heMean : (∫ a : Shao.Path k, Shao.energy a ∂P) = (k : ℝ) := by
+-    rw [Shao.energy, integral_finsetSum _ (fun i _ =>
+-      (hLp.comp_measurePreserving (measurePreserving_eval (fun _ : Fin k => rho) i)).integrable (by norm_num))]
++    have hci (i : Fin k) : Integrable (fun a : Shao.Path k => a i ^ 2) P := by
++      simpa only [Function.comp_def] using
++        (hLp.comp_measurePreserving (measurePreserving_eval (fun _ : Fin k => rho) i)).integrable (by norm_num)
++    change (∫ a : Shao.Path k, ∑ i : Fin k, a i ^ 2 ∂P) = (k : ℝ)
++    rw [integral_finsetSum _ (fun i _ => hci i)]
+     have hi (i : Fin k) : (∫ a : Shao.Path k, a i ^ 2 ∂P) = 1 := by
+       rw [← hsecond]
+-      have hh := integral_map (μ := P) (measurable_pi_apply i).aemeasurable h2.aestronglyMeasurable
++      have hsqMeas : Measurable (fun z : ℝ => z ^ 2) := by fun_prop
++      have hh := integral_map (μ := P) (measurable_pi_apply i).aemeasurable hsqMeas.aestronglyMeasurable
+       rw [(measurePreserving_eval (fun _ : Fin k => rho) i).map_eq] at hh
+       exact hh.symm
+     simp only [hi, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
+@@ -308,7 +330,8 @@
+       by_cases ha : a ∈ E
+       · rw [Set.indicator_of_mem ha]
+         change Shao.energy a < (k : ℝ) / 2 at ha
+-        nlinarith only [ha, Shao.energy_nonneg a, Nat.cast_nonneg k]
++        nlinarith only [ha, Shao.energy_nonneg a,
++          show (0 : ℝ) ≤ (k : ℝ) from Nat.cast_nonneg k]
+       · rw [Set.indicator_of_notMem ha]; exact sq_nonneg _)
+   rw [integral_indicator_const _ hEm, smul_eq_mul] at hi
+   have hvariance : variance (Shao.energy : Shao.Path k → ℝ) P =
+@@ -318,7 +341,9 @@
+   have hkp : 0 < (k : ℝ) := by exact_mod_cast hk
+   change P.real E ≤ _
+   apply (le_div_iff₀ hkp).2
+-  nlinarith only [hi, heVar]
++  have hmul : P.real E * (k : ℝ) ^ 2 ≤ 4 * (k : ℝ) * bound * beta := by nlinarith only [hi, heVar]
++  apply (mul_le_mul_iff_right₀ hkp).1
++  nlinarith only [hmul]
+ 
+ private theorem anib_actual_wall_interval_concentration
+     (rho : Measure ℝ) [IsProbabilityMeasure rho]
+@@ -358,12 +383,16 @@
+   let A : Set (Shao.Path k) := {v | a ≤ F v ∧ F v ≤ b}
+   have hAm : MeasurableSet A := by dsimp [A, F, clip]; measurability
+   let normPath : Shao.Path k → Shao.Path k := fun v i => v i / scale
+-  have hnm : Measurable normPath := Measurable.of_eval fun i => (measurable_pi_apply i).div_const scale
++  have hnm : Measurable normPath := by
++    dsimp only [normPath]
++    exact Measurable.of_eval fun i => (measurable_pi_apply (X := fun _ : Fin k => ℝ) i).div_const scale
+   have hpre : normPath ⁻¹' {v | 2 * a / scale ≤ H v ∧ H v ≤ 2 * b / scale} = A := by
+     ext v
+     have hv : (fun i : Fin k => Real.sqrt (k : ℝ) * normPath v i) = v := by
+       funext i; dsimp [normPath, scale]; field_simp
+-    dsimp only [Set.mem_preimage, Set.mem_setOf_eq, H]
++    change (2 * a / scale ≤ 2 * F (fun i : Fin k => Real.sqrt (k : ℝ) * normPath v i) / scale ∧
++      2 * F (fun i : Fin k => Real.sqrt (k : ℝ) * normPath v i) / scale ≤ 2 * b / scale) ↔
++      (a ≤ F v ∧ F v ≤ b)
+     rw [hv]
+     constructor
+     · intro hh
+@@ -401,7 +430,10 @@
+     have hfloor : (k : ℝ) / 2 ≤ q + Shao.energy v := by
+       have hh : (k : ℝ) / 2 ≤ Shao.energy v := le_of_not_gt hl
+       linarith only [hq, hh]
+-    simpa only [A, F, hc, max_eq_right hfloor] using hE
++    change a ≤ F v ∧ F v ≤ b
++    dsimp only [F]
++    rw [hc, max_eq_right hfloor]
++    exact hE
+   have hL := anib_iid_low_energy rho bound hbound hsupport hsecond k hk
+   have hfloor : 4 * bound * beta / (k : ℝ) ≤ 4 * beta / scale := by
+     have hb0 : 0 ≤ beta := (show 1 ≤ beta from hraw.2.2.2.2.2.1).trans' (by norm_num)
+@@ -411,7 +443,7 @@
+     nlinarith only [mul_le_mul_of_nonneg_right hscale (mul_nonneg (by positivity : (0 : ℝ) ≤ 4 * beta) hs.le)]
+   change P.real E ≤ _
+   calc
+-    _ ≤ P.real (A ∪ L) := measureReal_mono_ae hsub
++    _ ≤ P.real (A ∪ L) := ENNReal.toReal_mono (measure_ne_top _ _) (measure_mono_ae hsub)
+     _ ≤ P.real A + P.real L := measureReal_union_le _ _
+     _ ≤ (4 * (b - a) + 80 * beta) / scale + 4 * beta / scale :=
+       add_le_add hCA (hL.trans hfloor)
+@@ -443,7 +475,9 @@
+   letI : IsProbabilityMeasure eta := hd.2.1
+   let P : Measure (Shao.Path k) := Measure.pi (fun _ : Fin k => rho)
+   let T : Shao.Path k → Shao.Path k := fun a i => a i / scale
+-  have hTm : Measurable T := Measurable.of_eval fun i => (measurable_pi_apply i).div_const scale
++  have hTm : Measurable T := by
++    dsimp only [T]
++    exact Measurable.of_eval fun i => (measurable_pi_apply (X := fun _ : Fin k => ℝ) i).div_const scale
+   have hmax (a : Shao.Path k) : Shao.maxWithZero ((-1 : ℝ) • T a) =
+       Shao.maxWithZero ((-1 : ℝ) • a) / scale := by
+     have he : (-1 : ℝ) • T a = scale⁻¹ • ((-1 : ℝ) • a) := by funext i; dsimp [T]; ring
+@@ -454,7 +488,10 @@
+     · rw [max_eq_left (le_of_not_ge ha), max_eq_left (mul_nonpos_of_nonneg_of_nonpos
+         (inv_nonneg.2 hs.le) (le_of_not_ge ha))]; simp
+   let E : Set (Shao.Path k) := {a | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v / scale}
+-  have hEm : MeasurableSet E := by dsimp [E]; measurability
++  have hsm : Measurable (fun a : Shao.Path k => (-1 : ℝ) • a) :=
++    Measurable.of_eval fun i => measurable_const.mul (measurable_pi_apply (X := fun _ : Fin k => ℝ) i)
++  have hEm : MeasurableSet E :=
++    measurableSet_le (Shao.measurable_maxWithZero.comp hsm) measurable_const
+   have hp := hSurv eta k hk hd.2.2.1 hd.2.2.2.1 hd.2.2.2.2.1 (-1) (v / scale)
+     (Or.inr rfl) (div_nonneg hv hs.le)
+   have hpre : T ⁻¹' E = {a : Shao.Path k | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v} := by
+@@ -464,10 +501,25 @@
+   rw [← hd.2.2.2.2.2.2, Measure.real_def, Measure.map_apply hTm hEm, hpre] at hp
+   have hrev : MeasurePreserving (fun a : Shao.Path k => fun i => a (Fin.rev i)) P P :=
+     (measurePreserving_piCongrLeft (fun _ : Fin k => rho) Fin.revPerm).symm
+-  have he := hrev.measure_preimage (by measurability :
+-    MeasurableSet {a : Shao.Path k | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v})
++  have hEv : MeasurableSet {a : Shao.Path k | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v} :=
++    measurableSet_le (Shao.measurable_maxWithZero.comp hsm) measurable_const
++  have he := congrArg (fun m : Measure (Shao.Path k) =>
++    m {a | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v}) hrev.map_eq
++  rw [Measure.map_apply hrev.measurable hEv] at he
+   have hprob : P.real {a : Shao.Path k | Shao.maxWithZero (fun i => -a (Fin.rev i)) ≤ v} =
+       P.real {a : Shao.Path k | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v} := by
++    have hsigned (a : Shao.Path k) : (-1 : ℝ) • (fun i => a (Fin.rev i)) =
++        (fun i => -a (Fin.rev i)) := by
++      funext i
++      simp
++    have hrevpre : (fun a : Shao.Path k => fun i => a (Fin.rev i)) ⁻¹'
++        {a : Shao.Path k | Shao.maxWithZero ((-1 : ℝ) • a) ≤ v} =
++        {a : Shao.Path k | Shao.maxWithZero (fun i => -a (Fin.rev i)) ≤ v} := by
++      ext a
++      change Shao.maxWithZero ((-1 : ℝ) • (fun i => a (Fin.rev i))) ≤ v ↔ _
++      rw [hsigned]
++      rfl
++    rw [hrevpre] at he
+     exact congrArg ENNReal.toReal he
+   rw [hprob]
+   exact hp.trans (by
+@@ -555,10 +607,10 @@
+     have hslope : x * bound * Real.sqrt (2 / (k : ℝ)) ≤ 1 / 2 := by
+       have hsq := Real.sq_sqrt (show 0 ≤ 2 / (k : ℝ) by positivity)
+       have hid : (x * bound * Real.sqrt (2 / (k : ℝ))) ^ 2 * (k : ℝ) =
+-          2 * x ^ 2 * bound ^ 2 := by rw [mul_pow, mul_pow, hsq]; field_simp; ring
++          2 * x ^ 2 * bound ^ 2 := by rw [mul_pow, mul_pow, hsq]; field_simp <;> ring
+       have hnonneg : 0 ≤ x * bound * Real.sqrt (2 / (k : ℝ)) := by positivity
+       apply (sq_le_sq₀ hnonneg (by norm_num : (0 : ℝ) ≤ 1 / 2)).1
+-      apply (mul_le_mul_right hkR).1
++      apply (mul_le_mul_iff_right₀ hkR).1
+       nlinarith only [hlarge, hnk, hid]
+     let P : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+     let Pk : Measure (Shao.Path k) := Measure.pi (fun _ : Fin k => rho)
+@@ -572,9 +624,22 @@
+       Shao.prefixSum p.1 k - x * Real.sqrt (q + Shao.energy p.2 + Shao.energy p.1)
+     let G : Set (Shao.Path k × Shao.Path ell) := {p | p.2 ∈ L ∧
+       -Shao.prefixSum p.2 ell - v ≤ Z p ∧ Z p ≤ -Shao.prefixSum p.2 ell}
+-    have hEm : MeasurableSet E := by dsimp [E, wall]; measurability
+-    have hLm : MeasurableSet L := by dsimp [L]; measurability
+-    have hGm : MeasurableSet G := by dsimp [G, L, Z]; measurability
++    have hwallm : Measurable wall := measurable_const.mul
++      ((measurable_const.add Shao.measurable_energy).sqrt)
++    have hEm : MeasurableSet E :=
++      (measurableSet_le Shao.measurable_maxWithZero hwallm).inter
++        ((measurableSet_le (hwallm.sub_const v) (Shao.measurable_prefixSum r)).inter
++          (measurableSet_le (Shao.measurable_prefixSum r) hwallm))
++    have hLm : MeasurableSet L := by
++      apply measurableSet_le _ measurable_const
++      apply Shao.measurable_maxWithZero.comp
++      exact Measurable.of_eval fun i => (measurable_pi_apply (X := fun _ : Fin ell => ℝ) (Fin.rev i)).neg
++    have hZm : Measurable Z := ((Shao.measurable_prefixSum k).comp measurable_fst).sub
++      (measurable_const.mul (((measurable_const.add (Shao.measurable_energy.comp measurable_snd)).add
++        (Shao.measurable_energy.comp measurable_fst)).sqrt))
++    have hGm : MeasurableSet G := (hLm.preimage measurable_snd).inter
++      ((measurableSet_le (((Shao.measurable_prefixSum ell).comp measurable_snd).neg.sub_const v) hZm).inter
++        (measurableSet_le hZm (((Shao.measurable_prefixSum ell).comp measurable_snd).neg)))
+     have hsplit : MeasurePreserving
+         (fun a : Shao.Path r =>
+           (Shao.Probability.Spitzer.head a k hkr, Shao.Probability.Spitzer.tail a k hkr))
+@@ -592,56 +657,56 @@
+       have hh := e.sum_comp (fun i : Fin r => f (a i))
+       rw [Fintype.sum_sum_type] at hh
+       exact hh.symm
++    have hreversePrefix {m : ℕ} (a : Shao.Path m) (j : ℕ) (hj : j ≤ m) :
++        Shao.prefixSum (fun i : Fin m => a (Fin.rev i)) j =
++          Shao.prefixSum a m - Shao.prefixSum a (m - j) := by
++      have he : (∑ i ∈ Finset.univ.filter (fun i : Fin m => i.val < j), a (Fin.rev i)) =
++          ∑ i ∈ Finset.univ.filter (fun i : Fin m => m - j ≤ i.val), a i := by
++        apply Finset.sum_equiv Fin.revPerm
++        · intro i
++          simp only [Finset.mem_filter, Finset.mem_univ, true_and]
++          change (i.val < j ↔ m - j ≤ (Fin.rev i).val)
++          rw [Fin.val_rev]
++          have hi := i.is_lt
++          omega
++        · intro i _; rfl
++      have hh := Finset.sum_filter_add_sum_filter_not Finset.univ (fun i : Fin m => i.val < m - j) a
++      simp only [not_lt] at hh
++      rw [Shao.prefixSum_length]
++      change (∑ i ∈ Finset.univ.filter (fun i : Fin m => i.val < j), a (Fin.rev i)) =
++        (∑ i : Fin m, a i) - ∑ i ∈ Finset.univ.filter (fun i : Fin m => i.val < m - j), a i
++      rw [he]
++      linarith only [hh]
+     have hreverse (a : Shao.Path r) (j : ℕ) (hj : j ≤ ell) :
+         Shao.prefixSum (fun i : Fin ell => Shao.Probability.Spitzer.tail a k hkr (Fin.rev i)) j =
+           Shao.prefixSum a r - Shao.prefixSum a (r - j) := by
+-      have he : (∑ i ∈ Finset.univ.filter (fun i : Fin ell => i.val < j),
+-          Shao.Probability.Spitzer.tail a k hkr (Fin.rev i)) =
+-          ∑ i ∈ Finset.univ.filter (fun i : Fin r => r - j ≤ i.val), a i := by
+-        apply Finset.sum_bij (fun i _ => (⟨r - 1 - i.val, by have hi := i.is_lt; dsimp [ell] at hi; omega⟩ : Fin r))
+-        · intro i hi
+-          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hi ⊢
+-          omega
+-        · intro i hi i' hi' heq
+-          apply Fin.ext
+-          have hi0 := i.is_lt; have hi1 := i'.is_lt
+-          have hv := congrArg Fin.val heq
+-          dsimp [ell] at hi0 hi1
+-          dsimp at hv
+-          omega
+-        · intro i hi
+-          have hi0 := i.is_lt
+-          have hi1 := (Finset.mem_filter.mp hi).2
+-          refine ⟨⟨r - 1 - i.val, by dsimp [ell]; omega⟩, ?_, ?_⟩
+-          · simp only [Finset.mem_filter, Finset.mem_univ, true_and]; omega
+-          · apply Fin.ext; dsimp; omega
+-        · intro i hi
+-          congr 1
+-          apply Fin.ext
+-          simp only [Shao.Probability.Spitzer.tail, Fin.val_rev]
+-          have hi0 := i.is_lt
+-          dsimp [ell] at hi0 ⊢
+-          omega
+-      have hh := Finset.sum_filter_add_sum_filter_not Finset.univ (fun i : Fin r => i.val < r - j) a
+-      simp only [not_lt] at hh
+-      rw [Shao.prefixSum_length]
+-      change (∑ i ∈ Finset.univ.filter (fun i : Fin ell => i.val < j),
+-        Shao.Probability.Spitzer.tail a k hkr (Fin.rev i)) = _
+-      rw [he]
+-      linarith only [hh]
++      have hl : ell ≤ r := Nat.sub_le _ _
++      have he : (fun i : Fin ell => Shao.Probability.Spitzer.tail a k hkr (Fin.rev i)) =
++          Shao.Probability.Spitzer.head (fun i : Fin r => a (Fin.rev i)) ell hl := by
++        funext i
++        dsimp [Shao.Probability.Spitzer.tail, Shao.Probability.Spitzer.head]
++        congr 1
++        apply Fin.ext
++        simp only [Fin.val_rev]
++        have hi := i.is_lt
++        dsimp [ell] at hi ⊢
++        omega
++      rw [he, Shao.Probability.Spitzer.head_prefixSum _ _ _ _ hj,
++        hreversePrefix _ _ (hj.trans hl)]
+     have hsub : E ⊆ (fun a : Shao.Path r =>
+         (Shao.Probability.Spitzer.head a k hkr, Shao.Probability.Spitzer.tail a k hkr)) ⁻¹' G := by
+       intro a ha
+       have hS : Shao.prefixSum a r =
+           Shao.prefixSum (Shao.Probability.Spitzer.head a k hkr) k +
+           Shao.prefixSum (Shao.Probability.Spitzer.tail a k hkr) ell := by
+-        simpa only [Shao.prefixSum_length, id_eq] using hsplitSum a id
++        simpa only [ell, Shao.prefixSum_length, id_eq] using hsplitSum a id
+       have hQ : Shao.energy a = Shao.energy (Shao.Probability.Spitzer.head a k hkr) +
+           Shao.energy (Shao.Probability.Spitzer.tail a k hkr) := hsplitSum a (fun z => z ^ 2)
+       have hqe : q + Shao.energy (Shao.Probability.Spitzer.tail a k hkr) +
+           Shao.energy (Shao.Probability.Spitzer.head a k hkr) = q + Shao.energy a := by linarith only [hQ]
+       refine ⟨?_, ?_, ?_⟩
+-      · apply (Shao.maxWithZero_le_iff _ v).2
++      · change Shao.maxWithZero (-(fun i : Fin ell => Shao.Probability.Spitzer.tail a k hkr (Fin.rev i))) ≤ v
++        apply (Shao.maxWithZero_le_iff _ v).2
+         intro j hj
+         rw [Shao.prefixSum_neg, hreverse a j hj]
+         have hm := (Shao.maxWithZero_le_iff a (wall a)).1 ha.1 (r - j) (Nat.sub_le _ _)
+@@ -650,7 +715,7 @@
+         dsimp only [Z, Prod.fst, Prod.snd]
+         rw [hqe]
+         change _ ≤ _
+-        dsimp [wall] at ha
++        dsimp only [E, Set.mem_setOf_eq, wall] at ha
+         linarith only [hS, ha.2.1, ha.2.2]
+     have hsect (u : Shao.Path ell) : Pk.real {a | (a, u) ∈ G} ≤
+         84 * (v + beta) / Real.sqrt (k : ℝ) := by
+@@ -668,22 +733,29 @@
+         (84 * (v + beta) / Real.sqrt (k : ℝ)) * Pl.real L := by
+       let A : ℝ := 84 * (v + beta) / Real.sqrt (k : ℝ)
+       have hA : 0 ≤ A := by dsimp [A]; positivity
+-      have hfi : Integrable (G.indicator (fun _ => (1 : ℝ))) (Pk.prod Pl) :=
+-        (integrable_const 1).indicator hGm
+-      rw [← integral_indicator_one hGm, integral_prod_symm _ hfi]
+-      have hi := integral_mono hfi.integral_prod_right ((integrable_const A).indicator hLm)
+-        (fun u => by
+-          have hSm : MeasurableSet {a : Shao.Path k | (a, u) ∈ G} :=
+-            hGm.preimage (measurable_id.prodMk measurable_const)
+-          change (∫ a, {a : Shao.Path k | (a, u) ∈ G}.indicator (fun _ => (1 : ℝ)) a ∂Pk) ≤ _
+-          rw [integral_indicator_one hSm]
+-          by_cases hu : u ∈ L
+-          · rw [Set.indicator_of_mem hu]; exact hsect u
+-          · rw [Set.indicator_of_notMem hu]
+-            have he : {a : Shao.Path k | (a, u) ∈ G} = ∅ := by ext a; simp [G, hu]
+-            simp only [he, measureReal_empty, le_refl])
+-      rw [integral_indicator_const _ hLm, smul_eq_mul] at hi
+-      simpa only [mul_comm] using hi
++      change (Pk.prod Pl).real G ≤ A * Pl.real L
++      let f : Shao.Path k × Shao.Path ell → ℝ := G.indicator (fun _ => 1)
++      have hfi : Integrable f (Pk.prod Pl) := (integrable_const 1).indicator hGm
++      have hval : (∫ p, f p ∂Pk.prod Pl) = (Pk.prod Pl).real G := integral_indicator_one hGm
++      have hLval : (∫ u, L.indicator (fun _ => A) u ∂Pl) = A * Pl.real L := by
++        rw [integral_indicator_const A hLm]
++        simp only [smul_eq_mul, mul_comm]
++      rw [← hval, integral_prod_symm f hfi, ← hLval]
++      apply integral_mono hfi.integral_prod_right ((integrable_const A).indicator hLm)
++      intro u
++      let S : Set (Shao.Path k) := {a | (a, u) ∈ G}
++      have hSm : MeasurableSet S := hGm.preimage (measurable_id.prodMk measurable_const)
++      have hinner : (∫ a, f (a, u) ∂Pk) = Pk.real S := integral_indicator_one hSm
++      change (∫ a, f (a, u) ∂Pk) ≤ L.indicator (fun _ => A) u
++      rw [hinner]
++      by_cases hu : u ∈ L
++      · rw [Set.indicator_of_mem hu]
++        exact hsect u
++      · rw [Set.indicator_of_notMem hu]
++        have hempty : S = ∅ := by
++          apply Set.eq_empty_iff_forall_notMem.2
++          exact fun a ha => hu ha.1
++        simp only [hempty, measureReal_empty, le_refl]
+     have hL : Pl.real L ≤ Cs * (v + beta) / Real.sqrt (ell : ℝ) :=
+       hSurv rho bound hb hsupport hm hsecond ell hell v hv
+     have hrR : 0 < (r : ℝ) := by exact_mod_cast hr
+@@ -698,7 +770,9 @@
+       nlinarith only [hp]
+     have hprob : P.real E ≤ (Pk.prod Pl).real G := by
+       apply (measureReal_mono hsub).trans
+-      exact le_of_eq (congrArg ENNReal.toReal (hsplit.measure_preimage hGm))
++      have he := congrArg (fun m : Measure (Shao.Path k × Shao.Path ell) => m G) hsplit.map_eq
++      rw [Measure.map_apply hsplit.measurable hGm] at he
++      exact le_of_eq (congrArg ENNReal.toReal he)
+     change P.real E ≤ _
+     calc
+       _ ≤ (84 * (v + beta) / Real.sqrt (k : ℝ)) * (Cs * (v + beta) / Real.sqrt (ell : ℝ)) :=
+@@ -718,7 +792,8 @@
+   · let rhoNeg : Measure ℝ := Measure.map (fun z : ℝ => -z) rho
+     letI : IsProbabilityMeasure rhoNeg := by dsimp [rhoNeg]; infer_instance
+     have hbNeg : ∀ᵐ z : ℝ ∂rhoNeg, |z| ≤ bound := by
+-      rw [ae_map_iff measurable_neg.aemeasurable (by fun_prop)]
++      rw [ae_map_iff measurable_neg.aemeasurable
++        (measurableSet_le continuous_abs.measurable measurable_const)]
+       simpa only [abs_neg] using hsupport
+     have hmNeg : (∫ z : ℝ, z ∂rhoNeg) = 0 := by
+       rw [show rhoNeg = Measure.map (fun z : ℝ => -z) rho from rfl,
+@@ -735,11 +810,20 @@
+     have hmap : Measure.map (fun a : Shao.Path r => -a)
+         (Measure.pi (fun _ : Fin r => rho)) = Measure.pi (fun _ : Fin r => rhoNeg) :=
+       Measure.pi_map_pi (fun _ : Fin r => measurable_neg.aemeasurable)
++    have hwm : Measurable (fun a : Shao.Path r => x * Real.sqrt (q + Shao.energy a)) :=
++      measurable_const.mul ((measurable_const.add Shao.measurable_energy).sqrt)
+     have hEm : MeasurableSet {a : Shao.Path r | Shao.maxWithZero a ≤ x * Real.sqrt (q + Shao.energy a) ∧
+         x * Real.sqrt (q + Shao.energy a) - v ≤ Shao.prefixSum a r ∧
+-        Shao.prefixSum a r ≤ x * Real.sqrt (q + Shao.energy a)} := by measurability
++        Shao.prefixSum a r ≤ x * Real.sqrt (q + Shao.energy a)} :=
++      (measurableSet_le Shao.measurable_maxWithZero hwm).inter
++        ((measurableSet_le (hwm.sub_const v) (Shao.measurable_prefixSum r)).inter
++          (measurableSet_le (Shao.measurable_prefixSum r) hwm))
+     rw [hb3, ← hmap, Measure.real_def, Measure.map_apply (by fun_prop) hEm] at hh
+-    simpa only [Shao.energy_neg, Shao.prefixSum_neg, neg_one_smul, neg_mul, one_mul] using hh
++    change ((Measure.pi (fun _ : Fin r => rho)).real
++      {a : Shao.Path r | Shao.maxWithZero (-a) ≤ x * Real.sqrt (q + Shao.energy (-a)) ∧
++        x * Real.sqrt (q + Shao.energy (-a)) - v ≤ Shao.prefixSum (-a) r ∧
++        Shao.prefixSum (-a) r ≤ x * Real.sqrt (q + Shao.energy (-a))}) ≤ _ at hh
++    simpa only [Shao.energy_neg, Shao.prefixSum_neg, neg_one_smul, neg_one_mul, wall] using hh
+ 
+ private theorem anib_actual_interval_kernel_data
+     {ΩB : Type*} [MeasurableSpace ΩB]
+@@ -755,7 +839,7 @@
+   classical
+   intro Q
+   letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw Bm PB hBm
+-  have hReflection : HalflineReflectionIdentities Q := by
++  have hReflection : Shao.Probability.SourceActualLocalProfileBudget.HalflineReflectionIdentities Q := by
+     constructor
+     · intro w y T z _hw hT hy hz
+       simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+@@ -822,12 +906,15 @@
+       have hbgap : w - y ≤ b := by linarith only [hu]
+       have hb : 0 < b := hgap.trans_le hbgap
+       have hpSmall : (w - y) ^ 2 ≤ T / 2 := by nlinarith only [hs, hgap, hbgap]
++      have hnew : |y + (w - y)| ≤ w := by
++        have he : y + (w - y) = w := by ring
++        rw [he, abs_of_pos hw]
+       have hbud := Shao.C2.ActualIntervalProjection.source_upper_projection_negative_budget Q
+         w y T z b K hw hy hz hT hs hu hK hReg.differentiableAt
+-        (hp (w - y) hpSmall (by have hh : y + (w - y) = w := by ring; rw [hh, abs_of_pos hw]))
++        (hp (w - y) hpSmall hnew)
+       have hneg : max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) w y T z b) 0 =
+           max (-Shao.C2.ActualIntervalProjection.upperOvershoot Q w y T z b) 0 := by
+-        simp only [localSeparatedOvershoot, projectionIncrement, if_pos ⟨hT, hs⟩, if_pos hu,
++        simp only [localSeparatedOvershoot, projectionIncrement, hT, hs, true_and, if_true, if_pos hu,
+           Shao.C2.ActualIntervalProjection.upperOvershoot, Shao.C2.ProjectionOvershoot.projectionOvershoot,
+           Shao.C2.ProjectionOvershoot.projectionFactor, hDer]
+       rw [if_pos ⟨hs, Or.inl hu⟩, hneg]
+@@ -841,12 +928,15 @@
+       · have hgap : 0 < w + y := by linarith only [(abs_lt.mp hy).1]
+         have hbgap : w + y ≤ -b := by linarith only [hl]
+         have hpSmall : (-w - y) ^ 2 ≤ T / 2 := by nlinarith only [hs, hgap, hbgap]
++        have hnew : |y + (-w - y)| ≤ w := by
++          have he : y + (-w - y) = -w := by ring
++          rw [he, abs_neg, abs_of_pos hw]
+         have hbud := Shao.C2.ActualIntervalProjection.source_lower_projection_negative_budget Q
+           w y T z b K hw hy hz hT hs hl hK hReg.differentiableAt
+-          (hp (-w - y) hpSmall (by have hh : y + (-w - y) = -w := by ring; rw [hh, abs_neg, abs_of_pos hw]))
++          (hp (-w - y) hpSmall hnew)
+         have hneg : max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) w y T z b) 0 =
+             max (-Shao.C2.ActualIntervalProjection.lowerOvershoot Q w y T z b) 0 := by
+-          simp only [localSeparatedOvershoot, projectionIncrement, if_pos ⟨hT, hs⟩, if_neg hu, if_pos hl,
++          simp only [localSeparatedOvershoot, projectionIncrement, hT, hs, true_and, if_true, if_neg hu, if_pos hl,
+             Shao.C2.ActualIntervalProjection.lowerOvershoot, Shao.C2.ProjectionOvershoot.projectionOvershoot,
+             Shao.C2.ProjectionOvershoot.projectionFactor, hDer]
+           congr 2
+@@ -858,9 +948,9 @@
+         have hinc := mul_le_mul_of_nonneg_right (show C0 ≤ C0 + 1 by linarith)
+           (show 0 ≤ (|b| / Real.sqrt T) ^ 3 * (1 + |z - y| / Real.sqrt T) ^ 3 by positivity)
+         convert hinc using 1 <;> ring
+-      · simp only [localSeparatedOvershoot, projectionIncrement, if_pos ⟨hT, hs⟩, if_neg hu,
++      · simp only [localSeparatedOvershoot, projectionIncrement, hT, hs, true_and, if_true, if_neg hu,
+           if_neg hl, sub_self, neg_zero, zero_mul, max_self,
+-          show ¬(b ^ 2 ≤ T / 2 ∧ (w ≤ y + b ∨ y + b ≤ -w)) by tauto, if_false, le_refl]
++          if_neg (show ¬(w ≤ y + b ∨ y + b ≤ -w) from not_or.mpr ⟨hu, hl⟩), le_refl]
+   · simp only [localSeparatedOvershoot, show ¬(0 < T ∧ b ^ 2 ≤ T / 2) by tauto,
+       show ¬(b ^ 2 ≤ T / 2 ∧ (w ≤ y + b ∨ y + b ≤ -w)) by tauto,
+       if_false, neg_zero, max_self, le_refl]
+@@ -880,8 +970,10 @@
+   by_cases hr : r < n
+   · by_cases hact : r < nu sigma ∧ sourceAlive .interval a x r sigma ∧ 0 < remainingEnergy a r sigma
+     · have hcut := (energy_cutoff_data a h hh).2.2 sigma r (hact.1.trans_le (hnu sigma))
++      have hfull : r < n ∧ sourceAlive .interval a x r sigma ∧ 0 < remainingEnergy a r sigma :=
++        ⟨hr, hact.2⟩
+       simp only [sourceSeparatedOvershoot, dif_pos hr, if_pos hact, if_pos hcut.2,
+-        if_pos ⟨hr, hact.2⟩, le_refl]
++        if_pos hfull, le_refl]
+     · have hzero : sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) a x nu r sigma = 0 := by
+         simp only [sourceSeparatedOvershoot, dif_pos hr, if_neg hact]
+       rw [hzero]
+@@ -923,14 +1015,17 @@
+     have hT : Measurable (fun p : Shao.Path n × LabelPerm n => remainingEnergy p.1 r p.2) := by
+       apply measurable_from_prod_countable_left
+       intro sigma
+-      unfold remainingEnergy
+-      fun_prop
++      change Measurable (fun a : Shao.Path n => remainingEnergy a r sigma)
++      exact Shao.measurable_energy.sub ((Shao.measurable_prefixSquares r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin n => ℝ) (sigma i)))
+     have hd : Measurable (fun p : Shao.Path n × LabelPerm n => remainingSum p.1 r p.2) := by
+       apply measurable_from_prod_countable_left
+       intro sigma
+-      unfold remainingSum
+-      fun_prop
+-    exact Measurable.ite (measurableSet_le ((measurable_const.mul hT.sqrt).div_const 2) hd.abs)
++      change Measurable (fun a : Shao.Path n => remainingSum a r sigma)
++      exact (Shao.measurable_prefixSum n).sub ((Shao.measurable_prefixSum r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin n => ℝ) (sigma i)))
++    exact Measurable.ite (measurableSet_le ((measurable_const.mul hT.sqrt).div_const 2)
++      (continuous_abs.measurable.comp hd))
+       (hSep.neg.max measurable_const) measurable_const
+   have hbound (r : ℕ) (p : Shao.Path n × LabelPerm n) :
+       |term r p| ≤ 16 * (1 + (n : ℝ)) := by
+@@ -995,8 +1090,15 @@
+   have htm (r : ℕ) : Measurable (term r) := by
+     have hm := (hparts.1 (Equiv.refl (Fin n)) r).2
+     apply Measurable.ite _ (hm.neg.max measurable_const) measurable_const
+-    unfold remainingEnergy remainingSum
+-    measurability
++    have hTm : Measurable (fun a : Shao.Path n => remainingEnergy a r (Equiv.refl (Fin n))) :=
++      Shao.measurable_energy.sub ((Shao.measurable_prefixSquares r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin n => ℝ) i))
++    have hdm : Measurable (fun a : Shao.Path n => remainingSum a r (Equiv.refl (Fin n))) :=
++      (Shao.measurable_prefixSum n).sub ((Shao.measurable_prefixSum r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin n => ℝ) i))
++    exact (measurableSet_le measurable_const hTm).inter
++      (measurableSet_le ((measurable_const.mul hTm.sqrt).div_const 2)
++        (continuous_abs.measurable.comp hdm))
+   have htb (r : ℕ) (a : Shao.Path n) : |term r a| ≤ 16 * (1 + (n : ℝ)) := by
+     have hh := (source_parts_uniform_bound .interval (eventCompletionKernel .interval Q)
+       (actualDerivativeFamily Q .interval) 4 hk.2.1 a x hx (fun _ => n) r (Equiv.refl (Fin n))).1
+@@ -1018,31 +1120,60 @@
+       Shao.energy (Shao.Probability.Spitzer.reorder a sigma) = Shao.energy a := by
+     constructor
+     · simp only [Shao.prefixSum_length, Shao.Probability.Spitzer.reorder]
+-      exact sigma.sum_comp a
+-    · exact sigma.sum_comp (fun i => a i ^ 2)
++      exact Equiv.sum_comp sigma a
++    · exact Equiv.sum_comp sigma (fun i => a i ^ 2)
+   have hcanonical (a : Shao.Path n) (sigma : LabelPerm n) (r : ℕ) :
+       term r (randomReorder (a, sigma)) =
+         if h ≤ remainingEnergy a r sigma ∧
+             3 * x * Real.sqrt (remainingEnergy a r sigma) / 2 ≤ |remainingSum a r sigma| then
+           max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+             a x (fun _ : LabelPerm n => n) r sigma) 0 else 0 := by
+-    have hr : Shao.Probability.Spitzer.reorder
+-        (Shao.Probability.Spitzer.reorder a sigma) (Equiv.refl (Fin n)) =
+-          Shao.Probability.Spitzer.reorder a sigma := rfl
+-    simp only [term, randomReorder, remainingEnergy, remainingSum, hr, (hperm a sigma).1,
+-      (hperm a sigma).2, sourceSeparatedOvershoot, sourceAlive, actualWall,
+-      Shao.Probability.Spitzer.reorder, Equiv.refl_apply]
++    let R : Shao.Path n := randomReorder (a, sigma)
++    have htot : Shao.prefixSum R n = Shao.prefixSum a n ∧ Shao.energy R = Shao.energy a := hperm a sigma
++    have hT : remainingEnergy R r (Equiv.refl (Fin n)) = remainingEnergy a r sigma := by
++      change Shao.energy R - Shao.prefixSquares R r = Shao.energy a - Shao.prefixSquares R r
++      rw [htot.2]
++    have hd : remainingSum R r (Equiv.refl (Fin n)) = remainingSum a r sigma := by
++      change Shao.prefixSum R n - Shao.prefixSum R r = Shao.prefixSum a n - Shao.prefixSum R r
++      rw [htot.1]
++    have hAlive : sourceAlive .interval R x r (Equiv.refl (Fin n)) ↔ sourceAlive .interval a x r sigma := by
++      change (0 < Shao.energy R ∧ Interior .interval (x * Real.sqrt (Shao.energy R)) (Shao.prefixSum R n) ∧
++        ∀ k : ℕ, k ≤ r → Interior .interval (x * Real.sqrt (Shao.energy R)) (Shao.prefixSum R k)) ↔
++        (0 < Shao.energy a ∧ Interior .interval (x * Real.sqrt (Shao.energy a)) (Shao.prefixSum a n) ∧
++        ∀ k : ℕ, k ≤ r → Interior .interval (x * Real.sqrt (Shao.energy a)) (Shao.prefixSum R k))
++      rw [htot.1, htot.2]
++    have hSource : sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++        R x (fun _ : LabelPerm n => n) r (Equiv.refl (Fin n)) =
++        sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++          a x (fun _ : LabelPerm n => n) r sigma := by
++      unfold sourceSeparatedOvershoot
++      by_cases hr : r < n
++      · rw [dif_pos hr, dif_pos hr]
++        simp only [hAlive, hT]
++        congr 1
++        change localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++            (x * Real.sqrt (Shao.energy R)) (Shao.prefixSum R r) (remainingEnergy a r sigma)
++            (Shao.prefixSum R n) (a (sigma ⟨r, hr⟩)) = _
++        rw [htot.1, htot.2]
++        rfl
++      · rw [dif_neg hr, dif_neg hr]
++    change (if h ≤ remainingEnergy R r (Equiv.refl (Fin n)) ∧
++        3 * x * Real.sqrt (remainingEnergy R r (Equiv.refl (Fin n))) / 2 ≤
++          |remainingSum R r (Equiv.refl (Fin n))| then
++      max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++        R x (fun _ : LabelPerm n => n) r (Equiv.refl (Fin n))) 0 else 0) = _
++    rw [hT, hd, hSource]
+   have hdom (p : Shao.Path n × LabelPerm n) : actualBadIntervalNegativeBill Q x nu p ≤ G (randomReorder p) := by
+     apply Finset.sum_le_sum
+     intro r _
++    change (if 3 * x * Real.sqrt (remainingEnergy p.1 r p.2) / 2 ≤ |remainingSum p.1 r p.2| then
++      max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++        p.1 x (nu p.1) r p.2) 0 else 0) ≤ term r (randomReorder (p.1, p.2))
+     rw [hcanonical p.1 p.2 r]
+     have hh := anib_capped_source_negative_domination Q p.1 x h hh (nu p.1) (hnu p.1) r p.2
+     by_cases hbad : 3 * x * Real.sqrt (remainingEnergy p.1 r p.2) / 2 ≤ |remainingSum p.1 r p.2|
+-    · simp only [if_pos hbad]
+-      by_cases hcut : h ≤ remainingEnergy p.1 r p.2
+-      · simpa only [if_pos hcut, and_self, if_true] using hh
+-      · simpa only [if_neg hcut, false_and, if_false] using hh
+-    · simp only [if_neg hbad, and_false, if_false, le_refl]
++    · simpa only [hbad, if_true, and_true] using hh
++    · simp only [hbad, if_false, and_false, le_refl]
+   have hRm : Measurable (randomReorder : Shao.Path n × LabelPerm n → Shao.Path n) :=
+     measurable_from_prod_countable_left (fun sigma => by
+       apply Measurable.of_eval
+@@ -1102,8 +1233,15 @@
+     4 hk.2.1 P x hx (fun _ _ => r + t) (fun _ => measurable_const)
+   have hRm : Measurable R := by
+     apply Measurable.ite _ (((hparts.1 (Equiv.refl (Fin (r + t))) r).2).neg.max measurable_const) measurable_const
+-    unfold remainingEnergy remainingSum
+-    measurability
++    have hTm : Measurable (fun a : Shao.Path (r + t) => remainingEnergy a r (Equiv.refl (Fin (r + t)))) :=
++      Shao.measurable_energy.sub ((Shao.measurable_prefixSquares r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin (r + t) => ℝ) i))
++    have hdm : Measurable (fun a : Shao.Path (r + t) => remainingSum a r (Equiv.refl (Fin (r + t)))) :=
++      (Shao.measurable_prefixSum (r + t)).sub ((Shao.measurable_prefixSum r).comp
++        (Measurable.of_eval fun i => measurable_pi_apply (X := fun _ : Fin (r + t) => ℝ) i))
++    exact (measurableSet_le measurable_const hTm).inter
++      (measurableSet_le ((measurable_const.mul hTm.sqrt).div_const 2)
++        (continuous_abs.measurable.comp hdm))
+   have hRb (a : Shao.Path (r + t)) : |R a| ≤ 16 * (1 + ((r + t : ℕ) : ℝ)) := by
+     have hh := (source_parts_uniform_bound .interval (eventCompletionKernel .interval Q)
+       (actualDerivativeFamily Q .interval) 4 hk.2.1 a x hx (fun _ => r + t) r (Equiv.refl (Fin (r + t)))).1
+@@ -1136,8 +1274,10 @@
+     have hhead : Shao.prefixSum (Fin.append v u) r = Shao.prefixSum v r := by
+       simp [Shao.prefixSum, Finset.sum_filter, Fin.sum_univ_add]
+     constructor
+-    · simp only [remainingEnergy, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, hE, hP]; ring
+-    · simp only [remainingSum, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, hS, hhead]; ring
++    · change Shao.energy (Fin.append v u) - Shao.prefixSquares (Fin.append v u) r = Shao.energy u
++      rw [hE, hP]; ring
++    · change Shao.prefixSum (Fin.append v u) (r + t) - Shao.prefixSum (Fin.append v u) r = Shao.prefixSum u t
++      rw [hS, hhead]; ring
+   have hF : F = fun p : Shao.Path r × Shao.Path t => R (Fin.append p.1 p.2) := by
+     funext p
+     dsimp only [F, R]
+@@ -1196,12 +1336,15 @@
+     have hP : Shao.prefixSquares (Fin.append v u) r = Shao.energy v := by
+       simp [Shao.prefixSquares, Shao.energy, Finset.sum_filter, Fin.sum_univ_add]
+     have hS : Shao.prefixSum (Fin.append v u) (r + t) = Shao.prefixSum v r + d := by
+-      simp only [Shao.prefixSum_length, Fin.sum_univ_add, Fin.append_left, Fin.append_right]; rfl
++      dsimp only [d]
++      simp only [Shao.prefixSum_length, Fin.sum_univ_add, Fin.append_left, Fin.append_right]
+     have hhead : Shao.prefixSum (Fin.append v u) r = Shao.prefixSum v r := by
+       simp [Shao.prefixSum, Finset.sum_filter, Fin.sum_univ_add]
+     refine ⟨?_, ?_, ?_⟩
+-    · simp only [remainingEnergy, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, hE, hP]; ring
+-    · simp only [remainingSum, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, hS, hhead]; ring
++    · change Shao.energy (Fin.append v u) - Shao.prefixSquares (Fin.append v u) r = T
++      rw [hE, hP]; ring
++    · change Shao.prefixSum (Fin.append v u) (r + t) - Shao.prefixSum (Fin.append v u) r = d
++      rw [hS, hhead]; ring
+     · have he : (⟨r, hr⟩ : Fin (r + t)) = Fin.natAdd r (⟨0, ht⟩ : Fin t) := by apply Fin.ext; simp
+       rw [he, Fin.append_right]
+       simp only [b, dif_pos ht]
+@@ -1230,24 +1373,42 @@
+       let sigma : LabelPerm (r + t) := Equiv.refl _
+       by_cases ha : sourceAlive .interval a x r sigma ∧ 0 < remainingEnergy a r sigma
+       · have hw : 0 < actualWall a x := mul_pos hx (Real.sqrt_pos.2 ha.1.1)
+-        have hy : |Shao.prefixSum a r| < actualWall a x := by simpa only [sigma,
+-          Shao.Probability.Spitzer.reorder, Equiv.refl_apply] using abs_lt.mpr (ha.1.2.2 r le_rfl)
++        have hy : |Shao.prefixSum a r| < actualWall a x := by
++          have hh := abs_lt.mpr (ha.1.2.2 r le_rfl)
++          change |Shao.prefixSum a r| < actualWall a x at hh
++          exact hh
+         have hz : |Shao.prefixSum a (r + t)| < actualWall a x := abs_lt.mpr ha.1.2.1
+         have hc := hlocal Bm PB hBm (actualWall a x) (Shao.prefixSum a r) T
+           (Shao.prefixSum a (r + t)) b hw hy hz hT
+         have hden : Shao.prefixSum a (r + t) - Shao.prefixSum a r = d := by
+-          simpa only [remainingSum, sigma, Shao.Probability.Spitzer.reorder, Equiv.refl_apply] using (hstate v).2.1
+-        simp only [sourceSeparatedOvershoot, dif_pos hr, if_pos ⟨hr, ha⟩,
+-          sigma, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, (hstate v).1, (hstate v).2.2]
++          have hh := (hstate v).2.1
++          change Shao.prefixSum a (r + t) - Shao.prefixSum a r = d at hh
++          exact hh
++        have hfull : r < r + t ∧ sourceAlive .interval a x r sigma ∧
++            0 < remainingEnergy a r sigma := ⟨hr, ha⟩
++        change max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++          a x (fun _ : LabelPerm (r + t) => r + t) r sigma) 0 ≤ _
++        rw [sourceSeparatedOvershoot, dif_pos hr, if_pos hfull]
++        change max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++          (actualWall a x) (Shao.prefixSum a r) (remainingEnergy a r sigma)
++          (Shao.prefixSum a (r + t)) (a ⟨r, hr⟩)) 0 ≤ _
++        rw [show remainingEnergy a r sigma = T from (hstate v).1,
++          show a ⟨r, hr⟩ = b from (hstate v).2.2]
+         apply hc.trans
+         rw [hden]
+         simp only [D, if_pos hT]
+         split_ifs
+         · rw [div_pow]; ring_nf; exact le_rfl
+         · positivity
+-      · simp only [sourceSeparatedOvershoot, dif_pos hr,
+-          show ¬(r < (r + t) ∧ sourceAlive .interval a x r sigma ∧ 0 < remainingEnergy a r sigma) by tauto,
+-          if_false, neg_zero, max_self]
++      · have hzero : sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++            a x (fun _ : LabelPerm (r + t) => r + t) r sigma = 0 := by
++          rw [sourceSeparatedOvershoot, dif_pos hr,
++            if_neg (show ¬(r < (r + t) ∧ sourceAlive .interval a x r sigma ∧
++              0 < remainingEnergy a r sigma) by tauto)]
++        change max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++          a x (fun _ : LabelPerm (r + t) => r + t) r sigma) 0 ≤ _
++        rw [hzero]
++        simp only [neg_zero, max_self]
+         positivity
+     · simp only [F, if_neg hmask]
+       have hm : 0 ≤ marked3 := by dsimp [marked3, D]; split_ifs <;> positivity
+@@ -1316,14 +1477,16 @@
+     have hE : Shao.energy (Fin.append v u) = Shao.energy v + T := by
+       simp only [Shao.energy, Fin.sum_univ_add, Fin.append_left, Fin.append_right]; rfl
+     have hS : Shao.prefixSum (Fin.append v u) (r + t) = Shao.prefixSum v r + d := by
+-      simp only [Shao.prefixSum_length, Fin.sum_univ_add, Fin.append_left, Fin.append_right]; rfl
++      dsimp only [d]
++      simp only [Shao.prefixSum_length, Fin.sum_univ_add, Fin.append_left, Fin.append_right]
+     have hhead (k : ℕ) (hk : k ≤ r) : Shao.prefixSum (Fin.append v u) k = Shao.prefixSum v k := by
+       simp [Shao.prefixSum, Finset.sum_filter, Fin.sum_univ_add,
+         show ∀ i : Fin t, ¬r + i.val < k by intro i; omega]
+     have hP : Shao.prefixSquares (Fin.append v u) r = Shao.energy v := by
+       simp [Shao.prefixSquares, Shao.energy, Finset.sum_filter, Fin.sum_univ_add]
+     refine ⟨hE, hS, hhead, ?_, ?_⟩
+-    · simp only [remainingEnergy, Shao.Probability.Spitzer.reorder, Equiv.refl_apply, hE, hP]; ring
++    · change Shao.energy (Fin.append v u) - Shao.prefixSquares (Fin.append v u) r = T
++      rw [hE, hP]; ring
+     · have he : (⟨r, hnr⟩ : Fin (r + t)) = Fin.natAdd r (⟨0, ht⟩ : Fin t) := by apply Fin.ext; simp
+       rw [he, Fin.append_right]
+       simp only [b, dif_pos ht]
+@@ -1351,7 +1514,13 @@
+         wall v - |b| ≤ s * Shao.prefixSum v r ∧ s * Shao.prefixSum v r ≤ wall v}
+       let A : ℝ := C0 * (|b| / Real.sqrt T) ^ 3 * D ^ 3
+       have hA : 0 ≤ A := by dsimp [A, D]; positivity
+-      have hEm (s : ℝ) : MeasurableSet (E s) := by dsimp [E, wall]; measurability
++      have hwm : Measurable wall := measurable_const.mul ((measurable_const.add Shao.measurable_energy).sqrt)
++      have hEm (s : ℝ) : MeasurableSet (E s) := by
++        have hsm : Measurable (fun v : Shao.Path r => s • v) :=
++          Measurable.of_eval fun i => measurable_const.mul (measurable_pi_apply (X := fun _ : Fin r => ℝ) i)
++        exact (measurableSet_le (Shao.measurable_maxWithZero.comp hsm) hwm).inter
++          ((measurableSet_le (hwm.sub_const |b|) (measurable_const.mul (Shao.measurable_prefixSum r))).inter
++            (measurableSet_le (measurable_const.mul (Shao.measurable_prefixSum r)) hwm))
+       have hpoint (v : Shao.Path r) : F v ≤
+           (E 1).indicator (fun _ => A) v + (E (-1)).indicator (fun _ => A) v := by
+         dsimp only [F]
+@@ -1365,8 +1534,9 @@
+             rw [(hstate v).1, add_comm]
+           have hy : |Shao.prefixSum v r| < wall v := by
+             have hh := abs_lt.mpr (hact.1.2.2 r le_rfl)
+-            simpa only [a, sigma, Shao.Probability.Spitzer.reorder, Equiv.refl_apply,
+-              (hstate v).2.2.1 r le_rfl, hwall] using hh
++            change |Shao.prefixSum a r| < actualWall a x at hh
++            rw [(hstate v).2.2.1 r le_rfl, hwall] at hh
++            exact hh
+           have hz : |Shao.prefixSum a (r + t)| < actualWall a x := abs_lt.mpr hact.1.2.1
+           have hsurv (s : ℝ) (hs : s = 1 ∨ s = -1) : Shao.maxWithZero (s • v) ≤ wall v := by
+             apply (Shao.maxWithZero_le_iff _ _).2
+@@ -1374,7 +1544,7 @@
+             have hlive := hact.1.2.2 k hk
+             rw [Shao.prefixSum_smul]
+             have heq := (hstate v).2.2.1 k hk
+-            dsimp [sigma, a, Shao.Probability.Spitzer.reorder] at hlive
++            change Interior .interval (actualWall a x) (Shao.prefixSum a k) at hlive
+             rw [heq, hwall] at hlive
+             rcases hs with rfl | rfl <;> dsimp [Interior] at hlive <;> nlinarith only [hlive.1, hlive.2]
+           have hloc := hlocal Bm PB hBm (actualWall a x) (Shao.prefixSum v r) T
+@@ -1385,9 +1555,14 @@
+               a x (fun _ : LabelPerm (r + t) => r + t) r sigma) 0 =
+               max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                 (actualWall a x) (Shao.prefixSum v r) T (Shao.prefixSum a (r + t)) b) 0 := by
+-            simp only [sourceSeparatedOvershoot, dif_pos hnr, if_pos ⟨hnr, hact⟩,
+-              sigma, Shao.Probability.Spitzer.reorder, Equiv.refl_apply,
+-              (hstate v).2.2.1 r le_rfl, (hstate v).2.2.2.1, (hstate v).2.2.2.2]
++            have hfull : r < r + t ∧ sourceAlive .interval a x r sigma ∧
++                0 < remainingEnergy a r sigma := ⟨hnr, hact⟩
++            rw [sourceSeparatedOvershoot, dif_pos hnr, if_pos hfull]
++            change max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
++              (actualWall a x) (Shao.prefixSum a r) (remainingEnergy a r sigma)
++              (Shao.prefixSum a (r + t)) (a ⟨r, hnr⟩)) 0 = _
++            rw [(hstate v).2.2.1 r le_rfl, show remainingEnergy a r sigma = T from (hstate v).2.2.2.1,
++              show a ⟨r, hnr⟩ = b from (hstate v).2.2.2.2]
+           rw [hsource]
+           by_cases hu : wall v ≤ Shao.prefixSum v r + b
+           · have hgap : wall v - |b| ≤ Shao.prefixSum v r := by
+@@ -1401,7 +1576,7 @@
+             rw [hwall, if_pos ⟨hsmall, Or.inl hu⟩, hdiff] at hneg
+             have hAv : max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                 (actualWall a x) (Shao.prefixSum v r) T (Shao.prefixSum a (r + t)) b) 0 ≤ A := by
+-              simpa only [A, D, if_pos hT] using hneg
++              simpa only [A, D, if_pos hT, hwall] using hneg
+             exact hAv.trans (le_add_of_nonneg_right (Set.indicator_nonneg (fun _ _ => hA) _))
+           · by_cases hl : Shao.prefixSum v r + b ≤ -wall v
+             · have hgap : wall v - |b| ≤ -Shao.prefixSum v r := by
+@@ -1416,7 +1591,7 @@
+               rw [hwall, if_pos ⟨hsmall, Or.inr hl⟩, hdiff] at hneg
+               have hAv : max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                   (actualWall a x) (Shao.prefixSum v r) T (Shao.prefixSum a (r + t)) b) 0 ≤ A := by
+-                simpa only [A, D, if_pos hT] using hneg
++                simpa only [A, D, if_pos hT, hwall] using hneg
+               exact hAv.trans (le_add_of_nonneg_left (Set.indicator_nonneg (fun _ _ => hA) _))
+             · have hzero : max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                   (actualWall a x) (Shao.prefixSum v r) T (Shao.prefixSum a (r + t)) b) 0 ≤ 0 := by
+@@ -1439,12 +1614,17 @@
+       have hIntegral : (∫ v, F v ∂Pr) ≤ A * (2 * Cs * (|b| + beta) ^ 2 / (r : ℝ)) := by
+         have hi := integral_mono hFi
+           (((integrable_const A).indicator (hEm 1)).add ((integrable_const A).indicator (hEm (-1)))) hpoint
++        change (∫ v, F v ∂Pr) ≤ ∫ v,
++          (E 1).indicator (fun _ => A) v + (E (-1)).indicator (fun _ => A) v ∂Pr at hi
+         rw [integral_add ((integrable_const A).indicator (hEm 1))
+           ((integrable_const A).indicator (hEm (-1))),
+           integral_indicator_const _ (hEm 1), integral_indicator_const _ (hEm (-1)), smul_eq_mul, smul_eq_mul] at hi
+         have hplus := mul_le_mul_of_nonneg_right (hEbound 1 (Or.inl rfl)) hA
+         have hminus := mul_le_mul_of_nonneg_right (hEbound (-1) (Or.inr rfl)) hA
+-        nlinarith only [hi, hplus, hminus]
++        calc
++          _ ≤ Cs * (|b| + beta) ^ 2 / (r : ℝ) * A +
++              Cs * (|b| + beta) ^ 2 / (r : ℝ) * A := hi.trans (add_le_add hplus hminus)
++          _ = _ := by ring
+       have hstripGain : (|b| + beta) ^ 2 / (r : ℝ) ≤ 3 * T / ((r + t : ℕ) : ℝ) := by
+         have hbT : beta ^ 2 ≤ T / 4 := by dsimp [h0] at hmask; linarith only [hmask.1]
+         have hpoly : (|b| + beta) ^ 2 ≤ 3 * T / 2 := by
+@@ -1458,7 +1638,16 @@
+       have hmul := mul_le_mul_of_nonneg_left hstripGain (show 0 ≤ A * (2 * Cs) by positivity)
+       have hsq : (Real.sqrt T) ^ 2 = T := Real.sq_sqrt hT.le
+       have hsqrt : Real.sqrt T ≠ 0 := (Real.sqrt_pos.2 hT).ne'
+-      convert hmul using 1 <;> dsimp [A] <;> field_simp <;> nlinarith only [hsq]
++      have hcancel : (|b| / Real.sqrt T) ^ 3 * T = |b| ^ 3 / Real.sqrt T := by
++        calc
++          _ = |b| ^ 3 / (Real.sqrt T) ^ 3 * (Real.sqrt T) ^ 2 := by rw [div_pow, hsq]
++          _ = _ := by field_simp [hsqrt] <;> ring
++      calc
++        _ = (A * (2 * Cs)) * ((|b| + beta) ^ 2 / (r : ℝ)) := by ring
++        _ ≤ (A * (2 * Cs)) * (3 * T / ((r + t : ℕ) : ℝ)) := hmul
++        _ = (6 * Cs * C0 / ((r + t : ℕ) : ℝ) * D ^ 3) *
++            ((|b| / Real.sqrt T) ^ 3 * T) := by dsimp only [A]; ring
++        _ = _ := by rw [hcancel]; ring
+     · have hzero : ∀ v, F v = 0 := by
+         intro v
+         dsimp only [F]
+@@ -1466,7 +1655,10 @@
+         unfold sourceSeparatedOvershoot
+         rw [dif_pos hnr]
+         split_ifs with hact
+-        · simp only [(hstate v).2.2.2.1, (hstate v).2.2.2.2,
++        · have hbEq : (Fin.append v u) ((Equiv.refl (Fin (r + t))) ⟨r, hnr⟩) = b := by
++            change (Fin.append v u) ⟨r, hnr⟩ = b
++            exact (hstate v).2.2.2.2
++          simp only [(hstate v).2.2.2.1, hbEq,
+             localSeparatedOvershoot, if_neg (show ¬(0 < T ∧ b ^ 2 ≤ T / 2) by tauto),
+             neg_zero, max_self]
+         · simp only [neg_zero, max_self]
+@@ -1495,6 +1687,7 @@
+   have hinj : Set.InjOn (fun r => n - r) (↑(Finset.range n) : Set ℕ) := by
+     intro a ha b hb he
+     simp only [Finset.mem_coe, Finset.mem_range] at ha hb
++    change n - a = n - b at he
+     omega
+   have hLate : ((Finset.range n).filter (fun r => n ≤ 2 * r)).image (fun r => n - r) =
+       Finset.Icc 1 (n / 2) := by
+@@ -1511,12 +1704,12 @@
+         ∑ t ∈ ((Finset.range n).filter (fun r => 2 * r < n)).image (fun r => n - r), f t := by
+       rw [Finset.sum_image]
+       intro a ha b hb he
+-      exact hinj (Finset.mem_of_mem_filter ha) (Finset.mem_of_mem_filter hb) he
++      exact hinj (Finset.mem_filter.mp ha).1 (Finset.mem_filter.mp hb).1 he
+     rw [hi]
+     exact Finset.sum_le_sum_of_subset_of_nonneg hEarly (fun t _ _ => hf t)
+   · rw [← Finset.sum_filter, ← hLate, Finset.sum_image]
+     intro a ha b hb he
+-    exact hinj (Finset.mem_of_mem_filter ha) (Finset.mem_of_mem_filter hb) he
++    exact hinj (Finset.mem_filter.mp ha).1 (Finset.mem_filter.mp hb).1 he
+ 
+ private theorem anib_early_gaussian_factor_comparison :
+     ∃ C : ℝ, 0 < C ∧ ∀ x : ℝ, 16 ≤ x →
+@@ -1573,6 +1766,26 @@
+   have hsmall : Real.exp (-x ^ 2) ≤ (8 / 3 : ℝ) * Shao.standardNormalTail x :=
+     (Real.exp_le_exp.mpr (by nlinarith [sq_nonneg x] : -x ^ 2 ≤ -5 * x ^ 2 / 8)).trans hNeg
+   nlinarith only [hsqrt, hsmall, hP0]
++
++theorem actual_large_x_true_energy_closed_strip :
++    ∃ C : ℝ, 0 < C ∧
++      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
++        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
++        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
++        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
++        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
++          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
++          ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
++            ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
++              let wall : Shao.Path r → ℝ := fun a =>
++                x * Real.sqrt (q + Shao.energy a)
++              (Measure.pi (fun _ : Fin r => rho)).real
++                {a : Shao.Path r |
++                  Shao.maxWithZero (s • a) ≤ wall a ∧
++                  wall a - v ≤ s * Shao.prefixSum a r ∧
++                  s * Shao.prefixSum a r ≤ wall a} ≤
++                C * (v + beta) ^ 2 / (r : ℝ) := by
++  exact anib_large_x_true_energy_closed_strip
+ 
+ theorem actual_bad_interval_negative_budget :
+     ∃ C : ℝ, 0 < C ∧
+@@ -1654,9 +1867,12 @@
+   have hRank (r : ℕ) (hr : r < n) :
+       Integrable (R r) P ∧
+       (∫ a, R r a ∂P) ≤ if 2 * r < n then CE * E (n - r) else CL / (n : ℝ) * L (n - r) := by
+-    let t : ℕ := n - r
+-    have ht : 0 < t := Nat.sub_pos_of_lt hr
+-    have hN : r + t = n := Nat.add_sub_of_le hr.le
++    obtain ⟨t, hnt⟩ : ∃ t : ℕ, n = r + t := ⟨n - r, (Nat.add_sub_of_le hr.le).symm⟩
++    subst n
++    simp only [Nat.add_sub_cancel_left]
++    let n : ℕ := r + t
++    have ht : 0 < t := by omega
++    have hN : r + t = n := rfl
+     let F : Shao.Path r × Shao.Path t → ℝ := fun p =>
+       if h0 ≤ Shao.energy p.2 ∧
+           3 * x * Real.sqrt (Shao.energy p.2) / 2 ≤ |Shao.prefixSum p.2 t| then
+@@ -1664,9 +1880,9 @@
+           (Fin.append p.1 p.2) x (fun _ : LabelPerm (r + t) => r + t)
+           r (Equiv.refl (Fin (r + t)))) 0 else 0
+     have hd := anib_iid_rank_negative_disintegration rho Bm PB hBm r t ht x h0 hx0 hh0
+-    have hRi : Integrable (R r) P := by simpa only [R, hN] using hd.2.2.1
++    have hRi : Integrable (R r) P := by simpa only [R, P, hN] using hd.2.2.1
+     have hEq : (∫ a, R r a ∂P) = ∫ u, (∫ v, F (v, u) ∂Pt r) ∂Pt t := by
+-      simpa only [R, F, Pt, hN] using hd.2.2.2
++      simpa only [R, F, Pt, P, hN] using hd.2.2.2
+     have hinnerInt : Integrable (fun u : Shao.Path t => ∫ v, F (v, u) ∂Pt r) (Pt t) :=
+       hd.2.1.integral_prod_right
+     refine ⟨hRi, ?_⟩

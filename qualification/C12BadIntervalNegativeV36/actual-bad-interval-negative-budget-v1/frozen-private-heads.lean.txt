@@ -1,0 +1,350 @@
+/-
+EXACT PRIVATE-HEAD PROPOSAL; NO NEW DECLARATION BODY IS IMPLEMENTED HERE.
+
+Insertion context: the complete imports/options/namespace/opens/local instance
+and actualBadIntervalNegativeBill definition of frozen-public.lean.txt,
+SHA256 7f0960fc2b7b64371bf1c38b1e9cebf98bd4519e6836435c023468f4c14fa398.
+Insert these heads after that frozen definition and before its frozen public
+theorem. No extra namespace open, import, instance, definition, assumption,
+public declaration or public value is proposed. Each theorem below needs a
+proof after the parent freezes its complete head. All auxiliary functions are
+explicit theorem-local lets, not new global definitions.
+
+The order below is the proposed dependency order. Short dependency comments
+identify proof inputs rather than new mathematical premises.
+-/
+
+-- H01. Bounded-law moment consequences; EX2=1 forces B>=1 and beta>=1.
+-- Dependencies: bounded measurable integration and probability Lp comparison.
+private theorem anib_bounded_moment_data
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (bound : ℝ) (hbound : 0 < bound)
+    (hsupport : ∀ᵐ z : ℝ ∂rho, |z| ≤ bound)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    Integrable (fun z : ℝ => z) rho ∧
+      Integrable (fun z : ℝ => z ^ 2) rho ∧
+      Integrable (fun z : ℝ => |z| ^ 3) rho ∧
+      Integrable (fun z : ℝ => z ^ 4) rho ∧
+      1 ≤ bound ∧ 1 ≤ beta ∧
+      (∫ z : ℝ, z ^ 4 ∂rho) ≤ bound * beta
+
+-- H02. The true support-scale clip, on the whole real line.
+-- Dependencies: max/min 1-Lipschitz inequalities and difference of squares.
+private theorem anib_clipped_square_lipschitz
+    (bound : ℝ) (hbound : 0 ≤ bound) (s t : ℝ) :
+    let clip : ℝ → ℝ := fun z => min bound (max (-bound) z)
+    |clip t ^ 2 - clip s ^ 2| ≤ 2 * bound * |t - s|
+
+-- H03. Normalize the globally clipped/floored statistic to actual unit slope.
+-- Dependencies: H02, square-root rationalization above k/2, update sum algebra.
+private theorem anib_floored_statistic_strong
+    (k : ℕ) (hk : 0 < k)
+    (bound x q : ℝ) (hbound : 0 ≤ bound) (hx : 0 ≤ x) (hq : 0 ≤ q)
+    (hslope : x * bound * Real.sqrt (2 / (k : ℝ)) ≤ 1 / 2) :
+    let clip : ℝ → ℝ := fun z => min bound (max (-bound) z)
+    let F : Shao.Path k → ℝ := fun a =>
+      Shao.prefixSum a k - x * Real.sqrt
+        (max ((k : ℝ) / 2) (q + ∑ i : Fin k, clip (a i) ^ 2))
+    let H : Shao.Path k → ℝ := fun a =>
+      2 * F (fun i : Fin k => Real.sqrt (k : ℝ) * a i) / Real.sqrt (k : ℝ)
+    Measurable H ∧
+      ∀ (a : Shao.Path k) (i : Fin k),
+        Monotone (fun t : ℝ => H (Function.update a i t) - t)
+
+-- H04. Actual scalar pushforward and its genuine truncated budget.
+-- Dependencies: integral_map/pi_map_pi, truncationF=z^2*min(|z|,1).
+private theorem anib_normalized_iid_data
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (hsecondInt : Integrable (fun z : ℝ => z ^ 2) rho)
+    (hthirdInt : Integrable (fun z : ℝ => |z| ^ 3) rho)
+    (hmean : (∫ z : ℝ, z ∂rho) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (k : ℕ) (hk : 0 < k) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    let scale : ℝ := Real.sqrt (k : ℝ)
+    let eta : Measure ℝ := Measure.map (fun z : ℝ => z / scale) rho
+    0 < scale ∧ IsProbabilityMeasure eta ∧
+      Integrable (fun z : ℝ => z ^ 2) eta ∧
+      (∫ z : ℝ, z ∂eta) = 0 ∧
+      (k : ℝ) * (∫ z : ℝ, z ^ 2 ∂eta) = 1 ∧
+      Shao.truncationBudget eta k 0 ≤ beta / scale ∧
+      Measure.map (fun a : Shao.Path k => fun i : Fin k => a i / scale)
+        (Measure.pi (fun _ : Fin k => rho)) = Measure.pi (fun _ : Fin k => eta)
+
+-- H05. Pay the floor exception by the actual bounded fourth moment.
+-- Dependencies: H01, iid square-sum variance, Chebyshev at distance k/2.
+private theorem anib_iid_low_energy
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (bound : ℝ) (hbound : 0 < bound)
+    (hsupport : ∀ᵐ z : ℝ ∂rho, |z| ≤ bound)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (k : ℕ) (hk : 0 < k) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    (Measure.pi (fun _ : Fin k => rho)).real
+      {a : Shao.Path k | Shao.energy a < (k : ℝ) / 2} ≤
+      4 * bound * beta / (k : ℝ)
+
+-- H06. ALL-Q unweighted, external-energy concentration, with no x<=1 rule.
+-- Dependencies: H01/H03/H04/H05 and iid_strong_monotonicity_concentration.
+private theorem anib_actual_wall_interval_concentration
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (bound : ℝ) (hbound : 0 < bound)
+    (hsupport : ∀ᵐ z : ℝ ∂rho, |z| ≤ bound)
+    (hmean : (∫ z : ℝ, z ∂rho) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (k : ℕ) (hk : 0 < k)
+    (hscale : bound ≤ Real.sqrt (k : ℝ))
+    (x : ℝ) (hx : 0 ≤ x)
+    (hslope : x * bound * Real.sqrt (2 / (k : ℝ)) ≤ 1 / 2)
+    (q a b : ℝ) (hq : 0 ≤ q) (hab : a ≤ b) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    (Measure.pi (fun _ : Fin k => rho)).real
+      {v : Shao.Path k |
+        a ≤ Shao.prefixSum v k - x * Real.sqrt (q + Shao.energy v) ∧
+        Shao.prefixSum v k - x * Real.sqrt (q + Shao.energy v) ≤ b} ≤
+      84 * (b - a + beta) / Real.sqrt (k : ℝ)
+
+-- H07. Reversal/sign survival normalized by the same genuine third moment.
+-- Dependencies: H01/H04, original_closed_survival_uniform, iid reversal law.
+private theorem anib_reverse_closed_survival :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (k : ℕ), 0 < k → ∀ (v : ℝ), 0 ≤ v →
+          (Measure.pi (fun _ : Fin k => rho)).real
+            {a : Shao.Path k | Shao.maxWithZero (fun i => -a (Fin.rev i)) ≤ v} ≤
+            C * (v + beta) / Real.sqrt (k : ℝ)
+
+-- H08. The genuinely uncovered ALL-Q large-x signed true-wall strip.
+-- Dependencies: H01/H06/H07, split at floor(r/2), product Fubini and reflection.
+-- No high-energy G, weighted CDF, support200 premise, or random-wall stopping.
+private theorem anib_large_x_true_energy_closed_strip :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
+            ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
+              let wall : Shao.Path r → ℝ := fun a =>
+                x * Real.sqrt (q + Shao.energy a)
+              (Measure.pi (fun _ : Fin r => rho)).real
+                {a : Shao.Path r |
+                  Shao.maxWithZero (s • a) ≤ wall a ∧
+                  wall a - v ≤ s * Shao.prefixSum a r ∧
+                  s * Shao.prefixSum a r ≤ wall a} ≤
+                C * (v + beta) ^ 2 / (r : ℝ)
+
+-- H09. Instantiate the actual Brownian interval kernel, with native constant4.
+-- Dependencies: actual_interval_kernel_data and existing Brownian reflection/
+-- differentiability identifications; unchanged producer proofs are reused.
+private theorem anib_actual_interval_kernel_data
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    Measurable (actualDerivativeFamily Q .interval) ∧
+      KernelBounds .interval (eventCompletionKernel .interval Q)
+        (actualDerivativeFamily Q .interval) 4 ∧
+      ∀ w y T z : ℝ, 0 < w → 0 < T → |y| < w → |z| < w →
+        HasDerivAt (fun s : ℝ => eventCompletionKernel .interval Q (w, s, T, z))
+          (actualDerivativeFamily Q .interval (w, y, T, z)) y
+
+-- H10. Exact actual local negative source value, retaining small/crossing guards.
+-- Dependencies: H09, resolved closed-boundary image Taylor/profile<=2, and
+-- upper/lower source_projection_negative_budget; no full-amplitude domination.
+private theorem anib_local_actual_negative_cubic :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+        IsBrownianReal Bm PB →
+        let Q : Measure BridgeNoise := bridgeLaw Bm PB
+        ∀ w y T z b : ℝ, 0 < w → |y| < w → |z| < w → 0 < T →
+          max (-localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+            w y T z b) 0 ≤
+            if b ^ 2 ≤ T / 2 ∧ (w ≤ y + b ∨ y + b ≤ -w) then
+              C * (|b| / Real.sqrt T) ^ 3 *
+                (1 + |z - y| / Real.sqrt T) ^ 3
+            else 0
+
+-- H11. Pure source guard/cap removal, with no cap stopping premise.
+-- Dependencies: sourceSeparatedOvershoot value and energy_cutoff_data only.
+private theorem anib_capped_source_negative_domination
+    {n : ℕ} (Q : Measure BridgeNoise) (a : Shao.Path n) (x h : ℝ)
+    (hh : 0 < h) (nu : LabelPerm n → ℕ)
+    (hnu : ∀ sigma : LabelPerm n, nu sigma ≤ energyCutoff a h sigma)
+    (r : ℕ) (sigma : LabelPerm n) :
+    max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+      a x nu r sigma) 0 ≤
+      if h ≤ remainingEnergy a r sigma then
+        max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+          a x (fun _ : LabelPerm n => n) r sigma) 0
+      else 0
+
+-- H12. Genuine measurability/L1 for the exact public bill, every measurable cap.
+-- Dependencies: H09, source_parts_measurable_integrable/uniform_bound,
+-- measurable remaining sum/energy and finite discrete permutation seed.
+private theorem anib_bill_measurable_integrable
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB)
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnum : ∀ sigma : LabelPerm n, Measurable (fun a : Shao.Path n => nu a sigma)) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let bill : (Shao.Path n × LabelPerm n) → ℝ :=
+      actualBadIntervalNegativeBill Q x nu
+    Measurable bill ∧ Integrable bill (revealLaw P) ∧ ∀ p, 0 ≤ bill p
+
+-- H13. Remove the cap BEFORE the actual iid random-reorder pushforward.
+-- Dependencies: H11/H12, iid_randomPermutation_map_eq_pi and path identities.
+private theorem anib_cap_reorder_reduction
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB)
+    (n : ℕ) (x h : ℝ) (hx : 0 < x) (hh : 0 < h)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnum : ∀ sigma : LabelPerm n, Measurable (fun a : Shao.Path n => nu a sigma))
+    (hnu : ∀ a sigma, nu a sigma ≤ energyCutoff a h sigma) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let G : Shao.Path n → ℝ := fun a =>
+      ∑ r ∈ Finset.range n,
+        if h ≤ remainingEnergy a r (Equiv.refl (Fin n)) ∧
+            3 * x * Real.sqrt (remainingEnergy a r (Equiv.refl (Fin n))) / 2 ≤
+              |remainingSum a r (Equiv.refl (Fin n))| then
+          max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+            a x (fun _ : LabelPerm n => n) r (Equiv.refl (Fin n))) 0
+        else 0
+    Measurable G ∧ Integrable G P ∧
+      (∫ p, actualBadIntervalNegativeBill Q x nu p ∂revealLaw P) ≤
+        ∫ a, G a ∂P
+
+-- H14. Exact deterministic-rank integral = complete-suffix/prefix iterated integral.
+-- Dependencies: H09, literal Fin.append state identities, product law/Fubini.
+-- The actual crossing label remains the first coordinate of the complete suffix.
+private theorem anib_iid_rank_negative_disintegration
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB)
+    (r t : ℕ) (ht : 0 < t) (x h : ℝ) (hx : 0 < x) (hh : 0 < h) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let P : Measure (Shao.Path (r + t)) := Measure.pi (fun _ : Fin (r + t) => rho)
+    let Pr : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+    let Pt : Measure (Shao.Path t) := Measure.pi (fun _ : Fin t => rho)
+    let R : Shao.Path (r + t) → ℝ := fun a =>
+      if h ≤ remainingEnergy a r (Equiv.refl (Fin (r + t))) ∧
+          3 * x * Real.sqrt (remainingEnergy a r (Equiv.refl (Fin (r + t)))) / 2 ≤
+            |remainingSum a r (Equiv.refl (Fin (r + t)))| then
+        max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+          a x (fun _ : LabelPerm (r + t) => r + t) r (Equiv.refl (Fin (r + t)))) 0
+      else 0
+    let F : (Shao.Path r × Shao.Path t) → ℝ := fun p =>
+      if h ≤ Shao.energy p.2 ∧
+          3 * x * Real.sqrt (Shao.energy p.2) / 2 ≤ |Shao.prefixSum p.2 t| then
+        max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+          (Fin.append p.1 p.2) x (fun _ : LabelPerm (r + t) => r + t)
+          r (Equiv.refl (Fin (r + t)))) 0
+      else 0
+    Measurable F ∧ Integrable F (Pr.prod Pt) ∧ Integrable R P ∧
+      (∫ a, R a ∂P) = ∫ u, (∫ v, F (v, u) ∂Pr) ∂Pt
+
+-- H15. Cubic fixed-suffix bound; applies at all ranks, used only for early ranks.
+-- Dependencies: H09/H10, exact append state and small-energy/alive guard split.
+private theorem anib_fixed_suffix_cubic_bound :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        {ΩB : Type*} [MeasurableSpace ΩB]
+        (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+        IsBrownianReal Bm PB →
+        let Q : Measure BridgeNoise := bridgeLaw Bm PB
+        ∀ (r t : ℕ), 0 < t → ∀ (x h : ℝ), 0 < x → 0 < h →
+          ∀ (u : Shao.Path t),
+            let T : ℝ := Shao.energy u
+            let d : ℝ := Shao.prefixSum u t
+            let b : ℝ := if ht : 0 < t then u ⟨0, ht⟩ else 0
+            let D : ℝ := if 0 < T then 1 + |d| / Real.sqrt T else 1
+            let F : Shao.Path r → ℝ := fun v =>
+              if h ≤ T ∧ 3 * x * Real.sqrt T / 2 ≤ |d| then
+                max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                  (Fin.append v u) x (fun _ : LabelPerm (r + t) => r + t)
+                  r (Equiv.refl (Fin (r + t)))) 0
+              else 0
+            let marked3 : ℝ :=
+              if 0 < T ∧ h ≤ T ∧ (3 * x / 2) * Real.sqrt T ≤ |d| then
+                |b| ^ 3 / (Real.sqrt T) ^ 3 * D ^ 3
+              else 0
+            Integrable F (Measure.pi (fun _ : Fin r => rho)) ∧
+              (∫ v, F v ∂Measure.pi (fun _ : Fin r => rho)) ≤ C * marked3
+
+-- H16. Conditional strip changes the inverse power, keeping the same cubic mark.
+-- Dependencies: H01/H08/H09/H10, b^2<=T/2 and beta^2<=T/4 imply
+-- (|b|+beta)^2/r<=3*T/(r+t); two signed actual-wall crossing strips.
+-- No residual-budget or stopping premise appears in this conditional estimate.
+private theorem anib_fixed_suffix_late_marked1_bound :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        let h0 : ℝ := 4 * beta ^ 2
+        ∀ (r t : ℕ), 0 < r → 0 < t → r + t ≤ 2 * r →
+          ∀ (x : ℝ), 16 ≤ x →
+            bound ≤ Real.sqrt ((r + t : ℕ) : ℝ) / (100 * x) →
+            ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+              (Bm : NNReal → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+              IsBrownianReal Bm PB →
+              let Q : Measure BridgeNoise := bridgeLaw Bm PB
+              ∀ (u : Shao.Path t),
+                let T : ℝ := Shao.energy u
+                let d : ℝ := Shao.prefixSum u t
+                let b : ℝ := if ht : 0 < t then u ⟨0, ht⟩ else 0
+                let D : ℝ := if 0 < T then 1 + |d| / Real.sqrt T else 1
+                let F : Shao.Path r → ℝ := fun v =>
+                  if h0 ≤ T ∧ 3 * x * Real.sqrt T / 2 ≤ |d| then
+                    max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+                      (Fin.append v u) x (fun _ : LabelPerm (r + t) => r + t)
+                      r (Equiv.refl (Fin (r + t)))) 0
+                  else 0
+                let marked1 : ℝ :=
+                  if 0 < T ∧ h0 ≤ T ∧ (3 * x / 2) * Real.sqrt T ≤ |d| then
+                    |b| ^ 3 / Real.sqrt T * D ^ 3
+                  else 0
+                Integrable F (Measure.pi (fun _ : Fin r => rho)) ∧
+                  (∫ v, F v ∂Measure.pi (fun _ : Fin r => rho)) ≤
+                    C / ((r + t : ℕ) : ℝ) * marked1
+
+-- H17. Exact early/late deterministic-rank grids; no extra n factor.
+-- Dependencies: finite reindex t=n-r, parity, and nonnegativity only.
+private theorem anib_rank_grid_reindex
+    (n : ℕ) (hn : 0 < n) (f g : ℕ → ℝ) (hf : ∀ t, 0 ≤ f t) :
+    (∑ r ∈ Finset.range n, if 2 * r < n then f (n - r) else 0) ≤
+        (∑ t ∈ Finset.Icc ((n + 1) / 2) n, f t) ∧
+      (∑ r ∈ Finset.range n, if n ≤ 2 * r then g (n - r) else 0) =
+        (∑ t ∈ Finset.Icc 1 (n / 2), g t)
+
+-- H18. Gaussian comparison paid from public Mills/density/tail interfaces.
+-- Dependencies: standardNormal_mills_bounds, standardNormalDensity value,
+-- exp inequalities at x>=16. No inaccessible rare-producer private result.
+private theorem anib_early_gaussian_factor_comparison :
+    ∃ C : ℝ, 0 < C ∧ ∀ x : ℝ, 16 ≤ x →
+      Real.sqrt (Shao.standardNormalTail (3 * x / 2)) + Real.exp (-x ^ 2) ≤
+        C * Shao.standardNormalTail x
+
+/-
+Main public proof assembly after these bodies are independently qualified:
+  H12 supplies exact bill measurability/L1/nonnegativity;
+  H13 removes cap then reorders;
+  H14/H15/H16/H17 reduce the two rank ranges to the exact existing marked3
+  and marked1/n grids with drift power3;
+  iid_marked_and_unmarked_rare_real_suffix_budgets at p=3 and H18 pay them.
+No new private theorem is the public budget renamed or assumed as a premise.
+-/

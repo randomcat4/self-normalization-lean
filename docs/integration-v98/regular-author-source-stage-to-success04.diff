@@ -1,0 +1,40 @@
+--- reviewed-source72926c.lean
++++ successful-source64f7ea.lean
+@@ -147,7 +147,9 @@
+         _ ≤ q ^ 2 * (2 * q) := mul_le_mul_of_nonneg_right
+           (by linarith only [hq2, hT.le]) (by positivity)
+         _ = 2 * q ^ 3 := by ring
+-    exact (mul_le_mul_right (pow_pos hq 3)).1 hmul
++    by_contra hnot
++    have hbad := mul_lt_mul_of_pos_right (lt_of_not_ge hnot) (pow_pos hq 3)
++    exact (not_lt_of_ge hmul) hbad
+   have hSupport : theta * B ≤ 1 := by
+     have hraw : 200 * x * B ≤ sn := by
+       have hh := (le_div_iff₀ (mul_pos (by norm_num : (0 : ℝ) < 200) hxpos)).1 hBsmall
+@@ -248,7 +250,8 @@
+       let profilePlus : Shao.Path r → ℝ := fun a =>
+         Real.exp (-((max (wPlus a - M) 0) ^ 2) / T)
+       let FPlus : Shao.Path r → ℝ := (APlus ∩ GPlus ∩ OppPlus).indicator profilePlus
+-      have hWallM : Measurable wallPlus := by dsimp only [wallPlus]; fun_prop
++      have hWallM : Measurable wallPlus :=
++        (Shao.measurable_energy.add measurable_const).sqrt.const_mul x
+       have hwM : Measurable wPlus := hWallM.sub (Shao.measurable_prefixSum r)
+       have hAM : MeasurableSet APlus := by
+         simp only [APlus, Set.setOf_forall]
+@@ -258,10 +261,12 @@
+       have hGM : MeasurableSet GPlus :=
+         measurableSet_le measurable_const Shao.measurable_energy
+       have hOM : MeasurableSet OppPlus := by
+-        simp only [OppPlus, Set.setOf_exists, Set.setOf_and]
+-        exact MeasurableSet.iUnion fun k : Fin (r + 1) =>
+-          measurableSet_const.inter
+-            (measurableSet_le (Shao.measurable_prefixSum k.val) hWallM.neg)
++        simp only [OppPlus, Set.setOf_exists]
++        exact MeasurableSet.iUnion fun k : Fin (r + 1) => by
++          by_cases hk : 0 < k.val
++          · simpa only [hk, true_and, Pi.neg_apply] using
++              (measurableSet_le (Shao.measurable_prefixSum k.val) hWallM.neg)
++          · simp [hk]
+       have hProfileM : Measurable profilePlus := by
+         dsimp only [profilePlus]
+         exact ((((hwM.sub measurable_const).max measurable_const).pow_const 2).neg.div_const T).exp
