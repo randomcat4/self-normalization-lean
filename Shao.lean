@@ -27,6 +27,7 @@ import Shao.C2.AuxiliaryEnergyCentered
 import Shao.C2.AuxiliaryEnergyLaplace
 import Shao.C2.AuxiliaryEnergyMoments
 import Shao.C2.AuxiliaryEnergyTilt
+import Shao.C2.AuxiliaryHigherMarkDamped
 import Shao.C2.AuxiliaryLowEnergyGaussian
 import Shao.C2.AuxiliaryMarkedDeletion
 import Shao.C2.AuxiliaryMarkedRareBase
@@ -39,13 +40,18 @@ import Shao.C2.AuxiliaryProductC1Endpoint
 import Shao.C2.AuxiliaryProductTiltLaw
 import Shao.C2.AuxiliaryRareLaplace
 import Shao.C2.AuxiliaryRareTiltProbability
+import Shao.C2.AuxiliaryRealCutoffMoments
+import Shao.C2.AuxiliaryRealDampedMoments
 import Shao.C2.AuxiliarySourceCutoffPayment
 import Shao.C2.AuxiliarySourceEvent
 import Shao.C2.AuxiliarySourceGaussian
 import Shao.C2.AuxiliarySourceParameters
+import Shao.C2.AuxiliaryThirdMomentTruncation
 import Shao.C2.AuxiliaryTiltedProductEnergy
 import Shao.C2.AuxiliaryUnmarkedBlockCauchy
 import Shao.C2.AuxiliaryUnmarkedBlockRealCauchy
+import Shao.C2.AuxiliaryUnmarkedDampedMoments
+import Shao.C2.AuxiliaryUnmarkedPaidCauchy
 import Shao.C2.BridgeCompletionGlobalContinuity
 import Shao.C2.BridgeDomination
 import Shao.C2.BridgeEndpointIndependence
@@ -652,6 +658,7 @@ import Shao.OQ6.CappedSectionEnergy
 import Shao.OQ6.CompactCostParameterLimits
 import Shao.OQ6.CompactGoodEvent
 import Shao.OQ6.CompactTailBounds
+import Shao.OQ6.ConditionalTrueProjectionCarrier
 import Shao.OQ6.CoordinateBorelFactorization
 import Shao.OQ6.FiniteRows
 import Shao.OQ6.FiniteTiltedMoments
@@ -736,6 +743,7 @@ import Shao.Probability.SourceActualGaussianTransfer
 import Shao.Probability.SourceActualIntervalInitialCDF
 import Shao.Probability.SourceActualIntervalProfileBudget
 import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualRegularLocal
 import Shao.Probability.SourceActualRegularPhysicalRatio
 import Shao.Probability.SourceActualTransferAssembly
 import Shao.Probability.SourceBackwardStoppedEnergy

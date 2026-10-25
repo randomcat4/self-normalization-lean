@@ -1,0 +1,56 @@
+/- Mathematical candidate only: supplement.tex 4810--4856.
+   One actual raw-population retained local bill. No production body/check. -/
+import Shao.Probability.SourceActualIntervalProfileBudget
+import Shao.Probability.SourceActualRegularPhysicalRatio
+import Shao.C2.BridgeIntervalImageResolved
+import Shao.C2.BridgeLowerIdentification
+import Shao.C2.IntervalImageMixedIntSeries
+import Shao.C2.IntervalImageRevealDerivatives
+import Shao.C2.IntervalImageWallLimit
+import Shao.C2.HalfLineTaylorRemainder
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 5000000
+noncomputable section
+namespace Shao.Probability.SourceActualRegularLocal
+open MeasureTheory ProbabilityTheory
+open SourcePermutationReveal SourceSeparatedOvershoot
+open SourceActualLocalProfileBudget SourceActualIntervalProfileBudget
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open scoped BigOperators Classical
+open scoped NNReal
+
+theorem actual_regular_retained_local_cubic_bound :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (PB : Measure ΩB) [IsProbabilityMeasure PB]
+        (B : ℝ≥0 → ΩB → ℝ), IsBrownianReal B PB →
+        let Q : Measure BridgeNoise := bridgeLaw B PB
+        ∀ {n : ℕ} (pop : Shao.Path n) (x : ℝ)
+          (σ : LabelPerm n) (r : Fin n),
+          let a : ℝ := actualWall pop x
+          let y : ℝ := Shao.prefixSum (Spitzer.reorder pop σ) r.val
+          let T : ℝ := remainingEnergy pop r.val σ
+          let z : ℝ := Shao.prefixSum pop n
+          let b : ℝ := pop (σ r)
+          16 ≤ x →
+          (∀ k : ℕ, k ≤ r.val →
+            |Shao.prefixSum (Spitzer.reorder pop σ) k| < a) →
+          0 < T → |z - y| ≤ (3 / 2 : ℝ) * x * Real.sqrt T →
+          let F : MonitoredDomain → BridgeKernel := fun J => eventCompletionKernel J Q
+          let FY : MonitoredDomain → BridgeKernel := fun J => match J with
+            | .upper => halflineDerivative .upper
+            | .lower => halflineDerivative .lower
+            | .interval => intervalDerivative Q
+          let L : ℝ :=
+            sourceRetainedRemainder .interval (F .interval) (FY .interval)
+              pop x (fun _ => n) r.val σ -
+            sourceRetainedRemainder .upper (F .upper) (FY .upper)
+              pop x (fun _ => n) r.val σ -
+            sourceRetainedRemainder .lower (F .lower) (FY .lower)
+              pop x (fun _ => n) r.val σ
+          let D : ℝ := 1 + |z - y| / Real.sqrt T
+          |L| ≤ C * (|b| / Real.sqrt T) ^ 3 * D ^ 3 * Real.exp (-(a ^ 2) / T)
+
+end Shao.Probability.SourceActualRegularLocal
