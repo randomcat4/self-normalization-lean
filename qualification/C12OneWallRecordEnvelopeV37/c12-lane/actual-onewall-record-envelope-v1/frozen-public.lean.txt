@@ -1,0 +1,104 @@
+import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.C2.AuxiliaryMarkedDeletion
+import Shao.C2.CompletedIntervalUpdate
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualOneWallRecordEnvelope
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open scoped BigOperators Classical
+
+def oneWallSign (J : MonitoredDomain) : ℝ :=
+  match J with
+  | .lower => -1
+  | _ => 1
+
+def recordIncrement {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (r : Fin n) (sigma : LabelPerm n) : ℝ :=
+  let p : Shao.Path n := Shao.Probability.Spitzer.reorder a sigma
+  max (oneWallSign J * Shao.prefixSum p (r.val + 1) -
+    Shao.maxWithZero (oneWallSign J •
+      Shao.Probability.Spitzer.head p r.val r.isLt.le)) 0
+
+def recordStrip {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (x : ℝ) (r : Fin n) (sigma : LabelPerm n) : Prop :=
+  let F : ℝ := oneWallSign J *
+    Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) (r.val + 1) -
+      actualWall a x
+  0 ≤ F ∧ F ≤ recordIncrement J a r sigma
+
+def futureProfile {n : ℕ} (a : Shao.Path n) (j : ℕ)
+    (sigma : LabelPerm n) : ℝ :=
+  1 / Real.sqrt (remainingEnergy a j sigma) *
+    (1 + |remainingSum a j sigma| / Real.sqrt (remainingEnergy a j sigma)) ^ 2
+
+def ordinaryFutureWeight {n : ℕ} (a : Shao.Path n) (beta : ℝ)
+    (j : ℕ) (sigma : LabelPerm n) : ℝ :=
+  if 0 < remainingEnergy a j sigma ∧ 2 * beta ^ 2 ≤ remainingEnergy a j sigma
+  then futureProfile a j sigma else 0
+
+def badFutureWeight {n : ℕ} (a : Shao.Path n) (H : ℝ) (m : ℕ) (x : ℝ)
+    (j : ℕ) (sigma : LabelPerm n) : ℝ :=
+  if m ≤ n - j ∧ 0 < remainingEnergy a j sigma ∧
+      H / 2 ≤ remainingEnergy a j sigma ∧
+      Real.sqrt ((9 / 4 : ℝ) * x ^ 2 - 1) *
+        Real.sqrt (remainingEnergy a j sigma) ≤ |remainingSum a j sigma|
+  then futureProfile a j sigma else 0
+
+def circularWitness {n : ℕ} (a : Shao.Path n) : ℝ :=
+  if hn : 0 < n then
+    sSup {w : ℝ | ∃ i : Fin n, ∃ k : Fin (n + 1),
+      w = Shao.prefixSum a n -
+        2 * ∑ q ∈ Finset.range k.val,
+          a ⟨(i.val + q) % n, Nat.mod_lt _ hn⟩}
+  else 0
+
+def oppositePrefixHit {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (x : ℝ) (r : Fin n) (sigma : LabelPerm n) : Prop :=
+  ∃ k : ℕ, k ≤ r.val ∧
+    oneWallSign J * Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) k ≤
+      -actualWall a x
+
+theorem actual_onewall_record_envelope
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x beta : ℝ) (hx : 0 < x) (hbeta : 0 < beta)
+    (nu : LabelPerm n → ℕ) (r : Fin n) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a (4 * beta ^ 2) sigma) :
+    let O : ℝ := sourceSeparatedOvershoot J (halflineDerivative J) a x nu r.val sigma
+    0 ≤ O ∧ O ≤
+      if recordStrip J a x r sigma then
+        6 * recordIncrement J a r sigma * ordinaryFutureWeight a beta (r.val + 1) sigma
+      else 0
+
+theorem actual_onewall_prior_hit_record_envelope
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x beta : ℝ) (hx : 0 < x) (hbeta : 0 < beta)
+    (nu : LabelPerm n → ℕ) (r : Fin n) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a (4 * beta ^ 2) sigma) :
+    let O : ℝ := sourceSeparatedOvershoot J (halflineDerivative J) a x nu r.val sigma
+    let p : Shao.Path (r.val + 1) := oneWallSign J •
+      Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma)
+        (r.val + 1) (Nat.succ_le_of_lt r.isLt)
+    (if oppositePrefixHit J a x r sigma then O else 0) ≤
+      if recordStrip J a x r sigma ∧ 3 * actualWall a x ≤ circularWitness p then
+        6 * recordIncrement J a r sigma * ordinaryFutureWeight a beta (r.val + 1) sigma
+      else 0
+
+theorem actual_onewall_bad_future_record_envelope
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x beta H : ℝ) (hx : 1 ≤ x) (hbeta : 0 < beta)
+    (hH : 4 * beta ^ 2 ≤ H) (m : ℕ) (hm : m ≤ n)
+    (nu : LabelPerm n → ℕ) (r : Fin n) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ min (energyCutoff a H sigma) (n - m)) :
+    let O : ℝ := sourceSeparatedOvershoot J (halflineDerivative J) a x nu r.val sigma
+    let Bad : Prop := 3 * x * Real.sqrt (remainingEnergy a r.val sigma) / 2 ≤
+      |remainingSum a r.val sigma|
+    0 ≤ (if Bad then O else 0) ∧
+      (if Bad then O else 0) ≤
+        if recordStrip J a x r sigma then
+          6 * recordIncrement J a r sigma * badFutureWeight a H m x (r.val + 1) sigma
+        else 0

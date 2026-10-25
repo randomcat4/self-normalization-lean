@@ -1,0 +1,72 @@
+private theorem aoer_upper_local_record
+    (w y T z b U d M : ℝ) (hT : 0 < T) (hsmall : b ^ 2 ≤ T / 2)
+    (hU : T = b ^ 2 + U) (hd : z = y + b + d)
+    (hy : y < w) (hz : z < w) (hM : M < w) :
+    let D : ℝ := max (y + b - M) 0
+    let F : ℝ := y + b - w
+    let W : ℝ := 1 / Real.sqrt U * (1 + |d| / Real.sqrt U) ^ 2
+    let O : ℝ := localSeparatedOvershoot .upper (halflineDerivative .upper) w y T z b
+    0 ≤ O ∧ O ≤ if 0 ≤ F ∧ F ≤ D then 6 * D * W else 0
+
+private theorem aoer_lower_local_reflection (w y T z b : ℝ) :
+    localSeparatedOvershoot .lower (halflineDerivative .lower) w y T z b =
+      localSeparatedOvershoot .upper (halflineDerivative .upper) w (-y) T (-z) (-b)
+
+private theorem aoer_reveal_future_data
+    {n : ℕ} (a : Shao.Path n) (r : Fin n) (sigma : LabelPerm n) :
+    let p : Shao.Path n := Shao.Probability.Spitzer.reorder a sigma
+    let j : ℕ := r.val + 1
+    let tail : Shao.Path (n - j) :=
+      Shao.Probability.Spitzer.tail p j (Nat.succ_le_of_lt r.isLt)
+    Shao.prefixSum p j = Shao.prefixSum p r.val + a (sigma r) ∧
+      remainingEnergy a r.val sigma = (a (sigma r)) ^ 2 + remainingEnergy a j sigma ∧
+      remainingSum a r.val sigma = a (sigma r) + remainingSum a j sigma ∧
+      Shao.energy tail = remainingEnergy a j sigma ∧
+      Shao.prefixSum tail (n - j) = remainingSum a j sigma
+
+private theorem aoer_alive_signed_record
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x : ℝ) (r : Fin n) (sigma : LabelPerm n)
+    (ha : sourceAlive J a x r.val sigma) :
+    Shao.maxWithZero (oneWallSign J •
+      Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma)
+        r.val r.isLt.le) < actualWall a x
+
+private theorem aoer_circular_prefix_witness
+    {n : ℕ} (a : Shao.Path n) (hn : 0 < n) (k : ℕ) (hk : k ≤ n) :
+    Shao.prefixSum a n - 2 * Shao.prefixSum a k ≤ circularWitness a
+
+private theorem aoer_source_record_profile
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x H : ℝ) (hx : 0 < x) (hH : 0 < H)
+    (nu : LabelPerm n → ℕ) (r : Fin n) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a H sigma) :
+    let O : ℝ := sourceSeparatedOvershoot J (halflineDerivative J) a x nu r.val sigma
+    0 ≤ O ∧ O ≤
+      if recordStrip J a x r sigma ∧ 0 < remainingEnergy a (r.val + 1) sigma ∧
+          H / 2 ≤ remainingEnergy a (r.val + 1) sigma then
+        6 * recordIncrement J a r sigma * futureProfile a (r.val + 1) sigma
+      else 0
+
+private theorem aoer_nonzero_crossing
+    {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+    (a : Shao.Path n) (x : ℝ) (nu : LabelPerm n → ℕ)
+    (r : Fin n) (sigma : LabelPerm n)
+    (hO : sourceSeparatedOvershoot J (halflineDerivative J) a x nu r.val sigma ≠ 0) :
+    actualWall a x ≤ oneWallSign J *
+      Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) (r.val + 1)
+
+private theorem aoer_bad_future_guards
+    {n : ℕ} (a : Shao.Path n) (x H : ℝ) (hx : 1 ≤ x) (hH : 0 < H)
+    (m : ℕ) (hm : m ≤ n) (nu : LabelPerm n → ℕ)
+    (r : Fin n) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ min (energyCutoff a H sigma) (n - m))
+    (hactive : r.val < nu sigma)
+    (hsmall : (a (sigma r)) ^ 2 ≤ remainingEnergy a r.val sigma / 2)
+    (hBad : 3 * x * Real.sqrt (remainingEnergy a r.val sigma) / 2 ≤
+      |remainingSum a r.val sigma|) :
+    m ≤ n - (r.val + 1) ∧ 0 < remainingEnergy a (r.val + 1) sigma ∧
+      H / 2 ≤ remainingEnergy a (r.val + 1) sigma ∧
+      Real.sqrt ((9 / 4 : ℝ) * x ^ 2 - 1) *
+        Real.sqrt (remainingEnergy a (r.val + 1) sigma) ≤
+          |remainingSum a (r.val + 1) sigma|

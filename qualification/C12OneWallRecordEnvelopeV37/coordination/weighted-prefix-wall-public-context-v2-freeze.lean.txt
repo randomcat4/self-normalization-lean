@@ -1,0 +1,93 @@
+import Shao.Probability.SourceCircularWitnessMoment
+import Shao.Probability.FiniteIIDMoments
+import Shao.Probability.SourceTrueEnergyStrip
+import Shao.Probability.SourceMarkedSuffixAveraging
+import Shao.Probability.SourceTrueWallProfile
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.Probability.Independence.Integration
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Lean
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 5000000
+noncomputable section
+namespace Shao.Probability.SourceWeightedPrefixWall
+open MeasureTheory ProbabilityTheory Filter
+open scoped BigOperators Classical Topology ENNReal
+
+theorem actual_circular_weighted_true_wall_closed_cdf :
+    ∃ C : ℝ, 1 ≤ C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (B : ℝ), 0 < B → (∀ᵐ z : ℝ ∂rho, |z| ≤ B) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n →
+          ∀ x : ℝ, 1 ≤ x → B ≤ Real.sqrt (n : ℝ) / (200 * x) →
+            ∀ (r : ℕ), r ≤ n → (n : ℝ) / 2 ≤ (r : ℝ) →
+              let P : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+              let L : Shao.Path r → ℝ := fun a =>
+                if hr : 0 < r then
+                  sSup {w : ℝ | ∃ i : Fin r, ∃ k : Fin (r + 1),
+                    w = Shao.prefixSum a r -
+                      2 * ∑ q ∈ Finset.range k.val,
+                        a ⟨(i.val + q) % r, Nat.mod_lt _ hr⟩}
+                else 0
+              ∀ T : ℝ, 0 ≤ T →
+                let wall : Shao.Path r → ℝ := fun a =>
+                  x * Real.sqrt (Shao.energy a + T)
+                let w : Shao.Path r → ℝ := fun a => wall a - Shao.prefixSum a r
+                let A : Set (Shao.Path r) := {a | ∀ k : Fin (r + 1),
+                  0 < k.val → Shao.prefixSum a k.val < wall a}
+                let G : Set (Shao.Path r) := {a | (r : ℝ) / 2 ≤ Shao.energy a}
+                ∀ theta v : ℝ, 0 ≤ theta → theta ≤ x / Real.sqrt (r : ℝ) →
+                  0 ≤ v →
+                  Integrable
+                    ((A ∩ G ∩ {a | 0 < w a ∧ w a ≤ v}).indicator
+                      (fun a => Real.exp (theta * L a))) P ∧
+                    (∫ a : Shao.Path r,
+                      (A ∩ G ∩ {a | 0 < w a ∧ w a ≤ v}).indicator
+                        (fun a => Real.exp (theta * L a)) a ∂P) ≤
+                      C * (v + beta) ^ 2 / (r : ℝ) *
+                        (1 + theta * Real.sqrt (r : ℝ)) ^ 5 *
+                        Real.exp ((53 / 100 : ℝ) * (r : ℝ) * theta ^ 2 +
+                          C * (r : ℝ) * theta ^ 3 * beta + C * theta * B)
+
+
+theorem actual_prior_opposite_hit_gaussian_wall_profile :
+    ∃ C : ℝ, 1 ≤ C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (B : ℝ), 0 < B → (∀ᵐ z : ℝ ∂rho, |z| ≤ B) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n →
+          ∀ x : ℝ, 1 ≤ x → B ≤ Real.sqrt (n : ℝ) / (200 * x) →
+            ∀ (r : ℕ), r ≤ n → (n : ℝ) / 2 ≤ (r : ℝ) →
+              let P : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+              ∀ T M : ℝ, 0 < T → 0 ≤ M →
+                let wall : Shao.Path r → ℝ := fun a =>
+                  x * Real.sqrt (Shao.energy a + T)
+                let w : Shao.Path r → ℝ := fun a => wall a - Shao.prefixSum a r
+                let A : Set (Shao.Path r) := {a | ∀ k : Fin (r + 1),
+                  0 < k.val → Shao.prefixSum a k.val < wall a}
+                let G : Set (Shao.Path r) := {a | (r : ℝ) / 2 ≤ Shao.energy a}
+                let Pminus : Set (Shao.Path r) := {a | ∃ k : Fin (r + 1),
+                  0 < k.val ∧ Shao.prefixSum a k.val ≤ -wall a}
+                let a0 : ℝ := x * Real.sqrt ((r : ℝ) / 2 + T)
+                let profile : Shao.Path r → ℝ := fun a =>
+                  Real.exp (-((max (w a - M) 0) ^ 2) / T)
+                ∀ theta : ℝ, 0 ≤ theta → theta ≤ x / Real.sqrt (r : ℝ) →
+                  Integrable ((A ∩ G ∩ Pminus).indicator profile) P ∧
+                    (∫ a : Shao.Path r, (A ∩ G ∩ Pminus).indicator profile a ∂P) ≤
+                      C * (T + beta ^ 2) / (r : ℝ) *
+                        (1 + theta * Real.sqrt (r : ℝ)) ^ 5 *
+                        (1 + M / Real.sqrt T) ^ 2 *
+                        (1 + theta * Real.sqrt T) ^ 3 *
+                        Real.exp ((53 / 100 : ℝ) * (r : ℝ) * theta ^ 2 +
+                          C * (r : ℝ) * theta ^ 3 * beta + C * theta * B -
+                          3 * theta * a0 + theta * M + theta ^ 2 * T / 4)
+
+
+
+end Shao.Probability.SourceWeightedPrefixWall
