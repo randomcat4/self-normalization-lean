@@ -1,0 +1,86 @@
+
+SOURCE Shao/Probability/SourceEarlyRetainedProbability.lean
+/- Mathematics-only candidate. No formal body or Lean/AX authority.
+   Actual early rare branch and independent early omitted branch only.
+   Regular all-rank payment is already PR363; late strip/record belongs to B. -/
+import Shao.Probability.SourceResidualRareSuffix
+import Shao.Probability.SourceActualIntervalProfileBudget
+import Shao.Probability.SourceIIDGaussianProfileBudget
+import Shao.C2.BridgeIntervalImageResolved
+import Shao.C2.BridgeHalfLineRetainedBound
+import Shao.C2.AuxiliaryRealMarkedFiniteCutoffBudget
+import Shao.C2.AdaptiveRevealCutoff
+import Shao.C2.AuxiliaryLowEnergyGaussian
+import Shao.Probability.GaussianTail
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 5000000
+noncomputable section
+namespace Shao.Probability.SourceEarlyRetainedProbability
+open MeasureTheory ProbabilityTheory
+open SourcePermutationReveal SourceSeparatedOvershoot
+open SourceActualLocalProfileBudget SourceActualIntervalProfileBudget
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open scoped BigOperators Classical NNReal
+
+
+DECLARATION labelPermMeasurableSpace SOURCE_LINE 25
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+DECLARATION iid_actual_early_rare_and_omitted_retained_budget SOURCE_LINE 579
+theorem iid_actual_early_rare_and_omitted_retained_budget :
+    let K : ℝ := (2 : ℝ) ^ 64
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (PB : Measure ΩB) [IsProbabilityMeasure PB]
+        (B : ℝ≥0 → ΩB → ℝ), IsBrownianReal B PB →
+        let Q : Measure BridgeNoise := bridgeLaw B PB
+        ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+          (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →
+          (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+          ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+            let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+            let delta : ℝ := beta / Real.sqrt (n : ℝ)
+            let u : ℝ := delta * (1 + x) ^ 3
+            u ≤ Real.exp (-3 * x ^ 2) →
+            let h0 : ℝ := 4 * beta ^ 2
+            let H : ℝ := K * beta ^ 2 * (1 + x) ^ 6
+            let m : ℕ := ⌈H⌉₊
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let nu : Shao.Path n → LabelPerm n → ℕ :=
+              fun a sigma => energyCutoff a h0 sigma
+            let tau : Shao.Path n → LabelPerm n → ℕ := fun a sigma =>
+              min (energyCutoff a H sigma) (n - m)
+            let F : MonitoredDomain → BridgeKernel := fun J => eventCompletionKernel J Q
+            let FY : MonitoredDomain → BridgeKernel := fun J =>
+              match J with
+              | .upper => halflineDerivative .upper
+              | .lower => halflineDerivative .lower
+              | .interval => intervalDerivative Q
+            let L : MonitoredDomain → (Shao.Path n × LabelPerm n) → Fin n → ℝ :=
+              fun J p r => sourceRetainedRemainder J (F J) (FY J)
+                p.1 x (nu p.1) r.val p.2
+            let LD : (Shao.Path n × LabelPerm n) → Fin n → ℝ := fun p r =>
+              L .interval p r - L .upper p r - L .lower p r
+            let earlyRare : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+              ∑ r : Fin n,
+                if r.val ≤ n / 2 ∧ r.val < nu p.1 p.2 ∧
+                    (∀ k : ℕ, k ≤ r.val →
+                      |Shao.prefixSum (Spitzer.reorder p.1 p.2) k| < actualWall p.1 x) ∧
+                    (3 / 2 : ℝ) * x * Real.sqrt (remainingEnergy p.1 r.val p.2) <
+                      |remainingSum p.1 r.val p.2|
+                then |LD p r| else 0
+            let earlyOmitted : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+              ∑ r : Fin n,
+                if r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+                  |L .interval p r| + |L .upper p r| + |L .lower p r| +
+                    max (-sourceSeparatedOvershoot .interval (FY .interval)
+                      p.1 x (nu p.1) r.val p.2) 0
+                else 0
+            Measurable earlyRare ∧ Integrable earlyRare (revealLaw P) ∧
+              Measurable earlyOmitted ∧ Integrable earlyOmitted (revealLaw P) ∧
+              (∫ p, earlyRare p ∂revealLaw P) ≤ C * delta * Shao.standardNormalTail x ∧
+              (∫ p, earlyOmitted p ∂revealLaw P) ≤
+                C * beta * Real.sqrt H / (n : ℝ) ∧
+              (∫ p, earlyOmitted p ∂revealLaw P) ≤ C * delta * Shao.standardNormalTail x
