@@ -1,0 +1,20 @@
+private theorem arr_omitted_mask_iff
+    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)
+    (sigma : LabelPerm n) (r : Fin n) (m : ℕ) :
+    (min (energyCutoff a H sigma) (n - m) ≤ r.val ∧
+        r.val < energyCutoff a h0 sigma) ↔
+      h0 ≤ remainingEnergy a r.val sigma ∧
+        (remainingEnergy a r.val sigma < H ∨ n - r.val ≤ m)
+
+private theorem arr_absolute_rank_measurable_integrable
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnu : ∀ sigma, Measurable (fun a => nu a sigma)) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let F : Shao.Path n × LabelPerm n → ℝ := fun p =>
+      actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2
+    Measurable F ∧ Integrable F (revealLaw P) ∧
+      (∀ p, 0 ≤ F p) ∧ (∀ p, F p ≤ 3 + 88 * (1 + (n : ℝ)))

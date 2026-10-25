@@ -1,0 +1,22 @@
+private theorem arr_late_fixed_suffix_gaussian_bound :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+          Bcap ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          ∀ (r t : ℕ), n = r + t → 0 < r → n ≤ 2 * r →
+            ∀ (u : Shao.Path t) (H : ℝ), 0 < H → 4 * beta ^ 2 ≤ H →
+              ∀ (s : ℝ), (s = 1 ∨ s = -1) →
+                let Pr : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+                let T : ℝ := Shao.energy u
+                let F : Shao.Path r → ℝ := fun v =>
+                  Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+                    H x {s} false v u
+                let W : ℝ := if 0 < T ∧ H ≤ T then
+                    |Shao.Probability.SourceIIDGaussianProfileBudget.firstValue u| ^ 3 /
+                      Real.sqrt T *
+                        (Shao.Probability.SourceMarkedSuffixAveraging.suffixD u) ^ 5
+                  else 0
+                Integrable F Pr ∧ (∫ v, F v ∂Pr) ≤ C / (r : ℝ) * W

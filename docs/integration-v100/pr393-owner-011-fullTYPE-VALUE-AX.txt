@@ -1,0 +1,269 @@
+TARGET_DECL _private.Shao.Probability.SourceActualLateOmittedBudget.0.Shao.Probability.SourceActualLateOmittedBudget.alo_iid_masked_rank_fubini KIND theorem AXIOMS [propext,
+ Classical.choice,
+ Quot.sound]
+ACTUAL_TYPE ∀ {n : Nat} (rho : @MeasureTheory.Measure.{0} Real Real.measurableSpace)
+  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace rho] (r : Fin n) (h0 H x : Real)
+  (hh0 : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) h0)
+  (hH : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) H)
+  (m : Nat),
+  have P :
+    @MeasureTheory.Measure.{0} (Shao.Path n)
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) :=
+    @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)
+      (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => rho;
+  have Pprefix :
+    @MeasureTheory.Measure.{0} (Shao.Path (@Fin.val n r))
+      (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+        fun (a : Fin (@Fin.val n r)) => Real.measurableSpace) :=
+    @MeasureTheory.Measure.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+      (Fin.fintype (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+      fun (x : Fin (@Fin.val n r)) => rho;
+  have Psuffix :
+    @MeasureTheory.Measure.{0}
+      (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+      (@MeasurableSpace.pi.{0, 0}
+        (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+        (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) => Real)
+        fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+        Real.measurableSpace) :=
+    @MeasureTheory.Measure.pi.{0, 0}
+      (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+      (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) => Real)
+      (Fin.fintype (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+      (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+        Real.measurableSpace)
+      fun (x : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) => rho;
+  have nu : Shao.Path n → Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat :=
+    fun (a : Shao.Path n) (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>
+    @Shao.Probability.SourcePermutationReveal.energyCutoff n a h0 sigma;
+  have tau : Shao.Path n → Shao.Probability.SourcePermutationReveal.LabelPerm n → Nat :=
+    fun (a : Shao.Path n) (sigma : Shao.Probability.SourcePermutationReveal.LabelPerm n) =>
+    @Min.min.{0} Nat instMinNat (@Shao.Probability.SourcePermutationReveal.energyCutoff n a H sigma)
+      (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n m);
+  have g : Shao.Path n → Real := fun (a : Shao.Path n) =>
+    @ite.{1} Real
+      (And (@LE.le.{0} Nat instLENat (tau a (Equiv.refl.{1} (Fin n))) (@Fin.val n r))
+        (@LT.lt.{0} Nat instLTNat (@Fin.val n r) (nu a (Equiv.refl.{1} (Fin n)))))
+      (@instDecidableAnd (@LE.le.{0} Nat instLENat (tau a (Equiv.refl.{1} (Fin n))) (@Fin.val n r))
+        (@LT.lt.{0} Nat instLTNat (@Fin.val n r) (nu a (Equiv.refl.{1} (Fin n))))
+        (Nat.decLe (tau a (Equiv.refl.{1} (Fin n))) (@Fin.val n r))
+        (Nat.decLt (@Fin.val n r) (nu a (Equiv.refl.{1} (Fin n)))))
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight n h0 x
+          (@Singleton.singleton.{0, 0} Real (Finset.{0} Real) (@Finset.instSingleton.{0} Real)
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+          Bool.false a r)
+        (@Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight n h0 x
+          (@Singleton.singleton.{0, 0} Real (Finset.{0} Real) (@Finset.instSingleton.{0} Real)
+            (@Neg.neg.{0} Real Real.instNeg (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+          Bool.false a r))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero));
+  have f :
+    Prod.{0, 0} (Shao.Path (@Fin.val n r))
+        (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) →
+      Real :=
+    fun
+      (p :
+        Prod.{0, 0} (Shao.Path (@Fin.val n r))
+          (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))) =>
+    @ite.{1} Real
+      (And
+        (@LE.le.{0} Real Real.instLE h0
+          (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)))
+        (Or
+          (@LT.lt.{0} Real Real.instLT
+            (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+              (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+                (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p))
+            H)
+          (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            m)))
+      (@instDecidableAnd
+        (@LE.le.{0} Real Real.instLE h0
+          (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)))
+        (Or
+          (@LT.lt.{0} Real Real.instLT
+            (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+              (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+                (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p))
+            H)
+          (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            m))
+        (Real.decidableLE h0
+          (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)))
+        (@instDecidableOr
+          (@LT.lt.{0} Real Real.instLT
+            (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+              (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+                (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p))
+            H)
+          (@LE.le.{0} Nat instLENat (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+            m)
+          (Real.decidableLT
+            (@Shao.energy (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))
+              (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+                (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p))
+            H)
+          (Nat.decLe (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)) m)))
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight (@Fin.val n r)
+          (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)) h0 x
+          (@Singleton.singleton.{0, 0} Real (Finset.{0} Real) (@Finset.instSingleton.{0} Real)
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+          Bool.false
+          (@Prod.fst.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)
+          (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p))
+        (@Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight (@Fin.val n r)
+          (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)) h0 x
+          (@Singleton.singleton.{0, 0} Real (Finset.{0} Real) (@Finset.instSingleton.{0} Real)
+            (@Neg.neg.{0} Real Real.instNeg (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+          Bool.false
+          (@Prod.fst.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)
+          (@Prod.snd.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) p)))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero));
+  And
+    (@Measurable.{0, 0} (Shao.Path n) Real
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)
+      Real.measurableSpace g)
+    (And
+      (@MeasureTheory.Integrable.{0, 0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@ESeminormedAddMonoid.toContinuousENorm.{0} Real
+          (@UniformSpace.toTopologicalSpace.{0} Real
+            (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+          (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real
+            (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+              (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+                (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                  (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                    (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))
+        (Shao.Path n)
+        (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) g P)
+      (And
+        (@Measurable.{0, 0}
+          (Prod.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))))
+          Real
+          (@Prod.instMeasurableSpace.{0, 0} (Shao.Path (@Fin.val n r))
+            (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+            (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+              fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+            (@MeasurableSpace.pi.{0, 0}
+              (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+              (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) => Real)
+              fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+              Real.measurableSpace))
+          Real.measurableSpace f)
+        (And
+          (@MeasureTheory.Integrable.{0, 0} Real
+            (@UniformSpace.toTopologicalSpace.{0} Real
+              (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+            (@ESeminormedAddMonoid.toContinuousENorm.{0} Real
+              (@UniformSpace.toTopologicalSpace.{0} Real
+                (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+              (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real
+                (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+                  (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+                    (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                      (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                        (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))
+            (Prod.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))))
+            (@Prod.instMeasurableSpace.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+              (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+                fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+              (@MeasurableSpace.pi.{0, 0}
+                (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+                (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                  Real)
+                fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                Real.measurableSpace))
+            f
+            (@MeasureTheory.Measure.prod.{0, 0} (Shao.Path (@Fin.val n r))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+              (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+                fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+              (@MeasurableSpace.pi.{0, 0}
+                (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+                (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                  Real)
+                fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                Real.measurableSpace)
+              Pprefix Psuffix))
+          (And
+            (@MeasureTheory.Integrable.{0, 0} Real
+              (@UniformSpace.toTopologicalSpace.{0} Real
+                (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+              (@ESeminormedAddMonoid.toContinuousENorm.{0} Real
+                (@UniformSpace.toTopologicalSpace.{0} Real
+                  (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real
+                  (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+                    (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+                      (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                        (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                          (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))
+              (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+              (@MeasurableSpace.pi.{0, 0}
+                (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+                (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                  Real)
+                fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                Real.measurableSpace)
+              (fun (u : Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                @MeasureTheory.integral.{0, 0} (Shao.Path (@Fin.val n r)) Real Real.normedAddCommGroup
+                  (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+                    (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+                    (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+                  (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+                    fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+                  Pprefix fun (v : Shao.Path (@Fin.val n r)) =>
+                  f
+                    (@Prod.mk.{0, 0} (Shao.Path (@Fin.val n r))
+                      (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) v
+                      u))
+              Psuffix)
+            (@Eq.{1} Real
+              (@MeasureTheory.integral.{0, 0} (Shao.Path n) Real Real.normedAddCommGroup
+                (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+                  (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+                  (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+                (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P
+                fun (a : Shao.Path n) => g a)
+              (@MeasureTheory.integral.{0, 0}
+                (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) Real
+                Real.normedAddCommGroup
+                (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+                  (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+                  (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+                (@MeasurableSpace.pi.{0, 0}
+                  (Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r)))
+                  (fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                    Real)
+                  fun (a : Fin (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                  Real.measurableSpace)
+                Psuffix
+                fun
+                  (u : Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) =>
+                @MeasureTheory.integral.{0, 0} (Shao.Path (@Fin.val n r)) Real Real.normedAddCommGroup
+                  (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+                    (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+                    (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+                  (@MeasurableSpace.pi.{0, 0} (Fin (@Fin.val n r)) (fun (a : Fin (@Fin.val n r)) => Real)
+                    fun (a : Fin (@Fin.val n r)) => Real.measurableSpace)
+                  Pprefix fun (v : Shao.Path (@Fin.val n r)) =>
+                  f
+                    (@Prod.mk.{0, 0} (Shao.Path (@Fin.val n r))
+                      (Shao.Path (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Fin.val n r))) v
+                      u)))))))

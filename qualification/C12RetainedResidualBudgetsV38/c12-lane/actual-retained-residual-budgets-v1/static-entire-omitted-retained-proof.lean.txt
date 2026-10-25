@@ -1,0 +1,202 @@
+theorem iid_actual_entire_omitted_retained_budget :
+    let K : ℝ := (2 : ℝ) ^ 64
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (PB : Measure ΩB) [IsProbabilityMeasure PB]
+        (Bm : ℝ≥0 → ΩB → ℝ), IsBrownianReal Bm PB →
+        let Q : Measure BridgeNoise := bridgeLaw Bm PB
+        ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+          (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →
+          (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+          ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+            Bcap ≤ Real.sqrt (n : ℝ) / (100 * x) →
+            let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+            let delta : ℝ := beta / Real.sqrt (n : ℝ)
+            delta * (1 + x) ^ 3 ≤ Real.exp (-3 * x ^ 2) →
+            let h0 : ℝ := 4 * beta ^ 2
+            let H : ℝ := K * beta ^ 2 * (1 + x) ^ 6
+            let m : ℕ := ⌈H⌉₊
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let nu : Shao.Path n → LabelPerm n → ℕ :=
+              fun a sigma => energyCutoff a h0 sigma
+            let tau : Shao.Path n → LabelPerm n → ℕ := fun a sigma =>
+              min (energyCutoff a H sigma) (n - m)
+            let bill := actualOmittedRetainedBill Q x nu tau
+            Measurable bill ∧ Integrable bill (revealLaw P) ∧
+              (∀ p, 0 ≤ bill p) ∧
+              (∫ p, bill p ∂revealLaw P) ≤ C * beta * Real.sqrt H / (n : ℝ) ∧
+              (∫ p, bill p ∂revealLaw P) ≤ C * delta * Shao.standardNormalTail x := by
+  classical
+  intro K
+  obtain ⟨Ce, hCe, hEarly⟩ :=
+    Shao.Probability.SourceEarlyRetainedProbability.iid_actual_early_rare_and_omitted_retained_budget
+  obtain ⟨Cg, hCg, hLate⟩ := arr_iid_late_omitted_gaussian_bill
+  let Cphys : ℝ := 8000100 + (2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40)
+  let C : ℝ := 1 + Ce + 2 * Cphys * Cg
+  have hCP := Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant_nonneg
+  have hCphys : 0 < Cphys := by dsimp [Cphys]; positivity
+  refine ⟨C, by dsimp [C]; positivity, ?_⟩
+  intro ΩB mΩB PB hPB Bm hBm Q rho hrho Bcap hBcap hBound hmean hsecond
+    n hn x hx hSupport beta delta hsmall h0 H m P nu tau bill
+  letI : IsProbabilityMeasure rho := hrho
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw Bm PB hBm
+  letI : IsProbabilityMeasure P := by dsimp [P]; infer_instance
+  letI : IsProbabilityMeasure (revealLaw P) := by unfold revealLaw; infer_instance
+  have hxpos : 0 < x := by linarith only [hx]
+  have hnR : 0 < (n : ℝ) := Nat.cast_pos.2 hn
+  have h2 : Integrable (fun z : ℝ => z ^ 2) rho := by
+    refine (integrable_const (Bcap ^ 2)).mono' (by fun_prop) ?_
+    filter_upwards [hBound] with z hz
+    rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg z)]
+    simpa only [sq_abs] using pow_le_pow_left₀ (abs_nonneg z) hz 2
+  have h3 : Integrable (fun z : ℝ => |z| ^ 3) rho := by
+    refine (integrable_const (Bcap ^ 3)).mono' (by fun_prop) ?_
+    filter_upwards [hBound] with z hz
+    rw [Real.norm_eq_abs, abs_of_nonneg (by positivity : 0 ≤ |z| ^ 3)]
+    exact pow_le_pow_left₀ (abs_nonneg z) hz 3
+  have hbeta : 1 ≤ beta :=
+    Shao.C2.AuxiliaryEnergyCentered.auxiliary_absolute_third_moment_ge_one rho h2 h3 hsecond
+  have hbetaPos : 0 < beta := lt_of_lt_of_le zero_lt_one hbeta
+  have hh0 : 0 < h0 := by dsimp [h0]; positivity
+  have hK4 : 4 ≤ K := by norm_num [K]
+  have hx6 : 1 ≤ (1 + x) ^ 6 := one_le_pow₀ (by linarith only [hx] : 1 ≤ 1 + x)
+  have hh0H : h0 ≤ H := by
+    have h1 := mul_le_mul_of_nonneg_right hK4 (sq_nonneg beta)
+    have h2 := mul_le_mul_of_nonneg_left hx6
+      (mul_nonneg (by norm_num [K] : 0 ≤ K) (sq_nonneg beta))
+    dsimp only [h0, H]
+    nlinarith only [h1, h2]
+  have hH : 0 < H := hh0.trans_le hh0H
+  have hnu (sigma : LabelPerm n) : Measurable (fun a => nu a sigma) :=
+    Shao.Probability.SourceActualLocalProfileBudget.actual_energy_cutoff_measurable h0 hh0 sigma
+  have htau (sigma : LabelPerm n) : Measurable (fun a => tau a sigma) :=
+    (Shao.Probability.SourceActualLocalProfileBudget.actual_energy_cutoff_measurable H hH sigma).min
+      measurable_const
+  have hnum : Measurable (fun p : Shao.Path n × LabelPerm n => nu p.1 p.2) := by
+    apply measurable_from_prod_countable_left
+    exact hnu
+  have htaum : Measurable (fun p : Shao.Path n × LabelPerm n => tau p.1 p.2) := by
+    apply measurable_from_prod_countable_left
+    exact htau
+  have hRank (r : Fin n) := arr_absolute_rank_measurable_integrable
+    PB Bm hBm P x hxpos nu hnu r
+  have hMask (r : Fin n) : MeasurableSet {p : Shao.Path n × LabelPerm n |
+      tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2} :=
+    (measurableSet_le htaum measurable_const).inter
+      (measurableSet_lt measurable_const hnum)
+  have hRm (r : Fin n) : Measurable (fun p : Shao.Path n × LabelPerm n =>
+      if tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+        actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0) :=
+    Measurable.ite (hMask r) (hRank r).1 measurable_const
+  have hRi (r : Fin n) : Integrable (fun p : Shao.Path n × LabelPerm n =>
+      if tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+        actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0) (revealLaw P) := by
+    refine (hRank r).2.1.mono' (hRm r).aestronglyMeasurable (ae_of_all _ fun p => ?_)
+    rw [Real.norm_eq_abs]
+    split_ifs
+    · exact (abs_of_nonneg ((hRank r).2.2.1 p)).le
+    · rw [abs_zero]
+      exact (hRank r).2.2.1 p
+  have hBillM : Measurable bill := by
+    exact Finset.measurable_sum _ (fun r _ => hRm r)
+  have hBillI : Integrable bill (revealLaw P) := by
+    exact integrable_finsetSum _ (fun r _ => hRi r)
+  have hBillNN (p : Shao.Path n × LabelPerm n) : 0 ≤ bill p := by
+    apply Finset.sum_nonneg
+    intro r _
+    split_ifs
+    · exact (hRank r).2.2.1 p
+    · exact le_rfl
+  let early : Shao.Path n × LabelPerm n → ℝ := fun p =>
+    ∑ r : Fin n, if r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+      actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0
+  let lateProfile : ℝ → Shao.Path n × LabelPerm n → ℝ := fun s p =>
+    ∑ r : Fin n, if n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+      Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight h0 x {s} false
+        (Shao.Probability.Spitzer.reorder p.1 p.2) r else 0
+  have hE := hEarly PB Bm hBm rho Bcap hBcap hBound hmean hsecond n hn x hx hsmall
+  rcases hE with ⟨_hRareM, _hRareI, hEm0, hEi0, _hRareB, hEB0, hET0⟩
+  have hEm : Measurable early := by
+    simpa only [early, actualRetainedAbsoluteRank, actualDerivativeFamily] using hEm0
+  have hEi : Integrable early (revealLaw P) := by
+    simpa only [early, actualRetainedAbsoluteRank, actualDerivativeFamily] using hEi0
+  have hEB : (∫ p, early p ∂revealLaw P) ≤ Ce * beta * Real.sqrt H / (n : ℝ) := by
+    simpa only [early, actualRetainedAbsoluteRank, actualDerivativeFamily] using hEB0
+  have hET : (∫ p, early p ∂revealLaw P) ≤ Ce * delta * Shao.standardNormalTail x := by
+    simpa only [early, actualRetainedAbsoluteRank, actualDerivativeFamily] using hET0
+  have hG (s : ℝ) (hs : s = 1 ∨ s = -1) :
+      Measurable (lateProfile s) ∧ Integrable (lateProfile s) (revealLaw P) ∧
+      (∀ p, 0 ≤ lateProfile s p) ∧
+      (∫ p, lateProfile s p ∂revealLaw P) ≤ Cg * beta * Real.sqrt H / (n : ℝ) ∧
+      (∫ p, lateProfile s p ∂revealLaw P) ≤ Cg * delta * Shao.standardNormalTail x := by
+    simpa only [lateProfile] using
+      hLate rho Bcap hBcap hBound hmean hsecond n hn x hx hSupport hsmall s hs
+  have hGp := hG 1 (Or.inl rfl)
+  have hGm := hG (-1) (Or.inr rfl)
+  have hDom (p : Shao.Path n × LabelPerm n) :
+      bill p ≤ early p + Cphys * (lateProfile 1 p + lateProfile (-1) p) := by
+    calc
+      bill p ≤ ∑ r : Fin n,
+          (if r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+            actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0) +
+          Cphys * ((if n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+            Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight h0 x {1} false
+              (Shao.Probability.Spitzer.reorder p.1 p.2) r else 0) +
+            (if n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+            Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight h0 x {-1} false
+              (Shao.Probability.Spitzer.reorder p.1 p.2) r else 0)) := by
+        apply Finset.sum_le_sum
+        intro r _
+        by_cases hsel : tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2
+        · by_cases he : r.val ≤ n / 2
+          · have hl : ¬(n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2) :=
+              fun hh => (not_lt.mpr he) hh.1
+            simp only [if_pos hsel, if_pos (show r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧
+              r.val < nu p.1 p.2 from ⟨he, hsel⟩), if_neg hl, add_zero, mul_zero, le_refl]
+          · have hl : n / 2 < r.val := Nat.lt_of_not_ge he
+            have hne : ¬(r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2) :=
+              fun hh => he hh.1
+            have hd := (actual_retained_absolute_rank_gaussian_domination PB Bm hBm
+              p.1 h0 x hh0 hxpos (nu p.1) p.2 le_rfl r).2
+            simpa only [if_pos hsel, if_neg hne,
+              if_pos (show n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 from
+                ⟨hl, hsel⟩), zero_add, Cphys] using hd
+        · have he : ¬(r.val ≤ n / 2 ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2) :=
+            fun hh => hsel hh.2
+          have hl : ¬(n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2) :=
+            fun hh => hsel hh.2
+          simp only [if_neg hsel, if_neg he, if_neg hl, add_zero, mul_zero, le_refl]
+      _ = early p + Cphys * (lateProfile 1 p + lateProfile (-1) p) := by
+        simp only [early, lateProfile, Finset.sum_add_distrib, Finset.mul_sum, mul_add]
+  have hGPi := hGp.2.1
+  have hGMi := hGm.2.1
+  have hi : (∫ p, bill p ∂revealLaw P) ≤ (∫ p, early p ∂revealLaw P) +
+      Cphys * ((∫ p, lateProfile 1 p ∂revealLaw P) +
+        (∫ p, lateProfile (-1) p ∂revealLaw P)) := by
+    calc
+      _ ≤ ∫ p, early p + Cphys * (lateProfile 1 p + lateProfile (-1) p) ∂revealLaw P :=
+        integral_mono hBillI (hEi.add ((hGPi.add hGMi).const_mul Cphys)) hDom
+      _ = _ := by
+        rw [integral_add hEi ((hGPi.add hGMi).const_mul Cphys), integral_const_mul,
+          integral_add hGPi hGMi]
+  have hCoeff : Ce + 2 * Cphys * Cg ≤ C := by dsimp [C]; linarith
+  have hdelta : 0 ≤ delta := div_nonneg hbetaPos.le (Real.sqrt_nonneg _)
+  have hTail : 0 ≤ Shao.standardNormalTail x := ((Shao.standardNormalTail_basic).2.2.1 x).1.le
+  refine ⟨hBillM, hBillI, hBillNN, ?_, ?_⟩
+  · calc
+      _ ≤ Ce * beta * Real.sqrt H / (n : ℝ) + Cphys *
+          (Cg * beta * Real.sqrt H / (n : ℝ) + Cg * beta * Real.sqrt H / (n : ℝ)) :=
+        hi.trans (add_le_add hEB (mul_le_mul_of_nonneg_left
+          (add_le_add hGp.2.2.2.1 hGm.2.2.2.1) hCphys.le))
+      _ = (Ce + 2 * Cphys * Cg) * beta * Real.sqrt H / (n : ℝ) := by ring
+      _ ≤ C * beta * Real.sqrt H / (n : ℝ) :=
+        div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_right hCoeff hbetaPos.le) (Real.sqrt_nonneg H)) hnR.le
+  · calc
+      _ ≤ Ce * delta * Shao.standardNormalTail x + Cphys *
+          (Cg * delta * Shao.standardNormalTail x + Cg * delta * Shao.standardNormalTail x) :=
+        hi.trans (add_le_add hET (mul_le_mul_of_nonneg_left
+          (add_le_add hGp.2.2.2.2 hGm.2.2.2.2) hCphys.le))
+      _ = (Ce + 2 * Cphys * Cg) * delta * Shao.standardNormalTail x := by ring
+      _ ≤ C * delta * Shao.standardNormalTail x :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hCoeff hdelta) hTail
