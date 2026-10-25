@@ -1,0 +1,41 @@
+--- original-source/FiniteQuadraticSignChaos.lean
++++ repair-01/FiniteQuadraticSignChaos.lean
+@@ -105,5 +105,5 @@
+   have hsum :
+       (∑ δ : Fin n → Bool,
+-        chi δ + chi (flip i δ) + chi (flip j δ) + chi (flip i (flip j δ))) =
++        (chi δ + chi (flip i δ) + chi (flip j δ) + chi (flip i (flip j δ)))) =
+         ∑ _δ : Fin n → Bool, (1 : ℝ) :=
+     Finset.sum_congr rfl (fun δ _ => hpoint δ)
+@@ -268,5 +268,5 @@
+     rw [EuclideanSpace.real_norm_sq_eq]
+     simp only [u, PiLp.toLp_apply, Finset.sum_const, Finset.card_univ,
+-      Fintype.card_fin, nsmul_eq_mul, one_mul]
++      Fintype.card_fin, nsmul_eq_mul, Nat.cast_one, one_mul]
+   have hcoord : ∀ (s : Fin n → Bool) (r : Fin 1),
+       (signSum n 1 u s) r = ∑ i : Fin n, signValue (s i) * a i := by
+@@ -284,5 +284,5 @@
+       rw [EuclideanSpace.real_norm_sq_eq]
+       simp only [hcoord, Finset.sum_const, Finset.card_univ,
+-        Fintype.card_fin, nsmul_eq_mul, one_mul]
++        Fintype.card_fin, nsmul_eq_mul, Nat.cast_one, one_mul]
+     apply le_antisymm
+     · apply (sq_le_sq₀ (norm_nonneg (signSum n 1 u s))
+@@ -292,6 +292,6 @@
+         (norm_nonneg (signSum n 1 u s))).mp
+       rw [hsq, sq_abs]
+-  have henergy : energy n 1 u = ∑ i : Fin n, a i ^ 2 := by
++  have henergy : Shao.OQ6.FiniteHilbertSignMoments.energy n 1 u = ∑ i : Fin n, a i ^ 2 := by
+-    unfold energy
++    unfold Shao.OQ6.FiniteHilbertSignMoments.energy
+     exact Finset.sum_congr rfl (fun i _ => husq i)
+   simpa only [moment, hnorm, hilbertConstant, henergy] using
+@@ -330,6 +330,6 @@
+     intro t
+     rw [← hYsq t, Real.sqrt_sq (norm_nonneg (Y t))]
+-  have henergy : energy n n v = entryEnergy n D := by
++  have henergy : Shao.OQ6.FiniteHilbertSignMoments.energy n n v = entryEnergy n D := by
+-    unfold energy entryEnergy
++    unfold Shao.OQ6.FiniteHilbertSignMoments.energy entryEnergy
+     apply Finset.sum_congr rfl
+     intro j _hj
