@@ -1,0 +1,135 @@
+--- source-reviewed-2cbb
++++ native003-d0a
+@@ -219,9 +219,21 @@
+       Measurable (Late sign) ∧ Integrable (Late sign) (revealLaw P) ∧
+         (∀ p, 0 ≤ Late sign p) ∧
+         (∫ p, Late sign p ∂revealLaw P) ≤ CL * delta * Fx := by
+-    simpa only [Fx, mul_assoc] using
+-      hLateBudget PB Bm hBm rho Bcap hB hsupport hmean hsecond n hn x hx
+-        hscale hres nu hnum hcap sign hSign
++    have h := hLateBudget PB Bm hBm rho Bcap hB hsupport hmean hsecond n hn x hx
++      hscale hres nu hnum hcap sign hSign
++    have hEq : Late sign = actualLateRegularPostwallRetainedBill Q x sign nu := by
++      funext p
++      rfl
++    refine ⟨?_, ?_, ?_, ?_⟩
++    · rw [hEq]
++      exact h.1
++    · rw [hEq]
++      exact h.2.1
++    · intro p
++      rw [hEq]
++      exact h.2.2.1 p
++    · rw [hEq]
++      simpa only [Fx, mul_assoc, P, Q, delta, beta] using h.2.2.2
+   have heP := hEarlyData 1 (Or.inl rfl)
+   have heM := hEarlyData (-1) (Or.inr rfl)
+   have hlP := hLateData 1 (Or.inl rfl)
+@@ -274,7 +286,7 @@
+     ((hLm .interval r).sub (hLm .upper r)).sub (hLm .lower r)
+   have hRRi (r : Fin n) : Integrable (fun p => RR nu p r) (revealLaw P) :=
+     ((hLi .interval r).sub (hLi .upper r)).sub (hLi .lower r)
+-  have hBillM : Measurable bill := Finset.measurable_sum _ fun r _ => (hRRm r).abs
++  have hBillM : Measurable bill := Finset.measurable_sum _ fun r _ => (continuous_abs.measurable.comp (hRRm r))
+   have hBillI : Integrable bill (revealLaw P) := integrable_finsetSum _ fun r _ => (hRRi r).abs
+   have hBillNN (p : Shao.Path n × LabelPerm n) : 0 ≤ bill p :=
+     Finset.sum_nonneg fun r _ => abs_nonneg _
+@@ -319,7 +331,12 @@
+       exact mul_pos hx0 (Real.sqrt_pos.2 ha.1)
+     have hex : ∃ k : ℕ, k ≤ r.val ∧
+         actualWall p.1 x ≤ |Shao.prefixSum (Shao.Probability.Spitzer.reorder p.1 p.2) k| := by
+-      simpa only [A, not_forall, not_lt, not_imp] using hA
++      by_contra hnone
++      apply hA
++      intro k hk
++      apply lt_of_not_ge
++      intro hge
++      exact hnone ⟨k, hk, hge⟩
+     rcases hex with ⟨k, hkr, hge⟩
+     have hk0 : 0 < k := by
+       by_contra hk
+@@ -343,7 +360,12 @@
+       exact mul_pos hx0 (Real.sqrt_pos.2 ha.1)
+     have hex : ∃ k : ℕ, k ≤ r.val ∧
+         actualWall p.1 x ≤ |Shao.prefixSum (Shao.Probability.Spitzer.reorder p.1 p.2) k| := by
+-      simpa only [A, not_forall, not_lt, not_imp] using hA
++      by_contra hnone
++      apply hA
++      intro k hk
++      apply lt_of_not_ge
++      intro hge
++      exact hnone ⟨k, hk, hge⟩
+     rcases hex with ⟨k, hkr, hge⟩
+     have hk0 : 0 < k := by
+       by_contra hk
+@@ -361,7 +383,7 @@
+     simpa only [neg_one_mul] using neg_le_neg hu
+   have hUpperRank (p : Shao.Path n × LabelPerm n) (r : Fin n) :
+       actualPostwallRetainedRank Q 1 p.1 x (nu p.1) r p.2 = |LJ nu .upper p r| := by
+-    simp only [actualPostwallRetainedRank, actualPostwallHalfline, if_pos (rfl : (1 : ℝ) = 1), LJ]
++    simp [actualPostwallRetainedRank, actualPostwallHalfline, LJ]
+   have hLowerRank (p : Shao.Path n × LabelPerm n) (r : Fin n) :
+       actualPostwallRetainedRank Q (-1) p.1 x (nu p.1) r p.2 = |LJ nu .lower p r| := by
+     simp only [actualPostwallRetainedRank, actualPostwallHalfline,
+@@ -399,7 +421,7 @@
+         congr 1
+         ring
+       _ = |LJ nu .upper p r + LJ nu .lower p r| := abs_neg _
+-      _ ≤ |LJ nu .upper p r| + |LJ nu .lower p r| := abs_add _ _
++      _ ≤ |LJ nu .upper p r| + |LJ nu .lower p r| := abs_add_le _ _
+       _ = _ := by rw [hU, hD]
+   have hPT0 (p : Shao.Path n × LabelPerm n) (r : Fin n) : 0 ≤ PT p r := by
+     dsimp only [PT]
+@@ -419,7 +441,9 @@
+     by_cases hr : r.val < nu p.1 p.2
+     · have hrk : r.val < cap p.1 p.2 := lt_of_lt_of_le hr (hcap p.1 p.2)
+       rw [if_pos hr]
+-      exact (by simpa only [PT, if_pos ⟨hrk, ha, hrg⟩] using le_refl |RR cap p r|)
++      change |RR cap p r| ≤
++        if r.val < cap p.1 p.2 ∧ A p r ∧ Reg p r then |RR cap p r| else 0
++      rw [if_pos (show r.val < cap p.1 p.2 ∧ A p r ∧ Reg p r from ⟨hrk, ha, hrg⟩)]
+     · rw [if_neg hr, abs_zero]
+       exact hPT0 p r
+   have hMaskSplit (sign : ℝ) (p : Shao.Path n × LabelPerm n) (r : Fin n) (hrg : Reg p r) :
+@@ -453,7 +477,7 @@
+         rw [show BT p r = actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 from if_pos hb]
+         have htri : |RR nu p r| ≤ |LJ nu .interval p r| + |LJ nu .upper p r| + |LJ nu .lower p r| := by
+           change |LJ nu .interval p r - LJ nu .upper p r - LJ nu .lower p r| ≤ _
+-          exact (abs_sub _ _).trans (add_le_add_right (abs_sub _ _) _)
++          exact (abs_sub _ _).trans (add_le_add (abs_sub _ _) (le_refl _))
+         have hNeg : 0 ≤ max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+             p.1 x (nu p.1) r.val p.2) 0 := le_max_right _ _
+         exact htri.trans (by
+@@ -467,11 +491,18 @@
+     rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib,
+       ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+     exact Finset.sum_le_sum fun r _ => hRankDom p r
+-  have hiPB := hPreData.2.1.add hBadData.2.1
+-  have hiE1 := hiPB.add heP.2.1
+-  have hiE2 := hiE1.add heM.2.1
+-  have hiL1 := hiE2.add hlP.2.1
+-  have hiAll := hiL1.add hlM.2.1
++  have hiPB : Integrable (fun p => Pre p + Bad p) (revealLaw P) := by
++    convert hPreData.2.1.add hBadData.2.1 using 1
++  have hiE1 : Integrable (fun p => Pre p + Bad p + Early 1 p) (revealLaw P) := by
++    convert hiPB.add heP.2.1 using 1
++  have hiE2 : Integrable (fun p => Pre p + Bad p + Early 1 p + Early (-1) p) (revealLaw P) := by
++    convert hiE1.add heM.2.1 using 1
++  have hiL1 : Integrable (fun p => Pre p + Bad p + Early 1 p + Early (-1) p + Late 1 p)
++      (revealLaw P) := by
++    convert hiE2.add hlP.2.1 using 1
++  have hiAll : Integrable (fun p => Pre p + Bad p + Early 1 p + Early (-1) p + Late 1 p + Late (-1) p)
++      (revealLaw P) := by
++    convert hiL1.add hlM.2.1 using 1
+   have hBillPay : (∫ p, bill p ∂revealLaw P) ≤ C * delta * Shao.standardNormalTail x := by
+     calc
+       _ ≤ ∫ p, Pre p + Bad p + Early 1 p + Early (-1) p + Late 1 p + Late (-1) p ∂revealLaw P :=
+@@ -491,7 +522,7 @@
+             2 * CL * delta * (KT * Shao.standardNormalTail x) := by
+         have he := mul_le_mul_of_nonneg_left hEarlyTail (show 0 ≤ 2 * CE * delta by positivity)
+         have hl := mul_le_mul_of_nonneg_left hTailF (show 0 ≤ 2 * CL * delta by positivity)
+-        linarith only [he, hl]
++        exact add_le_add (add_le_add (le_refl _) he) hl
+       _ = (CP + CB + 2 * KT * (CE + CL)) * delta * Shao.standardNormalTail x := by ring
+       _ ≤ C * delta * Shao.standardNormalTail x := by
+         have hh := mul_le_mul_of_nonneg_right

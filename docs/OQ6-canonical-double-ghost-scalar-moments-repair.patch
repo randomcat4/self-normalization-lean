@@ -1,0 +1,60 @@
+--- original/CanonicalDoubleGhostScalarMoments.lean
++++ repair-01/CanonicalDoubleGhostScalarMoments.lean
+@@ -33,7 +33,7 @@
+ 
+ theorem halfSumCLM_apply (n : ℕ) (v : EuclideanSpace ℝ (Fin n)) :
+   halfSumCLM n v = (∑ i : Fin n, v i) / 2 := by
+-  simp [halfSumCLM, PiLp.proj, PiLp.projₗ, smul_eq_mul, div_eq_mul, mul_comm]
++  simp [halfSumCLM, PiLp.proj, PiLp.projₗ, smul_eq_mul, div_eq_mul_inv, mul_comm]
+ 
+ private theorem originalHalf_eq_halfSumCLM (n : ℕ) {Ω : Type*}
+     (r : Ω → Ω → ℝ) (x : Fin n → Ω) :
+@@ -125,15 +125,23 @@
+       have h22 : Measurable (Function.uncurry r ∘ corner22 i j) := by
+         apply hr.comp
+         exact ((measurable_pi_apply i).snd).prodMk ((measurable_pi_apply j).snd)
+-      simpa only [ghostEntry, ghostMatrix, ite_eq_right hij, Function.comp_def,
+-        Function.uncurry, corner11, corner21, corner12, corner22,
+-        Pi.sub_apply, Pi.add_apply] using ((h11.sub h21).sub h12).add h22
++      change Measurable (fun z : Fin n → Ω × Ω => ghostMatrix n r z i j)
++      simp only [ghostMatrix, ite_eq_right hij]
++      convert ((h11.sub h21).sub h12).add h22 using 1
++      funext z
++      simp only [Function.comp_def, Function.uncurry, corner11, corner21, corner12,
++        corner22, Pi.sub_apply, Pi.add_apply]
+   have hG : Measurable (ghostHalf n r) := by
++    change Measurable (fun z : Fin n → Ω × Ω => ghostHalf n r z)
+     simp only [ghostHalf, quadratic, mul_one]
+     change Measurable (fun z : Fin n → Ω × Ω =>
+       (∑ i : Fin n, ∑ j : Fin n, ghostEntry i j z) / 2)
+     fun_prop
+-  have hLeft : Measurable leftAbs := hG.abs
++  have hLeft : Measurable leftAbs := by
++    change Measurable (fun z : Fin n → Ω × Ω => |ghostHalf n r z|)
++    simpa only [Real.norm_eq_abs] using
++      (show Measurable (fun z : Fin n → Ω × Ω => ‖ghostHalf n r z‖) from
++        continuous_norm.measurable.comp hG)
+   have hSwap (z : Fin n → Ω × Ω) :
+       ghostHalf n r (swapSample n s z) = signedHalf z := by
+     dsimp only [ghostHalf, signedHalf, quadratic]
+@@ -240,7 +248,7 @@
+         exact Finset.sum_le_sum (fun i _ => Finset.sum_le_sum (fun j _ => hProduct i j))
+       _ = (n : ℝ) * weightEnergy n W := by
+         dsimp only [squareEntry, weightEnergy]
+-        simp_rw [div_eq_mul, add_mul, Finset.sum_add_distrib]
++        simp_rw [div_eq_mul_inv, add_mul, Finset.sum_add_distrib]
+         simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+           ← Finset.mul_sum, ← Finset.sum_mul]
+         ring
+@@ -536,7 +544,10 @@
+     by_cases hij : i = j
+     · subst j
+       rfl
+-    · simpa only [originalMatrix, ite_eq_right hij, ite_eq_right hij.symm] using hsym (x i) (x j)
++    · have hji : j ≠ i := by
++        intro h
++        exact hij h.symm
++      simpa only [originalMatrix, ite_eq_right hij, ite_eq_right hji] using hsym (x i) (x j)
+   have hBridge := quadratic_eq_two_upper n originalMatrix (fun _ : Fin n => (1 : ℝ))
+     hdiag hsymMatrix
+   have hUpper : (∑ i : Fin n, ∑ j : Fin n,
