@@ -1,0 +1,2286 @@
+{
+  "schema": "oq56-unit178-frozen-declarations-values-v1",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION",
+  "utc": "2026-10-25T01:21:35.644226+00:00",
+  "unit": 178,
+  "module": "Shao.OQ6.ConditionalStandardizedPMoment",
+  "namespace": "Shao.OQ6.ConditionalStandardizedPMoment",
+  "raw_prefix": "import Shao.OQ6.ConditionalVarianceMean\nimport Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm\nimport Mathlib.MeasureTheory.Integral.DominatedConvergence\nimport Mathlib.Analysis.SpecialFunctions.Pow.Continuity\nimport Mathlib.Analysis.SpecialFunctions.Pow.Deriv\nimport Mathlib.Analysis.Calculus.MeanValue\nimport Mathlib.Analysis.MeanInequalitiesPow\nimport Mathlib.Data.Nat.Find\n\nset_option autoImplicit false\nset_option maxHeartbeats 800000\n\nnamespace Shao.OQ6.ConditionalStandardizedPMoment\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory\n\n",
+  "raw_suffix": "\nend Shao.OQ6.ConditionalStandardizedPMoment\n",
+  "proofSeparator": " := by\n",
+  "declarations": [
+    {
+      "name": "actual_conditional_standardized_pmoment",
+      "header": "theorem actual_conditional_standardized_pmoment\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (w : Ω → ℝ)\n    (hw : Measurable w)\n    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)\n    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)\n    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)\n    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),\n      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤\n        w z.1 * w z.2)\n    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hgp : Integrable\n      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ) :\n    let Np : ℕ := Nat.ceil (p / α)\n    let Aexpp : ℝ := (Np.factorial : ℝ) / τ ^ Np\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let B : ℝ := Real.rpow β (1 / p)\n    let Wp : ℝ := Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)\n    0 < Aexpp ∧\n      (∀ s : ℝ, 1 ≤ s →\n        Real.rpow s p ≤ Aexpp * Real.exp (τ * Real.rpow s α)) ∧\n      Integrable (fun o => Real.rpow |w o| p) μ ∧\n      MemLp w (ENNReal.ofReal p) μ ∧\n      MemLp g (ENNReal.ofReal p) μ ∧ 1 ≤ β ∧\n      ∀ eps : ℝ, 0 < eps →\n      ∃ N0 : ℕ, 1 ≤ N0 ∧\n      ∀ R : ℝ, (N0 : ℝ) ≤ R →\n      let C : Set Ω := {o : Ω | w o ≤ R}\n      let π : ℝ := μ.real Cᶜ\n      let d : ℝ := μ.real C\n      let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C\n      let b : ℝ := ∫ o in Cᶜ, w o ∂μ\n      let c : ℝ := b / d\n      let u : ℝ := ∫ o, g o ∂ν\n      let a : Ω → ℝ := fun o => ∫ y, r o y ∂ν\n      let θ : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)\n      let Tp : ℝ := ∫ o in Cᶜ, Real.rpow |g o| p ∂μ\n      let Mp : ℝ := ∫ o, Real.rpow |g o| p ∂ν\n      (1 / 2 : ℝ) ≤ d ∧ d = 1 - π ∧\n        IsProbabilityMeasure ν ∧ ν ≪ μ ∧ ν C = 1 ∧\n        MemLp w (ENNReal.ofReal p) ν ∧\n        MemLp g (ENNReal.ofReal p) ν ∧\n        MemLp a (ENNReal.ofReal p) ν ∧\n        Integrable (fun o => Real.rpow |g o| p) ν ∧\n        Mp = (β - Tp) / d ∧ 0 ≤ Tp ∧ Tp ≤ eps ∧ |Mp - β| ≤ eps ∧\n        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →\n        let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y\n        let q : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)\n        let G : Ω → ℝ := fun o => (∫ y, H o y ∂ν) - q\n        let σ2 : ℝ := ∫ o, G o ^ 2 ∂ν\n        let σ : ℝ := Real.sqrt σ2\n        let βR : ℝ := ∫ o, Real.rpow |G o / σ| p ∂ν\n        let Δp : ℝ :=\n          Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)\n        Measurable G ∧ MemLp G (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o - g o| p) ν ∧\n          Δp ≤ |u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2 ∧\n          Δp ≤ eps ∧\n          (1 / 2 : ℝ) ≤ σ2 ∧ σ2 ≤ (3 / 2 : ℝ) ∧\n          |σ2 - 1| ≤ eps ∧ 0 < σ ∧\n          MemLp (fun o => G o / σ) (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o / σ| p) ν ∧\n          |βR - β| ≤ eps ∧ βR ≤ 2 * β",
+      "headerSHA256": "d05d15091377f6c85073789e7842814e1331c7134ea08703208e36d986fb17a0",
+      "headerBytes": 3545
+    }
+  ],
+  "fullConstructiveValues": {
+    "schema": "oq56-standardized-pmoment-primary-adapted-declaration-contract-v1",
+    "status": "UNFROZEN_COMPLETE_PROPOSAL_ADAPTED_TO_SELECTED_PRIMARY_NO_IMPLEMENTATION",
+    "unit_tentative": 178,
+    "module_proposed": "Shao.OQ6.ConditionalStandardizedPMoment",
+    "namespace_proposed": "Shao.OQ6.ConditionalStandardizedPMoment",
+    "public_declarations": [
+      {
+        "name": "actual_conditional_standardized_pmoment",
+        "kind": "theorem",
+        "ambient_types_assumptions_full_raw": "theorem actual_conditional_standardized_pmoment\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (w : Ω → ℝ)\n    (hw : Measurable w)\n    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)\n    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)\n    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)\n    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),\n      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤\n        w z.1 * w z.2)\n    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hgp : Integrable\n      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ) :",
+        "target_with_all_dependent_lets_full_raw": "    let Np : ℕ := Nat.ceil (p / α)\n    let Aexpp : ℝ := (Np.factorial : ℝ) / τ ^ Np\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let B : ℝ := Real.rpow β (1 / p)\n    let Wp : ℝ := Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)\n    0 < Aexpp ∧\n      (∀ s : ℝ, 1 ≤ s →\n        Real.rpow s p ≤ Aexpp * Real.exp (τ * Real.rpow s α)) ∧\n      Integrable (fun o => Real.rpow |w o| p) μ ∧\n      MemLp w (ENNReal.ofReal p) μ ∧\n      MemLp g (ENNReal.ofReal p) μ ∧ 1 ≤ β ∧\n      ∀ eps : ℝ, 0 < eps →\n      ∃ N0 : ℕ, 1 ≤ N0 ∧\n      ∀ R : ℝ, (N0 : ℝ) ≤ R →\n      let C : Set Ω := {o : Ω | w o ≤ R}\n      let π : ℝ := μ.real Cᶜ\n      let d : ℝ := μ.real C\n      let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C\n      let b : ℝ := ∫ o in Cᶜ, w o ∂μ\n      let c : ℝ := b / d\n      let u : ℝ := ∫ o, g o ∂ν\n      let a : Ω → ℝ := fun o => ∫ y, r o y ∂ν\n      let θ : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)\n      let Tp : ℝ := ∫ o in Cᶜ, Real.rpow |g o| p ∂μ\n      let Mp : ℝ := ∫ o, Real.rpow |g o| p ∂ν\n      (1 / 2 : ℝ) ≤ d ∧ d = 1 - π ∧\n        IsProbabilityMeasure ν ∧ ν ≪ μ ∧ ν C = 1 ∧\n        MemLp w (ENNReal.ofReal p) ν ∧\n        MemLp g (ENNReal.ofReal p) ν ∧\n        MemLp a (ENNReal.ofReal p) ν ∧\n        Integrable (fun o => Real.rpow |g o| p) ν ∧\n        Mp = (β - Tp) / d ∧ 0 ≤ Tp ∧ Tp ≤ eps ∧ |Mp - β| ≤ eps ∧\n        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →\n        let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y\n        let q : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)\n        let G : Ω → ℝ := fun o => (∫ y, H o y ∂ν) - q\n        let σ2 : ℝ := ∫ o, G o ^ 2 ∂ν\n        let σ : ℝ := Real.sqrt σ2\n        let βR : ℝ := ∫ o, Real.rpow |G o / σ| p ∂ν\n        let Δp : ℝ :=\n          Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)\n        Measurable G ∧ MemLp G (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o - g o| p) ν ∧\n          Δp ≤ |u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2 ∧\n          Δp ≤ eps ∧\n          (1 / 2 : ℝ) ≤ σ2 ∧ σ2 ≤ (3 / 2 : ℝ) ∧\n          |σ2 - 1| ≤ eps ∧ 0 < σ ∧\n          MemLp (fun o => G o / σ) (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o / σ| p) ν ∧\n          |βR - β| ≤ eps ∧ βR ≤ 2 * β := by\n",
+        "complete_raw_header_with_proof_separator": "theorem actual_conditional_standardized_pmoment\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (w : Ω → ℝ)\n    (hw : Measurable w)\n    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)\n    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)\n    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)\n    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),\n      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤\n        w z.1 * w z.2)\n    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hgp : Integrable\n      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ) :\n    let Np : ℕ := Nat.ceil (p / α)\n    let Aexpp : ℝ := (Np.factorial : ℝ) / τ ^ Np\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let B : ℝ := Real.rpow β (1 / p)\n    let Wp : ℝ := Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)\n    0 < Aexpp ∧\n      (∀ s : ℝ, 1 ≤ s →\n        Real.rpow s p ≤ Aexpp * Real.exp (τ * Real.rpow s α)) ∧\n      Integrable (fun o => Real.rpow |w o| p) μ ∧\n      MemLp w (ENNReal.ofReal p) μ ∧\n      MemLp g (ENNReal.ofReal p) μ ∧ 1 ≤ β ∧\n      ∀ eps : ℝ, 0 < eps →\n      ∃ N0 : ℕ, 1 ≤ N0 ∧\n      ∀ R : ℝ, (N0 : ℝ) ≤ R →\n      let C : Set Ω := {o : Ω | w o ≤ R}\n      let π : ℝ := μ.real Cᶜ\n      let d : ℝ := μ.real C\n      let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C\n      let b : ℝ := ∫ o in Cᶜ, w o ∂μ\n      let c : ℝ := b / d\n      let u : ℝ := ∫ o, g o ∂ν\n      let a : Ω → ℝ := fun o => ∫ y, r o y ∂ν\n      let θ : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)\n      let Tp : ℝ := ∫ o in Cᶜ, Real.rpow |g o| p ∂μ\n      let Mp : ℝ := ∫ o, Real.rpow |g o| p ∂ν\n      (1 / 2 : ℝ) ≤ d ∧ d = 1 - π ∧\n        IsProbabilityMeasure ν ∧ ν ≪ μ ∧ ν C = 1 ∧\n        MemLp w (ENNReal.ofReal p) ν ∧\n        MemLp g (ENNReal.ofReal p) ν ∧\n        MemLp a (ENNReal.ofReal p) ν ∧\n        Integrable (fun o => Real.rpow |g o| p) ν ∧\n        Mp = (β - Tp) / d ∧ 0 ≤ Tp ∧ Tp ≤ eps ∧ |Mp - β| ≤ eps ∧\n        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →\n        let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y\n        let q : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)\n        let G : Ω → ℝ := fun o => (∫ y, H o y ∂ν) - q\n        let σ2 : ℝ := ∫ o, G o ^ 2 ∂ν\n        let σ : ℝ := Real.sqrt σ2\n        let βR : ℝ := ∫ o, Real.rpow |G o / σ| p ∂ν\n        let Δp : ℝ :=\n          Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)\n        Measurable G ∧ MemLp G (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o - g o| p) ν ∧\n          Δp ≤ |u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2 ∧\n          Δp ≤ eps ∧\n          (1 / 2 : ℝ) ≤ σ2 ∧ σ2 ≤ (3 / 2 : ℝ) ∧\n          |σ2 - 1| ≤ eps ∧ 0 < σ ∧\n          MemLp (fun o => G o / σ) (ENNReal.ofReal p) ν ∧\n          Integrable (fun o => Real.rpow |G o / σ| p) ν ∧\n          |βR - β| ≤ eps ∧ βR ≤ 2 * β := by\n",
+        "header_sha256": "c980a588d8f9e4e49ba04372ab5a89fe513df1553b1d4e11669756815889d132"
+      }
+    ],
+    "raw_prefix": "import Shao.OQ6.ConditionalVarianceMean\nimport Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm\nimport Mathlib.MeasureTheory.Integral.DominatedConvergence\nimport Mathlib.Analysis.SpecialFunctions.Pow.Continuity\nimport Mathlib.Analysis.SpecialFunctions.Pow.Deriv\nimport Mathlib.Analysis.Calculus.MeanValue\nimport Mathlib.Analysis.MeanInequalitiesPow\nimport Mathlib.Data.Nat.Find\n\nset_option autoImplicit false\nset_option maxHeartbeats 800000\n\nnamespace Shao.OQ6.ConditionalStandardizedPMoment\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory\n\n",
+    "header_typed_full_values": [
+      {
+        "name": "Np",
+        "type": "ℕ",
+        "value": "Nat.ceil (p / α)"
+      },
+      {
+        "name": "Aexpp",
+        "type": "ℝ",
+        "value": "(Np.factorial : ℝ) / τ ^ Np"
+      },
+      {
+        "name": "g",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, h o y ∂μ"
+      },
+      {
+        "name": "r",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => h o y - g o - g y"
+      },
+      {
+        "name": "β",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂μ"
+      },
+      {
+        "name": "B",
+        "type": "ℝ",
+        "value": "Real.rpow β (1 / p)"
+      },
+      {
+        "name": "Wp",
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)"
+      },
+      {
+        "name": "C",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ R}"
+      },
+      {
+        "name": "π",
+        "type": "ℝ",
+        "value": "μ.real Cᶜ"
+      },
+      {
+        "name": "d",
+        "type": "ℝ",
+        "value": "μ.real C"
+      },
+      {
+        "name": "ν",
+        "type": "Measure Ω",
+        "value": "(μ C)⁻¹ • μ.restrict C"
+      },
+      {
+        "name": "b",
+        "type": "ℝ",
+        "value": "∫ o in Cᶜ, w o ∂μ"
+      },
+      {
+        "name": "c",
+        "type": "ℝ",
+        "value": "b / d"
+      },
+      {
+        "name": "u",
+        "type": "ℝ",
+        "value": "∫ o, g o ∂ν"
+      },
+      {
+        "name": "a",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, r o y ∂ν"
+      },
+      {
+        "name": "θ",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)"
+      },
+      {
+        "name": "Tp",
+        "type": "ℝ",
+        "value": "∫ o in Cᶜ, Real.rpow |g o| p ∂μ"
+      },
+      {
+        "name": "Mp",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂ν"
+      },
+      {
+        "name": "H",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => g o + g y + lam * r o y"
+      },
+      {
+        "name": "q",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)"
+      },
+      {
+        "name": "G",
+        "type": "Ω → ℝ",
+        "value": "fun o => (∫ y, H o y ∂ν) - q"
+      },
+      {
+        "name": "σ2",
+        "type": "ℝ",
+        "value": "∫ o, G o ^ 2 ∂ν"
+      },
+      {
+        "name": "σ",
+        "type": "ℝ",
+        "value": "Real.sqrt σ2"
+      },
+      {
+        "name": "βR",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |G o / σ| p ∂ν"
+      },
+      {
+        "name": "Δp",
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)"
+      }
+    ],
+    "expected_proof_local_repeated_header_values": [
+      {
+        "name": "Np",
+        "type": "ℕ",
+        "value": "Nat.ceil (p / α)"
+      },
+      {
+        "name": "Aexpp",
+        "type": "ℝ",
+        "value": "(Np.factorial : ℝ) / τ ^ Np"
+      },
+      {
+        "name": "g",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, h o y ∂μ"
+      },
+      {
+        "name": "r",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => h o y - g o - g y"
+      },
+      {
+        "name": "β",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂μ"
+      },
+      {
+        "name": "B",
+        "type": "ℝ",
+        "value": "Real.rpow β (1 / p)"
+      },
+      {
+        "name": "Wp",
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)"
+      },
+      {
+        "name": "C",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ R}"
+      },
+      {
+        "name": "π",
+        "type": "ℝ",
+        "value": "μ.real Cᶜ"
+      },
+      {
+        "name": "d",
+        "type": "ℝ",
+        "value": "μ.real C"
+      },
+      {
+        "name": "ν",
+        "type": "Measure Ω",
+        "value": "(μ C)⁻¹ • μ.restrict C"
+      },
+      {
+        "name": "b",
+        "type": "ℝ",
+        "value": "∫ o in Cᶜ, w o ∂μ"
+      },
+      {
+        "name": "c",
+        "type": "ℝ",
+        "value": "b / d"
+      },
+      {
+        "name": "u",
+        "type": "ℝ",
+        "value": "∫ o, g o ∂ν"
+      },
+      {
+        "name": "a",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, r o y ∂ν"
+      },
+      {
+        "name": "θ",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)"
+      },
+      {
+        "name": "Tp",
+        "type": "ℝ",
+        "value": "∫ o in Cᶜ, Real.rpow |g o| p ∂μ"
+      },
+      {
+        "name": "Mp",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂ν"
+      },
+      {
+        "name": "H",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => g o + g y + lam * r o y"
+      },
+      {
+        "name": "q",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)"
+      },
+      {
+        "name": "G",
+        "type": "Ω → ℝ",
+        "value": "fun o => (∫ y, H o y ∂ν) - q"
+      },
+      {
+        "name": "σ2",
+        "type": "ℝ",
+        "value": "∫ o, G o ^ 2 ∂ν"
+      },
+      {
+        "name": "σ",
+        "type": "ℝ",
+        "value": "Real.sqrt σ2"
+      },
+      {
+        "name": "βR",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |G o / σ| p ∂ν"
+      },
+      {
+        "name": "Δp",
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)"
+      }
+    ],
+    "additional_expected_proof_local_typed_full_values": [
+      {
+        "name": "W2",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)"
+      },
+      {
+        "name": "Cvar",
+        "type": "ℝ",
+        "value": "32 * (1 + B ^ 2 + W2 ^ 2)"
+      },
+      {
+        "name": "t",
+        "type": "ℝ",
+        "value": "1 - 1 / p"
+      },
+      {
+        "name": "e",
+        "type": "ℝ",
+        "value": "1 - 2 / p"
+      },
+      {
+        "name": "Mpow",
+        "type": "ℝ",
+        "value": "2 * (B + 1)"
+      },
+      {
+        "name": "Lpow",
+        "type": "ℝ",
+        "value": "p * Real.rpow Mpow (p - 1)"
+      },
+      {
+        "name": "piTail",
+        "type": "ℝ → ℝ",
+        "value": "fun s => μ.real {o : Ω | s < w o}"
+      },
+      {
+        "name": "bTail",
+        "type": "ℝ → ℝ",
+        "value": "fun s => ∫ o in {o : Ω | s < w o}, w o ∂μ"
+      },
+      {
+        "name": "pTail",
+        "type": "ℝ → ℝ",
+        "value": "fun s => ∫ o in {o : Ω | s < w o}, Real.rpow |g o| p ∂μ"
+      },
+      {
+        "name": "errG",
+        "type": "ℝ → ℝ",
+        "value": "fun s => 2 * B * Real.rpow (piTail s) t + Real.rpow 2 (1 + 1 / p) * Wp * bTail s + 4 * (bTail s) ^ 2"
+      },
+      {
+        "name": "errRoot",
+        "type": "ℝ → ℝ",
+        "value": "fun s => Real.rpow (2 * (β * piTail s + pTail s)) (1 / p)"
+      },
+      {
+        "name": "errVar",
+        "type": "ℝ → ℝ",
+        "value": "fun s => Cvar * (Real.rpow (piTail s) e + bTail s + (bTail s) ^ 2)"
+      },
+      {
+        "name": "errStd",
+        "type": "ℝ → ℝ",
+        "value": "fun s => 2 * (errG s + errRoot s + B * errVar s)"
+      },
+      {
+        "name": "N0",
+        "type": "ℕ",
+        "value": "Nat.find hTailSmall"
+      }
+    ],
+    "all_inline_typed_full_value_families": [
+      {
+        "type": "ℝ",
+        "value": "p / 2",
+        "scope": "Hölder on original g square",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "p / (p - 2)",
+        "scope": "conjugate exponent, p > 2",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "p / (p - 1)",
+        "scope": "conjugate exponent, p > 1",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "ENNReal.toReal (μ {o : Ω | s < w o})",
+        "scope": "same source tail real mass",
+        "proof_universal_parameters": [
+          "s : ℝ"
+        ]
+      },
+      {
+        "type": "Set Ω",
+        "value": "{o : Ω | s < w o}",
+        "scope": "strict source tail family",
+        "proof_universal_parameters": [
+          "s : ℝ"
+        ]
+      },
+      {
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ s}",
+        "scope": "closed source cutoff family",
+        "proof_universal_parameters": [
+          "s : ℝ"
+        ]
+      },
+      {
+        "type": "Measure Ω",
+        "value": "μ.restrict {o : Ω | s < w o}",
+        "scope": "integer dominated convergence and Hölder restrictions",
+        "proof_universal_parameters": [
+          "s : ℝ"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |w o| p",
+        "scope": "source and conditional p-integrability",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Aexpp * Real.exp (τ * Real.rpow (w o) α)",
+        "scope": "source exponential dominator",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |g o| p",
+        "scope": "actual projection p-moment",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => w o ^ 2",
+        "scope": "inherited actual W2",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => g o ^ 2",
+        "scope": "original unit second moment",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o|",
+        "scope": "integrable dominator for deleted w",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun _ => (1 : ℝ)",
+        "scope": "integrable dominator for deleted mass",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => c * w o",
+        "scope": "AE domination of actual a",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |a o| p",
+        "scope": "derive conditional p-integrability",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => g o - u + lam * (a o - θ)",
+        "scope": "actual G formula, only AE",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => G o - g o",
+        "scope": "actual projection perturbation",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |G o - g o| p",
+        "scope": "finite perturbation p-integral",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |G o| p",
+        "scope": "actual G p-integral",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => G o ^ 2",
+        "scope": "actual F2 variance",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => G o / σ",
+        "scope": "actual positive standardization",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |G o / σ| p",
+        "scope": "actual standardized p-moment",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun _ => u",
+        "scope": "probability constant p-norm",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun _ => θ",
+        "scope": "probability constant p-norm",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => f o + k o",
+        "scope": "Minkowski finite-sum argument",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => f o - k o",
+        "scope": "reverse triangle argument",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |f o + k o| p",
+        "scope": "sum integrability via convex power bound",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |f o + k o| (p - 1)",
+        "scope": "Holder dual test",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => v * f o",
+        "scope": "scalar norm identity",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |f o| p",
+        "scope": "universal finite-p-integral test",
+        "proof_universal_parameters": [
+          "f k : Ω → ℝ",
+          "v : ℝ",
+          "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+        ]
+      },
+      {
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |f o| p ∂ν) (1 / p)",
+        "scope": "direct real Lp norm expression; no quotient data",
+        "proof_universal_parameters": [
+          "f : Ω → ℝ"
+        ]
+      },
+      {
+        "type": "ℝ",
+        "value": "Real.rpow Mp (1 / p)",
+        "scope": "conditional g norm",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |G o| p ∂ν) (1 / p)",
+        "scope": "actual G norm",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "Real.rpow (∫ o, Real.rpow |G o| p ∂ν) (1 / p) / σ",
+        "scope": "actual standardized G norm",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "|u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2",
+        "scope": "finite F1 bound",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ → ℝ",
+        "value": "fun z => Real.rpow z p",
+        "scope": "power MVT on fixed nonnegative interval",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ → ℝ",
+        "value": "fun z => p * Real.rpow z (p - 1)",
+        "scope": "exact derivative bound on same interval",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "Ω → ℝ",
+        "value": "({o : Ω | (k : ℝ) < w o}).indicator f",
+        "scope": "integer tail masks",
+        "proof_universal_parameters": [
+          "k : ℕ",
+          "f : Ω → ℝ, instantiated only constant 1, w, and Real.rpow |g| p"
+        ]
+      },
+      {
+        "type": "ℕ → ℝ",
+        "value": "fun k => piTail (k : ℝ)",
+        "scope": "DCT scalar tail sequence",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℕ → ℝ",
+        "value": "fun k => bTail (k : ℝ)",
+        "scope": "DCT scalar tail sequence",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℕ → ℝ",
+        "value": "fun k => pTail (k : ℝ)",
+        "scope": "DCT scalar tail sequence",
+        "proof_universal_parameters": []
+      },
+      {
+        "type": "ℝ",
+        "value": "MeasureTheory.lpNorm f (ENNReal.ofReal p) ν",
+        "scope": "Inline only after actual R with d>=1/2 and actual probability ν=(μ C)^(-1) smul μ.restrict C. Original p>2, same original actual data. No named alias, no lpNorm at a freely chosen law or at source μ.",
+        "proof_universal_parameters": [
+          "f : Ω → ℝ, bound only in a local universal Prop proof",
+          "actual instances only original g,w,a,G; G-g; G/σ after σ>0; original constant functions 1,u,θ; and the original already-listed additions/subtractions/scalar multiples of these functions at original scalars lam,c,σ^(-1) and their listed scalar compositions"
+        ],
+        "not_independent_data": true,
+        "named_alias_allowed": false
+      }
+    ],
+    "proof_only_propositions_not_data_aliases": [
+      {
+        "name": "hTailSmall",
+        "type_full": "∃ k : ℕ, 1 ≤ k ∧ piTail (k : ℝ) ≤ (1 / 2 : ℝ) ∧ pTail (k : ℝ) ≤ eps ∧ 2 * (β * piTail (k : ℝ) + pTail (k : ℝ)) ≤ eps ∧ errG (k : ℝ) ≤ eps ∧ errVar (k : ℝ) ≤ min (1 / 2 : ℝ) eps ∧ errG (k : ℝ) + errRoot (k : ℝ) ≤ 1 ∧ Lpow * errStd (k : ℝ) ≤ min eps (β / 2)",
+        "role": "Derived from source scalar tails tending to zero, positivity of eps and proved beta>=1; no G/sigma/target moment appears"
+      },
+      {
+        "name": "hLam",
+        "type_full": "0 ≤ lam ∧ lam ≤ 1",
+        "role": "name of the existing public implication premise after introducing lam; no new assumption"
+      },
+      {
+        "name": "hN0",
+        "type_full": "1 ≤ N0 ∧ piTail (N0 : ℝ) ≤ (1 / 2 : ℝ) ∧ pTail (N0 : ℝ) ≤ eps ∧ 2 * (β * piTail (N0 : ℝ) + pTail (N0 : ℝ)) ≤ eps ∧ errG (N0 : ℝ) ≤ eps ∧ errVar (N0 : ℝ) ≤ min (1 / 2 : ℝ) eps ∧ errG (N0 : ℝ) + errRoot (N0 : ℝ) ≤ 1 ∧ Lpow * errStd (N0 : ℝ) ≤ min eps (β / 2)",
+        "role": "Nat.find_spec hTailSmall"
+      },
+      {
+        "name": "hCarrierConsumed",
+        "type_full": "IsProbabilityMeasure ν ∧ ν ≪ μ ∧ ν C = 1 ∧ (∀ f : Ω → ℝ, Integrable f μ → Integrable f ν ∧ (∫ o, f o ∂ν) = (∫ o in C, f o ∂μ) / d) ∧ (∀ᵐ o ∂μ, |a o| ≤ c * w o) ∧ |θ| ≤ c ^ 2 ∧ Measurable G ∧ (∀ᵐ o ∂μ, G o = g o - u + lam * (a o - θ))",
+        "role": "Derived conjunction/subfacts of175 at the identical actual data after d>0; not a new premise or Type-valued alias"
+      },
+      {
+        "name": "hF2Consumed",
+        "type_full": "|σ2 - 1| ≤ Cvar * (Real.rpow π e + b + b ^ 2)",
+        "role": "Derived at identical actual data from qualified176 final source78762108 and parent evidence acb07896; not a new assumption"
+      },
+      {
+        "name": "hBeta",
+        "type_full": "1 ≤ β",
+        "role": "Proved from original actual second moment and finite p moment"
+      },
+      {
+        "name": "hWpIntegral",
+        "type_full": "Integrable (fun o => Real.rpow |w o| p) μ",
+        "role": "Derived from original exponential premise"
+      },
+      {
+        "name": "hMinkowski",
+        "type_full": "∀ f k : Ω → ℝ, AEStronglyMeasurable f ν → AEStronglyMeasurable k ν → Integrable (fun o => Real.rpow |f o| p) ν → Integrable (fun o => Real.rpow |k o| p) ν → Real.rpow (∫ o, Real.rpow |f o + k o| p ∂ν) (1 / p) ≤ Real.rpow (∫ o, Real.rpow |f o| p ∂ν) (1 / p) + Real.rpow (∫ o, Real.rpow |k o| p ∂ν) (1 / p)",
+        "role": "Same full original local Prop target, now paid by complete lpNorm_add_le and hLpNormIntegral after converting both original finite p-integrals to MemLp. f,k remain only local proof binders."
+      },
+      {
+        "name": "hRootDifference",
+        "type_full": "∀ x y : ℝ, 0 ≤ x → 0 ≤ y → |Real.rpow x (1 / p) - Real.rpow y (1 / p)| ≤ Real.rpow |x - y| (1 / p)",
+        "role": "Local scalar proof; complete subadditivity derivation in note"
+      },
+      {
+        "name": "hPowerDifference",
+        "type_full": "∀ x y : ℝ, 0 ≤ x → x ≤ Mpow → 0 ≤ y → y ≤ Mpow → |Real.rpow x p - Real.rpow y p| ≤ Lpow * |x - y|",
+        "role": "Local scalar MVT with derivative bound; no target moment premise"
+      },
+      {
+        "name": "hPiLimit",
+        "type_full": "Filter.Tendsto (fun k : ℕ => piTail (k : ℝ)) Filter.atTop (nhds 0)",
+        "role": "Original-law dominated convergence for indicators"
+      },
+      {
+        "name": "hBtailLimit",
+        "type_full": "Filter.Tendsto (fun k : ℕ => bTail (k : ℝ)) Filter.atTop (nhds 0)",
+        "role": "Original-law dominated convergence dominated by abs w"
+      },
+      {
+        "name": "hPtailLimit",
+        "type_full": "Filter.Tendsto (fun k : ℕ => pTail (k : ℝ)) Filter.atTop (nhds 0)",
+        "role": "Original-law dominated convergence dominated by abs g to p"
+      },
+      {
+        "name": "hMpIdentity",
+        "type_full": "Mp = (β - Tp) / d",
+        "role": "Exact normalized restriction and complement split"
+      },
+      {
+        "name": "hSigmaPositive",
+        "type_full": "0 < σ ∧ σ ^ 2 = σ2",
+        "role": "Derived from actual variance >=1/2; normalization uses this only after threshold"
+      },
+      {
+        "name": "hLpNormIntegral",
+        "type_full": "∀ f : Ω → ℝ, AEStronglyMeasurable f ν → MeasureTheory.lpNorm f (ENNReal.ofReal p) ν = Real.rpow (∫ o, Real.rpow |f o| p ∂ν) (1 / p)",
+        "role": "Full primary lpNorm_eq_integral_norm_rpow_toReal with original p>0 finite, ENNReal.toReal_ofReal, Real.norm_eq_abs, Real.rpow_eq_pow, one_div. Prop-only bridge; no named Type-valued norm alias. Instances only new inline-family scope."
+      },
+      {
+        "name": "hRpowProduct",
+        "type_full": "∀ x y q : ℝ, 0 ≤ x → 0 ≤ y → Real.rpow (x * y) q = Real.rpow x q * Real.rpow y q",
+        "role": "Complete Real.mul_rpow at original nonnegative bases; actual q=p or1/p. Prop-only scalar normalization; no new data."
+      },
+      {
+        "name": "hRpowQuotient",
+        "type_full": "∀ A d q : ℝ, 0 ≤ A → 0 < d → Real.rpow (A / d) q = Real.rpow A q / Real.rpow d q",
+        "role": "Complete Real.div_rpow at original actual source w p-integral and d>0; actual q=1/p. Prop-only scalar normalization; no new data."
+      },
+      {
+        "name": "hTwoRootCoefficient",
+        "type_full": "Real.rpow (2 : ℝ) (1 + 1 / p) = 2 * Real.rpow (2 : ℝ) (1 / p)",
+        "role": "Complete Real.rpow_add at positive base2, exponents1 and1/p; normalize with Real.rpow_one/Real.rpow_eq_pow. Exact original errG coefficient only; no new data or constant."
+      }
+    ],
+    "constructive_existential_witnesses": [
+      {
+        "binder": "N0 : ℕ",
+        "type": "ℕ",
+        "full_value": "Nat.find hTailSmall",
+        "full_defining_predicate": "∃ k : ℕ, 1 ≤ k ∧ piTail (k : ℝ) ≤ (1 / 2 : ℝ) ∧ pTail (k : ℝ) ≤ eps ∧ 2 * (β * piTail (k : ℝ) + pTail (k : ℝ)) ≤ eps ∧ errG (k : ℝ) ≤ eps ∧ errVar (k : ℝ) ≤ min (1 / 2 : ℝ) eps ∧ errG (k : ℝ) + errRoot (k : ℝ) ≤ 1 ∧ Lpow * errStd (k : ℝ) ≤ min eps (β / 2)",
+        "why_noncircular": "Only original scalar piTail,bTail,pTail and fixed original-law constants; target G, sigma and betaR are absent"
+      }
+    ],
+    "new_global_definitions": [],
+    "new_global_instances": [],
+    "new_private_theorems": [],
+    "new_other_declarations": [],
+    "public_conclusion_quantifier_order": "Original fixed model and p -> fixed beta,B,Wp -> every eps>0 -> one N0>=1 -> every real R>=N0 -> actual normalized restriction objects -> every lam in [0,1] -> actual H/q/G/sigma2/sigma/betaR/Delta_p",
+    "finite_F1_bound": "Delta_p <= abs(u) + c * Wp / d^(1/p) + c^2; uniform majorant errG(R) is derived, not assumed",
+    "qualitative_scope": "Deleted g p-mass ->0, conditional original g p-moment ->beta, true G-g Lp norm ->0, true variance ->1 and eventually positive, actual standardized p-moment ->beta uniformly in lam and eventually <=2beta",
+    "no_moment_rate": true,
+    "beta_ge_one_derived_from_original_second": true,
+    "AE_policy": "Source envelope product-AE; w>=1 source-AE; actual a/G formulas source-AE and transported nu-AE; no all-row or pointwise promotion",
+    "pending_dependency_policy": "Qualified175+176 and complete selected primary including real base-product/quotient and fixed coefficient exponent-addition supplements are fully read and byte-bound. Remaining parent exact freeze and explicit separate later Stage2 authorization. No implementation in this task.",
+    "new_data_policy": "No unlisted independently selected function, measure, cutoff, law, assumption or selector. Additional data aliases beyond this full proposal require an affected parent amendment before implementation.",
+    "proof_only_parameters": "f,k,v,s,z and analogous bound variables in universal analytic proof propositions are not new public data or premises. Elementary compositions of listed expressions by +,-,*,abs,rpow, integral, indicator, restriction and scalar multiplication refer only to the same actual data.",
+    "lean_status": "NOT_IMPLEMENTED_NOT_CHECKED",
+    "author_review_status": "NO_INDEPENDENT_REVIEW_CLAIM",
+    "plain_math_full_proof": {
+      "unchanged_stage1": "C:/game/shao lean/drafts/oq56/next-source/oq6-conditional-standardized-pmoment-frontier-01/author-analysis-01/proof-note.md",
+      "sha256": "3e748d5f44fc5fb12df3785aec77f461b533e2bc9729efc0f469dd06d33b07c8",
+      "adaptation": "C:/game/shao lean/drafts/oq56/next-source/oq6-conditional-standardized-pmoment-frontier-01/author-analysis-01/primary-adaptation-01/api-adaptation.md",
+      "mathematical_statement_or_strength_changes": 0
+    },
+    "header_including_proof_separator_sha256": "c980a588d8f9e4e49ba04372ab5a89fe513df1553b1d4e11669756815889d132",
+    "new_imports_only": [
+      "Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm",
+      "Mathlib.MeasureTheory.Integral.DominatedConvergence",
+      "Mathlib.Analysis.SpecialFunctions.Pow.Continuity",
+      "Mathlib.Analysis.SpecialFunctions.Pow.Deriv",
+      "Mathlib.Analysis.Calculus.MeanValue",
+      "Mathlib.Analysis.MeanInequalitiesPow",
+      "Mathlib.Data.Nat.Find"
+    ],
+    "lpNorm_policy": "Only one added typed inline family, no named data alias. Every operational triangle/reverse/scalar use has actual MemLp/integrability already proved; totalized lpNorm zero outside MemLp is never used to discharge a moment.",
+    "AE_domination_policy": "Never apply pointwise lpNorm_mono_real to the source AE a bound. Use finite p-integral domination and the scalar product/quotient identities with their actual nonnegativity/positivity prerequisites.",
+    "upstream_qualification_bindings": {
+      "175": {
+        "path": "C:/game/shao lean/drafts/oq56/unit175/qualified-evidence.json",
+        "sha256": "1dc82a65af844abdf9e2287a993ab0efd91b5f0db61d8c7e347c5b2eb1c28ded",
+        "bytes": 10141
+      },
+      "176": {
+        "path": "C:/game/shao lean/drafts/oq56/unit176/qualified-evidence.json",
+        "sha256": "acb0789624585bfb195cd37e3f9df93c3756b417895277de2c52e47bde99be24",
+        "bytes": 12867
+      },
+      "176_parent_final_intake": {
+        "path": "C:/game/shao lean/drafts/oq56/unit176/parent-final-intake.json",
+        "sha256": "f14e2cd63fefd952f988276cfab1a6b9aeb2ba36028abd5c7e5e2b256038ecdb",
+        "bytes": 2329
+      },
+      "176_source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit176/author-01/stage2/repair-03/ConditionalVarianceMean.lean",
+        "sha256": "78762108ee542e89ea114a5f4047c53cad464a385e58ec7c20fd49a37537cbb8",
+        "bytes": 33321
+      },
+      "old_proof_review_or_Lean_replay": false
+    },
+    "remaining_primary_source_needs": [],
+    "implementation_authorized": false,
+    "derived_counts": {
+      "unique_named_typed_values": 39,
+      "header_typed_values": 25,
+      "additional_named_proof_values": 14,
+      "inline_fulltyped_families": 43,
+      "new_inline_families": 1,
+      "new_named_data_aliases": 0,
+      "constructive_existential_witnesses": 1
+    },
+    "primary_product_division_resolved": {
+      "packet": {
+        "path": "C:/game/shao lean/drafts/oq56/unit178/lead-primary-api-01/real-product-division-source-packet.json",
+        "bytes": 3715,
+        "sha256": "567478c95eb63ce51ef442ddf477c7b343a2afe600dc37e32c55d8b6cd620c17"
+      },
+      "selected_complete_declarations": [
+        "Real.mul_rpow",
+        "Real.div_rpow"
+      ],
+      "first_need_identified": "AE a domination cannot use pointwise lpNorm_mono_real; integral normalization requires base product/quotient rather than exponent-only rpow_mul",
+      "no_new_data_or_imports": true
+    },
+    "selected_primary_coverage_status": "ALL_SELECTED_BEARING_INTERFACES_FULL_SOURCE_AND_CHRONOLOGICAL_CONTEXT_BOUND_NO_OBSERVED_REMAINING_GAP",
+    "primary_fixed_coefficient_resolved": {
+      "packet": {
+        "path": "C:/game/shao lean/drafts/oq56/unit178/lead-primary-api-01/real-exponent-addition-source-packet.json",
+        "bytes": 845,
+        "sha256": "3d22e470349fdc0e52ed99a9a0f67f097055252a5a28d1bdad6a3021d8197352"
+      },
+      "selected_complete_declaration": "Real.rpow_add",
+      "exact_instantiation": "x=2, hx=0<2, y=1, z=1/p; Real.rpow_one and Real.rpow_eq_pow normalize same fixed errG coefficient",
+      "new_data_or_imports": 0,
+      "errG_or_predicate_change": false
+    },
+    "all_named_value_scopes_full": [
+      {
+        "name": "Np",
+        "full_type_value_location": "header_typed_full_values[0]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "Aexpp",
+        "full_type_value_location": "header_typed_full_values[1]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "g",
+        "full_type_value_location": "header_typed_full_values[2]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "r",
+        "full_type_value_location": "header_typed_full_values[3]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "β",
+        "full_type_value_location": "header_typed_full_values[4]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "B",
+        "full_type_value_location": "header_typed_full_values[5]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "Wp",
+        "full_type_value_location": "header_typed_full_values[6]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "C",
+        "full_type_value_location": "header_typed_full_values[7]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "π",
+        "full_type_value_location": "header_typed_full_values[8]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "d",
+        "full_type_value_location": "header_typed_full_values[9]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "ν",
+        "full_type_value_location": "header_typed_full_values[10]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "b",
+        "full_type_value_location": "header_typed_full_values[11]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "c",
+        "full_type_value_location": "header_typed_full_values[12]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "u",
+        "full_type_value_location": "header_typed_full_values[13]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "a",
+        "full_type_value_location": "header_typed_full_values[14]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "θ",
+        "full_type_value_location": "header_typed_full_values[15]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "Tp",
+        "full_type_value_location": "header_typed_full_values[16]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "Mp",
+        "full_type_value_location": "header_typed_full_values[17]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "H",
+        "full_type_value_location": "header_typed_full_values[18]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "q",
+        "full_type_value_location": "header_typed_full_values[19]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "G",
+        "full_type_value_location": "header_typed_full_values[20]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "σ2",
+        "full_type_value_location": "header_typed_full_values[21]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "σ",
+        "full_type_value_location": "header_typed_full_values[22]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "βR",
+        "full_type_value_location": "header_typed_full_values[23]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "Δp",
+        "full_type_value_location": "header_typed_full_values[24]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "W2",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[0]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Cvar",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[1]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "t",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[2]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "e",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[3]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Mpow",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[4]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Lpow",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[5]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "piTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[6]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "bTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[7]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "pTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[8]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errG",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[9]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errRoot",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[10]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errVar",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[11]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errStd",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[12]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "N0",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[13]",
+        "scope_context_id": "scope_05"
+      }
+    ],
+    "all_inline_family_scopes_full": [
+      {
+        "family_index1": 1,
+        "full_type_value_location": "all_inline_typed_full_value_families[0]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 2,
+        "full_type_value_location": "all_inline_typed_full_value_families[1]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 3,
+        "full_type_value_location": "all_inline_typed_full_value_families[2]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 4,
+        "full_type_value_location": "all_inline_typed_full_value_families[3]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 5,
+        "full_type_value_location": "all_inline_typed_full_value_families[4]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 6,
+        "full_type_value_location": "all_inline_typed_full_value_families[5]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 7,
+        "full_type_value_location": "all_inline_typed_full_value_families[6]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 8,
+        "full_type_value_location": "all_inline_typed_full_value_families[7]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 9,
+        "full_type_value_location": "all_inline_typed_full_value_families[8]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 10,
+        "full_type_value_location": "all_inline_typed_full_value_families[9]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 11,
+        "full_type_value_location": "all_inline_typed_full_value_families[10]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 12,
+        "full_type_value_location": "all_inline_typed_full_value_families[11]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 13,
+        "full_type_value_location": "all_inline_typed_full_value_families[12]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 14,
+        "full_type_value_location": "all_inline_typed_full_value_families[13]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 15,
+        "full_type_value_location": "all_inline_typed_full_value_families[14]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 16,
+        "full_type_value_location": "all_inline_typed_full_value_families[15]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 17,
+        "full_type_value_location": "all_inline_typed_full_value_families[16]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 18,
+        "full_type_value_location": "all_inline_typed_full_value_families[17]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 19,
+        "full_type_value_location": "all_inline_typed_full_value_families[18]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 20,
+        "full_type_value_location": "all_inline_typed_full_value_families[19]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 21,
+        "full_type_value_location": "all_inline_typed_full_value_families[20]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 22,
+        "full_type_value_location": "all_inline_typed_full_value_families[21]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 23,
+        "full_type_value_location": "all_inline_typed_full_value_families[22]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 24,
+        "full_type_value_location": "all_inline_typed_full_value_families[23]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 25,
+        "full_type_value_location": "all_inline_typed_full_value_families[24]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 26,
+        "full_type_value_location": "all_inline_typed_full_value_families[25]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 27,
+        "full_type_value_location": "all_inline_typed_full_value_families[26]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 28,
+        "full_type_value_location": "all_inline_typed_full_value_families[27]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 29,
+        "full_type_value_location": "all_inline_typed_full_value_families[28]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 30,
+        "full_type_value_location": "all_inline_typed_full_value_families[29]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 31,
+        "full_type_value_location": "all_inline_typed_full_value_families[30]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 32,
+        "full_type_value_location": "all_inline_typed_full_value_families[31]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 33,
+        "full_type_value_location": "all_inline_typed_full_value_families[32]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 34,
+        "full_type_value_location": "all_inline_typed_full_value_families[33]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 35,
+        "full_type_value_location": "all_inline_typed_full_value_families[34]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 36,
+        "full_type_value_location": "all_inline_typed_full_value_families[35]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 37,
+        "full_type_value_location": "all_inline_typed_full_value_families[36]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 38,
+        "full_type_value_location": "all_inline_typed_full_value_families[37]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 39,
+        "full_type_value_location": "all_inline_typed_full_value_families[38]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 40,
+        "full_type_value_location": "all_inline_typed_full_value_families[39]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 41,
+        "full_type_value_location": "all_inline_typed_full_value_families[40]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 42,
+        "full_type_value_location": "all_inline_typed_full_value_families[41]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 43,
+        "full_type_value_location": "all_inline_typed_full_value_families[42]",
+        "scope_context_id": "scope_12"
+      }
+    ],
+    "scope_context_dictionary_full": {
+      "scope_01": "Original theorem ambient fixed μ,h,w,α,τ,p and source proofs; introduced before eps,N0,R,lam. No conditional data or varying index is consulted.",
+      "scope_02": "After fixed eps>0, original hTailSmall/N0, and an arbitrary real R with N0<=R; before introducing lam. Uses the identical actual closed cutoff and normalized restriction. Analytical probability uses follow proof d>=1/2; the typed expressions are total.",
+      "scope_03": "After the preceding actual R/ν data and arbitrary lam with hLam:0<=lam and lam<=1. σ is the total sqrt of actual σ2; every analytical division by σ occurs only after proving σ2>=1/2 and σ>0. No all-lam pointwise row claim.",
+      "scope_04": "Original fixed ambient μ,h,w,α,τ,p plus exact preceding fixed g,r,β,B,Wp and preceding entries in this additional list; before eps,N0,R,lam. piTail,bTail,pTail,errG,errRoot,errVar,errStd are the original explicitly valued real-argument functions, not new selected cutoffs/laws.",
+      "scope_05": "After eps>0 and proved original hTailSmall existential; before every R and lam. Exact value Nat.find hTailSmall and exact full predicate remain verbatim in constructive_existential_witnesses.",
+      "scope_06": "Original fixed ambient μ,h,w,p and the exact bound variables stated in the original scope; may be instantiated under source μ or actual ν only as originally specified. Scalar x,y,z and f/k are universally quantified local proof binders, not new selected data.",
+      "scope_07": "Original fixed μ,g,w,p and original universally quantified real proof argument s or natural k. Source tail functions use the same μ; these are not new independent cutoff sequences or probability laws.",
+      "scope_08": "After actual R, closed cutoff and normalized ν; original a,c,u,θ,Mp are in scope and d>0 proved. Independent of lam unless the original stated expression contains lam/G.",
+      "scope_09": "Actual R,ν and arbitrary lam with hLam in scope; G,H and all scalar moments retain their exact frozen integral values. AE substitutions only under actual ν; no selected agreeing function.",
+      "scope_10": "Actual R,ν and lam data in scope; finite-G p-moment already derived, then actual σ>0 established before analytical standardization use. Only original quotient function/scalar expression.",
+      "scope_11": "Only local universal Prop proof binders f,k:Ω→ℝ and v:ℝ at the exact original source/conditional measure indicated by the expression. No new public/function/selector data. Conditional norm expressions use only ν after d>0. Integer masks use only original f=1,w,|g|^p under μ.",
+      "scope_12": "Inline only after actual R with d>=1/2 and actual probability ν=(μ C)^(-1) smul μ.restrict C. Original p>2, same original actual data. No named alias, no lpNorm at a freely chosen law or at source μ. Each function instance is used only when its original variables are in lexical scope; G-related instances follow lam, and G/σ analytic instances additionally follow σ>0. This is an inline expression only."
+    },
+    "scope_encoding_policy": "Lossless dictionary only for identical repeated scope strings. Resolve every scope_context_id through scope_context_dictionary_full; all original full typed values remain verbatim in their original arrays.",
+    "full_scope_resolution_sha256": "e065bf70d1abf0f2ec5f4439c487932c9cf341c2e8f47a96d9c6e9e9927cba21",
+    "scope_roundtrip_exact": true
+  },
+  "allowedProofNamedValues": [
+    {
+      "name": "Np",
+      "type": "ℕ",
+      "value": "Nat.ceil (p / α)"
+    },
+    {
+      "name": "Aexpp",
+      "type": "ℝ",
+      "value": "(Np.factorial : ℝ) / τ ^ Np"
+    },
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, h o y ∂μ"
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => h o y - g o - g y"
+    },
+    {
+      "name": "β",
+      "type": "ℝ",
+      "value": "∫ o, Real.rpow |g o| p ∂μ"
+    },
+    {
+      "name": "B",
+      "type": "ℝ",
+      "value": "Real.rpow β (1 / p)"
+    },
+    {
+      "name": "Wp",
+      "type": "ℝ",
+      "value": "Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)"
+    },
+    {
+      "name": "C",
+      "type": "Set Ω",
+      "value": "{o : Ω | w o ≤ R}"
+    },
+    {
+      "name": "π",
+      "type": "ℝ",
+      "value": "μ.real Cᶜ"
+    },
+    {
+      "name": "d",
+      "type": "ℝ",
+      "value": "μ.real C"
+    },
+    {
+      "name": "ν",
+      "type": "Measure Ω",
+      "value": "(μ C)⁻¹ • μ.restrict C"
+    },
+    {
+      "name": "b",
+      "type": "ℝ",
+      "value": "∫ o in Cᶜ, w o ∂μ"
+    },
+    {
+      "name": "c",
+      "type": "ℝ",
+      "value": "b / d"
+    },
+    {
+      "name": "u",
+      "type": "ℝ",
+      "value": "∫ o, g o ∂ν"
+    },
+    {
+      "name": "a",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, r o y ∂ν"
+    },
+    {
+      "name": "θ",
+      "type": "ℝ",
+      "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)"
+    },
+    {
+      "name": "Tp",
+      "type": "ℝ",
+      "value": "∫ o in Cᶜ, Real.rpow |g o| p ∂μ"
+    },
+    {
+      "name": "Mp",
+      "type": "ℝ",
+      "value": "∫ o, Real.rpow |g o| p ∂ν"
+    },
+    {
+      "name": "H",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => g o + g y + lam * r o y"
+    },
+    {
+      "name": "q",
+      "type": "ℝ",
+      "value": "∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)"
+    },
+    {
+      "name": "G",
+      "type": "Ω → ℝ",
+      "value": "fun o => (∫ y, H o y ∂ν) - q"
+    },
+    {
+      "name": "σ2",
+      "type": "ℝ",
+      "value": "∫ o, G o ^ 2 ∂ν"
+    },
+    {
+      "name": "σ",
+      "type": "ℝ",
+      "value": "Real.sqrt σ2"
+    },
+    {
+      "name": "βR",
+      "type": "ℝ",
+      "value": "∫ o, Real.rpow |G o / σ| p ∂ν"
+    },
+    {
+      "name": "Δp",
+      "type": "ℝ",
+      "value": "Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)"
+    },
+    {
+      "name": "W2",
+      "type": "ℝ",
+      "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)"
+    },
+    {
+      "name": "Cvar",
+      "type": "ℝ",
+      "value": "32 * (1 + B ^ 2 + W2 ^ 2)"
+    },
+    {
+      "name": "t",
+      "type": "ℝ",
+      "value": "1 - 1 / p"
+    },
+    {
+      "name": "e",
+      "type": "ℝ",
+      "value": "1 - 2 / p"
+    },
+    {
+      "name": "Mpow",
+      "type": "ℝ",
+      "value": "2 * (B + 1)"
+    },
+    {
+      "name": "Lpow",
+      "type": "ℝ",
+      "value": "p * Real.rpow Mpow (p - 1)"
+    },
+    {
+      "name": "piTail",
+      "type": "ℝ → ℝ",
+      "value": "fun s => μ.real {o : Ω | s < w o}"
+    },
+    {
+      "name": "bTail",
+      "type": "ℝ → ℝ",
+      "value": "fun s => ∫ o in {o : Ω | s < w o}, w o ∂μ"
+    },
+    {
+      "name": "pTail",
+      "type": "ℝ → ℝ",
+      "value": "fun s => ∫ o in {o : Ω | s < w o}, Real.rpow |g o| p ∂μ"
+    },
+    {
+      "name": "errG",
+      "type": "ℝ → ℝ",
+      "value": "fun s => 2 * B * Real.rpow (piTail s) t + Real.rpow 2 (1 + 1 / p) * Wp * bTail s + 4 * (bTail s) ^ 2"
+    },
+    {
+      "name": "errRoot",
+      "type": "ℝ → ℝ",
+      "value": "fun s => Real.rpow (2 * (β * piTail s + pTail s)) (1 / p)"
+    },
+    {
+      "name": "errVar",
+      "type": "ℝ → ℝ",
+      "value": "fun s => Cvar * (Real.rpow (piTail s) e + bTail s + (bTail s) ^ 2)"
+    },
+    {
+      "name": "errStd",
+      "type": "ℝ → ℝ",
+      "value": "fun s => 2 * (errG s + errRoot s + B * errVar s)"
+    },
+    {
+      "name": "N0",
+      "type": "ℕ",
+      "value": "Nat.find hTailSmall"
+    }
+  ],
+  "typedUniqueNamedValues": 39,
+  "headerLetOccurrences": 25,
+  "proofNamedValueOccurrencesPlanned": 39,
+  "totalSourceLetOccurrencesPlanned": 64,
+  "inlineConstructiveValues": [
+    {
+      "type": "ℝ",
+      "value": "p / 2",
+      "scope": "Hölder on original g square",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "p / (p - 2)",
+      "scope": "conjugate exponent, p > 2",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "p / (p - 1)",
+      "scope": "conjugate exponent, p > 1",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "ENNReal.toReal (μ {o : Ω | s < w o})",
+      "scope": "same source tail real mass",
+      "proof_universal_parameters": [
+        "s : ℝ"
+      ]
+    },
+    {
+      "type": "Set Ω",
+      "value": "{o : Ω | s < w o}",
+      "scope": "strict source tail family",
+      "proof_universal_parameters": [
+        "s : ℝ"
+      ]
+    },
+    {
+      "type": "Set Ω",
+      "value": "{o : Ω | w o ≤ s}",
+      "scope": "closed source cutoff family",
+      "proof_universal_parameters": [
+        "s : ℝ"
+      ]
+    },
+    {
+      "type": "Measure Ω",
+      "value": "μ.restrict {o : Ω | s < w o}",
+      "scope": "integer dominated convergence and Hölder restrictions",
+      "proof_universal_parameters": [
+        "s : ℝ"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |w o| p",
+      "scope": "source and conditional p-integrability",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Aexpp * Real.exp (τ * Real.rpow (w o) α)",
+      "scope": "source exponential dominator",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |g o| p",
+      "scope": "actual projection p-moment",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => w o ^ 2",
+      "scope": "inherited actual W2",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => g o ^ 2",
+      "scope": "original unit second moment",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => |w o|",
+      "scope": "integrable dominator for deleted w",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun _ => (1 : ℝ)",
+      "scope": "integrable dominator for deleted mass",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => c * w o",
+      "scope": "AE domination of actual a",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |a o| p",
+      "scope": "derive conditional p-integrability",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => g o - u + lam * (a o - θ)",
+      "scope": "actual G formula, only AE",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => G o - g o",
+      "scope": "actual projection perturbation",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |G o - g o| p",
+      "scope": "finite perturbation p-integral",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |G o| p",
+      "scope": "actual G p-integral",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => G o ^ 2",
+      "scope": "actual F2 variance",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => G o / σ",
+      "scope": "actual positive standardization",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |G o / σ| p",
+      "scope": "actual standardized p-moment",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun _ => u",
+      "scope": "probability constant p-norm",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun _ => θ",
+      "scope": "probability constant p-norm",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => f o + k o",
+      "scope": "Minkowski finite-sum argument",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => f o - k o",
+      "scope": "reverse triangle argument",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |f o + k o| p",
+      "scope": "sum integrability via convex power bound",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |f o + k o| (p - 1)",
+      "scope": "Holder dual test",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => v * f o",
+      "scope": "scalar norm identity",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |f o| p",
+      "scope": "universal finite-p-integral test",
+      "proof_universal_parameters": [
+        "f k : Ω → ℝ",
+        "v : ℝ",
+        "all original measurable/integrable hypotheses are universally quantified Prop-proof premises only"
+      ]
+    },
+    {
+      "type": "ℝ",
+      "value": "Real.rpow (∫ o, Real.rpow |f o| p ∂ν) (1 / p)",
+      "scope": "direct real Lp norm expression; no quotient data",
+      "proof_universal_parameters": [
+        "f : Ω → ℝ"
+      ]
+    },
+    {
+      "type": "ℝ",
+      "value": "Real.rpow Mp (1 / p)",
+      "scope": "conditional g norm",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "Real.rpow (∫ o, Real.rpow |G o| p ∂ν) (1 / p)",
+      "scope": "actual G norm",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "Real.rpow (∫ o, Real.rpow |G o| p ∂ν) (1 / p) / σ",
+      "scope": "actual standardized G norm",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "|u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2",
+      "scope": "finite F1 bound",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ → ℝ",
+      "value": "fun z => Real.rpow z p",
+      "scope": "power MVT on fixed nonnegative interval",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ → ℝ",
+      "value": "fun z => p * Real.rpow z (p - 1)",
+      "scope": "exact derivative bound on same interval",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "Ω → ℝ",
+      "value": "({o : Ω | (k : ℝ) < w o}).indicator f",
+      "scope": "integer tail masks",
+      "proof_universal_parameters": [
+        "k : ℕ",
+        "f : Ω → ℝ, instantiated only constant 1, w, and Real.rpow |g| p"
+      ]
+    },
+    {
+      "type": "ℕ → ℝ",
+      "value": "fun k => piTail (k : ℝ)",
+      "scope": "DCT scalar tail sequence",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℕ → ℝ",
+      "value": "fun k => bTail (k : ℝ)",
+      "scope": "DCT scalar tail sequence",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℕ → ℝ",
+      "value": "fun k => pTail (k : ℝ)",
+      "scope": "DCT scalar tail sequence",
+      "proof_universal_parameters": []
+    },
+    {
+      "type": "ℝ",
+      "value": "MeasureTheory.lpNorm f (ENNReal.ofReal p) ν",
+      "scope": "Inline only after actual R with d>=1/2 and actual probability ν=(μ C)^(-1) smul μ.restrict C. Original p>2, same original actual data. No named alias, no lpNorm at a freely chosen law or at source μ.",
+      "proof_universal_parameters": [
+        "f : Ω → ℝ, bound only in a local universal Prop proof",
+        "actual instances only original g,w,a,G; G-g; G/σ after σ>0; original constant functions 1,u,θ; and the original already-listed additions/subtractions/scalar multiples of these functions at original scalars lam,c,σ^(-1) and their listed scalar compositions"
+      ],
+      "not_independent_data": true,
+      "named_alias_allowed": false
+    }
+  ],
+  "inlineFamilies": 43,
+  "constructiveWitnessesFull": [
+    {
+      "binder": "N0 : ℕ",
+      "type": "ℕ",
+      "full_value": "Nat.find hTailSmall",
+      "full_defining_predicate": "∃ k : ℕ, 1 ≤ k ∧ piTail (k : ℝ) ≤ (1 / 2 : ℝ) ∧ pTail (k : ℝ) ≤ eps ∧ 2 * (β * piTail (k : ℝ) + pTail (k : ℝ)) ≤ eps ∧ errG (k : ℝ) ≤ eps ∧ errVar (k : ℝ) ≤ min (1 / 2 : ℝ) eps ∧ errG (k : ℝ) + errRoot (k : ℝ) ≤ 1 ∧ Lpow * errStd (k : ℝ) ≤ min eps (β / 2)",
+      "why_noncircular": "Only original scalar piTail,bTail,pTail and fixed original-law constants; target G, sigma and betaR are absent"
+    }
+  ],
+  "allFullScopeBindings": {
+    "named": [
+      {
+        "name": "Np",
+        "full_type_value_location": "header_typed_full_values[0]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "Aexpp",
+        "full_type_value_location": "header_typed_full_values[1]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "g",
+        "full_type_value_location": "header_typed_full_values[2]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "r",
+        "full_type_value_location": "header_typed_full_values[3]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "β",
+        "full_type_value_location": "header_typed_full_values[4]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "B",
+        "full_type_value_location": "header_typed_full_values[5]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "Wp",
+        "full_type_value_location": "header_typed_full_values[6]",
+        "scope_context_id": "scope_01"
+      },
+      {
+        "name": "C",
+        "full_type_value_location": "header_typed_full_values[7]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "π",
+        "full_type_value_location": "header_typed_full_values[8]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "d",
+        "full_type_value_location": "header_typed_full_values[9]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "ν",
+        "full_type_value_location": "header_typed_full_values[10]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "b",
+        "full_type_value_location": "header_typed_full_values[11]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "c",
+        "full_type_value_location": "header_typed_full_values[12]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "u",
+        "full_type_value_location": "header_typed_full_values[13]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "a",
+        "full_type_value_location": "header_typed_full_values[14]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "θ",
+        "full_type_value_location": "header_typed_full_values[15]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "Tp",
+        "full_type_value_location": "header_typed_full_values[16]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "Mp",
+        "full_type_value_location": "header_typed_full_values[17]",
+        "scope_context_id": "scope_02"
+      },
+      {
+        "name": "H",
+        "full_type_value_location": "header_typed_full_values[18]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "q",
+        "full_type_value_location": "header_typed_full_values[19]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "G",
+        "full_type_value_location": "header_typed_full_values[20]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "σ2",
+        "full_type_value_location": "header_typed_full_values[21]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "σ",
+        "full_type_value_location": "header_typed_full_values[22]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "βR",
+        "full_type_value_location": "header_typed_full_values[23]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "Δp",
+        "full_type_value_location": "header_typed_full_values[24]",
+        "scope_context_id": "scope_03"
+      },
+      {
+        "name": "W2",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[0]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Cvar",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[1]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "t",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[2]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "e",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[3]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Mpow",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[4]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "Lpow",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[5]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "piTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[6]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "bTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[7]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "pTail",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[8]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errG",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[9]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errRoot",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[10]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errVar",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[11]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "errStd",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[12]",
+        "scope_context_id": "scope_04"
+      },
+      {
+        "name": "N0",
+        "full_type_value_location": "additional_expected_proof_local_typed_full_values[13]",
+        "scope_context_id": "scope_05"
+      }
+    ],
+    "inline": [
+      {
+        "family_index1": 1,
+        "full_type_value_location": "all_inline_typed_full_value_families[0]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 2,
+        "full_type_value_location": "all_inline_typed_full_value_families[1]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 3,
+        "full_type_value_location": "all_inline_typed_full_value_families[2]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 4,
+        "full_type_value_location": "all_inline_typed_full_value_families[3]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 5,
+        "full_type_value_location": "all_inline_typed_full_value_families[4]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 6,
+        "full_type_value_location": "all_inline_typed_full_value_families[5]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 7,
+        "full_type_value_location": "all_inline_typed_full_value_families[6]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 8,
+        "full_type_value_location": "all_inline_typed_full_value_families[7]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 9,
+        "full_type_value_location": "all_inline_typed_full_value_families[8]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 10,
+        "full_type_value_location": "all_inline_typed_full_value_families[9]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 11,
+        "full_type_value_location": "all_inline_typed_full_value_families[10]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 12,
+        "full_type_value_location": "all_inline_typed_full_value_families[11]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 13,
+        "full_type_value_location": "all_inline_typed_full_value_families[12]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 14,
+        "full_type_value_location": "all_inline_typed_full_value_families[13]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 15,
+        "full_type_value_location": "all_inline_typed_full_value_families[14]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 16,
+        "full_type_value_location": "all_inline_typed_full_value_families[15]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 17,
+        "full_type_value_location": "all_inline_typed_full_value_families[16]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 18,
+        "full_type_value_location": "all_inline_typed_full_value_families[17]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 19,
+        "full_type_value_location": "all_inline_typed_full_value_families[18]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 20,
+        "full_type_value_location": "all_inline_typed_full_value_families[19]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 21,
+        "full_type_value_location": "all_inline_typed_full_value_families[20]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 22,
+        "full_type_value_location": "all_inline_typed_full_value_families[21]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 23,
+        "full_type_value_location": "all_inline_typed_full_value_families[22]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 24,
+        "full_type_value_location": "all_inline_typed_full_value_families[23]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 25,
+        "full_type_value_location": "all_inline_typed_full_value_families[24]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 26,
+        "full_type_value_location": "all_inline_typed_full_value_families[25]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 27,
+        "full_type_value_location": "all_inline_typed_full_value_families[26]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 28,
+        "full_type_value_location": "all_inline_typed_full_value_families[27]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 29,
+        "full_type_value_location": "all_inline_typed_full_value_families[28]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 30,
+        "full_type_value_location": "all_inline_typed_full_value_families[29]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 31,
+        "full_type_value_location": "all_inline_typed_full_value_families[30]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 32,
+        "full_type_value_location": "all_inline_typed_full_value_families[31]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 33,
+        "full_type_value_location": "all_inline_typed_full_value_families[32]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 34,
+        "full_type_value_location": "all_inline_typed_full_value_families[33]",
+        "scope_context_id": "scope_09"
+      },
+      {
+        "family_index1": 35,
+        "full_type_value_location": "all_inline_typed_full_value_families[34]",
+        "scope_context_id": "scope_10"
+      },
+      {
+        "family_index1": 36,
+        "full_type_value_location": "all_inline_typed_full_value_families[35]",
+        "scope_context_id": "scope_08"
+      },
+      {
+        "family_index1": 37,
+        "full_type_value_location": "all_inline_typed_full_value_families[36]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 38,
+        "full_type_value_location": "all_inline_typed_full_value_families[37]",
+        "scope_context_id": "scope_06"
+      },
+      {
+        "family_index1": 39,
+        "full_type_value_location": "all_inline_typed_full_value_families[38]",
+        "scope_context_id": "scope_11"
+      },
+      {
+        "family_index1": 40,
+        "full_type_value_location": "all_inline_typed_full_value_families[39]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 41,
+        "full_type_value_location": "all_inline_typed_full_value_families[40]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 42,
+        "full_type_value_location": "all_inline_typed_full_value_families[41]",
+        "scope_context_id": "scope_07"
+      },
+      {
+        "family_index1": 43,
+        "full_type_value_location": "all_inline_typed_full_value_families[42]",
+        "scope_context_id": "scope_12"
+      }
+    ],
+    "dictionary": {
+      "scope_01": "Original theorem ambient fixed μ,h,w,α,τ,p and source proofs; introduced before eps,N0,R,lam. No conditional data or varying index is consulted.",
+      "scope_02": "After fixed eps>0, original hTailSmall/N0, and an arbitrary real R with N0<=R; before introducing lam. Uses the identical actual closed cutoff and normalized restriction. Analytical probability uses follow proof d>=1/2; the typed expressions are total.",
+      "scope_03": "After the preceding actual R/ν data and arbitrary lam with hLam:0<=lam and lam<=1. σ is the total sqrt of actual σ2; every analytical division by σ occurs only after proving σ2>=1/2 and σ>0. No all-lam pointwise row claim.",
+      "scope_04": "Original fixed ambient μ,h,w,α,τ,p plus exact preceding fixed g,r,β,B,Wp and preceding entries in this additional list; before eps,N0,R,lam. piTail,bTail,pTail,errG,errRoot,errVar,errStd are the original explicitly valued real-argument functions, not new selected cutoffs/laws.",
+      "scope_05": "After eps>0 and proved original hTailSmall existential; before every R and lam. Exact value Nat.find hTailSmall and exact full predicate remain verbatim in constructive_existential_witnesses.",
+      "scope_06": "Original fixed ambient μ,h,w,p and the exact bound variables stated in the original scope; may be instantiated under source μ or actual ν only as originally specified. Scalar x,y,z and f/k are universally quantified local proof binders, not new selected data.",
+      "scope_07": "Original fixed μ,g,w,p and original universally quantified real proof argument s or natural k. Source tail functions use the same μ; these are not new independent cutoff sequences or probability laws.",
+      "scope_08": "After actual R, closed cutoff and normalized ν; original a,c,u,θ,Mp are in scope and d>0 proved. Independent of lam unless the original stated expression contains lam/G.",
+      "scope_09": "Actual R,ν and arbitrary lam with hLam in scope; G,H and all scalar moments retain their exact frozen integral values. AE substitutions only under actual ν; no selected agreeing function.",
+      "scope_10": "Actual R,ν and lam data in scope; finite-G p-moment already derived, then actual σ>0 established before analytical standardization use. Only original quotient function/scalar expression.",
+      "scope_11": "Only local universal Prop proof binders f,k:Ω→ℝ and v:ℝ at the exact original source/conditional measure indicated by the expression. No new public/function/selector data. Conditional norm expressions use only ν after d>0. Integer masks use only original f=1,w,|g|^p under μ.",
+      "scope_12": "Inline only after actual R with d>=1/2 and actual probability ν=(μ C)^(-1) smul μ.restrict C. Original p>2, same original actual data. No named alias, no lpNorm at a freely chosen law or at source μ. Each function instance is used only when its original variables are in lexical scope; G-related instances follow lam, and G/σ analytic instances additionally follow σ>0. This is an inline expression only."
+    }
+  },
+  "options": {
+    "autoImplicit": false,
+    "maxHeartbeats": 800000
+  },
+  "parentFullIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit178/primary-adaptation-parent-intake-v1.json",
+    "sha256": "ca549dec24b3660f95d684657c565cf480f87307c8cdf8e86a2fb924c08b91f1",
+    "bytes": 3869
+  },
+  "originalRawProposal": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-conditional-standardized-pmoment-frontier-01/author-analysis-01/primary-adaptation-01/raw_declarations.lean.txt",
+    "sha256": "50a599aaef3316d561297bb743975305be70b0b528a5205ad1851b6f1751c577",
+    "bytes": 4156
+  },
+  "originalDataProposal": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-conditional-standardized-pmoment-frontier-01/author-analysis-01/declaration-contract.json",
+    "sha256": "be979031c680bd5dbfb23b6afc9bef500d6b3d0007bb1feff7032e95daf9a10b",
+    "bytes": 30321
+  },
+  "adaptedDataProposal": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-conditional-standardized-pmoment-frontier-01/author-analysis-01/primary-adaptation-01/declaration-contract.json",
+    "sha256": "977da8dd04898a68e18812d19ae05368aa1ecb4ef6215c634388194995a8d9b0",
+    "bytes": 52724
+  },
+  "qualified175": {
+    "path": "C:/game/shao lean/drafts/oq56/unit175/qualified-evidence.json",
+    "sha256": "1dc82a65af844abdf9e2287a993ab0efd91b5f0db61d8c7e347c5b2eb1c28ded",
+    "bytes": 10141
+  },
+  "qualified176": {
+    "path": "C:/game/shao lean/drafts/oq56/unit176/qualified-evidence.json",
+    "sha256": "acb0789624585bfb195cd37e3f9df93c3756b417895277de2c52e47bde99be24",
+    "bytes": 12867
+  },
+  "publication176": {
+    "path": "C:/game/shao lean/drafts/oq56/publication-v104/published-receipt.json",
+    "sha256": "01426ba7cf86953a65b011d0022021a64478e801a86cdaf2313d2bd1e0d06198",
+    "bytes": 4194
+  },
+  "newGlobalDefinitions": [],
+  "newGlobalInstances": [],
+  "newPrivateTheorems": [],
+  "otherNewGlobalDeclarations": [],
+  "implementationAuthorization": true,
+  "implementationAuthorizationScope": "SAME178AUTHOR local drafts/oq56/unit178/author-01/stage2/ only, no server/Lean/Git/network/cache/probes; exact public header/fulltypeddata/inline43/witness/predicate preserved",
+  "authorLeanServerNetworkGitCacheProbesForbidden": true,
+  "policy": "No sorry/admit/new axiom/unsafe/native_decide/implemented_by/extern. No silent assumption/interface/data changes; report needed extension before using it. UTF8 LF noBOM single terminalLF before firstgate. No old source replay. One full final independent review and exactsource server kernel/all-actual-owner TYPE/nonthFullVALUE/recursiveAX mandatory. Root original groups remain OPEN.",
+  "formalStatus": "UNIMPLEMENTED_UNCHECKED_UNQUALIFIED",
+  "sourceFidelity": "Original closed cutoff equality atoms retained, only AE row/product identities. beta>=1 derived from original unit second moment, wLp derived exponential moment, threshold same original Nat.find noncircular predicate, allrealR>=N0/alllam. No standardized p-moment polynomial rate; p54 repair/external attribution preserved."
+}

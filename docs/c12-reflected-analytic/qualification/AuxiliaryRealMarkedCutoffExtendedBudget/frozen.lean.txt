@@ -1,0 +1,36 @@
+import Shao.C2.AuxiliaryRealMarkedFiniteCutoffExtendedBudget
+import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.AuxiliaryRealMarkedCutoffExtendedBudget
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_actual_real_marked_cutoff_extended_budget :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    ∀ a q : ℝ, 0 ≤ a → 0 < q → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ (m : ℕ) (b : ℝ), 0 < b →
+          let P : Measure (Shao.Path (m + 1)) := Measure.pi (fun _ : Fin (m + 1) => nu)
+          let T : Shao.Path (m + 1) → ℝ := Shao.energy
+          let d : Shao.Path (m + 1) → ℝ := fun v => Shao.prefixSum v (m + 1)
+          let M : Shao.Path (m + 1) → ℝ := fun v => |v 0| ^ 3
+          let a3 : ℝ → ℝ := fun u => ∫ z : ℝ, |z| ^ 3 * Real.exp (-u * z ^ 2) ∂nu
+          let retained : ℝ := ∫ z : ℝ, if z ^ 2 ≤ b then z ^ 2 else 0 ∂nu
+          let gamma : ℝ := if (1 / 2 : ℝ) ≤ retained then -c else 1
+          let selected : Shao.Path (m + 1) → ℝ := fun v =>
+            if 0 < T v ∧ b ≤ T v then
+              M v * Real.rpow (T v) (-q / 2) *
+                Real.rpow (1 + |d v| / Real.sqrt (T v)) a else 0
+          let kernel : ℝ → ℝ := fun s =>
+            Real.rpow s (q / 2 - 1) * a3 (s / 2) *
+              Real.exp (gamma * s * (m : ℝ))
+          (∫⁻ v, ENNReal.ofReal (selected v) ∂P) ≤
+            ENNReal.ofReal C *
+              ∫⁻ s : ℝ in Set.Ioo 0 (1 / b), ENNReal.ofReal (kernel s) := by
+
+end Shao.C2.AuxiliaryRealMarkedCutoffExtendedBudget
