@@ -1,0 +1,15 @@
+# Finite quadratic sign chaos
+
+This module proves the finite sign-chaos component of p44(5), for exact source SHA256 `21dbf9c47da7b5229c562543152f19ccbb2a1db9c1b7954e890dbe9b6611763b` and original successful object `bc80abf8a1bd6e8cd80227f31500e648e82cd93874341130b7701d1873ecb968`.
+
+Let Q_D(w)=sum_i sum_j D_ij w_i w_j and E(D)=sum_j sum_i D_ij^2. On the complete uniform Boolean sign cube, any zero-diagonal real matrix and any real q>=2 satisfy the ordered moment-root bound 16*q*sqrt(E(D)) and the half-ordered bound 8*q*sqrt(E(D)). These two bounds do not require symmetry. A separate deterministic theorem, with explicit symmetry and zero-diagonal premises, identifies Q_D(w) with twice the i<j sum for every real path w.
+
+The proof pays the directed random-cut factor 1/4 using explicit Boolean flips, applies finite real Jensen, and uses an involution of two complete sign cubes to decouple the cut form. Qualified185 supplies one scalar Euclidean (dimension 1) and one full Euclidean matrix-column moment estimate. Both averages are handled at the q-power level; there is no unpaid mixed-norm interchange. The final constants are 16 and 8. n=0/1, zero energy and arbitrary real q>=2 are retained; no energy or moment is divided by.
+
+The exact frozen interface has four definitions, six private supporting theorems and three public theorems. The complete module-index audit includes all 25 owners: 21 theorems and four definitions, with 12 generated owners and 18 private-prefix names. It covers 365 full TYPE lines and 26 FULLVALUE lines. All recursive axioms lie in propext/Classical.choice/Quot.sound; no namespace filtering is used.
+
+Native02 and the same-object audit returned actual Lean RC0 (5.535317s and 5.181690s). Eleven source style/deprecation warnings and the existing 134-byte Lake notice are retained. The audit itself has only the Lake notice. Both strictWrapperSuccess values remain false and FIRSTEMPTY=false; there is no warning-cleanup recompilation. The first failed source/native01 RC1/no-object receipt is preserved. A seven-line proof-body repair fixes finite-sum binder parentheses, Fin1 cast simplification and the explicit qualified185 energy name, without changing assumptions, frozen heads, four definition values, eleven local data values or ten anonymous connections.
+
+The same original independent reviewer combines the complete original source review with complete re-review of the three affected proofs and all actual TYPE/non-theorem FULLVALUE/private/generated/AX coverage. Parent qualification checks exact hashes, names, values, source spans and an independent reconstruction of the bound audit stream.
+
+This is a finite auxiliary theorem. Ghost-sample outer symmetrization, original random-observation integrals, the original F moment/tail theorem, random envelope moments, DC and all open roots require further work. No mathematical novelty is claimed. p54 repairs and Shao–Zhou external-result attribution remain unchanged. C2/C12/OQ56 remain OPEN; OQ3 remains PAUSED_BY_USER.
