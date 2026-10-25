@@ -1,0 +1,135 @@
+--- a/CanonicalProductEnvelopeTails.lean
++++ b/CanonicalProductEnvelopeTails.lean
+@@ -72,2 +72,2 @@ continuous_rootRecovery
+-  simpa only [rootRecovery, Real.rpow_eq_pow] using
+-    (Real.continuous_rpow_const (q := 1 / α) (by positivity))
++  change Continuous (fun t : ℝ => t ^ (1 / α))
++  exact Real.continuous_rpow_const (q := 1 / α) (by positivity)
+@@ -123,1 +123,3 @@ sum_rpow_le_product_seed_scale
+-          (by linarith [Real.rpow_nonneg ha α])
++          (by
++            have hNonneg : 0 ≤ Real.rpow a α := Real.rpow_nonneg ha α
++            linarith only [hNonneg])
+@@ -132,1 +134,3 @@ sum_rpow_le_product_seed_scale
+-          (by linarith [Real.rpow_nonneg hb α])
++          (by
++            have hNonneg : 0 ≤ Real.rpow b α := Real.rpow_nonneg hb α
++            linarith only [hNonneg])
+@@ -149,3 +153,9 @@ pair_exponential_domination
+-    rw [← Real.rpow_two, ← Real.rpow_mul (add_nonneg ha hb)]
+-    congr 1
+-    ring
++    have hSquare : Real.rpow (a + b) (2 : ℝ) = (a + b) ^ 2 :=
++      Real.rpow_two (a + b)
++    have hMul :
++        Real.rpow (a + b) ((2 : ℝ) * (α / 2)) =
++          Real.rpow (Real.rpow (a + b) (2 : ℝ)) (α / 2) :=
++      Real.rpow_mul (add_nonneg ha hb) 2 (α / 2)
++    rw [← hSquare, ← hMul]
++    congr 1
++    ring
+@@ -194,3 +204,3 @@ paired_seed_exponential_moment
+-  have hY : Measurable Y := by
+-    dsimp [Y, pairSquare]
+-    fun_prop
++  have hY : Measurable Y := by
++    change Measurable (fun p : Ω × Ω => (v p.1 + v p.2) ^ 2)
++    fun_prop
+@@ -282,3 +292,16 @@ envelope_scales_pos
+-  have hC : 0 < envelopeMomentScale α τ M := by
+-    unfold envelopeMomentScale sumMomentScale scalarMomentScale
+-    positivity
++  have hTwoPow : 0 < Real.rpow 2 α :=
++    Real.rpow_pos_of_pos (x := 2) (by norm_num) α
++  have hBeta : 0 < α / 2 := by positivity
++  have hPairTau : 0 < τ / Real.rpow 2 α := div_pos hτ hTwoPow
++  have hScalarMoment :
++      0 < scalarMomentScale (α / 2) (τ / Real.rpow 2 α) (M ^ 2) := by
++    change 0 < M ^ 2 *
++      Real.rpow ((τ / Real.rpow 2 α) * (α / 2)) (-(1 / (α / 2)))
++    exact mul_pos (by positivity)
++      (Real.rpow_pos_of_pos (mul_pos hPairTau hBeta) _)
++  have hC : 0 < envelopeMomentScale α τ M := by
++    change 0 < 2 * Real.rpow 2 (1 / (α / 2)) *
++      scalarMomentScale (α / 2) (τ / Real.rpow 2 α) (M ^ 2)
++    exact mul_pos
++      (mul_pos (by norm_num) (Real.rpow_pos_of_pos (x := 2) (by norm_num) _))
++      hScalarMoment
+@@ -357,4 +380,4 @@ paired_energy_real_moment_from_exp
+-  have hYMeasurable : ∀ i : Fin n, Measurable (YPair i) := by
+-    intro i
+-    dsimp [YPair, pairSquare]
+-    fun_prop
++  have hYMeasurable : ∀ i : Fin n, Measurable (YPair i) := by
++    intro i
++    change Measurable (fun p : Ω × Ω => (v p.1 + v p.2) ^ 2)
++    fun_prop
+@@ -385,1 +408,3 @@ paired_energy_real_moment_from_exp
+-    simpa only [μPair, pairedLaw] using hSum.1
++    change Integrable (fun z : Fin n → Ω × Ω => coordinateSum YPair z ^ p)
++      (Measure.pi μPair)
++    exact hSum.1
+@@ -392,2 +417,3 @@ paired_energy_real_moment_from_exp
+-    simpa only [μPair, pairedLaw, β, τPair, MPair, envelopeMomentScale, hExponent]
+-      using hSum.2
++    change (∫ z : Fin n → Ω × Ω, coordinateSum YPair z ^ p ∂Measure.pi μPair) ^
++        (1 / p) ≤ sumMomentScale β τPair MPair * ((n : ℝ) + p ^ (2 / α))
++    simpa only [β, hExponent] using hSum.2
+@@ -619,5 +645,9 @@ strict_moment_markov
+-  apply (mul_le_mul_left hEpsilon).mp
+-  calc
+-    epsilon * μ.real strictEvent ≤ momentIntegral := hScaledEvent
+-    _ ≤ Real.rpow K p := hIntegralBound
+-    _ = epsilon * Real.exp (-p) := hCancel.symm
++  have hScaledBound : epsilon * μ.real strictEvent ≤ epsilon * Real.exp (-p) := by
++    calc
++      epsilon * μ.real strictEvent ≤ momentIntegral := hScaledEvent
++      _ ≤ Real.rpow K p := hIntegralBound
++      _ = epsilon * Real.exp (-p) := hCancel.symm
++  by_contra hNot
++  have hPositiveGap : 0 < epsilon * (μ.real strictEvent - Real.exp (-p)) :=
++    mul_pos hEpsilon (sub_pos.mpr (lt_of_not_ge hNot))
++  nlinarith only [hScaledBound, hPositiveGap]
+@@ -639,2 +669,4 @@ tail_window_power_bounds
+-    simp only [Nat.cast_zero, Real.zero_rpow hβ] at hWindow
+-    linarith
++    have hZero : Real.rpow (0 : ℝ) (α / 2) = 0 := Real.zero_rpow hβ
++    simp only [Nat.cast_zero] at hWindow
++    rw [hZero] at hWindow
++    linarith
+@@ -647,2 +679,3 @@ tail_window_power_bounds
+-    rw [← Real.rpow_mul (Nat.cast_nonneg n)]
+-    have hExponent : (α / 2) * (2 / α) = (1 : ℝ) := by
++    change ((n : ℝ) ^ (α / 2)) ^ (2 / α) = (n : ℝ)
++    rw [← Real.rpow_mul (Nat.cast_nonneg n)]
++    have hExponent : (α / 2) * (2 / α) = (1 : ℝ) := by
+@@ -704,1 +737,2 @@ canonical_scalar_product_envelope_tail
+-        mul_le_mul_of_nonneg_left (add_le_add_left hWindowBounds.2.1 _) (by positivity)
++        mul_le_mul_of_nonneg_left
++          (by linarith only [hWindowBounds.2.1]) (by positivity)
+@@ -759,1 +793,2 @@ canonical_row_product_envelope_tail
+-        mul_le_mul_of_nonneg_left (add_le_add_left hWindowBounds.2.2 _) (by positivity)
++        mul_le_mul_of_nonneg_left
++          (by linarith only [hWindowBounds.2.2]) (by positivity)
+@@ -828,4 +863,6 @@ canonical_product_envelope_tails
+-    intro x hx
+-    apply lt_of_le_of_lt _ hx
+-    exact mul_le_mul_of_nonneg_right
+-      (mul_le_mul_of_nonneg_right hScalarScale (Nat.cast_nonneg n)) hqNonneg
++    intro x hx
++    change tailScale α τ M * (n : ℝ) * q < |originalUpper n r x| at hx
++    change scalarTailScale α τ M * (n : ℝ) * q < |originalUpper n r x|
++    apply lt_of_le_of_lt _ hx
++    exact mul_le_mul_of_nonneg_right
++      (mul_le_mul_of_nonneg_right hScalarScale (Nat.cast_nonneg n)) hqNonneg
+@@ -834,4 +871,6 @@ canonical_product_envelope_tails
+-    intro x hx
+-    apply lt_of_le_of_lt _ hx
+-    exact mul_le_mul_of_nonneg_right
+-      (mul_le_mul_of_nonneg_right hRowScale (sq_nonneg (n : ℝ))) hqNonneg
++    intro x hx
++    change tailScale α τ M * (n : ℝ) ^ 2 * q < ‖originalRows n r x‖ ^ 2 at hx
++    change rowTailScale α τ M * (n : ℝ) ^ 2 * q < ‖originalRows n r x‖ ^ 2
++    apply lt_of_le_of_lt _ hx
++    exact mul_le_mul_of_nonneg_right
++      (mul_le_mul_of_nonneg_right hRowScale (sq_nonneg (n : ℝ))) hqNonneg
