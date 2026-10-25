@@ -1,0 +1,7 @@
+# Unit176 actual retained second moment paid by the auxiliary third moment
+
+Source ordinary damping in supplement5155-5160 requires a genuine negative retained-energy branch in the old coordinate Gaussian factor producer. This leaf proves that actual second energy retained at literal b=4beta^2 is at least half for the actual normalized auxiliary finite3 law. It assumes finite2/finite3 and secondmoment1, no mean or symmetry. The auxiliary finite3 premise does not alter the original finite2-law root.
+
+Qualified153's exact public interface supplies beta>=1, hence2beta>0 and b>0; its old proof is reused. The actual retained function is measurable and integrable by domination by z^2. For z^2<=4beta^2 it dominates z^2-|z|^3/(2beta) because the subtracted term is nonnegative. Outside the cutoff, |z|>2beta and multiplication by z^2>=0 gives z^2<=|z|^3/(2beta), so the retained0 still dominates the same lower expression. True integrable lower expression integrates to1-beta/(2beta)=half. Weak cutoff boundaries are inside; atoms and zero coordinates retained; no assumed tail or budget oracle.
+
+This is a standalone source-bound retained-energy payment, not a rare/higher-moment/root theorem. It will pay the literal gamma=-c branch of175 once Root's public scalar facade qualification/export permits that gate. Exact source kernel/all-ownerAX and full independent final review remain required. No old successful proof/check replay, original finite2/p54/externalattribution unchanged;C2/C12 remainOPEN.

@@ -1,0 +1,231 @@
+FILE Mathlib/Analysis/SpecialFunctions/Pow/Real.lean
+
+662: theorem rpow_le_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x ≤ 1) (hz : 0 ≤ z) : x ^ z ≤ 1 :=
+
+617: theorem rpow_le_rpow_of_exponent_le (hx : 1 ≤ x) (hyz : y ≤ z) : x ^ y ≤ x ^ z :=
+
+476: theorem mul_rpow (hx : 0 ≤ x) (hy : 0 ≤ y) : (x * y) ^ z = x ^ z * y ^ z :=
+
+414: theorem rpow_mul {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z :=
+
+61: theorem rpow_natCast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
+
+207: theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z :=
+
+120: theorem rpow_zero (x : ℝ) : x ^ (0 : ℝ) = 1 :=
+
+163: theorem rpow_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : 0 ≤ x ^ y :=
+
+FILE Mathlib/Algebra/Order/Floor/Semiring.lean
+
+179: theorem le_ceil (a : R) : a ≤ ⌈a⌉₊ :=
+
+FILE Mathlib/MeasureTheory/Function/L1Space/Integrable.lean
+
+104: theorem Integrable.mono' {f : α → β} {g : α → ℝ} (hg : Integrable g μ)
+    (hf : AEStronglyMeasurable f μ) (h : ∀ᵐ a ∂μ, ‖f a‖ ≤ g a) : Integrable f μ :=
+
+420: theorem Integrable.add [ContinuousAdd ε']
+    {f g : α → ε'} (hf : Integrable f μ) (hg : Integrable g μ) :
+    Integrable (f + g) μ :=
+
+1028: theorem Integrable.const_mul {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (fun x => c * f x) μ :=
+
+FILE Mathlib/MeasureTheory/Integral/Bochner/Basic.lean
+
+670: lemma integral_mono {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ)
+    (h : f ≤ g) : ∫ x, f x ∂μ ≤ ∫ x, g x ∂μ :=
+
+239: theorem integral_add {f g : α → G} (hf : Integrable f μ) (hg : Integrable g μ) :
+    ∫ a, f a + g a ∂μ = ∫ a, f a ∂μ + ∫ a, g a ∂μ :=
+
+288: theorem integral_const_mul {L : Type*} [RCLike L] (r : L) (f : α → L) :
+    ∫ a, r * f a ∂μ = r * ∫ a, f a ∂μ :=
+
+FILE Mathlib/Analysis/SpecialFunctions/Pow/Continuity.lean
+
+279: theorem Continuous.rpow_const (hf : Continuous f) (h : ∀ x, f x ≠ 0 ∨ 0 ≤ p) :
+    Continuous fun x => f x ^ p :=
+
+FILE Mathlib/Analysis/SpecialFunctions/Sqrt.lean
+
+MISSING CONTRACT sqrt_sq_eq_abs
+
+MISSING CONTRACT sqrt_le_sqrt
+
+MISSING CONTRACT sqrt_pos
+
+MISSING CONTRACT sq_sqrt
+
+FILE /root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Util/CollectAxioms.lean
+1: /-
+2: Copyright (c) 2020 Microsoft Corporation. All rights reserved.
+3: Released under Apache 2.0 license as described in the file LICENSE.
+4: Authors: Leonardo de Moura
+5: -/
+6: module
+7: 
+8: prelude
+9: public import Lean.MonadEnv
+10: 
+11: namespace Lean
+12: 
+13: namespace CollectAxioms
+14: 
+15: structure State where
+16:   /-- Cache mapping constants to their (sorted) axiom dependencies. -/
+17:   seen   : NameMap (Array Name) := {}
+18:   /-- Axioms accumulated for the current constant being processed. -/
+19:   axioms : NameSet := {}
+20: 
+21: abbrev M := ReaderT Environment $ StateM State
+22: 
+23: def runM (env : Environment) (x : M α) : α :=
+24:   x.run env |>.run' {}
+25: 
+26: def insertArray (s : NameSet) (axs : Array Name) : NameSet :=
+27:   axs.foldl (init := s) fun acc ax => acc.insert ax
+28: 
+29: /--
+30: Collect axioms reachable from constant `c`, using `extFind?` to look up pre-computed axioms
+31: for imported declarations. Results are cached in `State.seen`.
+32: 
+33: When processing a constant not found in `extFind?` or the cache, the function temporarily
+34: clears the axiom accumulator, recurses into the constant's dependencies, caches the result
+35: in `seen`, and merges the collected axioms back.
+36: -/
+37: partial def collect
+38:     (extFind? : Environment → Name → Option (Array Name))
+39:     (c : Name) : M Unit := do
+40:   let env ← read
+41:   -- Check extension for pre-computed axioms (imported declarations)
+42:   if let some axs := extFind? env c then
+43:     modify fun s => { s with axioms := insertArray s.axioms axs, seen := s.seen.insert c axs }
+44:     return
+45:   -- Check local cache
+46:   let s ← get
+47:   if let some axs := s.seen.find? c then
+48:     modify fun s => { s with axioms := insertArray s.axioms axs }
+49:     return
+50:   -- Recurse: temporarily clear axioms to isolate this constant's contribution.
+51:   -- Insert sentinel to prevent infinite recursion (e.g., inductives ↔ constructors).
+52:   let savedAxioms := s.axioms
+53:   modify fun s => { s with axioms := {}, seen := s.seen.insert c #[] }
+54:   let collectExpr (e : Expr) : M Unit := e.getUsedConstants.forM (collect extFind?)
+55:   -- Take constants from the kernel env, which may differ from the elab env for (async) errors.
+56:   match env.checked.get.find? c with
+57:   | some (.axiomInfo v)  =>
+58:       modify fun s => { s with axioms := s.axioms.insert c }
+59:       collectExpr v.type
+60:   | some (.defnInfo v)   => collectExpr v.type *> collectExpr v.value
+61:   | some (.thmInfo v)    => collectExpr v.type *> collectExpr v.value
+62:   | some (.opaqueInfo v) => collectExpr v.type *> collectExpr v.value
+63:   | some (.quotInfo _)   => pure ()
+64:   | some (.ctorInfo v)   => collectExpr v.type
+65:   | some (.recInfo v)    => collectExpr v.type
+66:   | some (.inductInfo v) => collectExpr v.type *> v.ctors.forM (collect extFind?)
+67:   | none                 => pure ()
+68:   -- Cache result (sorted for canonical order) and merge back into saved axioms
+69:   let collected := (← get).axioms
+70:   let result := collected.toArray.qsort Name.lt
+71:   modify fun s => { s with
+72:     seen   := s.seen.insert c result
+73:     axioms := insertArray savedAxioms result
+74:   }
+75: 
+76: /-- Collect axioms for `c` and return its sorted axiom list from the cache. -/
+77: def collectAndGet
+78:     (extFind? : Environment → Name → Option (Array Name))
+79:     (c : Name) : M (Array Name) := do
+80:   collect extFind? c
+81:   let some axs := (← get).seen.find? c | panic! s!"collectAndGet: '{c}' not in seen after collect"
+82:   return axs
+83: 
+84: end CollectAxioms
+85: 
+86: /--
+87: Extension state holding imported module entries for efficient lookup of
+88: pre-computed axiom data.
+89: 
+90: We use `registerPersistentEnvExtension` with manual lookup instead of `MapDeclarationExtension`
+91: because `exportEntriesFnEx` needs to call `collect`, which needs the extension's `find?`, but
+92: `exportEntriesFnEx` is defined inside the `builtin_initialize` that creates the extension and
+93: thus cannot reference it. This state replicates `MapDeclarationExtension.find?`'s per-module
+94: binary search without requiring the extension object.
+95: -/
+96: structure ExportedAxiomsState where
+97:   importedModuleEntries : Array (Array (Name × Array Name)) := #[]
+98: 
+99: instance : Inhabited ExportedAxiomsState := ⟨{}⟩
+100: 
+101: /-- Look up pre-computed axioms for an imported declaration. -/
+102: def ExportedAxiomsState.find? (s : ExportedAxiomsState) (env : Environment)
+103:     (c : Name) : Option (Array Name) :=
+104:   match env.getModuleIdxFor? c with
+105:   | some modIdx =>
+106:     if h : modIdx.toNat < s.importedModuleEntries.size then
+107:       match s.importedModuleEntries[modIdx].binSearch (c, #[]) (fun a b => Name.quickLt a.1 b.1) with
+108:       | some entry => some entry.2
+109:       | none       => none
+110:     else none
+111:   | none => none
+112: 
+113: /--
+114: Environment extension that records axiom dependencies for all declarations in a module.
+115: Entries are computed once by `beforeExportFn` when the olean is serialized, not during
+116: elaboration. During elaboration, `collectAxioms` walks bodies directly. Downstream modules
+117: look up pre-computed entries for imported declarations, so axiom collection never crosses
+118: module boundaries.
+119: -/
+120: builtin_initialize exportedAxiomsExt :
+121:     PersistentEnvExtension (Name × Array Name) (Name × Array Name) ExportedAxiomsState ←
+122:   registerPersistentEnvExtension {
+123:     mkInitial     := pure {}
+124:     addImportedFn := fun importedEntries => pure { importedModuleEntries := importedEntries }
+125:     addEntryFn    := fun s _ => s
+126:     exportEntriesFnEx := fun env s =>
+127:       let exportedEnv := env.setExporting true
+128:       let privateEnv := env.setExporting false
+129:       -- Collect current-module declarations visible in the exported view.
+130:       -- By pre-computing axiom data for every exported declaration, downstream modules can
+131:       -- look up any imported declaration without walking its body, keeping collection
+132:       -- module-local.
+133:       let allNames := env.checked.get.constants.foldStage2
+134:         (fun names name _ =>
+135:           if (exportedEnv.find? name).isSome then names.push name
+136:           else names) #[]
+137:       -- Compute axioms within a shared state (for caching across declarations).
+138:       -- Use `privateEnv` so that `collect` can see all constant bodies.
+139:       let entries := CollectAxioms.runM privateEnv do
+140:         allNames.mapM fun name =>
+141:           return (name, ← CollectAxioms.collectAndGet s.find? name)
+142:       -- Sort by name for binary search at import time.
+143:       let entries := entries.qsort fun a b => Name.quickLt a.1 b.1
+144:       .uniform entries
+145:     asyncMode     := .mainOnly
+146:   }
+147: 
+148: /-- Collect all axioms transitively used by a constant. -/
+149: public def collectAxioms [Monad m] [MonadEnv m] (constName : Name) : m (Array Name) := do
+150:   let env ← getEnv
+151:   let privateEnv := env.setExporting false
+152:   let s := exportedAxiomsExt.getState (asyncMode := .mainOnly) env
+153:   return CollectAxioms.runM privateEnv do
+154:     CollectAxioms.collectAndGet s.find? constName
+155: 
+156: end Lean
+
+FILE /root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Environment.lean
+991: def hasExposedBody (env : Environment) (n : Name) : Bool :=
+992:   env.setExporting true |>.find? n |>.any (·.hasValue)
+993: 
+994: def getModuleIdxFor? (env : Environment) (declName : Name) : Option ModuleIdx :=
+995:   -- async constants are always from the current module
+996:   env.base.get env |>.const2ModIdx[declName]?
+997: 
+998: def isImportedConst (env : Environment) (declName : Name) : Bool :=
+999:   env.getModuleIdxFor? declName |>.isSome
+1000: 
+1001: /--
+1002: Allows `realizeConst` calls for the given declaration in all derived environment branches.
