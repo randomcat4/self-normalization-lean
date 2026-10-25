@@ -1,0 +1,754 @@
+import Shao.C2.InitialDoubleCompletionKernel
+import Shao.Probability.SourceScalarInitialBudget
+import Shao.Probability.TruncationRegularity
+import Shao.C2.InitialBrownianIdentity
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.InitialDoubleCompletionBudget
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.InitialDoubleCompletionKernel
+
+def initialDoubleObservable {n : ℕ}
+    (nu : Measure BridgeNoise) (x : ℝ) (a : Shao.Path n) : ℝ :=
+  if Shao.energy a = 0 then 1
+  else doubleCompletion nu x (Shao.C1.normalizedEndpoint a)
+
+def brownianInitialDouble {Ω : Type*}
+    (B : ℝ≥0 → Ω → ℝ) (x : ℝ) : Set Ω :=
+  {omega | (∃ t : BridgeTime, x ≤ B ⟨(t : ℝ), t.property.1⟩ omega) ∧
+    (∃ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ omega ≤ -x)}
+
+private theorem antitone_bounded_expectation_error
+    (mu rho : Measure ℝ) [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (delta M : ℝ) (hdelta : 0 ≤ delta) (hM : 0 ≤ M)
+    (hCDF : ∀ w : ℝ, |mu.real (Iic w) - rho.real (Iic w)| ≤ delta)
+    (f : ℝ → ℝ) (hf : Antitone f)
+    (hf0 : ∀ w, 0 ≤ f w) (hfM : ∀ w, f w ≤ M) :
+    Integrable f mu ∧ Integrable f rho ∧
+      |(∫ w : ℝ, f w ∂mu) - ∫ w : ℝ, f w ∂rho| ≤ M * delta := by
+  have hi (kappa : Measure ℝ) [IsProbabilityMeasure kappa] : Integrable f kappa := by
+    refine (integrable_const M).mono' hf.measurable.aestronglyMeasurable ?_
+    exact Eventually.of_forall fun w => by
+      rw [Real.norm_eq_abs, abs_of_nonneg (hf0 w)]
+      exact hfM w
+  refine ⟨hi mu, hi rho, ?_⟩
+  by_cases hM0 : M = 0
+  · have he : f = fun _ => 0 := funext fun w => le_antisymm (hM0 ▸ hfM w) (hf0 w)
+    simp only [he, integral_zero, sub_self, abs_zero, hM0, zero_mul, le_refl]
+  · have hMp : 0 < M := lt_of_le_of_ne hM (Ne.symm hM0)
+    let g : ℝ → ℝ := fun w => f w / M
+    have hg : Antitone g := by
+      intro a b hab
+      exact div_le_div_of_nonneg_right (hf hab) hM
+    have hg0 (w : ℝ) : 0 ≤ g w := div_nonneg (hf0 w) hM
+    have hg1 (w : ℝ) : g w ≤ 1 := (div_le_one hMp).mpr (hfM w)
+    have he := Shao.C2.EndpointCDFTransfer.antitone_unit_expectation_error
+      mu rho delta hdelta hCDF g hg hg0 hg1
+    dsimp [g] at he
+    rw [integral_div, integral_div, ← sub_div, abs_div, abs_of_pos hMp] at he
+    have hb := (div_le_iff₀ hMp).mp he
+    simpa only [mul_comm] using hb
+
+private theorem vanishing_bv_antitone_decomposition
+    (f : ℝ → ℝ) (V : ℝ) (hV : 0 ≤ V)
+    (hvar : eVariationOn f univ ≤ ENNReal.ofReal V)
+    (hleft : Tendsto f atBot (𝓝 0)) (hright : Tendsto f atTop (𝓝 0)) :
+    ∃ u v : ℝ → ℝ, Antitone u ∧ Antitone v ∧
+      (∀ w, 0 ≤ u w ∧ u w ≤ V / 2) ∧
+      (∀ w, 0 ≤ v w ∧ v w ≤ V / 2) ∧ (∀ w, f w = u w - v w) := by
+  have hfin (s : Set ℝ) : eVariationOn f s ≠ ∞ := by
+    exact ne_of_lt (((eVariationOn.mono f (subset_univ s)).trans hvar).trans_lt
+      ENNReal.ofReal_lt_top)
+  let P : ℝ → ℝ := fun w => (eVariationOn f (Iic w)).toReal
+  let Q : ℝ → ℝ := fun w => (eVariationOn f (Ici w)).toReal
+  let T : ℝ := (eVariationOn f univ).toReal
+  have hTV : T ≤ V := by
+    simpa only [T, ENNReal.toReal_ofReal hV] using
+      ENNReal.toReal_mono ENNReal.ofReal_ne_top hvar
+  have hsplit (w : ℝ) : T = P w + Q w := by
+    have hu : Iic w ∪ Ici w = (univ : Set ℝ) := by
+      ext z
+      simp only [mem_union, mem_Iic, mem_Ici, mem_univ, iff_true]
+      exact le_total z w
+    have he := congrArg ENNReal.toReal (eVariationOn.union f
+      (show IsGreatest (Iic w) w from ⟨le_rfl, fun _ hz => hz⟩)
+      (show IsLeast (Ici w) w from ⟨by simp only [mem_Ici, le_refl], fun _ hz => hz⟩))
+    rw [hu, ENNReal.toReal_add (hfin _) (hfin _)] at he
+    exact he
+  have hprefix (w : ℝ) : |f w| ≤ P w := by
+    have hb : ∀ᶠ z : ℝ in atBot, |f z - f w| ≤ P w := by
+      filter_upwards [eventually_le_atBot w] with z hz
+      simpa only [Real.dist_eq] using
+        (show BoundedVariationOn f (Iic w) from hfin _).dist_le hz
+          (by simp only [mem_Iic, le_refl])
+    have he := le_of_tendsto ((hleft.sub_const (f w)).abs) hb
+    simpa only [zero_sub, abs_neg] using he
+  have hsuffix (w : ℝ) : |f w| ≤ Q w := by
+    have hb : ∀ᶠ z : ℝ in atTop, |f z - f w| ≤ Q w := by
+      filter_upwards [eventually_ge_atTop w] with z hz
+      simpa only [Real.dist_eq] using
+        (show BoundedVariationOn f (Ici w) from hfin _).dist_le hz
+          (by simp only [mem_Ici, le_refl])
+    have he := le_of_tendsto ((hright.sub_const (f w)).abs) hb
+    simpa only [zero_sub, abs_neg] using he
+  have hinc (a b : ℝ) (hab : a ≤ b) : |f a - f b| ≤ Q a - Q b := by
+    have hu : Icc a b ∪ Ici b = (Ici a : Set ℝ) := by
+      ext z
+      constructor
+      · rintro (hz | hz)
+        · exact hz.1
+        · exact hab.trans hz
+      · intro hz
+        by_cases hzb : z ≤ b
+        · exact Or.inl ⟨hz, hzb⟩
+        · exact Or.inr (le_of_not_ge hzb)
+    have he := congrArg ENNReal.toReal (eVariationOn.union f
+      (show IsGreatest (Icc a b) b from ⟨⟨hab, le_rfl⟩, fun _ hz => hz.2⟩)
+      (show IsLeast (Ici b) b from ⟨by simp only [mem_Ici, le_refl], fun _ hz => hz⟩))
+    rw [hu, ENNReal.toReal_add (hfin _) (hfin _)] at he
+    have hb := (show BoundedVariationOn f (Icc a b) from hfin _).dist_le
+      (show a ∈ Icc a b from ⟨le_rfl, hab⟩)
+      (show b ∈ Icc a b from ⟨hab, le_rfl⟩)
+    rw [Real.dist_eq] at hb
+    change Q a = (eVariationOn f (Icc a b)).toReal + Q b at he
+    linarith
+  let u : ℝ → ℝ := fun w => (Q w + f w) / 2
+  let v : ℝ → ℝ := fun w => (Q w - f w) / 2
+  refine ⟨u, v, ?_, ?_, ?_, ?_, ?_⟩
+  · intro a b hab
+    have he := hinc a b hab
+    have hlo := neg_abs_le (f a - f b)
+    dsimp [u]
+    linarith
+  · intro a b hab
+    have he := hinc a b hab
+    have hhi := le_abs_self (f a - f b)
+    dsimp [v]
+    linarith
+  · intro w
+    have hp := hprefix w
+    have hq := hsuffix w
+    have he := hsplit w
+    have hlo := neg_abs_le (f w)
+    have hhi := le_abs_self (f w)
+    dsimp [u]
+    constructor <;> linarith
+  · intro w
+    have hp := hprefix w
+    have hq := hsuffix w
+    have he := hsplit w
+    have hlo := neg_abs_le (f w)
+    have hhi := le_abs_self (f w)
+    dsimp [v]
+    constructor <;> linarith
+  · intro w
+    dsimp [u, v]
+    ring
+
+private theorem vanishing_bv_expectation_error
+    (mu rho : Measure ℝ) [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (delta V : ℝ) (hdelta : 0 ≤ delta) (hV : 0 ≤ V)
+    (hCDF : ∀ w : ℝ, |mu.real (Iic w) - rho.real (Iic w)| ≤ delta)
+    (f : ℝ → ℝ) (hvar : eVariationOn f univ ≤ ENNReal.ofReal V)
+    (hleft : Tendsto f atBot (𝓝 0)) (hright : Tendsto f atTop (𝓝 0)) :
+    Integrable f mu ∧ Integrable f rho ∧
+      |(∫ w : ℝ, f w ∂mu) - ∫ w : ℝ, f w ∂rho| ≤ V * delta := by
+  obtain ⟨u, v, hu, hv, hub, hvb, heq⟩ :=
+    vanishing_bv_antitone_decomposition f V hV hvar hleft hright
+  have hhalf : 0 ≤ V / 2 := by positivity
+  obtain ⟨humu, hurho, hue⟩ := antitone_bounded_expectation_error
+    mu rho delta (V / 2) hdelta hhalf hCDF u hu (fun w => (hub w).1) (fun w => (hub w).2)
+  obtain ⟨hvmu, hvrho, hve⟩ := antitone_bounded_expectation_error
+    mu rho delta (V / 2) hdelta hhalf hCDF v hv (fun w => (hvb w).1) (fun w => (hvb w).2)
+  have hfun : f = fun w => u w - v w := funext heq
+  rw [hfun]
+  refine ⟨humu.sub hvmu, hurho.sub hvrho, ?_⟩
+  rw [integral_sub humu hvmu, integral_sub hurho hvrho]
+  have hr : ((∫ w, u w ∂mu) - ∫ w, v w ∂mu) -
+      ((∫ w, u w ∂rho) - ∫ w, v w ∂rho) =
+      ((∫ w, u w ∂mu) - ∫ w, u w ∂rho) -
+      ((∫ w, v w ∂mu) - ∫ w, v w ∂rho) := by ring
+  rw [hr]
+  exact (abs_sub _ _).trans (by linarith)
+
+private theorem nonnegative_closed_cutoff_variation_le
+    (f : ℝ → ℝ) (M : ℝ) (hM : 0 ≤ M)
+    (hf0 : ∀ w, 0 ≤ f w) (hfM : ∀ w, f w ≤ M) (v : ℝ) :
+    eVariationOn (fun w => if w ≤ v then f w else 0) univ ≤
+      eVariationOn f univ + ENNReal.ofReal M := by
+  let q : ℝ → ℝ := fun w => if w ≤ v then M else 0
+  have hq : Antitone q := by
+    intro x y hxy
+    dsimp [q]
+    split_ifs <;> linarith
+  have hq0 (w : ℝ) : 0 ≤ q w := by dsimp [q]; split_ifs <;> positivity
+  have hqM (w : ℝ) : q w ≤ M := by dsimp [q]; split_ifs <;> linarith
+  have hstep (x y : ℝ) (hxy : x ≤ y) :
+      |(if x ≤ v then f x else 0) - (if y ≤ v then f y else 0)| ≤
+        |f x - f y| + (q x - q y) := by
+    dsimp [q]
+    by_cases hx : x ≤ v <;> by_cases hy : y ≤ v
+    · simp only [if_pos hx, if_pos hy, sub_self, add_zero, le_refl]
+    · simp only [if_pos hx, if_neg hy, sub_zero, abs_of_nonneg (hf0 x)]
+      linarith [hfM x, abs_nonneg (f x - f y)]
+    · exact False.elim (hx (hxy.trans hy))
+    · simp only [if_neg hx, if_neg hy, sub_self, abs_zero, add_zero]
+      exact abs_nonneg _
+  apply iSup_le
+  rintro ⟨n, w, hw, hmem⟩
+  have ht (m : ℕ) :
+      (∑ i ∈ Finset.range m, (q (w i) - q (w (i + 1)))) = q (w 0) - q (w m) := by
+    induction m with
+    | zero => simp
+    | succ m ih => rw [Finset.sum_range_succ, ih]; ring
+  calc
+    _ ≤ ∑ i ∈ Finset.range n,
+        (edist (f (w i)) (f (w (i + 1))) +
+          ENNReal.ofReal (q (w i) - q (w (i + 1)))) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      rw [edist_dist, Real.dist_eq, edist_dist, Real.dist_eq,
+        ← ENNReal.ofReal_add (abs_nonneg _) (sub_nonneg.mpr (hq (hw (Nat.le_succ i))))]
+      apply ENNReal.ofReal_le_ofReal
+      simpa only [abs_sub_comm] using hstep _ _ (hw (Nat.le_succ i))
+    _ = (∑ i ∈ Finset.range n, edist (f (w i)) (f (w (i + 1)))) +
+        ENNReal.ofReal (q (w 0) - q (w n)) := by
+      rw [Finset.sum_add_distrib, ← ENNReal.ofReal_sum_of_nonneg, ht]
+      intro i hi
+      exact sub_nonneg.mpr (hq (hw (Nat.le_succ i)))
+    _ ≤ eVariationOn f univ + ENNReal.ofReal M := by
+      apply add_le_add
+      · simpa only [edist_comm] using
+          (eVariationOn.sum_le (f := f) (n := n) hw (fun _ => mem_univ _))
+      · exact ENNReal.ofReal_le_ofReal (by linarith [hqM (w 0), hq0 (w n)])
+
+private theorem truncation_square_support_bound
+    (h y : ℝ) (hh : 0 < h) (hh1 : h ≤ 1) :
+    y ^ 2 ≤ h ^ 2 * (if y = 0 then 0 else 1) + Shao.truncationF y / h := by
+  by_cases hy : y = 0
+  · simp [hy, Shao.truncationF]
+  · rw [if_neg hy, mul_one]
+    by_cases hsmall : |y| ≤ h
+    · have hs : y ^ 2 ≤ h ^ 2 := by nlinarith [sq_abs y, abs_nonneg y]
+      exact hs.trans (le_add_of_nonneg_right (div_nonneg (Shao.truncationF_nonneg y) hh.le))
+    · have hmin : h ≤ min |y| 1 := le_min (le_of_not_ge hsmall) hh1
+      have hs : h * y ^ 2 ≤ Shao.truncationF y := by
+        dsimp [Shao.truncationF]
+        nlinarith [mul_le_mul_of_nonneg_left hmin (sq_nonneg y)]
+      have hd : y ^ 2 ≤ Shao.truncationF y / h := (le_div_iff₀ hh).mpr (by nlinarith)
+      exact hd.trans (le_add_of_nonneg_left (sq_nonneg h))
+
+private theorem normalized_nonzero_support_lower_bound
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (n : ℕ) (hn : 0 < n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) rho)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (x : ℝ) (hx : 1 ≤ x) :
+    let normalizedLaw : Measure ℝ :=
+      Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+    let b : ℝ := Shao.truncationBudget normalizedLaw n x
+    b ≤ 1 / 2 →
+      0 < b ∧ (1 + x) ^ 6 / (8 * b ^ 2) ≤
+        (n : ℝ) * rho.real {z : ℝ | z ≠ 0} := by
+  classical
+  intro nu b hb
+  have hN : 0 < (n : ℝ) := by exact_mod_cast hn
+  let t : ℝ := Real.sqrt (n : ℝ)
+  have ht : 0 < t := Real.sqrt_pos.mpr hN
+  have ht2 : t ^ 2 = (n : ℝ) := Real.sq_sqrt hN.le
+  have hm : Measurable (fun z : ℝ => z / t) := by fun_prop
+  have hnu2 : Integrable (fun z : ℝ => z ^ 2) nu := by
+    apply (integrable_map_measure (by fun_prop) hm.aemeasurable).2
+    simpa only [Function.comp_def, div_pow] using h2.div_const (t ^ 2)
+  have hnusecond : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 := by
+    change (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂Measure.map (fun z : ℝ => z / t) rho) = 1
+    rw [integral_map hm.aemeasurable (by fun_prop)]
+    simp_rw [div_pow]
+    rw [integral_div, hsecond, ht2]
+    field_simp
+  have hnuPos : 0 < ∫ z : ℝ, z ^ 2 ∂nu := by nlinarith
+  have hbpos : 0 < b := Shao.truncationBudget_pos nu n hnu2 hn hnuPos x (by linarith)
+  refine ⟨hbpos, ?_⟩
+  let s : ℝ := 1 + x
+  have hs : 0 < s := by dsimp [s]; linarith
+  let Y : ℝ → ℝ := fun z => s * (z / t)
+  have hY : Measurable Y := by fun_prop
+  have hY2 : Integrable (fun z : ℝ => (Y z) ^ 2) rho := by
+    simpa only [Y, mul_pow, div_pow] using (h2.div_const (t ^ 2)).const_mul (s ^ 2)
+  have hYmoment : (n : ℝ) * (∫ z : ℝ, (Y z) ^ 2 ∂rho) = s ^ 2 := by
+    simp_rw [Y, mul_pow, div_pow]
+    rw [integral_const_mul, integral_div, hsecond, ht2]
+    field_simp
+  have hF : Integrable (fun z : ℝ => Shao.truncationF (Y z)) rho := by
+    refine hY2.mono' (Shao.continuous_truncationF.measurable.comp hY).aestronglyMeasurable ?_
+    exact Eventually.of_forall fun z => by
+      rw [Real.norm_eq_abs, abs_of_nonneg (Shao.truncationF_nonneg _)]
+      exact Shao.truncationF_le_sq _
+  have hbudget : b = (n : ℝ) * (∫ z : ℝ, Shao.truncationF (Y z) ∂rho) := by
+    change (n : ℝ) * (∫ z : ℝ, Shao.truncationF ((1 + x) * z)
+      ∂Measure.map (fun z : ℝ => z / t) rho) = _
+    rw [integral_map hm.aemeasurable
+      (Shao.continuous_truncationF.comp (continuous_const.mul continuous_id)).aestronglyMeasurable]
+  let I : ℝ → ℝ := fun z => if z = 0 then 0 else 1
+  let pi : ℝ := rho.real {z : ℝ | z ≠ 0}
+  have hIm : Measurable I := Measurable.ite
+    (measurableSet_eq_fun measurable_id measurable_const) measurable_const measurable_const
+  have hI : Integrable I rho := by
+    refine (integrable_const (1 : ℝ)).mono' hIm.aestronglyMeasurable ?_
+    exact Eventually.of_forall fun z => by dsimp [I]; split_ifs <;> norm_num
+  have hIint : (∫ z : ℝ, I z ∂rho) = pi := by
+    have he : I = ({z : ℝ | z ≠ 0}).indicator (fun _ => (1 : ℝ)) := by
+      funext z
+      by_cases hz : z = 0 <;> simp [I, hz]
+    rw [he]
+    exact integral_indicator_one ((measurableSet_singleton (0 : ℝ)).compl)
+  let h : ℝ := 2 * b / s ^ 2
+  have hh : 0 < h := by dsimp [h]; positivity
+  have hh1 : h ≤ 1 := by
+    apply (div_le_one (sq_pos_of_pos hs)).mpr
+    have hs2 : (2 : ℝ) ≤ s := by dsimp [s]; linarith
+    nlinarith
+  have hYzero (z : ℝ) : Y z = 0 ↔ z = 0 := by simp [Y, hs.ne', ht.ne']
+  have hp : ∀ z : ℝ, (Y z) ^ 2 ≤ h ^ 2 * I z + Shao.truncationF (Y z) / h := by
+    intro z
+    simpa only [I, hYzero z] using truncation_square_support_bound h (Y z) hh hh1
+  have hi := integral_mono hY2 ((hI.const_mul (h ^ 2)).add (hF.div_const h)) hp
+  change (∫ z : ℝ, (Y z) ^ 2 ∂rho) ≤
+    ∫ z : ℝ, h ^ 2 * I z + Shao.truncationF (Y z) / h ∂rho at hi
+  rw [integral_add (hI.const_mul (h ^ 2)) (hF.div_const h),
+    integral_const_mul, hIint, integral_div] at hi
+  have hcost : s ^ 2 ≤ (n : ℝ) * h ^ 2 * pi + b / h := by
+    calc
+      s ^ 2 = (n : ℝ) * (∫ z : ℝ, (Y z) ^ 2 ∂rho) := hYmoment.symm
+      _ ≤ (n : ℝ) * (h ^ 2 * pi + (∫ z : ℝ, Shao.truncationF (Y z) ∂rho) / h) :=
+        mul_le_mul_of_nonneg_left hi hN.le
+      _ = (n : ℝ) * h ^ 2 * pi + b / h := by rw [hbudget]; ring
+  have hdiv : b / h = s ^ 2 / 2 := by
+    dsimp [h]
+    field_simp [hbpos.ne', hs.ne']
+    <;> ring
+  rw [hdiv] at hcost
+  have heh : h ^ 2 * s ^ 4 = 4 * b ^ 2 := by
+    dsimp [h]
+    field_simp [hs.ne']
+    <;> ring
+  have hlast : s ^ 6 ≤ (n : ℝ) * pi * (4 * b ^ 2) + s ^ 6 / 2 := by
+    calc
+      s ^ 6 = s ^ 2 * s ^ 4 := by ring
+      _ ≤ ((n : ℝ) * h ^ 2 * pi + s ^ 2 / 2) * s ^ 4 :=
+        mul_le_mul_of_nonneg_right hcost (by positivity)
+      _ = (n : ℝ) * pi * (h ^ 2 * s ^ 4) + s ^ 6 / 2 := by ring
+      _ = (n : ℝ) * pi * (4 * b ^ 2) + s ^ 6 / 2 := by rw [heh]
+  change s ^ 6 / (8 * b ^ 2) ≤ (n : ℝ) * pi
+  apply (div_le_iff₀ (by positivity : (0 : ℝ) < 8 * b ^ 2)).mpr
+  nlinarith only [hlast]
+
+private theorem actual_iid_zero_energy_exponential
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (n : ℕ) (hn : 0 < n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) rho)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (x : ℝ) (hx : 1 ≤ x) :
+    let normalizedLaw : Measure ℝ :=
+      Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+    let b : ℝ := Shao.truncationBudget normalizedLaw n x
+    b ≤ 1 / 2 →
+      (Measure.pi (fun _ : Fin n => rho)).real {a : Shao.Path n | Shao.energy a = 0} ≤
+        Real.exp (-((1 + x) ^ 6 / (8 * b ^ 2))) := by
+  classical
+  intro nu b hb
+  obtain ⟨hbpos, hsupport⟩ := normalized_nonzero_support_lower_bound rho n hn h2 hsecond x hx hb
+  let pi : ℝ := rho.real {z : ℝ | z ≠ 0}
+  have hp0 : rho.real ({0} : Set ℝ) = 1 - pi := by
+    have hc := measureReal_compl (μ := rho) (s := ({0} : Set ℝ)) (measurableSet_singleton (0 : ℝ))
+    rw [probReal_univ] at hc
+    have he : ({0} : Set ℝ)ᶜ = {z : ℝ | z ≠ 0} := by ext z; simp
+    rw [he] at hc
+    dsimp [pi]
+    linarith
+  have he : {a : Shao.Path n | Shao.energy a = 0} =
+      Set.pi univ (fun _ : Fin n => ({0} : Set ℝ)) := by
+    ext a
+    simp [Shao.energy_eq_zero_iff]
+  rw [he, Measure.real_def, Measure.pi_pi]
+  simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ENNReal.toReal_pow]
+  change (rho.real ({0} : Set ℝ)) ^ n ≤ _
+  rw [hp0]
+  calc
+    (1 - pi) ^ n ≤ (Real.exp (-pi)) ^ n := by
+      apply pow_le_pow_left₀ (by rw [← hp0]; exact measureReal_nonneg)
+      have he := Real.add_one_le_exp (-pi)
+      linarith only [he]
+    _ = Real.exp (-((n : ℝ) * pi)) := by rw [← Real.exp_nat_mul]; congr 1; ring
+    _ ≤ Real.exp (-((1 + x) ^ 6 / (8 * b ^ 2))) := Real.exp_le_exp.mpr (neg_le_neg hsupport)
+
+private theorem rare_zero_gaussian_numeric
+    (x b : ℝ) (hx : 1 ≤ x) (hb : 0 < b) (hbsmall : b ≤ 1 / 2) :
+    Real.exp (-((1 + x) ^ 6 / (8 * b ^ 2))) ≤
+      Real.sqrt (2 * Real.pi) * b * Shao.standardNormalTail x := by
+  let s : ℝ := 1 + x
+  have hs2 : 2 ≤ s := by dsimp [s]; linarith
+  have hs : 0 < s := by linarith
+  have h4 : 4 * b ^ 2 ≤ 1 := by
+    have he := pow_le_pow_left₀ hb.le hbsmall 2
+    norm_num at he
+    linarith
+  have hx2 : x ^ 2 ≤ s ^ 2 := by dsimp [s]; nlinarith
+  have hs4 : 3 ≤ s ^ 4 := by
+    have he := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 2) hs2 4
+    norm_num at he
+    linarith
+  have hs6 : 3 * s ^ 2 ≤ s ^ 6 := by
+    have he := mul_le_mul_of_nonneg_right hs4 (sq_nonneg s)
+    nlinarith only [he]
+  have hp1 : 4 * b ^ 2 * x ^ 2 ≤ s ^ 2 := by
+    have he := mul_le_mul_of_nonneg_right h4 (sq_nonneg x)
+    nlinarith only [he, hx2]
+  have hp2 : 8 * s * b ≤ 2 * s ^ 2 := by
+    have he := mul_le_mul_of_nonneg_left hbsmall (show 0 ≤ 8 * s by positivity)
+    nlinarith only [he, mul_nonneg hs.le (sub_nonneg.mpr hs2)]
+  have hexponent : x ^ 2 / 2 + s / b ≤ s ^ 6 / (8 * b ^ 2) := by
+    apply (le_div_iff₀ (by positivity : (0 : ℝ) < 8 * b ^ 2)).mpr
+    have he : (s / b) * (8 * b ^ 2) = 8 * s * b := by field_simp
+    rw [add_mul, he]
+    nlinarith only [hp1, hp2, hs6]
+  have hsmall : Real.exp (-(s / b)) ≤ b / s := by
+    have he := Real.add_one_le_exp (s / b)
+    have hd : s / b ≤ Real.exp (s / b) := by linarith only [he]
+    have hm := mul_le_mul_of_nonneg_right hd (Real.exp_pos (-(s / b))).le
+    have hid : Real.exp (s / b) * Real.exp (-(s / b)) = 1 := by rw [← Real.exp_add]; simp
+    rw [hid] at hm
+    apply (le_div_iff₀ hs).mpr
+    have hh := mul_le_mul_of_nonneg_right hm hb.le
+    have hi : (s / b * Real.exp (-(s / b))) * b = Real.exp (-(s / b)) * s := by field_simp
+    rw [hi] at hh
+    simpa only [one_mul] using hh
+  have hc : 0 < Real.sqrt (2 * Real.pi) := by positivity
+  have hformula : Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * Real.pi) * Shao.standardNormalDensity x := by
+    simp only [Shao.standardNormalDensity, gaussianPDFReal, NNReal.coe_one, sub_zero, mul_one]
+    field_simp
+  have hm : Real.exp (-x ^ 2 / 2) / s ≤ Real.sqrt (2 * Real.pi) * Shao.standardNormalTail x := by
+    rw [hformula, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left (Shao.standardNormal_mills_bounds x (by linarith)).1 hc.le
+  calc
+    _ ≤ Real.exp (-(x ^ 2 / 2 + s / b)) := Real.exp_le_exp.mpr (neg_le_neg hexponent)
+    _ = Real.exp (-x ^ 2 / 2) * Real.exp (-(s / b)) := by rw [← Real.exp_add]; congr 1; ring
+    _ ≤ Real.exp (-x ^ 2 / 2) * (b / s) := mul_le_mul_of_nonneg_left hsmall (Real.exp_pos _).le
+    _ = b * (Real.exp (-x ^ 2 / 2) / s) := by ring
+    _ ≤ b * (Real.sqrt (2 * Real.pi) * Shao.standardNormalTail x) := mul_le_mul_of_nonneg_left hm hb.le
+    _ = _ := by ring
+
+private theorem double_kernel_gaussian_numeric
+    (x : ℝ) (hx : 1 ≤ x) :
+    Real.exp (-4 * x ^ 2) ≤ Real.sqrt (2 * Real.pi) * Shao.standardNormalTail x := by
+  have he := Real.add_one_le_exp (7 * x ^ 2 / 2)
+  have hx0 : 0 ≤ x := by linarith
+  have hexp : 1 + x ≤ Real.exp (7 * x ^ 2 / 2) := by nlinarith only [hx, he]
+  have hp : Real.exp (-4 * x ^ 2) * (1 + x) ≤ Real.exp (-x ^ 2 / 2) := by
+    calc
+      _ ≤ Real.exp (-4 * x ^ 2) * Real.exp (7 * x ^ 2 / 2) :=
+        mul_le_mul_of_nonneg_left hexp (Real.exp_pos _).le
+      _ = _ := by rw [← Real.exp_add]; congr 1; ring
+  have hc : 0 < Real.sqrt (2 * Real.pi) := by positivity
+  have hformula : Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * Real.pi) * Shao.standardNormalDensity x := by
+    simp only [Shao.standardNormalDensity, gaussianPDFReal, NNReal.coe_one, sub_zero, mul_one]
+    field_simp
+  have hm : Real.exp (-x ^ 2 / 2) / (1 + x) ≤
+      Real.sqrt (2 * Real.pi) * Shao.standardNormalTail x := by
+    rw [hformula, mul_div_assoc]
+    exact mul_le_mul_of_nonneg_left (Shao.standardNormal_mills_bounds x hx0).1 hc.le
+  exact ((le_div_iff₀ (by linarith : 0 < 1 + x)).mpr hp).trans hm
+
+private theorem actual_brownian_initial_double_integrals
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x : ℝ) :
+    PB.real (brownianInitialDouble B x) =
+      (∫ w : ℝ, doubleCompletion (bridgeLaw B PB) x w ∂(gaussianReal 0 1)) ∧
+    ∀ v : ℝ,
+      PB.real (brownianInitialDouble B x ∩ {omega : Ω | B 1 omega ≤ v}) =
+        (∫ w : ℝ, (if w ≤ v then doubleCompletion (bridgeLaw B PB) x w else 0)
+          ∂(gaussianReal 0 1)) := by
+  classical
+  letI := isProbabilityMeasure_bridgeLaw B PB hB
+  let nu : Measure BridgeNoise := bridgeLaw B PB
+  let G : Measure ℝ := gaussianReal 0 1
+  let D : Set (BridgeNoise × ℝ) :=
+    {p | p.1 ∈ (strictUpper x 0 1 p.2)ᶜ ∩ (strictLower x 0 1 p.2)ᶜ}
+  have hU : MeasurableSet {p : BridgeNoise × ℝ | p.1 ∈ strictUpper x 0 1 p.2} := by
+    exact Shao.C2.CompletionMeasurability.isOpen_strictUpper_parameters.measurableSet.preimage
+      (show Measurable (fun p : BridgeNoise × ℝ => (p.1, (x, (0, (1, p.2))))) by fun_prop)
+  have hL : MeasurableSet {p : BridgeNoise × ℝ | p.1 ∈ strictLower x 0 1 p.2} := by
+    exact Shao.C2.CompletionMeasurability.isOpen_strictLower_parameters.measurableSet.preimage
+      (show Measurable (fun p : BridgeNoise × ℝ => (p.1, (x, (0, (1, p.2))))) by fun_prop)
+  have hD : MeasurableSet D := hU.compl.inter hL.compl
+  have hsection (w : ℝ) : {g : BridgeNoise | (g, w) ∈ D} =
+      (strictUpper x 0 1 w)ᶜ ∩ (strictLower x 0 1 w)ᶜ := by ext g; rfl
+  have hprod (S : Set (BridgeNoise × ℝ)) (hS : MeasurableSet S) :
+      (nu.prod G).real S = ∫ w : ℝ, nu.real {g : BridgeNoise | (g, w) ∈ S} ∂G := by
+    let F : BridgeNoise × ℝ → ℝ := S.indicator (fun _ => 1)
+    have hF : Integrable F (nu.prod G) := (integrable_const 1).indicator hS
+    calc
+      _ = ∫ p, F p ∂(nu.prod G) := (integral_indicator_one hS).symm
+      _ = ∫ w : ℝ, ∫ g : BridgeNoise, F (g, w) ∂nu ∂G := integral_prod_symm F hF
+      _ = _ := by
+        apply integral_congr_ae
+        exact Eventually.of_forall fun w => by
+          have hm : MeasurableSet {g : BridgeNoise | (g, w) ∈ S} :=
+            hS.preimage (measurable_id.prodMk measurable_const)
+          change (∫ g, ({g : BridgeNoise | (g, w) ∈ S}).indicator (fun _ => (1 : ℝ)) g ∂nu) = _
+          exact integral_indicator_one hm
+  have hevent : brownianInitialDouble B x =ᵐ[PB]
+      (fun omega => (bridgeNoise B omega, B 1 omega)) ⁻¹' D := by
+    filter_upwards [ae_bridgeNoise_eq B PB hB] with omega homega
+    apply propext
+    have heq (t : BridgeTime) : bridgePath 0 1 (B 1 omega) (bridgeNoise B omega) t =
+        B ⟨(t : ℝ), t.property.1⟩ omega := by
+      simp only [bridgePath, ContinuousMap.coe_mk, mul_zero, zero_add, Real.sqrt_one, one_mul]
+      rw [homega t]
+      ring
+    simp only [brownianInitialDouble, D, mem_preimage, mem_setOf_eq, mem_inter_iff,
+      mem_compl_iff, strictUpper, strictLower, not_forall, not_lt, heq]
+  constructor
+  · calc
+      _ = PB.real ((fun omega => (bridgeNoise B omega, B 1 omega)) ⁻¹' D) := measureReal_congr hevent
+      _ = (nu.prod G).real D := (bridge_endpoint_hasLaw B PB hB).measureReal_eq hD
+      _ = ∫ w : ℝ, nu.real {g : BridgeNoise | (g, w) ∈ D} ∂G := hprod D hD
+      _ = _ := by
+        apply integral_congr_ae
+        exact Eventually.of_forall fun w => by
+          change nu.real {g : BridgeNoise | (g, w) ∈ D} =
+            nu.real ((strictUpper x 0 1 w)ᶜ ∩ (strictLower x 0 1 w)ᶜ)
+          exact congrArg (fun S : Set BridgeNoise => nu.real S) (hsection w)
+  · intro v
+    let S : Set (BridgeNoise × ℝ) := D ∩ {p | p.2 ≤ v}
+    have hS : MeasurableSet S := hD.inter (measurableSet_le measurable_snd measurable_const)
+    have hej : brownianInitialDouble B x ∩ {omega | B 1 omega ≤ v} =ᵐ[PB]
+        (fun omega => (bridgeNoise B omega, B 1 omega)) ⁻¹' S := by
+      filter_upwards [hevent] with omega homega
+      apply propext
+      change (omega ∈ brownianInitialDouble B x ∧ B 1 omega ≤ v) ↔
+        ((bridgeNoise B omega, B 1 omega) ∈ D ∧ B 1 omega ≤ v)
+      exact and_congr (Iff.of_eq homega) Iff.rfl
+    calc
+      _ = PB.real ((fun omega => (bridgeNoise B omega, B 1 omega)) ⁻¹' S) := measureReal_congr hej
+      _ = (nu.prod G).real S := (bridge_endpoint_hasLaw B PB hB).measureReal_eq hS
+      _ = ∫ w : ℝ, nu.real {g : BridgeNoise | (g, w) ∈ S} ∂G := hprod S hS
+      _ = _ := by
+        apply integral_congr_ae
+        exact Eventually.of_forall fun w => by
+          change nu.real {g : BridgeNoise | (g, w) ∈ S} =
+            (if w ≤ v then doubleCompletion (bridgeLaw B PB) x w else 0)
+          by_cases hw : w ≤ v
+          · have hs : {g : BridgeNoise | (g, w) ∈ S} = {g : BridgeNoise | (g, w) ∈ D} := by
+              ext g
+              simp only [S, mem_setOf_eq, mem_inter_iff, hw, and_true]
+            rw [hs, hsection, if_pos hw]
+          · have hs : {g : BridgeNoise | (g, w) ∈ S} = ∅ := by
+              ext g
+              simp only [S, mem_setOf_eq, mem_inter_iff, hw, and_false, mem_empty_iff_false]
+            rw [hs, measureReal_empty, if_neg hw]
+
+theorem original_finite_second_initial_double_completion_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) rho →
+        (∫ z : ℝ, z ∂rho) = 0 →
+        (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (Ω : Type*) [MeasurableSpace Ω]
+          (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB],
+          IsBrownianReal B PB →
+          ∀ x : ℝ, 1 ≤ x →
+            let normalizedLaw : Measure ℝ :=
+              Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+            let b : ℝ := Shao.truncationBudget normalizedLaw n x
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let W : Shao.Path n → ℝ := Shao.C1.normalizedEndpoint
+            let Z : Shao.Path n → ℝ := initialDoubleObservable (bridgeLaw B PB) x
+            b ≤ 1 / 2 →
+              Integrable Z P ∧
+              |(∫ a : Shao.Path n, Z a ∂P) - PB.real (brownianInitialDouble B x)| ≤
+                C * b * Shao.standardNormalTail x ∧
+              ∀ v : ℝ,
+                Integrable (fun a : Shao.Path n => if W a ≤ v then Z a else 0) P ∧
+                |(∫ a : Shao.Path n, (if W a ≤ v then Z a else 0) ∂P) -
+                  PB.real (brownianInitialDouble B x ∩ {omega : Ω | B 1 omega ≤ v})| ≤
+                    C * b * Shao.standardNormalTail x := by
+  classical
+  obtain ⟨Cs, hCs, hscalar⟩ :=
+    Shao.Probability.SourceScalarInitialBudget.finite_second_scalar_closed_cdf_budget
+  let K : ℝ := Real.sqrt (2 * Real.pi)
+  have hK : 0 < K := by dsimp [K]; positivity
+  refine ⟨(18 * Cs + 1) * K, by positivity, ?_⟩
+  intro rho hrho n hn h2 hmean hsecond Ω mΩ B PB hPB hB x hx
+  letI : IsProbabilityMeasure rho := hrho
+  letI : MeasurableSpace Ω := mΩ
+  letI : IsProbabilityMeasure PB := hPB
+  intro nu b P W Z hb
+  letI : IsProbabilityMeasure P := inferInstance
+  letI : IsProbabilityMeasure (bridgeLaw B PB) := isProbabilityMeasure_bridgeLaw B PB hB
+  have hx0 : 0 ≤ x := by linarith
+  have hN : 0 < (n : ℝ) := by exact_mod_cast hn
+  have hsqrt : 0 < Real.sqrt (n : ℝ) := Real.sqrt_pos.mpr hN
+  have hnorm : Measurable (fun z : ℝ => z / Real.sqrt (n : ℝ)) := by fun_prop
+  have hnu2 : Integrable (fun z : ℝ => z ^ 2) nu := by
+    apply (integrable_map_measure (by fun_prop) hnorm.aemeasurable).mpr
+    simpa only [Function.comp_def, div_pow] using h2.div_const ((Real.sqrt (n : ℝ)) ^ 2)
+  let R0 : ℝ := Shao.truncationBudget nu n 0
+  have hR00 : 0 ≤ R0 := Shao.truncationBudget_nonneg nu n hnu2 0
+  have hR0b : R0 ≤ b := Shao.truncationBudget_mono nu n hnu2 0 x (by norm_num) hx0
+  have hbpos : 0 < b := (normalized_nonzero_support_lower_bound rho n hn h2 hsecond x hx hb).1
+  let f : ℝ → ℝ := doubleCompletion (bridgeLaw B PB) x
+  let r : ℝ := Real.exp (-4 * x ^ 2)
+  have hr : 0 < r := Real.exp_pos _
+  obtain ⟨hfcont, hfb, hfvar, hfright, hfleft⟩ := actual_initial_double_completion_kernel B PB hB x hx
+  have hfmeas : Measurable f := hfcont.measurable
+  have hf01 (w : ℝ) : 0 ≤ f w ∧ f w ≤ 1 := by
+    constructor
+    · exact (hfb w).1
+    · change (bridgeLaw B PB).real _ ≤ 1
+      exact measureReal_le_one
+  have hW : Measurable W := Shao.C1.measurable_normalizedEndpoint
+  let mu : Measure ℝ := Measure.map W P
+  letI : IsProbabilityMeasure mu :=
+    (Measure.isProbabilityMeasure_map_iff hW.aemeasurable).mpr inferInstance
+  let G : Measure ℝ := gaussianReal 0 1
+  have hCDF (w : ℝ) : |mu.real (Iic w) - G.real (Iic w)| ≤ Cs * R0 := by
+    have he := hscalar rho n hn h2 hmean (show 0 < ∫ z : ℝ, z ^ 2 ∂rho by rw [hsecond]; norm_num) w
+    simp only [hsecond, Real.sqrt_one, one_mul] at he
+    change |P.real {a : Shao.Path n | W a ≤ w} - G.real (Iic w)| ≤ Cs * R0 at he
+    change |(Measure.map W P).real (Iic w) - G.real (Iic w)| ≤ Cs * R0
+    rw [Measure.real_def, Measure.map_apply hW measurableSet_Iic]
+    exact he
+  have hdelta : 0 ≤ Cs * R0 := mul_nonneg hCs.le hR00
+  let E : Set (Shao.Path n) := {a | Shao.energy a = 0}
+  have hE : MeasurableSet E := measurableSet_eq_fun Shao.measurable_energy measurable_const
+  have hzero : P.real E ≤ K * b * Shao.standardNormalTail x := by
+    exact (actual_iid_zero_energy_exponential rho n hn h2 hsecond x hx hb).trans
+      (rare_zero_gaussian_numeric x b hx hbpos hb)
+  have hrPsi : r ≤ K * Shao.standardNormalTail x := double_kernel_gaussian_numeric x hx
+  have hZmeas : Measurable Z := by
+    change Measurable (fun a : Shao.Path n => if Shao.energy a = 0 then 1 else f (W a))
+    exact Measurable.ite hE measurable_const (hfmeas.comp hW)
+  have hZ01 (a : Shao.Path n) : 0 ≤ Z a ∧ Z a ≤ 1 := by
+    change 0 ≤ (if Shao.energy a = 0 then 1 else f (W a)) ∧
+      (if Shao.energy a = 0 then 1 else f (W a)) ≤ 1
+    split_ifs
+    · norm_num
+    · exact hf01 (W a)
+  have hZagree (a : Shao.Path n) (ha : Shao.energy a ≠ 0) : Z a = f (W a) := by
+    exact if_neg ha
+  have hpaid (g : ℝ → ℝ) (hgmeas : Measurable g)
+      (hgb : ∀ w, 0 ≤ g w ∧ g w ≤ 1)
+      (V : ℝ) (hV : 0 ≤ V) (hV18 : V ≤ 18 * r)
+      (hgvar : eVariationOn g univ ≤ ENNReal.ofReal V)
+      (hgleft : Tendsto g atBot (𝓝 0)) (hgright : Tendsto g atTop (𝓝 0))
+      (Zg : Shao.Path n → ℝ) (hZgmeas : Measurable Zg)
+      (hZgb : ∀ a, 0 ≤ Zg a ∧ Zg a ≤ 1)
+      (hZgagree : ∀ a, Shao.energy a ≠ 0 → Zg a = g (W a)) :
+      Integrable Zg P ∧
+        |(∫ a : Shao.Path n, Zg a ∂P) - ∫ w : ℝ, g w ∂G| ≤
+          ((18 * Cs + 1) * K) * b * Shao.standardNormalTail x := by
+    obtain ⟨hgmu, hgG, hge⟩ := vanishing_bv_expectation_error
+      mu G (Cs * R0) V hdelta hV hCDF g hgvar hgleft hgright
+    have hgw : Integrable (fun a : Shao.Path n => g (W a)) P :=
+      (integrable_map_measure hgmeas.aestronglyMeasurable hW.aemeasurable).mp hgmu
+    have hZg : Integrable Zg P := by
+      refine (integrable_const (1 : ℝ)).mono' hZgmeas.aestronglyMeasurable ?_
+      exact Eventually.of_forall fun a => by
+        rw [Real.norm_eq_abs, abs_of_nonneg (hZgb a).1]
+        exact (hZgb a).2
+    have hI : Integrable (E.indicator (fun _ => (1 : ℝ))) P :=
+      (integrable_const (1 : ℝ)).indicator hE
+    have hpoint (a : Shao.Path n) :
+        ‖Zg a - g (W a)‖ ≤ E.indicator (fun _ => (1 : ℝ)) a := by
+      rw [Real.norm_eq_abs]
+      by_cases ha : Shao.energy a = 0
+      · rw [Set.indicator_of_mem (show a ∈ E from ha)]
+        apply abs_le.mpr
+        constructor <;> linarith [(hZgb a).1, (hZgb a).2, (hgb (W a)).1, (hgb (W a)).2]
+      · rw [hZgagree a ha, sub_self, abs_zero,
+          Set.indicator_of_notMem (show a ∉ E from ha)]
+    have hcor := norm_integral_le_of_norm_le hI (Eventually.of_forall hpoint)
+    rw [integral_sub hZg hgw, Real.norm_eq_abs] at hcor
+    have hEI : (∫ a : Shao.Path n, E.indicator (fun _ => (1 : ℝ)) a ∂P) = P.real E :=
+      integral_indicator_one hE
+    rw [hEI] at hcor
+    change |(∫ w : ℝ, g w ∂Measure.map W P) - ∫ w : ℝ, g w ∂G| ≤ V * (Cs * R0) at hge
+    rw [integral_map hW.aemeasurable hgmeas.aestronglyMeasurable] at hge
+    have hscale : V * (Cs * R0) ≤ 18 * Cs * b * r := by
+      calc
+        _ ≤ (18 * r) * (Cs * R0) := mul_le_mul_of_nonneg_right hV18 hdelta
+        _ ≤ (18 * r) * (Cs * b) :=
+          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hR0b hCs.le) (by positivity)
+        _ = _ := by ring
+    have hscalePsi : V * (Cs * R0) ≤ 18 * Cs * b * (K * Shao.standardNormalTail x) :=
+      hscale.trans (mul_le_mul_of_nonneg_left hrPsi (by positivity))
+    refine ⟨hZg, ?_⟩
+    calc
+      _ = |((∫ a : Shao.Path n, Zg a ∂P) - ∫ a : Shao.Path n, g (W a) ∂P) +
+          ((∫ a : Shao.Path n, g (W a) ∂P) - ∫ w : ℝ, g w ∂G)| := by congr 1; ring
+      _ ≤ |(∫ a : Shao.Path n, Zg a ∂P) - ∫ a : Shao.Path n, g (W a) ∂P| +
+          |(∫ a : Shao.Path n, g (W a) ∂P) - ∫ w : ℝ, g w ∂G| := abs_add_le _ _
+      _ ≤ P.real E + V * (Cs * R0) := add_le_add hcor hge
+      _ ≤ K * b * Shao.standardNormalTail x +
+          18 * Cs * b * (K * Shao.standardNormalTail x) := add_le_add hzero hscalePsi
+      _ = _ := by ring
+  obtain ⟨hBmarg, hBjoint⟩ := actual_brownian_initial_double_integrals B PB hB x
+  obtain ⟨hZi, hZerr⟩ := hpaid f hfmeas hf01 (10 * r) (by positivity)
+    (by nlinarith only [hr]) hfvar hfleft hfright Z hZmeas hZ01 hZagree
+  refine ⟨hZi, ?_, ?_⟩
+  · rw [hBmarg]
+    exact hZerr
+  · intro v
+    let g : ℝ → ℝ := fun w => if w ≤ v then f w else 0
+    have hgm : Measurable g := Measurable.ite measurableSet_Iic hfmeas measurable_const
+    have hgb (w : ℝ) : 0 ≤ g w ∧ g w ≤ 1 := by
+      dsimp [g]
+      split_ifs
+      · exact hf01 w
+      · norm_num
+    have hgv : eVariationOn g univ ≤ ENNReal.ofReal (18 * r) := by
+      calc
+        _ ≤ eVariationOn f univ + ENNReal.ofReal (8 * r) :=
+          nonnegative_closed_cutoff_variation_le f (8 * r) (by positivity)
+            (fun w => (hfb w).1) (fun w => (hfb w).2) v
+        _ ≤ ENNReal.ofReal (10 * r) + ENNReal.ofReal (8 * r) := add_le_add hfvar le_rfl
+        _ = _ := by
+          rw [← ENNReal.ofReal_add (by positivity : 0 ≤ 10 * r) (by positivity : 0 ≤ 8 * r)]
+          congr 1
+          ring
+    have hgl : Tendsto g atBot (𝓝 0) := by
+      apply hfleft.congr'
+      filter_upwards [eventually_le_atBot v] with w hw
+      exact (if_pos hw).symm
+    have hgr : Tendsto g atTop (𝓝 0) := by
+      apply (tendsto_const_nhds : Tendsto (fun _ : ℝ => (0 : ℝ)) atTop (𝓝 0)).congr'
+      filter_upwards [eventually_ge_atTop (v + 1)] with w hw
+      dsimp [g]
+      rw [if_neg (by linarith : ¬w ≤ v)]
+    let Zg : Shao.Path n → ℝ := fun a => if W a ≤ v then Z a else 0
+    have hZgm : Measurable Zg := Measurable.ite
+      (measurableSet_le hW measurable_const) hZmeas measurable_const
+    have hZgb (a : Shao.Path n) : 0 ≤ Zg a ∧ Zg a ≤ 1 := by
+      dsimp [Zg]
+      split_ifs
+      · exact hZ01 a
+      · norm_num
+    have hZga (a : Shao.Path n) (ha : Shao.energy a ≠ 0) : Zg a = g (W a) := by
+      dsimp [Zg, g]
+      rw [hZagree a ha]
+    obtain ⟨hZgi, hZge⟩ := hpaid g hgm hgb (18 * r) (by positivity) le_rfl hgv hgl hgr
+      Zg hZgm hZgb hZga
+    refine ⟨hZgi, ?_⟩
+    rw [hBjoint v]
+    exact hZge
+
+end Shao.C2.InitialDoubleCompletionBudget
+

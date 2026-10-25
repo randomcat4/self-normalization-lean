@@ -1,0 +1,51 @@
+import Shao.C2.InitialDoubleCompletionKernel
+import Shao.Probability.SourceScalarInitialBudget
+import Shao.Probability.TruncationRegularity
+import Shao.C2.InitialBrownianIdentity
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.InitialDoubleCompletionBudget
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.InitialDoubleCompletionKernel
+
+def initialDoubleObservable {n : ℕ}
+    (nu : Measure BridgeNoise) (x : ℝ) (a : Shao.Path n) : ℝ :=
+  if Shao.energy a = 0 then 1
+  else doubleCompletion nu x (Shao.C1.normalizedEndpoint a)
+
+def brownianInitialDouble {Ω : Type*}
+    (B : ℝ≥0 → Ω → ℝ) (x : ℝ) : Set Ω :=
+  {omega | (∃ t : BridgeTime, x ≤ B ⟨(t : ℝ), t.property.1⟩ omega) ∧
+    (∃ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ omega ≤ -x)}
+
+theorem original_finite_second_initial_double_completion_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) rho →
+        (∫ z : ℝ, z ∂rho) = 0 →
+        (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (Ω : Type*) [MeasurableSpace Ω]
+          (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB],
+          IsBrownianReal B PB →
+          ∀ x : ℝ, 1 ≤ x →
+            let normalizedLaw : Measure ℝ :=
+              Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+            let b : ℝ := Shao.truncationBudget normalizedLaw n x
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let W : Shao.Path n → ℝ := Shao.C1.normalizedEndpoint
+            let Z : Shao.Path n → ℝ := initialDoubleObservable (bridgeLaw B PB) x
+            b ≤ 1 / 2 →
+              Integrable Z P ∧
+              |(∫ a : Shao.Path n, Z a ∂P) - PB.real (brownianInitialDouble B x)| ≤
+                C * b * Shao.standardNormalTail x ∧
+              ∀ v : ℝ,
+                Integrable (fun a : Shao.Path n => if W a ≤ v then Z a else 0) P ∧
+                |(∫ a : Shao.Path n, (if W a ≤ v then Z a else 0) ∂P) -
+                  PB.real (brownianInitialDouble B x ∩ {omega : Ω | B 1 omega ≤ v})| ≤
+                    C * b * Shao.standardNormalTail x

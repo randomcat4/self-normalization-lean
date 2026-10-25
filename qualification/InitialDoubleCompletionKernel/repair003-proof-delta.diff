@@ -1,0 +1,58 @@
+--- source-kernel002.lean.txt
++++ InitialDoubleCompletionKernel.lean
+@@ -428,14 +428,16 @@
+     have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+     constructor
+     · simpa only [A, I, hexp] using hh.1
+-    · simpa only [D, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.1
++    · rw [← hexp k]
++      simpa only [D, I, neg_mul, sub_eq_add_neg] using hh.2.1
+   have hJbound (k : ℕ) (hk : 1 ≤ k) (w : ℝ) :
+       J k w ≤ r ^ k ∧ K k w ≤ r ^ k := by
+     have hk' : (1 : ℝ) ≤ (k : ℝ) := by exact_mod_cast hk
+     have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+     constructor
+     · simpa only [J, I, hexp] using hh.2.2.1
+-    · simpa only [K, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.2.2
++    · rw [← hexp k]
++      simpa only [K, I, neg_mul, sub_eq_add_neg] using hh.2.2.2
+   have hAvar (k : ℕ) (hk : 1 ≤ k) :
+       eVariationOn (A k) Set.univ ≤ ENNReal.ofReal (r ^ k) ∧
+         eVariationOn (D k) Set.univ ≤ ENNReal.ofReal (r ^ k) := by
+@@ -616,7 +618,6 @@
+   have hsbound (N : ℕ) : s (N + 1) ≤ r ^ (N + 1) := by
+     rw [← hexp]
+     apply Real.exp_le_exp.mpr
+-    dsimp only [s]
+     have hp : 0 ≤ 8 * ((N + 1 : ℕ) : ℝ) ^ 2 * x ^ 2 := by positivity
+     nlinarith only [hp]
+   have hpow : Tendsto (fun N : ℕ => r ^ (N + 1)) atTop (nhds 0) := by
+@@ -663,7 +664,6 @@
+     have hh := mul_le_mul_of_nonneg_left (min_le_right w (-x)) (by positivity : 0 ≤ 2 * x)
+     have he : Real.exp (-2 * x * (x - min w (-x))) ≤ r := by
+       apply Real.exp_le_exp.mpr
+-      dsimp only [r]
+       nlinarith only [hh]
+     dsimp only [L]
+     constructor <;> linarith [Real.exp_pos (-2 * x * (x - min w (-x)))]
+@@ -671,7 +671,6 @@
+     have hh := mul_le_mul_of_nonneg_left (le_max_right w x) (by positivity : 0 ≤ 2 * x)
+     have he : Real.exp (-2 * x * (x + max w x)) ≤ r := by
+       apply Real.exp_le_exp.mpr
+-      dsimp only [r]
+       nlinarith only [hh]
+     dsimp only [R]
+     constructor <;> linarith [Real.exp_pos (-2 * x * (x + max w x))]
+@@ -694,10 +693,10 @@
+     dsimp only [R]
+     linarith
+   have hLvar : eVariationOn L Set.univ ≤ ENNReal.ofReal r :=
+-    antitoneOn_variation_le L Set.univ r hLmono.antitoneOn
++    antitoneOn_variation_le L Set.univ r (hLmono.antitoneOn Set.univ)
+       (fun w hw => (hLbounds w).1) (fun w hw => (hLbounds w).2)
+   have hRvar : eVariationOn R Set.univ ≤ ENNReal.ofReal r :=
+-    monotoneOn_variation_le R Set.univ r hRmono.monotoneOn
++    monotoneOn_variation_le R Set.univ r (hRmono.monotoneOn Set.univ)
+       (fun w hw => (hRbounds w).1) (fun w hw => (hRbounds w).2)
+   have hLzero (w : ℝ) (hw : -x ≤ w) : L w = 0 := by
+     dsimp only [L]

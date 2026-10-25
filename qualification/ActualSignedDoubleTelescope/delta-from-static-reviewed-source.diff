@@ -1,0 +1,104 @@
+--- original-static-reviewed-source-044b
++++ current-source-a05f
+@@ -64,7 +64,7 @@
+       Q.real (Uᶜ ∩ Dᶜ) = 1 - Q.real U - Q.real D + Q.real (U ∩ D) := by
+     have h0 := measureReal_inter_add_sdiff (μ := Q) (s := Set.univ) hU
+     have h0' : Q.real U + Q.real Uᶜ = 1 := by
+-      simpa only [Set.univ_inter, Set.univ_diff, probReal_univ] using h0
++      simpa only [Set.univ_inter, ← Set.compl_eq_univ_sdiff, probReal_univ] using h0
+     have h1 := measureReal_inter_add_sdiff (μ := Q) (s := Uᶜ) hD
+     have h2 := measureReal_inter_add_sdiff (μ := Q) (s := D) hU
+     have hDU : D \ U = Uᶜ ∩ D := by
+@@ -103,9 +103,9 @@
+     have hCross : Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x := by
+       change (∃ r : ℕ, r ≤ n ∧ _ ≤ _) ∧ (∃ r : ℕ, r ≤ n ∧ _ ≤ _)
+       constructor
+-      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, hzero,
++      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, he, hzero,
+           Real.sqrt_zero, mul_zero, Shao.prefixSum_zero, le_refl]⟩
+-      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, hzero,
++      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, he, hzero,
+           Real.sqrt_zero, mul_zero, neg_zero, Shao.prefixSum_zero, le_refl]⟩
+     refine ⟨fun r _ => by rw [hV r]; norm_num, ?_, ?_⟩
+     · rw [hV 0, Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable, if_pos hzero]
+@@ -166,10 +166,10 @@
+       cases J with
+       | upper =>
+         change (∀ t : BridgeTime, bridgePath (y r) (T r) z g t < w) at hg
+-        exact ⟨by simpa only [hep.1] using hg 0, by simpa only [hep.2] using hg 1⟩
++        exact ⟨by simpa only [Interior, hep.1] using hg 0, by simpa only [Interior, hep.2] using hg 1⟩
+       | lower =>
+         change (∀ t : BridgeTime, -w < bridgePath (y r) (T r) z g t) at hg
+-        exact ⟨by simpa only [hep.1] using hg 0, by simpa only [hep.2] using hg 1⟩
++        exact ⟨by simpa only [Interior, hep.1] using hg 0, by simpa only [Interior, hep.2] using hg 1⟩
+       | interval =>
+         change (∀ t : BridgeTime, bridgePath (y r) (T r) z g t < w) ∧
+           (∀ t : BridgeTime, -w < bridgePath (y r) (T r) z g t) at hg
+@@ -208,13 +208,13 @@
+           eventCompletionKernel J Q (x, 0, 1, v) := by
+       cases J with
+       | upper =>
+-        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
++        exact (by simpa only [eventCompletionKernel, hc2, hcz, hcw, mul_zero, mul_one] using
+           Shao.C2.CompletionScaling.upperCompletion_scale Q c hc x 0 1 v (by norm_num))
+       | lower =>
+-        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
++        exact (by simpa only [eventCompletionKernel, hc2, hcz, hcw, mul_zero, mul_one] using
+           Shao.C2.CompletionScaling.lowerCompletion_scale Q c hc x 0 1 v (by norm_num))
+       | interval =>
+-        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
++        exact (by simpa only [eventCompletionKernel, hc2, hcz, hcw, mul_zero, mul_one] using
+           Shao.C2.CompletionScaling.intervalCompletion_scale Q c hc x 0 1 v (by norm_num))
+     have hInitial : actualDoubleValue Q x a 0 sigma =
+         Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a := by
+@@ -245,7 +245,7 @@
+         refine ⟨hQ, ?_, h⟩
+         have hn := h n le_rfl
+         change Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n < w at hn
+-        simpa only [hs] using hn
++        simpa only [Interior, w, hs] using hn
+     have hLo : sourceAlive .lower a x n sigma ↔
+         ∀ k : ℕ, k ≤ n → -w < y k := by
+       constructor
+@@ -254,7 +254,7 @@
+         refine ⟨hQ, ?_, h⟩
+         have hn := h n le_rfl
+         change -w < Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n at hn
+-        simpa only [hs] using hn
++        simpa only [Interior, w, hs] using hn
+     have hCross : Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x ↔
+         ¬ sourceAlive .upper a x n sigma ∧ ¬ sourceAlive .lower a x n sigma := by
+       change ((∃ r : ℕ, r ≤ n ∧ _ ≤ _) ∧ (∃ r : ℕ, r ≤ n ∧ _ ≤ _)) ↔ _
+@@ -414,16 +414,27 @@
+     have hLfun : L = fun p => LS .interval p - LS .upper p - LS .lower p := funext hL
+     have hOfun : O = fun p => OS .upper p + OS .lower p - OS .interval p := funext hO
+     rw [hZfun, hLfun, hOfun]
+-    rw [integral_sub (((hInt .interval).1.sub (hInt .interval).2.1).sub
+-        ((hInt .upper).1.sub (hInt .upper).2.1)) ((hInt .lower).1.sub (hInt .lower).2.1),
+-      integral_sub ((hInt .interval).1.sub (hInt .interval).2.1)
++    change (∫ p, (A .interval p - I .interval p) - (A .upper p - I .upper p) -
++      (A .lower p - I .lower p) ∂μ) =
++      (∫ p, LS .interval p - LS .upper p - LS .lower p ∂μ) -
++      (∫ p, OS .upper p + OS .lower p - OS .interval p ∂μ)
++    rw [integral_sub
++        (f := fun p => A .interval p - I .interval p - (A .upper p - I .upper p))
++        (g := fun p => A .lower p - I .lower p)
++        (((hInt .interval).1.sub (hInt .interval).2.1).sub
++          ((hInt .upper).1.sub (hInt .upper).2.1)) ((hInt .lower).1.sub (hInt .lower).2.1),
++      integral_sub (f := fun p => A .interval p - I .interval p)
++        (g := fun p => A .upper p - I .upper p)
++        ((hInt .interval).1.sub (hInt .interval).2.1)
+         ((hInt .upper).1.sub (hInt .upper).2.1),
+       integral_sub (hInt .interval).1 (hInt .interval).2.1,
+       integral_sub (hInt .upper).1 (hInt .upper).2.1,
+       integral_sub (hInt .lower).1 (hInt .lower).2.1,
+-      integral_sub ((hLSi .interval).sub (hLSi .upper)) (hLSi .lower),
++      integral_sub (f := fun p => LS .interval p - LS .upper p) (g := LS .lower)
++        ((hLSi .interval).sub (hLSi .upper)) (hLSi .lower),
+       integral_sub (hLSi .interval) (hLSi .upper),
+-      integral_sub ((hOSi .upper).add (hOSi .lower)) (hOSi .interval),
++      integral_sub (f := fun p => OS .upper p + OS .lower p) (g := OS .interval)
++        ((hOSi .upper).add (hOSi .lower)) (hOSi .interval),
+       integral_add (hOSi .upper) (hOSi .lower)]
+     linarith only [hTel .interval, hTel .upper, hTel .lower]
+   refine ⟨hSign, hZi, hLi, hOi, hIdentity, ?_⟩

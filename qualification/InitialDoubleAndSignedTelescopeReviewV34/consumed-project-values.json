@@ -1,0 +1,530 @@
+{
+  "rows": [
+    {
+      "name": "Path",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\FinitePath.lean",
+      "line": 18,
+      "fileSHA256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "value": "abbrev Path (n : ℕ) := Fin n → ℝ"
+    },
+    {
+      "name": "prefixSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\FinitePath.lean",
+      "line": 23,
+      "fileSHA256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "value": "def prefixSum (a : Path n) (k : ℕ) : ℝ :=\n  ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), a i"
+    },
+    {
+      "name": "prefixSquares",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\FinitePath.lean",
+      "line": 27,
+      "fileSHA256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "value": "def prefixSquares (a : Path n) (k : ℕ) : ℝ :=\n  ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), (a i) ^ 2"
+    },
+    {
+      "name": "energy",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\FinitePath.lean",
+      "line": 31,
+      "fileSHA256": "898262898f9c088e2d10e6238e411b4397387b21b1b71a2b545c5edef936e1bb",
+      "value": "def energy (a : Path n) : ℝ := ∑ i, (a i) ^ 2"
+    },
+    {
+      "name": "truncationF",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Basic\\TruncationBudget.lean",
+      "line": 24,
+      "fileSHA256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+      "value": "def truncationF (z : ℝ) : ℝ := z ^ 2 * min |z| 1"
+    },
+    {
+      "name": "normalizedEndpoint",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C1\\Normalization.lean",
+      "line": 15,
+      "fileSHA256": "fef196ff1358ca597a4ddeec652d537744be62c77e0e5829b63c61283c12734d",
+      "value": "def normalizedEndpoint (a : Path n) : ℝ :=\n  if energy a = 0 then 0 else prefixSum a n / Real.sqrt (energy a)"
+    },
+    {
+      "name": "BridgeTime",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 13,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "abbrev BridgeTime := unitInterval"
+    },
+    {
+      "name": "BridgeNoise",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 14,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "abbrev BridgeNoise := {g : C(BridgeTime, ℝ) // g 0 = 0 ∧ g 1 = 0}"
+    },
+    {
+      "name": "bridgePath",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 16,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def bridgePath (y T z : ℝ) (g : BridgeNoise) : C(BridgeTime, ℝ) :=\n  ⟨fun t => (1 - (t : ℝ)) * y + (t : ℝ) * z + Real.sqrt T * g.val t,\n    by fun_prop⟩"
+    },
+    {
+      "name": "strictUpper",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 20,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def strictUpper (a y T z : ℝ) : Set BridgeNoise :=\n  {g | ∀ t : BridgeTime, bridgePath y T z g t < a}"
+    },
+    {
+      "name": "strictLower",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 23,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def strictLower (a y T z : ℝ) : Set BridgeNoise :=\n  {g | ∀ t : BridgeTime, -a < bridgePath y T z g t}"
+    },
+    {
+      "name": "strictInterval",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 26,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def strictInterval (a y T z : ℝ) : Set BridgeNoise :=\n  strictUpper a y T z ∩ strictLower a y T z"
+    },
+    {
+      "name": "upperCompletion",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 29,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def upperCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=\n  P.real (strictUpper a y T z)"
+    },
+    {
+      "name": "lowerCompletion",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 32,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def lowerCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=\n  P.real (strictLower a y T z)"
+    },
+    {
+      "name": "intervalCompletion",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BridgeDomination.lean",
+      "line": 35,
+      "fileSHA256": "45b6733a6341fcf002bfa44738074419c118818e88ea8f0f2e07dc66d381e7b9",
+      "value": "def intervalCompletion (P : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=\n  P.real (strictInterval a y T z)"
+    },
+    {
+      "name": "leftWeight",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "line": 10,
+      "fileSHA256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "value": "def leftWeight : C(BridgeTime, ℝ) :=\n  ⟨fun t => 1 - (t : ℝ), by fun_prop⟩"
+    },
+    {
+      "name": "rightWeight",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "line": 13,
+      "fileSHA256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "value": "def rightWeight : C(BridgeTime, ℝ) :=\n  ⟨fun t => (t : ℝ), by fun_prop⟩"
+    },
+    {
+      "name": "pinPath",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "line": 16,
+      "fileSHA256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "value": "def pinPath (f : C(BridgeTime, ℝ)) : BridgeNoise :=\n  ⟨f - f 0 • leftWeight - f 1 • rightWeight,\n    by constructor <;> simp [leftWeight, rightWeight]⟩"
+    },
+    {
+      "name": "bridgeNoise",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "line": 20,
+      "fileSHA256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "value": "def bridgeNoise {Ω : Type*} (B : ℝ≥0 → Ω → ℝ) (ω : Ω) : BridgeNoise :=\n  pinPath (Shao.OQ4.PolygonalBrownianWeakLimit.brownianUnitPath B 1 ω)"
+    },
+    {
+      "name": "bridgeLaw",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\BrownianBridgeLaw.lean",
+      "line": 23,
+      "fileSHA256": "8dd4cb52e900f36c162a5711a5455b31835825d0d224e0d7dd28bcbbc1e0dbdd",
+      "value": "def bridgeLaw {Ω : Type*} [MeasurableSpace Ω]\n    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) : Measure BridgeNoise :=\n  P.map (bridgeNoise B)"
+    },
+    {
+      "name": "CompletionParameters",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\CompletionMeasurability.lean",
+      "line": 9,
+      "fileSHA256": "df167dac0100e49bd060b1bc717f2ed66657ef2a66cefaded5cca1f785e2771b",
+      "value": "abbrev CompletionParameters := ℝ × ℝ × ℝ × ℝ"
+    },
+    {
+      "name": "imageA",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageExponents.lean",
+      "line": 7,
+      "fileSHA256": "a2ade7b54d268c9d9052d995309eceeaee3db8899fea95f2138fb2e2871d157b",
+      "value": "def imageA (a y z m : ℝ) : ℝ := 8 * m ^ 2 * a ^ 2 + 4 * m * a * (z - y)"
+    },
+    {
+      "name": "imageB",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageExponents.lean",
+      "line": 8,
+      "fileSHA256": "a2ade7b54d268c9d9052d995309eceeaee3db8899fea95f2138fb2e2871d157b",
+      "value": "def imageB (a y z m : ℝ) : ℝ := 2 * (y + (2 * m + 1) * a) * (z + (2 * m + 1) * a)"
+    },
+    {
+      "name": "spatialTailBlock",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageSpatialConvergence.lean",
+      "line": 20,
+      "fileSHA256": "0f35dcb8ba433f3b68bb41379416ac4811c832e45b0ed0198c91461c1c776043",
+      "value": "def spatialTailBlock (j : ℕ) (a z T y : ℝ) (n : ℕ) : ℝ :=\n  iteratedDeriv j (fun w => Real.exp (-imageA a w z ((n : ℤ) + 2 : ℤ) / T)) y +\n    iteratedDeriv j (fun w => Real.exp (-imageA a w z (-((n : ℤ) + 2) : ℤ) / T)) y -\n    iteratedDeriv j (fun w => Real.exp (-imageB a w z ((n : ℤ) + 1 : ℤ) / T)) y -\n    iteratedDeriv j (fun w => Real.exp (-imageB a w z (-((n : ℤ) + 2) : ℤ) / T)) y"
+    },
+    {
+      "name": "spatialTailSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageSpatialDerivatives.lean",
+      "line": 11,
+      "fileSHA256": "12dc95c8a1eaa9fd6229a1b83b92e71f17f14f14eae06bbe0229ad090c0812bb",
+      "value": "def spatialTailSum (j : ℕ) (a z T y : ℝ) : ℝ :=\n  ∑' n : ℕ, spatialTailBlock j a z T y n"
+    },
+    {
+      "name": "finiteSpatialImages",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageCandidateSpatial.lean",
+      "line": 10,
+      "fileSHA256": "47b97aed344b91ffbe49d41f3c8f765f6680228594b96ac980a556256cea09d0",
+      "value": "def finiteSpatialImages (j : ℕ) (a z T y : ℝ) : ℝ :=\n  iteratedDeriv j (fun w => Real.exp (-imageA a w z 0 / T)) y +\n    iteratedDeriv j (fun w => Real.exp (-imageA a w z 1 / T)) y +\n    iteratedDeriv j (fun w => Real.exp (-imageA a w z (-1) / T)) y -\n    iteratedDeriv j (fun w => Real.exp (-imageB a w z 0 / T)) y -\n    iteratedDeriv j (fun w => Real.exp (-imageB a w z (-1) / T)) y"
+    },
+    {
+      "name": "imageCandidateSpatial",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageCandidateSpatial.lean",
+      "line": 17,
+      "fileSHA256": "47b97aed344b91ffbe49d41f3c8f765f6680228594b96ac980a556256cea09d0",
+      "value": "def imageCandidateSpatial (j : ℕ) (a z T y : ℝ) : ℝ :=\n  finiteSpatialImages j a z T y + spatialTailSum j a z T y"
+    },
+    {
+      "name": "intervalImageCandidate",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\IntervalImageCandidateSpatial.lean",
+      "line": 20,
+      "fileSHA256": "47b97aed344b91ffbe49d41f3c8f765f6680228594b96ac980a556256cea09d0",
+      "value": "def intervalImageCandidate (a z T y : ℝ) : ℝ :=\n  imageCandidateSpatial 0 a z T y"
+    },
+    {
+      "name": "sourceIntervalCompletion",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\SourceIntervalCompletion.lean",
+      "line": 8,
+      "fileSHA256": "7a00c4b90e69cc4d39362e7822c4d621a18cc94c602c60fbf8c58d0033470dc2",
+      "value": "def sourceIntervalCompletion (ν : Measure BridgeNoise) (a y T z : ℝ) : ℝ :=\n  if 0 < T then intervalCompletion ν a y T z\n  else if T = 0 ∧ y = z ∧ |y| < a then 1 else 0"
+    },
+    {
+      "name": "slopeTime",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\HalfLineMixedProfiles.lean",
+      "line": 9,
+      "fileSHA256": "84ffd80978363b070e0b0d2e6cdea6dc26e9a3aabcbc45596a527934c8c689a5",
+      "value": "def slopeTime (u v T : ℝ) : ℝ := (2 * v / T) * Real.exp (-2 * u * v / T)"
+    },
+    {
+      "name": "upperReflection",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\HalfLineReflectionFormula.lean",
+      "line": 11,
+      "fileSHA256": "e852b2878fe686464158ce509b45de20c5cc8c478e65316e25d39bf6543dbf8c",
+      "value": "def upperReflection (a y T z : ℝ) : ℝ :=\n  1 - Real.exp (-2 * (a - y) * (a - z) / T)"
+    },
+    {
+      "name": "lowerReflection",
+      "path": "C:\\game\\shao lean\\library\\Shao\\C2\\HalfLineReflectionFormula.lean",
+      "line": 14,
+      "fileSHA256": "e852b2878fe686464158ce509b45de20c5cc8c478e65316e25d39bf6543dbf8c",
+      "value": "def lowerReflection (a y T z : ℝ) : ℝ :=\n  1 - Real.exp (-2 * (a + y) * (a + z) / T)"
+    },
+    {
+      "name": "standardNormalDensity",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\GaussianTail.lean",
+      "line": 14,
+      "fileSHA256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "value": "noncomputable def standardNormalDensity (x : ℝ) : ℝ :=\n  ProbabilityTheory.gaussianPDFReal 0 1 x"
+    },
+    {
+      "name": "standardNormalTail",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\GaussianTail.lean",
+      "line": 17,
+      "fileSHA256": "f166fab0061199e25d0391bbde5c977905e368513a6e0e18b492877c65160922",
+      "value": "noncomputable def standardNormalTail (x : ℝ) : ℝ :=\n  ((ProbabilityTheory.gaussianReal 0 1) (Set.Ioi x)).toReal"
+    },
+    {
+      "name": "truncationBudget",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\TruncationIntegrals.lean",
+      "line": 26,
+      "fileSHA256": "d7432b7c579c6e6e0d9980af322437941f59f8f670bebd2dd4770f6cfcf1e234",
+      "value": "noncomputable def truncationBudget (ν : Measure ℝ) (n : ℕ) (t : ℝ) : ℝ :=\n  (n : ℝ) * ∫ z : ℝ, truncationF ((1 + t) * z) ∂ν"
+    },
+    {
+      "name": "reorder",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SpitzerFinite.lean",
+      "line": 32,
+      "fileSHA256": "59ee31957ffec68aaff56d4eee5e833ef28fcb549bdce5f0649bf83216b1224c",
+      "value": "def reorder {n : ℕ} (a : Shao.Path n) (σ : Equiv.Perm (Fin n)) :\n    Shao.Path n := fun i => a (σ i)"
+    },
+    {
+      "name": "LabelPerm",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 29,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "abbrev LabelPerm (n : ℕ) := Equiv.Perm (Fin n)"
+    },
+    {
+      "name": "BridgeKernel",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 30,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "abbrev BridgeKernel := (ℝ × ℝ × ℝ × ℝ) → ℝ"
+    },
+    {
+      "name": "labelPermMeasurableSpace",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 33,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤"
+    },
+    {
+      "name": "PrefixMeasurable",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 35,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def PrefixMeasurable {n : ℕ} {α : Sort*} (r : ℕ)\n    (f : LabelPerm n → α) : Prop :=\n  ∀ σ τ : LabelPerm n,\n    (∀ i : Fin n, i.val < r → σ i = τ i) → f σ = f τ"
+    },
+    {
+      "name": "remainingSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 40,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def remainingSum {n : ℕ} (a : Shao.Path n) (r : ℕ) (σ : LabelPerm n) : ℝ :=\n  Shao.prefixSum a n - Shao.prefixSum (Spitzer.reorder a σ) r"
+    },
+    {
+      "name": "remainingEnergy",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 43,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def remainingEnergy {n : ℕ} (a : Shao.Path n) (r : ℕ)\n    (σ : LabelPerm n) : ℝ :=\n  Shao.energy a - Shao.prefixSquares (Spitzer.reorder a σ) r"
+    },
+    {
+      "name": "uniformMean",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 47,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def uniformMean {n : ℕ} (f : LabelPerm n → ℝ) : ℝ :=\n  (∑ σ : LabelPerm n, f σ) / (Fintype.card (LabelPerm n) : ℝ)"
+    },
+    {
+      "name": "compensationCoefficient",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 50,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def compensationCoefficient (b d T : ℝ) : ℝ := b - b ^ 2 * d / T"
+    },
+    {
+      "name": "IsRevealStoppingRank",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 53,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def IsRevealStoppingRank {n : ℕ} (ν : LabelPerm n → ℕ) : Prop :=\n  (∀ σ, ν σ ≤ n) ∧\n  ∀ (r : ℕ) (σ τ : LabelPerm n),\n    (∀ i : Fin n, i.val < r → σ i = τ i) → (ν σ ≤ r ↔ ν τ ≤ r)"
+    },
+    {
+      "name": "energyCutoff",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 59,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def energyCutoff {n : ℕ} (a : Shao.Path n) (H : ℝ)\n    (σ : LabelPerm n) : ℕ := by\n  classical\n  exact if hex : ∃ r : ℕ, r ≤ n ∧ remainingEnergy a r σ < H then Nat.find hex else n"
+    },
+    {
+      "name": "MonitoredDomain",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 64,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "inductive MonitoredDomain : Type\n  | upper\n  | lower\n  | interval\n  deriving DecidableEq"
+    },
+    {
+      "name": "Interior",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 70,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def Interior (J : MonitoredDomain) (w y : ℝ) : Prop :=\n  match J with\n  | .upper => y < w\n  | .lower => -w < y\n  | .interval => -w < y ∧ y < w"
+    },
+    {
+      "name": "eventCompletionKernel",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 77,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def eventCompletionKernel (J : MonitoredDomain)\n    (P : Measure Shao.C2.BridgeDomination.BridgeNoise) : BridgeKernel :=\n  match J with\n  | .upper => fun p => Shao.C2.BridgeDomination.upperCompletion P\n      p.1 p.2.1 p.2.2.1 p.2.2.2\n  | .lower => fun p => Shao.C2.BridgeDomination.lowerCompletion P\n      p.1 p.2.1 p.2.2.1 p.2.2.2\n  | .interval => fun p => Shao.C2.BridgeDomination.intervalCompletion P\n      p.1 p.2.1 p.2.2.1 p.2.2.2"
+    },
+    {
+      "name": "actualWall",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 87,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def actualWall {n : ℕ} (a : Shao.Path n) (x : ℝ) : ℝ :=\n  x * Real.sqrt (Shao.energy a)"
+    },
+    {
+      "name": "completionExt",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 91,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def completionExt (J : MonitoredDomain) (F : BridgeKernel)\n    (w y T z : ℝ) : ℝ := by\n  classical\n  exact if 0 < w ∧ Interior J w y ∧ Interior J w z then\n    if 0 < T then F (w, y, T, z)\n    else if T = 0 ∧ y = z then 1 else 0\n  else 0"
+    },
+    {
+      "name": "sourceAlive",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 100,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def sourceAlive {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)\n    (x : ℝ) (r : ℕ) (σ : LabelPerm n) : Prop :=\n  0 < Shao.energy a ∧\n    Interior J (actualWall a x) (Shao.prefixSum a n) ∧\n    ∀ k : ℕ, k ≤ r →\n      Interior J (actualWall a x) (Shao.prefixSum (Spitzer.reorder a σ) k)"
+    },
+    {
+      "name": "sourceValue",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 107,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def sourceValue {n : ℕ} (J : MonitoredDomain) (F : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (r : ℕ) (σ : LabelPerm n) : ℝ := by\n  classical\n  exact if sourceAlive J a x r σ then\n    completionExt J F (actualWall a x)\n      (Shao.prefixSum (Spitzer.reorder a σ) r)\n      (remainingEnergy a r σ) (Shao.prefixSum a n)\n  else 0"
+    },
+    {
+      "name": "localRemainder",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 117,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def localRemainder (J : MonitoredDomain) (F G : BridgeKernel)\n    (w y T z b : ℝ) : ℝ :=\n  completionExt J F w (y + b) (T - b ^ 2) z - F (w, y, T, z) -\n    compensationCoefficient b (z - y) T * G (w, y, T, z)"
+    },
+    {
+      "name": "sourceDerivativeWeight",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 123,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def sourceDerivativeWeight {n : ℕ} (J : MonitoredDomain) (G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (r : ℕ) (σ : LabelPerm n) : ℝ := by\n  classical\n  exact if sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then\n    G (actualWall a x, Shao.prefixSum (Spitzer.reorder a σ) r,\n      remainingEnergy a r σ, Shao.prefixSum a n)\n  else 0"
+    },
+    {
+      "name": "sourceRemainder",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 132,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def sourceRemainder {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (r : ℕ) (σ : LabelPerm n) : ℝ := by\n  classical\n  exact if hr : r < n then\n    if sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then\n      localRemainder J F G (actualWall a x)\n        (Shao.prefixSum (Spitzer.reorder a σ) r)\n        (remainingEnergy a r σ) (Shao.prefixSum a n) (a (σ ⟨r, hr⟩))\n    else 0\n  else 0"
+    },
+    {
+      "name": "stoppedRemainderSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 143,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def stoppedRemainderSum {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ)\n    (σ : LabelPerm n) : ℝ :=\n  ∑ r ∈ Finset.range n, if r < ν σ then sourceRemainder J F G a x r σ else 0"
+    },
+    {
+      "name": "KernelBounds",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 149,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "structure KernelBounds (J : MonitoredDomain) (F G : BridgeKernel) (C : ℝ) : Prop where\n  nonnegC : 0 ≤ C\n  completion_bounds : ∀ w y T z : ℝ,\n    0 < w → 0 < T → Interior J w y → Interior J w z →\n      0 ≤ F (w, y, T, z) ∧ F (w, y, T, z) ≤ 1\n  derivative_bound : ∀ w y T z : ℝ,\n    0 < w → 0 < T → Interior J w y → Interior J w z →\n      |G (w, y, T, z)| ≤ C / Real.sqrt T * (1 + |z - y| / Real.sqrt T)"
+    },
+    {
+      "name": "PermutationInvariant",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 158,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def PermutationInvariant {n : ℕ} (m : Shao.Path n → ℝ) : Prop :=\n  ∀ (a : Shao.Path n) (σ : LabelPerm n), m (Spitzer.reorder a σ) = m a"
+    },
+    {
+      "name": "uniformPermutationLaw",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 162,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def uniformPermutationLaw (n : ℕ) : Measure (LabelPerm n) :=\n  ((Fintype.card (LabelPerm n) : ENNReal)⁻¹) • Measure.count"
+    },
+    {
+      "name": "revealLaw",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourcePermutationReveal.lean",
+      "line": 165,
+      "fileSHA256": "eb8ca14665fddaa34b063f3d53a42333db4dcf813c635e4978751b5251287b5a",
+      "value": "def revealLaw {n : ℕ} (P : Measure (Shao.Path n)) :\n    Measure (Shao.Path n × LabelPerm n) :=\n  P.prod (uniformPermutationLaw n)"
+    },
+    {
+      "name": "labelPermMeasurableSpace",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 19,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤"
+    },
+    {
+      "name": "projectionIncrement",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 22,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def projectionIncrement (J : MonitoredDomain) (w y b : ℝ) : ℝ :=\n  match J with\n  | .upper => if w ≤ y + b then w - y else b\n  | .lower => if y + b ≤ -w then -w - y else b\n  | .interval => if w ≤ y + b then w - y else\n      if y + b ≤ -w then -w - y else b"
+    },
+    {
+      "name": "localRetainedRemainder",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 29,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def localRetainedRemainder (J : MonitoredDomain) (F G : BridgeKernel)\n    (w y T z b : ℝ) : ℝ :=\n  if 0 < T ∧ b ^ 2 ≤ T / 2 then\n    localRemainder J F G w y T z (projectionIncrement J w y b)\n  else localRemainder J F G w y T z b"
+    },
+    {
+      "name": "localSeparatedOvershoot",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 36,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def localSeparatedOvershoot (J : MonitoredDomain) (G : BridgeKernel)\n    (w y T z b : ℝ) : ℝ :=\n  if 0 < T ∧ b ^ 2 ≤ T / 2 then\n    -(b - projectionIncrement J w y b) *\n      (1 - (b + projectionIncrement J w y b) * (z - y) / T) *\n      G (w, y, T, z)\n  else 0"
+    },
+    {
+      "name": "sourceRetainedRemainder",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 44,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def sourceRetainedRemainder {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ)\n    (r : ℕ) (σ : LabelPerm n) : ℝ :=\n  if hr : r < n then\n    if r < ν σ ∧ sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then\n      localRetainedRemainder J F G (actualWall a x)\n        (Shao.prefixSum (Spitzer.reorder a σ) r)\n        (remainingEnergy a r σ) (Shao.prefixSum a n) (a (σ ⟨r, hr⟩))\n    else 0\n  else 0"
+    },
+    {
+      "name": "sourceSeparatedOvershoot",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 55,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def sourceSeparatedOvershoot {n : ℕ} (J : MonitoredDomain) (G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ)\n    (r : ℕ) (σ : LabelPerm n) : ℝ :=\n  if hr : r < n then\n    if r < ν σ ∧ sourceAlive J a x r σ ∧ 0 < remainingEnergy a r σ then\n      localSeparatedOvershoot J G (actualWall a x)\n        (Shao.prefixSum (Spitzer.reorder a σ) r)\n        (remainingEnergy a r σ) (Shao.prefixSum a n) (a (σ ⟨r, hr⟩))\n    else 0\n  else 0"
+    },
+    {
+      "name": "retainedSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 66,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def retainedSum {n : ℕ} (J : MonitoredDomain) (F G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ) (σ : LabelPerm n) : ℝ :=\n  ∑ r ∈ Finset.range n, sourceRetainedRemainder J F G a x ν r σ"
+    },
+    {
+      "name": "separatedSum",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceSeparatedOvershoot.lean",
+      "line": 70,
+      "fileSHA256": "8aefd7970ff7ea6681850ef7c879618e944db3958d158f644671dbad60f1a623",
+      "value": "def separatedSum {n : ℕ} (J : MonitoredDomain) (G : BridgeKernel)\n    (a : Shao.Path n) (x : ℝ) (ν : LabelPerm n → ℕ) (σ : LabelPerm n) : ℝ :=\n  ∑ r ∈ Finset.range n, sourceSeparatedOvershoot J G a x ν r σ"
+    },
+    {
+      "name": "labelPermMeasurableSpace",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceActualLocalProfileBudget.lean",
+      "line": 19,
+      "fileSHA256": "76d9019141bf7548e38b58fac1f7a7a5fc36e52f86f33951a7fdd8d185b9d587",
+      "value": "local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤"
+    },
+    {
+      "name": "halflineDerivative",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceActualLocalProfileBudget.lean",
+      "line": 27,
+      "fileSHA256": "76d9019141bf7548e38b58fac1f7a7a5fc36e52f86f33951a7fdd8d185b9d587",
+      "value": "def halflineDerivative (J : MonitoredDomain) : BridgeKernel :=\n  match J with\n  | .upper => fun p => -Shao.C2.HalfLineMixedProfiles.slopeTime\n      (p.1 - p.2.1) (p.1 - p.2.2.2) p.2.2.1\n  | .lower => fun p => Shao.C2.HalfLineMixedProfiles.slopeTime\n      (p.1 + p.2.1) (p.1 + p.2.2.2) p.2.2.1\n  | .interval => fun _ => 0"
+    },
+    {
+      "name": "HalflineReflectionIdentities",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceActualLocalProfileBudget.lean",
+      "line": 35,
+      "fileSHA256": "76d9019141bf7548e38b58fac1f7a7a5fc36e52f86f33951a7fdd8d185b9d587",
+      "value": "def HalflineReflectionIdentities (Q : Measure BridgeNoise) : Prop :=\n  (∀ w y T z : ℝ, 0 < w → 0 < T → y < w → z < w →\n    upperCompletion Q w y T z = Shao.C2.HalfLineReflectionFormula.upperReflection w y T z) ∧\n  (∀ w y T z : ℝ, 0 < w → 0 < T → -w < y → -w < z →\n    lowerCompletion Q w y T z = Shao.C2.HalfLineReflectionFormula.lowerReflection w y T z)"
+    },
+    {
+      "name": "labelPermMeasurableSpace",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceActualIntervalProfileBudget.lean",
+      "line": 19,
+      "fileSHA256": "58eef62954931c95be1228accb921de6db3092a4d681184d6e1fef4ab2d20ef6",
+      "value": "local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤"
+    },
+    {
+      "name": "intervalDerivative",
+      "path": "C:\\game\\shao lean\\library\\Shao\\Probability\\SourceActualIntervalProfileBudget.lean",
+      "line": 21,
+      "fileSHA256": "58eef62954931c95be1228accb921de6db3092a4d681184d6e1fef4ab2d20ef6",
+      "value": "def intervalDerivative (Q : Measure BridgeNoise) : BridgeKernel := fun p =>\n  if 0 < p.1 ∧ 0 < p.2.2.1 ∧ |p.2.1| < p.1 ∧ |p.2.2.2| < p.1 then\n    deriv (fun y : ℝ => eventCompletionKernel .interval Q\n      (p.1, y, p.2.2.1, p.2.2.2)) p.2.1\n  else 0"
+    },
+    {
+      "name": "brownianUnitPath",
+      "path": "C:\\game\\shao lean\\library\\Shao\\OQ4\\PolygonalBrownianWeakLimit.lean",
+      "line": 316,
+      "fileSHA256": "a73019bdadfb7cd8fa20bc4c19041012212cf104d89f3f1c62d78c0dcb3d638f",
+      "value": "def brownianUnitPath {Ω : Type*} (B : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω) :\n    C(unitInterval, ℝ) :=\n  if hc : Continuous (fun u : unitInterval => B (unitTime T u) ω) then\n    ⟨fun u => B (unitTime T u) ω, hc⟩\n  else 0"
+    }
+  ],
+  "missing": []
+}
