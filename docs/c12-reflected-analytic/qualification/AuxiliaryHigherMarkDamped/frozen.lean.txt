@@ -1,0 +1,21 @@
+import Shao.Probability.SourceSuffixMomentBudgets
+import Mathlib.MeasureTheory.Integral.Pi
+
+set_option autoImplicit false
+set_option maxHeartbeats 3000000
+noncomputable section
+namespace Shao.C2.AuxiliaryHigherMarkDamped
+open MeasureTheory ProbabilityTheory
+
+theorem auxiliary_actual_higher_mark_damped :
+    ∀ p : ℕ, ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        Integrable (fun z : ℝ => |z| ^ 3) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ s : ℝ, 0 < s →
+          Integrable (fun z : ℝ => |z| ^ (3 + p) * Real.exp (-s * z ^ 2)) nu ∧
+            (∫ z : ℝ, |z| ^ (3 + p) * Real.exp (-s * z ^ 2) ∂nu) ≤
+              C * Real.rpow s (-(p : ℝ) / 2) * (∫ z : ℝ, |z| ^ 3 ∂nu) := by
+
+end Shao.C2.AuxiliaryHigherMarkDamped

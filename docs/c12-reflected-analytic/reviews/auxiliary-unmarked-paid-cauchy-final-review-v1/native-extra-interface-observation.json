@@ -1,0 +1,150 @@
+{
+  "native": [
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean",
+      "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204",
+      "pinnedBlobSHA256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204",
+      "workingEqualsPinned": true,
+      "ranges": [
+        {
+          "lines": [
+            46,
+            56
+          ],
+          "text": "46:   OrderIso.symm <| powOrderIso 2 two_ne_zero\n47: \n48: @[simp] lemma sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x := sqrt.symm_apply_apply _\n49: \n50: @[simp] lemma sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x := sqrt.apply_symm_apply _\n51: \n52: @[simp] lemma mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]\n53: \n54: @[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]\n55: \n56: lemma sqrt_le_sqrt : sqrt x ≤ sqrt y ↔ x ≤ y := sqrt.le_iff_le"
+        },
+        {
+          "lines": [
+            54,
+            64
+          ],
+          "text": "54: @[simp] lemma sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq]\n55: \n56: lemma sqrt_le_sqrt : sqrt x ≤ sqrt y ↔ x ≤ y := sqrt.le_iff_le\n57: \n58: lemma sqrt_lt_sqrt : sqrt x < sqrt y ↔ x < y := sqrt.lt_iff_lt\n59: \n60: lemma sqrt_eq_iff_eq_sq : sqrt x = y ↔ x = y ^ 2 := sqrt.toEquiv.eq_symm_apply.symm\n61: \n62: lemma sqrt_le_iff_le_sq : sqrt x ≤ y ↔ x ≤ y ^ 2 := sqrt.to_galoisConnection _ _\n63: \n64: lemma le_sqrt_iff_sq_le : x ≤ sqrt y ↔ x ^ 2 ≤ y := (sqrt.symm.to_galoisConnection _ _).symm"
+        },
+        {
+          "lines": [
+            94,
+            104
+          ],
+          "text": "94: theorem continuous_sqrt : Continuous sqrt := sqrt.continuous\n95: \n96: @[simp] theorem sqrt_pos : 0 < sqrt x ↔ 0 < x := by simp [pos_iff_ne_zero]\n97: \n98: alias ⟨_, sqrt_pos_of_pos⟩ := sqrt_pos\n99: \n100: attribute [bound] sqrt_pos_of_pos\n101: \n102: @[simp] theorem isSquare (x : ℝ≥0) : IsSquare x := ⟨_, mul_self_sqrt _ |>.symm⟩\n103: \n104: end NNReal"
+        },
+        {
+          "lines": [
+            141,
+            151
+          ],
+          "text": "141: theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : √x = 0 := by simp [sqrt, Real.toNNReal_eq_zero.2 h]\n142: \n143: @[simp] theorem sqrt_nonneg (x : ℝ) : 0 ≤ √x := by\n144:   unfold sqrt\n145:   exact NNReal.coe_nonneg _\n146: \n147: @[simp]\n148: theorem mul_self_sqrt (h : 0 ≤ x) : √x * √x = x := by\n149:   rw [Real.sqrt, ← NNReal.coe_mul, NNReal.mul_self_sqrt, Real.coe_toNNReal _ h]\n150: \n151: @[simp]"
+        },
+        {
+          "lines": [
+            175,
+            185
+          ],
+          "text": "175: \n176: @[simp]\n177: theorem sq_sqrt (h : 0 ≤ x) : √x ^ 2 = x := by rw [sq, mul_self_sqrt h]\n178: \n179: @[simp]\n180: theorem sqrt_sq (h : 0 ≤ x) : √(x ^ 2) = x := by rw [sq, sqrt_mul_self h]\n181: \n182: theorem sqrt_eq_iff_eq_sq (hx : 0 ≤ x) (hy : 0 ≤ y) : √x = y ↔ x = y ^ 2 := by\n183:   rw [sq, sqrt_eq_iff_mul_self_eq hx hy]\n184: \n185: theorem sqrt_mul_self_eq_abs (x : ℝ) : √(x * x) = |x| := by"
+        },
+        {
+          "lines": [
+            186,
+            196
+          ],
+          "text": "186:   rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]\n187: \n188: theorem sqrt_sq_eq_abs (x : ℝ) : √(x ^ 2) = |x| := by rw [sq, sqrt_mul_self_eq_abs]\n189: \n190: @[simp, grind =]\n191: theorem sqrt_zero : √0 = 0 := by simp [Real.sqrt]\n192: \n193: @[simp, grind =]\n194: theorem sqrt_one : √1 = 1 := by simp [Real.sqrt]\n195: \n196: @[simp]"
+        },
+        {
+          "lines": [
+            206,
+            216
+          ],
+          "text": "206: \n207: @[bound]\n208: theorem sqrt_le_sqrt (h : x ≤ y) : √x ≤ √y := by\n209:   rw [Real.sqrt, Real.sqrt, NNReal.coe_le_coe, NNReal.sqrt_le_sqrt]\n210:   exact toNNReal_le_toNNReal h\n211: \n212: @[gcongr]\n213: theorem sqrt_monotone : Monotone Real.sqrt :=\n214:   fun _ _ ↦ sqrt_le_sqrt\n215: \n216: theorem strictMonoOn_sqrt : StrictMonoOn sqrt (Ici 0) :="
+        },
+        {
+          "lines": [
+            273,
+            283
+          ],
+          "text": "273: \n274: /-- Variant of `sq_sqrt` without a non-negativity assumption on `x`. -/\n275: theorem sq_sqrt' : √x ^ 2 = max x 0 := by\n276:   rcases lt_trichotomy x 0 with _ | _ | _ <;> grind [sqrt_eq_zero', sq_sqrt]\n277: \n278: -- Add the rule for `√x ^ 2` to the grind whiteboard whenever we see a real square root.\n279: grind_pattern sq_sqrt' => √x\n280: \n281: -- Check that `grind` can discharge non-zero goals for square roots of positive numerals.\n282: example : √7 ≠ 0 := by grind\n283: "
+        },
+        {
+          "lines": [
+            283,
+            293
+          ],
+          "text": "283: \n284: @[simp]\n285: theorem sqrt_pos : 0 < √x ↔ 0 < x :=\n286:   lt_iff_lt_of_le_iff_le (Iff.trans (by simp [le_antisymm_iff, sqrt_nonneg]) sqrt_eq_zero')\n287: \n288: alias ⟨_, sqrt_pos_of_pos⟩ := sqrt_pos\n289: \n290: lemma sqrt_le_sqrt_iff' (hx : 0 < x) : √x ≤ √y ↔ x ≤ y := by\n291:   obtain hy | hy := le_total y 0\n292:   · exact iff_of_false ((sqrt_eq_zero_of_nonpos hy).trans_lt <| sqrt_pos.2 hx).not_ge\n293:       (hy.trans_lt hx).not_ge"
+        }
+      ]
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Data/Int/Sqrt.lean",
+      "sha256": "239af5ae3394db94073365c668fe4ce33cddb84feb592375eddcce6c0e44d167",
+      "pinnedBlobSHA256": "239af5ae3394db94073365c668fe4ce33cddb84feb592375eddcce6c0e44d167",
+      "workingEqualsPinned": true,
+      "ranges": [
+        {
+          "lines": [
+            34,
+            44
+          ],
+          "text": "34:   ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, ← Int.natCast_mul, natAbs_mul_self], fun h => ⟨sqrt x, h⟩⟩\n35: \n36: theorem sqrt_nonneg (n : ℤ) : 0 ≤ sqrt n :=\n37:   natCast_nonneg _\n38: \n39: @[simp, norm_cast]\n40: theorem sqrt_natCast (n : ℕ) : Int.sqrt (n : ℤ) = Nat.sqrt n := by rw [sqrt, toNat_natCast]\n41: \n42: @[simp]\n43: theorem sqrt_ofNat (n : ℕ) : Int.sqrt ofNat(n) = Nat.sqrt ofNat(n) :=\n44:   sqrt_natCast _"
+        }
+      ]
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Data/Nat/Sqrt.lean",
+      "sha256": "1e61ada5495ef1986e06fdffc14ae7a5163e839baae71ade5e39118889786bf5",
+      "pinnedBlobSHA256": "1e61ada5495ef1986e06fdffc14ae7a5163e839baae71ade5e39118889786bf5",
+      "workingEqualsPinned": true,
+      "ranges": [
+        {
+          "lines": [
+            48,
+            58
+          ],
+          "text": "48: \n49: @[gcongr]\n50: lemma sqrt_le_sqrt (h : m ≤ n) : sqrt m ≤ sqrt n := le_sqrt.2 (le_trans (sqrt_le _) h)\n51: \n52: lemma eq_sqrt : a = sqrt n ↔ a * a ≤ n ∧ n < (a + 1) * (a + 1) :=\n53:   ⟨fun e ↦ e.symm ▸ ⟨sqrt_le n, lt_succ_sqrt n⟩,\n54:    fun ⟨h₁, h₂⟩ ↦ le_antisymm (le_sqrt.2 h₁) (le_of_lt_succ <| sqrt_lt.2 h₂)⟩\n55: \n56: lemma eq_sqrt' : a = sqrt n ↔ a ^ 2 ≤ n ∧ n < (a + 1) ^ 2 := by\n57:   simpa only [Nat.pow_two] using eq_sqrt\n58: "
+        },
+        {
+          "lines": [
+            64,
+            74
+          ],
+          "text": "64: \n65: @[grind =]\n66: lemma sqrt_pos : 0 < sqrt n ↔ 0 < n :=\n67:   le_sqrt\n68: \n69: lemma sqrt_add_eq (n : ℕ) (h : a ≤ n + n) : sqrt (n * n + a) = n :=\n70:   le_antisymm\n71:     (le_of_lt_succ <| sqrt_lt.2 <| by grind)\n72:     (le_sqrt.2 <| by grind)\n73: \n74: lemma sqrt_add_eq' (n : ℕ) (h : a ≤ n + n) : sqrt (n ^ 2 + a) = n := by"
+        }
+      ]
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Data/Rat/Sqrt.lean",
+      "sha256": "180c714855894f1b7f3b8578c2d66290bd3aad1090e3dc087d9258ecdbf57df6",
+      "pinnedBlobSHA256": "180c714855894f1b7f3b8578c2d66290bd3aad1090e3dc087d9258ecdbf57df6",
+      "workingEqualsPinned": true,
+      "ranges": [
+        {
+          "lines": [
+            36,
+            46
+          ],
+          "text": "36:   ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, abs_mul_abs_self], fun h => ⟨Rat.sqrt x, h⟩⟩\n37: \n38: lemma sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q := mkRat_nonneg (Int.sqrt_nonneg _) _\n39: \n40: /-- `IsSquare` can be decided on `ℚ` by checking against the square root. -/\n41: instance : DecidablePred (IsSquare : ℚ → Prop) :=\n42:   fun m => decidable_of_iff' (sqrt m * sqrt m = m) <| by\n43:     simp_rw [← exists_mul_self m, IsSquare, eq_comm]\n44: \n45: @[simp, norm_cast]\n46: theorem sqrt_intCast (z : ℤ) : Rat.sqrt (z : ℚ) = Int.sqrt z := by"
+        }
+      ]
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/Complex/Exponential.lean",
+      "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+      "pinnedBlobSHA256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+      "workingEqualsPinned": true,
+      "ranges": [
+        {
+          "lines": [
+            156,
+            166
+          ],
+          "text": "156:   ring_nf\n157: \n158: theorem exp_nat_mul (x : ℂ) : ∀ n : ℕ, exp (n * x) = exp x ^ n\n159:   | 0 => by rw [Nat.cast_zero, zero_mul, exp_zero, pow_zero]\n160:   | Nat.succ n => by rw [pow_succ, Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul _ n, one_mul]\n161: \n162: @[simp]\n163: theorem exp_ne_zero : exp x ≠ 0 := fun h =>\n164:   zero_ne_one (α := ℂ) <| by rw [← exp_zero, ← add_neg_cancel x, exp_add, h]; simp\n165: \n166: theorem exp_neg : exp (-x) = (exp x)⁻¹ := by"
+        },
+        {
+          "lines": [
+            232,
+            242
+          ],
+          "text": "232:   @MonoidHom.map_pow (Multiplicative ℝ) ℝ _ _ expMonoidHom _ _\n233: \n234: nonrec theorem exp_nat_mul (x : ℝ) (n : ℕ) : exp (n * x) = exp x ^ n :=\n235:   ofReal_injective (by simp [exp_nat_mul])\n236: \n237: @[simp]\n238: nonrec theorem exp_ne_zero : exp x ≠ 0 := fun h =>\n239:   exp_ne_zero x <| by rw [exp, ← ofReal_inj] at h; simp_all\n240: \n241: nonrec theorem exp_neg : exp (-x) = (exp x)⁻¹ :=\n242:   ofReal_injective <| by simp [exp_neg]"
+        }
+      ]
+    }
+  ],
+  "extra": []
+}
