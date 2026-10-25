@@ -1,0 +1,32 @@
+--- static-reviewed-a1f40c94
++++ repair005-native-api
+@@ -261,12 +261,15 @@
+       HasDerivAt (fun s : ℝ => eventCompletionKernel J Q (w, s, T, z))
+         (actualDerivativeFamily Q J (w, y, T, z)) y := by
+     cases J with
+-    | upper => exact (actual_halfline_kernel_data Q hReflection .upper (Or.inl rfl)).2.2
+-        w y T z hw hT hy hz
+-    | lower => exact (actual_halfline_kernel_data Q hReflection .lower (Or.inr rfl)).2.2
+-        w y T z hw hT hy hz
+-    | interval => exact (actual_interval_kernel_data Q hReflection hRegular).2.2
+-        w y T z hw hT (abs_lt.mpr hy) (abs_lt.mpr hz)
++    | upper =>
++        exact (actual_halfline_kernel_data Q hReflection .upper (Or.inl rfl)).2.2
++          w y T z hw hT hy hz
++    | lower =>
++        exact (actual_halfline_kernel_data Q hReflection .lower (Or.inr rfl)).2.2
++          w y T z hw hT hy hz
++    | interval =>
++        exact (actual_interval_kernel_data Q hReflection hRegular).2.2
++          w y T z hw hT (abs_lt.mpr hy) (abs_lt.mpr hz)
+   have hSign := source_separated_overshoot_sign_domination Q (actualDerivativeFamily Q)
+     hDeriv a x hx0 nu r sigma
+   change 0 ≤ U ∧ 0 ≤ L ∧ I ≤ U + L ∧ max I 0 ≤ U + L ∧ 0 ≤ U + L - I at hSign
+@@ -358,6 +361,7 @@
+         localSeparatedOvershoot J (actualDerivativeFamily Q J) w y T z b := by
+     simp only [sourceSeparatedOvershoot, dif_pos hr, if_pos (show r < nu sigma ∧
+       sourceAlive J a x r sigma ∧ 0 < remainingEnergy a r sigma from ⟨hcap, ha, hT⟩)]
++    rfl
+   by_cases hsmall : b ^ 2 ≤ T / 2
+   swap
+   · have hzero (J : MonitoredDomain) :

@@ -1,0 +1,547 @@
+import Shao.C2.ActualSignedDoubleTelescope
+import Shao.C2.BrownianBridgeLawUniversality
+import Shao.Probability.SourceActualRegularPhysicalRatio
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualDoubleSeparatedClassification
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.ActualSignedDoubleTelescope
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open Shao.Probability.SourceActualIntervalProfileBudget
+
+def prefixAlive {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (x : ℝ) (r : ℕ) (sigma : LabelPerm n) : Prop :=
+  ∀ k : ℕ, k ≤ r → Interior J (actualWall a x)
+    (Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) k)
+
+private theorem actual_bridge_completion_reflection
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (w y T z : ℝ) :
+    intervalCompletion (bridgeLaw B P) w (-y) T (-z) =
+      intervalCompletion (bridgeLaw B P) w y T z ∧
+    upperCompletion (bridgeLaw B P) w (-y) T (-z) =
+      lowerCompletion (bridgeLaw B P) w y T z := by
+  classical
+  let R : BridgeNoise → BridgeNoise := fun g =>
+    ⟨-g.val, by
+      change -(g.val 0) = 0 ∧ -(g.val 1) = 0
+      constructor
+      · rw [g.property.1, neg_zero]
+      · rw [g.property.2, neg_zero]⟩
+  have hRm : Measurable R := by
+    apply Continuous.measurable
+    apply Continuous.subtype_mk
+    change Continuous (fun g : BridgeNoise => -g.val)
+    fun_prop
+  have hNoise : R ∘ bridgeNoise B =ᵐ[P] bridgeNoise (-B) := by
+    filter_upwards [ae_bridgeNoise_eq B P hB,
+      ae_bridgeNoise_eq (-B) P hB.neg] with ω hb hn
+    apply Subtype.ext
+    apply ContinuousMap.ext
+    intro t
+    change -(bridgeNoise B ω).val t = (bridgeNoise (-B) ω).val t
+    rw [hb t, hn t]
+    change -(B ⟨(t : ℝ), t.property.1⟩ ω - (t : ℝ) * B 1 ω) =
+      -(B ⟨(t : ℝ), t.property.1⟩ ω) - (t : ℝ) * (-B 1 ω)
+    ring
+  have hMap : (bridgeLaw B P).map R = bridgeLaw (-B) P := by
+    change (P.map (bridgeNoise B)).map R = P.map (bridgeNoise (-B))
+    rw [AEMeasurable.map_map_of_aemeasurable hRm.aemeasurable
+      (aemeasurable_bridgeNoise B P hB)]
+    exact Measure.map_congr hNoise
+  have hInvariant : (bridgeLaw B P).map R = bridgeLaw B P :=
+    hMap.trans (Shao.C2.BrownianBridgeLawUniversality.bridgeLaw_eq_of_isBrownianReal
+      (-B) B P P hB.neg hB)
+  have hp (g : BridgeNoise) (t : BridgeTime) :
+      bridgePath (-y) T (-z) (R g) t = -bridgePath y T z g t := by
+    change (1 - (t : ℝ)) * (-y) + (t : ℝ) * (-z) + Real.sqrt T * (-g.val t) =
+      -((1 - (t : ℝ)) * y + (t : ℝ) * z + Real.sqrt T * g.val t)
+    ring
+  have hPreI : R ⁻¹' strictInterval w (-y) T (-z) = strictInterval w y T z := by
+    ext g
+    change ((∀ t : BridgeTime, bridgePath (-y) T (-z) (R g) t < w) ∧
+      (∀ t : BridgeTime, -w < bridgePath (-y) T (-z) (R g) t)) ↔
+      ((∀ t : BridgeTime, bridgePath y T z g t < w) ∧
+      (∀ t : BridgeTime, -w < bridgePath y T z g t))
+    constructor
+    · rintro ⟨hu, hl⟩
+      constructor
+      · intro t
+        have ht := hl t
+        rw [hp g t] at ht
+        linarith only [ht]
+      · intro t
+        have ht := hu t
+        rw [hp g t] at ht
+        linarith only [ht]
+    · rintro ⟨hu, hl⟩
+      constructor
+      · intro t
+        rw [hp g t]
+        linarith only [hl t]
+      · intro t
+        rw [hp g t]
+        linarith only [hu t]
+  have hPreU : R ⁻¹' strictUpper w (-y) T (-z) = strictLower w y T z := by
+    ext g
+    change (∀ t : BridgeTime, bridgePath (-y) T (-z) (R g) t < w) ↔
+      ∀ t : BridgeTime, -w < bridgePath y T z g t
+    constructor
+    · intro h t
+      have ht := h t
+      rw [hp g t] at ht
+      linarith only [ht]
+    · intro h t
+      rw [hp g t]
+      linarith only [h t]
+  constructor
+  · change ((bridgeLaw B P) (strictInterval w (-y) T (-z))).toReal =
+      ((bridgeLaw B P) (strictInterval w y T z)).toReal
+    calc
+      _ = (((bridgeLaw B P).map R) (strictInterval w (-y) T (-z))).toReal := by
+        rw [hInvariant]
+      _ = ((bridgeLaw B P) (R ⁻¹' strictInterval w (-y) T (-z))).toReal := by
+        rw [Measure.map_apply hRm (measurableSet_strictInterval w (-y) T (-z))]
+      _ = ((bridgeLaw B P) (strictInterval w y T z)).toReal := by rw [hPreI]
+  · change ((bridgeLaw B P) (strictUpper w (-y) T (-z))).toReal =
+      ((bridgeLaw B P) (strictLower w y T z)).toReal
+    calc
+      _ = (((bridgeLaw B P).map R) (strictUpper w (-y) T (-z))).toReal := by
+        rw [hInvariant]
+      _ = ((bridgeLaw B P) (R ⁻¹' strictUpper w (-y) T (-z))).toReal := by
+        rw [Measure.map_apply hRm (measurableSet_strictUpper w (-y) T (-z))]
+      _ = ((bridgeLaw B P) (strictLower w y T z)).toReal := by rw [hPreU]
+
+private theorem actual_bridge_first_lower_gradient_ratio :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω]
+        (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P],
+        IsBrownianReal B P →
+        let Q : Measure BridgeNoise := bridgeLaw B P
+        ∀ (x w y T z b : ℝ), 16 ≤ x → 0 < T →
+          x * Real.sqrt T ≤ w →
+          let u : ℝ := w + y
+          0 < u → u ≤ |b| → b ^ 2 ≤ T / 2 →
+          |z| < w → |z - y| ≤ 3 * x * Real.sqrt T / 2 →
+          let dI : ℝ := deriv (fun s : ℝ => intervalCompletion Q w s T z) y
+          let dL : ℝ := deriv (fun s : ℝ => lowerCompletion Q w s T z) y
+          0 ≤ dL - dI ∧
+            dL - dI ≤ C * Real.exp (-(w ^ 2 / T)) * dL := by
+  classical
+  obtain ⟨C, hC, hUpper⟩ :=
+    Shao.Probability.SourceActualRegularPhysicalRatio.actual_bridge_first_upper_gradient_ratio
+  refine ⟨C, hC, ?_⟩
+  intro Ω hΩ B P hP hB Q x w y T z b hx hT hw u hu hub hb hz hdisp dI dL
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw B P hB
+  have hx0 : 0 < x := by linarith only [hx]
+  have hs : 0 < Real.sqrt T := Real.sqrt_pos.mpr hT
+  have hw0 : 0 < w := (mul_pos hx0 hs).trans_le hw
+  have hu2 : u ^ 2 ≤ T / 2 := calc
+    _ ≤ |b| ^ 2 := (sq_le_sq₀ hu.le (abs_nonneg b)).mpr hub
+    _ = b ^ 2 := sq_abs b
+    _ ≤ T / 2 := hb
+  have hus : u ≤ Real.sqrt T :=
+    (sq_le_sq₀ hu.le hs.le).mp (by rw [Real.sq_sqrt hT.le]; linarith only [hu2, hT])
+  have hy : |y| < w := by
+    have h16 : 16 * Real.sqrt T ≤ w :=
+      (mul_le_mul_of_nonneg_right hx hs.le).trans hw
+    apply abs_lt.mpr
+    dsimp only [u] at hu hus
+    constructor <;> linarith only [hu, hus, h16, hs]
+  have hReflection : HalflineReflectionIdentities Q := by
+    constructor
+    · intro a v S q _ha hS hv hq
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula B P hB a v S q hS hv hq
+    · intro a v S q _ha hS hv hq
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula B P hB a v S q hS hv hq
+  have hi0 := Shao.C2.BridgeIntervalImageResolved.sourceIntervalCompletion_spatial_hasDerivAt
+    B P hB w (-y) T (-z) hw0 (by simpa only [abs_neg] using hy)
+      (by simpa only [abs_neg] using hz) hT
+  have hiDiff : DifferentiableAt ℝ
+      (fun s : ℝ => intervalCompletion Q w s T (-z)) (-y) := by
+    simpa only [Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion, if_pos hT] using
+      hi0.differentiableAt
+  have huData := (actual_halfline_kernel_data Q hReflection .upper (Or.inl rfl)).2.2
+    w (-y) T (-z) hw0 hT (by change -y < w; linarith only [(abs_lt.mp hy).1])
+      (by change -z < w; linarith only [(abs_lt.mp hz).1])
+  have huDiff : DifferentiableAt ℝ
+      (fun s : ℝ => upperCompletion Q w s T (-z)) (-y) := huData.differentiableAt
+  have hEqI : (fun s : ℝ => intervalCompletion Q w (-s) T (-z)) =
+      (fun s : ℝ => intervalCompletion Q w s T z) := by
+    funext s
+    exact (actual_bridge_completion_reflection B P hB w s T z).1
+  have hEqU : (fun s : ℝ => upperCompletion Q w (-s) T (-z)) =
+      (fun s : ℝ => lowerCompletion Q w s T z) := by
+    funext s
+    exact (actual_bridge_completion_reflection B P hB w s T z).2
+  have hdiComp := hiDiff.hasDerivAt.comp y (hasDerivAt_id y).neg
+  have hduComp := huDiff.hasDerivAt.comp y (hasDerivAt_id y).neg
+  simp only [Function.comp_def, id_eq, mul_neg_one] at hdiComp hduComp
+  rw [hEqI] at hdiComp
+  rw [hEqU] at hduComp
+  have hdI : deriv (fun s : ℝ => intervalCompletion Q w s T (-z)) (-y) = -dI := by
+    have hh := hdiComp.deriv
+    change dI = -deriv (fun s : ℝ => intervalCompletion Q w s T (-z)) (-y) at hh
+    linarith only [hh]
+  have hdU : deriv (fun s : ℝ => upperCompletion Q w s T (-z)) (-y) = -dL := by
+    have hh := hduComp.deriv
+    change dL = -deriv (fun s : ℝ => upperCompletion Q w s T (-z)) (-y) at hh
+    linarith only [hh]
+  have hRatio := hUpper B P hB x w (-y) T (-z) (-b) hx hT hw
+    (by simpa only [sub_neg_eq_add] using hu)
+    (by simpa only [sub_neg_eq_add, abs_neg] using hub)
+    (by simpa only [neg_sq] using hb)
+    (by simpa only [abs_neg] using hz)
+    (by simpa only [neg_sub_neg, abs_sub_comm] using hdisp)
+  change 0 ≤ deriv (fun s : ℝ => intervalCompletion Q w s T (-z)) (-y) -
+      deriv (fun s : ℝ => upperCompletion Q w s T (-z)) (-y) ∧
+    deriv (fun s : ℝ => intervalCompletion Q w s T (-z)) (-y) -
+      deriv (fun s : ℝ => upperCompletion Q w s T (-z)) (-y) ≤
+        C * Real.exp (-(w ^ 2 / T)) *
+          (-deriv (fun s : ℝ => upperCompletion Q w s T (-z)) (-y)) at hRatio
+  rw [hdI, hdU] at hRatio
+  simpa only [neg_sub_neg, neg_neg] using hRatio
+
+theorem actual_double_separated_three_bill :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω]
+        (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P],
+        IsBrownianReal B P →
+        let Q : Measure BridgeNoise := bridgeLaw B P
+        ∀ {n : ℕ} (a : Shao.Path n) (x : ℝ), 16 ≤ x →
+          ∀ (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n),
+            let U : ℝ := sourceSeparatedOvershoot .upper
+              (actualDerivativeFamily Q .upper) a x nu r sigma
+            let L : ℝ := sourceSeparatedOvershoot .lower
+              (actualDerivativeFamily Q .lower) a x nu r sigma
+            let I : ℝ := sourceSeparatedOvershoot .interval
+              (actualDerivativeFamily Q .interval) a x nu r sigma
+            0 ≤ U + L - I ∧
+              U + L - I ≤ C * Real.exp (-x ^ 2) * (U + L) +
+                (if 3 * x * Real.sqrt (remainingEnergy a r sigma) / 2 <
+                  |remainingSum a r sigma| then U + L + max (-I) 0 else 0) +
+                (if prefixAlive .lower a x r sigma then 0 else U) +
+                (if prefixAlive .upper a x r sigma then 0 else L) := by
+  classical
+  obtain ⟨CU, hCU, hUpper⟩ :=
+    Shao.Probability.SourceActualRegularPhysicalRatio.actual_bridge_first_upper_gradient_ratio
+  obtain ⟨CL, hCL, hLower⟩ := actual_bridge_first_lower_gradient_ratio
+  let C : ℝ := max CU CL
+  have hC : 0 < C := hCU.trans_le (le_max_left CU CL)
+  refine ⟨C, hC, ?_⟩
+  intro Ω hΩ B P hP hB Q n a x hx nu r sigma U L I
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw B P hB
+  have hx0 : 0 < x := by linarith only [hx]
+  have hReflection : HalflineReflectionIdentities Q := by
+    constructor
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula B P hB w y T z hT hy hz
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula B P hB w y T z hT hy hz
+  have hRegular (w y T z : ℝ) (hw : 0 < w) (hT : 0 < T)
+      (hy : |y| < w) (hz : |z| < w) :
+      DifferentiableAt ℝ (fun s : ℝ =>
+        Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w s T z) y :=
+    Shao.C2.ActualBridgeIntervalTelescope.actual_source_interval_differentiable
+      B P hB w y T z hw hy hz hT
+  have hDeriv (J : MonitoredDomain) (w y T z : ℝ) (hw : 0 < w) (hT : 0 < T)
+      (hy : Interior J w y) (hz : Interior J w z) :
+      HasDerivAt (fun s : ℝ => eventCompletionKernel J Q (w, s, T, z))
+        (actualDerivativeFamily Q J (w, y, T, z)) y := by
+    cases J with
+    | upper =>
+        exact (actual_halfline_kernel_data Q hReflection .upper (Or.inl rfl)).2.2
+          w y T z hw hT hy hz
+    | lower =>
+        exact (actual_halfline_kernel_data Q hReflection .lower (Or.inr rfl)).2.2
+          w y T z hw hT hy hz
+    | interval =>
+        exact (actual_interval_kernel_data Q hReflection hRegular).2.2
+          w y T z hw hT (abs_lt.mpr hy) (abs_lt.mpr hz)
+  have hSign := source_separated_overshoot_sign_domination Q (actualDerivativeFamily Q)
+    hDeriv a x hx0 nu r sigma
+  change 0 ≤ U ∧ 0 ≤ L ∧ I ≤ U + L ∧ max I 0 ≤ U + L ∧ 0 ≤ U + L - I at hSign
+  refine ⟨hSign.2.2.2.2, ?_⟩
+  have hEps : 0 ≤ C * Real.exp (-x ^ 2) := mul_nonneg hC.le (Real.exp_pos _).le
+  have hPU : 0 ≤ (if prefixAlive .lower a x r sigma then 0 else U) := by
+    split_ifs
+    · exact le_rfl
+    · exact hSign.1
+  have hPL : 0 ≤ (if prefixAlive .upper a x r sigma then 0 else L) := by
+    split_ifs
+    · exact le_rfl
+    · exact hSign.2.1
+  have hDead (J : MonitoredDomain) (hd : ¬sourceAlive J a x r sigma) :
+      sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma = 0 := by
+    by_cases hr : r < n
+    · simp only [sourceSeparatedOvershoot, dif_pos hr,
+        if_neg (show ¬(r < nu sigma ∧ sourceAlive J a x r sigma ∧
+          0 < remainingEnergy a r sigma) from fun h => hd h.2.1)]
+    · simp only [sourceSeparatedOvershoot, dif_neg hr]
+  by_cases hbad : 3 * x * Real.sqrt (remainingEnergy a r sigma) / 2 <
+      |remainingSum a r sigma|
+  · rw [if_pos hbad]
+    have he := mul_nonneg hEps (add_nonneg hSign.1 hSign.2.1)
+    have hi := le_max_left (-I) 0
+    linarith only [he, hi, hPU, hPL]
+  simp only [if_neg hbad, add_zero]
+  by_cases hHU : prefixAlive .upper a x r sigma
+  swap
+  · have hUZ : U = 0 := hDead .upper (fun h => hHU h.2.2)
+    have hIZ : I = 0 := hDead .interval (fun h =>
+      hHU (fun k hk => (h.2.2 k hk).2))
+    rw [if_neg hHU]
+    simp only [hUZ, hIZ, ite_self, zero_add, add_zero, sub_zero]
+    have he := mul_nonneg hEps hSign.2.1
+    linarith only [he]
+  rw [if_pos hHU, add_zero]
+  by_cases hHL : prefixAlive .lower a x r sigma
+  swap
+  · have hLZ : L = 0 := hDead .lower (fun h => hHL h.2.2)
+    have hIZ : I = 0 := hDead .interval (fun h =>
+      hHL (fun k hk => (h.2.2 k hk).1))
+    rw [if_neg hHL]
+    simp only [hLZ, hIZ, ite_self, zero_add, add_zero, sub_zero]
+    have he := mul_nonneg hEps hSign.1
+    linarith only [he]
+  rw [if_pos hHL, add_zero]
+  by_cases hr : r < n
+  swap
+  · simp only [U, L, I, sourceSeparatedOvershoot, dif_neg hr, zero_add, sub_zero,
+      mul_zero, le_refl]
+  by_cases hcap : r < nu sigma
+  swap
+  · have hzero (J : MonitoredDomain) :
+        sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma = 0 := by
+      simp only [sourceSeparatedOvershoot, dif_pos hr,
+        if_neg (show ¬(r < nu sigma ∧ sourceAlive J a x r sigma ∧
+          0 < remainingEnergy a r sigma) from fun h => hcap h.1)]
+    have hUZ : U = 0 := hzero .upper
+    have hLZ : L = 0 := hzero .lower
+    have hIZ : I = 0 := hzero .interval
+    simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+  by_cases hT : 0 < remainingEnergy a r sigma
+  swap
+  · have hzero (J : MonitoredDomain) :
+        sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma = 0 := by
+      simp only [sourceSeparatedOvershoot, dif_pos hr,
+        if_neg (show ¬(r < nu sigma ∧ sourceAlive J a x r sigma ∧
+          0 < remainingEnergy a r sigma) from fun h => hT h.2.2)]
+    have hUZ : U = 0 := hzero .upper
+    have hLZ : L = 0 := hzero .lower
+    have hIZ : I = 0 := hzero .interval
+    simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+  by_cases hEnergy : 0 < Shao.energy a
+  swap
+  · have hUZ : U = 0 := hDead .upper (fun h => hEnergy h.1)
+    have hLZ : L = 0 := hDead .lower (fun h => hEnergy h.1)
+    have hIZ : I = 0 := hDead .interval (fun h => hEnergy h.1)
+    simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+  let w : ℝ := actualWall a x
+  let y : ℝ := Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) r
+  let T : ℝ := remainingEnergy a r sigma
+  let z : ℝ := Shao.prefixSum a n
+  let b : ℝ := a (sigma ⟨r, hr⟩)
+  have hw : 0 < w := mul_pos hx0 (Real.sqrt_pos.mpr hEnergy)
+  have hy : Interior .interval w y := ⟨hHL r le_rfl, hHU r le_rfl⟩
+  have hLocal (J : MonitoredDomain) (ha : sourceAlive J a x r sigma) :
+      sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma =
+        localSeparatedOvershoot J (actualDerivativeFamily Q J) w y T z b := by
+    simp only [sourceSeparatedOvershoot, dif_pos hr, if_pos (show r < nu sigma ∧
+      sourceAlive J a x r sigma ∧ 0 < remainingEnergy a r sigma from ⟨hcap, ha, hT⟩)]
+    rfl
+  by_cases hsmall : b ^ 2 ≤ T / 2
+  swap
+  · have hzero (J : MonitoredDomain) :
+        sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma = 0 := by
+      by_cases ha : sourceAlive J a x r sigma
+      · rw [hLocal J ha, localSeparatedOvershoot,
+          if_neg (show ¬(0 < T ∧ b ^ 2 ≤ T / 2) from fun h => hsmall h.2)]
+      · exact hDead J ha
+    have hUZ : U = 0 := hzero .upper
+    have hLZ : L = 0 := hzero .lower
+    have hIZ : I = 0 := hzero .interval
+    simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+  have hNoCross (J : MonitoredDomain) (hp : projectionIncrement J w y b = b) :
+      sourceSeparatedOvershoot J (actualDerivativeFamily Q J) a x nu r sigma = 0 := by
+    by_cases ha : sourceAlive J a x r sigma
+    · rw [hLocal J ha, localSeparatedOvershoot, if_pos (show 0 < T ∧ b ^ 2 ≤ T / 2 from
+        ⟨hT, hsmall⟩), hp]
+      ring
+    · exact hDead J ha
+  have hs : 0 < Real.sqrt T := Real.sqrt_pos.mpr hT
+  have hTE : T ≤ Shao.energy a := by
+    have hpre := Shao.prefixSquares_nonneg (Shao.Probability.Spitzer.reorder a sigma) r
+    dsimp only [T, remainingEnergy]
+    linarith only [hpre]
+  have hwScale : x * Real.sqrt T ≤ w :=
+    mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt hTE) hx0.le
+  have hbE : b ^ 2 ≤ Shao.energy a :=
+    Finset.single_le_sum (fun j _ => sq_nonneg (a j)) (Finset.mem_univ (sigma ⟨r, hr⟩))
+  have hbRoot : |b| ≤ Real.sqrt (Shao.energy a) :=
+    (sq_le_sq₀ (abs_nonneg b) (Real.sqrt_nonneg _)).mp (by
+      simpa only [sq_abs, Real.sq_sqrt hEnergy.le] using hbE)
+  have hbWall : |b| ≤ w / x := by
+    apply (le_div_iff₀ hx0).mpr
+    simpa only [w, actualWall, mul_comm] using mul_le_mul_of_nonneg_left hbRoot hx0.le
+  have hbS : |b| ≤ Real.sqrt T :=
+    (sq_le_sq₀ (abs_nonneg b) hs.le).mp (by
+      rw [sq_abs, Real.sq_sqrt hT.le]
+      linarith only [hsmall, hT])
+  have hdisp : |z - y| ≤ 3 * x * Real.sqrt T / 2 := le_of_not_gt hbad
+  have hGap : 3 * x * Real.sqrt T / 2 < 2 * w - |b| := by
+    have hh : 0 < (x - 2) * Real.sqrt T := mul_pos (by linarith only [hx]) hs
+    nlinarith only [hwScale, hbS, hh]
+  have hExp : Real.exp (-(w ^ 2 / T)) ≤ Real.exp (-x ^ 2) := by
+    apply Real.exp_le_exp.mpr
+    have hsquare : (x * Real.sqrt T) ^ 2 ≤ w ^ 2 :=
+      pow_le_pow_left₀ (mul_nonneg hx0.le hs.le) hwScale 2
+    have heq : (x * Real.sqrt T) ^ 2 = x ^ 2 * T := by
+      rw [mul_pow, Real.sq_sqrt hT.le]
+    rw [heq] at hsquare
+    have hh : x ^ 2 ≤ w ^ 2 / T := (le_div_iff₀ hT).mpr hsquare
+    linarith only [hh]
+  by_cases hz : |z| < w
+  · have hAliveU : sourceAlive .upper a x r sigma := ⟨hEnergy, (abs_lt.mp hz).2, hHU⟩
+    have hAliveL : sourceAlive .lower a x r sigma := ⟨hEnergy, (abs_lt.mp hz).1, hHL⟩
+    have hAliveI : sourceAlive .interval a x r sigma :=
+      ⟨hEnergy, abs_lt.mp hz, fun k hk => ⟨hHL k hk, hHU k hk⟩⟩
+    let dU : ℝ := actualDerivativeFamily Q .upper (w, y, T, z)
+    let dL : ℝ := actualDerivativeFamily Q .lower (w, y, T, z)
+    let dI : ℝ := actualDerivativeFamily Q .interval (w, y, T, z)
+    have hdU : deriv (fun s : ℝ => upperCompletion Q w s T z) y = dU :=
+      (hDeriv .upper w y T z hw hT hy.2 (abs_lt.mp hz).2).deriv
+    have hdL : deriv (fun s : ℝ => lowerCompletion Q w s T z) y = dL :=
+      (hDeriv .lower w y T z hw hT hy.1 (abs_lt.mp hz).1).deriv
+    have hdI : deriv (fun s : ℝ => intervalCompletion Q w s T z) y = dI :=
+      (hDeriv .interval w y T z hw hT hy (abs_lt.mp hz)).deriv
+    by_cases hcrossU : w ≤ y + b
+    · have hnotL : ¬y + b ≤ -w := by linarith only [hcrossU, hw]
+      have hLZ : L = 0 := hNoCross .lower (by simp only [projectionIncrement, if_neg hnotL])
+      let u : ℝ := w - y
+      let e : ℝ := |b| - u
+      let c : ℝ := 1 - (|b| + u) * (z - y) / T
+      have hPUC := projected_negative_part_control .upper Q (actualDerivativeFamily Q .upper)
+        1 w y T z b (Or.inl rfl) (Or.inr (Or.inl ⟨rfl, rfl⟩)) hw hT hy.2
+          (abs_lt.mp hz).2 (by simpa only [one_mul] using hcrossU) hsmall
+      have hPIC := projected_negative_part_control .interval Q (actualDerivativeFamily Q .interval)
+        1 w y T z b (Or.inl rfl) (Or.inl rfl) hw hT hy (abs_lt.mp hz)
+          (by simpa only [one_mul] using hcrossU) hsmall
+      rcases hPUC with ⟨_, hu, hub, he, _, _, hc, _, hUEq, _⟩
+      rcases hPIC with ⟨_, _, _, _, _, _, _, _, hIEq, _⟩
+      have he0 : 0 ≤ e := by simpa only [e, u, one_mul] using he
+      have hc0 : 0 ≤ c := by simpa only [c, u, one_mul] using hc
+      have hUFormula : U = -(e * c) * dU := by
+        rw [show U = localSeparatedOvershoot .upper (actualDerivativeFamily Q .upper) w y T z b
+          from hLocal .upper hAliveU, hUEq]
+        dsimp only [e, c, u, dU]
+        ring
+      have hIFormula : I = -(e * c) * dI := by
+        rw [show I = localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) w y T z b
+          from hLocal .interval hAliveI, hIEq]
+        dsimp only [e, c, u, dI]
+        ring
+      have hRatio := hUpper B P hB x w y T z b hx hT hwScale
+        (by simpa only [one_mul] using hu) (by simpa only [one_mul] using hub)
+          hsmall hz hdisp
+      change 0 ≤ deriv (fun s : ℝ => intervalCompletion Q w s T z) y -
+          deriv (fun s : ℝ => upperCompletion Q w s T z) y ∧
+        deriv (fun s : ℝ => intervalCompletion Q w s T z) y -
+          deriv (fun s : ℝ => upperCompletion Q w s T z) y ≤
+            CU * Real.exp (-(w ^ 2 / T)) * (-deriv (fun s : ℝ => upperCompletion Q w s T z) y)
+        at hRatio
+      rw [hdI, hdU] at hRatio
+      have hCoeff : CU * Real.exp (-(w ^ 2 / T)) ≤ C * Real.exp (-x ^ 2) :=
+        mul_le_mul (le_max_left CU CL) hExp (Real.exp_pos _).le hC.le
+      calc
+        U + L - I = (e * c) * (dI - dU) := by rw [hUFormula, hIFormula, hLZ]; ring
+        _ ≤ (e * c) * (CU * Real.exp (-(w ^ 2 / T)) * (-dU)) :=
+          mul_le_mul_of_nonneg_left hRatio.2 (mul_nonneg he0 hc0)
+        _ = CU * Real.exp (-(w ^ 2 / T)) * U := by rw [hUFormula]; ring
+        _ ≤ C * Real.exp (-x ^ 2) * U := mul_le_mul_of_nonneg_right hCoeff hSign.1
+        _ = C * Real.exp (-x ^ 2) * (U + L) := by rw [hLZ]; ring
+    · by_cases hcrossL : y + b ≤ -w
+      · have hUZ : U = 0 := hNoCross .upper (by simp only [projectionIncrement, if_neg hcrossU])
+        let u : ℝ := w - (-1) * y
+        let e : ℝ := |b| - u
+        let c : ℝ := 1 - (-1) * (|b| + u) * (z - y) / T
+        have hPLC := projected_negative_part_control .lower Q (actualDerivativeFamily Q .lower)
+          (-1) w y T z b (Or.inr rfl) (Or.inr (Or.inr ⟨rfl, rfl⟩)) hw hT hy.1
+            (abs_lt.mp hz).1 (by nlinarith only [hcrossL]) hsmall
+        have hPIC := projected_negative_part_control .interval Q (actualDerivativeFamily Q .interval)
+          (-1) w y T z b (Or.inr rfl) (Or.inl rfl) hw hT hy (abs_lt.mp hz)
+            (by nlinarith only [hcrossL]) hsmall
+        rcases hPLC with ⟨_, hu, hub, he, _, _, hc, _, hLEq, _⟩
+        rcases hPIC with ⟨_, _, _, _, _, _, _, _, hIEq, _⟩
+        have he0 : 0 ≤ e := he
+        have hc0 : 0 ≤ c := hc
+        have hLFormula : L = (e * c) * dL := by
+          rw [show L = localSeparatedOvershoot .lower (actualDerivativeFamily Q .lower) w y T z b
+            from hLocal .lower hAliveL, hLEq]
+          dsimp only [e, c, u, dL]
+          ring
+        have hIFormula : I = (e * c) * dI := by
+          rw [show I = localSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) w y T z b
+            from hLocal .interval hAliveI, hIEq]
+          dsimp only [e, c, u, dI]
+          ring
+        have hRatio := hLower B P hB x w y T z b hx hT hwScale
+          (by simpa only [neg_one_mul, sub_neg_eq_add] using hu)
+          (by simpa only [neg_one_mul, sub_neg_eq_add] using hub) hsmall hz hdisp
+        change 0 ≤ deriv (fun s : ℝ => lowerCompletion Q w s T z) y -
+            deriv (fun s : ℝ => intervalCompletion Q w s T z) y ∧
+          deriv (fun s : ℝ => lowerCompletion Q w s T z) y -
+            deriv (fun s : ℝ => intervalCompletion Q w s T z) y ≤
+              CL * Real.exp (-(w ^ 2 / T)) * deriv (fun s : ℝ => lowerCompletion Q w s T z) y
+          at hRatio
+        rw [hdL, hdI] at hRatio
+        have hCoeff : CL * Real.exp (-(w ^ 2 / T)) ≤ C * Real.exp (-x ^ 2) :=
+          mul_le_mul (le_max_right CU CL) hExp (Real.exp_pos _).le hC.le
+        calc
+          U + L - I = (e * c) * (dL - dI) := by rw [hLFormula, hIFormula, hUZ]; ring
+          _ ≤ (e * c) * (CL * Real.exp (-(w ^ 2 / T)) * dL) :=
+            mul_le_mul_of_nonneg_left hRatio.2 (mul_nonneg he0 hc0)
+          _ = CL * Real.exp (-(w ^ 2 / T)) * L := by rw [hLFormula]; ring
+          _ ≤ C * Real.exp (-x ^ 2) * L := mul_le_mul_of_nonneg_right hCoeff hSign.2.1
+          _ = C * Real.exp (-x ^ 2) * (U + L) := by rw [hUZ]; ring
+      · have hUZ : U = 0 := hNoCross .upper (by simp only [projectionIncrement, if_neg hcrossU])
+        have hLZ : L = 0 := hNoCross .lower (by simp only [projectionIncrement, if_neg hcrossL])
+        have hIZ : I = 0 := hNoCross .interval (by
+          simp only [projectionIncrement, if_neg hcrossU, if_neg hcrossL])
+        simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+  · rcases le_or_gt z (-w) with hzL | hzL
+    · have hLZ : L = 0 := hDead .lower (fun h => (not_lt_of_ge hzL) h.2.1)
+      have hIZ : I = 0 := hDead .interval (fun h => (not_lt_of_ge hzL) h.2.1.1)
+      have hnotU : ¬w ≤ y + b := by
+        intro hcross
+        have hh := (abs_le.mp hdisp).1
+        have hb := le_abs_self b
+        linarith only [hh, hb, hcross, hzL, hGap]
+      have hUZ : U = 0 := hNoCross .upper (by simp only [projectionIncrement, if_neg hnotU])
+      simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+    · have hzU : w ≤ z := by
+        by_contra h
+        exact hz (abs_lt.mpr ⟨hzL, lt_of_not_ge h⟩)
+      have hUZ : U = 0 := hDead .upper (fun h => (not_lt_of_ge hzU) h.2.1)
+      have hIZ : I = 0 := hDead .interval (fun h => (not_lt_of_ge hzU) h.2.1.2)
+      have hnotL : ¬y + b ≤ -w := by
+        intro hcross
+        have hh := (abs_le.mp hdisp).2
+        have hb := neg_abs_le b
+        linarith only [hh, hb, hcross, hzU, hGap]
+      have hLZ : L = 0 := hNoCross .lower (by simp only [projectionIncrement, if_neg hnotL])
+      simp only [hUZ, hLZ, hIZ, zero_add, sub_zero, mul_zero, le_refl]
+
+end Shao.C2.ActualDoubleSeparatedClassification
