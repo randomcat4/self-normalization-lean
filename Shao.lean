@@ -205,6 +205,7 @@ import Shao.C2.SourceIntervalCompletion
 import Shao.C2.SourceIntervalTelescope
 import Shao.C2.TruncatedScalarBudget
 import Shao.C2.TwoSided
+import Shao.C2.UniformGaussianTailPolynomial
 import Shao.Checks.Boundaries
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
@@ -667,10 +668,12 @@ import Shao.OQ6.ActualRemainderEnvelope
 import Shao.OQ6.ActualUncenteredCompactCDF
 import Shao.OQ6.AmbientCanonicalCodingTransport
 import Shao.OQ6.AmbientCanonicalIntegrableCDF
+import Shao.OQ6.BoundedMeanSumMoments
 import Shao.OQ6.CanonicalDoubleGhostRowMoments
 import Shao.OQ6.CanonicalDoubleGhostScalarMoments
 import Shao.OQ6.CanonicalIntegrableTailBounds
 import Shao.OQ6.CanonicalOverlap
+import Shao.OQ6.CanonicalProductEnvelopeTails
 import Shao.OQ6.CanonicalSequenceAnalyticCosts
 import Shao.OQ6.CanonicalTilt
 import Shao.OQ6.CappedSectionEnergy
@@ -778,7 +781,10 @@ import Shao.Probability.SourceActualIntervalProfileBudget
 import Shao.Probability.SourceActualLateOmittedBudget
 import Shao.Probability.SourceActualLocalProfileBudget
 import Shao.Probability.SourceActualOmittedOvershoot
+import Shao.Probability.SourceActualOrdinarySuffixWeight
 import Shao.Probability.SourceActualOriginalLawBridge
+import Shao.Probability.SourceActualRecordEndstrip
+import Shao.Probability.SourceActualRecordLowFullEnergy
 import Shao.Probability.SourceActualRegularLocal
 import Shao.Probability.SourceActualRegularPhysicalRatio
 import Shao.Probability.SourceActualTransferAssembly
