@@ -805,6 +805,8 @@ import Shao.Probability.SourceOriginalLawNonresidualReturn
 import Shao.Probability.SourceOriginalZeroEnergyBudget
 import Shao.Probability.SourceOriginalZeroWallBudget
 import Shao.Probability.SourcePermutationReveal
+import Shao.Probability.SourceRegularRetainedProbability
+import Shao.Probability.SourceResidualRareSuffix
 import Shao.Probability.SourceScalarFourierDerivatives
 import Shao.Probability.SourceScalarInitialBudget
 import Shao.Probability.SourceScalarNoise
