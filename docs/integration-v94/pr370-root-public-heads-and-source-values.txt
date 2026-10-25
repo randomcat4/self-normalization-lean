@@ -1,0 +1,44 @@
+
+SOURCE Shao/Probability/SourceCircularWitnessMoment.lean
+import Shao.Probability.MeasurablePath
+import Shao.Probability.BoundedQuadraticTilt
+import Shao.C2.AuxiliaryEnergyCentered
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.Probability.Independence.Integration
+import Mathlib.Probability.Martingale.OptionalStopping
+
+import Shao.Probability.EndpointRelativeError
+import Lean
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.Probability.SourceCircularWitnessMoment
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators
+
+DECLARATION actual_circular_witness_small_parameter_moment SOURCE_LINE 1933
+theorem actual_circular_witness_small_parameter_moment :
+    ∃ C : ℝ, 1 ≤ C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (B : ℝ), 0 < B → (∀ᵐ z : ℝ ∂rho, |z| ≤ B) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ N : ℕ,
+          let P : Measure (Shao.Path N) := Measure.pi (fun _ : Fin N => rho)
+          let L : Shao.Path N → ℝ := fun a =>
+            if hN : 0 < N then
+              sSup {w : ℝ | ∃ i : Fin N, ∃ k : Fin (N + 1),
+                w = Shao.prefixSum a N -
+                  2 * ∑ r ∈ Finset.range k.val,
+                    a ⟨(i.val + r) % N, Nat.mod_lt _ hN⟩}
+            else 0
+          Measurable L ∧
+            ∀ theta : ℝ, 0 ≤ theta → theta * B ≤ 1 / 10 →
+              Integrable (fun a : Shao.Path N => Real.exp (theta * L a)) P ∧
+                (∫ a : Shao.Path N, Real.exp (theta * L a) ∂P) ≤
+                  C * (1 + (N : ℝ) * theta ^ 2) *
+                    Real.exp ((1002001 / 2000000 : ℝ) * (N : ℝ) * theta ^ 2 +
+                      C * (N : ℝ) * theta ^ 3 * beta)
