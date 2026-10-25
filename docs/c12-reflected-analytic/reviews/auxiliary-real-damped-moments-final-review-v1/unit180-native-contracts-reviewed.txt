@@ -1,0 +1,109 @@
+Mathlib/MeasureTheory/MeasurableSpace/Basic.lean:325 protected lemma Measurable.ite {p : α → Prop} {_ : DecidablePred p}
+    (hp : MeasurableSet {a : α | p a}) (hf : Measurable f) (hg : Measurable g) :
+    Measurable fun x ↦ ite (p x) (f x) (g x) :=
+Mathlib/MeasureTheory/Group/Arithmetic.lean:269 theorem Measurable.div [MeasurableDiv₂ G] (hf : Measurable f) (hg : Measurable g) :
+    Measurable (f / g) :=
+Mathlib/MeasureTheory/Group/Arithmetic.lean:192 theorem Measurable.pow_const (hf : Measurable f) (c : γ) : Measurable fun x => f x ^ c :=
+Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean:245 theorem measurableSet_lt [SecondCountableTopology α] [OrderClosedTopology α]
+    {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
+    MeasurableSet { a | f a < g a } :=
+Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean:172 theorem measurableSet_le {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
+    MeasurableSet { a | f a ≤ g a } :=
+FILE /root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Meta/Tactic/Simp/SimpTheorems.lean
+330:     forallTelescopeReducing type fun xs type => do
+331:       let e := mkAppN e xs
+332:       let ps ← go e type
+333:       ps.mapM fun (e, type) =>
+334:         return (← mkLambdaFVars xs e, ← mkForallFVars xs type)
+335:   else if let some (_, lhs, rhs) := type.eq? then
+336:     if isGlobal then
+337:       checkBadRewrite lhs rhs
+338:     if inv then
+339:       let type ← mkEq rhs lhs
+340:       let e    ← mkEqSymm e
+341:       return [(e, type)]
+342:     else
+343:       return [(e, type)]
+344:   else if let some (lhs, rhs) := type.iff? then
+345:     if isGlobal then
+346:       checkBadRewrite lhs rhs
+347:     if inv then
+348:       let type ← mkEq rhs lhs
+349:       let e    ← mkEqSymm (← mkPropExt e)
+350:       return [(e, type)]
+351:     else
+352:       let type ← mkEq lhs rhs
+353:       let e    ← mkPropExt e
+354:       return [(e, type)]
+355:   else if let some (_, lhs, rhs) := type.ne? then
+356:     if inv then
+357:       throwError m!"Invalid `←` modifier: Cannot be applied to simp theorems of the form `a ≠ b`"
+358:         ++ .note m!"This simp theorem will rewrite{inlineExpr (← mkEq lhs rhs)}to `{.ofConstName ``False}`, \
+359:                     which should not be applied in the reverse direction"
+360:     if rhs.isConstOf ``Bool.true then
+361:       return [(← mkAppM ``Bool.of_not_eq_true #[e], ← mkEq lhs (mkConst ``Bool.false))]
+362:     else if rhs.isConstOf ``Bool.false then
+363:       return [(← mkAppM ``Bool.of_not_eq_false #[e], ← mkEq lhs (mkConst ``Bool.true))]
+364:     let type ← mkEq (← mkEq lhs rhs) (mkConst ``False)
+365:     let e    ← mkEqFalse e
+366:     return [(e, type)]
+367:   else if let some p := type.not? then
+368:     if inv then
+369:       throwError m!"Invalid `←` modifier: Cannot be applied to simp theorems of the form `¬ P`"
+370:         ++ .note m!"This simp theorem will rewrite{inlineExpr p}to `{.ofConstName ``False}`, which should not \
+371:                     be applied in the reverse direction"
+372:     if let some (_, lhs, rhs) := p.eq? then
+373:       if rhs.isConstOf ``Bool.true then
+374:         return [(← mkAppM ``Bool.of_not_eq_true #[e], ← mkEq lhs (mkConst ``Bool.false))]
+375:       else if rhs.isConstOf ``Bool.false then
+376:         return [(← mkAppM ``Bool.of_not_eq_false #[e], ← mkEq lhs (mkConst ``Bool.true))]
+377:     let type ← mkEq p (mkConst ``False)
+378:     let e    ← withoutExporting do mkEqFalse e
+379:     return [(e, type)]
+380:   else if let some (type₁, type₂) := type.and? then
+381:     let e₁ := mkProj ``And 0 e
+382:     let e₂ := mkProj ``And 1 e
+383:     return (← go e₁ type₁) ++ (← go e₂ type₂)
+384:   else
+385:     if inv then
+386:       throwError m!"Invalid `←` modifier: Cannot be applied to a rule that rewrites to `True`"
+387:         ++ .note m!"This simp theorem will rewrite{inlineExpr type}to `True`, which should not be applied in the reverse direction"
+388:     let type ← mkEq type (mkConst ``True)
+389:     let e    ← withoutExporting do mkEqTrue e
+390:     return [(e, type)]
+391: 
+392: private def checkTypeIsProp (type : Expr) : MetaM Unit :=
+393:   unless (← isProp type) do
+394:     throwError "Invalid simp theorem: Expected a proposition, but found{indentExpr type}"
+450: Creates a `SimpTheorem` from a global theorem.
+451: Because some theorems lead to multiple `SimpTheorems` (in particular conjunctions), returns an array.
+452: -/
+453: def mkSimpTheoremFromConst (declName : Name) (post := true) (inv := false)
+454:     (prio : Nat := eval_prio default) (checkLhs : Bool := false) : MetaM (Array SimpTheorem) := do
+455:   let cinfo ← getConstVal declName
+456:   let us := cinfo.levelParams.map mkLevelParam
+457:   let origin := .decl declName post inv
+458:   let val := mkConst declName us
+459:   withSimpGlobalConfig do
+460:     let type ← inferType val
+461:     checkTypeIsProp type
+462:     if inv || (← shouldPreprocess type) then
+463:       let mut r := #[]
+464:       for (val, type) in (← preprocess val type inv (isGlobal := true)) do
+465:         let auxName ← mkAuxLemma (kind? := `_simp) cinfo.levelParams type val (inferRfl := true)
+466:           (forceExpose := true)  -- These kinds of theorems are small and `to_additive` may need to
+467:                                  -- unfold them.
+468:           -- The `[defeq]` attribute transfers (should only matter for `[← thm]`)
+469:           (defeq := inv && defeqAttr.hasTag (← getEnv) declName)
+470:         r := r.push <| (← do mkSimpTheoremCore origin (mkConst auxName us) #[] (mkConst auxName) post prio (noIndexAtArgs := false) (checkLhs := checkLhs))
+471:       return r
+472:     else
+473:       return #[← withoutExporting do mkSimpTheoremCore origin (mkConst declName us) #[] (mkConst declName) post prio (noIndexAtArgs := false) (checkLhs := checkLhs)]
+474: 
+475: def SimpTheorem.getValue (simpThm : SimpTheorem) : MetaM Expr := do
+476:   if simpThm.proof.isConst && simpThm.levelParams.isEmpty then
+FILE /root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Meta/AppBuilder.lean
+663: def mkEqTrueCore (p : Expr) (h : Expr) : Expr :=
+  match_expr h with
+  | of_eq_true _ h => h
+  | _ => mkApp2 (mkConst ``eq_true) p h

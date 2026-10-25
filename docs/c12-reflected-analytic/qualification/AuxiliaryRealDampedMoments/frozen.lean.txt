@@ -1,0 +1,63 @@
+import Shao.C2.AuxiliaryUnmarkedDampedMoments
+import Shao.C2.AuxiliaryHigherMarkDamped
+import Shao.C2.AuxiliaryThirdMomentTruncation
+import Shao.C2.AuxiliaryUnmarkedBlockRealCauchy
+import Mathlib.Algebra.Order.Floor.Semiring
+
+set_option autoImplicit false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.AuxiliaryRealDampedMoments
+open MeasureTheory ProbabilityTheory
+
+private theorem scaled_real_power_le
+    (x a s : ℝ) (k : ℕ) (hx : 0 ≤ x) (ha : 0 ≤ a) (hs : 0 < s) (hk : a ≤ (k : ℝ)) :
+    Real.rpow x a ≤ Real.rpow s (-a / 2) *
+      (1 + Real.rpow s ((k : ℝ) / 2) * x ^ k) := by
+
+theorem auxiliary_actual_unmarked_real_gaussian_damped_moments :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    ∀ a : ℝ, 0 ≤ a → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ (n : ℕ) (b s : ℝ), 0 < b → 0 < s → s ≤ 2 / b →
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+          let retained : ℝ := ∫ z : ℝ, if z ^ 2 ≤ b then z ^ 2 else 0 ∂nu
+          let gamma : ℝ := if (1 / 2 : ℝ) ≤ retained then -c else 1
+          Integrable (fun v : Shao.Path n =>
+            Real.rpow |Shao.prefixSum v n| a * Real.exp (-s * Shao.energy v)) P ∧
+            (∫ v : Shao.Path n,
+              Real.rpow |Shao.prefixSum v n| a * Real.exp (-s * Shao.energy v) ∂P) ≤
+              C * Real.rpow s (-a / 2) * Real.exp (gamma * s * (n : ℝ)) := by
+
+theorem auxiliary_actual_higher_real_mark_damped :
+    ∀ a : ℝ, 0 ≤ a → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        Integrable (fun z : ℝ => |z| ^ 3) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ s : ℝ, 0 < s →
+          Integrable (fun z : ℝ => |z| ^ 3 * Real.rpow |z| a * Real.exp (-s * z ^ 2)) nu ∧
+            (∫ z : ℝ, |z| ^ 3 * Real.rpow |z| a * Real.exp (-s * z ^ 2) ∂nu) ≤
+              C * Real.rpow s (-a / 2) * (∫ z : ℝ, |z| ^ 3 ∂nu) := by
+
+theorem auxiliary_actual_unmarked_real_cauchy_paid :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    ∀ a : ℝ, 0 ≤ a → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        Integrable (fun z : ℝ => |z| ^ 3) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ (n : ℕ) (s : ℝ), 0 < s →
+          s * (∫ z : ℝ, |z| ^ 3 ∂nu) ^ 2 ≤ 1 / 2 →
+          ∀ A : Set (Shao.Path n), MeasurableSet A →
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+            let W : Shao.Path n → ℝ := fun v => Real.exp (-s * Shao.energy v)
+            let D : Shao.Path n → ℝ := fun v => Real.rpow |Shao.prefixSum v n| a * W v
+            Integrable (A.indicator D) P ∧
+              (∫ v : Shao.Path n, A.indicator D v ∂P) ≤
+                C * Real.rpow s (-a / 2) * Real.exp (-(c / 2) * s * (n : ℝ)) *
+                  Real.sqrt (∫ v : Shao.Path n, A.indicator W v ∂P) := by
+
+end Shao.C2.AuxiliaryRealDampedMoments
