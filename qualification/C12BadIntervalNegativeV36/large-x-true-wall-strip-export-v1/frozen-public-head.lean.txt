@@ -1,0 +1,18 @@
+theorem actual_large_x_true_energy_closed_strip :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
+            ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
+              let wall : Shao.Path r → ℝ := fun a =>
+                x * Real.sqrt (q + Shao.energy a)
+              (Measure.pi (fun _ : Fin r => rho)).real
+                {a : Shao.Path r |
+                  Shao.maxWithZero (s • a) ≤ wall a ∧
+                  wall a - v ≤ s * Shao.prefixSum a r ∧
+                  s * Shao.prefixSum a r ≤ wall a} ≤
+                C * (v + beta) ^ 2 / (r : ℝ)
