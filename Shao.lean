@@ -665,6 +665,7 @@ import Shao.OQ6.ActualRemainderEnvelope
 import Shao.OQ6.ActualUncenteredCompactCDF
 import Shao.OQ6.AmbientCanonicalCodingTransport
 import Shao.OQ6.AmbientCanonicalIntegrableCDF
+import Shao.OQ6.CanonicalDoubleGhostRowMoments
 import Shao.OQ6.CanonicalIntegrableTailBounds
 import Shao.OQ6.CanonicalOverlap
 import Shao.OQ6.CanonicalSequenceAnalyticCosts
