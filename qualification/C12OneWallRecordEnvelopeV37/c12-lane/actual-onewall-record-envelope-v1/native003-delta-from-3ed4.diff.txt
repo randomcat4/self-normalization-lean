@@ -1,0 +1,206 @@
+--- reviewed3ed4
++++ native003
+@@ -131,10 +131,16 @@
+     have hcoeff : c ≤ 3 * f := by
+       have hratio := mul_le_mul_of_nonneg_left hbRatio
+         (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (abs_nonneg d))
+       have hq : 0 ≤ |d| / Real.sqrt U := div_nonneg (abs_nonneg d) hroot.le
++      have hcoeff' : c ≤ 1 + 2 * (|d| / Real.sqrt U) := by
++        calc
++          c ≤ 1 + 2 * b * |d| / T := hcoeffFirst
++          _ = 1 + 2 * |d| * (b / T) := by ring
++          _ ≤ 1 + 2 * |d| * (1 / Real.sqrt U) := add_le_add (le_refl (1 : ℝ)) hratio
++          _ = 1 + 2 * (|d| / Real.sqrt U) := by ring
+       dsimp only [f]
+-      nlinarith [hcoeffFirst]
++      linarith only [hcoeff', hq]
+     have hvAbs : v ≤ |d| := by
+       have hn := neg_abs_le d
+       dsimp only [v, e] at *
+       linarith
+@@ -150,15 +156,21 @@
+         rw [hfactor]
+         apply (div_le_div_iff_of_pos_right hroot).mpr
+         dsimp only [f]
+         linarith
+-      have hh := (hvRatio.trans hq)
+-      nlinarith
++      have hh := hvRatio.trans hq
++      calc
++        2 * v / T = 2 * (v / T) := by ring
++        _ ≤ 2 * (f / Real.sqrt U) := mul_le_mul_of_nonneg_left hh (by norm_num)
++        _ = 2 * f / Real.sqrt U := by ring
+     have hf : 0 ≤ f := by dsimp only [f]; positivity
+     have hG : 0 ≤ 2 * v / T := by positivity
+     have hExp : Real.exp (-2 * u * v / T) ≤ 1 := by
+       have hp : 0 ≤ 2 * u * v / T := by positivity
+-      simpa only [Real.exp_zero] using Real.exp_le_exp.mpr (show -2 * u * v / T ≤ 0 by linarith)
++      apply Real.exp_le_one_iff.mpr
++      calc
++        -2 * u * v / T = -(2 * u * v / T) := by ring
++        _ ≤ 0 := neg_nonpos.mpr hp
+     have hFormula : O = e * c * (2 * v / T) * Real.exp (-2 * u * v / T) := by
+       dsimp only [O, localSeparatedOvershoot]
+       rw [if_pos ⟨hT, hsmall⟩]
+       simp only [projectionIncrement, if_pos hcross, halflineDerivative,
+@@ -226,9 +238,12 @@
+         ∑ i ∈ Finset.univ.filter (fun i : Fin n => j ≤ i.val), g (p i) := by
+     refine Finset.sum_bij
+       (fun (i : Fin (n - j)) _ => (⟨j + i.val, by omega⟩ : Fin n)) ?_ ?_ ?_ ?_
+     · intro i hi
+-      exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by omega⟩
++      apply Finset.mem_filter.mpr
++      refine ⟨Finset.mem_univ _, ?_⟩
++      change j ≤ j + i.val
++      omega
+     · intro i hi k hk heq
+       apply Fin.ext
+       have hv := congrArg Fin.val heq
+       dsimp only at hv
+@@ -279,15 +294,15 @@
+       Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma)
+         r.val r.isLt.le) < actualWall a x := by
+   classical
+   unfold Shao.maxWithZero
+-  apply Finset.sup'_lt_iff.mpr
++  rw [Finset.sup'_lt_iff]
+   intro k hk
+   have hkr : k ≤ r.val := (Finset.mem_Icc.mp hk).2
+   rw [Shao.prefixSum_smul,
+     Shao.Probability.Spitzer.head_prefixSum _ r.val r.isLt.le k hkr]
+   rcases hJ with rfl | rfl
+-  · simpa only [oneWallSign, one_mul] using ha.2.2 k hkr
++  · simpa only [oneWallSign, one_mul, Interior] using ha.2.2 k hkr
+   · have hh : -actualWall a x <
+         Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) k := ha.2.2 k hkr
+     simp only [oneWallSign, neg_one_mul]
+     linarith
+@@ -364,17 +379,24 @@
+       6 * recordIncrement J a r sigma * futureProfile a (r.val + 1) sigma else 0) := by
+     split_ifs <;> positivity
+   by_cases hact : r.val < nu sigma ∧ sourceAlive J a x r.val sigma ∧ 0 < T
+   swap
+-  · have hz : O = 0 := by
+-      simp only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_neg hact]
++  · have hactRaw : ¬(r.val < nu sigma ∧ sourceAlive J a x r.val sigma ∧
++        0 < remainingEnergy a r.val sigma) := hact
++    have hz : O = 0 := by
++      simp only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_neg hactRaw]
+     simpa only [hz] using And.intro (le_refl (0 : ℝ)) hR
++  have hactRaw : r.val < nu sigma ∧ sourceAlive J a x r.val sigma ∧
++      0 < remainingEnergy a r.val sigma := hact
+   by_cases hsmall : b ^ 2 ≤ T / 2
+   swap
+-  · have hz : O = 0 := by
+-      simp only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_pos hact,
+-        localSeparatedOvershoot, if_neg (show ¬(0 < T ∧ b ^ 2 ≤ T / 2) from
+-          fun h => hsmall h.2)]
++  · have hsmallRaw : ¬(0 < remainingEnergy a r.val sigma ∧
++        (a (sigma r)) ^ 2 ≤ remainingEnergy a r.val sigma / 2) := by
++      intro h
++      exact hsmall h.2
++    have hz : O = 0 := by
++      simp only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_pos hactRaw,
++        localSeparatedOvershoot, if_neg hsmallRaw]
+     simpa only [hz] using And.intro (le_refl (0 : ℝ)) hR
+   have hg := aoer_reveal_future_data a r sigma
+   have hcut : r.val < energyCutoff a H sigma := hact.1.trans_le hcap
+   have hTH : H ≤ T := ((energy_cutoff_data a H hH).2.2 sigma r.val hcut).2
+@@ -397,23 +419,24 @@
+     ring
+   have hy : s * y < w := by
+     have hh := hact.2.1.2.2 r.val le_rfl
+     rcases hJ with rfl | rfl
+-    · simpa only [s, oneWallSign, one_mul] using hh
++    · simpa only [s, oneWallSign, one_mul, Interior, w, y, p] using hh
+     · change -w < y at hh
+       simp only [s, oneWallSign, neg_one_mul]
+       linarith
+   have hz : s * z < w := by
+     have hh := hact.2.1.2.1
+     rcases hJ with rfl | rfl
+-    · simpa only [s, oneWallSign, one_mul] using hh
++    · simpa only [s, oneWallSign, one_mul, Interior, w, z] using hh
+     · change -w < z at hh
+       simp only [s, oneWallSign, neg_one_mul]
+       linarith
+   have hM : M < w := aoer_alive_signed_record J hJ a x r sigma hact.2.1
+   have hlocal : O = localSeparatedOvershoot J (halflineDerivative J) w y T z b := by
+-    simp only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_pos hact]
+-    rfl
++    have hr : (⟨r.val, r.isLt⟩ : Fin n) = r := Fin.ext rfl
++    simpa only [O, sourceSeparatedOvershoot, dif_pos r.isLt, if_pos hactRaw,
++      w, y, p, T, z, b, hr]
+   have hreflect : localSeparatedOvershoot J (halflineDerivative J) w y T z b =
+       localSeparatedOvershoot .upper (halflineDerivative .upper) w (s * y) T (s * z) (s * b) := by
+     rcases hJ with rfl | rfl
+     · simp only [s, oneWallSign, one_mul]
+@@ -432,12 +455,26 @@
+     ring
+   have hbase : 0 ≤ O ∧ O ≤
+       if recordStrip J a x r sigma then
+         6 * recordIncrement J a r sigma * futureProfile a (r.val + 1) sigma else 0 := by
+-    simpa only [← hreflect, ← hlocal, hDval, hFval, hsabs, recordStrip,
+-      futureProfile, s, p, w, U, d] using hscalar
++    dsimp only at hscalar
++    rw [← hreflect, ← hlocal, hDval, hFval, hsabs] at hscalar
++    refine ⟨hscalar.1, ?_⟩
++    by_cases hstrip : recordStrip J a x r sigma
++    · have hstrip' : 0 ≤ s * Shao.prefixSum p (r.val + 1) - w ∧
++          s * Shao.prefixSum p (r.val + 1) - w ≤ recordIncrement J a r sigma := by
++        simpa only [recordStrip, s, p, w] using hstrip
++      rw [if_pos hstrip]
++      simpa only [if_pos hstrip', futureProfile, U, d] using hscalar.2
++    · have hstrip' : ¬(0 ≤ s * Shao.prefixSum p (r.val + 1) - w ∧
++          s * Shao.prefixSum p (r.val + 1) - w ≤ recordIncrement J a r sigma) := by
++        simpa only [recordStrip, s, p, w] using hstrip
++      rw [if_neg hstrip]
++      simpa only [if_neg hstrip'] using hscalar.2
+   refine ⟨hbase.1, ?_⟩
+-  simpa only [hU, hUH, and_true] using hbase.2
++  have hUraw : 0 < remainingEnergy a (r.val + 1) sigma := hU
++  have hUHraw : H / 2 ≤ remainingEnergy a (r.val + 1) sigma := hUH
++  simpa only [hUraw, hUHraw, and_true] using hbase.2
+ 
+ private theorem aoer_nonzero_crossing
+     {n : ℕ} (J : MonitoredDomain) (hJ : J = .upper ∨ J = .lower)
+     (a : Shao.Path n) (x : ℝ) (nu : LabelPerm n → ℕ)
+@@ -533,9 +570,9 @@
+     by_cases hs : recordStrip J a x r sigma
+     · by_cases hg : 0 < remainingEnergy a (r.val + 1) sigma ∧
+           2 * beta ^ 2 ≤ remainingEnergy a (r.val + 1) sigma
+       · simp only [hs, true_and, hg, ite_true, ordinaryFutureWeight]
+-      · simp only [hs, true_and, hg, ite_false, ordinaryFutureWeight, mul_zero]
++      · simp only [hs, true_and, hg, ite_false, ordinaryFutureWeight, mul_zero, ite_true]
+     · simp only [hs, false_and, ite_false]
+   exact ⟨hb.1, heq ▸ hb.2⟩
+ 
+ theorem actual_onewall_prior_hit_record_envelope
+@@ -556,9 +593,12 @@
+   have hb := actual_onewall_record_envelope J hJ a x beta hx hbeta nu r sigma hcap
+   have hD : 0 ≤ recordIncrement J a r sigma := le_max_right _ _
+   have hW : 0 ≤ ordinaryFutureWeight a beta (r.val + 1) sigma := by
+     unfold ordinaryFutureWeight
+-    split_ifs <;> dsimp only [futureProfile] <;> positivity
++    split_ifs
++    · dsimp only [futureProfile]
++      positivity
++    · exact le_refl 0
+   have hR : 0 ≤ (if recordStrip J a x r sigma ∧ 3 * actualWall a x ≤ circularWitness p then
+       6 * recordIncrement J a r sigma * ordinaryFutureWeight a beta (r.val + 1) sigma else 0) := by
+     split_ifs <;> positivity
+   by_cases hop : oppositePrefixHit J a x r sigma
+@@ -603,9 +643,12 @@
+     (hcap.trans (min_le_left _ _))
+   have hD : 0 ≤ recordIncrement J a r sigma := le_max_right _ _
+   have hW : 0 ≤ badFutureWeight a H m x (r.val + 1) sigma := by
+     unfold badFutureWeight
+-    split_ifs <;> dsimp only [futureProfile] <;> positivity
++    split_ifs
++    · dsimp only [futureProfile]
++      positivity
++    · exact le_refl 0
+   have hR : 0 ≤ (if recordStrip J a x r sigma then
+       6 * recordIncrement J a r sigma * badFutureWeight a H m x (r.val + 1) sigma else 0) := by
+     split_ifs <;> positivity
+   by_cases hbad : Bad
