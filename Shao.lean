@@ -682,6 +682,7 @@ import Shao.OQ6.ConditionalUniformStandardizedResidual
 import Shao.OQ6.ConditionalVarianceMean
 import Shao.OQ6.CoordinateBorelFactorization
 import Shao.OQ6.FiniteHilbertSignMoments
+import Shao.OQ6.FiniteMatrixSignEnergy
 import Shao.OQ6.FiniteRows
 import Shao.OQ6.FiniteTiltedMoments
 import Shao.OQ6.FiniteUniformCodingAssembly
@@ -770,6 +771,7 @@ import Shao.Probability.SourceActualIntervalInitialCDF
 import Shao.Probability.SourceActualIntervalProfileBudget
 import Shao.Probability.SourceActualLateOmittedBudget
 import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualOmittedOvershoot
 import Shao.Probability.SourceActualRegularLocal
 import Shao.Probability.SourceActualRegularPhysicalRatio
 import Shao.Probability.SourceActualTransferAssembly
