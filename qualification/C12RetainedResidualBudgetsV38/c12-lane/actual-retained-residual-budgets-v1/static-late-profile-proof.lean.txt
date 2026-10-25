@@ -1,0 +1,198 @@
+private theorem arr_late_fixed_suffix_gaussian_bound :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+          Bcap ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          ∀ (r t : ℕ), n = r + t → 0 < r → n ≤ 2 * r →
+            ∀ (u : Shao.Path t) (H : ℝ), 0 < H → 4 * beta ^ 2 ≤ H →
+              ∀ (s : ℝ), (s = 1 ∨ s = -1) →
+                let Pr : Measure (Shao.Path r) := Measure.pi (fun _ : Fin r => rho)
+                let T : ℝ := Shao.energy u
+                let F : Shao.Path r → ℝ := fun v =>
+                  Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+                    H x {s} false v u
+                let W : ℝ := if 0 < T ∧ H ≤ T then
+                    |Shao.Probability.SourceIIDGaussianProfileBudget.firstValue u| ^ 3 /
+                      Real.sqrt T *
+                        (Shao.Probability.SourceMarkedSuffixAveraging.suffixD u) ^ 5
+                  else 0
+                Integrable F Pr ∧ (∫ v, F v ∂Pr) ≤ C / (r : ℝ) * W := by
+  classical
+  obtain ⟨Cs, hCs, hstrip⟩ :=
+    Shao.C2.ActualBadIntervalNegativeBudget.actual_large_x_true_energy_closed_strip
+  refine ⟨9 * Cs, by positivity, ?_⟩
+  intro rho hProb Bcap hBcap hsupport hmean hsecond n hn x hx hsupportN
+    beta r t hsplit hr hlate u H hH hHbeta s hs Pr T F W
+  letI : IsProbabilityMeasure rho := hProb
+  have hrR : 0 < (r : ℝ) := by exact_mod_cast hr
+  have hsqrtr : 0 < Real.sqrt (r : ℝ) := Real.sqrt_pos.2 hrR
+  have hBr : (beta / Real.sqrt (r : ℝ)) ^ 2 = beta ^ 2 / (r : ℝ) := by
+    rw [div_pow, Real.sq_sqrt hrR.le]
+  have hdata :=
+    Shao.Probability.SourceIIDGaussianProfileBudget.fixed_gaussian_weight_measurable_bound
+      r t H x {s} false
+  have hFm : Measurable F :=
+    hdata.1.comp (measurable_id.prodMk measurable_const)
+  have hFi : Integrable F Pr :=
+    (integrable_const ((({s} : Finset ℝ).card : ℝ) *
+      (1 + Real.sqrt (t : ℝ)) ^ 3)).mono' hFm.aestronglyMeasurable
+      (ae_of_all _ fun v => by
+        simpa only [Real.norm_eq_abs] using (hdata.2.1 v u).2)
+  refine ⟨hFi, ?_⟩
+  by_cases hcut : 0 < T ∧ H ≤ T
+  · let b : ℝ := Shao.Probability.SourceIIDGaussianProfileBudget.firstValue u
+    let d : ℝ := Shao.prefixSum u t
+    let D : ℝ := Shao.Probability.SourceMarkedSuffixAveraging.suffixD u
+    let M : ℝ := |b| + max (s * d) 0
+    let wall : Shao.Path r → ℝ := fun v => x * Real.sqrt (T + Shao.energy v)
+    let A : Set (Shao.Path r) := {v | Shao.maxWithZero (s • v) < wall v}
+    let w : Shao.Path r → ℝ := fun v => wall v - s * Shao.prefixSum v r
+    let profile : Shao.Path r → ℝ := fun v =>
+      Real.exp (-((max (w v - M) 0) ^ 2) / T)
+    have hT : 0 < T := hcut.1
+    have hsqrtT : 0 < Real.sqrt T := Real.sqrt_pos.2 hT
+    have hsqrtT2 : (Real.sqrt T) ^ 2 = T := Real.sq_sqrt hT.le
+    have hwm : Measurable wall :=
+      measurable_const.mul ((measurable_const.add Shao.measurable_energy).sqrt)
+    have hw : Measurable w :=
+      hwm.sub (measurable_const.mul (Shao.measurable_prefixSum r))
+    have hmaxm : Measurable (fun v : Shao.Path r => Shao.maxWithZero (s • v)) :=
+      Shao.measurable_maxWithZero.comp (Measurable.of_eval fun i =>
+        measurable_const.mul (measurable_pi_apply i))
+    have hA : MeasurableSet A := measurableSet_lt hmaxm hwm
+    have hM0 : 0 ≤ M := add_nonneg (abs_nonneg b) (le_max_right _ _)
+    have hDeq : D = 1 + |d| / Real.sqrt T := by
+      change (if 0 < T then 1 + |d| / Real.sqrt T else 1) = _
+      exact if_pos hT
+    have hD : 1 ≤ D := by
+      rw [hDeq]
+      linarith only [div_nonneg (abs_nonneg d) hsqrtT.le]
+    have hD0 : 0 ≤ D := (by norm_num : (0 : ℝ) ≤ 1).trans hD
+    have hD2 : 1 ≤ D ^ 2 := by nlinarith only [hD]
+    have hb : b ^ 2 ≤ T := by
+      dsimp only [b, Shao.Probability.SourceIIDGaussianProfileBudget.firstValue]
+      split_ifs with ht
+      · change (u ⟨0, ht⟩) ^ 2 ≤ ∑ i : Fin t, (u i) ^ 2
+        exact Finset.single_le_sum (fun i _ => sq_nonneg (u i))
+          (Finset.mem_univ (⟨0, ht⟩ : Fin t))
+      · simpa only [zero_pow (by norm_num : (2 : ℕ) ≠ 0)] using Shao.energy_nonneg u
+    have hbabs : |b| ≤ Real.sqrt T :=
+      (sq_le_sq₀ (abs_nonneg b) hsqrtT.le).1
+        (by simpa only [sq_abs, hsqrtT2] using hb)
+    have hsd : s * d ≤ |d| := by
+      rcases hs with rfl | rfl
+      · simpa only [one_mul] using le_abs_self d
+      · simpa only [neg_one_mul] using neg_le_abs d
+    have hMle : M ≤ Real.sqrt T * D := by
+      calc
+        M ≤ |b| + |d| := add_le_add le_rfl (max_le hsd (abs_nonneg d))
+        _ ≤ Real.sqrt T + |d| := add_le_add hbabs le_rfl
+        _ = Real.sqrt T * D := by
+          rw [hDeq, mul_add, mul_one, mul_div_cancel₀ _ hsqrtT.ne']
+    have hM2 : M ^ 2 ≤ T * D ^ 2 := by
+      have hh := (sq_le_sq₀ hM0 (mul_nonneg hsqrtT.le hD0)).2 hMle
+      simpa only [mul_pow, hsqrtT2] using hh
+    have hsurv (v : Shao.Path r) :
+        Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {s} false v u ↔
+          v ∈ A := by
+      simp [Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival, A, wall, T]
+    have he (v : Shao.Path r) :
+        F v = (|b| ^ 3 / (T * Real.sqrt T) * D ^ 3) * A.indicator profile v := by
+      by_cases hv : v ∈ A
+      · have hcond : 0 < Shao.energy u ∧ H ≤ Shao.energy u ∧
+            Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {s} false v u :=
+          ⟨hcut.1, hcut.2, (hsurv v).2 hv⟩
+        change Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+          H x {s} false v u = _
+        rw [Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight,
+          if_pos hcond, Set.indicator_of_mem hv]
+        simp only [Shao.Probability.SourceIIDGaussianProfileBudget.gaussianProfiles,
+          if_pos hcut.1, Finset.sum_singleton]
+        rfl
+      · have hnot : ¬Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival
+            x {s} false v u := fun hh => hv ((hsurv v).1 hh)
+        change Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+          H x {s} false v u = _
+        rw [Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight,
+          if_neg (by tauto), Set.indicator_of_notMem hv, mul_zero]
+    have hCDF (a : ℝ) (ha : 0 ≤ a) :
+        Pr.real {v | v ∈ A ∧ w v ≤ a} ≤
+          (2 * Cs) * (a ^ 2 / (r : ℝ) + (beta / Real.sqrt (r : ℝ)) ^ 2) := by
+      have hbnd := hstrip rho Bcap hBcap hsupport hmean hsecond n hn x hx hsupportN
+        r hr (by omega) hlate T a s hT.le ha hs
+      change Pr.real {v : Shao.Path r |
+          Shao.maxWithZero (s • v) ≤ wall v ∧
+          wall v - a ≤ s * Shao.prefixSum v r ∧
+          s * Shao.prefixSum v r ≤ wall v} ≤ Cs * (a + beta) ^ 2 / (r : ℝ) at hbnd
+      have hsub : {v | v ∈ A ∧ w v ≤ a} ⊆ {v : Shao.Path r |
+          Shao.maxWithZero (s • v) ≤ wall v ∧
+          wall v - a ≤ s * Shao.prefixSum v r ∧
+          s * Shao.prefixSum v r ≤ wall v} := by
+        intro v hv
+        have hvmax : Shao.maxWithZero (s • v) ≤ wall v :=
+          (show Shao.maxWithZero (s • v) < wall v from hv.1).le
+        have hvsum := (Shao.maxWithZero_le_iff (s • v) (wall v)).1 hvmax r le_rfl
+        rw [Shao.prefixSum_smul] at hvsum
+        have hvw : wall v - s * Shao.prefixSum v r ≤ a := hv.2
+        exact ⟨hvmax, by linarith only [hvw], hvsum⟩
+      have hsq : (a + beta) ^ 2 ≤ 2 * (a ^ 2 + beta ^ 2) := by
+        nlinarith only [sq_nonneg (a - beta)]
+      calc
+        _ ≤ Pr.real {v : Shao.Path r |
+            Shao.maxWithZero (s • v) ≤ wall v ∧
+            wall v - a ≤ s * Shao.prefixSum v r ∧
+            s * Shao.prefixSum v r ≤ wall v} := measureReal_mono hsub
+        _ ≤ Cs * (a + beta) ^ 2 / (r : ℝ) := hbnd
+        _ ≤ Cs * (2 * (a ^ 2 + beta ^ 2)) / (r : ℝ) :=
+          div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hsq hCs.le) hrR.le
+        _ = _ := by rw [hBr]; ring
+    have hg := Shao.Probability.gaussian_wall_profile_of_quadratic_closed_cdf
+      Pr A hA w hw (2 * Cs) (beta / Real.sqrt (r : ℝ)) (r : ℝ) T M
+      (by positivity) hrR hT hM0 hCDF
+    change (∫ v, A.indicator profile v ∂Pr) ≤
+      (2 * Cs) * (2 * (M ^ 2 + T) / (r : ℝ) +
+        (beta / Real.sqrt (r : ℝ)) ^ 2) at hg
+    have hbetaT : 4 * beta ^ 2 ≤ T := hHbeta.trans hcut.2
+    have hTD : T ≤ T * D ^ 2 := by
+      nlinarith only [mul_le_mul_of_nonneg_left hD2 hT.le]
+    have hgeom : 4 * M ^ 2 + 4 * T + 2 * beta ^ 2 ≤ 9 * T * D ^ 2 := by
+      have hTD0 : 0 ≤ T * D ^ 2 := mul_nonneg hT.le (sq_nonneg D)
+      nlinarith only [hM2, hTD, hbetaT, hTD0]
+    have hprofile : (∫ v, A.indicator profile v ∂Pr) ≤
+        9 * Cs * T * D ^ 2 / (r : ℝ) := by
+      calc
+        _ ≤ (2 * Cs) * (2 * (M ^ 2 + T) / (r : ℝ) +
+            (beta / Real.sqrt (r : ℝ)) ^ 2) := hg
+        _ = (Cs / (r : ℝ)) * (4 * M ^ 2 + 4 * T + 2 * beta ^ 2) := by
+          rw [hBr]
+          ring
+        _ ≤ (Cs / (r : ℝ)) * (9 * T * D ^ 2) :=
+          mul_le_mul_of_nonneg_left hgeom (div_nonneg hCs.le hrR.le)
+        _ = _ := by ring
+    have hWeq : W = |b| ^ 3 / Real.sqrt T * D ^ 5 := if_pos hcut
+    rw [hWeq]
+    calc
+      (∫ v, F v ∂Pr) =
+          (|b| ^ 3 / (T * Real.sqrt T) * D ^ 3) *
+            (∫ v, A.indicator profile v ∂Pr) := by
+        simp_rw [he]
+        exact integral_const_mul _ _
+      _ ≤ (|b| ^ 3 / (T * Real.sqrt T) * D ^ 3) *
+          (9 * Cs * T * D ^ 2 / (r : ℝ)) := by
+        apply mul_le_mul_of_nonneg_left hprofile
+        exact mul_nonneg (div_nonneg (pow_nonneg (abs_nonneg b) 3)
+          (mul_nonneg hT.le hsqrtT.le)) (pow_nonneg hD0 3)
+      _ = (9 * Cs) / (r : ℝ) * (|b| ^ 3 / Real.sqrt T * D ^ 5) := by
+        field_simp [hT.ne', hsqrtT.ne', hrR.ne']
+        <;> ring
+  · have hFzero : F = fun _ => 0 := by
+      funext v
+      change Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+        H x {s} false v u = 0
+      unfold Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight
+      exact if_neg (by tauto)
+    rw [hFzero, integral_zero]
+    simp only [W, if_neg hcut, mul_zero, le_refl]

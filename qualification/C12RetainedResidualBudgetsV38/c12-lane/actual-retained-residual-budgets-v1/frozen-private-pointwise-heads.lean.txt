@@ -1,0 +1,21 @@
+private theorem arr_interval_rank_gaussian_domination
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (a : Shao.Path n) (H x : ℝ) (hH : 0 < H) (hx : 0 < x)
+    (nu : LabelPerm n → ℕ) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a H sigma) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    |sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+        (actualDerivativeFamily Q .interval) a x nu r.val sigma| +
+      max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+        a x nu r.val sigma) 0 ≤
+      (2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40) *
+        Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1, -1} false
+          (Shao.Probability.Spitzer.reorder a sigma) r
+
+private theorem arr_two_sign_rank_gaussian_le
+    {n : ℕ} (a : Shao.Path n) (r : Fin n) (H x : ℝ) :
+    Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1, -1} false a r ≤
+      Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1} false a r +
+      Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {-1} false a r
