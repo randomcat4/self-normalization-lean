@@ -1,0 +1,107 @@
+private theorem arr_omitted_mask_iff
+    {n : ℕ} (a : Shao.Path n) (h0 H : ℝ) (hh0 : 0 < h0) (hH : 0 < H)
+    (sigma : LabelPerm n) (r : Fin n) (m : ℕ) :
+    (min (energyCutoff a H sigma) (n - m) ≤ r.val ∧
+        r.val < energyCutoff a h0 sigma) ↔
+      h0 ≤ remainingEnergy a r.val sigma ∧
+        (remainingEnergy a r.val sigma < H ∨ n - r.val ≤ m) := by
+  classical
+  have hHcut : energyCutoff a H sigma ≤ r.val ↔ remainingEnergy a r.val sigma < H :=
+    (energy_cutoff_data a H hH).2.1 sigma r.val r.is_lt.le
+  have hh0cut : energyCutoff a h0 sigma ≤ r.val ↔ remainingEnergy a r.val sigma < h0 :=
+    (energy_cutoff_data a h0 hh0).2.1 sigma r.val r.is_lt.le
+  have hnu : r.val < energyCutoff a h0 sigma ↔ h0 ≤ remainingEnergy a r.val sigma := by
+    constructor
+    · intro hr
+      exact ((energy_cutoff_data a h0 hh0).2.2 sigma r.val hr).2
+    · intro hT
+      by_contra hr
+      have hcut : energyCutoff a h0 sigma ≤ r.val := Nat.le_of_not_gt hr
+      exact (not_lt.mpr hT) (hh0cut.mp hcut)
+  have hm : n - m ≤ r.val ↔ n - r.val ≤ m := by omega
+  rw [min_le_iff, hHcut, hnu, hm]
+  tauto
+
+private theorem arr_absolute_rank_measurable_integrable
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnu : ∀ sigma, Measurable (fun a => nu a sigma)) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    let F : Shao.Path n × LabelPerm n → ℝ := fun p =>
+      actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2
+    Measurable F ∧ Integrable F (revealLaw P) ∧
+      (∀ p, 0 ≤ F p) ∧ (∀ p, F p ≤ 3 + 88 * (1 + (n : ℝ))) := by
+  classical
+  intro Q F
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw Bm PB hBm
+  letI : IsProbabilityMeasure (revealLaw P) := by unfold revealLaw; infer_instance
+  have hReflection : Shao.Probability.SourceActualLocalProfileBudget.HalflineReflectionIdentities Q := by
+    constructor
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula Bm PB hBm w y T z hT hy hz
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula Bm PB hBm w y T z hT hy hz
+  have hReg (w y T z : ℝ) (hw : 0 < w) (hT : 0 < T) (hy : |y| < w) (hz : |z| < w) :
+      DifferentiableAt ℝ
+        (fun Y => Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w Y T z) y :=
+    (Shao.C2.BridgeIntervalImageResolved.sourceIntervalCompletion_spatial_hasDerivAt
+      Bm PB hBm w y T z hw hy hz hT).differentiableAt
+  have hk (J : MonitoredDomain) : Measurable (actualDerivativeFamily Q J) ∧
+      KernelBounds J (eventCompletionKernel J Q) (actualDerivativeFamily Q J) 4 := by
+    cases J with
+    | upper =>
+        have hd := Shao.Probability.SourceActualLocalProfileBudget.actual_halfline_kernel_data
+          Q hReflection .upper (Or.inl rfl)
+        exact ⟨by simpa only [actualDerivativeFamily] using hd.1,
+          by simpa only [actualDerivativeFamily] using hd.2.1⟩
+    | lower =>
+        have hd := Shao.Probability.SourceActualLocalProfileBudget.actual_halfline_kernel_data
+          Q hReflection .lower (Or.inr rfl)
+        exact ⟨by simpa only [actualDerivativeFamily] using hd.1,
+          by simpa only [actualDerivativeFamily] using hd.2.1⟩
+    | interval =>
+        have hd := Shao.Probability.SourceActualIntervalProfileBudget.actual_interval_kernel_data
+          Q hReflection hReg
+        exact ⟨by simpa only [actualDerivativeFamily] using hd.1,
+          by simpa only [actualDerivativeFamily] using hd.2.1⟩
+  have hp (J : MonitoredDomain) := source_parts_measurable_integrable J
+    (eventCompletionKernel J Q) (actualDerivativeFamily Q J)
+    (eventCompletionKernel_data J Q).1 (hk J).1 4 (hk J).2 P x hx nu hnu
+  have hLm (J : MonitoredDomain) : Measurable (fun p : Shao.Path n × LabelPerm n =>
+      sourceRetainedRemainder J (eventCompletionKernel J Q)
+        (actualDerivativeFamily Q J) p.1 x (nu p.1) r.val p.2) := by
+    apply measurable_from_prod_countable_left
+    intro sigma
+    exact ((hp J).1 sigma r.val).1
+  have hOm : Measurable (fun p : Shao.Path n × LabelPerm n =>
+      sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+        p.1 x (nu p.1) r.val p.2) := by
+    apply measurable_from_prod_countable_left
+    intro sigma
+    exact ((hp .interval).1 sigma r.val).2
+  have hFm : Measurable F := by
+    dsimp only [F, actualRetainedAbsoluteRank]
+    exact ((((hLm .interval).abs.add (hLm .upper).abs).add
+      (hLm .lower).abs).add (hOm.neg.max measurable_const))
+  have hNN (p : Shao.Path n × LabelPerm n) : 0 ≤ F p := by
+    dsimp only [F, actualRetainedAbsoluteRank]
+    positivity
+  have hB (p : Shao.Path n × LabelPerm n) : F p ≤ 3 + 88 * (1 + (n : ℝ)) := by
+    have hd (J : MonitoredDomain) := source_parts_uniform_bound J
+      (eventCompletionKernel J Q) (actualDerivativeFamily Q J) 4 (hk J).2
+      p.1 x hx (nu p.1) r.val p.2
+    have hNeg : max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+        p.1 x (nu p.1) r.val p.2) 0 ≤ 4 * 4 * (1 + (n : ℝ)) :=
+      max_le ((neg_le_abs _).trans (hd .interval).1) (by positivity)
+    dsimp only [F, actualRetainedAbsoluteRank]
+    nlinarith only [(hd .interval).2, (hd .upper).2, (hd .lower).2, hNeg]
+  refine ⟨hFm, ?_, hNN, hB⟩
+  exact (integrable_const (3 + 88 * (1 + (n : ℝ)))).mono'
+    hFm.aestronglyMeasurable (ae_of_all _ fun p => by
+      rw [Real.norm_eq_abs, abs_of_nonneg (hNN p)]
+      exact hB p)

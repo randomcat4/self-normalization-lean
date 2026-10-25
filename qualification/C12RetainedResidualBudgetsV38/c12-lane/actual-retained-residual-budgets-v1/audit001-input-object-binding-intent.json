@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,os,json,hashlib\nbase=pathlib.Path('/root/rivermind-data/shao-lean-20261021');wt=base/'workspaces/c12-bridge-domination-v71';out=base/'outputs/c12-actual-retained-residual-budgets-v71';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nsrc=wt/'Shao/C2/ActualRetainedResidualBudgets.lean';obj=out/'ActualRetainedResidualBudgets.olean';audit=out/'OwnedAudit.lean';alias=wt/'.lake/build/lib/lean/Shao/C2/ActualRetainedResidualBudgets.olean'\nassert sha(src)=='031b7fd150cd13b268d17fdd085b64616849f8a1f84af7edbadc2796344c18f0';assert sha(obj)=='a9e40096d80abcddb93597698e75d24bd0d7802c699e3c2cee2caf2fde5acd04';assert sha(audit)=='e45e245b032a08306de283fef4d62f8a71e230b00b2c9a8aed71494c5061b34c'\nassert str(alias.absolute()).startswith(str(wt)+'/')\nif alias.exists() or alias.is_symlink():assert alias.resolve()==obj.resolve() and sha(alias)==sha(obj)\nelse:os.symlink(obj,alias)\nprint(json.dumps({'sourceSHA256':sha(src),'objectSHA256':sha(obj),'auditSHA256':sha(audit),'aliasPath':str(alias),'aliasTarget':str(alias.resolve()),'sharedPackageCacheWrites':0,'kernelResultRaw':(out/'kernel003-result.json').read_text(),'kernelStartRaw':(out/'kernel003-start.json').read_text()}))\n",
+  "timeout": 120
+}

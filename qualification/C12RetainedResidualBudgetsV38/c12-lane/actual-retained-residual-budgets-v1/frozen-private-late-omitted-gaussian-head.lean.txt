@@ -1,0 +1,30 @@
+private theorem arr_iid_late_omitted_gaussian_bill :
+    let K : ℝ := (2 : ℝ) ^ 64
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+          Bcap ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * (1 + x) ^ 3 ≤ Real.exp (-3 * x ^ 2) →
+          let h0 : ℝ := 4 * beta ^ 2
+          let H : ℝ := K * beta ^ 2 * (1 + x) ^ 6
+          let m : ℕ := ⌈H⌉₊
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          let nu : Shao.Path n → LabelPerm n → ℕ :=
+            fun a sigma => energyCutoff a h0 sigma
+          let tau : Shao.Path n → LabelPerm n → ℕ := fun a sigma =>
+            min (energyCutoff a H sigma) (n - m)
+          ∀ (s : ℝ), (s = 1 ∨ s = -1) →
+            let bill : Shao.Path n × LabelPerm n → ℝ := fun p =>
+              ∑ r : Fin n, if n / 2 < r.val ∧ tau p.1 p.2 ≤ r.val ∧
+                  r.val < nu p.1 p.2 then
+                Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight
+                  h0 x {s} false (Shao.Probability.Spitzer.reorder p.1 p.2) r
+              else 0
+            Measurable bill ∧ Integrable bill (revealLaw P) ∧
+              (∀ p, 0 ≤ bill p) ∧
+              (∫ p, bill p ∂revealLaw P) ≤ C * beta * Real.sqrt H / (n : ℝ) ∧
+              (∫ p, bill p ∂revealLaw P) ≤ C * delta * Shao.standardNormalTail x

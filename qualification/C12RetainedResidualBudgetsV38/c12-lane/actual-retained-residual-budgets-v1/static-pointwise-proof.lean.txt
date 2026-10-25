@@ -1,0 +1,337 @@
+import Shao.C2.ActualBadIntervalNegativeBudget
+import Shao.C2.BridgeIntervalImageResolved
+import Shao.Probability.SourceEarlyRetainedProbability
+import Shao.Probability.SourceLateOmittedSuffixBudget
+import Shao.Probability.SourceTrueWallProfile
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 5000000
+noncomputable section
+namespace Shao.C2.ActualRetainedResidualBudgets
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.ActualSignedDoubleTelescope
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+def actualRetainedAbsoluteRank {n : ℕ} (Q : Measure BridgeNoise)
+    (a : Shao.Path n) (x : ℝ) (nu : LabelPerm n → ℕ)
+    (r : Fin n) (sigma : LabelPerm n) : ℝ :=
+  |sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r.val sigma| +
+  |sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r.val sigma| +
+  |sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r.val sigma| +
+  max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+      a x nu r.val sigma) 0
+
+def actualOmittedRetainedBill {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (nu tau : Shao.Path n → LabelPerm n → ℕ)
+    (p : Shao.Path n × LabelPerm n) : ℝ :=
+  ∑ r : Fin n, if tau p.1 p.2 ≤ r.val ∧ r.val < nu p.1 p.2 then
+    actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0
+
+def actualBadRetainedBill {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (p : Shao.Path n × LabelPerm n) : ℝ :=
+  ∑ r : Fin n, if (3 * x / 2) * Real.sqrt (remainingEnergy p.1 r.val p.2) ≤
+      |remainingSum p.1 r.val p.2| then
+    actualRetainedAbsoluteRank Q p.1 x (nu p.1) r p.2 else 0
+
+private theorem arr_interval_rank_gaussian_domination
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (a : Shao.Path n) (H x : ℝ) (hH : 0 < H) (hx : 0 < x)
+    (nu : LabelPerm n → ℕ) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a H sigma) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    |sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+        (actualDerivativeFamily Q .interval) a x nu r.val sigma| +
+      max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+        a x nu r.val sigma) 0 ≤
+      (2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40) *
+        Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1, -1} false
+          (Shao.Probability.Spitzer.reorder a sigma) r := by
+  classical
+  dsimp only
+  let Q : Measure BridgeNoise := bridgeLaw Bm PB
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw Bm PB hBm
+  let K : ℝ := 2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40
+  let L : ℝ := sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+    (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) a x nu r.val sigma
+  let O : ℝ := sourceSeparatedOvershoot .interval
+    (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) a x nu r.val sigma
+  change |L| + max (-O) 0 ≤ K *
+    Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x
+      (Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval) false
+      (Shao.Probability.Spitzer.reorder a sigma) r
+  have hCP := Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant_nonneg
+  have hKpos : 0 < K := by dsimp [K]; positivity
+  have hReflection : Shao.Probability.SourceActualLocalProfileBudget.HalflineReflectionIdentities Q := by
+    constructor
+    · intro w y T z hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula Bm PB hBm w y T z hT hy hz
+    · intro w y T z hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula Bm PB hBm w y T z hT hy hz
+  have hRegular (w y T z : ℝ) (hw : 0 < w) (hT : 0 < T) (hy : |y| < w) (hz : |z| < w) :
+      DifferentiableAt ℝ
+        (fun Y => Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w Y T z) y :=
+    (Shao.C2.BridgeIntervalImageResolved.sourceIntervalCompletion_spatial_hasDerivAt
+      Bm PB hBm w y T z hw hy hz hT).differentiableAt
+  have hKernel := Shao.Probability.SourceActualIntervalProfileBudget.actual_interval_kernel_data
+    Q hReflection hRegular
+  have hsigns : ∀ s ∈ Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval,
+      s = 1 ∨ s = -1 := by
+    simp only [Shao.Probability.SourceActualLocalProfileBudget.wallSigns,
+      Finset.mem_insert, Finset.mem_singleton]
+    exact fun s hs => hs
+  let w : ℝ := actualWall a x
+  let y : ℝ := Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) r.val
+  let T : ℝ := remainingEnergy a r.val sigma
+  let z : ℝ := Shao.prefixSum a n
+  let b : ℝ := a (sigma r)
+  have hNN : 0 ≤ Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x (Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval) false
+      (Shao.Probability.Spitzer.reorder a sigma) r :=
+    ((Shao.Probability.SourceIIDGaussianProfileBudget.fixed_gaussian_weight_measurable_bound
+      r.val (n-r.val) H x (Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval) false).2.1 _ _).1
+  by_cases hact : r.val < nu sigma ∧ sourceAlive .interval a x r.val sigma ∧ 0 < T
+  · have hw : 0 < w := mul_pos hx (Real.sqrt_pos.2 hact.2.1.1)
+    have hy : |y| < w := abs_lt.mpr (hact.2.1.2.2 r.val le_rfl)
+    have hz : |z| < w := abs_lt.mpr hact.2.1.2.1
+    have hT : 0 < T := hact.2.2
+    have hcut : H ≤ T := ((energy_cutoff_data a H hH).2.2 sigma r.val (hact.1.trans_le hcap)).2
+    have hb : b ^ 2 ≤ T := (remaining_population_geometry a r.val r.is_lt.le sigma).2.2.1 r le_rfl
+    have hzero : T - b ^ 2 = 0 → y + b = z := Shao.Probability.SourceActualLocalProfileBudget.actual_reveal_zero_future_reachable a r sigma
+    have hExt (Y S : ℝ) : completionExt .interval (eventCompletionKernel .interval Q) w Y S z =
+        Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w Y S z := by
+      by_cases hY : |Y| < w
+      · have hYi := abs_lt.mp hY
+        have hzi := abs_lt.mp hz
+        simp [completionExt, Interior, hw, hYi.1, hYi.2, hzi.1, hzi.2,
+          Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion, eventCompletionKernel, hY]
+      · rw [Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion_exterior Q w Y S z (by tauto)]
+        have hYi : ¬(-w < Y ∧ Y < w) := fun hH => hY (abs_lt.mpr hH)
+        simp only [completionExt, Interior, hYi, false_and, and_false, if_false]
+    have hDer : deriv (fun Y : ℝ =>
+        Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w Y T z) y =
+        Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q (w,y,T,z) := by
+      have hf : (fun Y : ℝ => Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w Y T z) =
+          (fun Y : ℝ => eventCompletionKernel .interval Q (w,Y,T,z)) := by
+        funext Y
+        exact Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion_pos Q w Y T z hT
+      rw [hf]
+      exact (hKernel.2.2 w y T z hw hT hy hz).deriv
+    have hRem (beta : ℝ) :
+        localRemainder .interval (eventCompletionKernel .interval Q) (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) w y T z beta =
+          Shao.C2.ActualIntervalProjection.sourceRemainder Q w y T z beta := by
+      unfold localRemainder Shao.C2.ActualIntervalProjection.sourceRemainder
+      rw [hExt, hDer]
+      simp only [Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion, if_pos hT,
+        eventCompletionKernel, compensationCoefficient]
+    have hRet : localRetainedRemainder .interval (eventCompletionKernel .interval Q)
+        (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) w y T z b = Shao.C2.IntervalGaussianLocal.retainedRemainder Q w y T z b := by
+      by_cases hs : b^2 ≤ T/2 <;> by_cases hu : w ≤ y+b <;> by_cases hl : y+b ≤ -w
+      all_goals
+        have hH : ¬ |y+b| < w ↔ w ≤ y+b ∨ y+b ≤ -w := by
+          constructor
+          · intro hH
+            by_contra hc
+            push_neg at hc
+            exact hH (abs_lt.mpr ⟨by linarith only [hc.2], hc.1⟩)
+          · rintro (hu | hl) hH
+            · exact not_lt_of_ge hu (abs_lt.mp hH).2
+            · exact not_lt_of_ge hl (abs_lt.mp hH).1
+        simp only [localRetainedRemainder, projectionIncrement, Shao.C2.IntervalGaussianLocal.retainedRemainder,
+          hT, hs, hu, hl, hH, hRem, true_and, and_true, and_false, false_and,
+          true_or, or_true, false_or, or_false, if_true, if_false]
+    have hNeg : max (-localSeparatedOvershoot .interval (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) w y T z b) 0 =
+        Shao.C2.IntervalGaussianLocal.negativeOvershoot Q w y T z b := by
+      have huEq : -(b-(w-y))*(1-(b+(w-y))*(z-y)/T)*Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q (w,y,T,z) =
+          Shao.C2.ActualIntervalProjection.upperOvershoot Q w y T z b := by
+        simp only [Shao.C2.ActualIntervalProjection.upperOvershoot,
+          Shao.C2.ProjectionOvershoot.projectionOvershoot, Shao.C2.ProjectionOvershoot.projectionFactor, hDer]
+      have hlEq : -(b-(-w-y))*(1-(b+(-w-y))*(z-y)/T)*Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q (w,y,T,z) =
+          Shao.C2.ActualIntervalProjection.lowerOvershoot Q w y T z b := by
+        simp only [Shao.C2.ActualIntervalProjection.lowerOvershoot,
+          Shao.C2.ProjectionOvershoot.projectionOvershoot, Shao.C2.ProjectionOvershoot.projectionFactor, hDer]
+        ring
+      by_cases hs : b^2 ≤ T/2 <;> by_cases hu : w ≤ y+b <;> by_cases hl : y+b ≤ -w
+      all_goals
+        have hH : ¬ |y+b| < w ↔ w ≤ y+b ∨ y+b ≤ -w := by
+          constructor
+          · intro hH
+            by_contra hc
+            push_neg at hc
+            exact hH (abs_lt.mpr ⟨by linarith only [hc.2], hc.1⟩)
+          · rintro (hu | hl) hH
+            · exact not_lt_of_ge hu (abs_lt.mp hH).2
+            · exact not_lt_of_ge hl (abs_lt.mp hH).1
+        simp only [localSeparatedOvershoot, projectionIncrement, Shao.C2.IntervalGaussianLocal.negativeOvershoot,
+          hT, hs, hu, hl, hH, true_and, and_true, and_false, false_and,
+          true_or, or_true, false_or, or_false, if_true, if_false, huEq, hlEq,
+          sub_self, neg_zero, zero_mul, max_self]
+    have hbound := Shao.C2.BridgeIntervalImageResolved.actual_interval_retained_bound
+      Bm PB hBm w y T z b hw hy hz hT hb hzero
+    have hqperm : Shao.energy (Shao.Probability.Spitzer.reorder a sigma) = Shao.energy a := by
+      simpa only [Shao.energy, Shao.Probability.Spitzer.reorder] using Equiv.sum_comp sigma (fun i => (a i)^2)
+    have hsperm : Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n = Shao.prefixSum a n := by
+      simpa only [Shao.prefixSum_length, Shao.Probability.Spitzer.reorder] using Equiv.sum_comp sigma a
+    have hA : ∀ s ∈ Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval,
+        Shao.maxWithZero (s • Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma) r.val r.is_lt.le) < w := by
+      intro s hs
+      rcases hsigns s hs with rfl | rfl
+      all_goals
+        unfold Shao.maxWithZero
+        rw [Finset.sup'_lt_iff]
+        intro k hk
+        rw [Shao.prefixSum_smul, Shao.Probability.Spitzer.head_prefixSum _ _ _ k (Finset.mem_Icc.1 hk).2]
+        have hkLive := hact.2.1.2.2 k (Finset.mem_Icc.1 hk).2
+      · simpa only [one_mul] using hkLive.2
+      · simp only [neg_one_mul]
+        linarith only [hkLive.1]
+    have hRank : Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x (Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval) false
+        (Shao.Probability.Spitzer.reorder a sigma) r =
+        (|b|/Real.sqrt T)^3 * (1+|z-y|/Real.sqrt T)^3 *
+          Shao.C2.IntervalGaussianLargeStep.intervalEnvelope w y T z b := by
+      have he := (Shao.Probability.SourceIIDGaussianProfileBudget.gaussian_weight_source_state
+        (Shao.Probability.Spitzer.reorder a sigma) r H x (Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval) false).2.2.2.2
+      rw [hqperm, hsperm] at he
+      have hsel : 0 < Shao.energy a - Shao.prefixSquares (Shao.Probability.Spitzer.reorder a sigma) r.val ∧
+          H ≤ Shao.energy a - Shao.prefixSquares (Shao.Probability.Spitzer.reorder a sigma) r.val ∧
+          (∀ s ∈ Shao.Probability.SourceActualLocalProfileBudget.wallSigns .interval,
+            if false = true then Shao.maxWithZero
+              (s • Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma) r.val r.is_lt.le) ≤ x*Real.sqrt (Shao.energy a)
+            else Shao.maxWithZero
+              (s • Shao.Probability.Spitzer.head (Shao.Probability.Spitzer.reorder a sigma) r.val r.is_lt.le) < x*Real.sqrt (Shao.energy a)) :=
+        ⟨hT,hcut,by simpa only [Bool.false_eq_true, ite_false, w, actualWall] using hA⟩
+      rw [if_pos hsel, if_pos (show 0 < Shao.energy a -
+        Shao.prefixSquares (Shao.Probability.Spitzer.reorder a sigma) r.val from hT)] at he
+      convert he using 1
+      simp only [Shao.Probability.SourceActualLocalProfileBudget.wallSigns,
+        Finset.sum_insert (by norm_num : (1:ℝ) ∉ ({-1}:Finset ℝ)),
+        Finset.sum_singleton, one_mul, neg_one_mul, sub_neg_eq_add,
+        Shao.C2.IntervalGaussianLargeStep.intervalEnvelope, Shao.C2.GaussianWallEnvelope.wallEnvelope]
+      dsimp only [w, y, z, b, T, actualWall, remainingEnergy, Shao.Probability.Spitzer.reorder]
+      congr 2 <;> ring
+    dsimp only [L, O]
+    simp only [sourceRetainedRemainder, sourceSeparatedOvershoot, dif_pos r.is_lt,
+      if_pos (show r.val < nu sigma ∧ sourceAlive .interval a x r.val sigma ∧
+        0 < remainingEnergy a r.val sigma from hact)]
+    change |localRetainedRemainder .interval (eventCompletionKernel .interval Q) (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) w y T z b| +
+      max (-localSeparatedOvershoot .interval (Shao.Probability.SourceActualIntervalProfileBudget.intervalDerivative Q) w y T z b) 0 ≤ _
+    rw [hRet, hNeg, hRank]
+    simpa only [K, mul_assoc] using hbound
+  · dsimp only [L, O]
+    have hinactive : ¬ (r.val < nu sigma ∧ sourceAlive .interval a x r.val sigma ∧
+        0 < remainingEnergy a r.val sigma) := hact
+    simp only [sourceRetainedRemainder, sourceSeparatedOvershoot, dif_pos r.is_lt,
+      if_neg hinactive, abs_zero, neg_zero, max_self, add_zero]
+    exact mul_nonneg hKpos.le hNN
+
+private theorem arr_two_sign_rank_gaussian_le
+    {n : ℕ} (a : Shao.Path n) (r : Fin n) (H x : ℝ) :
+    Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1, -1} false a r ≤
+      Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1} false a r +
+      Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {-1} false a r := by
+  classical
+  let v := Shao.Probability.Spitzer.head a r.val r.is_lt.le
+  let u := Shao.Probability.Spitzer.tail a r.val r.is_lt.le
+  change Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight H x {1, -1} false v u ≤
+    Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight H x {1} false v u +
+    Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight H x {-1} false v u
+  have hplusNN : 0 ≤ Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight H x {1} false v u :=
+    ((Shao.Probability.SourceIIDGaussianProfileBudget.fixed_gaussian_weight_measurable_bound
+      r.val (n-r.val) H x {1} false).2.1 v u).1
+  have hminusNN : 0 ≤ Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight H x {-1} false v u :=
+    ((Shao.Probability.SourceIIDGaussianProfileBudget.fixed_gaussian_weight_measurable_bound
+      r.val (n-r.val) H x {-1} false).2.1 v u).1
+  by_cases hact : 0 < Shao.energy u ∧ H ≤ Shao.energy u ∧
+      Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {1, -1} false v u
+  · have hplus : Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {1} false v u := by
+      intro s hs
+      have hs1 : s = 1 := Finset.mem_singleton.mp hs
+      subst s
+      exact hact.2.2 1 (by simp)
+    have hminus : Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {-1} false v u := by
+      intro s hs
+      have hs1 : s = -1 := Finset.mem_singleton.mp hs
+      subst s
+      exact hact.2.2 (-1) (by simp)
+    have hplusAct : 0 < Shao.energy u ∧ H ≤ Shao.energy u ∧
+        Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {1} false v u :=
+      ⟨hact.1, hact.2.1, hplus⟩
+    have hminusAct : 0 < Shao.energy u ∧ H ≤ Shao.energy u ∧
+        Shao.Probability.SourceIIDGaussianProfileBudget.prefixSurvival x {-1} false v u :=
+      ⟨hact.1, hact.2.1, hminus⟩
+    simp only [Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight,
+      if_pos hact, if_pos hplusAct, if_pos hminusAct,
+      Shao.Probability.SourceIIDGaussianProfileBudget.gaussianProfiles, if_pos hact.1,
+      Finset.sum_insert (by norm_num : (1 : ℝ) ∉ ({-1} : Finset ℝ)), Finset.sum_singleton]
+    exact le_of_eq (by ring)
+  · rw [Shao.Probability.SourceIIDGaussianProfileBudget.fixedGaussianWeight, if_neg hact]
+    exact add_nonneg hplusNN hminusNN
+
+theorem actual_retained_absolute_rank_gaussian_domination
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (hBm : IsBrownianReal Bm PB)
+    {n : ℕ} (a : Shao.Path n) (H x : ℝ) (hH : 0 < H) (hx : 0 < x)
+    (nu : LabelPerm n → ℕ) (sigma : LabelPerm n)
+    (hcap : nu sigma ≤ energyCutoff a H sigma) (r : Fin n) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    0 ≤ actualRetainedAbsoluteRank Q a x nu r sigma ∧
+    actualRetainedAbsoluteRank Q a x nu r sigma ≤
+      (8000100 + (2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40)) *
+        (Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {1} false
+            (Shao.Probability.Spitzer.reorder a sigma) r +
+         Shao.Probability.SourceIIDGaussianProfileBudget.rankGaussianWeight H x {-1} false
+            (Shao.Probability.Spitzer.reorder a sigma) r) := by
+  classical
+  dsimp only
+  let Q : Measure BridgeNoise := bridgeLaw Bm PB
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw Bm PB hBm
+  have hReflection : Shao.Probability.SourceActualLocalProfileBudget.HalflineReflectionIdentities Q := by
+    constructor
+    · intro w y T z hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula Bm PB hBm w y T z hT hy hz
+    · intro w y T z hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula Bm PB hBm w y T z hT hy hz
+  have hI := arr_interval_rank_gaussian_domination PB Bm hBm a H x hH hx nu sigma hcap r
+  have hU := Shao.Probability.SourceActualLocalProfileBudget.actual_halfline_retained_rank_domination
+    Q hReflection .upper (Or.inl rfl) a H x hH hx nu sigma hcap r
+  have hL := Shao.Probability.SourceActualLocalProfileBudget.actual_halfline_retained_rank_domination
+    Q hReflection .lower (Or.inr rfl) a H x hH hx nu sigma hcap r
+  have hS := arr_two_sign_rank_gaussian_le (Shao.Probability.Spitzer.reorder a sigma) r H x
+  have hCP := Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant_nonneg
+  have hCI : 0 ≤ 2 * Shao.C2.IntervalImageRevealBounds.compensatedProfileConstant + 40 := by positivity
+  have hItwo := hI.trans (mul_le_mul_of_nonneg_left hS hCI)
+  change 0 ≤ actualRetainedAbsoluteRank Q a x nu r sigma ∧ _
+  refine ⟨?_, ?_⟩
+  · unfold actualRetainedAbsoluteRank
+    positivity
+  · dsimp only [actualRetainedAbsoluteRank]
+    change |sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+        (actualDerivativeFamily Q .interval) a x nu r.val sigma| +
+      |sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+        (actualDerivativeFamily Q .upper) a x nu r.val sigma| +
+      |sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+        (actualDerivativeFamily Q .lower) a x nu r.val sigma| +
+      max (-sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval)
+        a x nu r.val sigma) 0 ≤ _
+    simp only [actualDerivativeFamily] at ⊢
+    simp only [Shao.Probability.SourceActualLocalProfileBudget.wallSigns] at hU hL
+    dsimp only at hItwo
+    simp only [actualDerivativeFamily] at hItwo
+    nlinarith only [hItwo, hU, hL]
+
+end Shao.C2.ActualRetainedResidualBudgets

@@ -1,0 +1,15 @@
+{
+  "atUTC": "2026-10-25T15:01:23.941437+00:00",
+  "request": {
+    "action": "exec",
+    "command": "taskset -c 44-47 python3 -",
+    "stdin": "from pathlib import Path\nimport hashlib,json\nw=Path('/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71');o=Path('/root/rivermind-data/shao-lean-20261021/outputs/c12-actual-retained-residual-budgets-v71');s=w/'Shao/C2/ActualRetainedResidualBudgets.lean';a=o/'OwnedAudit.lean'\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None\nraw=s.read_bytes();rows=[]\nfor m in ['Shao/Probability/SourceEarlyRetainedProbability','Shao/Probability/SourceLateOmittedSuffixBudget']:\n p=w/'.lake/build/lib/lean'/(m+'.olean');rows.append({'module':m,'exists':p.exists(),'sha256':sha(p),'resolved':str(p.resolve()) if p.exists() else None})\nprint(json.dumps({'sourceSHA256':sha(s),'sourceBytes':len(raw),'sourceLF':raw.count(b'\\n'),'sourceCR':raw.count(b'\\r'),'auditSHA256':sha(a),'objectExists':(o/'ActualRetainedResidualBudgets.olean').exists(),'missingDependencies':[r['module'] for r in rows if not r['exists']],'imports':rows,'LeanAX':0,'heavy':0},separators=(',',':')))\n",
+    "timeout": 120
+  },
+  "response": {
+    "host_key_sha256": "+IZMFu9Xx6FSAhvQhtvZ3MpV70v2d+XNWcequAbsp+c",
+    "exit_code": 0,
+    "stdout": "{\"sourceSHA256\":\"eb3dc08dd050f33da808e801958ea08c07a9c8403a034d9d3164f093cb8daf4d\",\"sourceBytes\":104653,\"sourceLF\":1869,\"sourceCR\":0,\"auditSHA256\":\"e45e245b032a08306de283fef4d62f8a71e230b00b2c9a8aed71494c5061b34c\",\"objectExists\":false,\"missingDependencies\":[\"Shao/Probability/SourceEarlyRetainedProbability\",\"Shao/Probability/SourceLateOmittedSuffixBudget\"],\"imports\":[{\"module\":\"Shao/Probability/SourceEarlyRetainedProbability\",\"exists\":false,\"sha256\":null,\"resolved\":null},{\"module\":\"Shao/Probability/SourceLateOmittedSuffixBudget\",\"exists\":false,\"sha256\":null,\"resolved\":null}],\"LeanAX\":0,\"heavy\":0}\n",
+    "stderr": ""
+  }
+}

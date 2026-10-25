@@ -1,0 +1,29 @@
+--- exact-released-component-concatenation
++++ ActualRetainedResidualBudgets.lean
+@@ -783,7 +783,7 @@
+   have hEnergyI (t : ℕ) : Integrable (Shao.energy : Shao.Path t → ℝ) (Pt t) := by
+     change Integrable (fun u : Shao.Path t => ∑ i : Fin t, (u i) ^ 2) (Pt t)
+     exact integrable_finsetSum _ fun i _ =>
+-      (measurePreserving_eval (fun _ : Fin t => rho) i).integrable_comp_of_integrable h2
++      (measurePreserving_eval (μ := fun _ : Fin t => rho) i).integrable_comp_of_integrable h2
+   have hWi (t : ℕ) : Integrable (W t) (Pt t) :=
+     ((hEnergyI t).const_mul ((1 + Real.sqrt (t : ℝ)) ^ 5)).mono'
+       (hWm t).aestronglyMeasurable (ae_of_all _ fun u => by
+@@ -965,7 +965,7 @@
+     have hLaw (i : Fin n) : IdentDistrib (Function.eval i) (id : ℝ → ℝ) P rho :=
+       ⟨(measurable_pi_apply i).aemeasurable, measurable_id.aemeasurable,
+         by simp only [Measure.map_id]
+-           exact (measurePreserving_eval (fun _ : Fin n => rho) i).map_eq⟩
++           exact (measurePreserving_eval (μ := fun _ : Fin n => rho) i).map_eq⟩
+     exact iid_randomPermutation_map_eq_pi P rho (fun i : Fin n => Function.eval i)
+       (fun i => measurable_pi_apply i) hInd hLaw
+   have hMP : MeasurePreserving reorder (revealLaw P) P := ⟨hReorderM, hMap⟩
+@@ -1703,7 +1703,7 @@
+     have hLaw (i : Fin n) : IdentDistrib (Function.eval i) (id : ℝ → ℝ) P rho :=
+       ⟨(measurable_pi_apply i).aemeasurable, measurable_id.aemeasurable,
+         by simp only [Measure.map_id]
+-           exact (measurePreserving_eval (fun _ : Fin n => rho) i).map_eq⟩
++           exact (measurePreserving_eval (μ := fun _ : Fin n => rho) i).map_eq⟩
+     exact iid_randomPermutation_map_eq_pi P rho (fun i : Fin n => Function.eval i)
+       (fun i => measurable_pi_apply i) hInd hLaw
+   have hmp : MeasurePreserving randomReorder (revealLaw P) P := ⟨hRm, hmap⟩
