@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,hashlib,datetime,subprocess,os\nb=pathlib.Path('/root/rivermind-data/shao-lean-20261021');w=b/'workspaces/c12-bridge-domination-v71';o=b/'outputs/c12-uniform-gaussian-tail-polynomial-v71';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();p=b/'coordination/HEAVY-PHASE-C12-OQ56-19.json';s=w/'Shao/C2/UniformGaussianTailPolynomial.lean'\nassert sha(p)=='ea083f6a6392b08d62320ba9440b935a231b95cc37970be0db24723efc138c9d' and sha(s)=='7294125186fa502c7c89b0c19a345c93c9fa902ab1584825e7777fcb717fc888';assert not(o/'UniformGaussianTailPolynomial.olean').exists() and not(o/'kernel001-start.json').exists();assert subprocess.run(['flock','-n',str(b/'locks/c12-heavy.lock'),'true']).returncode==0\nprint(json.dumps({'atUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'state':'ACTUAL_PHASE19_ACK_EXACT_NEW_TAIL_READY_NO_START_YET','phaseSHA256':sha(p),'sourceSHA256':sha(s),'sourceBytes':s.stat().st_size,'CPU':sorted(os.sched_getaffinity(0)),'originalObjectAbsent':True,'startAbsent':True,'lockFree':True,'heavy':0,'C12HeavyAllowance':1}))\n",
+  "timeout": 60
+}
