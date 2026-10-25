@@ -1,0 +1,15 @@
+# Finite matrix sign energy bounds
+
+This unit supplies the fixed-matrix step of p44(2)–(4). For a real n×n matrix D it constructs true Euclidean columns, defines the whole row action as the sum of scaled columns, and identifies its coordinates and Hilbert energy with the corresponding finite matrix sums.
+
+Write E=∑j∑i Dij² and S=∑i Wi². Under pointwise Wi≥0 and |Dij|≤WiWj, the module proves E≤S² and √E≤S. For every real q≥2 it then proves the finite sign-cube moment root of ‖Dε‖₂ is at most 2√q S. The actual Rademacher-path measure version proves both Integrable of the qth power and the same moment bound. These statements include n=0, zero energy and weights, nonsymmetric matrices and nonzero diagonals.
+
+The finite Hilbert/Rademacher theorem of qualified unit185 is reused through its exact public interfaces. This module does not prove random ghost-sample exchange laws, canonical conditional means, Jensen/Fubini for outer observations, random row tails, scalar second chaos, DC or a research root theorem. C2/C12/OQ56 remain OPEN; OQ3 remains PAUSED_BY_USER. The p54 repairs and external Shao–Zhou attribution remain unchanged. No 183/184 mathematical dependency is added.
+
+The accepted source is repair-01, SHA256 07520a5e75c82565c542a3596f87755153234aece93f86f1a5517cedb13249ce, 5524 bytes and 101 LF. It adds only the ENNReal notation scope to the first implementation; all nine declaration headers, four definition values and five proof bodies remain byte-identical. The first implementation’s known parser failure and missing object are retained as failed evidence. The original author scope entry with the reversed 85–70 range is retained; the independent mapping supplement binds the actual new source at lines85–86, bytes[4709,4807), with column n D at[4790,4800).
+
+Server native02 and the audit of the same object both exited0, in approximately4.797s and5.339s. The object SHA256 is1796459cf11e28c8a4d0fbf4014cf2f285fa313295460efd46155ae926323780, 150336 bytes. The 5350/5359 protected physical records remained exact. The strict wrappers remain false because the native check retained two warnings and the audit retained one; no warning-cleanup recompilation or FIRSTEMPTY claim is made.
+
+The actual module-index inventory contains15 constants:11 theorems and4 definitions, with all228 TYPE lines and43 non-theorem FULLVALUE lines reviewed. This includes the generated pathSum.eq_1 in the producer namespace whose actual module owner is this unit. Recursive axioms are confined to propext, Classical.choice and Quot.sound. The same independent reviewer completed the original full proof review, the affected notation/mapping review and the final full actual-owner evidence review; unchanged producer and proof evidence was reused.
+
+The accompanying complete reviews, coverage, mapping supplement and exact parent/independent qualification records bind these statements to the source and original successful object. Publication is for review; merging and root integration belong to the coordinator.
