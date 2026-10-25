@@ -20,6 +20,7 @@ import Shao.C2.ActualBrownianCrossingLower
 import Shao.C2.ActualIntervalProjection
 import Shao.C2.ActualOriginalBrownianComparison
 import Shao.C2.ActualOriginalCompactRelative
+import Shao.C2.ActualSignedDoubleTelescope
 import Shao.C2.AdaptiveRevealCutoff
 import Shao.C2.AuxiliaryCenteredEvent
 import Shao.C2.AuxiliaryCenteredProductLaw
@@ -127,6 +128,8 @@ import Shao.C2.HalfLineWallProfiles
 import Shao.C2.InitialBrownianIdentity
 import Shao.C2.InitialCompletionError
 import Shao.C2.InitialCompletionVariation
+import Shao.C2.InitialDoubleCompletionBudget
+import Shao.C2.InitialDoubleCompletionKernel
 import Shao.C2.InteriorDerivativeMeasurability
 import Shao.C2.IntervalDerivativeBound
 import Shao.C2.IntervalGaussianCosinePoisson

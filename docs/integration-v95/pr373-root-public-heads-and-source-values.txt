@@ -1,0 +1,185 @@
+
+SOURCE Shao/C2/ActualSignedDoubleTelescope.lean
+import Shao.C2.InitialDoubleCompletionBudget
+import Shao.C2.ActualBridgeIntervalTelescope
+import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualIntervalProfileBudget
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualSignedDoubleTelescope
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open Shao.Probability.SourceActualIntervalProfileBudget
+
+
+DECLARATION labelPermMeasurableSpace SOURCE_LINE 19
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+DECLARATION actualDoubleValue SOURCE_LINE 21
+def actualDoubleValue {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  1 - sourceValue .upper (eventCompletionKernel .upper Q) a x r sigma -
+    sourceValue .lower (eventCompletionKernel .lower Q) a x r sigma +
+    sourceValue .interval (eventCompletionKernel .interval Q) a x r sigma
+
+DECLARATION actualDerivativeFamily SOURCE_LINE 27
+def actualDerivativeFamily (Q : Measure BridgeNoise) : MonitoredDomain → BridgeKernel :=
+  fun J => match J with
+    | .upper => halflineDerivative .upper
+    | .lower => halflineDerivative .lower
+    | .interval => intervalDerivative Q
+
+DECLARATION actualDoubleRetained SOURCE_LINE 33
+def actualDoubleRetained {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r sigma -
+    sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r sigma -
+    sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r sigma
+
+DECLARATION actualDoubleSeparated SOURCE_LINE 42
+def actualDoubleSeparated {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceSeparatedOvershoot .upper (actualDerivativeFamily Q .upper) a x nu r sigma +
+    sourceSeparatedOvershoot .lower (actualDerivativeFamily Q .lower) a x nu r sigma -
+    sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) a x nu r sigma
+
+DECLARATION doubleCrossingEvent SOURCE_LINE 48
+def doubleCrossingEvent {n : ℕ} (x : ℝ) : Set (Shao.Path n) :=
+  {a | (∃ r : ℕ, r ≤ n ∧ actualWall a x ≤ Shao.prefixSum a r) ∧
+    (∃ r : ℕ, r ≤ n ∧ Shao.prefixSum a r ≤ -actualWall a x)}
+
+DECLARATION actual_double_value_boundary SOURCE_LINE 52
+theorem actual_double_value_boundary
+    {n : ℕ} (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (x : ℝ) (hx : 0 < x) (a : Shao.Path n) (sigma : LabelPerm n) :
+    (∀ r : ℕ, r ≤ n →
+      0 ≤ actualDoubleValue Q x a r sigma ∧ actualDoubleValue Q x a r sigma ≤ 1) ∧
+    actualDoubleValue Q x a 0 sigma =
+      Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a ∧
+    actualDoubleValue Q x a n sigma =
+      if Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x then 1 else 0
+
+DECLARATION actual_double_stopped_telescope SOURCE_LINE 277
+theorem actual_double_stopped_telescope
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB)
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (H : ℝ) (hH : 0 < H)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnum : ∀ sigma, Measurable (fun a => nu a sigma))
+    (hnu : ∀ a, IsRevealStoppingRank (nu a))
+    (hcap : ∀ a sigma, nu a sigma ≤ energyCutoff a H sigma)
+    (m : Shao.Path n → ℝ) (hmm : Measurable m) (hmb : ∀ a, |m a| ≤ 1)
+    (hminv : PermutationInvariant m) :
+    let Q : Measure BridgeNoise := bridgeLaw B PB
+    let Z : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * (actualDoubleValue Q x p.1 (nu p.1 p.2) p.2 -
+        Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x p.1)
+    let L : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleRetained Q x p.1 (nu p.1) r p.2
+    let O : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleSeparated Q x p.1 (nu p.1) r p.2
+    (∀ a sigma r, 0 ≤ actualDoubleSeparated Q x a (nu a) r sigma) ∧
+    Integrable Z (revealLaw P) ∧ Integrable L (revealLaw P) ∧ Integrable O (revealLaw P) ∧
+    (∫ p, Z p ∂revealLaw P) = (∫ p, L p ∂revealLaw P) - (∫ p, O p ∂revealLaw P) ∧
+    ((∀ a, 0 ≤ m a) → (∫ p, Z p ∂revealLaw P) ≤ (∫ p, L p ∂revealLaw P))
+
+SOURCE Shao/C2/InitialDoubleCompletionBudget.lean
+import Shao.C2.InitialDoubleCompletionKernel
+import Shao.Probability.SourceScalarInitialBudget
+import Shao.Probability.TruncationRegularity
+import Shao.C2.InitialBrownianIdentity
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.InitialDoubleCompletionBudget
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.InitialDoubleCompletionKernel
+
+
+DECLARATION initialDoubleObservable SOURCE_LINE 16
+def initialDoubleObservable {n : ℕ}
+    (nu : Measure BridgeNoise) (x : ℝ) (a : Shao.Path n) : ℝ :=
+  if Shao.energy a = 0 then 1
+  else doubleCompletion nu x (Shao.C1.normalizedEndpoint a)
+
+DECLARATION brownianInitialDouble SOURCE_LINE 21
+def brownianInitialDouble {Ω : Type*}
+    (B : ℝ≥0 → Ω → ℝ) (x : ℝ) : Set Ω :=
+  {omega | (∃ t : BridgeTime, x ≤ B ⟨(t : ℝ), t.property.1⟩ omega) ∧
+    (∃ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ omega ≤ -x)}
+
+DECLARATION original_finite_second_initial_double_completion_budget SOURCE_LINE 559
+theorem original_finite_second_initial_double_completion_budget :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) rho →
+        (∫ z : ℝ, z ∂rho) = 0 →
+        (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (Ω : Type*) [MeasurableSpace Ω]
+          (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB],
+          IsBrownianReal B PB →
+          ∀ x : ℝ, 1 ≤ x →
+            let normalizedLaw : Measure ℝ :=
+              Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+            let b : ℝ := Shao.truncationBudget normalizedLaw n x
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let W : Shao.Path n → ℝ := Shao.C1.normalizedEndpoint
+            let Z : Shao.Path n → ℝ := initialDoubleObservable (bridgeLaw B PB) x
+            b ≤ 1 / 2 →
+              Integrable Z P ∧
+              |(∫ a : Shao.Path n, Z a ∂P) - PB.real (brownianInitialDouble B x)| ≤
+                C * b * Shao.standardNormalTail x ∧
+              ∀ v : ℝ,
+                Integrable (fun a : Shao.Path n => if W a ≤ v then Z a else 0) P ∧
+                |(∫ a : Shao.Path n, (if W a ≤ v then Z a else 0) ∂P) -
+                  PB.real (brownianInitialDouble B x ∩ {omega : Ω | B 1 omega ≤ v})| ≤
+                    C * b * Shao.standardNormalTail x
+
+SOURCE Shao/C2/InitialDoubleCompletionKernel.lean
+import Shao.C2.BrownianKilledSineIdentification
+import Shao.C2.BridgeUpperAffineIdentification
+import Shao.C2.BridgeLowerIdentification
+import Shao.C2.InitialCompletionVariation
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.InitialDoubleCompletionKernel
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+
+
+DECLARATION doubleCompletion SOURCE_LINE 15
+def doubleCompletion (nu : Measure BridgeNoise) (x w : ℝ) : ℝ :=
+  nu.real ((strictUpper x 0 1 w)ᶜ ∩ (strictLower x 0 1 w)ᶜ)
+
+DECLARATION actual_initial_double_completion_kernel SOURCE_LINE 358
+theorem actual_initial_double_completion_kernel
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 1 ≤ x) :
+    let f : ℝ → ℝ := doubleCompletion (bridgeLaw B P) x
+    let r : ℝ := Real.exp (-4 * x ^ 2)
+    Continuous f ∧
+      (∀ w : ℝ, 0 ≤ f w ∧ f w ≤ 8 * r) ∧
+      eVariationOn f Set.univ ≤ ENNReal.ofReal (10 * r) ∧
+      Tendsto f atTop (nhds 0) ∧ Tendsto f atBot (nhds 0)
