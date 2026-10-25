@@ -1,0 +1,194 @@
+--- source-kernel001.lean.txt
++++ InitialDoubleCompletionKernel.lean
+@@ -27,12 +27,12 @@
+   have hB : MeasurableSet B := measurableSet_strictLower x 0 1 w
+   have h0 := measureReal_inter_add_sdiff (μ := nu) (s := Set.univ) hA
+   have h0' : nu.real A + nu.real Aᶜ = 1 := by
+-    simpa only [Set.univ_inter, Set.univ_diff, probReal_univ] using h0
++    simpa only [Set.univ_inter, ← Set.compl_eq_univ_sdiff, probReal_univ] using h0
+   have h1 := measureReal_inter_add_sdiff (μ := nu) (s := Aᶜ) hB
+   have h2 := measureReal_inter_add_sdiff (μ := nu) (s := B) hA
+   have hBA : B \ A = Aᶜ ∩ B := by
+     ext g
+-    simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_compl_iff]
++    simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_compl_iff]
+     exact and_comm
+   rw [show B ∩ A = A ∩ B from Set.inter_comm B A, hBA] at h2
+   change nu.real (Aᶜ ∩ B) + nu.real (Aᶜ ∩ Bᶜ) = nu.real Aᶜ at h1
+@@ -119,7 +119,7 @@
+       rw [doubleCompletion_eq, hL, hI, hU]
+       simp only [sub_zero, div_one]
+       ring
+-    simpa only [abs_of_neg hwneg, add_neg_eq_sub] using hj
++    simpa only [abs_of_neg hwneg, sub_eq_add_neg] using hj
+ 
+ 
+ private theorem doubleCompletion_interior_images
+@@ -252,7 +252,7 @@
+       have he : (f (w (i + 1)) + g (w (i + 1))) - (f (w i) + g (w i)) =
+           (f (w (i + 1)) - f (w i)) + (g (w (i + 1)) - g (w i)) := by ring
+       rw [he]
+-      exact abs_add _ _
++      exact abs_add_le _ _
+     _ = (∑ i ∈ Finset.range n, edist (f (w (i + 1))) (f (w i))) +
+         ∑ i ∈ Finset.range n, edist (g (w (i + 1))) (g (w i)) := by
+       rw [Finset.sum_add_distrib]
+@@ -277,7 +277,7 @@
+   have hlim : Tendsto
+       (fun N : ℕ => ∑ i ∈ Finset.range n, edist (F N (w (i + 1))) (F N (w i)))
+       atTop (nhds (∑ i ∈ Finset.range n, edist (f (w (i + 1))) (f (w i)))) := by
+-    apply tendsto_finset_sum
++    apply tendsto_finsetSum (Finset.range n)
+     intro i hi
+     exact (hconv (w (i + 1)) (hmem (i + 1))).edist (hconv (w i) (hmem i))
+   apply le_of_tendsto hlim
+@@ -351,7 +351,7 @@
+         (mul_nonneg (by norm_num) (pow_nonneg hr0.le _))) hu
+     calc
+       _ ≤ 2 * r + ∑' n : ℕ, (2 * r ^ (n + 2) + 2 * r ^ (n + 1)) :=
+-        add_le_add_left hfinite _
++        add_le_add le_rfl hfinite
+       _ = 2 * r + (2 * r ^ 2 + 2 * r) / (1 - r) := by rw [hsum]
+       _ ≤ 8 * r := by linarith only [hmain]
+ 
+@@ -397,17 +397,17 @@
+     rcases le_total 0 b with hb0 | hb0
+     · apply antitoneOn_variation_le (I a b) Set.univ C
+       · intro v hv w hw hvw
++        change Real.exp (-(a + b * c w)) ≤ Real.exp (-(a + b * c v))
+         apply Real.exp_le_exp.mpr
+         have hh := mul_le_mul_of_nonneg_left (hcmono hvw) hb0
+-        dsimp [I]
+         linarith
+       · intro w hw; exact (hIpos a b w).le
+       · intro w hw; exact hb w
+     · apply monotoneOn_variation_le (I a b) Set.univ C
+       · intro v hv w hw hvw
++        change Real.exp (-(a + b * c v)) ≤ Real.exp (-(a + b * c w))
+         apply Real.exp_le_exp.mpr
+         have hh := mul_le_mul_of_nonpos_left (hcmono hvw) hb0
+-        dsimp [I]
+         linarith
+       · intro w hw; exact (hIpos a b w).le
+       · intro w hw; exact hb w
+@@ -428,14 +428,14 @@
+     have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+     constructor
+     · simpa only [A, I, hexp] using hh.1
+-    · simpa only [D, I, neg_mul, add_neg_eq_sub, hexp] using hh.2.1
++    · simpa only [D, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.1
+   have hJbound (k : ℕ) (hk : 1 ≤ k) (w : ℝ) :
+       J k w ≤ r ^ k ∧ K k w ≤ r ^ k := by
+     have hk' : (1 : ℝ) ≤ (k : ℝ) := by exact_mod_cast hk
+     have hh := initial_image_geometric_majorants x (c w) (k : ℝ) hx0 hk' (hcrange w)
+     constructor
+     · simpa only [J, I, hexp] using hh.2.2.1
+-    · simpa only [K, I, neg_mul, add_neg_eq_sub, hexp] using hh.2.2.2
++    · simpa only [K, I, neg_mul, sub_eq_add_neg, hexp] using hh.2.2.2
+   have hAvar (k : ℕ) (hk : 1 ≤ k) :
+       eVariationOn (A k) Set.univ ≤ ENNReal.ofReal (r ^ k) ∧
+         eVariationOn (D k) Set.univ ≤ ENNReal.ofReal (r ^ k) := by
+@@ -461,9 +461,9 @@
+     calc
+       _ ≤ |A (n + 2) w + D (n + 2) w - J (n + 1) w| + |K (n + 1) w| := abs_sub _ _
+       _ ≤ (|A (n + 2) w + D (n + 2) w| + |J (n + 1) w|) + |K (n + 1) w| :=
+-        add_le_add_right (abs_sub _ _) _
++        add_le_add (abs_sub (A (n + 2) w + D (n + 2) w) (J (n + 1) w)) le_rfl
+       _ ≤ ((|A (n + 2) w| + |D (n + 2) w|) + |J (n + 1) w|) + |K (n + 1) w| :=
+-        add_le_add_right (add_le_add_right (abs_add _ _) _) _
++        add_le_add (add_le_add (abs_add_le (A (n + 2) w) (D (n + 2) w)) le_rfl) le_rfl
+       _ ≤ u n := by
+         rw [abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _),
+           abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _)]
+@@ -477,15 +477,19 @@
+   have hTvar (n : ℕ) : eVariationOn (T n) Set.univ ≤ ENNReal.ofReal (u n) := by
+     have hA := hAvar (n + 2) (by omega)
+     have hJ := hJvar (n + 1) (by omega)
++    change eVariationOn
++      (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w - K (n + 1) w)
++      Set.univ ≤ ENNReal.ofReal (u n)
+     calc
+       _ ≤ eVariationOn (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w) Set.univ +
+-          eVariationOn (K (n + 1)) Set.univ := hsub _ _
++          eVariationOn (K (n + 1)) Set.univ :=
++        hsub (fun w => A (n + 2) w + D (n + 2) w - J (n + 1) w) (K (n + 1))
+       _ ≤ (eVariationOn (fun w => A (n + 2) w + D (n + 2) w) Set.univ +
+           eVariationOn (J (n + 1)) Set.univ) + eVariationOn (K (n + 1)) Set.univ :=
+-        add_le_add_right (hsub _ _) _
++        add_le_add (hsub (fun w => A (n + 2) w + D (n + 2) w) (J (n + 1))) le_rfl
+       _ ≤ ((eVariationOn (A (n + 2)) Set.univ + eVariationOn (D (n + 2)) Set.univ) +
+           eVariationOn (J (n + 1)) Set.univ) + eVariationOn (K (n + 1)) Set.univ :=
+-        add_le_add_right (add_le_add_right (variation_add_le _ _ _) _) _
++        add_le_add (add_le_add (variation_add_le (A (n + 2)) (D (n + 2)) Set.univ) le_rfl) le_rfl
+       _ ≤ ((ENNReal.ofReal (r ^ (n + 2)) + ENNReal.ofReal (r ^ (n + 2))) +
+           ENNReal.ofReal (r ^ (n + 1))) + ENNReal.ofReal (r ^ (n + 1)) :=
+         add_le_add (add_le_add (add_le_add hA.1 hA.2) hJ.1) hJ.2
+@@ -507,7 +511,8 @@
+         exact Finset.sum_range_succ _ N
+       rw [heq, Finset.sum_range_succ]
+       calc
+-        _ ≤ eVariationOn (q N) Set.univ + eVariationOn (T N) Set.univ := variation_add_le _ _ _
++        _ ≤ eVariationOn (q N) Set.univ + eVariationOn (T N) Set.univ :=
++          variation_add_le (q N) (T N) Set.univ
+         _ ≤ ENNReal.ofReal (∑ n ∈ Finset.range N, u n) + ENNReal.ofReal (u N) :=
+           add_le_add ih (hTvar N)
+         _ = ENNReal.ofReal ((∑ n ∈ Finset.range N, u n) + u N) := by
+@@ -515,11 +520,14 @@
+   let S : ℕ → ℝ → ℝ := fun N w => A 1 w + D 1 w + q N w
+   have hSvar (N : ℕ) : eVariationOn (S N) Set.univ ≤ ENNReal.ofReal (8 * r) := by
+     have hA := hAvar 1 (by omega)
++    change eVariationOn (fun w => A 1 w + D 1 w + q N w) Set.univ ≤
++      ENNReal.ofReal (8 * r)
+     calc
+       _ ≤ eVariationOn (fun w => A 1 w + D 1 w) Set.univ + eVariationOn (q N) Set.univ :=
+-        variation_add_le _ _ _
++        variation_add_le (fun w => A 1 w + D 1 w) (q N) Set.univ
+       _ ≤ (eVariationOn (A 1) Set.univ + eVariationOn (D 1) Set.univ) +
+-          eVariationOn (q N) Set.univ := add_le_add_right (variation_add_le _ _ _) _
++          eVariationOn (q N) Set.univ :=
++        add_le_add (variation_add_le (A 1) (D 1) Set.univ) le_rfl
+       _ ≤ (ENNReal.ofReal (r ^ 1) + ENNReal.ofReal (r ^ 1)) +
+           ENNReal.ofReal (∑ n ∈ Finset.range N, u n) := add_le_add (add_le_add hA.1 hA.2) (hqvar N)
+       _ = ENNReal.ofReal (2 * r + ∑ n ∈ Finset.range N, u n) := by
+@@ -539,8 +547,9 @@
+           intro n hn
+           simpa only [Real.norm_eq_abs] using hTnorm n w
+     calc
+-      _ ≤ |A 1 w + D 1 w| + |q N w| := abs_add _ _
+-      _ ≤ (|A 1 w| + |D 1 w|) + |q N w| := add_le_add_right (abs_add _ _) _
++      _ ≤ |A 1 w + D 1 w| + |q N w| := abs_add_le (A 1 w + D 1 w) (q N w)
++      _ ≤ (|A 1 w| + |D 1 w|) + |q N w| :=
++        add_le_add (abs_add_le (A 1 w) (D 1 w)) le_rfl
+       _ ≤ 2 * r + ∑ n ∈ Finset.range N, u n := by
+         rw [abs_of_pos (hIpos _ _ _), abs_of_pos (hIpos _ _ _)]
+         simp only [pow_one] at hA
+@@ -714,7 +723,7 @@
+       rw [hfx, hFw, hRzero w hwx]
+       dsimp only [L]
+       rw [min_eq_left hwleft, habs]
+-      simp only [add_neg_eq_sub]
++      simp only [sub_eq_add_neg]
+       ring
+     · by_cases hwright : x ≤ w
+       · have hwl : -x ≤ w := by linarith
+@@ -785,9 +794,10 @@
+   have hfvar : eVariationOn f Set.univ ≤ ENNReal.ofReal (10 * r) := by
+     rw [hfeq]
+     calc
+-      _ ≤ eVariationOn (fun w => F w - L w) Set.univ + eVariationOn R Set.univ := hsub _ _
++      _ ≤ eVariationOn (fun w => F w - L w) Set.univ + eVariationOn R Set.univ :=
++        hsub (fun w => F w - L w) R
+       _ ≤ (eVariationOn F Set.univ + eVariationOn L Set.univ) + eVariationOn R Set.univ :=
+-        add_le_add_right (hsub _ _) _
++        add_le_add (hsub F L) le_rfl
+       _ ≤ (ENNReal.ofReal (8 * r) + ENNReal.ofReal r) + ENNReal.ofReal r :=
+         add_le_add (add_le_add hFvar hLvar) hRvar
+       _ = ENNReal.ofReal (10 * r) := by
+@@ -821,6 +831,6 @@
+     filter_upwards [eventually_le_atBot (-x)] with w hw
+     have hw0 : w ≤ 0 := by linarith
+     have hh := doubleCompletion_exterior B P hB x hxp w (by rw [abs_of_nonpos hw0]; linarith)
+-    simpa only [f, Function.comp_def, abs_of_nonpos hw0, add_neg_eq_sub] using hh.symm
++    simpa only [f, Function.comp_def, abs_of_nonpos hw0, sub_eq_add_neg] using hh.symm
+   exact ⟨hfcont, hfbounds, hfvar, hftop, hfbot⟩
+ end Shao.C2.InitialDoubleCompletionKernel

@@ -1,0 +1,23 @@
+--- source-kernel002.lean.txt
++++ InitialDoubleCompletionBudget.lean
+@@ -76,7 +76,7 @@
+       simp only [mem_union, mem_Iic, mem_Ici, mem_univ, iff_true]
+       exact le_total z w
+     have he := congrArg ENNReal.toReal (eVariationOn.union f
+-      (show IsGreatest (Iic w) w from ⟨le_rfl, fun _ hz => hz⟩)
++      (show IsGreatest (Iic w) w from ⟨by simp only [mem_Iic, le_refl], fun _ hz => hz⟩)
+       (show IsLeast (Ici w) w from ⟨by simp only [mem_Ici, le_refl], fun _ hz => hz⟩))
+     rw [hu, ENNReal.toReal_add (hfin _) (hfin _)] at he
+     exact he
+@@ -292,8 +292,9 @@
+   have hbudget : b = (n : ℝ) * (∫ z : ℝ, Shao.truncationF (Y z) ∂rho) := by
+     change (n : ℝ) * (∫ z : ℝ, Shao.truncationF ((1 + x) * z)
+       ∂Measure.map (fun z : ℝ => z / t) rho) = _
+-    rw [integral_map hm.aemeasurable
+-      (Shao.continuous_truncationF.comp (continuous_const.mul continuous_id)).aestronglyMeasurable]
++    have hfm : Continuous (fun z : ℝ => Shao.truncationF ((1 + x) * z)) :=
++      Shao.continuous_truncationF.comp (continuous_const.mul continuous_id)
++    rw [integral_map hm.aemeasurable hfm.aestronglyMeasurable]
+   let I : ℝ → ℝ := fun z => if z = 0 then 0 else 1
+   let pi : ℝ := rho.real {z : ℝ | z ≠ 0}
+   have hIm : Measurable I := Measurable.ite

@@ -1,0 +1,31 @@
+private theorem antitone_bounded_expectation_error
+    (mu rho : Measure ℝ) [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (delta M : ℝ) (hdelta : 0 ≤ delta) (hM : 0 ≤ M)
+    (hCDF : ∀ w : ℝ, |mu.real (Iic w) - rho.real (Iic w)| ≤ delta)
+    (f : ℝ → ℝ) (hf : Antitone f)
+    (hf0 : ∀ w, 0 ≤ f w) (hfM : ∀ w, f w ≤ M) :
+    Integrable f mu ∧ Integrable f rho ∧
+      |(∫ w : ℝ, f w ∂mu) - ∫ w : ℝ, f w ∂rho| ≤ M * delta
+
+private theorem vanishing_bv_antitone_decomposition
+    (f : ℝ → ℝ) (V : ℝ) (hV : 0 ≤ V)
+    (hvar : eVariationOn f univ ≤ ENNReal.ofReal V)
+    (hleft : Tendsto f atBot (𝓝 0)) (hright : Tendsto f atTop (𝓝 0)) :
+    ∃ u v : ℝ → ℝ, Antitone u ∧ Antitone v ∧
+      (∀ w, 0 ≤ u w ∧ u w ≤ V / 2) ∧
+      (∀ w, 0 ≤ v w ∧ v w ≤ V / 2) ∧ (∀ w, f w = u w - v w)
+
+private theorem vanishing_bv_expectation_error
+    (mu rho : Measure ℝ) [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (delta V : ℝ) (hdelta : 0 ≤ delta) (hV : 0 ≤ V)
+    (hCDF : ∀ w : ℝ, |mu.real (Iic w) - rho.real (Iic w)| ≤ delta)
+    (f : ℝ → ℝ) (hvar : eVariationOn f univ ≤ ENNReal.ofReal V)
+    (hleft : Tendsto f atBot (𝓝 0)) (hright : Tendsto f atTop (𝓝 0)) :
+    Integrable f mu ∧ Integrable f rho ∧
+      |(∫ w : ℝ, f w ∂mu) - ∫ w : ℝ, f w ∂rho| ≤ V * delta
+
+private theorem nonnegative_closed_cutoff_variation_le
+    (f : ℝ → ℝ) (M : ℝ) (hM : 0 ≤ M)
+    (hf0 : ∀ w, 0 ≤ f w) (hfM : ∀ w, f w ≤ M) (v : ℝ) :
+    eVariationOn (fun w => if w ≤ v then f w else 0) univ ≤
+      eVariationOn f univ + ENNReal.ofReal M

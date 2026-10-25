@@ -1,0 +1,23 @@
+private theorem doubleCompletion_exterior
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x)
+    (w : ℝ) (hw : x ≤ |w|) :
+    doubleCompletion (bridgeLaw B P) x w = Real.exp (-2 * x * (x + |w|))
+
+private theorem doubleCompletion_interior_images
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (x : ℝ) (hx : 0 < x)
+    (w : ℝ) (hw : |w| < x) :
+    doubleCompletion (bridgeLaw B P) x w =
+      Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w 1) +
+        Real.exp (-Shao.C2.IntervalImageExponents.imageA x 0 w (-1)) +
+          ∑' n : ℕ, Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock 0 x w 1 0 n
+
+private theorem initial_image_tail_eq (x w : ℝ) (n : ℕ) :
+    Shao.C2.IntervalImageSpatialConvergence.spatialTailBlock 0 x w 1 0 n =
+      Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 + 4 * ((n : ℝ) + 2) * x * w)) +
+        Real.exp (-(8 * ((n : ℝ) + 2) ^ 2 * x ^ 2 - 4 * ((n : ℝ) + 2) * x * w)) -
+        Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 + 2 * (2 * (n : ℝ) + 3) * x * w)) -
+        Real.exp (-(2 * (2 * (n : ℝ) + 3) ^ 2 * x ^ 2 - 2 * (2 * (n : ℝ) + 3) * x * w))
