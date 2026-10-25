@@ -17,6 +17,7 @@ import Shao.C2.ActualAdaptiveIntervalTelescope
 import Shao.C2.ActualBridgeIIDIntervalBudget
 import Shao.C2.ActualBridgeIntervalTelescope
 import Shao.C2.ActualBrownianCrossingLower
+import Shao.C2.ActualDoubleSeparatedClassification
 import Shao.C2.ActualIntervalProjection
 import Shao.C2.ActualOriginalBrownianComparison
 import Shao.C2.ActualOriginalCompactRelative
@@ -669,6 +670,7 @@ import Shao.OQ6.CappedSectionEnergy
 import Shao.OQ6.CompactCostParameterLimits
 import Shao.OQ6.CompactGoodEvent
 import Shao.OQ6.CompactTailBounds
+import Shao.OQ6.ConditionalResidualExponentialEnvelope
 import Shao.OQ6.ConditionalStandardizedLowEnergy
 import Shao.OQ6.ConditionalStandardizedPMoment
 import Shao.OQ6.ConditionalTrueProjectionCarrier
