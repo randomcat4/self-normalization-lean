@@ -1,0 +1,69 @@
+import Shao.C2.ActualSignedDoubleTelescope
+import Shao.C2.BrownianBridgeLawUniversality
+import Shao.Probability.SourceActualRegularPhysicalRatio
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualDoubleSeparatedClassification
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.C2.ActualSignedDoubleTelescope
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open Shao.Probability.SourceActualIntervalProfileBudget
+
+def prefixAlive {n : ℕ} (J : MonitoredDomain) (a : Shao.Path n)
+    (x : ℝ) (r : ℕ) (sigma : LabelPerm n) : Prop :=
+  ∀ k : ℕ, k ≤ r → Interior J (actualWall a x)
+    (Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) k)
+
+private theorem actual_bridge_completion_reflection
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (w y T z : ℝ) :
+    intervalCompletion (bridgeLaw B P) w (-y) T (-z) =
+      intervalCompletion (bridgeLaw B P) w y T z ∧
+    upperCompletion (bridgeLaw B P) w (-y) T (-z) =
+      lowerCompletion (bridgeLaw B P) w y T z
+
+private theorem actual_bridge_first_lower_gradient_ratio :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω]
+        (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P],
+        IsBrownianReal B P →
+        let Q : Measure BridgeNoise := bridgeLaw B P
+        ∀ (x w y T z b : ℝ), 16 ≤ x → 0 < T →
+          x * Real.sqrt T ≤ w →
+          let u : ℝ := w + y
+          0 < u → u ≤ |b| → b ^ 2 ≤ T / 2 →
+          |z| < w → |z - y| ≤ 3 * x * Real.sqrt T / 2 →
+          let dI : ℝ := deriv (fun s : ℝ => intervalCompletion Q w s T z) y
+          let dL : ℝ := deriv (fun s : ℝ => lowerCompletion Q w s T z) y
+          0 ≤ dL - dI ∧
+            dL - dI ≤ C * Real.exp (-(w ^ 2 / T)) * dL
+
+theorem actual_double_separated_three_bill :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ {Ω : Type*} [MeasurableSpace Ω]
+        (B : NNReal → Ω → ℝ) (P : Measure Ω) [IsProbabilityMeasure P],
+        IsBrownianReal B P →
+        let Q : Measure BridgeNoise := bridgeLaw B P
+        ∀ {n : ℕ} (a : Shao.Path n) (x : ℝ), 16 ≤ x →
+          ∀ (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n),
+            let U : ℝ := sourceSeparatedOvershoot .upper
+              (actualDerivativeFamily Q .upper) a x nu r sigma
+            let L : ℝ := sourceSeparatedOvershoot .lower
+              (actualDerivativeFamily Q .lower) a x nu r sigma
+            let I : ℝ := sourceSeparatedOvershoot .interval
+              (actualDerivativeFamily Q .interval) a x nu r sigma
+            0 ≤ U + L - I ∧
+              U + L - I ≤ C * Real.exp (-x ^ 2) * (U + L) +
+                (if 3 * x * Real.sqrt (remainingEnergy a r sigma) / 2 <
+                  |remainingSum a r sigma| then U + L + max (-I) 0 else 0) +
+                (if prefixAlive .lower a x r sigma then 0 else U) +
+                (if prefixAlive .upper a x r sigma then 0 else L)
+end Shao.C2.ActualDoubleSeparatedClassification
