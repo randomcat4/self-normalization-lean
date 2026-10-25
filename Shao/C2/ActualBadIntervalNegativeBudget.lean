@@ -534,7 +534,7 @@ private theorem anib_large_x_true_energy_closed_strip :
         (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
         (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
         let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
-        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
           bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
           ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
             ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
@@ -553,7 +553,7 @@ private theorem anib_large_x_true_energy_closed_strip :
   have hUpper : ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
       (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
       (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
-      ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), 16 ≤ x →
+      ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
       bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
       ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
       ∀ q v : ℝ, 0 ≤ q → 0 ≤ v →
@@ -578,9 +578,10 @@ private theorem anib_large_x_true_energy_closed_strip :
       have hh := (sq_le_sq₀ (by positivity : (0 : ℝ) ≤ 100 * x * bound)
         (Real.sqrt_nonneg (n : ℝ))).2 hxb
       nlinarith only [hh, hsn2]
-    have hx2 : 256 ≤ x ^ 2 := by nlinarith only [hx, sq_nonneg (x - 16)]
+    have hx2 : (1 / 4 : ℝ) ≤ x ^ 2 := by
+      nlinarith only [hx, sq_nonneg (x - 1 / 2)]
     have hb2 : 1 ≤ bound ^ 2 := by nlinarith only [hb1, sq_nonneg (bound - 1)]
-    have hprod : 256 ≤ x ^ 2 * bound ^ 2 :=
+    have hprod : (1 / 4 : ℝ) ≤ x ^ 2 * bound ^ 2 :=
       (by simpa only [mul_one] using mul_le_mul hx2 hb2 (by norm_num : (0 : ℝ) ≤ 1) (sq_nonneg x))
     have hr2 : 2 ≤ r := by
       have hnR : (n : ℝ) ≤ 2 * (r : ℝ) := by exact_mod_cast hnr
@@ -1609,7 +1610,8 @@ private theorem anib_fixed_suffix_late_marked1_bound :
           exact add_nonneg (Set.indicator_nonneg (fun _ _ => hA) _) (Set.indicator_nonneg (fun _ _ => hA) _)
       have hEbound (s : ℝ) (hs : s = 1 ∨ s = -1) :
           Pr.real (E s) ≤ Cs * (|b| + beta) ^ 2 / (r : ℝ) :=
-        hstrip rho bound hb hsupport hmean hsecond (r + t) hN x hx hscale r hr
+        hstrip rho bound hb hsupport hmean hsecond (r + t) hN x
+          (by linarith only [hx]) hscale r hr
           (by omega) hlate T |b| s hT.le (abs_nonneg b) hs
       have hIntegral : (∫ v, F v ∂Pr) ≤ A * (2 * Cs * (|b| + beta) ^ 2 / (r : ℝ)) := by
         have hi := integral_mono hFi
@@ -1767,6 +1769,26 @@ private theorem anib_early_gaussian_factor_comparison :
     (Real.exp_le_exp.mpr (by nlinarith [sq_nonneg x] : -x ^ 2 ≤ -5 * x ^ 2 / 8)).trans hNeg
   nlinarith only [hsqrt, hsmall, hP0]
 
+theorem actual_auxiliary_level_true_energy_closed_strip :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+        ∀ (n : ℕ), 0 < n → ∀ (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          ∀ (r : ℕ), 0 < r → r ≤ n → n ≤ 2 * r →
+            ∀ (q v s : ℝ), 0 ≤ q → 0 ≤ v → (s = 1 ∨ s = -1) →
+              let wall : Shao.Path r → ℝ := fun a =>
+                x * Real.sqrt (q + Shao.energy a)
+              (Measure.pi (fun _ : Fin r => rho)).real
+                {a : Shao.Path r |
+                  Shao.maxWithZero (s • a) ≤ wall a ∧
+                  wall a - v ≤ s * Shao.prefixSum a r ∧
+                  s * Shao.prefixSum a r ≤ wall a} ≤
+                C * (v + beta) ^ 2 / (r : ℝ) := by
+  exact anib_large_x_true_energy_closed_strip
+
 theorem actual_large_x_true_energy_closed_strip :
     ∃ C : ℝ, 0 < C ∧
       ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
@@ -1785,7 +1807,11 @@ theorem actual_large_x_true_energy_closed_strip :
                   wall a - v ≤ s * Shao.prefixSum a r ∧
                   s * Shao.prefixSum a r ≤ wall a} ≤
                 C * (v + beta) ^ 2 / (r : ℝ) := by
-  exact anib_large_x_true_energy_closed_strip
+  obtain ⟨C, hC, hstrip⟩ := anib_large_x_true_energy_closed_strip
+  refine ⟨C, hC, ?_⟩
+  intro rho hProb bound hb hsupport hm hsecond beta n hn x hx hscale
+  exact hstrip rho bound hb hsupport hm hsecond n hn x
+    (by linarith only [hx]) hscale
 
 theorem actual_bad_interval_negative_budget :
     ∃ C : ℝ, 0 < C ∧
