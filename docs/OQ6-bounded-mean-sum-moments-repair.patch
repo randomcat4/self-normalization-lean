@@ -1,0 +1,22 @@
+--- a/Shao/OQ6/BoundedMeanSumMoments.lean
++++ b/Shao/OQ6/BoundedMeanSumMoments.lean
+@@ -123,7 +123,8 @@
+     have hBaseNonneg : 0 ≤ a + (j : ℝ) * B := by positivity
+     have hBaseLe : a + (j : ℝ) * B ≤ commonBase := by
+       dsimp only [commonBase]
+-      exact add_le_add_left (mul_le_mul_of_nonneg_right (by exact_mod_cast hjle) hB) a
++      have hCast : (j : ℝ) ≤ (k : ℝ) := by exact_mod_cast hjle
++      nlinarith [mul_le_mul_of_nonneg_right hCast hB]
+     have hPowerLe : (a + (j : ℝ) * B) ^ j ≤ commonBase ^ j := by gcongr
+     change (∫ ω : Ω, binomialCoefficient j * (f ω) ^ j ∂μ) ≤
+       binomialCoefficient j * commonBase ^ j
+@@ -205,7 +206,8 @@
+       dsimp only [shiftedPower, shiftedPowerBound]
+       rw [Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (add_nonneg hz.1 hB) k)]
+       have hLower : 0 ≤ deletedSum z + B := add_nonneg hz.1 hB
+-      have hUpper : deletedSum z + B ≤ (n : ℝ) * B + B := add_le_add_right hz.2 B
++      have hUpper : deletedSum z + B ≤ (n : ℝ) * B + B := by
++        linarith [hz.2]
+       gcongr
+   have hProductInt : Integrable productKernel ((μ i).prod (Measure.pi deletedMeasure)) :=
+     hScalarInt.mul_prod hShiftedInt
