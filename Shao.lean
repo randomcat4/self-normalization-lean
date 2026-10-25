@@ -672,6 +672,7 @@ import Shao.OQ6.CappedSectionEnergy
 import Shao.OQ6.CompactCostParameterLimits
 import Shao.OQ6.CompactGoodEvent
 import Shao.OQ6.CompactTailBounds
+import Shao.OQ6.ConditionalGhostSquareMoments
 import Shao.OQ6.ConditionalResidualExponentialEnvelope
 import Shao.OQ6.ConditionalStandardizedLowEnergy
 import Shao.OQ6.ConditionalStandardizedPMoment
@@ -761,6 +762,7 @@ import Shao.Probability.RetainedMoments
 import Shao.Probability.RetainedSample
 import Shao.Probability.RetainedVariance
 import Shao.Probability.RetentionEvent
+import Shao.Probability.SourceActualAdaptiveTerminal
 import Shao.Probability.SourceActualGaussianTransfer
 import Shao.Probability.SourceActualIntervalInitialCDF
 import Shao.Probability.SourceActualIntervalProfileBudget
