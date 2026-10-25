@@ -1,0 +1,302 @@
+{
+  "kind": "READ_ONLY_NATIVE_SOURCE_HEADS_NOT_LEAN_CHECK",
+  "mathlibCommit": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "rows": [
+    {
+      "name": "Summable.of_nonneg_of_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/Algebra/InfiniteSum/ENNReal.lean",
+      "line": 532,
+      "fileSHA256": "88ef56c969006630d0066b7af2c74e75dd060608f3c42f0ef288ad1c6da908cc",
+      "head": "theorem Summable.of_nonneg_of_le {f g : β → ℝ} (hg : ∀ b, 0 ≤ g b) (hgf : ∀ b, g b ≤ f b)\n    (hf : Summable f) : Summable g",
+      "context": "\nend ENNReal\n\ntheorem tsum_comp_le_tsum_of_inj {β : Type*} {f : α → ℝ} (hf : Summable f) (hn : ∀ a, 0 ≤ f a)\n    {i : β → α} (hi : Function.Injective i) : tsum (f ∘ i) ≤ tsum f := by\n  lift f to α → ℝ≥0 using hn\n  rw [NNReal.summable_coe] at hf\n  simpa only [Function.comp_def, ← NNReal.coe_tsum] using! NNReal.tsum_comp_le_tsum_of_inj hf hi\n\n/-- Comparison test of convergence of series of non-negative real numbers. -/"
+    },
+    {
+      "name": "gaussianPDFReal",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Probability/Distributions/Gaussian/Real.lean",
+      "line": 47,
+      "fileSHA256": "9edebfff169cb577b6dab1a7912f2e8fec0e70a8dac39db105263e1a0f31b383",
+      "head": "def gaussianPDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ",
+      "context": "open scoped ENNReal NNReal Real Complex\n\nopen MeasureTheory\n\nnamespace ProbabilityTheory\n\nsection GaussianPDF\n\n/-- Probability density function of the Gaussian distribution with mean `μ` and variance `v`. -/\nnoncomputable"
+    },
+    {
+      "name": "continuous_tsum",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Analysis/Normed/Group/FunctionSeries.lean",
+      "line": 124,
+      "fileSHA256": "a9235d69ae20f4792282138e50afb92f47b868c2c3d3c82c7556035df2d685ef",
+      "head": "theorem continuous_tsum [TopologicalSpace β] {f : α → β → F} (hf : ∀ i, Continuous (f i))\n    (hu : Summable u) (hfu : ∀ n x, ‖f n x‖ ≤ u n) : Continuous fun x => ∑' n, f n x",
+      "context": "function is. -/\ntheorem continuousOn_tsum [TopologicalSpace β] {f : α → β → F} {s : Set β}\n    (hf : ∀ i, ContinuousOn (f i) s) (hu : Summable u) (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :\n    ContinuousOn (fun x => ∑' n, f n x) s := by\n  refine (tendstoUniformlyOn_tsum hu hfu).continuousOn (Frequently.of_forall ?_)\n  intro t\n  exact continuousOn_finsetSum _ fun i _ => hf i\n\n/-- An infinite sum of functions with summable sup norm is continuous if each individual\nfunction is. -/"
+    },
+    {
+      "name": "norm_integral_le_of_norm_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Analysis/BoxIntegral/Basic.lean",
+      "line": 357,
+      "fileSHA256": "3857da18629ea188402c31b8c272bf1890a274a8a2e61ed8debe9bcfd4d66e4a",
+      "head": "theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x ∈ Box.Icc I, ‖f x‖ ≤ g x)\n    (μ : Measure ℝⁿ) [IsLocallyFiniteMeasure μ] (hg : Integrable I l g μ.toBoxAdditive.toSMul) :\n    ‖(integral I l f μ.toBoxAdditive.toSMul : E)‖ ≤ integral I l g μ.toBoxAdditive.toSMul",
+      "context": "nonnegative. -/\ntheorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x ∈ Box.Icc I, 0 ≤ g x) (μ : Measure ℝⁿ)\n    [IsLocallyFiniteMeasure μ] : 0 ≤ integral I l g μ.toBoxAdditive.toSMul := by\n  by_cases hgi : Integrable I l g μ.toBoxAdditive.toSMul\n  · refine ge_of_tendsto' hgi.hasIntegral fun π => sum_nonneg fun J _ => ?_\n    exact mul_nonneg ENNReal.toReal_nonneg (hg _ <| π.tag_mem_Icc _)\n  · rw [integral, dite_eq_right hgi]\n\n/-- If `‖f x‖ ≤ g x` on `[l, u]` and `g` is integrable, then the norm of the integral of `f` is less\nthan or equal to the integral of `g`. -/"
+    },
+    {
+      "name": "summable_geometric_of_abs_lt_one",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Analysis/SpecificLimits/Normed.lean",
+      "line": 493,
+      "fileSHA256": "eee44dfd62feb67bdf3ccc6cf57e8e101f38a7408dbb9c6347e0978ce2010d41",
+      "head": "theorem summable_geometric_of_abs_lt_one {r : ℝ} (h : |r| < 1) : Summable fun n : ℕ ↦ r ^ n",
+      "context": "instance : HasSummableGeomSeries K :=\n  .of_summable_pow fun _ h ↦ (hasSum_geometric_of_norm_lt_one h).summable\n\ntheorem tsum_geometric_of_norm_lt_one (h : ‖ξ‖ < 1) : ∑' n : ℕ, ξ ^ n = (1 - ξ)⁻¹ :=\n  (hasSum_geometric_of_norm_lt_one h).tsum_eq\n\ntheorem hasSum_geometric_of_abs_lt_one {r : ℝ} (h : |r| < 1) :\n    HasSum (fun n : ℕ ↦ r ^ n) (1 - r)⁻¹ :=\n  hasSum_geometric_of_norm_lt_one h\n"
+    },
+    {
+      "name": "tsum_geometric_of_abs_lt_one",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Analysis/SpecificLimits/Normed.lean",
+      "line": 496,
+      "fileSHA256": "eee44dfd62feb67bdf3ccc6cf57e8e101f38a7408dbb9c6347e0978ce2010d41",
+      "head": "theorem tsum_geometric_of_abs_lt_one {r : ℝ} (h : |r| < 1) : ∑' n : ℕ, r ^ n = (1 - r)⁻¹",
+      "context": "theorem tsum_geometric_of_norm_lt_one (h : ‖ξ‖ < 1) : ∑' n : ℕ, ξ ^ n = (1 - ξ)⁻¹ :=\n  (hasSum_geometric_of_norm_lt_one h).tsum_eq\n\ntheorem hasSum_geometric_of_abs_lt_one {r : ℝ} (h : |r| < 1) :\n    HasSum (fun n : ℕ ↦ r ^ n) (1 - r)⁻¹ :=\n  hasSum_geometric_of_norm_lt_one h\n\ntheorem summable_geometric_of_abs_lt_one {r : ℝ} (h : |r| < 1) : Summable fun n : ℕ ↦ r ^ n :=\n  summable_geometric_of_norm_lt_one h\n"
+    },
+    {
+      "name": "sum_comp",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/CategoryTheory/Preadditive/Basic.lean",
+      "line": 201,
+      "fileSHA256": "6c9cfa70bb661abab0f2f437c7290bb72c62dc2f3d95ded2f968577a649d8b97",
+      "head": "theorem sum_comp {P Q R : C} {J : Type*} (s : Finset J) (f : J → (P ⟶ Q)) (g : Q ⟶ R) :\n    (∑ j ∈ s, f j) ≫ g = ∑ j ∈ s, f j ≫ g",
+      "context": "\ntheorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=\n  map_zsmul (leftComp R f) n g\n\n@[reassoc]\ntheorem comp_sum {P Q R : C} {J : Type*} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :\n    (f ≫ ∑ j ∈ s, g j) = ∑ j ∈ s, f ≫ g j :=\n  map_sum (leftComp R f) _ _\n\n@[reassoc]"
+    },
+    {
+      "name": "sum_comp",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Algebra/Polynomial/Eval/Defs.lean",
+      "line": 478,
+      "fileSHA256": "3f9f86d02e7ab9c127910ea1e797179878f2935bc447b7bdea504df8ce06a2e9",
+      "head": "@[simp] lemma sum_comp (s : Finset ι) (p : ι → R[X]) (q : R[X]) :\n    (∑ i ∈ s, p i).comp q = ∑ i ∈ s, (p i).comp q",
+      "context": "    (p ^ n).comp q = p.comp q ^ n :=\n  (MonoidHom.mk (OneHom.mk (fun r : R[X] => r.comp q) one_comp) fun r s => mul_comp r s q).map_pow\n    p n\n\ntheorem comp_assoc {R : Type*} [CommSemiring R] (φ ψ χ : R[X]) :\n    (φ.comp ψ).comp χ = φ.comp (ψ.comp χ) := by\n  refine Polynomial.induction_on φ ?_ ?_ ?_ <;>\n    · intros\n      simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ, ← mul_assoc]\n"
+    },
+    {
+      "name": "measureReal_nonneg",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+      "line": 53,
+      "fileSHA256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+      "head": "@[simp] theorem measureReal_nonneg : 0 ≤ μ.real s",
+      "context": "  exact or_iff_left h\n\ntheorem measureReal_ne_zero_iff (h : μ s ≠ ∞ := by finiteness) :\n    μ.real s ≠ 0 ↔ μ s ≠ 0 := by\n  simp [measureReal_eq_zero_iff, h]\n\n@[simp] theorem measureReal_zero : (0 : Measure α).real = 0 := rfl\n\ntheorem measureReal_zero_apply (s : Set α) : (0 : Measure α).real s = 0 := rfl\n"
+    },
+    {
+      "name": "measureReal_mono",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+      "line": 88,
+      "fileSHA256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+      "head": "@[gcongr] theorem measureReal_mono (h : s₁ ⊆ s₂) (h₂ : μ s₂ ≠ ∞",
+      "context": "\ntheorem map_measureReal_apply_of_aemeasurable [MeasurableSpace β] {f : α → β}\n    (hf : AEMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :\n    (μ.map f).real s = μ.real (f ⁻¹' s) := by\n  simp_rw [measureReal_def, map_apply_of_aemeasurable hf hs]\n\ntheorem map_measureReal_apply [MeasurableSpace β] {f : α → β} (hf : Measurable f)\n    {s : Set β} (hs : MeasurableSet s) : (μ.map f).real s = μ.real (f ⁻¹' s) :=\n  map_measureReal_apply_of_aemeasurable hf.aemeasurable hs\n"
+    },
+    {
+      "name": "measureReal_congr",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+      "line": 180,
+      "fileSHA256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+      "head": "theorem measureReal_congr (H : s =ᵐ[μ] t) : μ.real s = μ.real t",
+      "context": "\n@[simp]\ntheorem measureReal_union_null_iff\n    (h₁ : μ s₁ ≠ ∞ := by finiteness) (h₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real (s₁ ∪ s₂) = 0 ↔ μ.real s₁ = 0 ∧ μ.real s₂ = 0 :=\n  ⟨fun h ↦ ⟨measureReal_mono_null subset_union_left h (by finiteness),\n      measureReal_mono_null subset_union_right h (by finiteness)⟩,\n  fun h ↦ measureReal_union_null h.1 h.2⟩\n\n/-- If two sets are equal modulo a set of measure zero, then `μ.real s = μ.real t`. -/"
+    },
+    {
+      "name": "measureReal_inter_add_sdiff",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+      "line": 237,
+      "fileSHA256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+      "head": "theorem measureReal_inter_add_sdiff (ht : MeasurableSet t)\n    (h : μ s ≠ ∞",
+      "context": "theorem measureReal_union (hd : Disjoint s₁ s₂) (h : MeasurableSet s₂)\n    (h₁ : μ s₁ ≠ ∞ := by finiteness) (h₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real (s₁ ∪ s₂) = μ.real s₁ + μ.real s₂ :=\n  measureReal_union₀ h.nullMeasurableSet hd.aedisjoint h₁ h₂\n\ntheorem measureReal_union' (hd : Disjoint s₁ s₂) (h : MeasurableSet s₁)\n    (h₁ : μ s₁ ≠ ∞ := by finiteness) (h₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real (s₁ ∪ s₂) = μ.real s₁ + μ.real s₂ :=\n  measureReal_union₀' h.nullMeasurableSet hd.aedisjoint h₁ h₂\n"
+    },
+    {
+      "name": "measureReal_compl",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+      "line": 409,
+      "fileSHA256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+      "head": "theorem measureReal_compl [IsFiniteMeasure μ] (h₁ : MeasurableSet s) :\n    μ.real sᶜ = μ.real univ - μ.real s",
+      "context": "\ntheorem measureReal_eq_measureReal_larger_of_between_null_sdiff (h12 : s₁ ⊆ s₂)\n    (h23 : s₂ ⊆ s₃) (h_nulldiff : μ.real (s₃ \\ s₁) = 0) (h' : μ (s₃ \\ s₁) ≠ ∞ := by finiteness) :\n    μ.real s₂ = μ.real s₃ :=\n  (measureReal_eq_measureReal_of_between_null_sdiff h12 h23 h_nulldiff h').2\n\n@[deprecated (since := \"2026-06-03\")]\nalias measureReal_eq_measureReal_larger_of_between_null_diff :=\n  measureReal_eq_measureReal_larger_of_between_null_sdiff\n"
+    },
+    {
+      "name": "measureReal_le_one",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Typeclasses/Probability.lean",
+      "line": 44,
+      "fileSHA256": "00ef2a106c0ae4032944cec021ad58d04c370cc9b84547bed95462ca5205e25b",
+      "head": "lemma measureReal_le_one {μ : Measure α} [IsZeroOrProbabilityMeasure μ] {s : Set α} :\n    μ.real s ≤ 1",
+      "context": "  measure_univ : μ univ = 0 ∨ μ univ = 1\n\nlemma isZeroOrProbabilityMeasure_iff : IsZeroOrProbabilityMeasure μ ↔ μ univ = 0 ∨ μ univ = 1 :=\n  ⟨fun _ ↦ IsZeroOrProbabilityMeasure.measure_univ, IsZeroOrProbabilityMeasure.mk⟩\n\nlemma prob_le_one {μ : Measure α} [IsZeroOrProbabilityMeasure μ] {s : Set α} : μ s ≤ 1 := by\n  apply (measure_mono (subset_univ _)).trans\n  rcases IsZeroOrProbabilityMeasure.measure_univ (μ := μ) with h | h <;> simp [h]\n\n@[simp]"
+    },
+    {
+      "name": "probReal_univ",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/Typeclasses/Probability.lean",
+      "line": 118,
+      "fileSHA256": "00ef2a106c0ae4032944cec021ad58d04c370cc9b84547bed95462ca5205e25b",
+      "head": "@[simp] lemma probReal_univ : μ.real univ = 1",
+      "context": "    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] :\n    IsProbabilityMeasure (ite p μ ν) := by split <;> infer_instance\n\nopen unitInterval in\ninstance {μ ν : Measure α} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] {p : I} :\n    IsProbabilityMeasure (toNNReal p • μ + toNNReal (σ p) • ν) where\n  measure_univ := by simp [← ENNReal.coe_add]\n\nvariable [IsProbabilityMeasure μ] {p : α → Prop} {f : β → α}\n"
+    },
+    {
+      "name": "pi_pi",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/FiniteMeasurePi.lean",
+      "line": 51,
+      "fileSHA256": "9473e13c68f573ad6f3087d45e1bb56f9d337a74120593c0d628ff98cbded575",
+      "head": "@[simp] lemma pi_pi (s : Π i, Set (α i)) :\n    (FiniteMeasure.pi μ) (Set.pi univ s) = ∏ i, μ i (s i)",
+      "context": "namespace FiniteMeasure\n\n/-- The product of finitely many finite measures. -/\nnoncomputable def pi (μ : Π i, FiniteMeasure (α i)) : FiniteMeasure (Π i, α i) :=\n  ⟨Measure.pi (fun i ↦ μ i), inferInstance⟩\n\nvariable (μ : Π i, FiniteMeasure (α i))\n\n@[simp] lemma toMeasure_pi : (FiniteMeasure.pi μ).toMeasure = Measure.pi (fun i ↦ μ i) := rfl\n"
+    },
+    {
+      "name": "pi_pi",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Measure/FiniteMeasurePi.lean",
+      "line": 80,
+      "fileSHA256": "9473e13c68f573ad6f3087d45e1bb56f9d337a74120593c0d628ff98cbded575",
+      "head": "@[simp] lemma pi_pi (s : Π i, Set (α i)) :\n    ProbabilityMeasure.pi μ (Set.pi univ s) = ∏ i, μ i (s i)",
+      "context": "\n/-- The product of finitely many probability measures. -/\nnoncomputable def pi (μ : Π i, ProbabilityMeasure (α i)) : ProbabilityMeasure (Π i, α i) :=\n  ⟨Measure.pi (fun i ↦ μ i), inferInstance⟩\n\nvariable (μ : Π i, ProbabilityMeasure (α i))\n\n@[simp] lemma toMeasure_pi :\n    (ProbabilityMeasure.pi μ).toMeasure = Measure.pi (fun i ↦ μ i) := rfl\n"
+    },
+    {
+      "name": "integrable_map_measure",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "line": 355,
+      "fileSHA256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "head": "theorem integrable_map_measure {f : α → α'} {g : α' → ε}\n    (hg : AEStronglyMeasurable g (Measure.map f μ)) (hf : AEMeasurable f μ) :\n    Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ",
+      "context": "  exact (eq_or_ne μ 0).by_cases (fun h => by simp [h]) fun h =>\n    integrable_smul_measure (ENNReal.inv_ne_zero.2 <| by finiteness)\n      (ENNReal.inv_ne_top.2 <| mt Measure.measure_univ_eq_zero.1 h)\n\nend\n\nsection\n\nvariable {α' : Type*} [MeasurableSpace α']\n"
+    },
+    {
+      "name": "Integrable.bdd_mul",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "line": 1056,
+      "fileSHA256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "head": "theorem Integrable.bdd_mul {f g : α → 𝕜} {c : ℝ} (hg : Integrable g μ)\n    (hf : AEStronglyMeasurable f μ) (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :\n    Integrable (fun x => f x * g x) μ",
+      "context": "\ntheorem integrable_const_mul_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :\n    Integrable (fun x => c * f x) μ ↔ Integrable f μ :=\n  hc.integrable_smul_iff f\n\ntheorem integrable_mul_const_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :\n    Integrable (fun x => f x * c) μ ↔ Integrable f μ :=\n  hc.op.integrable_smul_iff f\n\n-- TODO: generalise this to enorms, once there is an `ENormedDivisionRing` class"
+    },
+    {
+      "name": "norm_integral_le_of_norm_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean",
+      "line": 756,
+      "fileSHA256": "bf8558a4cb789e3505cfb08a6712ce83017719be2523e862d5e52f082433814c",
+      "head": "theorem norm_integral_le_of_norm_le {g : ℝ → ℝ} (hab : a ≤ b)\n    (h : ∀ᵐ t ∂μ, t ∈ Set.Ioc a b → ‖f t‖ ≤ g t) (hbound : IntervalIntegrable g μ a b) :\n    ‖∫ t in a..b, f t ∂μ‖ ≤ ∫ t in a..b, g t ∂μ",
+      "context": "\ntheorem norm_integral_le_integral_norm (h : a ≤ b) :\n    ‖∫ x in a..b, f x ∂μ‖ ≤ ∫ x in a..b, ‖f x‖ ∂μ :=\n  norm_integral_le_integral_norm_uIoc.trans_eq <| by rw [uIoc_of_le h, integral_of_le h]\n\ntheorem norm_integral_le_abs_of_norm_le {g : ℝ → ℝ} (h : ∀ᵐ t ∂μ.restrict <| Ι a b, ‖f t‖ ≤ g t)\n    (hbound : IntervalIntegrable g μ a b) : ‖∫ t in a..b, f t ∂μ‖ ≤ |∫ t in a..b, g t ∂μ| := by\n  rw [norm_intervalIntegral_eq, abs_intervalIntegral_eq]\n  exact (norm_integral_le_of_norm_le hbound.def' h).trans (le_abs_self _)\n"
+    },
+    {
+      "name": "integral_prod_symm",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "line": 466,
+      "fileSHA256": "8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05",
+      "head": "theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.prod ν)) :\n    ∫ z, f z ∂μ.prod ν = ∫ y, ∫ x, f (x, y) ∂μ ∂ν",
+      "context": "    simp_rw [integral_add' i_f i_g, integral_integral_add' i_f i_g, hf, hg]\n  · exact isClosed_eq continuous_integral continuous_integral_integral\n  · rintro f g hfg - hf; convert hf using 1\n    · exact integral_congr_ae hfg.symm\n    · apply integral_congr_ae\n      filter_upwards [ae_ae_of_ae_prod hfg] with x hfgx using integral_congr_ae (ae_eq_symm hfgx)\n\n/-- Symmetric version of **Fubini's Theorem**: For integrable functions on `α × β`,\n  the Bochner integral of `f` is equal to the iterated Bochner integral.\n  This version has the integrals on the right-hand side in the other order. -/"
+    },
+    {
+      "name": "integral_indicator_one",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Set.lean",
+      "line": 529,
+      "fileSHA256": "e4d90b9fde463a9123e1ac3321ce25c0714e19ce92e172f297e062d9de16be75",
+      "head": "theorem integral_indicator_one ⦃s : Set X⦄ (hs : MeasurableSet s) :\n    ∫ x, s.indicator 1 x ∂μ = μ.real s",
+      "context": "\ntheorem setIntegral_const [CompleteSpace E] (c : E) : ∫ _ in s, c ∂μ = μ.real s • c := by\n  rw [integral_const, measureReal_restrict_apply_univ]\n\n@[simp]\ntheorem integral_indicator_const [CompleteSpace E] (e : E) ⦃s : Set X⦄ (s_meas : MeasurableSet s) :\n    ∫ x : X, s.indicator (fun _ : X => e) x ∂μ = μ.real s • e := by\n  rw [integral_indicator s_meas, ← setIntegral_const]\n\n@[simp]"
+    },
+    {
+      "name": "norm_integral_le_of_norm_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+      "line": 983,
+      "fileSHA256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+      "head": "theorem norm_integral_le_of_norm_le {f : α → G} {g : α → ℝ} (hg : Integrable g μ)\n    (h : ∀ᵐ x ∂μ, ‖f x‖ ≤ g x) : ‖∫ x, f x ∂μ‖ ≤ ∫ x, g x ∂μ",
+      "context": "  · calc\n      ‖∫ a, f a ∂μ‖ ≤ ENNReal.toReal (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) :=\n        norm_integral_le_lintegral_norm _\n      _ = ∫ a, ‖f a‖ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae h.norm).symm\n  · rw [integral_non_aestronglyMeasurable h, norm_zero]\n    exact integral_nonneg_of_ae le_ae\n\nlemma abs_integral_le_integral_abs {f : α → ℝ} : |∫ a, f a ∂μ| ≤ ∫ a, |f a| ∂μ :=\n  norm_integral_le_integral_norm f\n"
+    },
+    {
+      "name": "integral_map",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+      "line": 1076,
+      "fileSHA256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+      "head": "theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasurable φ μ) {f : β → G}\n    (hfm : AEStronglyMeasurable f (Measure.map φ μ)) :\n    ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ",
+      "context": "    {f : β → G} (hfm : StronglyMeasurable f) : ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ := by\n  by_cases hfi : Integrable f (Measure.map φ μ); swap\n  · rw [integral_undef hfi, integral_undef]\n    exact fun hfφ => hfi ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).2 hfφ)\n  simp only [integral_eq_setToFun]\n  apply setToFun_of_le_map_of_stronglyMeasurable _ _\n    ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).1 hfi) hfm hφ le_rfl\n  intro s x hs\n  simp [weightedSMul_apply, map_measureReal_apply, hs, hφ]\n"
+    },
+    {
+      "name": "pi_pi",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/Constructions/Pi.lean",
+      "line": 291,
+      "fileSHA256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+      "head": "theorem pi_pi [∀ i, SigmaFinite (μ i)] (s : (i : ι) → Set (α i)) :\n    Measure.pi μ (pi univ s) = ∏ i, μ i (s i)",
+      "context": "    Measure.pi μ = μ' :=\n  pi_eq_generateFrom (fun _ => generateFrom_measurableSet) (fun _ => isPiSystem_measurableSet)\n    (fun i => (μ i).toFiniteSpanningSetsIn) h\n\nvariable (μ)\n\ntheorem pi'_eq_pi [Encodable ι] [∀ i, SigmaFinite (μ i)] : pi' μ = Measure.pi μ :=\n  Eq.symm <| pi_eq fun s _ => pi'_pi μ s\n\n@[simp]"
+    },
+    {
+      "name": "integral_prod_symm",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/VectorMeasure/Prod.lean",
+      "line": 376,
+      "fileSHA256": "563acee2da6d7b53d7bd0350457f41cb09534727f472862cbf8b3b45a7d3fa64",
+      "head": "theorem integral_prod_symm {B : G →L[ℝ] E →L[ℝ] J} {C : J →L[ℝ] F →L[ℝ] I}\n    {A : E →L[ℝ] F →L[ℝ] H} {D : G →L[ℝ] H →L[ℝ] I}\n    [CompleteSpace H] [CompleteSpace J]\n    [IsFiniteMeasure ν.variation] [IsFiniteMeasure μ.variation]\n    {f : X × Y → G} (hf : Integrable f (μ.variation.prod ν.variation))\n    (h : ∀ x y z, (D x) (A z y) = C (B x z) y) :\n    ∫ᵛ z, f z ∂[D; μ.prod ν A] = ∫ᵛ y, (∫ᵛ x, f (x, y) ∂[B; μ]) ∂[C; ν]",
+      "context": "    ∫ᵛ z, f z ∂•(μ.prod ν B) = ∫ᵛ x, (∫ᵛ y, f (x, y) ∂•ν) ∂[B.flip; μ] := by\n  by_cases h : CompleteSpace H\n  · exact integral_prod hf (by simp)\n  · simp [integral_of_not_completeSpace, h]\n\n/-- Symmetric version of **Fubini's Theorem**: For integrable functions on `X × Y`,\nthe vector measure integral of `f` for the product vector measure is equal to the iterated vector\nmeasure integral. We express this with respect to general pairing functions, with a compatibility\ncondition saying that the compositions coincide up to reordering.\nThis version has the integrals on the right-hand side in the other order. -/"
+    },
+    {
+      "name": "integral_map",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/MeasureTheory/VectorMeasure/Integral.lean",
+      "line": 829,
+      "fileSHA256": "f2dff3b91fe301bbe8c354abb5cf8f01f7c5c06cc7fc80bb5fdc0ccbecd86632",
+      "head": "theorem integral_map {β : Type*} [MeasurableSpace β]\n    {φ : X → β} (hφ : Measurable φ) {f : β → E}\n    (hfm : AEStronglyMeasurable f (μ.variation.map φ))\n    (hfi' : μ.Integrable (f ∘ φ)) :\n    ∫ᵛ y, f y ∂[B; μ.map φ] = ∫ᵛ x, f (φ x) ∂[B; μ]",
+      "context": "theorem Integrable.map {β : Type*} [MeasurableSpace β] {φ : X → β}\n    {f : β → E} (hfm : AEStronglyMeasurable f (μ.variation.map φ))\n    (h : μ.Integrable (f ∘ φ)) : (μ.map φ).Integrable f := by\n  by_cases hφ : Measurable φ; swap\n  · simp [VectorMeasure.map, hφ]\n  simp_rw [VectorMeasure.Integrable] at h ⊢\n  apply ((integrable_map_measure hfm hφ.aemeasurable).2 h).mono_measure\n  apply variation_map_le\n\nset_option backward.isDefEq.respectTransparency.types false in"
+    },
+    {
+      "name": "eVariationOn.eVariationOn",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 61,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "noncomputable def eVariationOn (f : α → E) (s : Set α) : ℝ≥0∞",
+      "context": "\n@[expose] public section\n\nopen scoped NNReal ENNReal Topology UniformConvergence\nopen Set Filter OrderDual\n\nvariable {α : Type*} [LinearOrder α] {E M : Type*} [TopologicalSpace E] [WeakPseudoEMetricSpace E]\n  [PseudoEMetricSpace M]\n\n/-- The (extended-real-valued) variation of a function `f` on a set `s` inside a linear order is\nthe supremum of the sum of `edist (f (u (i+1))) (f (u i))` over all finite increasing\nsequences `u` in `s`. -/"
+    },
+    {
+      "name": "eVariationOn.BoundedVariationOn",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 66,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "def BoundedVariationOn (f : α → E) (s : Set α)",
+      "context": "\nvariable {α : Type*} [LinearOrder α] {E M : Type*} [TopologicalSpace E] [WeakPseudoEMetricSpace E]\n  [PseudoEMetricSpace M]\n\n/-- The (extended-real-valued) variation of a function `f` on a set `s` inside a linear order is\nthe supremum of the sum of `edist (f (u (i+1))) (f (u i))` over all finite increasing\nsequences `u` in `s`. -/\nnoncomputable def eVariationOn (f : α → E) (s : Set α) : ℝ≥0∞ :=\n  ⨆ p : ℕ × { u : ℕ → α // Monotone u ∧ ∀ i, u i ∈ s },\n    ∑ i ∈ Finset.range p.1, edist (f (p.2.1 (i + 1))) (f (p.2.1 i))\n\n/-- A function has bounded variation on a set `s` if its total variation there is finite. -/"
+    },
+    {
+      "name": "eVariationOn.sum_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 94,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "theorem sum_le {f : α → E} {s : Set α} {n : ℕ} {u : ℕ → α} (hu : Monotone u) (us : ∀ i, u i ∈ s) :\n    (∑ i ∈ Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤ eVariationOn f s",
+      "context": "\ntheorem eq_of_edist_zero_on {f f' : α → E} {s : Set α} (h : ∀ ⦃x⦄, x ∈ s → edist (f x) (f' x) = 0) :\n    eVariationOn f s = eVariationOn f' s := by\n  dsimp only [eVariationOn]\n  congr 1 with p : 1\n  congr 1 with i : 1\n  rw [edist_congr_right (h <| p.snd.prop.2 (i + 1)), edist_congr_left (h <| p.snd.prop.2 i)]\n\ntheorem eq_of_eqOn {f f' : α → E} {s : Set α} (h : EqOn f f' s) :\n    eVariationOn f s = eVariationOn f' s :=\n  eq_of_edist_zero_on fun x xs => by rw [h xs, edist_self]\n"
+    },
+    {
+      "name": "eVariationOn.mono",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 158,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "theorem mono (f : α → E) {s t : Set α} (hst : t ⊆ s) : eVariationOn f t ≤ eVariationOn f s",
+      "context": "            by grind [StrictMonoOn], ?_⟩\n          simp only [h'v, ← hv, Order.add_one_le_iff, Finset.sum_range_succ, lt_self_iff_false,\n            ↓reduceIte, le_refl]\n          congr 1\n          exact Finset.sum_congr rfl (by grind)\n    rcases this with ⟨p, -, hp⟩\n    rw [hp]\n    apply le_iSup _ p\n  · apply iSup_le\n    rintro ⟨n, u, u_mono, u_mem⟩\n    apply sum_le_of_monotoneOn_Iic (by grind [MonotoneOn, StrictMonoOn]) (by grind)\n"
+    },
+    {
+      "name": "eVariationOn.union",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 392,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht : IsLeast t x) :\n    eVariationOn f (s ∪ t) = eVariationOn f s + eVariationOn f t",
+      "context": "      rw [Finset.range_eq_Ico]\n      convert\n          Finset.sum_Ico_add (fun i : ℕ => edist (f (w (i + 1))) (f (w i))) 0 m (n + 1) using 3 <;>\n        abel\n    _ ≤ ∑ i ∈ Finset.range (n + 1 + m), edist (f (w (i + 1))) (f (w i)) := by\n      rw [← Finset.sum_union]\n      · gcongr; grind\n      · exact Finset.disjoint_left.2 (by grind)\n    _ ≤ eVariationOn f (s ∪ t) := sum_le (by grind [Monotone]) (by grind)\n\n/-- If a set `s` is to the left of a set `t`, and both contain the boundary point `x`, then\nthe variation of `f` along `s ∪ t` is the sum of the variations. -/"
+    },
+    {
+      "name": "eVariationOn._root_.BoundedVariationOn.dist_le",
+      "path": "/root/rivermind-data/shao-lean-20261021/cache-overlays/shared-v34/packages/mathlib/Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "line": 262,
+      "fileSHA256": "a38d81730422c6673a0ebd7dd924b32449af1525c291691dc07b2e1cbbb89b8f",
+      "head": "theorem _root_.BoundedVariationOn.dist_le {E : Type*} [PseudoMetricSpace E] {f : α → E}\n    {s : Set α} (h : BoundedVariationOn f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s) :\n    dist (f x) (f y) ≤ (eVariationOn f s).toReal",
+      "context": "    forall_apply_eq_imp_iff₂, tendstoUniformlyOn_singleton_iff_tendsto] using! @tendsto_id _ (𝓝 f)\n\nset_option backward.isDefEq.respectTransparency false in\n/-- The map `(eVariationOn · s)` is lower semicontinuous for uniform convergence on `s`. -/\ntheorem lowerSemicontinuous_uniformOn (s : Set α) :\n    LowerSemicontinuous fun f : α →ᵤ[{s}] M => eVariationOn f s := fun f ↦ by\n  apply @lowerSemicontinuous_aux _ _ _ _ (UniformOnFun α M {s}) id (𝓝 f) f s _\n  have := @tendsto_id _ (𝓝 f)\n  rw [UniformOnFun.tendsto_iff_tendstoUniformlyOn] at this\n  simp_rw [← tendstoUniformlyOn_singleton_iff_tendsto]\n  exact fun x xs => (this s rfl).mono (singleton_subset_iff.mpr xs)\n"
+    }
+  ],
+  "requested": [
+    "measureReal_inter_add_sdiff",
+    "measureReal_nonneg",
+    "measureReal_mono",
+    "probReal_univ",
+    "measureReal_compl",
+    "measureReal_congr",
+    "measureReal_le_one",
+    "integrable_map_measure",
+    "integral_map",
+    "integral_indicator_one",
+    "integral_prod_symm",
+    "norm_integral_le_of_norm_le",
+    "Integrable.bdd_mul",
+    "measureReal_eq",
+    "pi_pi",
+    "isProbabilityMeasure_map_iff",
+    "sum_comp",
+    "continuous_tsum",
+    "summable_geometric_of_abs_lt_one",
+    "tsum_geometric_of_abs_lt_one",
+    "Summable.sum_le_tsum",
+    "Summable.of_nonneg_of_le",
+    "HasSum.tendsto_sum_nat",
+    "gaussianPDFReal"
+  ],
+  "missing": [
+    "HasSum.tendsto_sum_nat",
+    "Summable.sum_le_tsum",
+    "isProbabilityMeasure_map_iff",
+    "measureReal_eq"
+  ]
+}

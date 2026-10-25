@@ -1,0 +1,85 @@
+import Shao.C2.InitialDoubleCompletionBudget
+import Shao.C2.ActualBridgeIntervalTelescope
+import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualIntervalProfileBudget
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualSignedDoubleTelescope
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open Shao.Probability.SourceActualIntervalProfileBudget
+
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+def actualDoubleValue {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  1 - sourceValue .upper (eventCompletionKernel .upper Q) a x r sigma -
+    sourceValue .lower (eventCompletionKernel .lower Q) a x r sigma +
+    sourceValue .interval (eventCompletionKernel .interval Q) a x r sigma
+
+def actualDerivativeFamily (Q : Measure BridgeNoise) : MonitoredDomain → BridgeKernel :=
+  fun J => match J with
+    | .upper => halflineDerivative .upper
+    | .lower => halflineDerivative .lower
+    | .interval => intervalDerivative Q
+
+def actualDoubleRetained {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r sigma -
+    sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r sigma -
+    sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r sigma
+
+def actualDoubleSeparated {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceSeparatedOvershoot .upper (actualDerivativeFamily Q .upper) a x nu r sigma +
+    sourceSeparatedOvershoot .lower (actualDerivativeFamily Q .lower) a x nu r sigma -
+    sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) a x nu r sigma
+
+def doubleCrossingEvent {n : ℕ} (x : ℝ) : Set (Shao.Path n) :=
+  {a | (∃ r : ℕ, r ≤ n ∧ actualWall a x ≤ Shao.prefixSum a r) ∧
+    (∃ r : ℕ, r ≤ n ∧ Shao.prefixSum a r ≤ -actualWall a x)}
+
+theorem actual_double_value_boundary
+    {n : ℕ} (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (x : ℝ) (hx : 0 < x) (a : Shao.Path n) (sigma : LabelPerm n) :
+    (∀ r : ℕ, r ≤ n →
+      0 ≤ actualDoubleValue Q x a r sigma ∧ actualDoubleValue Q x a r sigma ≤ 1) ∧
+    actualDoubleValue Q x a 0 sigma =
+      Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a ∧
+    actualDoubleValue Q x a n sigma =
+      if Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x then 1 else 0
+
+theorem actual_double_stopped_telescope
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB)
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (H : ℝ) (hH : 0 < H)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnum : ∀ sigma, Measurable (fun a => nu a sigma))
+    (hnu : ∀ a, IsRevealStoppingRank (nu a))
+    (hcap : ∀ a sigma, nu a sigma ≤ energyCutoff a H sigma)
+    (m : Shao.Path n → ℝ) (hmm : Measurable m) (hmb : ∀ a, |m a| ≤ 1)
+    (hminv : PermutationInvariant m) :
+    let Q : Measure BridgeNoise := bridgeLaw B PB
+    let Z : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * (actualDoubleValue Q x p.1 (nu p.1 p.2) p.2 -
+        Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x p.1)
+    let L : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleRetained Q x p.1 (nu p.1) r p.2
+    let O : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleSeparated Q x p.1 (nu p.1) r p.2
+    (∀ a sigma r, 0 ≤ actualDoubleSeparated Q x a (nu a) r sigma) ∧
+    Integrable Z (revealLaw P) ∧ Integrable L (revealLaw P) ∧ Integrable O (revealLaw P) ∧
+    (∫ p, Z p ∂revealLaw P) = (∫ p, L p ∂revealLaw P) - (∫ p, O p ∂revealLaw P) ∧
+    ((∀ a, 0 ≤ m a) → (∫ p, Z p ∂revealLaw P) ≤ (∫ p, L p ∂revealLaw P))

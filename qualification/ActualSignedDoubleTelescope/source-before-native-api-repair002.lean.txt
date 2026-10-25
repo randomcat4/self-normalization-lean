@@ -1,0 +1,437 @@
+import Shao.C2.InitialDoubleCompletionBudget
+import Shao.C2.ActualBridgeIntervalTelescope
+import Shao.Probability.SourceActualLocalProfileBudget
+import Shao.Probability.SourceActualIntervalProfileBudget
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.ActualSignedDoubleTelescope
+open MeasureTheory ProbabilityTheory Set Filter
+open scoped BigOperators ENNReal NNReal Topology Classical
+open Shao.C2.BridgeDomination Shao.C2.BrownianBridgeLaw
+open Shao.Probability.SourcePermutationReveal
+open Shao.Probability.SourceSeparatedOvershoot
+open Shao.Probability.SourceActualLocalProfileBudget
+open Shao.Probability.SourceActualIntervalProfileBudget
+
+local instance labelPermMeasurableSpace (n : ℕ) : MeasurableSpace (LabelPerm n) := ⊤
+
+def actualDoubleValue {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  1 - sourceValue .upper (eventCompletionKernel .upper Q) a x r sigma -
+    sourceValue .lower (eventCompletionKernel .lower Q) a x r sigma +
+    sourceValue .interval (eventCompletionKernel .interval Q) a x r sigma
+
+def actualDerivativeFamily (Q : Measure BridgeNoise) : MonitoredDomain → BridgeKernel :=
+  fun J => match J with
+    | .upper => halflineDerivative .upper
+    | .lower => halflineDerivative .lower
+    | .interval => intervalDerivative Q
+
+def actualDoubleRetained {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceRetainedRemainder .interval (eventCompletionKernel .interval Q)
+      (actualDerivativeFamily Q .interval) a x nu r sigma -
+    sourceRetainedRemainder .upper (eventCompletionKernel .upper Q)
+      (actualDerivativeFamily Q .upper) a x nu r sigma -
+    sourceRetainedRemainder .lower (eventCompletionKernel .lower Q)
+      (actualDerivativeFamily Q .lower) a x nu r sigma
+
+def actualDoubleSeparated {n : ℕ} (Q : Measure BridgeNoise) (x : ℝ)
+    (a : Shao.Path n) (nu : LabelPerm n → ℕ) (r : ℕ) (sigma : LabelPerm n) : ℝ :=
+  sourceSeparatedOvershoot .upper (actualDerivativeFamily Q .upper) a x nu r sigma +
+    sourceSeparatedOvershoot .lower (actualDerivativeFamily Q .lower) a x nu r sigma -
+    sourceSeparatedOvershoot .interval (actualDerivativeFamily Q .interval) a x nu r sigma
+
+def doubleCrossingEvent {n : ℕ} (x : ℝ) : Set (Shao.Path n) :=
+  {a | (∃ r : ℕ, r ≤ n ∧ actualWall a x ≤ Shao.prefixSum a r) ∧
+    (∃ r : ℕ, r ≤ n ∧ Shao.prefixSum a r ≤ -actualWall a x)}
+
+theorem actual_double_value_boundary
+    {n : ℕ} (Q : Measure BridgeNoise) [IsProbabilityMeasure Q]
+    (x : ℝ) (hx : 0 < x) (a : Shao.Path n) (sigma : LabelPerm n) :
+    (∀ r : ℕ, r ≤ n →
+      0 ≤ actualDoubleValue Q x a r sigma ∧ actualDoubleValue Q x a r sigma ≤ 1) ∧
+    actualDoubleValue Q x a 0 sigma =
+      Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a ∧
+    actualDoubleValue Q x a n sigma =
+      if Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x then 1 else 0 := by
+  classical
+  -- This identity is applied to two sections of the same bridge sample.
+  have hIE (U D : Set BridgeNoise) (hU : MeasurableSet U) (hD : MeasurableSet D) :
+      Q.real (Uᶜ ∩ Dᶜ) = 1 - Q.real U - Q.real D + Q.real (U ∩ D) := by
+    have h0 := measureReal_inter_add_sdiff (μ := Q) (s := Set.univ) hU
+    have h0' : Q.real U + Q.real Uᶜ = 1 := by
+      simpa only [Set.univ_inter, Set.univ_diff, probReal_univ] using h0
+    have h1 := measureReal_inter_add_sdiff (μ := Q) (s := Uᶜ) hD
+    have h2 := measureReal_inter_add_sdiff (μ := Q) (s := D) hU
+    have hDU : D \ U = Uᶜ ∩ D := by
+      ext g
+      simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_compl_iff]
+      exact and_comm
+    rw [show D ∩ U = U ∩ D from Set.inter_comm D U, hDU] at h2
+    change Q.real (Uᶜ ∩ D) + Q.real (Uᶜ ∩ Dᶜ) = Q.real Uᶜ at h1
+    linarith
+  have hs : Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n =
+      Shao.prefixSum a n := by
+    simpa only [Shao.prefixSum_length, Shao.Probability.Spitzer.reorder] using
+      Equiv.sum_comp sigma a
+  have he : Shao.energy (Shao.Probability.Spitzer.reorder a sigma) = Shao.energy a := by
+    simpa only [Shao.energy, Shao.Probability.Spitzer.reorder] using
+      Equiv.sum_comp sigma (fun i => (a i) ^ 2)
+  have hWall : actualWall (Shao.Probability.Spitzer.reorder a sigma) x = actualWall a x := by
+    simp only [actualWall, he]
+  have hAliveI (r : ℕ) : sourceAlive .interval a x r sigma ↔
+      sourceAlive .upper a x r sigma ∧ sourceAlive .lower a x r sigma := by
+    constructor
+    · intro h
+      exact ⟨⟨h.1, h.2.1.2, fun k hk => (h.2.2 k hk).2⟩,
+        ⟨h.1, h.2.1.1, fun k hk => (h.2.2 k hk).1⟩⟩
+    · rintro ⟨hu, hl⟩
+      exact ⟨hu.1, ⟨hl.2.1, hu.2.1⟩, fun k hk => ⟨hl.2.2 k hk, hu.2.2 k hk⟩⟩
+  by_cases hzero : Shao.energy a = 0
+  · have hDead (J : MonitoredDomain) (r : ℕ) : ¬ sourceAlive J a x r sigma := by
+      intro h
+      have hpos := h.1
+      rw [hzero] at hpos
+      exact (lt_irrefl 0) hpos
+    have hV (r : ℕ) : actualDoubleValue Q x a r sigma = 1 := by
+      simp only [actualDoubleValue, sourceValue, if_neg (hDead .upper r),
+        if_neg (hDead .lower r), if_neg (hDead .interval r), sub_zero, add_zero]
+    have hCross : Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x := by
+      change (∃ r : ℕ, r ≤ n ∧ _ ≤ _) ∧ (∃ r : ℕ, r ≤ n ∧ _ ≤ _)
+      constructor
+      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, hzero,
+          Real.sqrt_zero, mul_zero, Shao.prefixSum_zero, le_refl]⟩
+      · exact ⟨0, Nat.zero_le n, by simp only [hWall, actualWall, hzero,
+          Real.sqrt_zero, mul_zero, neg_zero, Shao.prefixSum_zero, le_refl]⟩
+    refine ⟨fun r _ => by rw [hV r]; norm_num, ?_, ?_⟩
+    · rw [hV 0, Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable, if_pos hzero]
+    · rw [hV n, if_pos hCross]
+  · have hQ : 0 < Shao.energy a := lt_of_le_of_ne (Shao.energy_nonneg a) (Ne.symm hzero)
+    let w : ℝ := actualWall a x
+    let z : ℝ := Shao.prefixSum a n
+    let y : ℕ → ℝ := fun r => Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) r
+    let T : ℕ → ℝ := fun r => remainingEnergy a r sigma
+    have hw : 0 < w := mul_pos hx (Real.sqrt_pos.mpr hQ)
+    let S : MonitoredDomain → ℕ → Set BridgeNoise := fun J r => match J with
+      | .upper => strictUpper w (y r) (T r) z
+      | .lower => strictLower w (y r) (T r) z
+      | .interval => strictInterval w (y r) (T r) z
+    let E : MonitoredDomain → ℕ → Set BridgeNoise := fun J r =>
+      if sourceAlive J a x r sigma then S J r else ∅
+    have hSm (J : MonitoredDomain) (r : ℕ) : MeasurableSet (S J r) := by
+      cases J with
+      | upper => exact measurableSet_strictUpper _ _ _ _
+      | lower => exact measurableSet_strictLower _ _ _ _
+      | interval => exact measurableSet_strictInterval _ _ _ _
+    have hEm (J : MonitoredDomain) (r : ℕ) : MeasurableSet (E J r) := by
+      dsimp only [E]
+      split_ifs
+      · exact hSm J r
+      · exact MeasurableSet.empty
+    have hEI (r : ℕ) : E .interval r = E .upper r ∩ E .lower r := by
+      by_cases hu : sourceAlive .upper a x r sigma <;>
+        by_cases hl : sourceAlive .lower a x r sigma <;>
+        simp [E, S, strictInterval, hAliveI r, hu, hl]
+    have hValue (J : MonitoredDomain) (r : ℕ) (hr : r ≤ n) :
+        sourceValue J (eventCompletionKernel J Q) a x r sigma = Q.real (E J r) := by
+      by_cases ha : sourceAlive J a x r sigma
+      · have hgeom := remaining_population_geometry a r hr sigma
+        have hreach : T r = 0 → y r = z := by
+          intro ht
+          have hsum := (hgeom.2.2.2 ht).1
+          change z - y r = 0 at hsum
+          linarith only [hsum]
+        have hExt := (eventCompletionKernel_data J Q).2.2 w (y r) (T r) z hw hgeom.1 hreach
+        simp only [sourceValue, if_pos ha, E, if_pos ha]
+        change completionExt J (eventCompletionKernel J Q) w (y r) (T r) z =
+          Q.real (S J r)
+        rw [hExt]
+        cases J <;> rfl
+      · simp only [sourceValue, if_neg ha, E, if_neg ha, measureReal_empty]
+    have hProb (r : ℕ) (hr : r ≤ n) :
+        0 ≤ actualDoubleValue Q x a r sigma ∧ actualDoubleValue Q x a r sigma ≤ 1 := by
+      rw [actualDoubleValue, hValue .upper r hr, hValue .lower r hr,
+        hValue .interval r hr, hEI r, ← hIE _ _ (hEm .upper r) (hEm .lower r)]
+      refine ⟨measureReal_nonneg, ?_⟩
+      calc
+        _ ≤ Q.real Set.univ := measureReal_mono (Set.subset_univ _) (by finiteness)
+        _ = 1 := probReal_univ
+    have hEnds (J : MonitoredDomain) (r : ℕ) (g : BridgeNoise) (hg : g ∈ S J r) :
+        Interior J w (y r) ∧ Interior J w z := by
+      have hep := bridgePath_endpoints (y r) (T r) z g
+      cases J with
+      | upper =>
+        change (∀ t : BridgeTime, bridgePath (y r) (T r) z g t < w) at hg
+        exact ⟨by simpa only [hep.1] using hg 0, by simpa only [hep.2] using hg 1⟩
+      | lower =>
+        change (∀ t : BridgeTime, -w < bridgePath (y r) (T r) z g t) at hg
+        exact ⟨by simpa only [hep.1] using hg 0, by simpa only [hep.2] using hg 1⟩
+      | interval =>
+        change (∀ t : BridgeTime, bridgePath (y r) (T r) z g t < w) ∧
+          (∀ t : BridgeTime, -w < bridgePath (y r) (T r) z g t) at hg
+        exact ⟨⟨by simpa only [hep.1] using hg.2 0, by simpa only [hep.1] using hg.1 0⟩,
+          ⟨by simpa only [hep.2] using hg.2 1, by simpa only [hep.2] using hg.1 1⟩⟩
+    have hE0 (J : MonitoredDomain) : E J 0 = S J 0 := by
+      ext g
+      by_cases ha : sourceAlive J a x 0 sigma
+      · simp only [E, if_pos ha]
+      · simp only [E, if_neg ha, Set.mem_empty_iff_false, false_iff]
+        intro hg
+        apply ha
+        have hends := hEnds J 0 g hg
+        refine ⟨hQ, hends.2, ?_⟩
+        intro k hk
+        have hk0 : k = 0 := Nat.eq_zero_of_le_zero hk
+        subst k
+        exact hends.1
+    have hV0 (J : MonitoredDomain) :
+        sourceValue J (eventCompletionKernel J Q) a x 0 sigma =
+          eventCompletionKernel J Q (w, 0, Shao.energy a, z) := by
+      rw [hValue J 0 (Nat.zero_le n), hE0 J]
+      cases J <;> simp only [S, y, T, remainingEnergy, Shao.prefixSum_zero,
+        Shao.prefixSquares_zero, sub_zero, eventCompletionKernel,
+        upperCompletion, lowerCompletion, intervalCompletion]
+    let c : ℝ := Real.sqrt (Shao.energy a)
+    let v : ℝ := z / c
+    have hc : 0 < c := Real.sqrt_pos.mpr hQ
+    have hc2 : c ^ 2 = Shao.energy a := Real.sq_sqrt hQ.le
+    have hcz : c * v = z := by
+      dsimp only [v]
+      field_simp [ne_of_gt hc] <;> ring
+    have hcw : c * x = w := by dsimp only [c, w, actualWall]; ring
+    have hScale (J : MonitoredDomain) :
+        eventCompletionKernel J Q (w, 0, Shao.energy a, z) =
+          eventCompletionKernel J Q (x, 0, 1, v) := by
+      cases J with
+      | upper =>
+        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
+          Shao.C2.CompletionScaling.upperCompletion_scale Q c hc x 0 1 v (by norm_num))
+      | lower =>
+        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
+          Shao.C2.CompletionScaling.lowerCompletion_scale Q c hc x 0 1 v (by norm_num))
+      | interval =>
+        exact (by simpa only [hc2, hcz, hcw, mul_zero, mul_one] using
+          Shao.C2.CompletionScaling.intervalCompletion_scale Q c hc x 0 1 v (by norm_num))
+    have hInitial : actualDoubleValue Q x a 0 sigma =
+        Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x a := by
+      rw [actualDoubleValue, hV0 .upper, hV0 .lower, hV0 .interval,
+        hScale .upper, hScale .lower, hScale .interval,
+        Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable, if_neg hzero]
+      have hv : Shao.C1.normalizedEndpoint a = v := by
+        simp only [Shao.C1.normalizedEndpoint, if_neg hzero]
+        rfl
+      rw [hv]
+      exact (hIE (strictUpper x 0 1 v) (strictLower x 0 1 v)
+        (measurableSet_strictUpper x 0 1 v) (measurableSet_strictLower x 0 1 v)).symm
+    have hFinal (J : MonitoredDomain) :
+        sourceValue J (eventCompletionKernel J Q) a x n sigma =
+          if sourceAlive J a x n sigma then 1 else 0 := by
+      have ht : remainingEnergy a n sigma = 0 := by
+        rw [remainingEnergy, Shao.prefixSquares_length, he, sub_self]
+      by_cases ha : sourceAlive J a x n sigma
+      · simp only [sourceValue, if_pos ha]
+        rw [hs, ht, completionExt, if_pos ⟨hw, ha.2.1, ha.2.1⟩]
+        norm_num
+      · simp only [sourceValue, if_neg ha]
+    have hUp : sourceAlive .upper a x n sigma ↔
+        ∀ k : ℕ, k ≤ n → y k < w := by
+      constructor
+      · intro h; exact h.2.2
+      · intro h
+        refine ⟨hQ, ?_, h⟩
+        have hn := h n le_rfl
+        change Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n < w at hn
+        simpa only [hs] using hn
+    have hLo : sourceAlive .lower a x n sigma ↔
+        ∀ k : ℕ, k ≤ n → -w < y k := by
+      constructor
+      · intro h; exact h.2.2
+      · intro h
+        refine ⟨hQ, ?_, h⟩
+        have hn := h n le_rfl
+        change -w < Shao.prefixSum (Shao.Probability.Spitzer.reorder a sigma) n at hn
+        simpa only [hs] using hn
+    have hCross : Shao.Probability.Spitzer.reorder a sigma ∈ doubleCrossingEvent x ↔
+        ¬ sourceAlive .upper a x n sigma ∧ ¬ sourceAlive .lower a x n sigma := by
+      change ((∃ r : ℕ, r ≤ n ∧ _ ≤ _) ∧ (∃ r : ℕ, r ≤ n ∧ _ ≤ _)) ↔ _
+      simp only [hWall]
+      constructor
+      · rintro ⟨⟨ru, hru, hu⟩, ⟨rl, hrl, hl⟩⟩
+        exact ⟨fun ha => (not_lt_of_ge hu) ((hUp.mp ha) ru hru),
+          fun ha => (not_lt_of_ge hl) ((hLo.mp ha) rl hrl)⟩
+      · rintro ⟨hu, hl⟩
+        have hu' : ¬ ∀ k : ℕ, k ≤ n → y k < w := fun h => hu (hUp.mpr h)
+        have hl' : ¬ ∀ k : ℕ, k ≤ n → -w < y k := fun h => hl (hLo.mpr h)
+        push_neg at hu' hl'
+        exact ⟨hu', hl'⟩
+    refine ⟨hProb, hInitial, ?_⟩
+    rw [actualDoubleValue, hFinal .upper, hFinal .lower, hFinal .interval, hCross]
+    by_cases hu : sourceAlive .upper a x n sigma <;>
+      by_cases hl : sourceAlive .lower a x n sigma <;>
+      simp [hAliveI n, hu, hl]
+
+theorem actual_double_stopped_telescope
+    {Ω : Type*} [MeasurableSpace Ω]
+    (B : ℝ≥0 → Ω → ℝ) (PB : Measure Ω) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB)
+    (n : ℕ) (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (x : ℝ) (hx : 0 < x) (H : ℝ) (hH : 0 < H)
+    (nu : Shao.Path n → LabelPerm n → ℕ)
+    (hnum : ∀ sigma, Measurable (fun a => nu a sigma))
+    (hnu : ∀ a, IsRevealStoppingRank (nu a))
+    (hcap : ∀ a sigma, nu a sigma ≤ energyCutoff a H sigma)
+    (m : Shao.Path n → ℝ) (hmm : Measurable m) (hmb : ∀ a, |m a| ≤ 1)
+    (hminv : PermutationInvariant m) :
+    let Q : Measure BridgeNoise := bridgeLaw B PB
+    let Z : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * (actualDoubleValue Q x p.1 (nu p.1 p.2) p.2 -
+        Shao.C2.InitialDoubleCompletionBudget.initialDoubleObservable Q x p.1)
+    let L : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleRetained Q x p.1 (nu p.1) r p.2
+    let O : (Shao.Path n × LabelPerm n) → ℝ := fun p =>
+      m p.1 * ∑ r ∈ Finset.range n, actualDoubleSeparated Q x p.1 (nu p.1) r p.2
+    (∀ a sigma r, 0 ≤ actualDoubleSeparated Q x a (nu a) r sigma) ∧
+    Integrable Z (revealLaw P) ∧ Integrable L (revealLaw P) ∧ Integrable O (revealLaw P) ∧
+    (∫ p, Z p ∂revealLaw P) = (∫ p, L p ∂revealLaw P) - (∫ p, O p ∂revealLaw P) ∧
+    ((∀ a, 0 ≤ m a) → (∫ p, Z p ∂revealLaw P) ≤ (∫ p, L p ∂revealLaw P)) := by
+  classical
+  intro Q Z L O
+  letI : IsProbabilityMeasure Q := isProbabilityMeasure_bridgeLaw B PB hB
+  have hReflection : HalflineReflectionIdentities Q := by
+    constructor
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.upperReflection] using
+        Shao.C2.BridgeUpperAffineIdentification.bridge_upper_formula B PB hB w y T z hT hy hz
+    · intro w y T z _hw hT hy hz
+      simpa only [Shao.C2.HalfLineReflectionFormula.lowerReflection] using
+        Shao.C2.BridgeLowerIdentification.bridge_lower_formula B PB hB w y T z hT hy hz
+  have hRegular (w y T z : ℝ) (hw : 0 < w) (hT : 0 < T)
+      (hy : |y| < w) (hz : |z| < w) :
+      DifferentiableAt ℝ (fun s : ℝ =>
+        Shao.C2.SourceIntervalCompletion.sourceIntervalCompletion Q w s T z) y :=
+    Shao.C2.ActualBridgeIntervalTelescope.actual_source_interval_differentiable
+      B PB hB w y T z hw hy hz hT
+  have hData (J : MonitoredDomain) :
+      Measurable (actualDerivativeFamily Q J) ∧
+      KernelBounds J (eventCompletionKernel J Q) (actualDerivativeFamily Q J) 4 ∧
+      (∀ w y T z : ℝ, 0 < w → 0 < T → Interior J w y → Interior J w z →
+        HasDerivAt (fun s : ℝ => eventCompletionKernel J Q (w, s, T, z))
+          (actualDerivativeFamily Q J (w, y, T, z)) y) := by
+    cases J with
+    | upper => exact actual_halfline_kernel_data Q hReflection .upper (Or.inl rfl)
+    | lower => exact actual_halfline_kernel_data Q hReflection .lower (Or.inr rfl)
+    | interval =>
+      have hi := actual_interval_kernel_data Q hReflection hRegular
+      exact ⟨hi.1, hi.2.1, fun w y T z hw hT hy hz =>
+        hi.2.2 w y T z hw hT (abs_lt.mpr hy) (abs_lt.mpr hz)⟩
+  let F : MonitoredDomain → BridgeKernel := fun J => eventCompletionKernel J Q
+  let G : MonitoredDomain → BridgeKernel := actualDerivativeFamily Q
+  let μ : Measure (Shao.Path n × LabelPerm n) := revealLaw P
+  have hFm (J : MonitoredDomain) : Measurable (F J) := (eventCompletionKernel_data J Q).1
+  have hGm (J : MonitoredDomain) : Measurable (G J) := (hData J).1
+  have hK (J : MonitoredDomain) : KernelBounds J (F J) (G J) 4 := (hData J).2.1
+  have hnuBound (a : Shao.Path n) (sigma : LabelPerm n) : nu a sigma ≤ n := (hnu a).1 sigma
+  have hParts (J : MonitoredDomain) := source_parts_measurable_integrable J (F J) (G J)
+    (hFm J) (hGm J) 4 (hK J) P x hx nu hnum
+  let A : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+    m p.1 * sourceValue J (F J) p.1 x (nu p.1 p.2) p.2
+  let I : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+    m p.1 * sourceValue J (F J) p.1 x 0 p.2
+  let R : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+    m p.1 * stoppedRemainderSum J (F J) (G J) p.1 x (nu p.1) p.2
+  let LS : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+    m p.1 * retainedSum J (F J) (G J) p.1 x (nu p.1) p.2
+  let OS : MonitoredDomain → (Shao.Path n × LabelPerm n) → ℝ := fun J p =>
+    m p.1 * separatedSum J (G J) p.1 x (nu p.1) p.2
+  have hInt (J : MonitoredDomain) : Integrable (A J) μ ∧ Integrable (I J) μ ∧ Integrable (R J) μ :=
+    source_stopped_integrability J (F J) (G J) (hFm J) (hGm J) 4 (hK J)
+      P x hx nu hnum hnuBound m hmm hmb
+  have hLSi (J : MonitoredDomain) : Integrable (LS J) μ :=
+    (hParts J).2.2.1.bdd_mul (c := 1) (hmm.comp measurable_fst).aestronglyMeasurable
+      (ae_of_all _ (fun p => by simpa only [Real.norm_eq_abs] using hmb p.1))
+  have hOSi (J : MonitoredDomain) : Integrable (OS J) μ :=
+    (hParts J).2.2.2.bdd_mul (c := 1) (hmm.comp measurable_fst).aestronglyMeasurable
+      (ae_of_all _ (fun p => by simpa only [Real.norm_eq_abs] using hmb p.1))
+  have hSplit (J : MonitoredDomain) (p : Shao.Path n × LabelPerm n) :
+      R J p = LS J p + OS J p := by
+    change m p.1 * (∑ r ∈ Finset.range n,
+        if r < nu p.1 p.2 then sourceRemainder J (F J) (G J) p.1 x r p.2 else 0) =
+      m p.1 * (∑ r ∈ Finset.range n,
+        sourceRetainedRemainder J (F J) (G J) p.1 x (nu p.1) r p.2) +
+      m p.1 * (∑ r ∈ Finset.range n,
+        sourceSeparatedOvershoot J (G J) p.1 x (nu p.1) r p.2)
+    rw [← mul_add, ← Finset.sum_add_distrib]
+    apply congrArg (fun t : ℝ => m p.1 * t)
+    exact Finset.sum_congr rfl (fun r _ => source_selected_remainder_decomposition
+      J (F J) (G J) p.1 x hx (nu p.1) r p.2)
+  have hTel (J : MonitoredDomain) :
+      (∫ p, A J p ∂μ) - (∫ p, I J p ∂μ) =
+        (∫ p, LS J p ∂μ) + (∫ p, OS J p ∂μ) := by
+    have ht := source_masked_stopped_telescope_integral J (F J) (G J) (hFm J) (hGm J)
+      4 (hK J) P x hx H hH nu hnum hnu hcap m hmm hmb
+    change (∫ p, A J p ∂μ) - (∫ p, I J p ∂μ) = ∫ p, R J p ∂μ at ht
+    have hfun : R J = fun p => LS J p + OS J p := funext (hSplit J)
+    rw [hfun, integral_add (hLSi J) (hOSi J)] at ht
+    exact ht
+  have hSign (a : Shao.Path n) (sigma : LabelPerm n) (r : ℕ) :
+      0 ≤ actualDoubleSeparated Q x a (nu a) r sigma :=
+    (source_separated_overshoot_sign_domination Q (actualDerivativeFamily Q)
+      (fun J => (hData J).2.2) a x hx (nu a) r sigma).2.2.2.2
+  have hZ (p : Shao.Path n × LabelPerm n) :
+      Z p = (A .interval p - I .interval p) -
+        (A .upper p - I .upper p) - (A .lower p - I .lower p) := by
+    dsimp only [Z, A, I]
+    rw [← (actual_double_value_boundary Q x hx p.1 p.2).2.1]
+    dsimp only [actualDoubleValue, F]
+    ring
+  have hL (p : Shao.Path n × LabelPerm n) :
+      L p = LS .interval p - LS .upper p - LS .lower p := by
+    simp only [L, actualDoubleRetained, LS, retainedSum, G, F, Finset.sum_sub_distrib]
+    ring
+  have hO (p : Shao.Path n × LabelPerm n) :
+      O p = OS .upper p + OS .lower p - OS .interval p := by
+    simp only [O, actualDoubleSeparated, OS, separatedSum, G,
+      Finset.sum_sub_distrib, Finset.sum_add_distrib]
+    ring
+  have hZi : Integrable Z μ := by
+    have hi := (((hInt .interval).1.sub (hInt .interval).2.1).sub
+      ((hInt .upper).1.sub (hInt .upper).2.1)).sub
+        ((hInt .lower).1.sub (hInt .lower).2.1)
+    exact hi.congr (ae_of_all _ (fun p => (hZ p).symm))
+  have hLi : Integrable L μ := by
+    apply (((hLSi .interval).sub (hLSi .upper)).sub (hLSi .lower)).congr
+    exact ae_of_all _ (fun p => (hL p).symm)
+  have hOi : Integrable O μ := by
+    apply (((hOSi .upper).add (hOSi .lower)).sub (hOSi .interval)).congr
+    exact ae_of_all _ (fun p => (hO p).symm)
+  have hIdentity : (∫ p, Z p ∂μ) = (∫ p, L p ∂μ) - (∫ p, O p ∂μ) := by
+    have hZfun : Z = fun p => (A .interval p - I .interval p) -
+        (A .upper p - I .upper p) - (A .lower p - I .lower p) := funext hZ
+    have hLfun : L = fun p => LS .interval p - LS .upper p - LS .lower p := funext hL
+    have hOfun : O = fun p => OS .upper p + OS .lower p - OS .interval p := funext hO
+    rw [hZfun, hLfun, hOfun]
+    rw [integral_sub (((hInt .interval).1.sub (hInt .interval).2.1).sub
+        ((hInt .upper).1.sub (hInt .upper).2.1)) ((hInt .lower).1.sub (hInt .lower).2.1),
+      integral_sub ((hInt .interval).1.sub (hInt .interval).2.1)
+        ((hInt .upper).1.sub (hInt .upper).2.1),
+      integral_sub (hInt .interval).1 (hInt .interval).2.1,
+      integral_sub (hInt .upper).1 (hInt .upper).2.1,
+      integral_sub (hInt .lower).1 (hInt .lower).2.1,
+      integral_sub ((hLSi .interval).sub (hLSi .upper)) (hLSi .lower),
+      integral_sub (hLSi .interval) (hLSi .upper),
+      integral_sub ((hOSi .upper).add (hOSi .lower)) (hOSi .interval),
+      integral_add (hOSi .upper) (hOSi .lower)]
+    linarith only [hTel .interval, hTel .upper, hTel .lower]
+  refine ⟨hSign, hZi, hLi, hOi, hIdentity, ?_⟩
+  intro hm0
+  have hO0 : 0 ≤ ∫ p, O p ∂μ := by
+    apply integral_nonneg
+    intro p
+    exact mul_nonneg (hm0 p.1) (Finset.sum_nonneg (fun r _ => hSign p.1 p.2 r))
+  linarith only [hIdentity, hO0]
+
+end Shao.C2.ActualSignedDoubleTelescope
