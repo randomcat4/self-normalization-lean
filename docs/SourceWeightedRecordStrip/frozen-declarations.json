@@ -1,0 +1,109 @@
+{
+  "atUTC": "2026-10-25T18:22:56.536253+00:00",
+  "status": "ROOT_FROZEN_EXACT_3_COMPLETE_DECLARATIONS_AND_CONTEXT_SOURCE_IMPLEMENTATION_AUTHORIZED",
+  "module": "Shao.Probability.SourceWeightedRecordStrip",
+  "localAuthorScope": "drafts/c2-weighted-record-strip/",
+  "productionSource": "Shao/Probability/SourceWeightedRecordStrip.lean",
+  "candidateProposal": {
+    "path": "drafts/c2-actual-centered-nonresidual-proposal/proposal.md",
+    "sha256": "3e52542893f48687b5f0bbd0ccfdfc5816c329ea6537420ce2cb84f10363aded"
+  },
+  "declarationsInput": {
+    "path": "drafts/c2-actual-centered-nonresidual-proposal/DECLARATIONS-ONLY-v1.lean.txt",
+    "sha256": "c9ee4a307103899be95ef1140101ecbdacdb95f8e9c349af0a2b6a0c030f2756"
+  },
+  "prefix": "import Shao.Probability.SourceWeightedPrefixWall\nimport Shao.C2.ActualOneWallRecordEnvelope\nimport Shao.Probability.SpitzerFinite\n\nset_option autoImplicit false\nset_option Elab.async false\nset_option maxHeartbeats 5000000\nnoncomputable section\nnamespace Shao.Probability.SourceWeightedRecordStrip\nopen MeasureTheory ProbabilityTheory\nopen Shao.C2.ActualOneWallRecordEnvelope\nopen scoped BigOperators Classical\n\n",
+  "prefixSHA256": "941e61b121a71be70800f1bb41bebdfd0ce243010c3c94cfab7b2a8e3b2e9322",
+  "completeHeads": [
+    {
+      "name": "wrs_cyclic_record_identity",
+      "private": true,
+      "completeStatement": "private theorem wrs_cyclic_record_identity\n    (N : ℕ) (hN : 0 < N) (a : Shao.Path N) :\n    let D : Shao.Path N → ℝ := fun v =>\n      max (Shao.prefixSum v N - Shao.maxWithZero\n        (Shao.Probability.Spitzer.head v (N - 1) (Nat.sub_le N 1))) 0\n    let rotate : Fin N → Shao.Path N → Shao.Path N := fun j v i =>\n      v ⟨(i.val + j.val) % N, Nat.mod_lt _ hN⟩\n    (∑ j : Fin N, D (rotate j a)) = max (Shao.prefixSum a N) 0 ∧\n      (∀ j : Fin N, circularWitness (rotate j a) = circularWitness a)\n",
+      "sha256": "05585a2c515cf786007bdbd8e6e5b2735fa52f8fceb65e0b0033cb6a5dafb6f6"
+    },
+    {
+      "name": "actual_circular_weighted_record_moment",
+      "private": false,
+      "completeStatement": "theorem actual_circular_weighted_record_moment :\n    ∃ C : ℝ, 1 ≤ C ∧\n      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]\n        (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →\n        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →\n        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho\n        ∀ (N : ℕ), 0 < N →\n          let P : Measure (Shao.Path N) := Measure.pi (fun _ : Fin N => rho)\n          let D : Shao.Path N → ℝ := fun a =>\n            max (Shao.prefixSum a N - Shao.maxWithZero\n              (Shao.Probability.Spitzer.head a (N - 1) (Nat.sub_le N 1))) 0\n          let L : Shao.Path N → ℝ := fun a => circularWitness a\n          ∀ theta : ℝ, 0 ≤ theta → theta * Bcap ≤ 1 / 100 →\n            1 ≤ theta * Real.sqrt (N : ℝ) →\n            Measurable D ∧ Measurable L ∧\n              Integrable (fun a => (D a ^ 2 + beta * D a) *\n                Real.exp (theta * L a)) P ∧\n              (∫ a : Shao.Path N, (D a ^ 2 + beta * D a) *\n                Real.exp (theta * L a) ∂P) ≤\n                C * beta / Real.sqrt (N : ℝ) *\n                  (1 + (N : ℝ) * theta ^ 2) *\n                  Real.exp ((253 / 500 : ℝ) * (N : ℝ) * theta ^ 2 +\n                    C * (N : ℝ) * theta ^ 3 * beta + C * theta * Bcap)\n",
+      "sha256": "07223b848a396cf02ee5c8f30157031fd6393859e80c58849586771ccb3e1889"
+    },
+    {
+      "name": "actual_circular_weighted_true_energy_record_strip",
+      "private": false,
+      "completeStatement": "theorem actual_circular_weighted_true_energy_record_strip :\n    ∃ C : ℝ, 1 ≤ C ∧\n      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]\n        (Bcap : ℝ), 0 < Bcap → (∀ᵐ z : ℝ ∂rho, |z| ≤ Bcap) →\n        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →\n        let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho\n        ∀ (n : ℕ), 0 < n →\n          ∀ x : ℝ, 1 ≤ x → Bcap ≤ Real.sqrt (n : ℝ) / (200 * x) →\n            ∀ j : ℕ, 12 ≤ j → j ≤ n →\n              let P : Measure (Shao.Path j) := Measure.pi (fun _ : Fin j => rho)\n              let D : Shao.Path j → ℝ := fun a =>\n                max (Shao.prefixSum a j - Shao.maxWithZero\n                  (Shao.Probability.Spitzer.head a (j - 1) (Nat.sub_le j 1))) 0\n              let L : Shao.Path j → ℝ := fun a => circularWitness a\n              ∀ q : ℝ, 0 ≤ q →\n                let F : Shao.Path j → ℝ := fun a => Shao.prefixSum a j -\n                  x * Real.sqrt (max (Shao.energy a + q) ((n : ℝ) / 2))\n                let E : Set (Shao.Path j) := {a | 0 ≤ F a ∧ F a ≤ D a}\n                ∀ theta : ℝ, 0 ≤ theta → theta * Bcap ≤ 1 / 100 →\n                  1 ≤ theta * Real.sqrt ((j : ℝ) / 4) →\n                  Measurable F ∧ MeasurableSet E ∧\n                    Integrable (E.indicator\n                      (fun a => D a * Real.exp (theta * L a))) P ∧\n                    (∫ a : Shao.Path j, E.indicator\n                      (fun a => D a * Real.exp (theta * L a)) a ∂P) ≤\n                      C * beta / (j : ℝ) *\n                        (1 + theta * Real.sqrt (j : ℝ)) ^ 5 *\n                        Real.exp ((253 / 500 : ℝ) * (j : ℝ) * theta ^ 2 +\n                          C * (j : ℝ) * theta ^ 3 * beta + C * theta * Bcap)\n",
+      "sha256": "156b21353679b0dd9ce44e5bfe9cff4e3cea2647705c907c7292f7a2c3a9e6db"
+    }
+  ],
+  "privateDeclarations": 1,
+  "publicDeclarations": 2,
+  "statementLets": 12,
+  "newGlobalDefinitions": 0,
+  "newInstances": 0,
+  "allowedProductionCommentChange": "Remove historical PROPOSAL ONLY opening comment; proof-free mathematical prefix from first import and every complete theorem head remain exact. New explanatory comments UTF8 LF and no trailing whitespace.",
+  "inputsManifest": {
+    "path": "drafts/c2-actual-centered-nonresidual-proposal/inputs-manifest-v1.json",
+    "sha256": "b98acc80324e12ba38c384e4bcbb0b3d0126d6cfed5f7310e15ecf6e4a609c77",
+    "verifiedCurrentRows": 53
+  },
+  "outputSeal": {
+    "path": "drafts/c2-actual-centered-nonresidual-proposal/OUTPUT-SEAL-v1.json",
+    "sha256": "02511108d5dd468ea1d7e2f7c9602c0af716c74b2c70129826aaf988f8c769f9",
+    "all10OutputsExact": true
+  },
+  "RootRead": {
+    "completeProposal": true,
+    "all3CompleteDeclarationsAnd12StatementLetValues": true,
+    "completeUnfrozenFinalResidualGoalForScopeOnly": true,
+    "completeRelevantConsumedRanges": [
+      [
+        4,
+        36
+      ],
+      [
+        111,
+        135
+      ],
+      [
+        1172,
+        1287
+      ],
+      [
+        1334,
+        1507
+      ]
+    ],
+    "oldProducerProofReviewsReplayed": 0
+  },
+  "mathematicalScope": "Actual finite iid circular-weighted record moments plus floor-n/2 true-energy closed record-strip, precise .506 exponent and thetaB/positive split guards; no full separatedovershoot or C2 closure claim.",
+  "preservedRisks": [
+    "cyclic record identity ties and nonpositive total",
+    "actual witness rotation and reversal",
+    "true F clipped global extension agrees law-ae",
+    "split last-record gap domination and exact closed strip interval",
+    "theta guards, beta moments, polynomialdegree5, .506 exponent slack",
+    "accepted private owned constant references exact names/complete ambient"
+  ],
+  "authorConstraints": [
+    "Only three frozen global/private theorem heads, no new global definitions, selectors, instances or changed assumptions/import/options. A real needed declaration change requires complete proposed head to Root before implementation.",
+    "Proof-local data definitions must be explicit and catalogued for the one complete independent final source review; do not invent additional SOURCE contexts or per-command environment grants.",
+    "Reuse exact accepted pww/witness helpers/private actual owner names; do not copy/rebuild/review old producers or create wrapper-only modules.",
+    "UTF8 noBOM LF and normalize before first source-bound gate; no forbidden proof bypasses."
+  ],
+  "currentResourcePhase": {
+    "path": "coordination/restart-20261025/HEAVY-PHASE-C12-OQ56-13.json",
+    "sha256": "bb198e0df97fc01b1eaab1b5e1328cc476ae3f635dabd7e8df4b98f9fc82c14c",
+    "RootHeavy": 0,
+    "permittedNow": "CPU-free source implementation and targeted read-only pinned primary-source queries only; no Lean/AX/build/upload/Git/native until later actual zero-point phase change."
+  },
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "actualTelemetry": null,
+  "fullResidualOwnLawConsumer": "UNFROZEN_NOT_AUTHOR_READY_fullsignedO_and_C12native_qualification_remain_OPEN",
+  "rootGroups": {
+    "C1": "COMPLETE_IMMUTABLE_V85",
+    "C2": "OPEN",
+    "C12": "OPEN",
+    "OQ56": "OPEN",
+    "OQ3": "PAUSED_BY_USER"
+  }
+}
