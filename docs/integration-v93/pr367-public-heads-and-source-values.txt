@@ -1,0 +1,81 @@
+
+SOURCE Shao/OQ6/LogarithmicConditionalRates.lean
+import Shao.OQ6.ConditionalVarianceMean
+
+set_option autoImplicit false
+set_option maxHeartbeats 800000
+
+namespace Shao.OQ6.LogarithmicConditionalRates
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory
+
+
+DECLARATION actual_logarithmic_conditional_rates SOURCE_LINE 12
+theorem actual_logarithmic_conditional_rates
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))
+    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (w : Ω → ℝ)
+    (hw : Measurable w)
+    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)
+    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)
+    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)
+    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),
+      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤
+        w z.1 * w z.2)
+    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)
+    (hgp : Integrable
+      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)
+    (J : ℝ) (hJ : 0 ≤ J) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ
+    let B : ℝ := Real.rpow β (1 / p)
+    let W2 : ℝ := Real.sqrt (∫ o, w o ^ 2 ∂μ)
+    let Cvar : ℝ := 32 * (1 + B ^ 2 + W2 ^ 2)
+    let Cmean : ℝ := 4 * (1 + B)
+    let e : ℝ := 1 - 2 / p
+    let t : ℝ := 1 - 1 / p
+    let A : ℝ := 2 * (J + 1) / e
+    let M : ℝ := ∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ
+    let Kvar : ℝ := Cvar *
+      (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)
+    let Kmean : ℝ := Cmean * (Real.rpow M t + W2 ^ 2 * M)
+    let N0 : ℕ := Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))
+    0 < e ∧ e ≤ (1 / 3 : ℝ) ∧ t = (1 + e) / 2 ∧ 0 < A ∧
+      Real.exp τ ≤ M ∧ 1 < M ∧
+      J ≤ A * e ∧ J ≤ A / 2 ∧ J ≤ A ∧
+      J ≤ A * t - 1 / 2 ∧ J ≤ A - 1 / 2 ∧
+      ∀ n : ℕ, N0 ≤ n →
+      let Rn : ℝ := Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)
+      let Cn : Set Ω := {o : Ω | w o ≤ Rn}
+      let πn : ℝ := μ.real Cnᶜ
+      let dn : ℝ := μ.real Cn
+      let νn : Measure Ω := (μ Cn)⁻¹ • μ.restrict Cn
+      let bn : ℝ := ∫ o in Cnᶜ, w o ∂μ
+      3 ≤ n ∧ 0 < Rn ∧ MeasurableSet Cn ∧
+        (∀ᵐ o ∂μ,
+          (w o ≤ Rn ↔ τ * Real.rpow (w o) α ≤ A * Real.log (n : ℝ))) ∧
+        0 ≤ πn ∧ πn ≤ M * Real.rpow (n : ℝ) (-A) ∧
+        M * Real.rpow (n : ℝ) (-A) ≤ (1 / 2 : ℝ) ∧
+        dn = 1 - πn ∧ (1 / 2 : ℝ) ≤ dn ∧
+        IsProbabilityMeasure νn ∧ νn ≪ μ ∧
+        0 ≤ bn ∧ bn ^ 2 ≤ W2 ^ 2 * πn ∧
+        bn ≤ W2 * Real.sqrt M * Real.rpow (n : ℝ) (-A / 2) ∧
+        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →
+        let Hn : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y
+        let qn : ℝ := ∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)
+        let Gn : Ω → ℝ := fun o => (∫ y, Hn o y ∂νn) - qn
+        let σ2n : ℝ := ∫ o, Gn o ^ 2 ∂νn
+        MemLp Gn 2 νn ∧ (∫ o, Gn o ∂νn) = 0 ∧ 0 ≤ σ2n ∧
+          |σ2n - 1| ≤ Kvar * Real.rpow (n : ℝ) (-J) ∧
+          (∀ m : ℕ, m ≤ n →
+            Real.sqrt (m : ℝ) * |qn| ≤ Kmean * Real.rpow (n : ℝ) (-J))

@@ -1,0 +1,96 @@
+
+SOURCE Shao/OQ6/ConditionalStandardizedPMoment.lean
+import Shao.OQ6.ConditionalVarianceMean
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.MeanInequalitiesPow
+import Mathlib.Data.Nat.Find
+
+set_option autoImplicit false
+set_option maxHeartbeats 800000
+
+namespace Shao.OQ6.ConditionalStandardizedPMoment
+
+noncomputable section
+
+open MeasureTheory ProbabilityTheory
+
+
+DECLARATION actual_conditional_standardized_pmoment SOURCE_LINE 20
+theorem actual_conditional_standardized_pmoment
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))
+    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (w : Ω → ℝ)
+    (hw : Measurable w)
+    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)
+    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)
+    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)
+    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),
+      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤
+        w z.1 * w z.2)
+    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)
+    (hgp : Integrable
+      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ) :
+    let Np : ℕ := Nat.ceil (p / α)
+    let Aexpp : ℝ := (Np.factorial : ℝ) / τ ^ Np
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ
+    let B : ℝ := Real.rpow β (1 / p)
+    let Wp : ℝ := Real.rpow (∫ o, Real.rpow |w o| p ∂μ) (1 / p)
+    0 < Aexpp ∧
+      (∀ s : ℝ, 1 ≤ s →
+        Real.rpow s p ≤ Aexpp * Real.exp (τ * Real.rpow s α)) ∧
+      Integrable (fun o => Real.rpow |w o| p) μ ∧
+      MemLp w (ENNReal.ofReal p) μ ∧
+      MemLp g (ENNReal.ofReal p) μ ∧ 1 ≤ β ∧
+      ∀ eps : ℝ, 0 < eps →
+      ∃ N0 : ℕ, 1 ≤ N0 ∧
+      ∀ R : ℝ, (N0 : ℝ) ≤ R →
+      let C : Set Ω := {o : Ω | w o ≤ R}
+      let π : ℝ := μ.real Cᶜ
+      let d : ℝ := μ.real C
+      let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C
+      let b : ℝ := ∫ o in Cᶜ, w o ∂μ
+      let c : ℝ := b / d
+      let u : ℝ := ∫ o, g o ∂ν
+      let a : Ω → ℝ := fun o => ∫ y, r o y ∂ν
+      let θ : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ∂(ν.prod ν)
+      let Tp : ℝ := ∫ o in Cᶜ, Real.rpow |g o| p ∂μ
+      let Mp : ℝ := ∫ o, Real.rpow |g o| p ∂ν
+      (1 / 2 : ℝ) ≤ d ∧ d = 1 - π ∧
+        IsProbabilityMeasure ν ∧ ν ≪ μ ∧ ν C = 1 ∧
+        MemLp w (ENNReal.ofReal p) ν ∧
+        MemLp g (ENNReal.ofReal p) ν ∧
+        MemLp a (ENNReal.ofReal p) ν ∧
+        Integrable (fun o => Real.rpow |g o| p) ν ∧
+        Mp = (β - Tp) / d ∧ 0 ≤ Tp ∧ Tp ≤ eps ∧ |Mp - β| ≤ eps ∧
+        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →
+        let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y
+        let q : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(ν.prod ν)
+        let G : Ω → ℝ := fun o => (∫ y, H o y ∂ν) - q
+        let σ2 : ℝ := ∫ o, G o ^ 2 ∂ν
+        let σ : ℝ := Real.sqrt σ2
+        let βR : ℝ := ∫ o, Real.rpow |G o / σ| p ∂ν
+        let Δp : ℝ :=
+          Real.rpow (∫ o, Real.rpow |G o - g o| p ∂ν) (1 / p)
+        Measurable G ∧ MemLp G (ENNReal.ofReal p) ν ∧
+          Integrable (fun o => Real.rpow |G o - g o| p) ν ∧
+          Δp ≤ |u| + c * (Wp / Real.rpow d (1 / p)) + c ^ 2 ∧
+          Δp ≤ eps ∧
+          (1 / 2 : ℝ) ≤ σ2 ∧ σ2 ≤ (3 / 2 : ℝ) ∧
+          |σ2 - 1| ≤ eps ∧ 0 < σ ∧
+          MemLp (fun o => G o / σ) (ENNReal.ofReal p) ν ∧
+          Integrable (fun o => Real.rpow |G o / σ| p) ν ∧
+          |βR - β| ≤ eps ∧ βR ≤ 2 * β

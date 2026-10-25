@@ -1,0 +1,3627 @@
+{
+  "schema": "oq56-unit177-frozen-declarations-values-v1",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION",
+  "utc": "2026-10-25T05:22:44.650921+00:00",
+  "unit": 177,
+  "module": "Shao.OQ6.LogarithmicConditionalRates",
+  "namespace": "Shao.OQ6.LogarithmicConditionalRates",
+  "raw_prefix": "import Shao.OQ6.ConditionalVarianceMean\n\nset_option autoImplicit false\nset_option maxHeartbeats 800000\n\nnamespace Shao.OQ6.LogarithmicConditionalRates\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory\n\n",
+  "raw_suffix": "\n\nend\n\nend Shao.OQ6.LogarithmicConditionalRates\n",
+  "proofSeparator": " := by\n",
+  "declarations": [
+    {
+      "name": "actual_logarithmic_conditional_rates",
+      "header": "theorem actual_logarithmic_conditional_rates\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (w : Ω → ℝ)\n    (hw : Measurable w)\n    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)\n    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)\n    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)\n    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),\n      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤\n        w z.1 * w z.2)\n    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hgp : Integrable\n      (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)\n    (J : ℝ) (hJ : 0 ≤ J) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let B : ℝ := Real.rpow β (1 / p)\n    let W2 : ℝ := Real.sqrt (∫ o, w o ^ 2 ∂μ)\n    let Cvar : ℝ := 32 * (1 + B ^ 2 + W2 ^ 2)\n    let Cmean : ℝ := 4 * (1 + B)\n    let e : ℝ := 1 - 2 / p\n    let t : ℝ := 1 - 1 / p\n    let A : ℝ := 2 * (J + 1) / e\n    let M : ℝ := ∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ\n    let Kvar : ℝ := Cvar *\n      (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)\n    let Kmean : ℝ := Cmean * (Real.rpow M t + W2 ^ 2 * M)\n    let N0 : ℕ := Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))\n    0 < e ∧ e ≤ (1 / 3 : ℝ) ∧ t = (1 + e) / 2 ∧ 0 < A ∧\n      Real.exp τ ≤ M ∧ 1 < M ∧\n      J ≤ A * e ∧ J ≤ A / 2 ∧ J ≤ A ∧\n      J ≤ A * t - 1 / 2 ∧ J ≤ A - 1 / 2 ∧\n      ∀ n : ℕ, N0 ≤ n →\n      let Rn : ℝ := Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)\n      let Cn : Set Ω := {o : Ω | w o ≤ Rn}\n      let πn : ℝ := μ.real Cnᶜ\n      let dn : ℝ := μ.real Cn\n      let νn : Measure Ω := (μ Cn)⁻¹ • μ.restrict Cn\n      let bn : ℝ := ∫ o in Cnᶜ, w o ∂μ\n      3 ≤ n ∧ 0 < Rn ∧ MeasurableSet Cn ∧\n        (∀ᵐ o ∂μ,\n          (w o ≤ Rn ↔ τ * Real.rpow (w o) α ≤ A * Real.log (n : ℝ))) ∧\n        0 ≤ πn ∧ πn ≤ M * Real.rpow (n : ℝ) (-A) ∧\n        M * Real.rpow (n : ℝ) (-A) ≤ (1 / 2 : ℝ) ∧\n        dn = 1 - πn ∧ (1 / 2 : ℝ) ≤ dn ∧\n        IsProbabilityMeasure νn ∧ νn ≪ μ ∧\n        0 ≤ bn ∧ bn ^ 2 ≤ W2 ^ 2 * πn ∧\n        bn ≤ W2 * Real.sqrt M * Real.rpow (n : ℝ) (-A / 2) ∧\n        ∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →\n        let Hn : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y\n        let qn : ℝ := ∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)\n        let Gn : Ω → ℝ := fun o => (∫ y, Hn o y ∂νn) - qn\n        let σ2n : ℝ := ∫ o, Gn o ^ 2 ∂νn\n        MemLp Gn 2 νn ∧ (∫ o, Gn o ∂νn) = 0 ∧ 0 ≤ σ2n ∧\n          |σ2n - 1| ≤ Kvar * Real.rpow (n : ℝ) (-J) ∧\n          (∀ m : ℕ, m ≤ n →\n            Real.sqrt (m : ℝ) * |qn| ≤ Kmean * Real.rpow (n : ℝ) (-J))",
+      "headerBytes": 3269,
+      "headerSHA256": "e7209b2115cca64ef82b2a5357850f198785df05b0db4876f1a03534840ab5c0"
+    }
+  ],
+  "fullConstructiveValues": {
+    "schema": "oq56-unit177-stage1-complete-typed-value-proposal-v1",
+    "status": "PROPOSAL_ONLY_PARENT_FREEZE_REQUIRED_BEFORE_IMPLEMENTATION",
+    "module": "Shao.OQ6.LogarithmicConditionalRates",
+    "namespace": "Shao.OQ6.LogarithmicConditionalRates",
+    "publicTheorems": [
+      "actual_logarithmic_conditional_rates"
+    ],
+    "rawHeaderFile": "raw-declaration.lean.txt",
+    "rawPrefix": "import Shao.OQ6.ConditionalVarianceMean\n\nset_option autoImplicit false\nset_option maxHeartbeats 800000\n\nnamespace Shao.OQ6.LogarithmicConditionalRates\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory\n\n",
+    "rawSuffix": "\n\nend\n\nend Shao.OQ6.LogarithmicConditionalRates\n",
+    "headerBinders": [
+      {
+        "name": "Ω",
+        "type": "Type*",
+        "kind": "typeParameter"
+      },
+      {
+        "name": "instMeasurableSpace",
+        "type": "MeasurableSpace Ω",
+        "kind": "instanceParameter"
+      },
+      {
+        "name": "μ",
+        "type": "Measure Ω",
+        "kind": "originalData"
+      },
+      {
+        "name": "instProbability",
+        "type": "IsProbabilityMeasure μ",
+        "kind": "PropInstance"
+      },
+      {
+        "name": "h",
+        "type": "Ω → Ω → ℝ",
+        "kind": "originalData"
+      },
+      {
+        "name": "hh",
+        "type": "Measurable (fun z : Ω × Ω => h z.1 z.2)",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hh2",
+        "type": "MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ)",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hhsymm",
+        "type": "∀ o y, h o y = h y o",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hcenter",
+        "type": "(∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hprojectionsecond",
+        "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+        "kind": "originalProp"
+      },
+      {
+        "name": "w",
+        "type": "Ω → ℝ",
+        "kind": "originalData"
+      },
+      {
+        "name": "hw",
+        "type": "Measurable w",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hwone",
+        "type": "∀ᵐ o ∂μ, 1 ≤ w o",
+        "kind": "originalProp"
+      },
+      {
+        "name": "α",
+        "type": "ℝ",
+        "kind": "originalData"
+      },
+      {
+        "name": "τ",
+        "type": "ℝ",
+        "kind": "originalData"
+      },
+      {
+        "name": "hα",
+        "type": "0 < α",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hτ",
+        "type": "0 < τ",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hwexp",
+        "type": "Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ",
+        "kind": "originalProp"
+      },
+      {
+        "name": "henvelope",
+        "type": "∀ᵐ z : Ω × Ω ∂(μ.prod μ), |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤ w z.1 * w z.2",
+        "kind": "originalProp"
+      },
+      {
+        "name": "p",
+        "type": "ℝ",
+        "kind": "originalData"
+      },
+      {
+        "name": "hp",
+        "type": "2 < p ∧ p ≤ 3",
+        "kind": "originalProp"
+      },
+      {
+        "name": "hgp",
+        "type": "Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ",
+        "kind": "originalProp"
+      },
+      {
+        "name": "J",
+        "type": "ℝ",
+        "kind": "newRequestedRateChosenBeforeAllNMLam"
+      },
+      {
+        "name": "hJ",
+        "type": "0 ≤ J",
+        "kind": "requestedRateProp"
+      }
+    ],
+    "headerLetValues": [
+      {
+        "name": "g",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, h o y ∂μ",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "r",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => h o y - g o - g y",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "β",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂μ",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "B",
+        "type": "ℝ",
+        "value": "Real.rpow β (1 / p)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "W2",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "Cvar",
+        "type": "ℝ",
+        "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "Cmean",
+        "type": "ℝ",
+        "value": "4 * (1 + B)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "e",
+        "type": "ℝ",
+        "value": "1 - 2 / p",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "t",
+        "type": "ℝ",
+        "value": "1 - 1 / p",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "A",
+        "type": "ℝ",
+        "value": "2 * (J + 1) / e",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "M",
+        "type": "ℝ",
+        "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "Kvar",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "Kmean",
+        "type": "ℝ",
+        "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+        "phase": "beforeAllNMLam"
+      },
+      {
+        "name": "N0",
+        "type": "ℕ",
+        "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+        "phase": "beforeAllNMLam",
+        "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+      },
+      {
+        "name": "Rn",
+        "type": "ℝ",
+        "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "Cn",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ Rn}",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "πn",
+        "type": "ℝ",
+        "value": "μ.real Cnᶜ",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "dn",
+        "type": "ℝ",
+        "value": "μ.real Cn",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "νn",
+        "type": "Measure Ω",
+        "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "bn",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, w o ∂μ",
+        "phase": "afterNBeforeLamM"
+      },
+      {
+        "name": "Hn",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => g o + g y + lam * r o y",
+        "phase": "afterLamBeforeM"
+      },
+      {
+        "name": "qn",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)",
+        "phase": "afterLamBeforeM"
+      },
+      {
+        "name": "Gn",
+        "type": "Ω → ℝ",
+        "value": "fun o => (∫ y, Hn o y ∂νn) - qn",
+        "phase": "afterLamBeforeM"
+      },
+      {
+        "name": "σ2n",
+        "type": "ℝ",
+        "value": "∫ o, Gn o ^ 2 ∂νn",
+        "phase": "afterLamBeforeM"
+      }
+    ],
+    "plannedProofLocalValues": {
+      "rule": "Each of the 24 header let values may be repeated exactly once as a proof let, with exactly its listed type and value. No additional independent named data/function/measure/number/sequence/selector is proposed.",
+      "names": [
+        "g",
+        "r",
+        "β",
+        "B",
+        "W2",
+        "Cvar",
+        "Cmean",
+        "e",
+        "t",
+        "A",
+        "M",
+        "Kvar",
+        "Kmean",
+        "N0",
+        "Rn",
+        "Cn",
+        "πn",
+        "dn",
+        "νn",
+        "bn",
+        "Hn",
+        "qn",
+        "Gn",
+        "σ2n"
+      ],
+      "uniqueDataValues": 24,
+      "headerLetOccurrences": 24,
+      "proofLetOccurrencesMaximum": 24,
+      "totalLetOccurrencesMaximum": 48,
+      "independentAdditionalValues": [],
+      "PropHaveRule": "Any number of named haves and local lemmas whose complete type is Prop may be used, including universal proof binders for points, real exponents, natural m, inequalities and actual integrability. They must prove consequences of the frozen premises; they may not smuggle in a new independent data/function/law or desired bound as a premise. Any constructive name beyond these 24 values requires a revised parent freeze."
+    },
+    "inlineConstructiveValues": [
+      {
+        "id": "originalExpIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.exp (τ * Real.rpow (w o) α)"
+      },
+      {
+        "id": "originalExponentIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => τ * Real.rpow (w o) α"
+      },
+      {
+        "id": "expLowerConstantIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.exp τ"
+      },
+      {
+        "id": "oneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (1 : ℝ)"
+      },
+      {
+        "id": "zeroIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (0 : ℝ)"
+      },
+      {
+        "id": "wSquaredIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => w o ^ 2"
+      },
+      {
+        "id": "absWIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o|"
+      },
+      {
+        "id": "absWSquaredIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o| ^ 2"
+      },
+      {
+        "id": "wRpowTwoIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow (w o) (2 : ℝ)"
+      },
+      {
+        "id": "absWRpowTwoIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |w o| (2 : ℝ)"
+      },
+      {
+        "id": "tailLowerConstantIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.rpow (n : ℝ) A"
+      },
+      {
+        "id": "absWTimesOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o| * (1 : ℝ)"
+      },
+      {
+        "id": "WSquaredTimesOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => w o ^ 2 * (1 : ℝ)"
+      },
+      {
+        "id": "goodSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ Rn}"
+      },
+      {
+        "id": "strictBadSet",
+        "type": "Set Ω",
+        "value": "Cnᶜ",
+        "equalOnlyByMembership": "{o : Ω | Rn < w o}"
+      },
+      {
+        "id": "exponentGoodSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | τ * Real.rpow (w o) α ≤ A * Real.log (n : ℝ)}",
+        "comparison": "MU_AE_ONLY"
+      },
+      {
+        "id": "exponentStrictBadSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | A * Real.log (n : ℝ) < τ * Real.rpow (w o) α}",
+        "comparison": "MU_AE_ONLY"
+      },
+      {
+        "id": "badRestriction",
+        "type": "Measure Ω",
+        "value": "μ.restrict Cnᶜ"
+      },
+      {
+        "id": "goodRestriction",
+        "type": "Measure Ω",
+        "value": "μ.restrict Cn"
+      },
+      {
+        "id": "trueConditionalLaw",
+        "type": "Measure Ω",
+        "value": "(μ Cn)⁻¹ • μ.restrict Cn"
+      },
+      {
+        "id": "trueProductLaw",
+        "type": "Measure (Ω × Ω)",
+        "value": "νn.prod νn"
+      },
+      {
+        "id": "badMeasureENNReal",
+        "type": "ℝ≥0∞",
+        "value": "μ Cnᶜ"
+      },
+      {
+        "id": "badMeasureReal",
+        "type": "ℝ",
+        "value": "μ.real Cnᶜ"
+      },
+      {
+        "id": "goodMeasureENNReal",
+        "type": "ℝ≥0∞",
+        "value": "μ Cn"
+      },
+      {
+        "id": "goodMeasureReal",
+        "type": "ℝ",
+        "value": "μ.real Cn"
+      },
+      {
+        "id": "badWSquareIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, w o ^ 2 ∂μ"
+      },
+      {
+        "id": "globalWSquareIntegral",
+        "type": "ℝ",
+        "value": "∫ o, w o ^ 2 ∂μ"
+      },
+      {
+        "id": "badAbsWIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, |w o| ∂μ"
+      },
+      {
+        "id": "badExpIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, Real.exp (τ * Real.rpow (w o) α) ∂μ"
+      },
+      {
+        "id": "badConstIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, Real.rpow (n : ℝ) A ∂μ"
+      },
+      {
+        "id": "badOneIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, (1 : ℝ) ∂μ"
+      },
+      {
+        "id": "badSquareRoot",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ)"
+      },
+      {
+        "id": "tailSqrtProbability",
+        "type": "ℝ",
+        "value": "Real.sqrt πn"
+      },
+      {
+        "id": "tailSqrtBound",
+        "type": "ℝ",
+        "value": "Real.sqrt (M * Real.rpow (n : ℝ) (-A))"
+      },
+      {
+        "id": "thresholdReal",
+        "type": "ℝ",
+        "value": "max (3 : ℝ) (Real.rpow (2 * M) (1 / A))"
+      },
+      {
+        "id": "thresholdCeilCast",
+        "type": "ℝ",
+        "value": "(N0 : ℝ)"
+      },
+      {
+        "id": "positiveThresholdPower",
+        "type": "ℝ",
+        "value": "Real.rpow (2 * M) (1 / A)"
+      },
+      {
+        "id": "thresholdComposedPower",
+        "type": "ℝ",
+        "value": "Real.rpow (Real.rpow (2 * M) (1 / A)) A"
+      },
+      {
+        "id": "cutoffBase",
+        "type": "ℝ",
+        "value": "A * Real.log (n : ℝ) / τ"
+      },
+      {
+        "id": "cutoffComposedPower",
+        "type": "ℝ",
+        "value": "Real.rpow Rn α"
+      },
+      {
+        "id": "powerExponentialIdentity",
+        "type": "ℝ",
+        "value": "Real.exp (A * Real.log (n : ℝ))"
+      },
+      {
+        "id": "nPowerFamily",
+        "type": "ℝ",
+        "parameter": "a : ℝ, only universally bound inside Prop haves or instantiated by the enumerated exponents",
+        "value": "Real.rpow (n : ℝ) a",
+        "allowedInstantiations": [
+          "A",
+          "-A",
+          "-A / 2",
+          "-(A * e)",
+          "-(A * t)",
+          "-J",
+          "1 / 2",
+          "1 / 2 - A * t",
+          "1 / 2 - A",
+          "-(A * t - 1 / 2)",
+          "-(A - 1 / 2)"
+        ]
+      },
+      {
+        "id": "MProbabilityPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow (M * Real.rpow (n : ℝ) (-A)) s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ]
+      },
+      {
+        "id": "MFixedPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow M s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ]
+      },
+      {
+        "id": "piProbabilityPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow πn s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ]
+      },
+      {
+        "id": "finite176BootstrapCoefficient",
+        "type": "ℝ",
+        "value": "0",
+        "usage": "Only call qualified176 at Rn, proven dn>=1/2, lam=0 to extract actual w-L2/b/nu facts before lam quantification"
+      },
+      {
+        "id": "finite176BadC",
+        "type": "ℝ",
+        "value": "bn / dn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias"
+      },
+      {
+        "id": "finite176TrueU",
+        "type": "ℝ",
+        "value": "∫ o, g o ∂νn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias"
+      },
+      {
+        "id": "finite176TrueA",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, r o y ∂νn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias"
+      },
+      {
+        "id": "finite176TrueTheta",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(νn.prod νn)",
+        "usage": "Inside already-qualified theorem type only; no new independent alias"
+      },
+      {
+        "id": "HProductIntegrand",
+        "type": "Ω × Ω → ℝ",
+        "value": "fun z : Ω × Ω => Hn z.1 z.2"
+      },
+      {
+        "id": "GSecondIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Gn o ^ 2"
+      },
+      {
+        "id": "finiteVarianceBudget",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow πn e + bn + bn ^ 2)"
+      },
+      {
+        "id": "finiteMeanBudget",
+        "type": "ℝ",
+        "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow πn t + bn ^ 2)"
+      },
+      {
+        "id": "fixedVarianceCoefficients",
+        "type": "ℝ",
+        "value": "Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M"
+      },
+      {
+        "id": "fixedMeanCoefficients",
+        "type": "ℝ",
+        "value": "Real.rpow M t + W2 ^ 2 * M"
+      },
+      {
+        "id": "nCast",
+        "type": "ℝ",
+        "value": "(n : ℝ)"
+      },
+      {
+        "id": "mCast",
+        "type": "ℝ",
+        "value": "(m : ℝ)"
+      },
+      {
+        "id": "sampleSquareRootFamily",
+        "type": "ℝ",
+        "parameter": "k : ℕ, instantiated only by n or m inside original quantifier scopes",
+        "value": "Real.sqrt (k : ℝ)",
+        "allowedInstantiations": [
+          "n",
+          "m"
+        ]
+      },
+      {
+        "id": "varianceSubstitutionBudget",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow M e * Real.rpow (n : ℝ) (-(A * e)) + W2 * Real.sqrt M * Real.rpow (n : ℝ) (-A / 2) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))"
+      },
+      {
+        "id": "meanSubstitutionBudget",
+        "type": "ℝ",
+        "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow M t * Real.rpow (n : ℝ) (-(A * t)) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))"
+      },
+      {
+        "id": "tailDivisionBudget",
+        "type": "ℝ",
+        "value": "M / Real.rpow (n : ℝ) A"
+      },
+      {
+        "id": "badCauchySquaredBudget",
+        "type": "ℝ",
+        "value": "πn * (∫ o in Cnᶜ, w o ^ 2 ∂μ)"
+      },
+      {
+        "id": "badCauchySqrtBudget",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ) * Real.sqrt πn"
+      },
+      {
+        "id": "badOneSquareIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (1 : ℝ) ^ 2"
+      },
+      {
+        "id": "badOnePowerIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.rpow (1 : ℝ) (2 : ℝ)"
+      },
+      {
+        "id": "wSquaredNormIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => ‖w o‖ ^ 2"
+      },
+      {
+        "id": "absNormOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => |(1 : ℝ)|"
+      }
+    ],
+    "existentialWitnesses": [],
+    "newDefinitions": [],
+    "newStructures": [],
+    "newGlobalInstances": [],
+    "newPrivateTheorems": [],
+    "newAxioms": [],
+    "typeAliasOrProbeDeclarations": [],
+    "quantifierOrder": "Original μ,h,w,α,τ,p and exact original propositions; J>=0; fixed 14 common let values; ∀ natural n>=N0; six true cutoff/conditional values; ∀ real lam in [0,1]; four true H/q/G/variance values; ∀ natural m<=n.",
+    "unpaid": "No implementation, kernel, independent review, F1, p-moment rate, concentration, source probability engine or root closure.",
+    "inlineReductionPolicy": "Only the listed typed expressions and their definitionally equal or purely algebraically rewritten forms are proposed. Numeral/cast/parenthesis changes and arithmetic tactics create no independent datum. This is not a grant for a new scalar, function, law, sequence or witness. Any genuinely additional constructive expression or named data alias must be sent to the parent for a revised freeze.",
+    "anonymousInstanceLabels": "instMeasurableSpace and instProbability in metadata label the two anonymous raw instance binders; no claim is made that these are Lean-generated binder names.",
+    "proseOnlyAbbreviations": "Dn in the mathematical note abbreviates the already listed inline value Cnᶜ; no additional named Lean proof-local Dn is proposed.",
+    "latePropBinderLabels": [
+      {
+        "name": "n",
+        "type": "ℕ",
+        "scope": "∀ n before true cutoff values"
+      },
+      {
+        "name": "hn",
+        "type": "N0 ≤ n",
+        "scope": "Proof of the original arrow after ∀n; proposed proof binder only"
+      },
+      {
+        "name": "lam",
+        "type": "ℝ",
+        "scope": "∀ lam after common n properties"
+      },
+      {
+        "name": "hLam",
+        "type": "0 ≤ lam ∧ lam ≤ 1",
+        "scope": "Proof of the original arrow after ∀lam; ASCII name"
+      },
+      {
+        "name": "m",
+        "type": "ℕ",
+        "scope": "∀m after all fixed constants/n/lam and actual H/q/G"
+      },
+      {
+        "name": "hmn",
+        "type": "m ≤ n",
+        "scope": "Proof of the original arrow after ∀m; proposed proof binder only"
+      }
+    ]
+  },
+  "fullScopeLedger": {
+    "schema": "oq56-unit177-full24-68-scope-adaptation-v1",
+    "status": "PROPOSAL_PARENT_FREEZE_REQUIRED",
+    "originalProposal": {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/constructive-values.json",
+      "bytes": 19661,
+      "sha256": "31858ed1c0162d2b1b6c0806df1bf2cdafa7c3c809929b0628ea57f0dc71d332"
+    },
+    "rawHeader": {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/primary-adaptation-01/resume-01/raw-declaration.lean.txt",
+      "bytes": 3276,
+      "sha256": "6be3219ee9b49b80e57d4c87ef37810a4dc2b93aa7dbc54ea28a49a7f90f11f8"
+    },
+    "scopes": {
+      "S0": {
+        "quantifiers": "Original μ/h/w/α/τ/p then real J and hJ; before all n/lam/m",
+        "binders": [
+          {
+            "name": "Ω",
+            "type": "Type*",
+            "kind": "typeParameter"
+          },
+          {
+            "name": "instMeasurableSpace",
+            "type": "MeasurableSpace Ω",
+            "kind": "instanceParameter"
+          },
+          {
+            "name": "μ",
+            "type": "Measure Ω",
+            "kind": "originalData"
+          },
+          {
+            "name": "instProbability",
+            "type": "IsProbabilityMeasure μ",
+            "kind": "PropInstance"
+          },
+          {
+            "name": "h",
+            "type": "Ω → Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hh",
+            "type": "Measurable (fun z : Ω × Ω => h z.1 z.2)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hh2",
+            "type": "MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hhsymm",
+            "type": "∀ o y, h o y = h y o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hcenter",
+            "type": "(∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hprojectionsecond",
+            "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+            "kind": "originalProp"
+          },
+          {
+            "name": "w",
+            "type": "Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hw",
+            "type": "Measurable w",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwone",
+            "type": "∀ᵐ o ∂μ, 1 ≤ w o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "α",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "τ",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hα",
+            "type": "0 < α",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hτ",
+            "type": "0 < τ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwexp",
+            "type": "Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "henvelope",
+            "type": "∀ᵐ z : Ω × Ω ∂(μ.prod μ), |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤ w z.1 * w z.2",
+            "kind": "originalProp"
+          },
+          {
+            "name": "p",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hp",
+            "type": "2 < p ∧ p ≤ 3",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hgp",
+            "type": "Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "J",
+            "type": "ℝ",
+            "kind": "newRequestedRateChosenBeforeAllNMLam"
+          },
+          {
+            "name": "hJ",
+            "type": "0 ≤ J",
+            "kind": "requestedRateProp"
+          }
+        ],
+        "availableLetValues": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "β",
+            "type": "ℝ",
+            "value": "∫ o, Real.rpow |g o| p ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "B",
+            "type": "ℝ",
+            "value": "Real.rpow β (1 / p)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "W2",
+            "type": "ℝ",
+            "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cvar",
+            "type": "ℝ",
+            "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cmean",
+            "type": "ℝ",
+            "value": "4 * (1 + B)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "e",
+            "type": "ℝ",
+            "value": "1 - 2 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "t",
+            "type": "ℝ",
+            "value": "1 - 1 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "A",
+            "type": "ℝ",
+            "value": "2 * (J + 1) / e",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "M",
+            "type": "ℝ",
+            "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kvar",
+            "type": "ℝ",
+            "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kmean",
+            "type": "ℝ",
+            "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "N0",
+            "type": "ℕ",
+            "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+            "phase": "beforeAllNMLam",
+            "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+          }
+        ]
+      },
+      "S1": {
+        "quantifiers": "S0 then ∀ n:ℕ and hn:N0≤n; before lam/m",
+        "binders": [
+          {
+            "name": "Ω",
+            "type": "Type*",
+            "kind": "typeParameter"
+          },
+          {
+            "name": "instMeasurableSpace",
+            "type": "MeasurableSpace Ω",
+            "kind": "instanceParameter"
+          },
+          {
+            "name": "μ",
+            "type": "Measure Ω",
+            "kind": "originalData"
+          },
+          {
+            "name": "instProbability",
+            "type": "IsProbabilityMeasure μ",
+            "kind": "PropInstance"
+          },
+          {
+            "name": "h",
+            "type": "Ω → Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hh",
+            "type": "Measurable (fun z : Ω × Ω => h z.1 z.2)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hh2",
+            "type": "MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hhsymm",
+            "type": "∀ o y, h o y = h y o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hcenter",
+            "type": "(∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hprojectionsecond",
+            "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+            "kind": "originalProp"
+          },
+          {
+            "name": "w",
+            "type": "Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hw",
+            "type": "Measurable w",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwone",
+            "type": "∀ᵐ o ∂μ, 1 ≤ w o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "α",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "τ",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hα",
+            "type": "0 < α",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hτ",
+            "type": "0 < τ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwexp",
+            "type": "Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "henvelope",
+            "type": "∀ᵐ z : Ω × Ω ∂(μ.prod μ), |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤ w z.1 * w z.2",
+            "kind": "originalProp"
+          },
+          {
+            "name": "p",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hp",
+            "type": "2 < p ∧ p ≤ 3",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hgp",
+            "type": "Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "J",
+            "type": "ℝ",
+            "kind": "newRequestedRateChosenBeforeAllNMLam"
+          },
+          {
+            "name": "hJ",
+            "type": "0 ≤ J",
+            "kind": "requestedRateProp"
+          },
+          {
+            "name": "n",
+            "type": "ℕ",
+            "scope": "∀ n before true cutoff values"
+          },
+          {
+            "name": "hn",
+            "type": "N0 ≤ n",
+            "scope": "Proof of the original arrow after ∀n; proposed proof binder only"
+          }
+        ],
+        "availableLetValues": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "β",
+            "type": "ℝ",
+            "value": "∫ o, Real.rpow |g o| p ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "B",
+            "type": "ℝ",
+            "value": "Real.rpow β (1 / p)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "W2",
+            "type": "ℝ",
+            "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cvar",
+            "type": "ℝ",
+            "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cmean",
+            "type": "ℝ",
+            "value": "4 * (1 + B)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "e",
+            "type": "ℝ",
+            "value": "1 - 2 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "t",
+            "type": "ℝ",
+            "value": "1 - 1 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "A",
+            "type": "ℝ",
+            "value": "2 * (J + 1) / e",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "M",
+            "type": "ℝ",
+            "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kvar",
+            "type": "ℝ",
+            "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kmean",
+            "type": "ℝ",
+            "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "N0",
+            "type": "ℕ",
+            "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+            "phase": "beforeAllNMLam",
+            "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+          },
+          {
+            "name": "Rn",
+            "type": "ℝ",
+            "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "Cn",
+            "type": "Set Ω",
+            "value": "{o : Ω | w o ≤ Rn}",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "πn",
+            "type": "ℝ",
+            "value": "μ.real Cnᶜ",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "dn",
+            "type": "ℝ",
+            "value": "μ.real Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "νn",
+            "type": "Measure Ω",
+            "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "bn",
+            "type": "ℝ",
+            "value": "∫ o in Cnᶜ, w o ∂μ",
+            "phase": "afterNBeforeLamM"
+          }
+        ]
+      },
+      "S2": {
+        "quantifiers": "S1 then ∀ lam:ℝ and hLam:0≤lam∧lam≤1; before m",
+        "binders": [
+          {
+            "name": "Ω",
+            "type": "Type*",
+            "kind": "typeParameter"
+          },
+          {
+            "name": "instMeasurableSpace",
+            "type": "MeasurableSpace Ω",
+            "kind": "instanceParameter"
+          },
+          {
+            "name": "μ",
+            "type": "Measure Ω",
+            "kind": "originalData"
+          },
+          {
+            "name": "instProbability",
+            "type": "IsProbabilityMeasure μ",
+            "kind": "PropInstance"
+          },
+          {
+            "name": "h",
+            "type": "Ω → Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hh",
+            "type": "Measurable (fun z : Ω × Ω => h z.1 z.2)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hh2",
+            "type": "MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hhsymm",
+            "type": "∀ o y, h o y = h y o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hcenter",
+            "type": "(∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hprojectionsecond",
+            "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+            "kind": "originalProp"
+          },
+          {
+            "name": "w",
+            "type": "Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hw",
+            "type": "Measurable w",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwone",
+            "type": "∀ᵐ o ∂μ, 1 ≤ w o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "α",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "τ",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hα",
+            "type": "0 < α",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hτ",
+            "type": "0 < τ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwexp",
+            "type": "Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "henvelope",
+            "type": "∀ᵐ z : Ω × Ω ∂(μ.prod μ), |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤ w z.1 * w z.2",
+            "kind": "originalProp"
+          },
+          {
+            "name": "p",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hp",
+            "type": "2 < p ∧ p ≤ 3",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hgp",
+            "type": "Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "J",
+            "type": "ℝ",
+            "kind": "newRequestedRateChosenBeforeAllNMLam"
+          },
+          {
+            "name": "hJ",
+            "type": "0 ≤ J",
+            "kind": "requestedRateProp"
+          },
+          {
+            "name": "n",
+            "type": "ℕ",
+            "scope": "∀ n before true cutoff values"
+          },
+          {
+            "name": "hn",
+            "type": "N0 ≤ n",
+            "scope": "Proof of the original arrow after ∀n; proposed proof binder only"
+          },
+          {
+            "name": "lam",
+            "type": "ℝ",
+            "scope": "∀ lam after common n properties"
+          },
+          {
+            "name": "hLam",
+            "type": "0 ≤ lam ∧ lam ≤ 1",
+            "scope": "Proof of the original arrow after ∀lam; ASCII name"
+          }
+        ],
+        "availableLetValues": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "β",
+            "type": "ℝ",
+            "value": "∫ o, Real.rpow |g o| p ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "B",
+            "type": "ℝ",
+            "value": "Real.rpow β (1 / p)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "W2",
+            "type": "ℝ",
+            "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cvar",
+            "type": "ℝ",
+            "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cmean",
+            "type": "ℝ",
+            "value": "4 * (1 + B)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "e",
+            "type": "ℝ",
+            "value": "1 - 2 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "t",
+            "type": "ℝ",
+            "value": "1 - 1 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "A",
+            "type": "ℝ",
+            "value": "2 * (J + 1) / e",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "M",
+            "type": "ℝ",
+            "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kvar",
+            "type": "ℝ",
+            "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kmean",
+            "type": "ℝ",
+            "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "N0",
+            "type": "ℕ",
+            "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+            "phase": "beforeAllNMLam",
+            "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+          },
+          {
+            "name": "Rn",
+            "type": "ℝ",
+            "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "Cn",
+            "type": "Set Ω",
+            "value": "{o : Ω | w o ≤ Rn}",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "πn",
+            "type": "ℝ",
+            "value": "μ.real Cnᶜ",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "dn",
+            "type": "ℝ",
+            "value": "μ.real Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "νn",
+            "type": "Measure Ω",
+            "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "bn",
+            "type": "ℝ",
+            "value": "∫ o in Cnᶜ, w o ∂μ",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "Hn",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => g o + g y + lam * r o y",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "qn",
+            "type": "ℝ",
+            "value": "∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "Gn",
+            "type": "Ω → ℝ",
+            "value": "fun o => (∫ y, Hn o y ∂νn) - qn",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "σ2n",
+            "type": "ℝ",
+            "value": "∫ o, Gn o ^ 2 ∂νn",
+            "phase": "afterLamBeforeM"
+          }
+        ]
+      },
+      "S3": {
+        "quantifiers": "S2 then ∀ m:ℕ and hmn:m≤n",
+        "binders": [
+          {
+            "name": "Ω",
+            "type": "Type*",
+            "kind": "typeParameter"
+          },
+          {
+            "name": "instMeasurableSpace",
+            "type": "MeasurableSpace Ω",
+            "kind": "instanceParameter"
+          },
+          {
+            "name": "μ",
+            "type": "Measure Ω",
+            "kind": "originalData"
+          },
+          {
+            "name": "instProbability",
+            "type": "IsProbabilityMeasure μ",
+            "kind": "PropInstance"
+          },
+          {
+            "name": "h",
+            "type": "Ω → Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hh",
+            "type": "Measurable (fun z : Ω × Ω => h z.1 z.2)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hh2",
+            "type": "MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ)",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hhsymm",
+            "type": "∀ o y, h o y = h y o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hcenter",
+            "type": "(∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hprojectionsecond",
+            "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+            "kind": "originalProp"
+          },
+          {
+            "name": "w",
+            "type": "Ω → ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hw",
+            "type": "Measurable w",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwone",
+            "type": "∀ᵐ o ∂μ, 1 ≤ w o",
+            "kind": "originalProp"
+          },
+          {
+            "name": "α",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "τ",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hα",
+            "type": "0 < α",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hτ",
+            "type": "0 < τ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hwexp",
+            "type": "Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "henvelope",
+            "type": "∀ᵐ z : Ω × Ω ∂(μ.prod μ), |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤ w z.1 * w z.2",
+            "kind": "originalProp"
+          },
+          {
+            "name": "p",
+            "type": "ℝ",
+            "kind": "originalData"
+          },
+          {
+            "name": "hp",
+            "type": "2 < p ∧ p ≤ 3",
+            "kind": "originalProp"
+          },
+          {
+            "name": "hgp",
+            "type": "Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ",
+            "kind": "originalProp"
+          },
+          {
+            "name": "J",
+            "type": "ℝ",
+            "kind": "newRequestedRateChosenBeforeAllNMLam"
+          },
+          {
+            "name": "hJ",
+            "type": "0 ≤ J",
+            "kind": "requestedRateProp"
+          },
+          {
+            "name": "n",
+            "type": "ℕ",
+            "scope": "∀ n before true cutoff values"
+          },
+          {
+            "name": "hn",
+            "type": "N0 ≤ n",
+            "scope": "Proof of the original arrow after ∀n; proposed proof binder only"
+          },
+          {
+            "name": "lam",
+            "type": "ℝ",
+            "scope": "∀ lam after common n properties"
+          },
+          {
+            "name": "hLam",
+            "type": "0 ≤ lam ∧ lam ≤ 1",
+            "scope": "Proof of the original arrow after ∀lam; ASCII name"
+          },
+          {
+            "name": "m",
+            "type": "ℕ",
+            "scope": "∀m after all fixed constants/n/lam and actual H/q/G"
+          },
+          {
+            "name": "hmn",
+            "type": "m ≤ n",
+            "scope": "Proof of the original arrow after ∀m; proposed proof binder only"
+          }
+        ],
+        "availableLetValues": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "β",
+            "type": "ℝ",
+            "value": "∫ o, Real.rpow |g o| p ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "B",
+            "type": "ℝ",
+            "value": "Real.rpow β (1 / p)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "W2",
+            "type": "ℝ",
+            "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cvar",
+            "type": "ℝ",
+            "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Cmean",
+            "type": "ℝ",
+            "value": "4 * (1 + B)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "e",
+            "type": "ℝ",
+            "value": "1 - 2 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "t",
+            "type": "ℝ",
+            "value": "1 - 1 / p",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "A",
+            "type": "ℝ",
+            "value": "2 * (J + 1) / e",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "M",
+            "type": "ℝ",
+            "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kvar",
+            "type": "ℝ",
+            "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "Kmean",
+            "type": "ℝ",
+            "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+            "phase": "beforeAllNMLam"
+          },
+          {
+            "name": "N0",
+            "type": "ℕ",
+            "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+            "phase": "beforeAllNMLam",
+            "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+          },
+          {
+            "name": "Rn",
+            "type": "ℝ",
+            "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "Cn",
+            "type": "Set Ω",
+            "value": "{o : Ω | w o ≤ Rn}",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "πn",
+            "type": "ℝ",
+            "value": "μ.real Cnᶜ",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "dn",
+            "type": "ℝ",
+            "value": "μ.real Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "νn",
+            "type": "Measure Ω",
+            "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "bn",
+            "type": "ℝ",
+            "value": "∫ o in Cnᶜ, w o ∂μ",
+            "phase": "afterNBeforeLamM"
+          },
+          {
+            "name": "Hn",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => g o + g y + lam * r o y",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "qn",
+            "type": "ℝ",
+            "value": "∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "Gn",
+            "type": "Ω → ℝ",
+            "value": "fun o => (∫ y, Hn o y ∂νn) - qn",
+            "phase": "afterLamBeforeM"
+          },
+          {
+            "name": "σ2n",
+            "type": "ℝ",
+            "value": "∫ o, Gn o ^ 2 ∂νn",
+            "phase": "afterLamBeforeM"
+          }
+        ]
+      }
+    },
+    "headerLetValues": [
+      {
+        "name": "g",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, h o y ∂μ",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "r",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => h o y - g o - g y",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "β",
+        "type": "ℝ",
+        "value": "∫ o, Real.rpow |g o| p ∂μ",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "B",
+        "type": "ℝ",
+        "value": "Real.rpow β (1 / p)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "W2",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Cvar",
+        "type": "ℝ",
+        "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Cmean",
+        "type": "ℝ",
+        "value": "4 * (1 + B)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "e",
+        "type": "ℝ",
+        "value": "1 - 2 / p",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "t",
+        "type": "ℝ",
+        "value": "1 - 1 / p",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "A",
+        "type": "ℝ",
+        "value": "2 * (J + 1) / e",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "M",
+        "type": "ℝ",
+        "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Kvar",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Kmean",
+        "type": "ℝ",
+        "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+        "phase": "beforeAllNMLam",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "N0",
+        "type": "ℕ",
+        "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+        "phase": "beforeAllNMLam",
+        "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE",
+        "scopeRef": "S0",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Rn",
+        "type": "ℝ",
+        "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Cn",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ Rn}",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "πn",
+        "type": "ℝ",
+        "value": "μ.real Cnᶜ",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "dn",
+        "type": "ℝ",
+        "value": "μ.real Cn",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "νn",
+        "type": "Measure Ω",
+        "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "bn",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, w o ∂μ",
+        "phase": "afterNBeforeLamM",
+        "scopeRef": "S1",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn",
+          "νn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Hn",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => g o + g y + lam * r o y",
+        "phase": "afterLamBeforeM",
+        "scopeRef": "S2",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn",
+          "νn",
+          "bn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "qn",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)",
+        "phase": "afterLamBeforeM",
+        "scopeRef": "S2",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn",
+          "νn",
+          "bn",
+          "Hn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "Gn",
+        "type": "Ω → ℝ",
+        "value": "fun o => (∫ y, Hn o y ∂νn) - qn",
+        "phase": "afterLamBeforeM",
+        "scopeRef": "S2",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn",
+          "νn",
+          "bn",
+          "Hn",
+          "qn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      },
+      {
+        "name": "σ2n",
+        "type": "ℝ",
+        "value": "∫ o, Gn o ^ 2 ∂νn",
+        "phase": "afterLamBeforeM",
+        "scopeRef": "S2",
+        "availableEarlierHeaderValues": [
+          "g",
+          "r",
+          "β",
+          "B",
+          "W2",
+          "Cvar",
+          "Cmean",
+          "e",
+          "t",
+          "A",
+          "M",
+          "Kvar",
+          "Kmean",
+          "N0",
+          "Rn",
+          "Cn",
+          "πn",
+          "dn",
+          "νn",
+          "bn",
+          "Hn",
+          "qn",
+          "Gn"
+        ],
+        "sameExactProofLetPermitted": true,
+        "newValueOrAlias": false
+      }
+    ],
+    "plannedProofLocalValues": {
+      "rule": "Each of the 24 header let values may be repeated exactly once as a proof let, with exactly its listed type and value. No additional independent named data/function/measure/number/sequence/selector is proposed.",
+      "names": [
+        "g",
+        "r",
+        "β",
+        "B",
+        "W2",
+        "Cvar",
+        "Cmean",
+        "e",
+        "t",
+        "A",
+        "M",
+        "Kvar",
+        "Kmean",
+        "N0",
+        "Rn",
+        "Cn",
+        "πn",
+        "dn",
+        "νn",
+        "bn",
+        "Hn",
+        "qn",
+        "Gn",
+        "σ2n"
+      ],
+      "uniqueDataValues": 24,
+      "headerLetOccurrences": 24,
+      "proofLetOccurrencesMaximum": 24,
+      "totalLetOccurrencesMaximum": 48,
+      "independentAdditionalValues": [],
+      "PropHaveRule": "Any number of named haves and local lemmas whose complete type is Prop may be used, including universal proof binders for points, real exponents, natural m, inequalities and actual integrability. They must prove consequences of the frozen premises; they may not smuggle in a new independent data/function/law or desired bound as a premise. Any constructive name beyond these 24 values requires a revised parent freeze."
+    },
+    "inlineConstructiveValues": [
+      {
+        "id": "originalExpIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.exp (τ * Real.rpow (w o) α)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "originalExponentIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => τ * Real.rpow (w o) α",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "expLowerConstantIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.exp τ",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "oneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (1 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "zeroIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (0 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "wSquaredIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => w o ^ 2",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "absWIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o|",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "absWSquaredIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o| ^ 2",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "wRpowTwoIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow (w o) (2 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "absWRpowTwoIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.rpow |w o| (2 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "tailLowerConstantIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.rpow (n : ℝ) A",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "absWTimesOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => |w o| * (1 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "WSquaredTimesOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => w o ^ 2 * (1 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "goodSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | w o ≤ Rn}",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "strictBadSet",
+        "type": "Set Ω",
+        "value": "Cnᶜ",
+        "equalOnlyByMembership": "{o : Ω | Rn < w o}",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "exponentGoodSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | τ * Real.rpow (w o) α ≤ A * Real.log (n : ℝ)}",
+        "comparison": "MU_AE_ONLY",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "exponentStrictBadSet",
+        "type": "Set Ω",
+        "value": "{o : Ω | A * Real.log (n : ℝ) < τ * Real.rpow (w o) α}",
+        "comparison": "MU_AE_ONLY",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badRestriction",
+        "type": "Measure Ω",
+        "value": "μ.restrict Cnᶜ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "goodRestriction",
+        "type": "Measure Ω",
+        "value": "μ.restrict Cn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "trueConditionalLaw",
+        "type": "Measure Ω",
+        "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "trueProductLaw",
+        "type": "Measure (Ω × Ω)",
+        "value": "νn.prod νn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badMeasureENNReal",
+        "type": "ℝ≥0∞",
+        "value": "μ Cnᶜ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badMeasureReal",
+        "type": "ℝ",
+        "value": "μ.real Cnᶜ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "goodMeasureENNReal",
+        "type": "ℝ≥0∞",
+        "value": "μ Cn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "goodMeasureReal",
+        "type": "ℝ",
+        "value": "μ.real Cn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badWSquareIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, w o ^ 2 ∂μ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "globalWSquareIntegral",
+        "type": "ℝ",
+        "value": "∫ o, w o ^ 2 ∂μ",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badAbsWIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, |w o| ∂μ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badExpIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badConstIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, Real.rpow (n : ℝ) A ∂μ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badOneIntegral",
+        "type": "ℝ",
+        "value": "∫ o in Cnᶜ, (1 : ℝ) ∂μ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badSquareRoot",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ)",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "tailSqrtProbability",
+        "type": "ℝ",
+        "value": "Real.sqrt πn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "tailSqrtBound",
+        "type": "ℝ",
+        "value": "Real.sqrt (M * Real.rpow (n : ℝ) (-A))",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "thresholdReal",
+        "type": "ℝ",
+        "value": "max (3 : ℝ) (Real.rpow (2 * M) (1 / A))",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "thresholdCeilCast",
+        "type": "ℝ",
+        "value": "(N0 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "positiveThresholdPower",
+        "type": "ℝ",
+        "value": "Real.rpow (2 * M) (1 / A)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "thresholdComposedPower",
+        "type": "ℝ",
+        "value": "Real.rpow (Real.rpow (2 * M) (1 / A)) A",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "cutoffBase",
+        "type": "ℝ",
+        "value": "A * Real.log (n : ℝ) / τ",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "cutoffComposedPower",
+        "type": "ℝ",
+        "value": "Real.rpow Rn α",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "powerExponentialIdentity",
+        "type": "ℝ",
+        "value": "Real.exp (A * Real.log (n : ℝ))",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "nPowerFamily",
+        "type": "ℝ",
+        "parameter": "a : ℝ, only universally bound inside Prop haves or instantiated by the enumerated exponents",
+        "value": "Real.rpow (n : ℝ) a",
+        "allowedInstantiations": [
+          "A",
+          "-A",
+          "-A / 2",
+          "-(A * e)",
+          "-(A * t)",
+          "-J",
+          "1 / 2",
+          "1 / 2 - A * t",
+          "1 / 2 - A",
+          "-(A * t - 1 / 2)",
+          "-(A - 1 / 2)"
+        ],
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "parameterRestriction": "Retain exact original parameter and allowedInstantiations; no sequence or function-valued data name"
+      },
+      {
+        "id": "MProbabilityPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow (M * Real.rpow (n : ℝ) (-A)) s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ],
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "parameterRestriction": "Retain exact original parameter and allowedInstantiations; no sequence or function-valued data name"
+      },
+      {
+        "id": "MFixedPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow M s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ],
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "parameterRestriction": "Retain exact original parameter and allowedInstantiations; no sequence or function-valued data name"
+      },
+      {
+        "id": "piProbabilityPowerFamily",
+        "type": "ℝ",
+        "parameter": "s : ℝ, instantiated only by e or t",
+        "value": "Real.rpow πn s",
+        "allowedInstantiations": [
+          "e",
+          "t"
+        ],
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "parameterRestriction": "Retain exact original parameter and allowedInstantiations; no sequence or function-valued data name"
+      },
+      {
+        "id": "finite176BootstrapCoefficient",
+        "type": "ℝ",
+        "value": "0",
+        "usage": "Only call qualified176 at Rn, proven dn>=1/2, lam=0 to extract actual w-L2/b/nu facts before lam quantification",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "finite176BadC",
+        "type": "ℝ",
+        "value": "bn / dn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "usageRestriction": "Only the actual expression inside the qualified176 public type; no independent local alias"
+      },
+      {
+        "id": "finite176TrueU",
+        "type": "ℝ",
+        "value": "∫ o, g o ∂νn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "usageRestriction": "Only the actual expression inside the qualified176 public type; no independent local alias"
+      },
+      {
+        "id": "finite176TrueA",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, r o y ∂νn",
+        "usage": "Inside already-qualified theorem type only; no new independent alias",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "usageRestriction": "Only the actual expression inside the qualified176 public type; no independent local alias"
+      },
+      {
+        "id": "finite176TrueTheta",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(νn.prod νn)",
+        "usage": "Inside already-qualified theorem type only; no new independent alias",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "usageRestriction": "Only the actual expression inside the qualified176 public type; no independent local alias"
+      },
+      {
+        "id": "HProductIntegrand",
+        "type": "Ω × Ω → ℝ",
+        "value": "fun z : Ω × Ω => Hn z.1 z.2",
+        "scopeRef": "S2",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "GSecondIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => Gn o ^ 2",
+        "scopeRef": "S2",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "finiteVarianceBudget",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow πn e + bn + bn ^ 2)",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "finiteMeanBudget",
+        "type": "ℝ",
+        "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow πn t + bn ^ 2)",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "fixedVarianceCoefficients",
+        "type": "ℝ",
+        "value": "Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "fixedMeanCoefficients",
+        "type": "ℝ",
+        "value": "Real.rpow M t + W2 ^ 2 * M",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "nCast",
+        "type": "ℝ",
+        "value": "(n : ℝ)",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "mCast",
+        "type": "ℝ",
+        "value": "(m : ℝ)",
+        "scopeRef": "S3",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "sampleSquareRootFamily",
+        "type": "ℝ",
+        "parameter": "k : ℕ, instantiated only by n or m inside original quantifier scopes",
+        "value": "Real.sqrt (k : ℝ)",
+        "allowedInstantiations": [
+          "n",
+          "m"
+        ],
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true,
+        "scopePerInstantiation": {
+          "n": "S1",
+          "m": "S3"
+        },
+        "noIndependentK": "k is bound only in Prop local proofs, instantiated only by actual n/m",
+        "parameterRestriction": "Retain exact original parameter and allowedInstantiations; no sequence or function-valued data name"
+      },
+      {
+        "id": "varianceSubstitutionBudget",
+        "type": "ℝ",
+        "value": "Cvar * (Real.rpow M e * Real.rpow (n : ℝ) (-(A * e)) + W2 * Real.sqrt M * Real.rpow (n : ℝ) (-A / 2) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "meanSubstitutionBudget",
+        "type": "ℝ",
+        "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow M t * Real.rpow (n : ℝ) (-(A * t)) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "tailDivisionBudget",
+        "type": "ℝ",
+        "value": "M / Real.rpow (n : ℝ) A",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badCauchySquaredBudget",
+        "type": "ℝ",
+        "value": "πn * (∫ o in Cnᶜ, w o ^ 2 ∂μ)",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badCauchySqrtBudget",
+        "type": "ℝ",
+        "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ) * Real.sqrt πn",
+        "scopeRef": "S1",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badOneSquareIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => (1 : ℝ) ^ 2",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "badOnePowerIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => Real.rpow (1 : ℝ) (2 : ℝ)",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "wSquaredNormIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun o => ‖w o‖ ^ 2",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      },
+      {
+        "id": "absNormOneIntegrand",
+        "type": "Ω → ℝ",
+        "value": "fun _ : Ω => |(1 : ℝ)|",
+        "scopeRef": "S0",
+        "newNamedAliasPermitted": false,
+        "exactOriginalValuePreserved": true
+      }
+    ],
+    "counts": {
+      "uniqueNamedValues": 24,
+      "inlineFamilies": 68,
+      "additionalIndependentDataValues": 0,
+      "existentialWitnesses": 0
+    },
+    "PropLocalProofRule": "Any number of named haves and local lemmas whose complete type is Prop may be used, including universal proof binders for points, real exponents, natural m, inequalities and actual integrability. They must prove consequences of the frozen premises; they may not smuggle in a new independent data/function/law or desired bound as a premise. Any constructive name beyond these 24 values requires a revised parent freeze.",
+    "PropExamples": [
+      "0<p;0<e;e≤1/3;0<t;0<A;Ae=2(J+1);five exponent inequalities",
+      "expτ≤M;1<M;original exponential integrand μ-AE nonnegative",
+      "N0≤n→3≤n;positive n/log/cutoff and threshold power facts",
+      "MeasurableSet Cn;μ-AE cutoff equivalence;restricted strict-bad implication",
+      "Actual restricted/global integrability and MemLp propositions;νn probability and absolute continuity",
+      "Exact actual integral equalities;tail;dn≥1/2;restricted Cauchy;all original variance/mean inequalities"
+    ],
+    "localPropInstances": "IsProbabilityMeasure νn is extracted from qualified176; finite original/restricted measure instances use existing class synthesis. No new global instance or independent measure value.",
+    "allValuesAndScopesComplete": true,
+    "newDefinitions": [],
+    "newStructures": [],
+    "newPrivateTheorems": [],
+    "newAxioms": [],
+    "scopeInterpretation": "For a header let, scopeRef supplies only its quantifier frame and availableEarlierHeaderValues is the exact permitted earlier let list. For an inline expression, scopeRef supplies the full completed phase values. Parameter families retain their exact per-instantiation scopes and original restrictions."
+  },
+  "allowedProofNamedValues": [
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, h o y ∂μ",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => h o y - g o - g y",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "β",
+      "type": "ℝ",
+      "value": "∫ o, Real.rpow |g o| p ∂μ",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "B",
+      "type": "ℝ",
+      "value": "Real.rpow β (1 / p)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "W2",
+      "type": "ℝ",
+      "value": "Real.sqrt (∫ o, w o ^ 2 ∂μ)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "Cvar",
+      "type": "ℝ",
+      "value": "32 * (1 + B ^ 2 + W2 ^ 2)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "Cmean",
+      "type": "ℝ",
+      "value": "4 * (1 + B)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "e",
+      "type": "ℝ",
+      "value": "1 - 2 / p",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "t",
+      "type": "ℝ",
+      "value": "1 - 1 / p",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "A",
+      "type": "ℝ",
+      "value": "2 * (J + 1) / e",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "M",
+      "type": "ℝ",
+      "value": "∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "Kvar",
+      "type": "ℝ",
+      "value": "Cvar * (Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "Kmean",
+      "type": "ℝ",
+      "value": "Cmean * (Real.rpow M t + W2 ^ 2 * M)",
+      "phase": "beforeAllNMLam"
+    },
+    {
+      "name": "N0",
+      "type": "ℕ",
+      "value": "Nat.ceil (max (3 : ℝ) (Real.rpow (2 * M) (1 / A)))",
+      "phase": "beforeAllNMLam",
+      "witnessKind": "DETERMINISTIC_NAT_CEIL_NO_EXISTS_CHOICE"
+    },
+    {
+      "name": "Rn",
+      "type": "ℝ",
+      "value": "Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "Cn",
+      "type": "Set Ω",
+      "value": "{o : Ω | w o ≤ Rn}",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "πn",
+      "type": "ℝ",
+      "value": "μ.real Cnᶜ",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "dn",
+      "type": "ℝ",
+      "value": "μ.real Cn",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "νn",
+      "type": "Measure Ω",
+      "value": "(μ Cn)⁻¹ • μ.restrict Cn",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "bn",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, w o ∂μ",
+      "phase": "afterNBeforeLamM"
+    },
+    {
+      "name": "Hn",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => g o + g y + lam * r o y",
+      "phase": "afterLamBeforeM"
+    },
+    {
+      "name": "qn",
+      "type": "ℝ",
+      "value": "∫ z : Ω × Ω, Hn z.1 z.2 ∂(νn.prod νn)",
+      "phase": "afterLamBeforeM"
+    },
+    {
+      "name": "Gn",
+      "type": "Ω → ℝ",
+      "value": "fun o => (∫ y, Hn o y ∂νn) - qn",
+      "phase": "afterLamBeforeM"
+    },
+    {
+      "name": "σ2n",
+      "type": "ℝ",
+      "value": "∫ o, Gn o ^ 2 ∂νn",
+      "phase": "afterLamBeforeM"
+    }
+  ],
+  "headerLetOccurrences": 24,
+  "typedUniqueNamedValues": 24,
+  "proofNamedValueOccurrencesMaximum": 24,
+  "totalSourceLetOccurrencesMaximum": 48,
+  "inlineConstructiveValues": [
+    {
+      "id": "originalExpIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.exp (τ * Real.rpow (w o) α)"
+    },
+    {
+      "id": "originalExponentIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => τ * Real.rpow (w o) α"
+    },
+    {
+      "id": "expLowerConstantIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => Real.exp τ"
+    },
+    {
+      "id": "oneIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => (1 : ℝ)"
+    },
+    {
+      "id": "zeroIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => (0 : ℝ)"
+    },
+    {
+      "id": "wSquaredIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => w o ^ 2"
+    },
+    {
+      "id": "absWIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => |w o|"
+    },
+    {
+      "id": "absWSquaredIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => |w o| ^ 2"
+    },
+    {
+      "id": "wRpowTwoIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow (w o) (2 : ℝ)"
+    },
+    {
+      "id": "absWRpowTwoIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => Real.rpow |w o| (2 : ℝ)"
+    },
+    {
+      "id": "tailLowerConstantIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => Real.rpow (n : ℝ) A"
+    },
+    {
+      "id": "absWTimesOneIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => |w o| * (1 : ℝ)"
+    },
+    {
+      "id": "WSquaredTimesOneIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => w o ^ 2 * (1 : ℝ)"
+    },
+    {
+      "id": "goodSet",
+      "type": "Set Ω",
+      "value": "{o : Ω | w o ≤ Rn}"
+    },
+    {
+      "id": "strictBadSet",
+      "type": "Set Ω",
+      "value": "Cnᶜ",
+      "equalOnlyByMembership": "{o : Ω | Rn < w o}"
+    },
+    {
+      "id": "exponentGoodSet",
+      "type": "Set Ω",
+      "value": "{o : Ω | τ * Real.rpow (w o) α ≤ A * Real.log (n : ℝ)}",
+      "comparison": "MU_AE_ONLY"
+    },
+    {
+      "id": "exponentStrictBadSet",
+      "type": "Set Ω",
+      "value": "{o : Ω | A * Real.log (n : ℝ) < τ * Real.rpow (w o) α}",
+      "comparison": "MU_AE_ONLY"
+    },
+    {
+      "id": "badRestriction",
+      "type": "Measure Ω",
+      "value": "μ.restrict Cnᶜ"
+    },
+    {
+      "id": "goodRestriction",
+      "type": "Measure Ω",
+      "value": "μ.restrict Cn"
+    },
+    {
+      "id": "trueConditionalLaw",
+      "type": "Measure Ω",
+      "value": "(μ Cn)⁻¹ • μ.restrict Cn"
+    },
+    {
+      "id": "trueProductLaw",
+      "type": "Measure (Ω × Ω)",
+      "value": "νn.prod νn"
+    },
+    {
+      "id": "badMeasureENNReal",
+      "type": "ℝ≥0∞",
+      "value": "μ Cnᶜ"
+    },
+    {
+      "id": "badMeasureReal",
+      "type": "ℝ",
+      "value": "μ.real Cnᶜ"
+    },
+    {
+      "id": "goodMeasureENNReal",
+      "type": "ℝ≥0∞",
+      "value": "μ Cn"
+    },
+    {
+      "id": "goodMeasureReal",
+      "type": "ℝ",
+      "value": "μ.real Cn"
+    },
+    {
+      "id": "badWSquareIntegral",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, w o ^ 2 ∂μ"
+    },
+    {
+      "id": "globalWSquareIntegral",
+      "type": "ℝ",
+      "value": "∫ o, w o ^ 2 ∂μ"
+    },
+    {
+      "id": "badAbsWIntegral",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, |w o| ∂μ"
+    },
+    {
+      "id": "badExpIntegral",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, Real.exp (τ * Real.rpow (w o) α) ∂μ"
+    },
+    {
+      "id": "badConstIntegral",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, Real.rpow (n : ℝ) A ∂μ"
+    },
+    {
+      "id": "badOneIntegral",
+      "type": "ℝ",
+      "value": "∫ o in Cnᶜ, (1 : ℝ) ∂μ"
+    },
+    {
+      "id": "badSquareRoot",
+      "type": "ℝ",
+      "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ)"
+    },
+    {
+      "id": "tailSqrtProbability",
+      "type": "ℝ",
+      "value": "Real.sqrt πn"
+    },
+    {
+      "id": "tailSqrtBound",
+      "type": "ℝ",
+      "value": "Real.sqrt (M * Real.rpow (n : ℝ) (-A))"
+    },
+    {
+      "id": "thresholdReal",
+      "type": "ℝ",
+      "value": "max (3 : ℝ) (Real.rpow (2 * M) (1 / A))"
+    },
+    {
+      "id": "thresholdCeilCast",
+      "type": "ℝ",
+      "value": "(N0 : ℝ)"
+    },
+    {
+      "id": "positiveThresholdPower",
+      "type": "ℝ",
+      "value": "Real.rpow (2 * M) (1 / A)"
+    },
+    {
+      "id": "thresholdComposedPower",
+      "type": "ℝ",
+      "value": "Real.rpow (Real.rpow (2 * M) (1 / A)) A"
+    },
+    {
+      "id": "cutoffBase",
+      "type": "ℝ",
+      "value": "A * Real.log (n : ℝ) / τ"
+    },
+    {
+      "id": "cutoffComposedPower",
+      "type": "ℝ",
+      "value": "Real.rpow Rn α"
+    },
+    {
+      "id": "powerExponentialIdentity",
+      "type": "ℝ",
+      "value": "Real.exp (A * Real.log (n : ℝ))"
+    },
+    {
+      "id": "nPowerFamily",
+      "type": "ℝ",
+      "parameter": "a : ℝ, only universally bound inside Prop haves or instantiated by the enumerated exponents",
+      "value": "Real.rpow (n : ℝ) a",
+      "allowedInstantiations": [
+        "A",
+        "-A",
+        "-A / 2",
+        "-(A * e)",
+        "-(A * t)",
+        "-J",
+        "1 / 2",
+        "1 / 2 - A * t",
+        "1 / 2 - A",
+        "-(A * t - 1 / 2)",
+        "-(A - 1 / 2)"
+      ]
+    },
+    {
+      "id": "MProbabilityPowerFamily",
+      "type": "ℝ",
+      "parameter": "s : ℝ, instantiated only by e or t",
+      "value": "Real.rpow (M * Real.rpow (n : ℝ) (-A)) s",
+      "allowedInstantiations": [
+        "e",
+        "t"
+      ]
+    },
+    {
+      "id": "MFixedPowerFamily",
+      "type": "ℝ",
+      "parameter": "s : ℝ, instantiated only by e or t",
+      "value": "Real.rpow M s",
+      "allowedInstantiations": [
+        "e",
+        "t"
+      ]
+    },
+    {
+      "id": "piProbabilityPowerFamily",
+      "type": "ℝ",
+      "parameter": "s : ℝ, instantiated only by e or t",
+      "value": "Real.rpow πn s",
+      "allowedInstantiations": [
+        "e",
+        "t"
+      ]
+    },
+    {
+      "id": "finite176BootstrapCoefficient",
+      "type": "ℝ",
+      "value": "0",
+      "usage": "Only call qualified176 at Rn, proven dn>=1/2, lam=0 to extract actual w-L2/b/nu facts before lam quantification"
+    },
+    {
+      "id": "finite176BadC",
+      "type": "ℝ",
+      "value": "bn / dn",
+      "usage": "Inside already-qualified theorem type only; no new independent alias"
+    },
+    {
+      "id": "finite176TrueU",
+      "type": "ℝ",
+      "value": "∫ o, g o ∂νn",
+      "usage": "Inside already-qualified theorem type only; no new independent alias"
+    },
+    {
+      "id": "finite176TrueA",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, r o y ∂νn",
+      "usage": "Inside already-qualified theorem type only; no new independent alias"
+    },
+    {
+      "id": "finite176TrueTheta",
+      "type": "ℝ",
+      "value": "∫ z : Ω × Ω, r z.1 z.2 ∂(νn.prod νn)",
+      "usage": "Inside already-qualified theorem type only; no new independent alias"
+    },
+    {
+      "id": "HProductIntegrand",
+      "type": "Ω × Ω → ℝ",
+      "value": "fun z : Ω × Ω => Hn z.1 z.2"
+    },
+    {
+      "id": "GSecondIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => Gn o ^ 2"
+    },
+    {
+      "id": "finiteVarianceBudget",
+      "type": "ℝ",
+      "value": "Cvar * (Real.rpow πn e + bn + bn ^ 2)"
+    },
+    {
+      "id": "finiteMeanBudget",
+      "type": "ℝ",
+      "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow πn t + bn ^ 2)"
+    },
+    {
+      "id": "fixedVarianceCoefficients",
+      "type": "ℝ",
+      "value": "Real.rpow M e + W2 * Real.sqrt M + W2 ^ 2 * M"
+    },
+    {
+      "id": "fixedMeanCoefficients",
+      "type": "ℝ",
+      "value": "Real.rpow M t + W2 ^ 2 * M"
+    },
+    {
+      "id": "nCast",
+      "type": "ℝ",
+      "value": "(n : ℝ)"
+    },
+    {
+      "id": "mCast",
+      "type": "ℝ",
+      "value": "(m : ℝ)"
+    },
+    {
+      "id": "sampleSquareRootFamily",
+      "type": "ℝ",
+      "parameter": "k : ℕ, instantiated only by n or m inside original quantifier scopes",
+      "value": "Real.sqrt (k : ℝ)",
+      "allowedInstantiations": [
+        "n",
+        "m"
+      ]
+    },
+    {
+      "id": "varianceSubstitutionBudget",
+      "type": "ℝ",
+      "value": "Cvar * (Real.rpow M e * Real.rpow (n : ℝ) (-(A * e)) + W2 * Real.sqrt M * Real.rpow (n : ℝ) (-A / 2) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))"
+    },
+    {
+      "id": "meanSubstitutionBudget",
+      "type": "ℝ",
+      "value": "Cmean * Real.sqrt (n : ℝ) * (Real.rpow M t * Real.rpow (n : ℝ) (-(A * t)) + W2 ^ 2 * M * Real.rpow (n : ℝ) (-A))"
+    },
+    {
+      "id": "tailDivisionBudget",
+      "type": "ℝ",
+      "value": "M / Real.rpow (n : ℝ) A"
+    },
+    {
+      "id": "badCauchySquaredBudget",
+      "type": "ℝ",
+      "value": "πn * (∫ o in Cnᶜ, w o ^ 2 ∂μ)"
+    },
+    {
+      "id": "badCauchySqrtBudget",
+      "type": "ℝ",
+      "value": "Real.sqrt (∫ o in Cnᶜ, w o ^ 2 ∂μ) * Real.sqrt πn"
+    },
+    {
+      "id": "badOneSquareIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => (1 : ℝ) ^ 2"
+    },
+    {
+      "id": "badOnePowerIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => Real.rpow (1 : ℝ) (2 : ℝ)"
+    },
+    {
+      "id": "wSquaredNormIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun o => ‖w o‖ ^ 2"
+    },
+    {
+      "id": "absNormOneIntegrand",
+      "type": "Ω → ℝ",
+      "value": "fun _ : Ω => |(1 : ℝ)|"
+    }
+  ],
+  "inlineFamilies": 68,
+  "constructiveExistentialWitnesses": [],
+  "scopeFamilyClarification": "ScopeRef is earliest available phase, not permission to instantiate absent variables: sqrt(n) atS1, sqrt(m) onlyS3; all universal proof arguments localProp only. Original allowedInstantiations unchanged. Named earlier-header lists exact.",
+  "options": {
+    "autoImplicit": false,
+    "maxHeartbeats": 800000
+  },
+  "originalRawProposal": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/primary-adaptation-01/resume-01/raw-declaration.lean.txt",
+    "sha256": "6be3219ee9b49b80e57d4c87ef37810a4dc2b93aa7dbc54ea28a49a7f90f11f8",
+    "bytes": 3276
+  },
+  "parentFullIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit177/primary-adaptation-parent-intake-v1.json",
+    "sha256": "6bb5f76628c1ae2a8118f484ce1ee89c0e3d7f987fbc287050b0057097b425d2",
+    "bytes": 3948
+  },
+  "APIAdaptation": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/primary-adaptation-01/resume-01/API-adaptation.md",
+    "sha256": "e03c9fa9d83626fe3f0cb703a1625194a2ea125e7bd4266382795390404fa0e3",
+    "bytes": 12758
+  },
+  "actualSelectedAPIBindings": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/primary-adaptation-01/resume-01/api-bindings.json",
+    "sha256": "28d5f51cebf43dc8d286d3a296edd74cb79b565edc1e9f0f1884a9367c690c9b",
+    "bytes": 65586
+  },
+  "actualCompleteContextBindings": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-logarithmic-conditional-rates-frontier-01/author-analysis-01/primary-adaptation-01/resume-01/primary-context-bindings.json",
+    "sha256": "530b921393b40873cb0abb45f9af5054063550aab32dbeae8c658231ee817fc8",
+    "bytes": 61797
+  },
+  "qualified176": {
+    "path": "C:/game/shao lean/drafts/oq56/unit176/qualified-evidence.json",
+    "sha256": "acb0789624585bfb195cd37e3f9df93c3756b417895277de2c52e47bde99be24",
+    "bytes": 12867
+  },
+  "source176SHA256": "78762108ee542e89ea114a5f4047c53cad464a385e58ec7c20fd49a37537cbb8",
+  "implementationAuthorization": true,
+  "implementationAuthorizationScope": "Same177author onlyNEW drafts/oq56/unit177/author-01/stage2/; noLean/server/network/Git/probes/cache/toolchain; parentserveronly",
+  "authorServerLeanProbesForbidden": true,
+  "newGlobalDefinitions": [],
+  "newPrivateTheorems": [],
+  "newGlobalInstances": [],
+  "otherNewGlobalDeclarations": [],
+  "policy": "No silent assumption/type/value/inline/witness/import changes; report necessary extension before implementation. No sorry/admit/newaxiom/unsafe/native_decide/implemented_by/extern. Local Prop universal binders/proofs and existing probability Prop instances allowed only; no newdata aliases. UTF8LF noBOM singleterminalLF beforefirstgate. One complete freshindependent finalreview plus exactsource serverkernel/allactualownerTYPE/nonthfullVALUE/recursiveAX mandatory.",
+  "sourceFidelity": "Actual original cutoff (Alogn/tau)^(1/alpha),A/N0/K constantsbeforeallnlam,m;μ-AEeventequivalence/equalityatoms;directtail noncircular mass;true176 projectionandlaw. J0onlybounded. No p-moment rate, no concentration, no rootclosure; ordinaryhSZunproved/externalSZ attribution.",
+  "formalStatus": "UNIMPLEMENTED_UNCHECKED_UNQUALIFIED"
+}
