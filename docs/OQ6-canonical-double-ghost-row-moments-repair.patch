@@ -1,0 +1,251 @@
+--- original-stage2/CanonicalDoubleGhostRowMoments.lean
++++ repair-01/CanonicalDoubleGhostRowMoments.lean
+@@ -92,31 +92,43 @@
+       MeasurePreserving (corner11 i j) (pairedLaw n ν) (ν.prod ν) := by
+     refine ⟨((measurable_pi_apply i).fst).prodMk ((measurable_pi_apply j).fst), ?_⟩
+     have hjoint := ((hPInd.indepFun hij).comp measurable_fst measurable_fst).map_prod_eq_prod_map_map
+       ((measurable_pi_apply i).fst.aemeasurable) ((measurable_pi_apply j).fst.aemeasurable)
+-    rw [(hfst i).map_eq, (hfst j).map_eq] at hjoint
+-    exact hjoint
++    have hfi := (hfst i).map_eq
++    have hfj := (hfst j).map_eq
++    simp only [Function.comp_def, pairedEval] at hfi hfj hjoint
++    rw [hfi, hfj] at hjoint
++    simpa only [corner11] using hjoint
+   have h21 (i j : Fin n) (hij : i ≠ j) :
+       MeasurePreserving (corner21 i j) (pairedLaw n ν) (ν.prod ν) := by
+     refine ⟨((measurable_pi_apply i).snd).prodMk ((measurable_pi_apply j).fst), ?_⟩
+     have hjoint := ((hPInd.indepFun hij).comp measurable_snd measurable_fst).map_prod_eq_prod_map_map
+       ((measurable_pi_apply i).snd.aemeasurable) ((measurable_pi_apply j).fst.aemeasurable)
+-    rw [(hsnd i).map_eq, (hfst j).map_eq] at hjoint
+-    exact hjoint
++    have hfi := (hsnd i).map_eq
++    have hfj := (hfst j).map_eq
++    simp only [Function.comp_def, pairedEval] at hfi hfj hjoint
++    rw [hfi, hfj] at hjoint
++    simpa only [corner21] using hjoint
+   have h12 (i j : Fin n) (hij : i ≠ j) :
+       MeasurePreserving (corner12 i j) (pairedLaw n ν) (ν.prod ν) := by
+     refine ⟨((measurable_pi_apply i).fst).prodMk ((measurable_pi_apply j).snd), ?_⟩
+     have hjoint := ((hPInd.indepFun hij).comp measurable_fst measurable_snd).map_prod_eq_prod_map_map
+       ((measurable_pi_apply i).fst.aemeasurable) ((measurable_pi_apply j).snd.aemeasurable)
+-    rw [(hfst i).map_eq, (hsnd j).map_eq] at hjoint
+-    exact hjoint
++    have hfi := (hfst i).map_eq
++    have hfj := (hsnd j).map_eq
++    simp only [Function.comp_def, pairedEval] at hfi hfj hjoint
++    rw [hfi, hfj] at hjoint
++    simpa only [corner12] using hjoint
+   have h22 (i j : Fin n) (hij : i ≠ j) :
+       MeasurePreserving (corner22 i j) (pairedLaw n ν) (ν.prod ν) := by
+     refine ⟨((measurable_pi_apply i).snd).prodMk ((measurable_pi_apply j).snd), ?_⟩
+     have hjoint := ((hPInd.indepFun hij).comp measurable_snd measurable_snd).map_prod_eq_prod_map_map
+       ((measurable_pi_apply i).snd.aemeasurable) ((measurable_pi_apply j).snd.aemeasurable)
+-    rw [(hsnd i).map_eq, (hsnd j).map_eq] at hjoint
+-    exact hjoint
++    have hfi := (hsnd i).map_eq
++    have hfj := (hsnd j).map_eq
++    simp only [Function.comp_def, pairedEval] at hfi hfj hjoint
++    rw [hfi, hfj] at hjoint
++    simpa only [corner22] using hjoint
+   have hOriginalEntry (i j : Fin n) : Integrable (originalEntry i j) (sampleLaw n ν) := by
+     by_cases hij : i = j
+     · subst j
+       simpa only [originalEntry, ite_true] using
+@@ -127,14 +139,16 @@
+     by_cases hij : i = j
+     · subst j
+       simpa only [ghostEntry, ghostMatrix, ite_true] using
+         (integrable_const (0 : ℝ) : Integrable (fun _ : Fin n → Ω × Ω => (0 : ℝ)) (pairedLaw n ν))
+-    · simpa only [ghostEntry, ghostMatrix, ite_eq_right hij, Function.comp_def,
+-        Function.uncurry, corner11, corner21, corner12, corner22] using
+-        ((((h11 i j hij).integrable_comp_of_integrable hr1).sub
+-          ((h21 i j hij).integrable_comp_of_integrable hr1)).sub
+-          ((h12 i j hij).integrable_comp_of_integrable hr1)).add
+-          ((h22 i j hij).integrable_comp_of_integrable hr1)
++    · apply (((((h11 i j hij).integrable_comp_of_integrable hr1).sub
++        ((h21 i j hij).integrable_comp_of_integrable hr1)).sub
++        ((h12 i j hij).integrable_comp_of_integrable hr1)).add
++        ((h22 i j hij).integrable_comp_of_integrable hr1)).congr
++      filter_upwards with z
++      simp only [ghostEntry, ghostMatrix, ite_eq_right hij, Function.comp_def,
++        Function.uncurry, corner11, corner21, corner12, corner22,
++        Pi.sub_apply, Pi.add_apply]
+   have hOriginalCoefficient (i : Fin n) : Integrable (originalCoefficient i) (sampleLaw n ν) := by
+     simpa only [originalCoefficient, originalRows, PiLp.toLp_apply, originalEntry] using
+       integrable_finsetSum Finset.univ (fun j _ => hOriginalEntry i j)
+   have hGhostCoefficient (i : Fin n) : Integrable (ghostCoefficient i) (pairedLaw n ν) := by
+@@ -167,9 +181,9 @@
+     intro i
+     exact (hEval i).quasiMeasurePreserving.ae hGood
+   have hIntegralKernel : (∫ p : Ω × Ω, Function.uncurry r p ∂ν.prod ν) = 0 := by
+     rw [integral_prod _ hr1]
+-    simpa only [integral_zero] using integral_congr_ae hcR
++    simpa only [Function.uncurry, integral_zero] using integral_congr_ae hcR
+   have hEvalIntegral (f : Ω → ℝ) (hf : Integrable f ν) (i : Fin n) :
+       (∫ y : Fin n → Ω, f (sampleEval i y) ∂sampleLaw n ν) = ∫ a : Ω, f a ∂ν := by
+     calc
+       (∫ y : Fin n → Ω, f (sampleEval i y) ∂sampleLaw n ν) =
+@@ -198,11 +212,13 @@
+         integrable_const _
+       have h10 := (hEval i).integrable_comp_of_integrable (hx j).2.1
+       have h01 := (hEval j).integrable_comp_of_integrable (hx i).1
+       have h00 := (hPair i j hij).integrable_comp_of_integrable hr1
+-      simpa only [sectionEntry, ghostMatrix, ite_eq_right hij, pairSamples,
+-        Function.comp_def, Function.uncurry, sampleEval, samplePairEval] using
+-        ((hconst.sub h10).sub h01).add h00
++      apply (((hconst.sub h10).sub h01).add h00).congr
++      filter_upwards with y
++      simp only [sectionEntry, ghostMatrix, ite_eq_right hij, pairSamples,
++        Function.comp_def, Function.uncurry, sampleEval, samplePairEval,
++        Pi.sub_apply, Pi.add_apply]
+   have hSectionMean (i j : Fin n) :
+       (∫ y : Fin n → Ω, sectionEntry i j x y ∂sampleLaw n ν) = originalEntry i j x := by
+     by_cases hij : i = j
+     · subst j
+@@ -211,12 +227,19 @@
+         integrable_const _
+       have h10 := (hEval i).integrable_comp_of_integrable (hx j).2.1
+       have h01 := (hEval j).integrable_comp_of_integrable (hx i).1
+       have h00 := (hPair i j hij).integrable_comp_of_integrable hr1
++      simp only [Function.comp_def, Function.uncurry, sampleEval, samplePairEval] at h10 h01 h00
+       simp only [sectionEntry, ghostMatrix, originalEntry, ite_eq_right hij, pairSamples]
+-      rw [integral_add ((hconst.sub h10).sub h01) h00,
+-        integral_sub (hconst.sub h10) h01, integral_sub hconst h10]
+-      rw [hEvalIntegral _ (hx j).2.1 i, hEvalIntegral _ (hx i).1 j,
++      have hAddIntegral := integral_add ((hconst.sub h10).sub h01) h00
++      have hSubIntegral := integral_sub (hconst.sub h10) h01
++      have hFirstSubIntegral := integral_sub hconst h10
++      simp only [Pi.sub_apply, Pi.add_apply] at hAddIntegral hSubIntegral hFirstSubIntegral
++      rw [hAddIntegral, hSubIntegral, hFirstSubIntegral]
++      have h10Integral := hEvalIntegral _ (hx j).2.1 i
++      have h01Integral := hEvalIntegral _ (hx i).1 j
++      simp only [sampleEval] at h10Integral h01Integral
++      rw [h10Integral, h01Integral,
+         hPairIntegral i j hij, (hx j).2.2.2, (hx i).2.2.1]
+       simp
+   have hSectionCoefficient (i : Fin n) :
+       Integrable (sectionCoefficient i x) (sampleLaw n ν) := by
+@@ -259,21 +282,26 @@
+   have hble : b ≤ 1 := by dsimp [b]; exact (one_div_le_one_div_of_le (by norm_num : (0 : ℝ) < 1) (by linarith : (1 : ℝ) ≤ q)).trans_eq (by norm_num)
+   have hcancel : q * b = 1 := by dsimp [b]; exact mul_one_div_cancel hqpos.ne'
+   have hInverse (a : Ω) : inversePower (powerNorm a) = ‖G a‖ := by
+     dsimp only [inversePower, powerNorm]
++    simp only [Real.rpow_eq_pow]
+     rw [← Real.rpow_mul (norm_nonneg (G a)), hcancel, Real.rpow_one]
+   have hconcave : ConcaveOn ℝ nonnegativeHalfLine inversePower := by
+-    simpa only [nonnegativeHalfLine, inversePower] using Real.concaveOn_rpow hbpos.le hble
++    simpa only [nonnegativeHalfLine, inversePower, Real.rpow_eq_pow] using Real.concaveOn_rpow hbpos.le hble
+   have hcontinuous : ContinuousOn inversePower nonnegativeHalfLine :=
+     (Real.continuous_rpow_const hbpos.le).continuousOn
+   have hpowerInt : Integrable powerNorm μ := hGq
+   have hcompInt : Integrable (inversePower ∘ powerNorm) μ := by
+     apply hG.norm.congr
+     exact Filter.Eventually.of_forall (fun a => (hInverse a).symm)
++  have hpowerNonneg (a : Ω) : powerNorm a ∈ nonnegativeHalfLine := by
++    change 0 ≤ Real.rpow ‖G a‖ q
++    simpa only [Real.rpow_eq_pow] using Real.rpow_nonneg (norm_nonneg (G a)) q
+   have hmean : (∫ a : Ω, ‖G a‖ ∂μ) ≤ inversePower (∫ a : Ω, powerNorm a ∂μ) := by
+-    have hjensen := hconcave.le_map_integral hcontinuous isClosed_Ici
+-      (Filter.Eventually.of_forall (fun a => Real.rpow_nonneg (norm_nonneg (G a)) q))
+-      hpowerInt hcompInt
++    have hjensen : (∫ a : Ω, inversePower (powerNorm a) ∂μ) ≤
++        inversePower (∫ a : Ω, powerNorm a ∂μ) :=
++      hconcave.le_map_integral (f := powerNorm) hcontinuous isClosed_Ici
++        (Filter.Eventually.of_forall hpowerNonneg) hpowerInt hcompInt
+     simpa only [Function.comp_def, hInverse] using hjensen
+   have hnorm : ‖∫ a : Ω, G a ∂μ‖ ≤ inversePower (∫ a : Ω, powerNorm a ∂μ) :=
+     (norm_integral_le_integral_norm G).trans hmean
+   have hmeanNonneg : 0 ≤ ∫ a : Ω, powerNorm a ∂μ :=
+@@ -282,9 +310,11 @@
+     Real.rpow ‖∫ a : Ω, G a ∂μ‖ q ≤
+         Real.rpow (inversePower (∫ a : Ω, powerNorm a ∂μ)) q :=
+       Real.rpow_le_rpow (norm_nonneg _) hnorm hqpos.le
+     _ = ∫ a : Ω, Real.rpow ‖G a‖ q ∂μ := by
+-      dsimp only [inversePower]
++      change Real.rpow (Real.rpow (∫ a : Ω, powerNorm a ∂μ) b) q =
++        ∫ a : Ω, powerNorm a ∂μ
++      simp only [Real.rpow_eq_pow]
+       rw [← Real.rpow_mul hmeanNonneg, mul_comm b q, hcancel, Real.rpow_one]
+ 
+ theorem ghost_row_qmoment_bound (n : ℕ) {Ω : Type*} [mΩ : MeasurableSpace Ω] (ν : Measure Ω) [hν : IsProbabilityMeasure ν] (r : Ω → Ω → ℝ) (w : Ω → ℝ) (q : ℝ) (hr : Measurable (Function.uncurry r)) (hq : 2 ≤ q) (hW : ∀ᵐ a : Ω ∂ν, 0 ≤ w a) (hR : ∀ᵐ p : Ω × Ω ∂ν.prod ν, |r p.1 p.2| ≤ w p.1 * w p.2) (hS : Integrable (fun z : Fin n → Ω × Ω => Real.rpow (pairedEnergy n w z) q) (pairedLaw n ν)) : Integrable (fun z : Fin n → Ω × Ω => Real.rpow ‖ghostRows n r z‖ q) (pairedLaw n ν) ∧ (∫ z : Fin n → Ω × Ω, Real.rpow ‖ghostRows n r z‖ q ∂pairedLaw n ν) ≤ Real.rpow ((2 : ℝ) * Real.sqrt q) q * (∫ z : Fin n → Ω × Ω, Real.rpow (pairedEnergy n w z) q ∂pairedLaw n ν) := by
+   classical
+@@ -339,8 +369,9 @@
+     (Real.continuous_rpow_const hinvpos.le).comp (continuous_id.max continuous_const)
+   have hRecover (z : Fin n → Ω × Ω) :
+       recoverPower (Real.rpow (S z) q) = S z := by
+     dsimp only [recoverPower]
++    simp only [Real.rpow_eq_pow]
+     rw [max_eq_left (Real.rpow_nonneg (hSnonneg z) q),
+       ← Real.rpow_mul (hSnonneg z), mul_one_div_cancel hqpos.ne', Real.rpow_one]
+   have hSmeas : AEStronglyMeasurable S (pairedLaw n ν) := by
+     apply (hRecoverCont.comp_aestronglyMeasurable hS.aestronglyMeasurable).congr
+@@ -348,8 +379,9 @@
+   have hOnePlus : Integrable onePlusPower (pairedLaw n ν) :=
+     (integrable_const (1 : ℝ)).add hS
+   have hSle (z : Fin n → Ω × Ω) : S z ≤ onePlusPower z := by
+     change S z ≤ 1 + Real.rpow (S z) q
++    simp only [Real.rpow_eq_pow]
+     by_cases hz : S z ≤ 1
+     · have hp := Real.rpow_nonneg (hSnonneg z) q
+       linarith
+     · have hp := Real.self_le_rpow_of_one_le (le_of_lt (lt_of_not_ge hz)) hq1
+@@ -373,31 +405,33 @@
+     apply hDomInt.mono' hF1Meas.aestronglyMeasurable
+     filter_upwards [hEnvelope] with z hz
+     change |Real.rpow ‖ghostRows n r z‖ q| ≤
+       Real.rpow dimensionBound q * Real.rpow (S z) q
++    simp only [Real.rpow_eq_pow]
+     rw [abs_of_nonneg (Real.rpow_nonneg (norm_nonneg _) q)]
+     have hb : ‖ghostRows n r z‖ ≤ dimensionBound * S z :=
+       hDeterministic (ghostMatrix n r z) (ghostWeight n w z)
+         (fun _ : Fin n => (1 : ℝ)) hz.1 hz.2 (by intro j; norm_num)
+     calc
+-      Real.rpow ‖ghostRows n r z‖ q ≤ Real.rpow (dimensionBound * S z) q :=
++      ‖ghostRows n r z‖ ^ q ≤ (dimensionBound * S z) ^ q :=
+         Real.rpow_le_rpow (norm_nonneg _) hb hqpos.le
+-      _ = Real.rpow dimensionBound q * Real.rpow (S z) q :=
++      _ = dimensionBound ^ q * S z ^ q :=
+         Real.mul_rpow (Real.sqrt_nonneg (n : ℝ)) (hSnonneg z)
+   have hSignedInt (s : Fin n → Bool) : Integrable (signedPower s) (pairedLaw n ν) := by
+     apply hDomInt.mono' (hSignedMeas s).aestronglyMeasurable
+     filter_upwards [hEnvelope] with z hz
+     change |Real.rpow ‖rowAction n (ghostMatrix n r z) (signPath n s)‖ q| ≤
+       Real.rpow dimensionBound q * Real.rpow (S z) q
++    simp only [Real.rpow_eq_pow]
+     rw [abs_of_nonneg (Real.rpow_nonneg (norm_nonneg _) q)]
+     have hsign (j : Fin n) : |signPath n s j| ≤ 1 := by
+       cases hs : s j <;> simp [signPath, signValue, hs]
+     have hb := hDeterministic (ghostMatrix n r z) (ghostWeight n w z)
+       (signPath n s) hz.1 hz.2 hsign
+     calc
+-      Real.rpow ‖rowAction n (ghostMatrix n r z) (signPath n s)‖ q ≤
+-          Real.rpow (dimensionBound * S z) q := Real.rpow_le_rpow (norm_nonneg _) hb hqpos.le
+-      _ = Real.rpow dimensionBound q * Real.rpow (S z) q :=
++      ‖rowAction n (ghostMatrix n r z) (signPath n s)‖ ^ q ≤
++          (dimensionBound * S z) ^ q := Real.rpow_le_rpow (norm_nonneg _) hb hqpos.le
++      _ = dimensionBound ^ q * S z ^ q :=
+         Real.mul_rpow (Real.sqrt_nonneg (n : ℝ)) (hSnonneg z)
+   have hScalarMeas : StronglyMeasurable scalarPower :=
+     (Real.continuous_rpow_const hqpos.le).stronglyMeasurable
+   have hLawIntegral (s : Fin n → Bool) :
+@@ -432,8 +466,9 @@
+     have hbase : Real.rpow (cubePower z) (1 / q) ≤ K * S z := by
+       exact finite_matrix_sign_moment_bound n (ghostMatrix n r z) (ghostWeight n w z) q hz.1 hz.2 hq
+     calc
+       cubePower z = Real.rpow (Real.rpow (cubePower z) (1 / q)) q := by
++        simp only [Real.rpow_eq_pow]
+         rw [← Real.rpow_mul (hCubeNonneg z), one_div_mul_cancel hqpos.ne', Real.rpow_one]
+       _ ≤ Real.rpow (K * S z) q :=
+         Real.rpow_le_rpow (Real.rpow_nonneg (hCubeNonneg z) (1 / q)) hbase hqpos.le
+       _ = Real.rpow K q * Real.rpow (S z) q :=
+@@ -525,8 +560,9 @@
+       Real.rpow_le_rpow hRowIntegralNonneg hMoment hinvpos.le
+     _ = Real.rpow (Real.rpow K q) (1 / q) * Real.rpow weightQIntegral (1 / q) :=
+       Real.mul_rpow (Real.rpow_nonneg hKNonneg q) hWeightIntegralNonneg
+     _ = K * Real.rpow weightQIntegral (1 / q) := by
++      simp only [Real.rpow_eq_pow]
+       rw [← Real.rpow_mul hKNonneg, mul_one_div_cancel hqpos.ne', Real.rpow_one]
+ 
+ end
+ 
