@@ -1,0 +1,73 @@
+import Shao.C2.AuxiliaryRealMarkedMoments
+import Shao.Probability.SourceSuffixMomentBudgets
+import Shao.Probability.SourceSuffixScalarInterfaces
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 4000000
+noncomputable section
+namespace Shao.C2.AuxiliaryRealMarkedCutoffInverse
+open MeasureTheory ProbabilityTheory
+
+private theorem marked_cutoff_kernel_integrable_real_inverse
+    (nu : Measure ℝ) [IsProbabilityMeasure nu]
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0) (hnorm : (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (m : ℕ) (q b : ℝ) (hq : 1 ≤ q) (hb : 0 < b) :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    let a3 : ℝ → ℝ := fun u => ∫ z : ℝ, |z| ^ 3 * Real.exp (-u * z ^ 2) ∂nu
+    let retained : ℝ := ∫ z : ℝ, if z ^ 2 ≤ b then z ^ 2 else 0 ∂nu
+    let gamma : ℝ := if (1 / 2 : ℝ) ≤ retained then -c else 1
+    IntegrableOn (fun s : ℝ => Real.rpow s (q / 2 - 1) * a3 (s / 2) *
+      Real.exp (gamma * s * (m : ℝ))) (Set.Ioo 0 (1 / b)) := by
+
+private theorem marked_real_power_cutoff_inverse :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    ∀ a q : ℝ, 0 ≤ a → 1 ≤ q → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ (m : ℕ) (b : ℝ), 0 < b →
+          let P : Measure (Shao.Path (m + 1)) := Measure.pi (fun _ : Fin (m + 1) => nu)
+          let T : Shao.Path (m + 1) → ℝ := Shao.energy
+          let d : Shao.Path (m + 1) → ℝ := fun v => Shao.prefixSum v (m + 1)
+          let M : Shao.Path (m + 1) → ℝ := fun v => |v 0| ^ 3
+          let a3 : ℝ → ℝ := fun u => ∫ z : ℝ, |z| ^ 3 * Real.exp (-u * z ^ 2) ∂nu
+          let retained : ℝ := ∫ z : ℝ, if z ^ 2 ≤ b then z ^ 2 else 0 ∂nu
+          let gamma : ℝ := if (1 / 2 : ℝ) ≤ retained then -c else 1
+          let selected : Shao.Path (m + 1) → ℝ := fun v =>
+            if 0 < T v ∧ b ≤ T v then
+              M v * Real.rpow |d v| a * Real.rpow (T v) (-(q + a) / 2) else 0
+          let kernel : ℝ → ℝ := fun s =>
+            Real.rpow s (q / 2 - 1) * a3 (s / 2) *
+              Real.exp (gamma * s * (m : ℝ))
+          Integrable selected P ∧ IntegrableOn kernel (Set.Ioo 0 (1 / b)) ∧
+            (∫ v, selected v ∂P) ≤ C * ∫ s : ℝ in Set.Ioo 0 (1 / b), kernel s := by
+
+theorem auxiliary_actual_real_marked_cutoff_inverse_moments :
+    let c : ℝ := (1 - Real.exp (-2)) / 8
+    ∀ a q : ℝ, 0 ≤ a → 1 ≤ q → ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu],
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 → (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ (m : ℕ) (b : ℝ), 0 < b →
+          let P : Measure (Shao.Path (m + 1)) := Measure.pi (fun _ : Fin (m + 1) => nu)
+          let T : Shao.Path (m + 1) → ℝ := Shao.energy
+          let d : Shao.Path (m + 1) → ℝ := fun v => Shao.prefixSum v (m + 1)
+          let M : Shao.Path (m + 1) → ℝ := fun v => |v 0| ^ 3
+          let a3 : ℝ → ℝ := fun u => ∫ z : ℝ, |z| ^ 3 * Real.exp (-u * z ^ 2) ∂nu
+          let retained : ℝ := ∫ z : ℝ, if z ^ 2 ≤ b then z ^ 2 else 0 ∂nu
+          let gamma : ℝ := if (1 / 2 : ℝ) ≤ retained then -c else 1
+          let selected : Shao.Path (m + 1) → ℝ := fun v =>
+            if 0 < T v ∧ b ≤ T v then
+              M v * Real.rpow (T v) (-q / 2) *
+                Real.rpow (1 + |d v| / Real.sqrt (T v)) a else 0
+          let kernel : ℝ → ℝ := fun s =>
+            Real.rpow s (q / 2 - 1) * a3 (s / 2) *
+              Real.exp (gamma * s * (m : ℝ))
+          Integrable selected P ∧ IntegrableOn kernel (Set.Ioo 0 (1 / b)) ∧
+            (∫ v, selected v ∂P) ≤ C * ∫ s : ℝ in Set.Ioo 0 (1 / b), kernel s := by
+
+end Shao.C2.AuxiliaryRealMarkedCutoffInverse

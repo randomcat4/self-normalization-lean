@@ -1,0 +1,147 @@
+{
+  "bindings": [
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "sha256": "8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05",
+      "pinSHA256": "8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05",
+      "matchesPin": true
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "pinSHA256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "matchesPin": true
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+      "sha256": "f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd",
+      "pinSHA256": "f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd",
+      "matchesPin": true
+    }
+  ],
+  "excerpts": [
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 48,
+      "lastLine": 61,
+      "text": "48: variable {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} {ν : Measure β}\n49: variable [NormedAddCommGroup E]\n50: \n51: /-! ### Measurability\n52: \n53: Before we define the product measure, we can talk about the measurability of operations on binary\n54: functions. We show that if `f` is a binary measurable function, then the function that integrates\n55: along one of the variables (using either the Lebesgue or Bochner integral) is measurable.\n56: -/\n57: \n58: section\n59: \n60: variable [NormedSpace ℝ E]\n61: "
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 100,
+      "lastLine": 101,
+      "text": "100: variable [SFinite ν]\n101: "
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 139,
+      "lastLine": 145,
+      "text": "139: /-- The Bochner integral is a.e.-measurable.\n140:   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/\n141: theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SFinite ν] [NormedSpace ℝ E]\n142:     ⦃f : α × β → E⦄ (hf : AEStronglyMeasurable f (μ.prod ν)) :\n143:     AEStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=\n144:   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.stronglyMeasurable_mk.integral_prod_right', by\n145:     filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 225,
+      "lastLine": 242,
+      "text": "225:     filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm] with _ hx using\n226:       integral_congr_ae (EventuallyEq.fun_comp hx _)\n227: \n228: /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every\n229:   `x` and the function `x ↦ ∫ ‖f (x, y)‖ dy` is integrable. -/\n230: theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.prod ν)) :\n231:     Integrable f (μ.prod ν) ↔\n232:       (∀ᵐ x ∂μ, Integrable (fun y => f (x, y)) ν) ∧ Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ := by\n233:   simp [Integrable, h1f, hasFiniteIntegral_prod_iff', h1f.norm.integral_prod_right',\n234:     h1f.prodMk_left]\n235: \n236: /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every\n237:   `y` and the function `y ↦ ∫ ‖f (x, y)‖ dx` is integrable. -/\n238: theorem integrable_prod_iff' [SFinite μ] ⦃f : α × β → E⦄\n239:     (h1f : AEStronglyMeasurable f (μ.prod ν)) :\n240:     Integrable f (μ.prod ν) ↔\n241:       (∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ) ∧ Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν := by\n242:   convert! integrable_prod_iff h1f.prod_swap using 1"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 330,
+      "lastLine": 343,
+      "text": "330: end\n331: \n332: variable [NormedSpace ℝ E]\n333: \n334: theorem Integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.prod ν)) :\n335:     Integrable (fun x => ∫ y, f (x, y) ∂ν) μ := by\n336:   apply Integrable.mono hf.integral_norm_prod_left hf.aestronglyMeasurable.integral_prod_right'\n337:   filter_upwards with x\n338:   grw [norm_integral_le_integral_norm]\n339:   exact le_abs_self _\n340: \n341: theorem Integrable.integral_prod_right [SFinite μ] ⦃f : α × β → E⦄\n342:     (hf : Integrable f (μ.prod ν)) : Integrable (fun y => ∫ x, f (x, y) ∂μ) ν :=\n343:   hf.swap.integral_prod_left"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean",
+      "firstLine": 465,
+      "lastLine": 490,
+      "text": "465:   This version has the integrals on the right-hand side in the other order. -/\n466: theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.prod ν)) :\n467:     ∫ z, f z ∂μ.prod ν = ∫ y, ∫ x, f (x, y) ∂μ ∂ν := by\n468:   rw [← integral_prod_swap f]; exact integral_prod _ hf.swap\n469: \n470: /-- Reversed version of **Fubini's Theorem**. -/\n471: theorem integral_integral {f : α → β → E} (hf : Integrable (uncurry f) (μ.prod ν)) :\n472:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.1 z.2 ∂μ.prod ν :=\n473:   (integral_prod _ hf).symm\n474: \n475: /-- Reversed version of **Fubini's Theorem** (symmetric version). -/\n476: theorem integral_integral_symm {f : α → β → E} (hf : Integrable (uncurry f) (μ.prod ν)) :\n477:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.2 z.1 ∂ν.prod μ :=\n478:   (integral_prod_symm _ hf.swap).symm\n479: \n480: /-- Change the order of Bochner integration. -/\n481: theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncurry f) (μ.prod ν)) :\n482:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ y, ∫ x, f x y ∂μ ∂ν :=\n483:   (integral_integral hf).trans (integral_prod_symm _ hf)\n484: \n485: /-- Change the order of integration, when one of the integrals is an interval integral. -/\n486: lemma intervalIntegral_integral_swap {a b : ℝ} {f : ℝ → α → E}\n487:     (h_int : Integrable (uncurry f) ((volume.restrict (Set.uIoc a b)).prod μ)) :\n488:     ∫ x in a..b, ∫ y, f x y ∂μ = ∫ y, (∫ x in a..b, f x y) ∂μ := by\n489:   rcases le_total a b with (hab | hab)\n490:   · simp_rw [intervalIntegral.integral_of_le hab]"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "firstLine": 34,
+      "lastLine": 48,
+      "text": "34: integrable\n35: \n36: -/\n37: \n38: @[expose] public section\n39: \n40: \n41: noncomputable section\n42: \n43: open ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n44: \n45: open scoped Topology\n46: \n47: variable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\n48: variable [NormedAddCommGroup β] [NormedAddCommGroup γ]"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+      "firstLine": 104,
+      "lastLine": 106,
+      "text": "104: theorem Integrable.mono' {f : α → β} {g : α → ℝ} (hg : Integrable g μ)\n105:     (hf : AEStronglyMeasurable f μ) (h : ∀ᵐ a ∂μ, ‖f a‖ ≤ g a) : Integrable f μ :=\n106:   ⟨hf, hg.hasFiniteIntegral.mono' h⟩"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+      "firstLine": 207,
+      "lastLine": 208,
+      "text": "207: theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by\n208:   simp only [rpow_def_of_pos hx, mul_add, exp_add]"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+      "firstLine": 258,
+      "lastLine": 263,
+      "text": "258: /-- See also `rpow_neg_eq_inv_rpow` for a version with `x⁻¹ ^ y` in the RHS. -/\n259: theorem rpow_neg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : x ^ (-y) = (x ^ y)⁻¹ := by\n260:   simp only [rpow_def_of_nonneg hx]; split_ifs <;> simp_all [exp_neg]\n261: \n262: theorem rpow_sub {x : ℝ} (hx : 0 < x) (y z : ℝ) : x ^ (y - z) = x ^ y / x ^ z := by\n263:   simp only [sub_eq_add_neg, rpow_add hx, rpow_neg (le_of_lt hx), div_eq_mul_inv]"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+      "firstLine": 476,
+      "lastLine": 489,
+      "text": "476: theorem mul_rpow (hx : 0 ≤ x) (hy : 0 ≤ y) : (x * y) ^ z = x ^ z * y ^ z := by\n477:   rw [rpow_def_of_nonneg (by positivity)]\n478:   split_ifs with nz\n479:   on_goal 3 =>\n480:     rw [← Ne, mul_ne_zero_iff] at nz\n481:     rw [log_mul nz.1 nz.2, add_mul, exp_add, rpow_def_of_pos (hx.lt_of_ne' nz.1),\n482:       rpow_def_of_pos (hy.lt_of_ne' nz.2)]\n483:   all_goals simp_all\n484: \n485: theorem inv_rpow (hx : 0 ≤ x) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ := by\n486:   rw [← rpow_neg_eq_inv_rpow, rpow_neg hx]\n487: \n488: theorem div_rpow (hx : 0 ≤ x) (hy : 0 ≤ y) (z : ℝ) : (x / y) ^ z = x ^ z / y ^ z := by\n489:   simp only [div_eq_mul_inv, mul_rpow hx (inv_nonneg.2 hy), inv_rpow hy]"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+      "firstLine": 998,
+      "lastLine": 1001,
+      "text": "998: theorem rpow_div_two_eq_sqrt {x : ℝ} (r : ℝ) (hx : 0 ≤ x) : x ^ (r / 2) = √x ^ r := by\n999:   rw [sqrt_eq_rpow, ← rpow_mul hx]\n1000:   congr\n1001:   ring"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Monotone.lean",
+      "missing": true
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Basic/FinitePath.lean",
+      "firstLine": 18,
+      "text": "16: open scoped BigOperators\n17: \n18: abbrev Path (n : ℕ) := Fin n → ℝ\n19: \n20: variable {n : ℕ}\n21: \n22: /-- Sum of the first k coordinates, saturated at the path length. -/\n23: def prefixSum (a : Path n) (k : ℕ) : ℝ :=\n24:   ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), a i\n25: \n26: /-- Actual squared coordinates in the first k positions. -/\n27: def prefixSquares (a : Path n) (k : ℕ) : ℝ :="
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Basic/FinitePath.lean",
+      "firstLine": 23,
+      "text": "21: \n22: /-- Sum of the first k coordinates, saturated at the path length. -/\n23: def prefixSum (a : Path n) (k : ℕ) : ℝ :=\n24:   ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), a i\n25: \n26: /-- Actual squared coordinates in the first k positions. -/\n27: def prefixSquares (a : Path n) (k : ℕ) : ℝ :=\n28:   ∑ i ∈ Finset.univ.filter (fun i : Fin n => i.val < k), (a i) ^ 2\n29: \n30: /-- Genuine final energy, without centering or replacement by variance. -/\n31: def energy (a : Path n) : ℝ := ∑ i, (a i) ^ 2\n32: "
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Basic/FinitePath.lean",
+      "firstLine": 31,
+      "text": "29: \n30: /-- Genuine final energy, without centering or replacement by variance. -/\n31: def energy (a : Path n) : ℝ := ∑ i, (a i) ^ 2\n32: \n33: @[simp] theorem prefixSum_zero (a : Path n) : prefixSum a 0 = 0 := by\n34:   simp [prefixSum]\n35: \n36: @[simp] theorem prefixSquares_zero (a : Path n) : prefixSquares a 0 = 0 := by\n37:   simp [prefixSquares]\n38: \n39: @[simp] theorem prefixSum_length (a : Path n) : prefixSum a n = ∑ i, a i := by\n40:   unfold prefixSum"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Probability/MeasurablePath.lean",
+      "firstLine": 53,
+      "text": "51:   continuous_const.mul continuous_sqrt_energy\n52: \n53: theorem measurable_prefixSum (k : ℕ) :\n54:     Measurable (fun a : Path n => prefixSum a k) :=\n55:   (continuous_prefixSum k).measurable\n56: \n57: theorem measurable_prefixSquares (k : ℕ) :\n58:     Measurable (fun a : Path n => prefixSquares a k) :=\n59:   (continuous_prefixSquares k).measurable\n60: \n61: theorem measurable_energy : Measurable (energy : Path n → ℝ) :=\n62:   continuous_energy.measurable"
+    },
+    {
+      "path": "/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/Shao/Probability/MeasurablePath.lean",
+      "firstLine": 61,
+      "text": "59:   (continuous_prefixSquares k).measurable\n60: \n61: theorem measurable_energy : Measurable (energy : Path n → ℝ) :=\n62:   continuous_energy.measurable\n63: \n64: theorem measurable_upperMax (hn : 0 < n) :\n65:     Measurable (fun a : Path n => upperMax a hn) :=\n66:   (continuous_upperMax hn).measurable\n67: \n68: theorem measurable_lowerMax (hn : 0 < n) :\n69:     Measurable (fun a : Path n => lowerMax a hn) :=\n70:   (continuous_lowerMax hn).measurable"
+    }
+  ],
+  "originalGateMetadata": {
+    "freeze-record.json": {
+      "mtimeNs": 1792890750887571472,
+      "content": null
+    },
+    "attempt001/command.txt": {
+      "mtimeNs": 1792890751531569689,
+      "content": null
+    },
+    "attempt001/exit.json": {
+      "mtimeNs": 1792890770031518488,
+      "content": "{\"kernelExit\": 1}\n"
+    },
+    "attempt002/exit.json": {
+      "mtimeNs": 1792890804407423347,
+      "content": "{\"kernelExit\": 0}\n"
+    },
+    "audit-exit.json": {
+      "mtimeNs": 1792890820103379905,
+      "content": "{\"auditExit\": 0}\n"
+    }
+  }
+}
