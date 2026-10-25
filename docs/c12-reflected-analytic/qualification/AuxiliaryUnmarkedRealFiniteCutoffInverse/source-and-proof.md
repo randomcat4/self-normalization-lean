@@ -1,0 +1,13 @@
+# Unit183 finite H ordinary unmarked inverse master — author kernel/audit pass
+
+Direct source supplement4431–4444 and4474–4485: ell0,realgrowth a>=0,realinverse q>0,b<=H<infinity,b>0,actual b<=E<H. Source uses event T<H<=e*exp(-T/H), inverseLaplace alpha=q/2 and(q+a)/2, shiftu=s+1/H<=2/b and u^-a/2<=s^-a/2. No thirdmoment, no rare/Psi/boundedrho premise. Actualgamma retainedIF and actualfiniteHshift preserved; no wholeC2/root closure.
+
+Both completeheads and context frozen5ffd25706830e4a39e101aa1282e97a018f0dc7f4039d64650d210eb24100fb6 beforeproofwriting. Kernelintegrability reuses182PUBLICactualkernelconjunction atgrowth0,q, then exactexpfactor exp(gamma*n/H); no reproof of182kernelhelper, no privateProbabilityaccess. 182 nowexactsourcequalified by parent24f9a78220d73fd61ab9a6faab20980b0086d5d3e4391bb40f773f26c3b5e051 before183firstgate. No oldsource edits.
+
+Forprivatepowerproducer choosequalified179Ca BEFORElaw/n/b/H, alpha=(q+a)/2>0,A=e^2*alpha. JointK=s^(alpha-1)*absS^a*exp(-(s+1/H)E). Truejointintegrability fromnativeintegrable_prod_iff: sectionmoment179atshiftedparameter, legalshiftderivedH>=b>0 ands<1/b. Native rpow_le_rpow_of_nonpos witha>=0 compares shiftednegativepowertos^-a/2; exactrpowcancelgivesq/2-1. Actualkernelintegrability ispureexpconstanttimes182kernel,independentofnumericalboundconstant.
+
+PointwisePUBLICinverse_laplacealphaEb. Exactexpidentity turns absS^a*Ibase into exp(E/H)*Ishift by unconditionalintegral_const_mul plus pointwisealgebra; onE<H,exp(E/H)<=e. NonnegativeIshift permitsboundingcoefficient, actualpointwiseboundA*Ishift paysselectedIntegrable. FubinimonotonicitygivesA*Caactualkernelbound. No circularintegrabilityhypothesisorintegraloracle. Publicnormalizedrealgrowth step uses twonewfiniteHpowerproducers at0,a and actualD(F0+Fa) domination, samecorrectnativepositiveenergyidentity as182, with theFINITEsameactualeventthroughout. Exactnewcutofffunctions reviewedseparately beforeacceptance.
+
+Attackn0/a0/zeroS/atoms/zeroE falsecutoff,b=Eweakallowed,H=Eexcluded,H=ballfalse,qsmallpositive,gammabothbranches,retainedhalfnegativebranch. Universalconstantsbeforelaw/n/b/H;rate/Hdependentkernelintegrabilityfactorneverleaksintouniversalbound. Kernel/AX counts mustderiveactualownermap whengated, notcopiedfrom182. Allfuturegate commands serveronlyCPU14–17/c12-heavy.lock/-M8192/-j4. No sharedsources/cache/rootimports/merge.
+
+First183kernel001 failedonlyexplicitReal.rpow/HPownormalizationinexponentialfactorringequalityandmissingmul_oneindivisionnormalization. Proof-only002PASSwithbothfrozenheadsunchanged;failedsource/log/command/exit preservedremote. Exhaustiveactualownermap2theorems(1public1private),0generated/values,37507completeactualtypebytes;all2recursiveAXwhitelistedonly. No oldLean/auditreplay.
