@@ -1,0 +1,98 @@
+TARGET_DECL Shao.C2.AuxiliaryUnmarkedBlockRealCauchy.auxiliary_actual_unmarked_block_real_cauchy KIND theorem AXIOMS [propext,
+ Classical.choice,
+ Quot.sound]
+ACTUAL_TYPE ∀ (nu : @MeasureTheory.Measure.{0} Real Real.measurableSpace)
+  [@MeasureTheory.IsProbabilityMeasure.{0} Real Real.measurableSpace nu] (n : Nat) (a s : Real)
+  (ha : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) a)
+  (hs : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) s)
+  (A : Set.{0} (Shao.Path n))
+  (hA :
+    @MeasurableSet.{0} (Shao.Path n)
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) A)
+  (hDamped :
+    @MeasureTheory.Integrable.{0, 0} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real
+          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))
+      (Shao.Path n)
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (i : Fin n) => Real.measurableSpace)
+      (fun (v : Shao.Path n) =>
+        @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (Real.rpow (@abs.{0} Real Real.lattice Real.instAddGroup (@Shao.prefixSum n v n))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@OfNat.ofNat.{0} Real (nat_lit 2)
+                (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                  (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                    (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+              a))
+          (Real.exp
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg s)
+              (@Shao.energy n v))))
+      (@MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)
+        (fun (i : Fin n) => Real.measurableSpace) fun (x : Fin n) => nu)),
+  have P :
+    @MeasureTheory.Measure.{0} (Shao.Path n)
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) :=
+    @MeasureTheory.Measure.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) (Fin.fintype n)
+      (fun (a : Fin n) => Real.measurableSpace) fun (x : Fin n) => nu;
+  have W : Shao.Path n → Real := fun (v : Shao.Path n) =>
+    Real.exp
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@Neg.neg.{0} Real Real.instNeg s)
+        (@Shao.energy n v));
+  have D : Shao.Path n → Real := fun (v : Shao.Path n) =>
+    @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (Real.rpow (@abs.{0} Real Real.lattice Real.instAddGroup (@Shao.prefixSum n v n)) a) (W v);
+  And
+    (@MeasureTheory.Integrable.{0, 0} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@ESeminormedAddMonoid.toContinuousENorm.{0} Real
+        (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+        (@SeminormedAddGroup.toESeminormedAddMonoid.{0} Real
+          (@SeminormedAddCommGroup.toSeminormedAddGroup.{0} Real
+            (@NonUnitalSeminormedRing.toSeminormedAddCommGroup.{0} Real
+              (@NonUnitalSeminormedCommRing.toNonUnitalSeminormedRing.{0} Real
+                (@SeminormedCommRing.toNonUnitalSeminormedCommRing.{0} Real
+                  (@NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)))))))
+      (Shao.Path n)
+      (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace)
+      (@Set.indicator.{0, 0} (Shao.Path n) Real Real.instZero A D) P)
+    (@LE.le.{0} Real Real.instLE
+      (@MeasureTheory.integral.{0, 0} (Shao.Path n) Real Real.normedAddCommGroup
+        (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+          (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+          (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+        (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P
+        fun (v : Shao.Path n) => @Set.indicator.{0, 0} (Shao.Path n) Real Real.instZero A D v)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (Real.sqrt
+          (@MeasureTheory.integral.{0, 0} (Shao.Path n) Real Real.normedAddCommGroup
+            (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+              (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P
+            fun (v : Shao.Path n) =>
+            @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (Real.rpow (@abs.{0} Real Real.lattice Real.instAddGroup (@Shao.prefixSum n v n))
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@OfNat.ofNat.{0} Real (nat_lit 2)
+                    (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                      (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                        (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+                  a))
+              (W v)))
+        (Real.sqrt
+          (@MeasureTheory.integral.{0, 0} (Shao.Path n) Real Real.normedAddCommGroup
+            (@InnerProductSpace.toNormedSpace.{0, 0} Real Real Real.instRCLike
+              (@NormedAddCommGroup.toSeminormedAddCommGroup.{0} Real Real.normedAddCommGroup)
+              (@RCLike.toInnerProductSpaceReal.{0} Real Real.instRCLike))
+            (@MeasurableSpace.pi.{0, 0} (Fin n) (fun (a : Fin n) => Real) fun (a : Fin n) => Real.measurableSpace) P
+            fun (v : Shao.Path n) => @Set.indicator.{0, 0} (Shao.Path n) Real Real.instZero A W v))))
+TARGET_DECL Shao.C2.AuxiliaryUnmarkedBlockRealCauchy.auxiliary_actual_unmarked_block_real_cauchy._simp_1_1 KIND theorem AXIOMS [propext]
+ACTUAL_TYPE ∀ {α : Type u_1} [inst : Preorder.{u_1} α] (a : α),
+  @Eq.{1} Prop (@LE.le.{u_1} α (@Preorder.toLE.{u_1} α inst) a a) True
