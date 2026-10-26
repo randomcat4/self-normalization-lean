@@ -2,7 +2,7 @@
 
 Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 
-The current mathematical snapshot is **v118**: **912 modules, 4,066 public source theorems, 7,939 Shao-namespace theorem constants, and 16,114 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v118 server receipt](verification/receipt-v118.json).
+The current mathematical snapshot is **v119**: **913 modules, 4,067 public source theorems, 7,950 Shao-namespace theorem constants, and 16,133 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v119 server receipt](verification/receipt-v119.json).
 
 ## Accepted scope and current state
 
@@ -12,7 +12,7 @@ The current mathematical snapshot is **v118**: **912 modules, 4,066 public sourc
 | C2 / assigned C12 | All five original labels g:double, g:absolute, m:B, m:A and m:C accepted by v112. Assigned C1/C2 work is complete; broader common extensions remain separate. [Evidence](docs/EVIDENCE.md#c2) |
 | OQ3 | Paused by the human. The accepted fixed jointly nonlattice counterexample remains in Lean; paused B/D directions are not declared complete. [Counterexample](Shao/OQ3/SourceCounterexampleRoot.lean) |
 | OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. Ready/idle without a new source-bound assignment; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
-| OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. The rho-sensitive capped partial-law deletion producer is accepted; combined S14 fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
+| OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. The rho-sensitive capped partial-law deletion producer and original-window four S14 expectation fees are accepted; compact fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
 
 ## Latest accepted OQ56 components
 
@@ -22,6 +22,7 @@ The current mathematical snapshot is **v118**: **912 modules, 4,066 public sourc
 - v116: literal clipped comparison without an external domination premise, and comparison-exception/payment composition in that bounded class.
 - v117: original-length deterministic/measurable deletion envelopes and genuine rho/rho-squared moments under the full quadratic tilt, including rho = 0.
 - v118: original-length rho-sensitive capped deletion bounds under the actual partial weight, with full integrability and rho = 0; this supplies S13 absolute-D/J ingredients within the original explicit window.
+- v119: all four original S14 expectation fees and their combined polynomial budget, preserving the original law/window/n and rho = 0; this is not a general probability-payment or full-root theorem.
 
 The bounded-class exponential payment bound retains the three terms exp(-cn) + 4 exp(-y sqrt(n)/2) + 9 exp(-k_n). It is not a theorem for the unrestricted original S15 class. Symmetry, normalization, original sample-length denominators, threshold windows, zero-denominator guards and genuine remainder fees remain where the exact statements require them.
 
