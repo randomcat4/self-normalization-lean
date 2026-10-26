@@ -720,6 +720,9 @@ import Shao.OQ6.NormalizedIntegrableTailAssembly
 import Shao.OQ6.NormalizedRawNumeratorBuffer
 import Shao.OQ6.NormalizedRemainderEnvelope
 import Shao.OQ6.ObservationProductTilt
+import Shao.OQ6.OriginalGhostComparison
+import Shao.OQ6.OriginalGhostGoodEvent
+import Shao.OQ6.PairedSelfNormalizedTail
 import Shao.OQ6.PartialObservationTilt
 import Shao.OQ6.PhysicalCompact
 import Shao.OQ6.QuadraticTilt

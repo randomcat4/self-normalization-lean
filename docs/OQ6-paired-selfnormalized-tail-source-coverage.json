@@ -1,0 +1,1183 @@
+{
+  "schema": "unit199-independent-complete-source-coverage-v1",
+  "status": "CORRECT_SOURCE_REVIEW_MACHINE_PENDING",
+  "qualified": false,
+  "source": {
+    "sha256": "60425a4454af45f28c22e3e81bb9a23344953c074f3f38108e08509dc55fecc6",
+    "bytes": 7295,
+    "LF": 169,
+    "CR": 0,
+    "BOM": false,
+    "bannedSourceTokens": [],
+    "letICount": 2,
+    "localDataLets": [
+      "D",
+      "B",
+      "I"
+    ],
+    "explicitHaveCount": 10,
+    "numericalCharacters": 27,
+    "numericalTokens": 21,
+    "projectionTokens": 6
+  },
+  "freeze": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-selfnormalized-upper-199/parent-freeze-v1.json",
+    "sha256": "75cf8afc9388df07693768041065d46f910066d9a2f513ac694f697bd071587f",
+    "beforeImplementation": true
+  },
+  "completeSource169LinesRead": true,
+  "all6HeadsAnd2RHS": [
+    {
+      "id": "D01",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.pairedDifference",
+      "sourceFirstLine": 17,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "def pairedDifference\n    (n : ℕ) {Ω : Type*} (g : Ω → ℝ)\n    (z : Fin n → Ω × Ω) : Fin n → ℝ :=\n  fun i : Fin n => g (z i).1 - g (z i).2"
+    },
+    {
+      "id": "D02",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.pairedTailEvent",
+      "sourceFirstLine": 22,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "def pairedTailEvent\n    (n : ℕ) {Ω : Type*} (g : Ω → ℝ) (t : ℝ) :\n    Set (Fin n → Ω × Ω) :=\n  {z : Fin n → Ω × Ω |\n    t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n      |∑ i : Fin n, pairedDifference n g z i|}"
+    },
+    {
+      "id": "T01",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.paired_swap_spec",
+      "sourceFirstLine": 29,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "theorem paired_swap_spec\n    (n : ℕ) {Ω : Type*} (g : Ω → ℝ)\n    (s : Fin n → Bool) (z : Fin n → Ω × Ω) :\n    (∀ i : Fin n,\n      pairedDifference n g (swapSample n s z) i =\n        signValue (s i) * pairedDifference n g z i) ∧\n    scalarEnergy n (pairedDifference n g (swapSample n s z)) =\n      scalarEnergy n (pairedDifference n g z) ∧\n    (∑ i : Fin n, pairedDifference n g (swapSample n s z) i) =\n      scalarSignSum n (pairedDifference n g z) s := by\n  have hdiff (i : Fin n) :\n      pairedDifference n g (swapSample n s z) i =\n        signValue (s i) * pairedDifference n g z i := by\n    cases hsi : s i <;>\n      simp [pairedDifference, Shao.OQ6.DoubleGhostSignInvariance.swapSample,\n        Shao.OQ6.DoubleGhostSignInvariance.pairSwap, signValue, hsi]\n  refine ⟨hdiff, ?_, ?_⟩\n  · unfold scalarEnergy\n    apply Finset.sum_congr rfl\n    intro i hi\n    rw [hdiff i]\n    cases hsi : s i <;> simp [signValue, hsi]\n  · unfold scalarSignSum\n    apply Finset.sum_congr rfl\n    intro i hi\n    exact hdiff i"
+    },
+    {
+      "id": "T02",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.measurableSet_pairedTailEvent",
+      "sourceFirstLine": 56,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "theorem measurableSet_pairedTailEvent\n    (n : ℕ) {Ω : Type*} [mΩ : MeasurableSpace Ω]\n    (g : Ω → ℝ) (hg : Measurable g) (t : ℝ) :\n    MeasurableSet (pairedTailEvent n g t) := by\n  have henergy : Measurable (fun z : Fin n → Ω × Ω =>\n      scalarEnergy n (pairedDifference n g z)) := by\n    unfold scalarEnergy pairedDifference\n    fun_prop\n  have hsum : Measurable (fun z : Fin n → Ω × Ω =>\n      ∑ i : Fin n, pairedDifference n g z i) := by\n    unfold pairedDifference\n    fun_prop\n  exact measurableSet_lt\n    (measurable_const.mul (Real.continuous_sqrt.measurable.comp henergy))\n    (continuous_abs.measurable.comp hsum)"
+    },
+    {
+      "id": "T03",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.paired_tail_cube_integral",
+      "sourceFirstLine": 72,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "theorem paired_tail_cube_integral\n    (n : ℕ) {Ω : Type*} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (t : ℝ) :\n    (pairedLaw n μ).real (pairedTailEvent n g t) =\n      ∫ z : Fin n → Ω × Ω,\n        cubeMean n (fun s : Fin n → Bool =>\n          if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n              |scalarSignSum n (pairedDifference n g z) s|\n          then (1 : ℝ) else (0 : ℝ)) ∂pairedLaw n μ := by\n  letI instP : IsProbabilityMeasure (pairedLaw n μ) :=\n    inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ.prod μ)))\n  let D : Set (Fin n → Ω × Ω) := pairedTailEvent n g t\n  let B : (Fin n → Bool) → Set (Fin n → Ω × Ω) :=\n    fun s : Fin n → Bool => {z : Fin n → Ω × Ω |\n      t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n        |scalarSignSum n (pairedDifference n g z) s|}\n  let I : (Fin n → Bool) → (Fin n → Ω × Ω) → ℝ :=\n    fun (s : Fin n → Bool) (z : Fin n → Ω × Ω) =>\n      if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n          |scalarSignSum n (pairedDifference n g z) s|\n      then (1 : ℝ) else (0 : ℝ)\n  have hD : MeasurableSet D := measurableSet_pairedTailEvent n g hg t\n  have hpre (s : Fin n → Bool) :\n      B s = (swapSample n s) ⁻¹' D := by\n    ext z\n    change (t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n        |scalarSignSum n (pairedDifference n g z) s|) ↔\n      (t * Real.sqrt (scalarEnergy n (pairedDifference n g (swapSample n s z))) <\n        |∑ i : Fin n, pairedDifference n g (swapSample n s z) i|)\n    rw [(paired_swap_spec n g s z).2.1, (paired_swap_spec n g s z).2.2]\n  have hB (s : Fin n → Bool) : MeasurableSet (B s) := by\n    rw [hpre s]\n    exact hD.preimage\n      (Shao.OQ6.DoubleGhostSignInvariance.swapSample_measurePreserving n μ s).measurable\n  have hI_eq (s : Fin n → Bool) :\n      I s = (B s).indicator (fun _ : Fin n → Ω × Ω => (1 : ℝ)) := by\n    funext z\n    by_cases hz : t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n        |scalarSignSum n (pairedDifference n g z) s| <;>\n      simp [I, B, Set.indicator, hz]\n  have hI_int (s : Fin n → Bool) : Integrable (I s) (pairedLaw n μ) := by\n    rw [hI_eq s]\n    exact (integrable_const (1 : ℝ)).indicator (hB s)\n  have hmass (s : Fin n → Bool) :\n      (pairedLaw n μ).real (B s) = (pairedLaw n μ).real D := by\n    change ((pairedLaw n μ) (B s)).toReal = ((pairedLaw n μ) D).toReal\n    rw [hpre s,\n      (Shao.OQ6.DoubleGhostSignInvariance.swapSample_measurePreserving n μ s).measure_preimage\n        hD.nullMeasurableSet]\n  have hint (s : Fin n → Bool) :\n      (∫ z : Fin n → Ω × Ω, I s z ∂pairedLaw n μ) =\n        (pairedLaw n μ).real D := by\n    rw [hI_eq s, integral_indicator_one (hB s)]\n    exact hmass s\n  change (pairedLaw n μ).real D =\n    ∫ z : Fin n → Ω × Ω,\n      ((2 : ℝ) ^ n)⁻¹ * ∑ s : Fin n → Bool, I s z ∂pairedLaw n μ\n  rw [integral_const_mul,\n    integral_finsetSum (Finset.univ : Finset (Fin n → Bool)) (fun s _ => hI_int s)]\n  simp_rw [hint]\n  simp [Fintype.card_fun, nsmul_eq_mul, ← mul_assoc]"
+    },
+    {
+      "id": "T04",
+      "name": "Shao.OQ6.PairedSelfNormalizedTail.paired_selfnormalized_tail",
+      "sourceFirstLine": 135,
+      "pureHeadExact": true,
+      "globalRHSExact": true,
+      "fullSourceBlock": "theorem paired_selfnormalized_tail\n    (n : ℕ) {Ω : Type*} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g)\n    (t : ℝ) (ht : (0 : ℝ) ≤ t) :\n    (pairedLaw n μ).real (pairedTailEvent n g t) ≤\n      (2 : ℝ) * Real.exp (-(t ^ (2 : ℕ)) / (2 : ℝ)) := by\n  letI instP : IsProbabilityMeasure (pairedLaw n μ) :=\n    inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ.prod μ)))\n  rw [paired_tail_cube_integral n μ g hg t]\n  calc\n    (∫ z : Fin n → Ω × Ω,\n      cubeMean n (fun s : Fin n → Bool =>\n        if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) <\n            |scalarSignSum n (pairedDifference n g z) s|\n        then (1 : ℝ) else (0 : ℝ)) ∂pairedLaw n μ) ≤\n        ∫ _ : Fin n → Ω × Ω,\n          (2 : ℝ) * Real.exp (-(t ^ (2 : ℕ)) / (2 : ℝ)) ∂pairedLaw n μ := by\n      apply integral_mono_of_nonneg\n      · filter_upwards [] with z\n        unfold cubeMean\n        apply mul_nonneg\n        · exact inv_nonneg.mpr (pow_nonneg (by norm_num : (0 : ℝ) ≤ 2) n)\n        · apply Finset.sum_nonneg\n          intro s hs\n          split_ifs with hcond <;> norm_num\n      · exact integrable_const _\n      · filter_upwards [] with z\n        exact Shao.OQ6.FiniteSignExponential.finite_sign_two_sided_tail\n          n (pairedDifference n g z) t ht\n    _ = (2 : ℝ) * Real.exp (-(t ^ (2 : ℕ)) / (2 : ℝ)) := by simp"
+    }
+  ],
+  "all28Data": [
+    {
+      "id": "D01.global",
+      "type": "(n : ℕ) → {Ω : Type u} → (Ω → ℝ) → (Fin n → Ω × Ω) → Fin n → ℝ",
+      "initializer": "fun (n : ℕ) {Ω : Type u} (g : Ω → ℝ) (z : Fin n → Ω × Ω) (i : Fin n) => g (z i).1 - g (z i).2",
+      "termCaptures": [],
+      "typeCaptures": [],
+      "completeCaptures": [],
+      "lambdaSetBinders": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "z : Fin n → Ω × Ω",
+        "i : Fin n"
+      ],
+      "frozenScope": "Global definition; before D02; all telescope arguments bound here",
+      "independentlyReviewedSourceFirstLine": 17,
+      "independentlyReviewedSourceLastLine": 20,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "D02.global",
+      "type": "(n : ℕ) → {Ω : Type u} → (Ω → ℝ) → ℝ → Set (Fin n → Ω × Ω)",
+      "initializer": "fun (n : ℕ) {Ω : Type u} (g : Ω → ℝ) (t : ℝ) => {z : Fin n → Ω × Ω | t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) < |∑ i : Fin n, pairedDifference n g z i|}",
+      "termCaptures": [],
+      "typeCaptures": [],
+      "completeCaptures": [],
+      "lambdaSetBinders": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ",
+        "z : Fin n → Ω × Ω",
+        "i : Fin n"
+      ],
+      "frozenScope": "Global definition; D01 and the exact pending198 scalarEnergy are in scope",
+      "independentlyReviewedSourceFirstLine": 22,
+      "independentlyReviewedSourceLastLine": 27,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T01.swappedVector",
+      "type": "Fin n → ℝ",
+      "initializer": "pairedDifference n g (swapSample n s z)",
+      "termCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "typeCaptures": [
+        "n : ℕ"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "After T01 telescope; coordinate Bool case contains no new data",
+      "independentlyReviewedSourceFirstLine": 29,
+      "independentlyReviewedSourceLastLine": 49,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T01.signedVector",
+      "type": "Fin n → ℝ",
+      "initializer": "fun i : Fin n => signValue (s i) * pairedDifference n g z i",
+      "termCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "typeCaptures": [
+        "n : ℕ"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "lambdaSetBinders": [
+        "i : Fin n"
+      ],
+      "frozenScope": "After T01 telescope; coordinate Bool case contains no new data",
+      "independentlyReviewedSourceFirstLine": 32,
+      "independentlyReviewedSourceLastLine": 54,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T01.squaredVector",
+      "type": "Fin n → ℝ",
+      "initializer": "fun i : Fin n => (signValue (s i) * pairedDifference n g z i) ^ (2 : ℕ)",
+      "termCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "typeCaptures": [
+        "n : ℕ"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "{Ω : Type*}",
+        "g : Ω → ℝ",
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "lambdaSetBinders": [
+        "i : Fin n"
+      ],
+      "frozenScope": "After T01 telescope; coordinate Bool case contains no new data",
+      "independentlyReviewedSourceFirstLine": 46,
+      "independentlyReviewedSourceLastLine": 50,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T02.coordinateDifference",
+      "type": "Fin n → (Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun (i : Fin n) (z : Fin n → Ω × Ω) => g (z i).1 - g (z i).2",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "lambdaSetBinders": [
+        "i : Fin n",
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "After T02 telescope; these are all function expressions used to establish event measurability, even if inlined",
+      "independentlyReviewedSourceFirstLine": 60,
+      "independentlyReviewedSourceLastLine": 67,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T02.energyFunction",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => scalarEnergy n (pairedDifference n g z)",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "After T02 telescope; these are all function expressions used to establish event measurability, even if inlined",
+      "independentlyReviewedSourceFirstLine": 60,
+      "independentlyReviewedSourceLastLine": 63,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T02.sumFunction",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => ∑ i : Fin n, pairedDifference n g z i",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω",
+        "i : Fin n"
+      ],
+      "frozenScope": "After T02 telescope; these are all function expressions used to establish event measurability, even if inlined",
+      "independentlyReviewedSourceFirstLine": 64,
+      "independentlyReviewedSourceLastLine": 67,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T02.thresholdFunction",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => t * Real.sqrt (scalarEnergy n (pairedDifference n g z))",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "After T02 telescope; these are all function expressions used to establish event measurability, even if inlined",
+      "independentlyReviewedSourceFirstLine": 68,
+      "independentlyReviewedSourceLastLine": 70,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T02.absoluteSumFunction",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => |∑ i : Fin n, pairedDifference n g z i|",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω",
+        "i : Fin n"
+      ],
+      "frozenScope": "After T02 telescope; these are all function expressions used to establish event measurability, even if inlined",
+      "independentlyReviewedSourceFirstLine": 68,
+      "independentlyReviewedSourceLastLine": 70,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.P",
+      "type": "Measure (Fin n → Ω × Ω)",
+      "initializer": "pairedLaw n μ",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T03 proof after full telescope; if local name P is omitted this is the exact anonymous measure expression",
+      "independentlyReviewedSourceFirstLine": 72,
+      "independentlyReviewedSourceLastLine": 133,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.instP",
+      "type": "IsProbabilityMeasure (pairedLaw n μ)",
+      "initializer": "inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ.prod μ)))",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "hμ : IsProbabilityMeasure μ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "hμ : IsProbabilityMeasure μ"
+      ],
+      "lambdaSetBinders": [
+        "_ : Fin n"
+      ],
+      "frozenScope": "Local typeclass instance at T03 only; definitional unfolding pairedLaw; derived from hμ, not a new assumption",
+      "independentlyReviewedSourceFirstLine": 82,
+      "independentlyReviewedSourceLastLine": 83,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.D",
+      "type": "Set (Fin n → Ω × Ω)",
+      "initializer": "pairedTailEvent n g t",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T03 proof; exact D02 value, no event restriction",
+      "independentlyReviewedSourceFirstLine": 84,
+      "independentlyReviewedSourceLastLine": 84,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.B",
+      "type": "(Fin n → Bool) → Set (Fin n → Ω × Ω)",
+      "initializer": "fun s : Fin n → Bool => {z : Fin n → Ω × Ω | t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) < |scalarSignSum n (pairedDifference n g z) s|}",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T03 proof after full telescope; fixed s before z",
+      "independentlyReviewedSourceFirstLine": 85,
+      "independentlyReviewedSourceLastLine": 88,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.I",
+      "type": "(Fin n → Bool) → (Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun (s : Fin n → Bool) (z : Fin n → Ω × Ω) => if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) < |scalarSignSum n (pairedDifference n g z) s| then (1 : ℝ) else (0 : ℝ)",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T03 proof; canonical Real-order decidability in each indicator",
+      "independentlyReviewedSourceFirstLine": 89,
+      "independentlyReviewedSourceLastLine": 93,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.indicatorForm",
+      "type": "(Fin n → Bool) → (Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun s : Fin n → Bool => (B s).indicator (fun _ : Fin n → Ω × Ω => (1 : ℝ))",
+      "termCaptures": [
+        "B : (Fin n → Bool) → Set (Fin n → Ω × Ω)"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "B : (Fin n → Bool) → Set (Fin n → Ω × Ω)",
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "lambdaSetBinders": [
+        "s : Fin n → Bool",
+        "_ : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T03 proof after B; exact pointwise rewrite of I, no new event",
+      "independentlyReviewedSourceFirstLine": 107,
+      "independentlyReviewedSourceLastLine": 115,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.J",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => cubeMean n (fun s : Fin n → Bool => if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) < |scalarSignSum n (pairedDifference n g z) s| then (1 : ℝ) else (0 : ℝ))",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω",
+        "s : Fin n → Bool"
+      ],
+      "frozenScope": "T03 header and proof; same full initializer if J is a let",
+      "independentlyReviewedSourceFirstLine": 76,
+      "independentlyReviewedSourceLastLine": 81,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.one",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun _ : Fin n → Ω × Ω => (1 : ℝ)",
+      "termCaptures": [],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "lambdaSetBinders": [
+        "_ : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T03 proof for integrable_const and indicators; Ω/n occur only in domain type",
+      "independentlyReviewedSourceFirstLine": 108,
+      "independentlyReviewedSourceLastLine": 115,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.weight",
+      "type": "ℝ",
+      "initializer": "((2 : ℝ) ^ n)⁻¹",
+      "termCaptures": [
+        "n : ℕ"
+      ],
+      "typeCaptures": [],
+      "completeCaptures": [
+        "n : ℕ"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T03 proof after unfolding accepted185 cubeMean; positive denominator for every n",
+      "independentlyReviewedSourceFirstLine": 127,
+      "independentlyReviewedSourceLastLine": 133,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.signIntegralFamily",
+      "type": "(Fin n → Bool) → ℝ",
+      "initializer": "fun s : Fin n → Bool => ∫ z : Fin n → Ω × Ω, I s z ∂pairedLaw n μ",
+      "termCaptures": [
+        "I : (Fin n → Bool) → (Fin n → Ω × Ω) → ℝ",
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "typeCaptures": [
+        "n : ℕ"
+      ],
+      "completeCaptures": [
+        "I : (Fin n → Bool) → (Fin n → Ω × Ω) → ℝ",
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "lambdaSetBinders": [
+        "s : Fin n → Bool",
+        "z : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T03 proof when applying integral_finsetSum; all I s integrable established first",
+      "independentlyReviewedSourceFirstLine": 122,
+      "independentlyReviewedSourceLastLine": 131,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.swapMap",
+      "type": "(Fin n → Bool) → (Fin n → Ω × Ω) → (Fin n → Ω × Ω)",
+      "initializer": "fun s : Fin n → Bool => swapSample n (Ω := Ω) s",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "lambdaSetBinders": [
+        "s : Fin n → Bool"
+      ],
+      "frozenScope": "T03 measure_preimage application; s fixed independently of z",
+      "independentlyReviewedSourceFirstLine": 95,
+      "independentlyReviewedSourceLastLine": 121,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.constantProbabilityFamily",
+      "type": "(Fin n → Bool) → ℝ",
+      "initializer": "fun _ : Fin n → Bool => (pairedLaw n μ).real (pairedTailEvent n g t)",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "_ : Fin n → Bool"
+      ],
+      "frozenScope": "T03 finite constant sum after every fixed sign probability equality",
+      "independentlyReviewedSourceFirstLine": 122,
+      "independentlyReviewedSourceLastLine": 133,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.cardNat",
+      "type": "ℕ",
+      "initializer": "Fintype.card (Fin n → Bool)",
+      "termCaptures": [
+        "n : ℕ"
+      ],
+      "typeCaptures": [],
+      "completeCaptures": [
+        "n : ℕ"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T03 finite cube cardinality; equals Nat.pow 2 n before casting",
+      "independentlyReviewedSourceFirstLine": 130,
+      "independentlyReviewedSourceLastLine": 133,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T03.cardReal",
+      "type": "ℝ",
+      "initializer": "(Fintype.card (Fin n → Bool) : ℝ)",
+      "termCaptures": [
+        "n : ℕ"
+      ],
+      "typeCaptures": [],
+      "completeCaptures": [
+        "n : ℕ"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T03 normalization; equals (2 : ℝ)^n by Nat-to-Real cast of the preceding natural equality",
+      "independentlyReviewedSourceFirstLine": 130,
+      "independentlyReviewedSourceLastLine": 133,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T04.instP",
+      "type": "IsProbabilityMeasure (pairedLaw n μ)",
+      "initializer": "inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ.prod μ)))",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "hμ : IsProbabilityMeasure μ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "mΩ : MeasurableSpace Ω",
+        "μ : Measure Ω",
+        "hμ : IsProbabilityMeasure μ"
+      ],
+      "lambdaSetBinders": [
+        "_ : Fin n"
+      ],
+      "frozenScope": "Separate T04 local instance after its full telescope; no lexical inheritance from T03",
+      "independentlyReviewedSourceFirstLine": 142,
+      "independentlyReviewedSourceLastLine": 143,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T04.average",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun z : Fin n → Ω × Ω => cubeMean n (fun s : Fin n → Bool => if t * Real.sqrt (scalarEnergy n (pairedDifference n g z)) < |scalarSignSum n (pairedDifference n g z) s| then (1 : ℝ) else (0 : ℝ))",
+      "termCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [
+        "z : Fin n → Ω × Ω",
+        "s : Fin n → Bool"
+      ],
+      "frozenScope": "T04 integral_mono application; same anonymous RHS as T03",
+      "independentlyReviewedSourceFirstLine": 146,
+      "independentlyReviewedSourceLastLine": 160,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T04.bound",
+      "type": "ℝ",
+      "initializer": "(2 : ℝ) * Real.exp (-(t ^ (2 : ℕ)) / (2 : ℝ))",
+      "termCaptures": [
+        "t : ℝ"
+      ],
+      "typeCaptures": [],
+      "completeCaptures": [
+        "t : ℝ"
+      ],
+      "lambdaSetBinders": [],
+      "frozenScope": "T04 proof after full telescope; constant independent of z and s",
+      "independentlyReviewedSourceFirstLine": 139,
+      "independentlyReviewedSourceLastLine": 165,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    },
+    {
+      "id": "T04.constantBound",
+      "type": "(Fin n → Ω × Ω) → ℝ",
+      "initializer": "fun _ : Fin n → Ω × Ω => (2 : ℝ) * Real.exp (-(t ^ (2 : ℕ)) / (2 : ℝ))",
+      "termCaptures": [
+        "t : ℝ"
+      ],
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "completeCaptures": [
+        "t : ℝ",
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "lambdaSetBinders": [
+        "_ : Fin n → Ω × Ω"
+      ],
+      "frozenScope": "T04 integral comparison upper function",
+      "independentlyReviewedSourceFirstLine": 151,
+      "independentlyReviewedSourceLastLine": 165,
+      "exactFrozenInitializerOrAllowedInlining": true,
+      "newChoiceOrSelector": false,
+      "actualDataScopeCompatible": true
+    }
+  ],
+  "all10ActualExplicitPropHeads": [
+    {
+      "name": "hdiff",
+      "completeHead": "  have hdiff (i : Fin n) :\n      pairedDifference n g (swapSample n s z) i =\n        signValue (s i) * pairedDifference n g z i",
+      "firstLine": 39,
+      "lastBodyLine": 44,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": null,
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "henergy",
+      "completeHead": "  have henergy : Measurable (fun z : Fin n → Ω × Ω =>\n      scalarEnergy n (pairedDifference n g z))",
+      "firstLine": 60,
+      "lastBodyLine": 63,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": null,
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hsum",
+      "completeHead": "  have hsum : Measurable (fun z : Fin n → Ω × Ω =>\n      ∑ i : Fin n, pairedDifference n g z i)",
+      "firstLine": 64,
+      "lastBodyLine": 67,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": null,
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hD",
+      "completeHead": "  have hD : MeasurableSet D",
+      "firstLine": 94,
+      "lastBodyLine": 94,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hpre",
+      "completeHead": "  have hpre (s : Fin n → Bool) :\n      B s = (swapSample n s) ⁻¹' D",
+      "firstLine": 95,
+      "lastBodyLine": 102,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hB",
+      "completeHead": "  have hB (s : Fin n → Bool) : MeasurableSet (B s)",
+      "firstLine": 103,
+      "lastBodyLine": 106,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hI_eq",
+      "completeHead": "  have hI_eq (s : Fin n → Bool) :\n      I s = (B s).indicator (fun _ : Fin n → Ω × Ω => (1 : ℝ))",
+      "firstLine": 107,
+      "lastBodyLine": 112,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hI_int",
+      "completeHead": "  have hI_int (s : Fin n → Bool) : Integrable (I s) (pairedLaw n μ)",
+      "firstLine": 113,
+      "lastBodyLine": 115,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hmass",
+      "completeHead": "  have hmass (s : Fin n → Bool) :\n      (pairedLaw n μ).real (B s) = (pairedLaw n μ).real D",
+      "firstLine": 116,
+      "lastBodyLine": 121,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    },
+    {
+      "name": "hint",
+      "completeHead": "  have hint (s : Fin n → Bool) :\n      (∫ z : Fin n → Ω × Ω, I s z ∂pairedLaw n μ) =\n        (pairedLaw n μ).real D",
+      "firstLine": 122,
+      "lastBodyLine": 126,
+      "scopeCheckedAgainstActualSource": true,
+      "localData": [
+        "T03.instP",
+        "T03.D",
+        "T03.B",
+        "T03.I"
+      ],
+      "additionalMathematicalData": false
+    }
+  ],
+  "actualBranchesAndAnonymousPropObligations": [
+    {
+      "scope": "T01.hdiff",
+      "lines": [
+        39,
+        44
+      ],
+      "binders": [
+        "i : Fin n"
+      ],
+      "facts": [
+        "s i = false",
+        "s i = true"
+      ],
+      "math": "False swaps and negates; true keeps; no selected sign."
+    },
+    {
+      "scope": "T01.energy bullet",
+      "lines": [
+        46,
+        50
+      ],
+      "binders": [
+        "i : Fin n",
+        "hi : i in Finset.univ"
+      ],
+      "facts": [
+        "s i = false",
+        "s i = true"
+      ],
+      "math": "Finite-square equality; no division."
+    },
+    {
+      "scope": "T01.sum bullet",
+      "lines": [
+        51,
+        54
+      ],
+      "binders": [
+        "i : Fin n",
+        "hi : i in Finset.univ"
+      ],
+      "math": "Coordinate equality supplied by hdiff."
+    },
+    {
+      "scope": "T03.hpre",
+      "lines": [
+        95,
+        102
+      ],
+      "binders": [
+        "s : Fin n -> Bool",
+        "z : Fin n -> Omega x Omega"
+      ],
+      "math": "Exact strict event membership iff, then energy/sum rewriting."
+    },
+    {
+      "scope": "T03.hI_eq",
+      "lines": [
+        107,
+        112
+      ],
+      "binders": [
+        "s : Fin n -> Bool",
+        "z : Fin n -> Omega x Omega"
+      ],
+      "facts": [
+        "strict test hz",
+        "negated strict test hz"
+      ],
+      "math": "Only frozen real indicator values 1/0."
+    },
+    {
+      "scope": "T03.integral_finsetSum",
+      "lines": [
+        130,
+        131
+      ],
+      "binders": [
+        "s : Fin n -> Bool",
+        "membership proof"
+      ],
+      "math": "Only hI_int s is consumed."
+    },
+    {
+      "scope": "T04.integral_mono_of_nonneg bullets",
+      "lines": [
+        153,
+        164
+      ],
+      "binders": [
+        "z : Fin n -> Omega x Omega",
+        "s : Fin n -> Bool",
+        "hs : s in Finset.univ"
+      ],
+      "facts": [
+        "hcond strict test",
+        "hcond negated strict test"
+      ],
+      "math": "Average nonnegative / constant integrable / qualified198 pointwise upper bound. These are three Prop obligations, no additional data."
+    },
+    {
+      "scope": "T04.pow_nonneg anonymous Prop",
+      "lines": [
+        157,
+        157
+      ],
+      "completeHead": "(0 : Real) <= (2 : Real)",
+      "math": "Ordinary numerical Prop argument, not an additional hypothesis."
+    }
+  ],
+  "actualLocalProbabilityInstances": [
+    {
+      "owner": "T03",
+      "lines": [
+        82,
+        83
+      ],
+      "type": "IsProbabilityMeasure (pairedLaw n mu)",
+      "initializer": "inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => mu.prod mu)))",
+      "typeCaptures": [
+        "n",
+        "Omega",
+        "mOmega",
+        "mu"
+      ],
+      "termCaptures": [
+        "n",
+        "Omega",
+        "mOmega",
+        "mu",
+        "hmu"
+      ]
+    },
+    {
+      "owner": "T04",
+      "lines": [
+        142,
+        143
+      ],
+      "type": "IsProbabilityMeasure (pairedLaw n mu)",
+      "initializer": "inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => mu.prod mu)))",
+      "typeCaptures": [
+        "n",
+        "Omega",
+        "mOmega",
+        "mu"
+      ],
+      "termCaptures": [
+        "n",
+        "Omega",
+        "mOmega",
+        "mu",
+        "hmu"
+      ]
+    }
+  ],
+  "primary11PlusSupplement12": 12,
+  "formalOld185187": {
+    "entries": 7,
+    "TYPElines": 28,
+    "nonTheoremVALUElines": 30,
+    "independentCompleteInterfaceRead": true,
+    "oldProofOrAXReplayed": false
+  },
+  "qualified198": {
+    "entries": 3,
+    "TYPElines": 33,
+    "nonTheoremVALUElines": 9,
+    "independentCompleteInterfaceRead": true,
+    "oldProofOrAXReplayed": false
+  },
+  "future188": {
+    "entries": 3,
+    "TYPElines": 24,
+    "nonTheoremVALUElines": 8,
+    "formalDependency199": false
+  },
+  "sourceToStatement": {
+    "p51SHA": "96920f428b8fc09788a6388103cefe398e3ec739129a5922b984babd09e99359",
+    "p51FullRead": true,
+    "pairedDifferenceLawOnly": true,
+    "S11OrOriginalSingleSampleClaim": false,
+    "SZ92JSW64AttributionPreserved": true,
+    "newNoveltyClaim": false
+  },
+  "boundaryChecks": [
+    "n=0: empty strict event and sign cube cardinality1",
+    "zero energy: all differences0 and strict event empty",
+    "t=0 retained in T04",
+    "t<0 retained only in T02/T03",
+    "arbitrary measurable space; no standard-Borel restriction",
+    "g only measurable; no L1/L2/boundedness/exponential moment",
+    "atomic laws and equality boundaries remain strict"
+  ],
+  "actualOwnedCount": "UNKNOWN_PENDING_FIRST_OBJECT",
+  "nativeAndAllOwnedAX": "NOT_PROVIDED_NOT_RUN",
+  "LeanAXServerNetworkGitAPIUploadCalls": 0,
+  "warnings": [
+    "Author Prop scope metadata bodyLastLine1 includes next sibling command in several rows. Independent ranges here use exact actual lexical body ends; source scope itself is correct.",
+    "Stage1 AGENTS/REGISTRY hashes are historical administrative snapshots; Stage2 live binding and user current direction take precedence.",
+    "Pinned primary prefix offsets count Unicode codepoints; initial reviewer UTF16 false mismatches preserved separately."
+  ],
+  "rootScope": "C1 immutablev85 COMPLETE; C2/C12/OQ56 and S11 OPEN; OQ3 PAUSED_BY_USER; p54 repairs and external attribution preserved;124 not prerequisite"
+}
