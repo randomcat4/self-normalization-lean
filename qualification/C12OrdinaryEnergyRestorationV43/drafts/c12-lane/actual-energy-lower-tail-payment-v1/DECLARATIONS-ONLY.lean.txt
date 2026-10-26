@@ -1,0 +1,31 @@
+import Shao.C2.AuxiliaryLowEnergyGaussian
+import Shao.Probability.QuadraticEnergyLowerTail
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 800000
+noncomputable section
+namespace Shao.C2.ActualEnergyLowerTailPayment
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators Classical
+
+theorem own_cubic_small_energy_exponential_payment
+    (delta x : ℝ) (hdelta : 0 < delta) (hx : 0 ≤ x)
+    (hsmall : delta * (1 + x) ^ 3 ≤ 1 / 16) :
+    Real.exp (-(1 / (64 * delta ^ 2))) ≤
+      32 * delta * (1 + x) ^ 3 * Shao.standardNormalTail x
+
+theorem iid_actual_energy_lower_tail_gaussian_payment
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) nu)
+    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (x : ℝ) (hx : 0 ≤ x) :
+    let delta : ℝ := (n : ℝ) * (∫ z : ℝ, |z| ^ 3 ∂nu)
+    delta * (1 + x) ^ 3 ≤ 1 / 16 →
+      0 < delta ∧
+        (Measure.pi (fun _ : Fin n => nu)).real
+            {v : Shao.Path n | Shao.energy v ≤ 1 / 2} ≤
+          32 * delta * (1 + x) ^ 3 * Shao.standardNormalTail x
+
+end Shao.C2.ActualEnergyLowerTailPayment
