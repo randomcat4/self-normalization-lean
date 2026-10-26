@@ -1,0 +1,22 @@
+--- ../OriginalRhoTiltedMoments.lean
++++ OriginalRhoTiltedMoments.lean
+@@ -160,7 +160,7 @@
+         apply integral_congr_ae
+         exact Filter.Eventually.of_forall fun z => by ring
+       _ = ((∫ z, |f z| ^ 2 ∂P) - 2 * c * (∫ z, |f z| ∂P)) + c ^ 2 := by
+-        rw [integral_add (hSqI.sub hLinI) (integrable_const (c ^ 2)),
++        rw [integral_add (hSqI.sub' hLinI) (integrable_const (c ^ 2)),
+           integral_sub hSqI hLinI, integral_const_mul, integral_const,
+           probReal_univ, one_smul]
+       _ = (∫ z, f z ^ 2 ∂P) - c ^ 2 := by
+@@ -289,7 +289,9 @@
+       hFullPos, hprod, hPaDensity, hPaProd, hPaProb,
+       hF2, hFI, hrows, hLambdaI, hFid, hLambdaId, _, _, _, _, _, _⟩
+   letI : IsProbabilityMeasure Pₐ := hPaProb
+-  have hN4 : (4 : ℝ) ≤ N := by exact_mod_cast hn
++  have hN4 : (4 : ℝ) ≤ N := by
++    dsimp only [N]
++    exact_mod_cast hn
+   have hNpos : 0 < N := lt_of_lt_of_le (by norm_num) hN4
+   have hqpos : 0 < q := Real.sqrt_pos.2 hNpos
+   have hNm1 : 0 < N - 1 := by linarith only [hN4]

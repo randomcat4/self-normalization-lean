@@ -1,0 +1,112 @@
+{
+  "schema": "oq56-unit213-parent-proof-only-repair01-freeze-v1",
+  "atUTC": "2026-10-26T15:21:51.506795+00:00",
+  "completePriorContract": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-tilted-moments-213/parent-freeze-v1.json",
+    "sha256": "47d21e0b9d2890fcae23bdf4008c78a134149feccf6c802c117e974fbb998105",
+    "bytes": 14092
+  },
+  "priorSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit213/author-01/stage2/OriginalRhoTiltedMoments.lean",
+    "sha256": "dfdac876cf2f374cec8c92cbb75b518810fefb9ff5649b27a4031f6ae98a16af",
+    "bytes": 20062
+  },
+  "failedDiagnosticPacket": {
+    "path": "C:/game/shao lean/drafts/oq56/unit213/lead-execution-01/author-kernel-01-affected-diagnostics.json",
+    "sha256": "809a2477e99d42c9a017fc5e7da0f9eca678c8204adc4d67ff8081ea55c963bb",
+    "bytes": 5091
+  },
+  "actualFailure": "Native01RC1/2sourceerrors/8warnings/10.6845149919s/noO/allownedended/exactpreservation; archive unchanged",
+  "all4CompleteGlobalHeadsAndAllDataUnchanged": true,
+  "globalDeclarations": [
+    {
+      "name": "actual_quadratic_rho_moments",
+      "completeHead": "theorem actual_quadratic_rho_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o z, h o z = h z o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ z, h o z ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (y : ℝ) (hy : 1 ≤ y)\n    (hwindow : y ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ z, h o z ∂μ\n    let r : Ω → Ω → ℝ := fun o z => h o z - g o - g z\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ν : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let u : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ψ ξ i / ((n : ℝ) - 2)\n    let J : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, u ξ i ^ 2\n    let D : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    0 ≤ rho ∧ rho ^ 2 = v ∧\n      μ.tilted φ = ν ∧ IsProbabilityMeasure ν ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ν) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      Integrable (fun ξ => |F ξ|) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧ Integrable J Pₐ ∧\n      Integrable D Pₐ ∧ Integrable (fun ξ => |D ξ|) Pₐ ∧\n      (∀ ξ, J ξ = Λsq ξ / ((n : ℝ) - 2) ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) =\n        (∫ ξ, Λsq ξ ∂Pₐ) / ((n : ℝ) - 2) ^ 2 ∧\n      (∫ ξ, |D ξ| ∂Pₐ) =\n        (∫ ξ, |F ξ| ∂Pₐ) /\n          (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ rho ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ rho ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) ≤\n        56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, |D ξ| ∂Pₐ) ≤\n        8 * C ^ 2 * rho * (1 + y ^ 2) / Real.sqrt (n : ℝ)",
+      "role": "public"
+    },
+    {
+      "name": "rho_choose_bounds",
+      "completeHead": "private theorem rho_choose_bounds\n    (n : ℕ) (hn : 4 ≤ n) :\n    (n.choose 2 : ℝ) ≤ (n : ℝ) ^ 2 / 2 ∧\n      6 * (n.choose 3 : ℝ) ≤ (n : ℝ) ^ 3 ∧\n      6 * (n.choose 4 : ℝ) ≤ (n : ℝ) ^ 4 / 4",
+      "role": "private helper"
+    },
+    {
+      "name": "rho_coefficient_bounds",
+      "completeHead": "private theorem rho_coefficient_bounds\n    (n : ℕ) (hn : 4 ≤ n)\n    (y C : ℝ) (hC : 1 ≤ C) :\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    (4 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n      96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n    (8 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 2)",
+      "role": "private helper"
+    },
+    {
+      "name": "integral_abs_sq_le_second",
+      "completeHead": "private theorem integral_abs_sq_le_second\n    {X : Type*} [MeasurableSpace X]\n    (P : Measure X) [IsProbabilityMeasure P]\n    (f : X → ℝ) (hf : MemLp f 2 P) :\n    Integrable (fun z => |f z|) P ∧\n      (∫ z, |f z| ∂P) ^ 2 ≤ ∫ z, f z ^ 2 ∂P",
+      "role": "private helper"
+    }
+  ],
+  "permittedOnlyAffectedProofChanges": [
+    "H03 after hLinI before hExpand add fully typed ordinary derived Prop hSubI : Integrable (fun z : X => |f z| ^ 2 - 2 * c * |f z|) P := hSqI.sub hLinI. Its explicit function-lambda type is definitionally the same pointwise function as the inferred Pi.sub proof; no mathematical assumption.",
+    "H03 hExpand existing integral_add application: replace (hSqI.sub hLinI) by hSubI. This makes the rewrite instantiate the explicit lambda exactly matching the displayed integrand. Preserve all other integral rewrites/proof/data.",
+    "P01 hN4 same complete proposition (4 : ℝ) ≤ N: before exact_mod_cast hn, dsimp only [N] (or change to the explicit cast proposition (4 : ℝ) ≤ (n : ℝ)). Only unfold the already frozen N; no new data/premise.",
+    "Any separately exposed needed alteration must be reported before unlisted edits. No cleanup-only warning changes or newimports/helpers."
+  ],
+  "newOrdinaryPropContract": {
+    "name": "hSubI",
+    "scope": "private integral_abs_sq_le_second, after hLinI and before hExpand",
+    "completeType": "Integrable (fun z : X => |f z| ^ 2 - 2 * c * |f z|) P",
+    "completeProofInitializer": "hSqI.sub hLinI",
+    "effectiveContext": "{X : Type*} [MeasurableSpace X] (P : Measure X) [IsProbabilityMeasure P] (f : X → ℝ) (hf : MemLp f 2 P); c=∫z,|fz|∂P; hSqI:Integrable(fun z=>|fz|²)P; hLinI:Integrable(fun z=>2*c*|fz|)P",
+    "captures": [
+      "X",
+      "measurable instance",
+      "P",
+      "f",
+      "c",
+      "hSqI",
+      "hLinI"
+    ],
+    "newNonPropValue": false
+  },
+  "selectedPrimaryPackets": [
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit213/lead-execution-01/primary-integral-add-sub-heads-search01.json",
+      "sha256": "933ad5605ebbfb9a9597e4db14bf8a3d46c86e18ca1bb4f1b96ebc2193c3f23e",
+      "bytes": 1315
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit213/lead-execution-01/primary-integrable-sub-complete-head01.json",
+      "sha256": "05eb1c097959f4a2505f2ada75a6ecfbeb05f1be0f081f9d938e9efbd823437c",
+      "bytes": 1010
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-tilted-moments-213/parent-primary-complete-heads01.json",
+      "sha256": "cb7acb785517c1ac15acfa84ea06861531bc6891c2ef50ebb86752b2a2760aed",
+      "bytes": 17597
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-tilted-moments-213/parent-primary-effective-context-supplement01.json",
+      "sha256": "16d512463957de9f8d165a316ee863122d3fbae8ce949d7355e99b376fe381b2",
+      "bytes": 3892
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-tilted-moments-213/parent-primary-bochner-context02.json",
+      "sha256": "6474238289a6f48ce79646296a279894a688e72325df90cec764b335441de39a",
+      "bytes": 2393
+    }
+  ],
+  "existingIndependentCompleteSOURCEReview": {
+    "path": "C:/game/shao lean/drafts/oq56/unit213/final-review-01/MANIFEST.json",
+    "sha256": "e487ec365498b4ee88cf527d97e3b4da09ebb4bd5b62e10da71952b74f8f623f",
+    "bytes": 1927
+  },
+  "reuse": "Unchanged457sourceproofs/28data/21headerlets/3directactualtypes/52bindings retain qualifiedSOURCEcoverage; sameindependentreviewer reviews affected exactdelta before newnative02. Oldaccepted139140proof/kernel/leafAX neverreplayed.",
+  "implementationAuthorized": true,
+  "qualified": false,
+  "authorOutputOwnership": "NEW unit213/author-01/stage2/repair-proof01 only; SAMEcanonicalauthor; purelocalnoLean/server/network/Git/API/upload/subagents",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "input": null,
+    "cachedInput": null,
+    "output": null,
+    "reasoningSubset": null
+  }
+}
