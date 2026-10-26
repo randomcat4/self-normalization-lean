@@ -1,0 +1,15 @@
+# Common observable sub-sigma algebra for the original kernel
+
+The new theorem `Shao.OQ6.KernelObservableReduction.exists_countably_generated_observable_subspace` constructs one countably generated measurable subspace m0 <= mOmega on the same arbitrary observation type. It retains joint measurability of the SAME real kernel h and measurability of every member of the SAME countable scalar-observable family. No countable-generation, separation, standard-Borel or nonempty premise is imposed on the original space.
+
+The proof selects countable generator supports for the kernel preimages and scalar observables, then takes one common family of measurable rectangle sides. The private supporting theorem handles arbitrary generator families, including empty support. The actual compiled inventory includes its generated singleton-membership simplification theorem.
+
+Exact qualified source: SHA256 `cb8dcc89e43c7ce79252bfd67bced38cf9ef2aa1bb52075ee9a38cbcd7a38c88`, 8739 bytes, 198 LF lines. The complete independent SOURCE proof review composes the two narrowly frozen repair reviews; the same independent reviewer completed the final actual-type and machine review. The author and reviewer are separate.
+
+Native03 passed with actual Lean RC0, 0 source errors, 0 source warnings and empty stdout. Its FIRST original object is SHA256 `346321016125d27f15517ca7fa61dc89a00ba5bc72741a7ea0afc7941077fffe`, 147512 bytes. The same-object import audit passed actual RC0 without recompiling or replacing that object. All 3 actual module owners have complete types (43 TYPE lines, 0 non-theorem VALUE lines), including the private and generated owners. Recursive axiom occurrences are propext3, Classical.choice2 and Quot.sound2, all within the standard whitelist.
+
+Both strict runner-wrapper flags remain false, with the known standing134-byte stderr retained; FIRSTEMPTY is null and is not a returned runner field. Accepted old SHA seals with current bytes/ns checks are distinguished from new full-SHA checks. Native01 and native02 failures, their exact source versions and compact diagnostic histories remain preserved. No old accepted producer proof or leaf axiom audit was replayed.
+
+This qualifies only the classical common-observable-sub-sigma prerequisite. Typed trim-law, projection/integral/moment, pair/sample/statistic transport is the separate next unit219, still under independent SOURCE review at this milestone. Scalar coding application, the literal centered clipped CDF/S27, external Shao-Zhou input, atoms, zero denominators, S11/general S15/DC and full OQ56 remain OPEN. The original p51 repair-candidate status, p54 repairs, Shao-Zhou (2016) attribution and no-novelty boundary are preserved. Original C1 immutablev85 and assigned C2/C12v112 completion are unchanged; OQ3 remains separately user-paused.
+
+All Lean and axiom checks ran on the designated server under phase39, the existing OQ56 lock, CPU52-55 (a valid subset), -M8192 -j4. Publication is metadata/source only and performs no merge or shared/cache/import mutation.
