@@ -1,0 +1,53 @@
+--- C:/game/shao lean/drafts/oq56/unit196/author-01/stage2/BoundedStudentizerGeometry.lean
++++ C:/game/shao lean/drafts/oq56/unit196/author-01/stage2/repair-01/BoundedStudentizerGeometry.lean
+@@ -243,9 +243,11 @@
+     rw [Finset.sum_add_distrib, herase]
+   rw [Shao.OQ6.FiniteRows.rowMean, hrow,
+     sampled_uStatistic_formula n g r x hsym hn]
+   unfold Shao.OQ5.P35.center Shao.OQ5.P35.mean
+-  rw [Finset.sum_add_distrib, hU, residualU_eq_erased_row]
++  rw [Finset.sum_add_distrib, hU]
++  dsimp only
++  rw [residualU_eq_erased_row]
+   field_simp [hN0, hN1, hN2] <;> ring
+ 
+ -- D17
+ 
+@@ -654,18 +656,18 @@
+         2 * |∑ i : Fin n,
+           Shao.OQ5.P35.center (fun j : Fin n => g (x j)) i *
+             Shao.OQ5.P35.center (residualU n r x) i| +
+         (∑ i : Fin n, (Shao.OQ5.P35.center (residualU n r x) i) ^ 2) := by
+-    have h1 := abs_add ((projectionV n g x) ^ 2 - (projectionW n g x) ^ 2)
++    have h1 := abs_add_le ((projectionV n g x) ^ 2 - (projectionW n g x) ^ 2)
+       (2 * (∑ i : Fin n,
+         Shao.OQ5.P35.center (fun j : Fin n => g (x j)) i *
+           Shao.OQ5.P35.center (residualU n r x) i))
+-    have h2 := abs_add ((projectionV n g x) ^ 2 - (projectionW n g x) ^ 2 +
++    have h2 := abs_add_le ((projectionV n g x) ^ 2 - (projectionW n g x) ^ 2 +
+       2 * (∑ i : Fin n,
+         Shao.OQ5.P35.center (fun j : Fin n => g (x j)) i *
+           Shao.OQ5.P35.center (residualU n r x) i))
+       (∑ i : Fin n, (Shao.OQ5.P35.center (residualU n r x) i) ^ 2)
+-    have h3 := abs_add ((projectionV n g x) ^ 2) (-((projectionW n g x) ^ 2))
++    have h3 := abs_add_le ((projectionV n g x) ^ 2) (-((projectionW n g x) ^ 2))
+     rw [abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)] at h1
+     rw [abs_of_nonneg hB0] at h2
+     simp only [← sub_eq_add_neg, abs_neg, abs_of_nonneg (sq_nonneg (projectionV n g x)),
+       abs_of_nonneg (sq_nonneg (projectionW n g x))] at h3
+@@ -726,9 +728,14 @@
+         16 * Real.sqrt K * Real.sqrt (q / (n : ℝ)) + 16 * K * q / (n : ℝ) := hsharp
+     _ ≤ studentizerGeometryScale K * (y / Real.sqrt (n : ℝ)) +
+         studentizerGeometryScale K * Real.sqrt (q / (n : ℝ)) +
+         studentizerGeometryScale K * (q / (n : ℝ)) := by
+-      nlinarith only [ht1, ht2, ht3]
++      calc
++        164 * y / Real.sqrt (n : ℝ) + 16 * Real.sqrt K * Real.sqrt (q / (n : ℝ)) +
++            16 * K * q / (n : ℝ) =
++          164 * (y / Real.sqrt (n : ℝ)) + 16 * Real.sqrt K * Real.sqrt (q / (n : ℝ)) +
++            16 * K * (q / (n : ℝ)) := by ring
++        _ ≤ _ := add_le_add (add_le_add ht1 ht2) ht3
+     _ = _ := by ring
+ 
+ end
+ 
