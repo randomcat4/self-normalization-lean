@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,hashlib\nb=pathlib.Path('/root/rivermind-data/shao-lean-20261021');w=b/'workspaces/c12-bridge-domination-v71';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();units=[('233',b/'outputs/c12-original-growing-double-comparison-v71','kernel001','OriginalGrowingDoubleComparison'),('236',b/'outputs/c12-original-moment-envelope-v71','kernel002','OriginalMomentEnvelope')];rows=[]\nfor unit,o,k,module in units:\n rr=json.loads((o/(k+'-result.json')).read_text());assert rr['naturalRC']==1 and rr['objectSHA256'] is None;assert not(o/(module+'.olean')).exists() and not(o/'audit001-start.json').exists();rows += [{'unit':unit,'file':k+suffix,'remote':str(o/(k+suffix)),'bytes':(o/(k+suffix)).stat().st_size,'sha256':sha(o/(k+suffix))} for suffix in ['-result.json','-start.json','-threads.json']]\n if unit=='233':print('233_ERROR_LOG\\n'+(o/(k+'.log')).read_text())\np=w/'.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean';ls=p.read_text().splitlines();print('RPOW_PRIMARY_MATCH',[(i+1,l) for i,l in enumerate(ls) if 'rpow_eq_pow' in l or 'def rpow' in l]);print('RPOW_SOURCE_IMPORTS',[(i+1,l) for i,l in enumerate(ls[:80])]);print('FAILURE_ROWS_JSON'+json.dumps(rows))\n",
+  "timeout": 60
+}

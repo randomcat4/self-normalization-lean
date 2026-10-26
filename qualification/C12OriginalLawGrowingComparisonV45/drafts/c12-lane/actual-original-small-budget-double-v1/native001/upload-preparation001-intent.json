@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,subprocess,hashlib,re\nbase=pathlib.Path('/root/rivermind-data/shao-lean-20261021');w=base/'workspaces/c12-bridge-domination-v71';o=base/'outputs/c12-actual-original-small-budget-double-v71';s=w/'Shao/C2/ActualOriginalSmallBudgetDouble.lean'\nphase=max((base/'coordination').glob('HEAVY-PHASE-*.json'),key=lambda p:int(re.search(r'-(\\d+)\\.json$',p.name).group(1)))\nassert phase.name=='HEAVY-PHASE-C12-OQ56-33.json' and hashlib.sha256(phase.read_bytes()).hexdigest()=='6994b853aea6e15f5be7aa9b7295bac71da6ddd053d7ec31f0d1c2031a8d1913'\nassert not s.exists() and not o.exists();assert subprocess.run(['flock','-n',str(base/'locks/c12-heavy.lock'),'true']).returncode==0\no.mkdir();print(json.dumps({'freshSourceAbsent':True,'freshOutputCreated':True,'phase':33,'c12LockFree':True,'LeanAX':0}))\n",
+  "timeout": 60
+}

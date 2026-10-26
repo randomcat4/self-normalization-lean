@@ -1,0 +1,20 @@
+--- source001
++++ source002
+@@ -76,12 +76,13 @@
+     simpa only [a, mul_comm] using hShift
+   have hsmallCmp : delta * a ^ 3 ≤ eps := hsmall.trans (min_le_left _ _)
+   have hsmallEnergy : delta * a ^ 3 ≤ 1 / 16 := hsmall.trans (min_le_right _ _)
+-  have hPaid :=
++  have hPaidRaw :=
+     Shao.C2.UnitSecondEnergyLowerTailPayment.iid_unit_second_energy_lower_tail_gaussian_payment
+       chi n hn h2 h3 hsecond x hx0 hsmallEnergy
+-  change 0 < delta ∧
+-    Pc.real {w : Shao.Path n | Shao.energy w ≤ (n : ℝ) / 2} ≤
+-      32 * u * Shao.standardNormalTail x at hPaid
++  have hPaid : 0 < delta ∧
++      Pc.real {w : Shao.Path n | Shao.energy w ≤ (n : ℝ) / 2} ≤
++        32 * u * Shao.standardNormalTail x := by
++    simpa only [u, a, mul_assoc] using hPaidRaw
+   let bad : Set (Shao.Path n) :=
+     {w | Shao.energy (fun i => w i - mu) < 1 / 4}
+   have hEnergySet :

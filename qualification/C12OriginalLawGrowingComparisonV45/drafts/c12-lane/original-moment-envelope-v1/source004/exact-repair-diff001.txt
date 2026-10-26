@@ -1,0 +1,30 @@
+--- source003
++++ source004
+@@ -31,7 +31,7 @@
+   have hInverse : Tendsto (fun n : ℕ => 1 / Real.rpow (n : ℝ) alpha)
+       atTop (𝓝 0) := by
+     refine hNeg.congr' (Filter.Eventually.of_forall fun n => ?_)
+-    simp only [Function.comp_apply, Real.rpow_neg (Nat.cast_nonneg n), one_div]
++    simp only [Real.rpow_eq_pow, Function.comp_apply, Real.rpow_neg (Nat.cast_nonneg n), one_div]
+   have hRatio : Tendsto (fun n : ℕ => (1 + b n) / Real.rpow (n : ℝ) alpha)
+       atTop (𝓝 0) := by
+     simpa only [add_div, zero_add] using hInverse.add hRate
+@@ -39,7 +39,7 @@
+   have hTotal : Tendsto
+       (fun n : ℕ => (moment / Real.rpow sigma p) *
+         Real.rpow ((1 + b n) / Real.rpow (n : ℝ) alpha) p) atTop (𝓝 0) := by
+-    simpa only [mul_zero] using hPower.const_mul (moment / Real.rpow sigma p)
++    simpa only [Real.rpow_eq_pow, mul_zero] using hPower.const_mul (moment / Real.rpow sigma p)
+   refine hTotal.congr' (Filter.Eventually.of_forall fun n => ?_)
+   have hExponent : alpha * p = (p - 2) / 2 := by
+     dsimp only [alpha]
+@@ -47,7 +47,9 @@
+     <;> ring
+   have hDenominator : Real.rpow (Real.rpow (n : ℝ) alpha) p =
+       Real.rpow (n : ℝ) ((p - 2) / 2) := by
++    simp only [Real.rpow_eq_pow]
+     rw [← Real.rpow_mul (Nat.cast_nonneg n), hExponent]
++  simp only [Real.rpow_eq_pow] at hDenominator ⊢
+   rw [Real.div_rpow (by linarith only [hb n])
+     (Real.rpow_nonneg (Nat.cast_nonneg n) alpha) p, hDenominator]
+   simp only [div_eq_mul_inv, mul_inv_rev]
