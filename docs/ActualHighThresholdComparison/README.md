@@ -1,0 +1,9 @@
+# Actual high-threshold two-boundary comparison
+
+This change proves a full signed positive-overshoot budget for the actual stopped process and consumes it in a bounded, centered, unit-variance iid high-threshold comparison. For x >= 16 with the frozen support and small-budget hypotheses, the residual source-initial comparison has error C delta Psi; the complete physical Brownian comparison has the genuine error C R Psi, where R is the same normalized law’s own truncation budget and R = delta (1+x)^3. The universal constant is chosen before the model and distribution.
+
+The two exact source versions each passed independent complete source-to-statement/proof review, a server native kernel check, and an audit of every actual module-index-owned declaration. All 29 actual declarations (27 theorems and 2 definitions), all 29 complete TYPEs, both complete non-theorem VALUEs, and recursive axioms are covered. Only propext, Classical.choice and Quot.sound occur. The first successful original objects are reused without producer recompilation.
+
+The proof keeps the same stopping time/cap throughout, uses the full joint reorder law, handles closed terminal domains including zero-energy paths, and establishes ordinary integrability before splitting integrals. Earlier failed source/check receipts and exact independent affected-proof reviews are preserved. Verbatim UTF-8 envelopes preserve all sealed qualification bytes and their original hashes. The standing mathlib Git-status warning is explained by the pinned thin view; the large raw diagnostic inventory is retained byte-exact on the designated server and its relocation is recorded.
+
+Original C1 immutablev85 is complete. C2/C12/OQ56 remain OPEN; this change does not claim the original-law restoration bridge or root completion. OQ3 remains paused by the user.
