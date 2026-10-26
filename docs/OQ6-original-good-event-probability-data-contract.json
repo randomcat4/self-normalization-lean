@@ -1,0 +1,459 @@
+{
+  "schema": "oq56-unit205-parent-frozen-complete-data-localfacts-closures-v1",
+  "atUTC": "2026-10-26T09:44:46.284200+00:00",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION",
+  "globalDeclarations": [
+    {
+      "kind": "def",
+      "name": "normalizedGoodEvent",
+      "head": "def normalizedGoodEvent\n    (n : ℕ) {Ω : Type*} (g : Ω → ℝ) (y : ℝ) : Set (Fin n → Ω)",
+      "headSHA256": "afc6f1c4eb0e9fe0e976570fb64b0207a1d7740d4704868aeac2b627e69cb329",
+      "rhs": "{x : Fin n → Ω |\n  (1 / 2 : ℝ) ≤ Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy n g x / (n : ℝ) ∧\n    |Shao.OQ6.OriginalGhostGoodEvent.sampleSum n g x / Real.sqrt (n : ℝ)| ≤\n      Real.sqrt y * Real.rpow (n : ℝ) ((1 : ℝ) / 4) *\n        ((4 : ℝ) + Real.sqrt\n          (Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy n g x / (n : ℝ)))}",
+      "rhsSHA256": "b5f887bef3775f8a4798bfe62246f6b28484c2cad090eabd82cf3bd5990cce3e"
+    },
+    {
+      "kind": "theorem",
+      "name": "original_good_event_complement_bound",
+      "head": "theorem original_good_event_complement_bound\n    {Ω : Type*} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ c : ℝ, 0 < c ∧ ∀ (n : ℕ), 0 < n → ∀ (y : ℝ), (1 : ℝ) ≤ y →\n      (Shao.OQ6.CanonicalDoubleGhostRowMoments.sampleLaw n μ).real\n        (normalizedGoodEvent n g y)ᶜ ≤\n          Real.exp (-c * (n : ℝ)) +\n            (4 : ℝ) * Real.exp (-(y * Real.sqrt (n : ℝ)) / (2 : ℝ))",
+      "headSHA256": "8205f2f381a365f377f58bdd09d082f816a5e56e1499e96d0a2b3c3cfe60f994",
+      "headBytes": 618
+    }
+  ],
+  "ambientBinders": [
+    "Ω",
+    "mΩ",
+    "μ",
+    "hμ",
+    "g",
+    "hg",
+    "hg2",
+    "hgmean",
+    "hgsecond"
+  ],
+  "postWitnessBinders": [
+    "n:ℕ",
+    "hn:0<n",
+    "y:ℝ",
+    "hy:(1:ℝ)≤y"
+  ],
+  "plannedImports": [
+    "Shao.OQ6.OriginalLowEnergyTail",
+    "Shao.OQ6.OriginalNormalizedUpperTail"
+  ],
+  "namespace": "Shao.OQ6.OriginalGoodEventProbability",
+  "data": [
+    {
+      "name": "c",
+      "type": "ℝ",
+      "initializer": null,
+      "selection": "rcases qualified203 original_low_energy_exponential μ g hg hg2 hgsecond with ⟨c,hc,hLowAll⟩",
+      "scope": "before∀n,y",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "hμ",
+        "g",
+        "hg",
+        "hg2",
+        "hgsecond"
+      ],
+      "beforeNandY": true,
+      "captureMeaning": "Direct inputs to qualified203 witness elimination; hgmean is not an input to that selection. No n/y/x in scope. Actual compiler captures remain unknown until new object audit."
+    },
+    {
+      "name": "n",
+      "type": "ℕ",
+      "initializer": null,
+      "scope": "∀n binder afterfixedc",
+      "captures": []
+    },
+    {
+      "name": "y",
+      "type": "ℝ",
+      "initializer": null,
+      "scope": "∀y binder after n/hn",
+      "captures": []
+    },
+    {
+      "name": "M",
+      "type": "Measure (Fin n → Ω)",
+      "initializer": "Shao.OQ6.CanonicalDoubleGhostRowMoments.sampleLaw n μ",
+      "captures": [
+        "n",
+        "Ω",
+        "mΩ",
+        "μ"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "E",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "fun x : Fin n → Ω => Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy n g x",
+      "captures": [
+        "n",
+        "Ω",
+        "g"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "S",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "fun x : Fin n → Ω => Shao.OQ6.OriginalGhostGoodEvent.sampleSum n g x",
+      "captures": [
+        "n",
+        "Ω",
+        "g"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "r",
+      "type": "ℝ",
+      "initializer": "Real.sqrt (n : ℝ)",
+      "captures": [
+        "n"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "q",
+      "type": "ℝ",
+      "initializer": "Real.rpow (n : ℝ) ((1 : ℝ) / 4)",
+      "captures": [
+        "n"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "T",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "fun x : Fin n → Ω => Real.sqrt y * q * ((4 : ℝ) + Real.sqrt (E x / (n : ℝ)))",
+      "captures": [
+        "n",
+        "Ω",
+        "y",
+        "q",
+        "E"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "G",
+      "type": "Set (Fin n → Ω)",
+      "initializer": "normalizedGoodEvent n g y",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "y"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "A",
+      "type": "Set (Fin n → Ω)",
+      "initializer": "{x : Fin n → Ω | E x < (n : ℝ) / (2 : ℝ)}",
+      "captures": [
+        "n",
+        "Ω",
+        "E"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    },
+    {
+      "name": "B",
+      "type": "Set (Fin n → Ω)",
+      "initializer": "{x : Fin n → Ω | T x < |S x / r|}",
+      "captures": [
+        "n",
+        "Ω",
+        "T",
+        "S",
+        "r"
+      ],
+      "scope": "inside∀n/y after globalwitnessc, beforepointwiseproofx"
+    }
+  ],
+  "localPropHeads": [
+    {
+      "name": "hc",
+      "type": "0 < c",
+      "sourceHead": null,
+      "derivation": "from203exists",
+      "scope": "cWitnessElimination",
+      "bindingKind": "rcases existential/conjunction elimination binder, not new have declaration"
+    },
+    {
+      "name": "hLowAll",
+      "type": "∀ n : ℕ, (Shao.OQ6.CanonicalDoubleGhostRowMoments.sampleLaw n μ).real {x : Fin n → Ω | Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy n g x < (n : ℝ) / (2 : ℝ)} ≤ Real.exp (-c * (n : ℝ))",
+      "sourceHead": null,
+      "derivation": "from203existsbefore∀n/y",
+      "scope": "cWitnessElimination",
+      "bindingKind": "rcases existential/conjunction elimination binder, not new have declaration"
+    },
+    {
+      "name": "hNpos",
+      "type": "0 < (n : ℝ)",
+      "sourceHead": "have hNpos : 0 < (n : ℝ)",
+      "derivation": "castgivenhn0<n",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hLowPoint",
+      "type": "∀ x : Fin n → Ω, E x / (n : ℝ) < (1 / 2 : ℝ) ↔ E x < (n : ℝ) / (2 : ℝ)",
+      "sourceHead": "have hLowPoint : ∀ x : Fin n → Ω, E x / (n : ℝ) < (1 / 2 : ℝ) ↔ E x < (n : ℝ) / (2 : ℝ)",
+      "derivation": "div_lt_iff₀hNpos anddeterministicrealringidentity",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hComplementPoint",
+      "type": "∀ x : Fin n → Ω, x ∈ Gᶜ ↔ x ∈ A ∪ B",
+      "sourceHead": "have hComplementPoint : ∀ x : Fin n → Ω, x ∈ Gᶜ ↔ x ∈ A ∪ B",
+      "derivation": "unfoldliteralG,A,B,T/E/S/r/q; DeMorganandnot_le; hLowPoint; allpoints/strictness retained",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hComplementEq",
+      "type": "Gᶜ = A ∪ B",
+      "sourceHead": "have hComplementEq : Gᶜ = A ∪ B",
+      "derivation": "Set.ext hComplementPoint",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hMeasureEq",
+      "type": "M.real Gᶜ = M.real (A ∪ B)",
+      "sourceHead": "have hMeasureEq : M.real Gᶜ = M.real (A ∪ B)",
+      "derivation": "congrArg typedmeasureEvaluation ofhComplementEq",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hLow",
+      "type": "M.real A ≤ Real.exp (-c * (n : ℝ))",
+      "sourceHead": "have hLow : M.real A ≤ Real.exp (-c * (n : ℝ))",
+      "derivation": "exacthLowAlln/unfoldM,A,E",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hUpper",
+      "type": "M.real B ≤ (4 : ℝ) * Real.exp (-(y * r) / (2 : ℝ))",
+      "sourceHead": "have hUpper : M.real B ≤ (4 : ℝ) * Real.exp (-(y * r) / (2 : ℝ))",
+      "derivation": "qualified204 original_normalized_upper_tail n hn μ g hg hg2 hgmean hgsecond y hy; definitionalM/B/T/r/q/E/S",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hUnion",
+      "type": "M.real (A ∪ B) ≤ M.real A + M.real B",
+      "sourceHead": "have hUnion : M.real (A ∪ B) ≤ M.real A + M.real B",
+      "derivation": "exactprimarymeasureReal_union_le A B; nofinite/measurablesetextraassumption",
+      "scope": "inside∀n/y"
+    },
+    {
+      "name": "hPayment",
+      "type": "M.real Gᶜ ≤ Real.exp (-c * (n : ℝ)) + (4 : ℝ) * Real.exp (-(y * r) / (2 : ℝ))",
+      "sourceHead": "have hPayment : M.real Gᶜ ≤ Real.exp (-c * (n : ℝ)) + (4 : ℝ) * Real.exp (-(y * r) / (2 : ℝ))",
+      "derivation": "substitutehMeasureEq; add_le_addhLowhUpper afterhUnion",
+      "scope": "inside∀n/y"
+    }
+  ],
+  "inlineClosures": [
+    {
+      "name": "measureEvaluation",
+      "type": "Set (Fin n → Ω) → ℝ",
+      "initializer": "fun U : Set (Fin n → Ω) => M.real U",
+      "captures": [
+        "n",
+        "Ω",
+        "mΩ",
+        "M"
+      ],
+      "scope": "hMeasureEq only"
+    },
+    {
+      "name": "globalMeanIntegrand",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => g o",
+      "captures": [
+        "Ω",
+        "g"
+      ],
+      "scope": "hgmean globalhead"
+    },
+    {
+      "name": "globalSecondIntegrand",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => (g o) ^ (2 : ℕ)",
+      "captures": [
+        "Ω",
+        "g"
+      ],
+      "scope": "hgsecond globalhead"
+    }
+  ],
+  "pointwiseBinder": "x:Fin n→Ω exists onlyinside local∀x/Set.ext proof, never capturedbyc",
+  "newGlobalInstances": 0,
+  "newPrivateHelpers": 0,
+  "additionalProbabilityInstanceNeededForUnionAPI": false,
+  "S11Scope": "Afterqualifiedproofthiswouldcloseonlyliteralp51S11Gycomplementprobabilitybound, notwholeOQ56/root/sourcegeometry/remainderpayments. No completionclaimednow.",
+  "originalVInterpretation": "V²=E/n,V=nonnegative sqrt(E/n); literalGyfirstconjusesE/n. W=S/sqrtn. n≥4sourceimpliesexplicitn>0.",
+  "primaryUnion": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-good-event-probability-205/parent-selected-union-primary.json",
+    "sha256": "3e730c4f25a35ddd5346fe718521a68d5f1e4ebd4292ff4304013f0158d0ab3d"
+  },
+  "producerGates": [
+    {
+      "unit": 203,
+      "qualified": true,
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit203/qualified-evidence.json",
+        "sha256": "12f384c5d2e5e97973b34d8823561e35b8a58be109b01d29e78b83c7866b2bcb",
+        "bytes": 7541
+      },
+      "exactActualTYPEBound": true
+    },
+    {
+      "unit": 204,
+      "qualified": true,
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit204/qualified-evidence.json",
+        "sha256": "bafc2d9665572e1efed6963e30d2f74a3e4cc2d10b92bd2e202b9a34326cac10",
+        "bytes": 7863
+      },
+      "exactActualTYPEBound": true
+    }
+  ],
+  "newAssumptions": [],
+  "noNOrYDependentWitness": true,
+  "noDivisionByRandomEnergyProbabilityOrSampleSum": true,
+  "onlyClearedDenominator": "positive deterministic(n:Real) fromgivenhn",
+  "implementationAuthorized": true,
+  "qualified": false,
+  "LeanAXCalls": 0,
+  "next": "Same frozen source-bound local implementation, independent complete new-source review, then newsource native and sameFIRSTOallowner audit only after Root hold05 clears and fresh actual resource compliance.",
+  "preamble": {
+    "importsExact": [
+      "Shao.OQ6.OriginalLowEnergyTail",
+      "Shao.OQ6.OriginalNormalizedUpperTail"
+    ],
+    "openScoped": [
+      "BigOperators"
+    ],
+    "open": [
+      "MeasureTheory"
+    ],
+    "namespace": "Shao.OQ6.OriginalGoodEventProbability",
+    "anonymousSection": "noncomputable section",
+    "finalStructuralClosers": [
+      "end",
+      "end Shao.OQ6.OriginalGoodEventProbability"
+    ],
+    "structuralClosureExplicitlyRequired": true
+  },
+  "primaryPositiveDiv": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-good-event-probability-205/parent-selected-positive-div-primary.json",
+    "sha256": "3309217f155c9a8c59fe815e148ae416a555af8b7f1c7ff9ab1c06e88c4f7d8a",
+    "bytes": 54022
+  },
+  "sourceFidelityAndClosures": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-good-event-probability-205/parent-pre-freeze-scope-closure-audit.json",
+    "sha256": "e02c8d9af32fb7b3fef6b3a3e1ea30d49a3df13e0a3880be2472e3c939bf3c08",
+    "bytes": 8609
+  },
+  "parentReadSelectedUnionAndPositiveDivFullHeadsAndContexts": true,
+  "currentOriginalRootScope": "C1 original COMPLETE immutablev85; C2/C12 assigned original scope COMPLETE v112; OQ56/S11/broader common FullRootOD extensions OPEN; OQ3 PAUSED_BY_USER.",
+  "historicalCandidatePreserved": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-good-event-probability-205/lead-stage1-candidate-contract.json",
+    "sha256": "67066bcfa1889ca054c5eb94be6a4d90f625966a9c4d15ac1c71ce569b05901a",
+    "bytes": 11041
+  },
+  "consumedActualInterfaces": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-good-event-probability-205/parent-consumed-qualified-actual-interfaces-v1.json",
+    "sha256": "de5eaf57b9a40578d3a084b06ea718375604a297e31b8dbc0cce3c163b7e570c",
+    "bytes": 24140
+  },
+  "implementationScope": "Pure local author only; no server/Lean/AX/API/upload/Git/children. Resource hold05 active.",
+  "additionalExplicitClosureScopes": [
+    {
+      "id": "normalizedGoodEvent.predicate",
+      "type": "(Fin n → Ω) → Prop",
+      "bound": [
+        "x:Fin n→Ω"
+      ],
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "y"
+      ],
+      "scope": "Definitionrhs only; no μ/mΩ/probability witness."
+    },
+    {
+      "id": "hLowPoint.pointwise",
+      "type": "∀ x : Fin n → Ω, E x / (n : ℝ) < (1 / 2 : ℝ) ↔ E x < (n : ℝ) / (2 : ℝ)",
+      "bound": [
+        "x:Fin n→Ω"
+      ],
+      "captures": [
+        "n",
+        "Ω",
+        "E",
+        "hNpos"
+      ],
+      "note": "Positive deterministic n only; (1/2)*n=n/2 by real field arithmetic."
+    },
+    {
+      "id": "hComplementPoint.pointwise",
+      "type": "∀ x : Fin n → Ω, x ∈ Gᶜ ↔ x ∈ A ∪ B",
+      "bound": [
+        "x:Fin n→Ω"
+      ],
+      "captures": [
+        "n",
+        "Ω",
+        "G",
+        "A",
+        "B",
+        "E",
+        "S",
+        "T",
+        "r",
+        "q",
+        "g",
+        "y",
+        "hLowPoint"
+      ],
+      "note": "Unfold allaliases; not(P∧Q) iff notP∨notQ and not_le converts both bad boundaries to strict <. Captures listed conservatively by alias expansion, actualcompiled UNKNOWN."
+    },
+    {
+      "id": "hComplementEq.SetExt",
+      "type": "Gᶜ = A ∪ B",
+      "bound": [
+        "x:Fin n→Ω"
+      ],
+      "captures": [
+        "n",
+        "Ω",
+        "G",
+        "A",
+        "B",
+        "hComplementPoint"
+      ]
+    },
+    {
+      "id": "hMeasureEq.measureEvaluation",
+      "type": "Set (Fin n → Ω) → ℝ",
+      "bound": [
+        "U:Set(Fin n→Ω)"
+      ],
+      "captures": [
+        "n",
+        "Ω",
+        "mΩ",
+        "M"
+      ],
+      "note": "congrArg only; not a measure-monotonicity call and no finiteness default."
+    }
+  ]
+}

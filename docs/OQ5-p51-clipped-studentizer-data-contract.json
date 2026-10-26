@@ -1,0 +1,119 @@
+{
+  "schema": "oq56-unit208-parent-complete-prior-contract-v1",
+  "atUTC": "2026-10-26T10:25:43.638160+00:00",
+  "module": "Shao.OQ5.P51.ClippedStudentizer",
+  "globalDeclarations": [
+    {
+      "kind": "def",
+      "name": "studentizerClip",
+      "exactHeadAndRHS": "def studentizerClip (B d : ℝ) : ℝ :=\n  max (-(min B (1 / 2 : ℝ))) (min d B)",
+      "sha256": "75453535f616076c61583c7b441a67b0062756ab44ad3b5c37af6a566f6c1f0e"
+    },
+    {
+      "kind": "def",
+      "name": "studentizerClipBudget",
+      "exactHeadAndRHS": "def studentizerClipBudget (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ :=\n  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +\n    residualEnergyJ n r x / ((1 + rho) * y * Real.sqrt (n : ℝ)))",
+      "sha256": "e787b38e5985a31c3c0201220bddd818c306e641de3de566f2cf3116a46051bd"
+    },
+    {
+      "kind": "def",
+      "name": "clippedCenteredDelta",
+      "exactHeadAndRHS": "def clippedCenteredDelta (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) : ℝ :=\n  if projectionV n g x = 0 then 0 else\n    studentizerClip (studentizerClipBudget n r C0 rho y x)\n      (centeredDelta n g r x)",
+      "sha256": "05fbd4eb16d75e0490ae906f41a029d54642e80b76f839b24a79ef0579dc1f03"
+    },
+    {
+      "kind": "def",
+      "name": "clippedCenteredStatistic",
+      "exactHeadAndRHS": "def clippedCenteredStatistic (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) : ℝ :=\n  if projectionV n g x = 0 then 0 else\n    (projectionW n g x + residualStatisticD n r x) /\n      (projectionV n g x *\n        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))",
+      "sha256": "3e51d463cb2c647263e05934c04b055131a4a7f24615ee88730e165dc9a72fbb"
+    },
+    {
+      "kind": "theorem",
+      "name": "studentizerClip_contract",
+      "exactHead": "theorem studentizerClip_contract (B d : ℝ) (hB : 0 ≤ B) :\n    (1 / 2 : ℝ) ≤ 1 + studentizerClip B d ∧\n    |studentizerClip B d| ≤ B ∧\n    |studentizerClip B d| ≤ |d| ∧\n    (-(1 / 2 : ℝ) ≤ d → |d| ≤ B → studentizerClip B d = d)",
+      "sha256": "dacf576641d318802a4c025432392c6b438f7610e1c27ac8699fef0eb0a09106"
+    },
+    {
+      "kind": "theorem",
+      "name": "studentizerClipBudget_nonneg",
+      "exactHead": "theorem studentizerClipBudget_nonneg (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω)\n    (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    0 ≤ studentizerClipBudget n r C0 rho y x",
+      "sha256": "2ca90a55876d8e6918dd006acf0de649ae6b5f1d9d8aa1d7c496ac3db55ab719"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedCentered_zero",
+      "exactHead": "theorem clippedCentered_zero (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (hV : projectionV n g x = 0) :\n    centeredDelta n g r x = 0 ∧\n    clippedCenteredDelta n g r C0 rho y x = 0 ∧\n    clippedCenteredStatistic n g r C0 rho y x = 0",
+      "sha256": "903ca31a996c666ee585f475b7e5a4609615af0429ea955372cf15a6376614cb"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedCenteredDelta_bounds",
+      "exactHead": "theorem clippedCenteredDelta_bounds (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    (1 / 2 : ℝ) ≤ 1 + clippedCenteredDelta n g r C0 rho y x ∧\n    |clippedCenteredDelta n g r C0 rho y x| ≤\n      studentizerClipBudget n r C0 rho y x ∧\n    |clippedCenteredDelta n g r C0 rho y x| ≤ |centeredDelta n g r x| ∧\n    (0 < projectionV n g x →\n      0 < projectionV n g x *\n        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))",
+      "sha256": "3e3b8de08b738c8c4dd5b65d160622b4c4c5dfa35d9a33d72ea671064d099651"
+    },
+    {
+      "kind": "theorem",
+      "name": "centered_studentizer_factorization",
+      "exactHead": "theorem centered_studentizer_factorization (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hV : 0 < projectionV n g x)\n    (hLower : -(1 / 2 : ℝ) ≤ centeredDelta n g r x) :\n    0 < Real.sqrt (centeredSq n g r x) ∧\n    Real.sqrt (centeredSq n g r x) =\n      projectionV n g x * Real.sqrt (1 + centeredDelta n g r x)",
+      "sha256": "f29a5ed2279416fa39ca72db375758c852c35e46847ac31a4e95bedd9bd7c6fc"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedCentered_comparison_on_projectionGood",
+      "exactHead": "theorem clippedCentered_comparison_on_projectionGood (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (hn : 4 ≤ n) (hy : (1 : ℝ) ≤ y)\n    (hGood : x ∈ projectionGood n g y)\n    (hDom : |centeredDelta n g r x| ≤ studentizerClipBudget n r C0 rho y x)\n    (hLower : -(1 / 2 : ℝ) ≤ centeredDelta n g r x) :\n    clippedCenteredDelta n g r C0 rho y x = centeredDelta n g r x ∧\n    0 < projectionV n g x *\n      Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x) ∧\n    0 < Real.sqrt (centeredSq n g r x) ∧\n    projectionV n g x * Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x) =\n      Real.sqrt (centeredSq n g r x) ∧\n    clippedCenteredStatistic n g r C0 rho y x =\n      (if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n        (projectionW n g x + residualStatisticD n r x) /\n          Real.sqrt (centeredSq n g r x))",
+      "sha256": "37844aeb241a5d5e5b47471cec46ea83524873c9e8fdc8bbeabe2a14b1c7d249"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedCentered_denominator_bad_subset",
+      "exactHead": "theorem clippedCentered_denominator_bad_subset (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    {x : Fin n → Ω |\n      (1 / 4 : ℝ) < y ^ 2 * |clippedCenteredDelta n g r C0 rho y x| ∧\n        x ∈ projectionGood n g y} ⊆\n      denominatorRemainderBad n g r y",
+      "sha256": "fa03e141b94a4fada642809064407d995c0ad2e0cca5f262a894bc31c648dd8c"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedCentered_comparison_exception_subset",
+      "exactHead": "theorem clippedCentered_comparison_exception_subset (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (hn : 4 ≤ n) (hy : (1 : ℝ) ≤ y)\n    (hDom : ∀ x : Fin n → Ω, x ∈ projectionGood n g y →\n      |centeredDelta n g r x| ≤ studentizerClipBudget n r C0 rho y x) :\n    {x : Fin n → Ω |\n      clippedCenteredStatistic n g r C0 rho y x ≠\n        (if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n          (projectionW n g x + residualStatisticD n r x) /\n            Real.sqrt (centeredSq n g r x))} ⊆\n      (projectionGood n g y)ᶜ ∪ lowerStudentizerBad n g r y",
+      "sha256": "66490e5ab9891d85dae77c5b6363e5be5cd18d5c67cd1aa351bee11441260cca"
+    }
+  ],
+  "priorAuthorStage1Manifest": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/manifest.json",
+    "sha256": "1f39e8c1cd2bf65a89f0900f5577084a7b90782dc0bf0dc55fb31dc52286c732",
+    "bytes": 1647
+  },
+  "typedLocalDataPropAndClosureScopes": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/local-data-scope-contract.md",
+    "sha256": "d34f0fe8855427ea50a1f9562b84f04ecc441a28753d0952424d3a94cfa4d092",
+    "bytes": 4594
+  },
+  "sourceAndZeroDenominatorScope": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/problem-and-source-scope.md",
+    "sha256": "93a2a926dc501abb6eceac943da24f5ef2a6245958698d934af97c504265877b",
+    "bytes": 5987
+  },
+  "proofPlan": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/proofplan.md",
+    "sha256": "5bd4534b3a6670cd24e0658e5fbb357496cfde0d717a807ac7ad7cd51060b138",
+    "bytes": 4032
+  },
+  "consumedQualifiedActualTYPEAndFULLVALUE": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/consumed-interfaces.json",
+    "sha256": "a81d2d02c86e278c55474616b73cb4692d2328378b5c7e3719005d597bfec2ff",
+    "bytes": 31889
+  },
+  "completeSelectedPrimaryHeadsAndContexts": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-studentizer-208/author-stage1-01/primary-bindings.json",
+    "sha256": "e0d1e42b301a40006a10bd68e48aff8d03ef71e580097e5cef16a4ed295e0127",
+    "bytes": 3702
+  },
+  "parentCompleteAll12GlobalHeadsRHSDataContractScopeProofplanPrimaryAndActualConsumedPacketReadOnce": true,
+  "nonPropLocalAliases": "Only the typed optional aliases in the frozen local-data-scope-contract; no new function/data selection, witness or external captures.",
+  "ordinaryProofLocalPropPolicy": "Derived elementary order/algebra/propositional branch facts may be introduced only inside the frozen containing theorem scopes from its displayed inputs and selected qualified definitions. They add no premises/global/private helper or bearing mathematical interface. Independent source review covers every actual local fact/closure; generated module owners audited after first native. Substantive new mathematical interfaces or nonProp data/head changes must return to parent before implementation.",
+  "noSilentAssumptionChanges": true,
+  "hDomConditionalPreserved": true,
+  "unconditionalS10DominationStillMissing": true,
+  "future209ExplicitHsymRequired": true,
+  "implementationAuthorized": true,
+  "pureLocalOnly": true,
+  "qualified": false
+}
