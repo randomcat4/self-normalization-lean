@@ -1,0 +1,63 @@
+theorem actual_normalized_kernel_observable_trim_transport
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    {J : Type v} [Fintype J]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)
+    (hh₀ : Measurable[m₀.prod m₀, borel ℝ]
+      (fun t : Ω × Ω => h t.1 t.2)) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ :=
+      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+    let rho : ℝ := Real.sqrt v
+    let rowIntegrable : Ω → Prop := fun o => Integrable (h o) μ
+    let gLp : ℝ≥0∞ → Prop := fun p => MemLp g p μ
+    let projectionLaw : Measure ℝ :=
+      @Measure.map Ω ℝ mΩ (borel ℝ) g μ
+    let pairLaw : @Measure (Ω × Ω) (mΩ.prod mΩ) :=
+      @Measure.prod Ω Ω mΩ mΩ μ μ
+    let mJ : MeasurableSpace (J → Ω) :=
+      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)
+    let mJ₀ : MeasurableSpace (J → Ω) :=
+      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)
+    let P : @Measure (J → Ω) mJ :=
+      @Measure.pi J (fun _ : J => Ω) (inferInstance : Fintype J)
+        (fun _ : J => mΩ) (fun _ : J => μ)
+    let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+    letI : MeasurableSpace Ω := m₀
+    let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀
+    let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y
+    let v₀ : ℝ := ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)
+    let rho₀ : ℝ := Real.sqrt v₀
+    let P₀ : @Measure (J → Ω) mJ₀ := Measure.pi (fun _ : J => μ₀)
+    IsProbabilityMeasure μ₀ ∧
+      (∀ o : Ω, g₀ o = g o) ∧
+      (∀ o y : Ω, r₀ o y = r o y) ∧
+      (∀ o : Ω, Integrable (h o) μ₀ ↔ rowIntegrable o) ∧
+      MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ₀.prod μ₀) ∧
+      (∫ t : Ω × Ω, h t.1 t.2 ∂(μ₀.prod μ₀)) = 0 ∧
+      Measurable g₀ ∧ MemLp g₀ 2 μ₀ ∧
+      (∫ o, g₀ o ∂μ₀) = 0 ∧
+      (∫ o, g₀ o ^ 2 ∂μ₀) = 1 ∧
+      Measurable (fun t : Ω × Ω => r₀ t.1 t.2) ∧
+      MemLp (fun t : Ω × Ω => r₀ t.1 t.2) 2 (μ₀.prod μ₀) ∧
+      (∀ o y : Ω, r₀ o y = r₀ y o) ∧
+      (∀ᵐ o ∂μ₀, (∫ y, r₀ o y ∂μ₀) = 0) ∧
+      v₀ = v ∧ rho₀ = rho ∧
+      μ₀.map g₀ = projectionLaw ∧
+      (∀ p : ℝ≥0∞, MemLp g₀ p μ₀ ↔ gLp p) ∧
+      μ₀.prod μ₀ =
+        @Measure.map (Ω × Ω) (Ω × Ω)
+          (mΩ.prod mΩ) (m₀.prod m₀) id pairLaw ∧
+      IsProbabilityMeasure P₀ ∧
+      P₀ = @Measure.map (J → Ω) (J → Ω) mJ mJ₀ id P ∧
+      (∀ T : (J → Ω) → ℝ,
+        Measurable[mJ₀, borel ℝ] T →
+          P₀.map T = @Measure.map (J → Ω) ℝ mJ (borel ℝ) T P)
