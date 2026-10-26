@@ -1,6 +1,6 @@
 # Current mathematical status
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v117. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v118. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
 
 ## C1 and C2
 
@@ -27,12 +27,13 @@ OQ56 remains open. The following are accepted components, rather than a full-roo
 | v115 | 206 event identity; 207 bounded four payments; 209 literal 512 domination | Identity holds for all n/all real y; payment theorem is bounded-product/polylog class; 209 keeps its sigma window |
 | v116 | 210 literal clipped comparison; 211 comparison/payment composition | 210 derives hDom within the original window; 211 derives that window internally for eventual n, but remains in the bounded class |
 | v117 | 212 original-length deletion envelopes; 213 full quadratic-tilt rho moments | Deterministic/measurable S13 support and full-law S3/S5 moments; no weighted partial-law deletion or S14 fee closure |
+| v118 | 214 rho-sensitive capped partial-law deletion producer | Original explicit window and sample length; genuine integrability, linear-rho D and quadratic-rho J; S14 combined fees remain open |
 
 The v117 deletion quantities omit the deleted coordinate and do not carry a good-event indicator. They retain the original n, n-1 and n-2 normalizations. Their exact signed identities, reverse-triangle bound, measurable retained-coordinate factorization and full definition values are reviewed.
 
 The v117 moment producer uses the actual residual scale rho = sqrt(integral r squared), actual full quadratic tilt and original y <= sqrt(n)/(2 exp(1/2)) window. Its J moment is quadratic in rho, its absolute-D moment is linear in rho, and rho = 0 is included. An old 1 + rho estimate is not a substitute for these scales.
 
-The next source-bound work is the public weighted partial-law deletion interface and its genuine expectation fees, followed by the remaining original S14/S11/general-S15 dependencies. A deterministic deletion identity, full-law moment bound or bounded-class payment estimate cannot by itself close that chain. Existing S17 does not replace literal S10. The common K/Xi derivative, high-frequency and inversion work is advanced only when an actual missing source-bound interface requires it.
+Unit214 now supplies the public rho-sensitive capped partial-law deletion interface. Its exact source/first object, all four actual owned theorem types and recursive axioms are independently qualified and integrated at v118. The next source-bound work is unit215 genuine S14 expectation-fee composition, followed by compact-level fees and the remaining original S11/general-S15 dependencies. A deterministic deletion identity, full-law moment bound or bounded-class payment estimate cannot by itself close that chain. Existing S17 does not replace literal S10. The common K/Xi derivative, high-frequency and inversion work is advanced only when an actual missing source-bound interface requires it.
 
 ## Acceptance meaning
 

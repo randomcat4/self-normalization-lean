@@ -751,6 +751,7 @@ import Shao.OQ6.QuantizedObservationCoding
 import Shao.OQ6.ResidualDeletion
 import Shao.OQ6.ResidualDeletionMeasurable
 import Shao.OQ6.ResidualRowExpansion
+import Shao.OQ6.RhoWeightedDeletionMoments
 import Shao.OQ6.ScalarObservationCoding
 import Shao.OQ6.SignedCompactCDFBounds
 import Shao.OQ6.SourceAnalyticCost

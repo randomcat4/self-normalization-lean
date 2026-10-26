@@ -134,7 +134,7 @@ theorem actual_quadratic_rho_weighted_deletion_bounds
         (fun ξ => R ξ i * cap ξ i * |J ξ - Jdel ξ i|) P₀) ∧
       (∑ i : Fin n,
         ∫ ξ, R ξ i * cap ξ i * |J ξ - Jdel ξ i| ∂P₀) ≤
-          96 * C ^ 2 * ρr ^ 2 * (1 + x) ^ 2 
+          96 * C ^ 2 * ρr ^ 2 * (1 + x) ^ 2
 
 ```
 
