@@ -1,0 +1,39 @@
+# Current mathematical status
+
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v117. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+
+## C1 and C2
+
+C1's original signed half-line theorem is accepted at v85 for both signs and every nonnegative x in the same original I_n. The accepted conclusions retain raw zero-energy probability, literal weak multiplication crossing, strict complementary survival and relative error. The original C1 result is not reopened by later shared extensions.
+
+C2's original g:double, g:absolute, m:B, m:A and m:C conclusions are all accepted at v112. C12's assigned original C1/C2 scope is complete and its owner is ready/idle. Broader common fullRootOD extensions remain open; their status does not revoke original C1/C2 acceptance.
+
+## OQ3
+
+OQ3 remains separately paused by the human. The fixed jointly nonlattice saddle-remainder counterexample is retained in [SourceCounterexampleRoot](../Shao/OQ3/SourceCounterexampleRoot.lean). A general restart or coordinator replacement does not reactivate OQ3, and the paused B/D roots are not claimed complete.
+
+## OQ4
+
+The assigned original fixed-law weak-window concentration and universal sharp sixth-root criterion were accepted at v79. The lane remains ready/idle without a new concrete source dependency. This limited original acceptance does not certify all historical subclauses or unrelated OQ4 extensions.
+
+## OQ56
+
+OQ56 remains open. The following are accepted components, rather than a full-root completion claim:
+
+| Snapshot | Components | Retained boundary |
+| --- | --- | --- |
+| v113 | 203 low-energy and 204 normalized upper-tail bounds | Two S11 components only |
+| v114 | 205 good-event probability; 208 finite clipping | The 208 construction itself retains explicit hDom/hLower premises |
+| v115 | 206 event identity; 207 bounded four payments; 209 literal 512 domination | Identity holds for all n/all real y; payment theorem is bounded-product/polylog class; 209 keeps its sigma window |
+| v116 | 210 literal clipped comparison; 211 comparison/payment composition | 210 derives hDom within the original window; 211 derives that window internally for eventual n, but remains in the bounded class |
+| v117 | 212 original-length deletion envelopes; 213 full quadratic-tilt rho moments | Deterministic/measurable S13 support and full-law S3/S5 moments; no weighted partial-law deletion or S14 fee closure |
+
+The v117 deletion quantities omit the deleted coordinate and do not carry a good-event indicator. They retain the original n, n-1 and n-2 normalizations. Their exact signed identities, reverse-triangle bound, measurable retained-coordinate factorization and full definition values are reviewed.
+
+The v117 moment producer uses the actual residual scale rho = sqrt(integral r squared), actual full quadratic tilt and original y <= sqrt(n)/(2 exp(1/2)) window. Its J moment is quadratic in rho, its absolute-D moment is linear in rho, and rho = 0 is included. An old 1 + rho estimate is not a substitute for these scales.
+
+The next source-bound work is the public weighted partial-law deletion interface and its genuine expectation fees, followed by the remaining original S14/S11/general-S15 dependencies. A deterministic deletion identity, full-law moment bound or bounded-class payment estimate cannot by itself close that chain. Existing S17 does not replace literal S10. The common K/Xi derivative, high-frequency and inversion work is advanced only when an actual missing source-bound interface requires it.
+
+## Acceptance meaning
+
+Every accepted exact source has a qualified independent complete statement/proof/actual-type review, required full non-theorem-value coverage and server kernel/recursive-axiom evidence. Root reuses those exact seals and verifies range, interfaces, interactions and one appropriate integration gate. Failures, warning records, first original objects and author history remain preserved. Auxiliary declaration counts are never completion percentages. No novelty or firstness certification is implied.

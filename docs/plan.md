@@ -1,27 +1,31 @@
-# Delivery plan
+# Execution, acceptance and delivery
 
-## Repositories and authority
+The current mathematical scope is [CURRENT-STATUS](CURRENT-STATUS.md). The local shared workspace's current AGENTS.md, SERVER.md and compact registry govern ownership and execution; historical resource numbers in old documents are not current grants.
 
-Use two private repositories in total: existing shao for source manuscripts/history and shao-lean for formal statements, proofs, fixed dependencies and server verification receipts. C1 and C2 share one Lean library. Workers use isolated worktrees, not separate repositories. Source files are referenced by exact source commit and SHA256 instead of copied wholesale.
+## Proof and evidence
 
-## Milestones
+Freeze exact declarations and assumptions before implementation. Authors own distinct files/worktrees; independent reviewers read complete source-to-statement/proof evidence, all actual owned types and required complete non-theorem values. Include private/generated and imported-prefix owners by actual module index. Reject sorry, admit, new axioms, unsafe and native_decide. Recursive axioms are limited to propext, Classical.choice and Quot.sound.
 
-1. Finite paths, genuine energy, event algebra, C1 normalization and C2 two-sided consumers. Current implementation milestone.
-2. Finite iid laws, fixed permutations and independent copies; event measurability and distribution transport.
-3. Truncated budget and ordered deletion, independently after their interfaces are frozen.
-4. Conditional truncation, exact product conditional laws and moment/mixture formulas. Recentring has a distinct energy.
-5. Separate C1 reversal/Lindley and C2 permutation-reveal consumers. No assertion of a unified 124 mechanism.
+Reuse qualified exact-source successful checks and first original objects. Root accepts their scope, interfaces and interactions and runs the appropriate aggregate/current whole-project coverage/axiom/retention gate. A changed proof invalidates only affected evidence. Do not repeat an accepted producer or old leaf audit merely because a coordinator or context changes. Kernel success proves the encoded statement; independent source fidelity remains required.
 
-Each milestone has a source-linked statement contract, independently read declarations, kernel checks and a reviewable PR. Update a draft when checked substantive work is ready, with a target checkpoint every 1–2 hours of active work; do not manufacture empty commits. The checkpoint is a project practice, not a claim about a published prover protocol. No background recurring automation is configured.
+## Current server allocation
 
-## Team
+All Lean compilation and heavy computation run on the designated server with pinned Lean/mathlib and the read-only shared-v34 package view. Root alone writes shared caches and merges integrations. No package updates or full mathlib rebuilds are authorized.
 
-Primary coordinates semantics, dependencies, integration and publication. Two gpt-6.1-sol xhigh authors own disjoint files. A third fresh gpt-6.1-sol xhigh context audits actual declarations and proofs without relying on author explanations. Changes are not accepted by majority vote; concrete objections must be resolved.
+| Lane | CPU affinity | Current heavy allowance |
+| --- | --- | --- |
+| Root | 40–43, shared root-heavy.lock | 1 |
+| OQ56 | 52–55, original lane HEAVY.lock | 1 |
+| C12 | 44–47 reserved | 0 |
+| OQ4 | 48–51, ready/idle | 0 |
+| OQ3 | Human-paused | 0 |
 
-## Compute
+Phase ROOT_OQ56_38 allows at most two project heavy commands, one per active lane, each using -M8192 and -j4. The project process budget is 80 GiB; external CPU0–23 and its 80-GiB budget remain protected. The aggregate guard is 180 GiB with a 200-GiB hard limit. Check actual memory, CPU and locks before every start. A reduced external demand is not a budget change, and old cache releases are not replayed. Hold the lane lock only during actual checks.
 
-Server quota: 40 CPU cores and 200 GiB RAM. Initial planning envelope: three workers × 24 GiB, integration 16 GiB, system/cache 24 GiB = 112 GiB; this is a capacity estimate, not a measured footprint. Model inference is external, so no GPU or local model allocation is required. Begin with at most three single-module Lean checks concurrently and one integration build at a time; raise concurrency only using measured demand. Do not raise it above 140 GiB, defer new heavy jobs around 160 GiB, investigate task-owned jobs near 180 GiB/OOM. Keep toolchain and fixed dependencies shared, project build outputs separate. A single writer populates dependency caches. Initial disk budget 100–120 GB; retain at least 150 GB free where practical.
+## Publication and continuity
 
-## Deliverables and reuse
+Publish substantive exact-source milestones, with source SHA256, head, complete independent review and server receipts. Lane authors do not merge; Root verifies exact PR scope and integration before merging, preserving author commits and source bytes. Curated source/configuration/compact evidence goes to Git; credentials, raw logs, caches, binaries and environments do not.
 
-GitHub receives source, lockfiles, source mappings, concise review and verification receipts. The local fallback receives the same curated outputs if GitHub becomes unavailable. Toolchains, .lake, oleans, installers, raw logs, scratch searches and credentials stay out. All heavy checks run on the server. Reuse unchanged environment and module evidence; changes require only the changed objects and affected downstream checks, plus the actual integrated project entrypoint at a milestone.
+A platform capacity error is an execution interruption. Inspect saved tool/writer/server effects, then recover the same authorized owner and model from a precise checkpoint and observe actual ACKs. Do not switch models, revive released owners or replay uncertain writes. A final answer is not a persistent continuation mechanism.
+
+The existing lean-pr-90 heartbeat is the only recurring coordinator schedule. During a human-requested handoff its old-root wakeup is temporarily paused, and the same schedule is retargeted only after exclusive successor activation. Mathematical lane owners and leases continue independently unless explicitly changed by the human.
