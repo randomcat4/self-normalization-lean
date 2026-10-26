@@ -1,0 +1,36 @@
+theorem original_iid_full_two_sided_relative_comparison :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ rhoStar : ℝ, 0 < rhoStar → rhoStar ≤ 1 / 16 →
+        ∀ p : ℝ, 2 < p → p ≤ 3 →
+          ∀ {Ω ΩB : Type*} [MeasurableSpace Ω] [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            ∀ (mu : Measure Ω) (rho : Measure ℝ)
+              [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+              (n : ℕ) (hn : 0 < n) (X : Fin n → Ω → ℝ),
+              (∀ i, AEMeasurable (X i) mu) →
+              iIndepFun X mu →
+              (∀ i, IdentDistrib (X i) (id : ℝ → ℝ) mu rho) →
+              Integrable (fun z : ℝ => z ^ 2) rho →
+              (∫ z : ℝ, z ∂rho) = 0 →
+              (0 < ∫ z : ℝ, z ^ 2 ∂rho) →
+              Integrable (fun z : ℝ => Real.rpow |z| p) rho →
+              let sigmaSq : ℝ := ∫ z : ℝ, z ^ 2 ∂rho
+              let sigma : ℝ := Real.sqrt sigmaSq
+              let scale : ℝ := sigma * Real.sqrt (n : ℝ)
+              let nu : Measure ℝ := Measure.map (fun z : ℝ => z / scale) rho
+              let Ln : ℝ := (∫ z : ℝ, Real.rpow |z| p ∂rho) /
+                (Real.rpow sigma p * Real.rpow (n : ℝ) ((p - 2) / 2))
+              let Rn : ℝ → ℝ := fun t => Shao.truncationBudget nu n t
+              let I : Set ℝ := {t | 0 ≤ t ∧
+                (t ≤ Real.rpow Ln (-1 / p) ∨ Rn t ≤ rhoStar)}
+              let population : Ω → Shao.Path n := Shao.Probability.samplePath X
+              let rawEnergy : Ω → ℝ := fun omega => ∑ i : Fin n, (X i omega) ^ 2
+              ∀ x : ℝ, 0 ≤ x → (x ≤ 1 ∨ x ∈ I) →
+                let A : Set Ω := {omega |
+                  x * Real.sqrt (rawEnergy omega) ≤ Shao.absMax (population omega) hn}
+                let H : ℝ := PB.real {omega |
+                  ∃ s : BridgeTime, x ≤ |Bm ⟨(s : ℝ), s.property.1⟩ omega|}
+                0 < H ∧
+                  |mu.real A / H - 1| ≤ C * Rn x ∧
+                  |mu.real A / H - 1| ≤ C * Real.rpow (1 + x) p * Ln

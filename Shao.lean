@@ -200,8 +200,11 @@ import Shao.C2.IntervalSineNormalizedHighTime
 import Shao.C2.IntervalSineSeries
 import Shao.C2.IntervalSineTerms
 import Shao.C2.IntervalSpectralGaussian
+import Shao.C2.OriginalFullTwoSidedRelative
+import Shao.C2.OriginalGrowingAbsoluteComparison
 import Shao.C2.OriginalGrowingDoubleComparison
 import Shao.C2.OriginalMomentEnvelope
+import Shao.C2.OriginalUniformSubpower
 import Shao.C2.PhysicalBrownianEndpointDensity
 import Shao.C2.PolygonalPrefixEvents
 import Shao.C2.PolygonalRademacherReflection
