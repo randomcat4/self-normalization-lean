@@ -2,7 +2,7 @@
 
 Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 
-The current mathematical snapshot is **v120**: **914 modules, 4,068 public source theorems, 7,952 Shao-namespace theorem constants, and 16,145 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v120 server receipt](verification/receipt-v120.json).
+The accepted mathematical snapshot, exact inventory and remaining work are recorded in the [current scope](docs/CURRENT-STATUS.md) and [evidence index](docs/EVIDENCE.md). Inventory counts are not completion percentages.
 
 ## Accepted scope and current state
 
@@ -14,7 +14,7 @@ The current mathematical snapshot is **v120**: **914 modules, 4,068 public sourc
 | OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. Ready/idle without a new source-bound assignment; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
 | OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. The rho-sensitive capped partial-law deletion producer and original-window four S14 expectation fees are accepted; compact fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
 
-## Latest accepted OQ56 components
+## Selected accepted OQ56 components
 
 - v113: original low-energy and normalized upper-tail components.
 - v114: literal good-event probability and conditional finite clipping construction.
@@ -24,6 +24,7 @@ The current mathematical snapshot is **v120**: **914 modules, 4,068 public sourc
 - v118: original-length rho-sensitive capped deletion bounds under the actual partial weight, with full integrability and rho = 0; this supplies S13 absolute-D/J ingredients within the original explicit window.
 - v119: all four original S14 expectation fees and their combined polynomial budget, preserving the original law/window/n and rho = 0; this is not a general probability-payment or full-root theorem.
 - v120: original untilted compact continuous-cap combined expectation fees, retaining the original (n-2)^2 budget via an explicit parameter transform. The actual projection cost remains separate; its L2 bound of at most 4 is not a decay rate.
+- v121: the actual projection p-moment rate and combined compact analytic cost, for 2<p<=3 and a finite genuine projection p-moment. Probability/CDF and root closure remain separate.
 
 The bounded-class exponential payment bound retains the three terms exp(-cn) + 4 exp(-y sqrt(n)/2) + 9 exp(-k_n). It is not a theorem for the unrestricted original S15 class. Symmetry, normalization, original sample-length denominators, threshold windows, zero-denominator guards and genuine remainder fees remain where the exact statements require them.
 
