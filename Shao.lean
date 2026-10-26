@@ -16,6 +16,7 @@ import Shao.C1.UniformPermutationIIDLaw
 import Shao.C2.ActualAdaptiveIntervalTelescope
 import Shao.C2.ActualAllRetainedDoubleBudget
 import Shao.C2.ActualBadIntervalNegativeBudget
+import Shao.C2.ActualBoundedCenteredFixed
 import Shao.C2.ActualBridgeIIDIntervalBudget
 import Shao.C2.ActualBridgeIntervalTelescope
 import Shao.C2.ActualBrownianCrossingLower
@@ -27,6 +28,7 @@ import Shao.C2.ActualOriginalCompactRelative
 import Shao.C2.ActualPostwallRetainedBudgets
 import Shao.C2.ActualRetainedResidualBudgets
 import Shao.C2.ActualSignedDoubleTelescope
+import Shao.C2.ActualUniformAbsoluteFixedThreshold
 import Shao.C2.AdaptiveRevealCutoff
 import Shao.C2.AuxiliaryCenteredEvent
 import Shao.C2.AuxiliaryCenteredProductLaw
@@ -567,6 +569,8 @@ import Shao.OQ5.P50.LayeredProductLaw
 import Shao.OQ5.P50.LayeredRealTransport
 import Shao.OQ5.P50.ThreeStateLaw
 import Shao.OQ5.P50.ThreeStateLayer
+import Shao.OQ5.P51.BoundedPolylogConcentration
+import Shao.OQ5.P51.BoundedPolylogWindow
 import Shao.OQ5.P52.BackgroundMeasureBridges
 import Shao.OQ5.P52.FixedLayerAbsoluteMoments
 import Shao.OQ5.P52.FixedLayerAtomicCost
@@ -669,6 +673,7 @@ import Shao.OQ6.ActualUncenteredCompactCDF
 import Shao.OQ6.AmbientCanonicalCodingTransport
 import Shao.OQ6.AmbientCanonicalIntegrableCDF
 import Shao.OQ6.BoundedMeanSumMoments
+import Shao.OQ6.BoundedProductEnvelopeTails
 import Shao.OQ6.CanonicalDoubleGhostRowMoments
 import Shao.OQ6.CanonicalDoubleGhostScalarMoments
 import Shao.OQ6.CanonicalIntegrableTailBounds

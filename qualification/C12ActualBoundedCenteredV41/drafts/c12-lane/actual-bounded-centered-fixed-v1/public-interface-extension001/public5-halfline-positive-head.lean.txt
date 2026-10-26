@@ -1,0 +1,20 @@
+theorem iid_actual_halfline_initial_all_positive :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ), 0 < n → bound ≤ Real.sqrt (n : ℝ) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB → ∀ (x : ℝ), 0 < x →
+              let Q : Measure BridgeNoise := bridgeLaw Bm PB
+              (∀ J : MonitoredDomain, (J = .upper ∨ J = .lower) →
+                let V0 : Shao.Path n → ℝ := fun a =>
+                  sourceValue J (eventCompletionKernel J Q) a x 0 (Equiv.refl (Fin n))
+                Integrable V0 P ∧ |(∫ a, V0 a ∂P) - (1 - 2 * Shao.standardNormalTail x)| ≤ C * delta) ∧
+              ∀ s : ℝ, (s = 1 ∨ s = -1) →
+                PB.real {omegaB | ∃ t : BridgeTime,
+                  x ≤ s * Bm ⟨(t : ℝ), t.property.1⟩ omegaB} = 2 * Shao.standardNormalTail x
