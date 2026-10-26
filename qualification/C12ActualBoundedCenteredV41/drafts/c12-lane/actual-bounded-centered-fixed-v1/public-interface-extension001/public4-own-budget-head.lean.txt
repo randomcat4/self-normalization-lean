@@ -1,0 +1,20 @@
+theorem iid_actual_bounded_own_budget_identities
+    (rho : Measure ℝ) [IsProbabilityMeasure rho]
+    (bound : ℝ) (hb : 0 < bound) (hsupport : ∀ᵐ z : ℝ ∂rho, |z| ≤ bound)
+    (hmean : (∫ z : ℝ, z ∂rho) = 0)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (n : ℕ) (hn : 0 < n) (x : ℝ) (hx : (1 / 2 : ℝ) ≤ x)
+    (hscale : bound ≤ Real.sqrt (n : ℝ) / (100 * x)) :
+    let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    let delta : ℝ := beta / Real.sqrt (n : ℝ)
+    let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+    Integrable (fun z : ℝ => z) rho ∧
+      Integrable (fun z : ℝ => z ^ 2) rho ∧ Integrable (fun z : ℝ => |z| ^ 3) rho ∧
+      1 ≤ bound ∧ 1 ≤ beta ∧ 0 < delta ∧ 0 < 4 * beta ^ 2 ∧ 2500 ≤ n ∧
+      Shao.truncationBudget normalizedLaw n 0 = delta ∧
+      Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+      4 * (n : ℝ) * (Shao.truncationBudget normalizedLaw n 0) ^ 2 = 4 * beta ^ 2 ∧
+      ∀ t ∈ Finset.Icc 1 (n / 2),
+        Shao.truncationBudget
+          (Measure.map (fun z : ℝ => z / Real.sqrt ((n - t : ℕ) : ℝ)) rho)
+          (n - t) 0 = beta / Real.sqrt ((n - t : ℕ) : ℝ)

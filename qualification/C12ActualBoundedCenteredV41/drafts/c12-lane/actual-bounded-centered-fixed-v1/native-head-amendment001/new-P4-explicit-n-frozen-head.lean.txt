@@ -1,0 +1,16 @@
+private theorem abcf_future_measurable_integrable
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBm : IsBrownianReal Bm PB) (n : ℕ)
+    (P : Measure (Shao.Path n)) [IsProbabilityMeasure P]
+    (H x : ℝ) (hH : 0 < H) (hx : 0 ≤ x) :
+    let Q : Measure BridgeNoise := bridgeLaw Bm PB
+    (∀ (J : MonitoredDomain) (r : ℕ), r ≤ n →
+      Measurable (abcf_futureAt (n := n) J Q x r) ∧
+      Integrable (abcf_futureAt J Q x r) (revealLaw P) ∧
+      ∀ p : Shao.Path n × LabelPerm n, 0 ≤ abcf_futureAt J Q x r p ∧ abcf_futureAt J Q x r p ≤ 1) ∧
+    ∀ J : MonitoredDomain,
+      Measurable (abcf_h0Future (n := n) J Q H x) ∧ Integrable (abcf_h0Future J Q H x) (revealLaw P) ∧
+      Measurable (fun a => abcf_h0Future J Q H x (a, Equiv.refl (Fin n))) ∧
+      Integrable (fun a => abcf_h0Future J Q H x (a, Equiv.refl (Fin n))) P ∧
+      ∀ p : Shao.Path n × LabelPerm n, 0 ≤ abcf_h0Future J Q H x p ∧ abcf_h0Future J Q H x p ≤ 1
