@@ -1,0 +1,97 @@
+import Shao.OQ4.PositiveBoundaryStudentized
+import Mathlib.MeasureTheory.Integral.Pi
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.OQ4.RowPositiveBoundaryStudentized
+
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped BigOperators NNReal Topology
+
+universe uB
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+-- PRIVATE 1. E|Q/n-1| and finite-product variance factorization are proof-local.
+-- No centering, no fourth moment, no strict positivity assumption on M.
+private theorem finite_energy_truncation_bound
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) ν)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂ν) = 1)
+    (M : ℝ) (hM : (∫ z : ℝ, |z| ^ 3 ∂ν) ≤ M)
+    (n : ℕ) (hn : 0 < n) (K : ℝ) (hK : 0 < K)
+    (δ : ℝ) (hδ : 0 < δ) :
+    (Measure.pi (fun _ : Fin n => ν)).real
+      (PositiveBoundaryStudentized.energyBad n δ) ≤
+        (Real.sqrt (K / (n : ℝ)) + 2 * M / Real.sqrt K) / δ
+
+-- PUBLIC 1. This head is strictly weaker than the row-window target.
+theorem varying_row_energy_lln
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (δ : ℝ) (hδ : 0 < δ) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+      (PositiveBoundaryStudentized.energyBad (nSeq j) δ))
+      atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC 2. Uses the existing actual varying-row polygonal survival limit.
+theorem varying_row_deterministic_positive_boundary_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (rSeq : ℕ → ℝ) (r : ℝ) (hr : 0 < r)
+    (hrSeq : Tendsto rSeq atTop (𝓝 r)) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+      (@Shao.closedStrip (nSeq j) (rSeq j * Real.sqrt (nSeq j : ℝ))))
+      atTop (𝓝 (Shao.Probability.BrownianSup.probability B P hB r))
+
+-- PUBLIC 3. Literal actual weak multiplicative event; includes Q=0 and n=0.
+theorem varying_row_studentized_positive_boundary_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (x : ℝ) (hx : 0 < x)
+    (hxSeq : Tendsto xSeq atTop (𝓝 x)) :
+    Tendsto (fun j => (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+      {a : Shao.Path (nSeq j) |
+        a ∈ Shao.closedStrip (xSeq j * Real.sqrt (Shao.energy a))})
+      atTop (𝓝 (Shao.Probability.BrownianSup.probability B P hB x))
+
+-- PUBLIC 4. Exact positive-limit consumer of the broader window contradiction.
+theorem varying_row_studentized_positive_boundary_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (x : ℝ) (hx : 0 < x)
+    (hxSeq : Tendsto xSeq atTop (𝓝 x)) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+        {a : Shao.Path (nSeq j) |
+          a ∈ Shao.closedStrip (xSeq j * Real.sqrt (Shao.energy a))} /
+      Shao.Probability.BrownianSup.probability B P hB (xSeq j))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RowPositiveBoundaryStudentized
+end
