@@ -1,0 +1,298 @@
+import Shao.OQ5.P51.ClippedStudentizer
+import Shao.OQ6.ResidualDeletionMeasurable
+
+set_option autoImplicit false
+
+universe u
+
+noncomputable section
+open scoped BigOperators Classical
+
+namespace Shao.OQ5.P51
+
+/- Original p51 S13: original-length deleted nonnegative envelopes.
+   Author source candidate; server kernel and independent final review pending. -/
+
+def residualStatisticDDeleted (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=
+  Shao.OQ5.P35.unorderedPairSum
+      (Shao.OQ6.ResidualDeletion.eraseIncident
+        (fun j k : Fin n => r (x j) (x k)) i) /
+    (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))
+
+def residualEnergyJDeleted (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=
+  (∑ j : Fin n,
+    (Shao.OQ6.ResidualDeletion.rowSum
+      (Shao.OQ6.ResidualDeletion.eraseIncident
+        (fun k l : Fin n => r (x k) (x l)) i) j) ^ 2) /
+    ((n : ℝ) - 2) ^ 2
+
+def studentizerClipBudgetDeleted (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (C0 rho y : ℝ)
+    (x : Fin n → Ω) (i : Fin n) : ℝ :=
+  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +
+    residualEnergyJDeleted n r x i /
+      ((1 + rho) * y * Real.sqrt (n : ℝ)))
+
+theorem residualEnergyJ_eq_rowSqSum
+    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) :
+    residualEnergyJ n r x =
+      (∑ j : Fin n,
+        (Shao.OQ6.ResidualDeletion.rowSum
+          (fun k l : Fin n => r (x k) (x l)) j) ^ 2) /
+        ((n : ℝ) - 2) ^ 2 := by
+  simp only [residualEnergyJ, residualU_eq_erased_row,
+    Shao.OQ6.ResidualDeletion.rowSum]
+  simp_rw [div_pow]
+  rw [← Finset.sum_div]
+
+theorem clippedDeletion_envelopes_nonneg
+    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)
+    (C0 rho y : ℝ) (x : Fin n → Ω) (i : Fin n)
+    (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :
+    0 ≤ |residualStatisticD n r x| ∧
+    0 ≤ studentizerClipBudget n r C0 rho y x ∧
+    0 ≤ |residualStatisticDDeleted n r x i| ∧
+    0 ≤ studentizerClipBudgetDeleted n r C0 rho y x i := by
+  have hJdel : 0 ≤ residualEnergyJDeleted n r x i := by
+    unfold residualEnergyJDeleted
+    exact div_nonneg (Finset.sum_nonneg (fun j _ => sq_nonneg _))
+      (sq_nonneg _)
+  have hSigma : 0 ≤ 1 + rho := by linarith only [hrho]
+  refine ⟨abs_nonneg _, studentizerClipBudget_nonneg n r C0 rho y x hC0 hrho hy,
+    abs_nonneg _, ?_⟩
+  unfold studentizerClipBudgetDeleted
+  exact mul_nonneg hC0
+    (add_nonneg
+      (div_nonneg (mul_nonneg hSigma hy) (Real.sqrt_nonneg (n : ℝ)))
+      (div_nonneg hJdel
+        (mul_nonneg (mul_nonneg hSigma hy) (Real.sqrt_nonneg (n : ℝ)))))
+
+theorem clippedDeletion_coordinate_invariant
+    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)
+    (C0 rho y : ℝ) (i : Fin n) (x z : Fin n → Ω)
+    (hxz : ∀ j : Fin n, j ≠ i → x j = z j) :
+    residualStatisticDDeleted n r x i = residualStatisticDDeleted n r z i ∧
+    residualEnergyJDeleted n r x i = residualEnergyJDeleted n r z i ∧
+    studentizerClipBudgetDeleted n r C0 rho y x i =
+      studentizerClipBudgetDeleted n r C0 rho y z i := by
+  let Mx : Fin n → Fin n → ℝ := fun j k : Fin n => r (x j) (x k)
+  let Mz : Fin n → Fin n → ℝ := fun j k : Fin n => r (z j) (z k)
+  have hErase : Shao.OQ6.ResidualDeletion.eraseIncident Mx i =
+      Shao.OQ6.ResidualDeletion.eraseIncident Mz i := by
+    funext j k
+    by_cases hj : j = i
+    · simp [Shao.OQ6.ResidualDeletion.eraseIncident, hj]
+    · by_cases hk : k = i
+      · simp [Shao.OQ6.ResidualDeletion.eraseIncident, hk]
+      · simp [Shao.OQ6.ResidualDeletion.eraseIncident, Mx, Mz, hj, hk,
+          hxz j hj, hxz k hk]
+  have hD : residualStatisticDDeleted n r x i =
+      residualStatisticDDeleted n r z i := by
+    change Shao.OQ5.P35.unorderedPairSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident Mx i) /
+          (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) =
+      Shao.OQ5.P35.unorderedPairSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident Mz i) /
+          (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))
+    rw [hErase]
+  have hJ : residualEnergyJDeleted n r x i =
+      residualEnergyJDeleted n r z i := by
+    change (∑ j : Fin n,
+        (Shao.OQ6.ResidualDeletion.rowSum
+          (Shao.OQ6.ResidualDeletion.eraseIncident Mx i) j) ^ 2) /
+          ((n : ℝ) - 2) ^ 2 =
+      (∑ j : Fin n,
+        (Shao.OQ6.ResidualDeletion.rowSum
+          (Shao.OQ6.ResidualDeletion.eraseIncident Mz i) j) ^ 2) /
+          ((n : ℝ) - 2) ^ 2
+    rw [hErase]
+  refine ⟨hD, hJ, ?_⟩
+  unfold studentizerClipBudgetDeleted
+  rw [hJ]
+
+theorem clippedDeletion_measurable_factorization
+    (n : ℕ) {Ω : Type u} [MeasurableSpace Ω]
+    (r : Ω → Ω → ℝ)
+    (hr : Measurable (fun p : Ω × Ω => r p.1 p.2))
+    (C0 rho y : ℝ) (i : Fin n) :
+    Measurable (fun x : Fin n → Ω => |residualStatisticD n r x|) ∧
+    Measurable (fun x : Fin n → Ω => studentizerClipBudget n r C0 rho y x) ∧
+    ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ,
+      Measurable E ∧
+      ∀ x : Fin n → Ω,
+        (|residualStatisticDDeleted n r x i|,
+          studentizerClipBudgetDeleted n r C0 rho y x i) =
+            E (fun j : {j : Fin n // j ≠ i} => x j.val) := by
+  let Ret : Type u := {j : Fin n // j ≠ i} → Ω
+  let denD : ℝ := Real.sqrt (n : ℝ) * ((n : ℝ) - 1)
+  let denJ : ℝ := ((n : ℝ) - 2) ^ 2
+  let denB : ℝ := (1 + rho) * y * Real.sqrt (n : ℝ)
+  let base : ℝ := ((1 + rho) * y) / Real.sqrt (n : ℝ)
+  let F : Ret → ℝ := Classical.choose
+    (Shao.OQ6.ResidualDeletion.erasedSamplePairSum_measurable_factorization r hr i)
+  have hF : Measurable F :=
+    (Classical.choose_spec
+      (Shao.OQ6.ResidualDeletion.erasedSamplePairSum_measurable_factorization r hr i)).1
+  have hFfactor : ∀ x : Fin n → Ω,
+      Shao.OQ5.P35.unorderedPairSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident
+          (fun j k : Fin n => r (x j) (x k)) i) =
+        F (fun j : {j : Fin n // j ≠ i} => x j.val) :=
+    (Classical.choose_spec
+      (Shao.OQ6.ResidualDeletion.erasedSamplePairSum_measurable_factorization r hr i)).2
+  let L : Ret → ℝ := Classical.choose
+    (Shao.OQ6.ResidualDeletion.erasedSampleRowSqSum_measurable_factorization r hr i)
+  have hL : Measurable L :=
+    (Classical.choose_spec
+      (Shao.OQ6.ResidualDeletion.erasedSampleRowSqSum_measurable_factorization r hr i)).1
+  have hLfactor : ∀ x : Fin n → Ω,
+      (∑ j : Fin n, (Shao.OQ6.ResidualDeletion.rowSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident
+          (fun k l : Fin n => r (x k) (x l)) i) j) ^ 2) =
+        L (fun j : {j : Fin n // j ≠ i} => x j.val) :=
+    (Classical.choose_spec
+      (Shao.OQ6.ResidualDeletion.erasedSampleRowSqSum_measurable_factorization r hr i)).2
+  let E : Ret → ℝ × ℝ := fun eta : Ret =>
+    (|F eta / denD|, C0 * (base + (L eta / denJ) / denB))
+  have hE : Measurable E := by
+    dsimp only [E]
+    simpa only [Real.norm_eq_abs] using
+      ((hF.div_const denD).norm).prodMk
+        (measurable_const.mul (measurable_const.add
+          ((hL.div_const denJ).div_const denB)))
+  have hEfactor : ∀ x : Fin n → Ω,
+      (|residualStatisticDDeleted n r x i|,
+        studentizerClipBudgetDeleted n r C0 rho y x i) =
+      E (fun j : {j : Fin n // j ≠ i} => x j.val) := by
+    intro x
+    dsimp only [residualStatisticDDeleted, studentizerClipBudgetDeleted,
+      residualEnergyJDeleted, E]
+    rw [hFfactor x, hLfactor x]
+  have hentry (j k : Fin n) :
+      Measurable (fun x : Fin n → Ω => r (x j) (x k)) := by
+    have hp : Measurable (fun x : Fin n → Ω => (x j, x k)) :=
+      (measurable_pi_apply j).prodMk (measurable_pi_apply k)
+    simpa only [Function.comp_def] using hr.comp hp
+  have hUpper : Measurable (fun x : Fin n → Ω =>
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x) := by
+    unfold Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper
+    apply Finset.measurable_sum
+    intro j _
+    apply Finset.measurable_sum
+    intro k _
+    by_cases hjk : j < k
+    · simpa only [hjk, ite_true] using hentry j k
+    · simp only [hjk, ite_false]
+      exact measurable_const
+  have hFullD : Measurable (fun x : Fin n → Ω => |residualStatisticD n r x|) := by
+    simpa only [Real.norm_eq_abs] using (hUpper.div_const denD).norm
+  have hrowFull (j : Fin n) : Measurable (fun x : Fin n → Ω =>
+      Shao.OQ6.ResidualDeletion.rowSum
+        (fun k l : Fin n => r (x k) (x l)) j) := by
+    unfold Shao.OQ6.ResidualDeletion.rowSum
+    exact Finset.measurable_sum _ (fun k _ => hentry j k)
+  have hFullJ : Measurable (fun x : Fin n → Ω => residualEnergyJ n r x) := by
+    simpa only [residualEnergyJ_eq_rowSqSum] using
+      (Finset.measurable_sum _ (fun j _ => (hrowFull j).pow_const 2)).div_const denJ
+  have hFullB : Measurable (fun x : Fin n → Ω =>
+      studentizerClipBudget n r C0 rho y x) := by
+    exact measurable_const.mul (measurable_const.add (hFullJ.div_const denB))
+  exact ⟨hFullD, hFullB, E, hE, hEfactor⟩
+
+theorem clippedDeletion_cost_identities
+    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)
+    (hsym : ∀ a b : Ω, r a b = r b a)
+    (C0 rho y : ℝ) (x : Fin n → Ω) (i : Fin n)
+    (hn : 4 ≤ n) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : (1 : ℝ) ≤ y) :
+    let M : Fin n → Fin n → ℝ := fun j k : Fin n => r (x j) (x k)
+    let psi : Fin n → ℝ := fun j : Fin n =>
+      Shao.OQ6.ResidualDeletion.rowSum M j
+    let Lambda : ℝ := ∑ j : Fin n, (psi j) ^ 2
+    let LambdaDeleted : ℝ := ∑ j : Fin n,
+      (Shao.OQ6.ResidualDeletion.rowSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident M i) j) ^ 2
+    residualStatisticD n r x - residualStatisticDDeleted n r x i =
+      psi i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) ∧
+    | |residualStatisticD n r x| - |residualStatisticDDeleted n r x i| | ≤
+      |residualStatisticD n r x - residualStatisticDDeleted n r x i| ∧
+    residualEnergyJ n r x - residualEnergyJDeleted n r x i =
+      (Lambda - LambdaDeleted) / ((n : ℝ) - 2) ^ 2 ∧
+    Lambda - LambdaDeleted = (psi i) ^ 2 +
+      ∑ j ∈ Finset.univ.erase i,
+        (2 * M i j * (psi j - M i j) + (M i j) ^ 2) ∧
+    studentizerClipBudget n r C0 rho y x -
+        studentizerClipBudgetDeleted n r C0 rho y x i =
+      C0 * (residualEnergyJ n r x - residualEnergyJDeleted n r x i) /
+        ((1 + rho) * y * Real.sqrt (n : ℝ)) ∧
+    |studentizerClipBudget n r C0 rho y x -
+        studentizerClipBudgetDeleted n r C0 rho y x i| =
+      C0 * |Lambda - LambdaDeleted| /
+        (((n : ℝ) - 2) ^ 2 * ((1 + rho) * y * Real.sqrt (n : ℝ))) := by
+  dsimp only
+  let M : Fin n → Fin n → ℝ := fun j k : Fin n => r (x j) (x k)
+  let psi : Fin n → ℝ := fun j : Fin n =>
+    Shao.OQ6.ResidualDeletion.rowSum M j
+  let Lambda : ℝ := ∑ j : Fin n, (psi j) ^ 2
+  let LambdaDeleted : ℝ := ∑ j : Fin n,
+    (Shao.OQ6.ResidualDeletion.rowSum
+      (Shao.OQ6.ResidualDeletion.eraseIncident M i) j) ^ 2
+  let denD : ℝ := Real.sqrt (n : ℝ) * ((n : ℝ) - 1)
+  let denJ : ℝ := ((n : ℝ) - 2) ^ 2
+  let denB : ℝ := (1 + rho) * y * Real.sqrt (n : ℝ)
+  have hM : ∀ j k : Fin n, M j k = M k j := fun j k => hsym (x j) (x k)
+  have hn4 : (4 : ℝ) ≤ n := by exact_mod_cast hn
+  have hroot : 0 < Real.sqrt (n : ℝ) :=
+    Real.sqrt_pos.mpr (by linarith only [hn4])
+  have hDenD : 0 < denD :=
+    mul_pos hroot (by linarith only [hn4])
+  have hDenJ : 0 < denJ := by
+    exact pow_pos (by linarith only [hn4] : 0 < (n : ℝ) - 2) 2
+  have hDenB : 0 < denB :=
+    mul_pos (mul_pos (by linarith only [hrho]) (by linarith only [hy])) hroot
+  have hFullD : residualStatisticD n r x =
+      Shao.OQ5.P35.unorderedPairSum M / denD := by
+    rfl
+  have hFullJ : residualEnergyJ n r x = Lambda / denJ :=
+    residualEnergyJ_eq_rowSqSum n r x
+  have hDeletedJ : residualEnergyJDeleted n r x i = LambdaDeleted / denJ := by
+    rfl
+  have hD : residualStatisticD n r x - residualStatisticDDeleted n r x i =
+      psi i / denD := by
+    rw [hFullD]
+    change Shao.OQ5.P35.unorderedPairSum M / denD -
+        Shao.OQ5.P35.unorderedPairSum
+          (Shao.OQ6.ResidualDeletion.eraseIncident M i) / denD = psi i / denD
+    rw [← sub_div]
+    congr 1
+    exact Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident M hM i
+  have hAbs :
+      | |residualStatisticD n r x| - |residualStatisticDDeleted n r x i| | ≤
+        |residualStatisticD n r x - residualStatisticDDeleted n r x i| :=
+    abs_abs_sub_abs_le_abs_sub _ _
+  have hJ : residualEnergyJ n r x - residualEnergyJDeleted n r x i =
+      (Lambda - LambdaDeleted) / denJ := by
+    rw [hFullJ, hDeletedJ, ← sub_div]
+  have hLambda : Lambda - LambdaDeleted = (psi i) ^ 2 +
+      ∑ j ∈ Finset.univ.erase i,
+        (2 * M i j * (psi j - M i j) + (M i j) ^ 2) :=
+    Shao.OQ6.ResidualDeletion.rowSqSum_sub_eraseIncident M hM i
+  have hB : studentizerClipBudget n r C0 rho y x -
+      studentizerClipBudgetDeleted n r C0 rho y x i =
+      C0 * (residualEnergyJ n r x - residualEnergyJDeleted n r x i) / denB := by
+    unfold studentizerClipBudget studentizerClipBudgetDeleted
+    dsimp only [denB]
+    ring
+  have hAbsB : |studentizerClipBudget n r C0 rho y x -
+      studentizerClipBudgetDeleted n r C0 rho y x i| =
+      C0 * |Lambda - LambdaDeleted| / (denJ * denB) := by
+    rw [hB, hJ]
+    rw [abs_div, abs_mul, abs_of_nonneg hC0, abs_div,
+      abs_of_pos hDenJ, abs_of_pos hDenB]
+    rw [← mul_div_assoc, div_div]
+  exact ⟨hD, hAbs, hJ, hLambda, hB, hAbsB⟩
+
+end Shao.OQ5.P51
+
+end

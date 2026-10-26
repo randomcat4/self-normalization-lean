@@ -589,6 +589,7 @@ import Shao.OQ5.P51.BoundedPolylogConcentration
 import Shao.OQ5.P51.BoundedPolylogWindow
 import Shao.OQ5.P51.BoundedRemainderPayments
 import Shao.OQ5.P51.BoundedStudentizerGeometry
+import Shao.OQ5.P51.ClippedDeletionEnvelope
 import Shao.OQ5.P51.ClippedStudentizer
 import Shao.OQ5.P51.LiteralClippedComparison
 import Shao.OQ5.P51.LiteralStudentizerBudgetDomination
@@ -739,6 +740,7 @@ import Shao.OQ6.OriginalGoodEventBridge
 import Shao.OQ6.OriginalGoodEventProbability
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
+import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSelfNormalizedTail
 import Shao.OQ6.PairedSelfNormalizedTail
 import Shao.OQ6.PartialObservationTilt
