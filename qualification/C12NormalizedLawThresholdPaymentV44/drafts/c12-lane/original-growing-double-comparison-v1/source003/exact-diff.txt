@@ -1,0 +1,18 @@
+--- source002
++++ source003
+@@ -147,11 +147,12 @@
+     have hSigned := hSignedCompare rhoStar hrhoStar hrhoStarUpper p hp2 hp3
+       mu rho n hn X hX hIndep hLaw h2 hmean hsecond hp
+       1 x (Or.inl rfl) hx0 hxI
+-    have hCross := hSigned.2.2.2.1
++    have hCrossRaw := hSigned.2.2.2.1
+     let U : Set Ω := {omega |
+       x * Real.sqrt (rawEnergy omega) ≤ Shao.upperMax (population omega) hn}
+-    change |mu.real U - 2 * Shao.standardNormalTail x| ≤
+-      C1 * R * Shao.standardNormalTail x at hCross
++    have hCross : |mu.real U - 2 * Shao.standardNormalTail x| ≤
++        C1 * R * Shao.standardNormalTail x := by
++      simpa only [one_smul] using hCrossRaw
+     have hUpper : mu.real U ≤ 2 * Shao.standardNormalTail x +
+         C1 * R * Shao.standardNormalTail x := by
+       linarith only [(abs_le.mp hCross).2]

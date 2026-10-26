@@ -1,0 +1,16 @@
+theorem actual_brownian_weak_double_crossing
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x : ℝ) (hx : 0 < x) :
+    let U : Set ΩB :=
+      {omega | ∃ t : BridgeTime, x ≤ B ⟨(t : ℝ), t.property.1⟩ omega}
+    let L : Set ΩB :=
+      {omega | ∃ t : BridgeTime, B ⟨(t : ℝ), t.property.1⟩ omega ≤ -x}
+    let DB : Set ΩB := U ∩ L
+    let H : ℝ := PB.real
+      {omega | ∃ t : BridgeTime, x ≤ |B ⟨(t : ℝ), t.property.1⟩ omega|}
+    let d : ℝ := PB.real DB
+    NullMeasurableSet U PB ∧ NullMeasurableSet L PB ∧
+      NullMeasurableSet DB PB ∧ NullMeasurableSet (U ∪ L) PB ∧
+      d = 4 * Shao.standardNormalTail x - H ∧
+      0 ≤ d ∧ d ≤ 2 * Shao.standardNormalTail x ∧

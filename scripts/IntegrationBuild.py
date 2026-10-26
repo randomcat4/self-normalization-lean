@@ -3,7 +3,7 @@ import subprocess, json, hashlib, time
 
 w=Path.cwd()
 r=Path('/root/rivermind-data/shao-lean-20261021')
-logs=r/'logs/integration-v108'
+logs=r/'logs/integration-v109'
 config=json.loads((logs/'scope-config.json').read_text())
 logdir=logs/'sequential'
 logdir.mkdir(exist_ok=True)

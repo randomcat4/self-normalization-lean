@@ -1,0 +1,32 @@
+import Shao.C2.AuxiliaryCenteredProductLaw
+import Shao.C2.TwoSided
+import Shao.Probability.MeasurablePath
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 800000
+noncomputable section
+namespace Shao.C2.ActualCenteredProductTransport
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators Classical
+
+theorem double_crossing_smul_iff
+    {n : ℕ} (hn : 0 < n) (v : Shao.Path n) (t : ℝ) (ht : 0 < t) (x : ℝ) :
+    t • v ∈ Shao.C2.doubleCrossing hn x ↔ v ∈ Shao.C2.doubleCrossing hn x
+
+theorem iid_centered_scaled_product_transport
+    (rho : Measure ℝ) [IsProbabilityMeasure rho] (n : ℕ) (hn : 0 < n)
+    (mu t : ℝ) (ht : 0 < t) :
+    let chi : Measure ℝ := Measure.map (fun z : ℝ => (z - mu) / t) rho
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let Pc : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => chi)
+    IsProbabilityMeasure chi ∧
+      Measure.map (fun v : Shao.Path n => (fun i => (v i - mu) / t)) P = Pc ∧
+      (∀ x : ℝ,
+        P.real {v : Shao.Path n | (fun i => v i - mu) ∈ Shao.C2.doubleCrossing hn x} =
+          Pc.real (Shao.C2.doubleCrossing hn x)) ∧
+      ∀ q : ℝ,
+        P.real {v : Shao.Path n | Shao.energy (fun i => v i - mu) ≤ q} =
+          Pc.real {w : Shao.Path n | t ^ 2 * Shao.energy w ≤ q}
+
+end Shao.C2.ActualCenteredProductTransport

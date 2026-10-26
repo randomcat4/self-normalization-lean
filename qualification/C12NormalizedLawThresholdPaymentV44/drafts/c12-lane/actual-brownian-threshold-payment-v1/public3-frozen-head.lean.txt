@@ -1,0 +1,11 @@
+theorem brownian_double_local_threshold_payment
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (x t : ℝ) (hx : 0 < x) (ht : 0 < t)
+    (hneigh : |t - x| ≤ 1 / (1 + x)) :
+    let D : ℝ → Set ΩB := fun z => {omega |
+      (∃ r : BridgeTime, z ≤ B ⟨(r : ℝ), r.property.1⟩ omega) ∧
+      ∃ r : BridgeTime, B ⟨(r : ℝ), r.property.1⟩ omega ≤ -z}
+    Shao.standardNormalTail t ≤ Real.exp 2 * Shao.standardNormalTail x ∧
+      |PB.real (D t) - PB.real (D x)| ≤
+        (8 * Real.exp 2) * (1 + x) * |t - x| * Shao.standardNormalTail x
