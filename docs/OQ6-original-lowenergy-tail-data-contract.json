@@ -1,0 +1,1199 @@
+{
+  "schema": "oq56-unit203-parent-canonical-frozen-data-local-facts-v1",
+  "status": "PARENT_FROZEN_BEFORE_IMPLEMENTATION",
+  "ambient": {
+    "binders": "{Ω : Type*} [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ] (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ) (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1)",
+    "target": "exact candidate-public-header.lean.txt",
+    "inheritedClassSupport": "Real carries all codomain norm/order/topology/measurability instances. μ probability supplies finite and SigmaFinite. Product domain uses original mΩ and Pi; no extra domain structure.",
+    "ownedTopLevelDeclarations": [
+      "Shao.OQ6.OriginalLowEnergyTail.original_low_energy_exponential"
+    ],
+    "newTopLevelData": [],
+    "privateHelperDeclarations": [],
+    "localClassInstances": [
+      "hPprob"
+    ]
+  },
+  "data": [
+    {
+      "name": "X",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => (g o) ^ (2 : ℕ)",
+      "scope": "before cutoff",
+      "captures": "g",
+      "dependsOn": [],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "g"
+      ]
+    },
+    {
+      "name": "Z",
+      "type": "ℕ → Ω → ℝ",
+      "initializer": "fun k : ℕ => fun o : Ω => min (X o) (k : ℝ)",
+      "scope": "before cutoff",
+      "captures": "X",
+      "dependsOn": [
+        "X"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "X"
+      ]
+    },
+    {
+      "name": "KExistsProp",
+      "type": "Prop",
+      "initializer": "∃ k : ℕ, 1 ≤ k ∧ (7 / 8 : ℝ) ≤ ∫ o : Ω, Z k o ∂μ",
+      "scope": "before cutoff",
+      "captures": "μ,Z",
+      "dependsOn": [
+        "Z"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "Z"
+      ]
+    },
+    {
+      "name": "k",
+      "type": "ℕ",
+      "initializer": null,
+      "scope": "existential elimination before ∀n",
+      "captures": "hKExists",
+      "dependsOn": [
+        "KExistsProp",
+        "hKExists"
+      ],
+      "selection": {
+        "kind": "EXISTENTIAL_ELIMINATION_NOT_CLASSICAL_CHOOSE",
+        "source": "hKExists : KExistsProp",
+        "binderPattern": "rcases hKExists with ⟨k,hkOne,hkMoment⟩",
+        "beforeForallN": true,
+        "initializerAbsentBecauseBoundByExistsElim": true,
+        "nonCircular": true
+      },
+      "explicitTermAndTypeCaptures": [
+        "hKExists"
+      ]
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "initializer": "(k : ℝ)",
+      "scope": "fixed for whole ∀n",
+      "captures": "k",
+      "dependsOn": [
+        "k"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "k"
+      ]
+    },
+    {
+      "name": "Y",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => min (X o) K",
+      "scope": "fixed for whole ∀n",
+      "captures": "X,K",
+      "dependsOn": [
+        "X",
+        "K"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "X",
+        "K"
+      ]
+    },
+    {
+      "name": "s",
+      "type": "ℝ",
+      "initializer": "1 / (8 * K)",
+      "scope": "fixed for whole ∀n",
+      "captures": "K",
+      "dependsOn": [
+        "K"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "K"
+      ]
+    },
+    {
+      "name": "c",
+      "type": "ℝ",
+      "initializer": "s / 4",
+      "scope": "existential result before ∀n",
+      "captures": "s",
+      "dependsOn": [
+        "s"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "s"
+      ]
+    },
+    {
+      "name": "f",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => Real.exp (-s * X o)",
+      "scope": "fixed for whole ∀n",
+      "captures": "X,s",
+      "dependsOn": [
+        "X",
+        "s"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "s",
+        "X"
+      ]
+    },
+    {
+      "name": "L",
+      "type": "ℝ",
+      "initializer": "∫ o : Ω, f o ∂μ",
+      "scope": "fixed for whole ∀n",
+      "captures": "μ,f",
+      "dependsOn": [
+        "f"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "f"
+      ]
+    },
+    {
+      "name": "U",
+      "type": "Ω → ℝ",
+      "initializer": "fun o : Ω => 1 - (s * Y o - s ^ (2 : ℕ) * (Y o) ^ (2 : ℕ))",
+      "scope": "single-coordinate bound",
+      "captures": "s,Y",
+      "dependsOn": [
+        "s",
+        "Y"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "Ω",
+        "s",
+        "Y"
+      ]
+    },
+    {
+      "name": "n",
+      "type": "ℕ",
+      "initializer": null,
+      "scope": "∀n binder after k,K,s,c fixed",
+      "captures": "none",
+      "dependsOn": [
+        "c",
+        "hCPos",
+        "hLDecay"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": []
+    },
+    {
+      "name": "P",
+      "type": "Measure (Fin n → Ω)",
+      "initializer": "Shao.OQ6.CanonicalDoubleGhostRowMoments.sampleLaw n μ",
+      "scope": "inside ∀n",
+      "captures": "n,Ω,mΩ,μ",
+      "dependsOn": [
+        "n"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "Ω",
+        "mΩ",
+        "μ"
+      ]
+    },
+    {
+      "name": "S",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy n g",
+      "scope": "inside ∀n",
+      "captures": "n,Ω,g",
+      "dependsOn": [
+        "n"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "Ω",
+        "g"
+      ]
+    },
+    {
+      "name": "F",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "fun x : Fin n → Ω => Real.exp (-s * S x)",
+      "scope": "inside ∀n",
+      "captures": "n,s,S",
+      "dependsOn": [
+        "n",
+        "s",
+        "S"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "Ω",
+        "s",
+        "S"
+      ]
+    },
+    {
+      "name": "ε",
+      "type": "ℝ",
+      "initializer": "Real.exp (-s * (n : ℝ) / (2 : ℝ))",
+      "scope": "inside ∀n",
+      "captures": "n,s",
+      "dependsOn": [
+        "n",
+        "s"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "s"
+      ]
+    },
+    {
+      "name": "E",
+      "type": "Set (Fin n → Ω)",
+      "initializer": "{x : Fin n → Ω | S x < (n : ℝ) / (2 : ℝ)}",
+      "scope": "inside ∀n",
+      "captures": "n,S",
+      "dependsOn": [
+        "n",
+        "S"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "Ω",
+        "S"
+      ]
+    },
+    {
+      "name": "hPprob",
+      "type": "IsProbabilityMeasure P",
+      "initializer": "by\n  change IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ))\n  infer_instance",
+      "scope": "local instance inside ∀n",
+      "captures": "n,Ω,mΩ,μ,hμ,P",
+      "dependsOn": [
+        "P"
+      ],
+      "selection": null,
+      "explicitTermAndTypeCaptures": [
+        "n",
+        "Ω",
+        "mΩ",
+        "μ",
+        "hμ",
+        "P"
+      ],
+      "stage1InitializerPreserved": "MeasureTheory.Measure.pi.instIsProbabilityMeasure (fun _ : Fin n => μ), after definitional change of P/sampleLaw",
+      "initializerClarification": "Executable proof term for the exact existing Pi probability instance, no new mathematical input or class."
+    }
+  ],
+  "localFacts": [
+    {
+      "name": "hXMeas",
+      "type": "Measurable X",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "X"
+      ],
+      "derivation": "hg.pow_const (2:ℕ)",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hXMeas",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hXMeas : Measurable X"
+    },
+    {
+      "name": "hXInt",
+      "type": "Integrable X μ",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "X"
+      ],
+      "derivation": "hg2.integrable_sq",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hXInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hXInt : Integrable X μ"
+    },
+    {
+      "name": "hXNonneg",
+      "type": "∀ o : Ω, 0 ≤ X o",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "X"
+      ],
+      "derivation": "sq_nonneg (g o)",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hXNonneg",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hXNonneg : ∀ o : Ω, 0 ≤ X o"
+    },
+    {
+      "name": "hZMeas",
+      "type": "∀ k : ℕ, Measurable (Z k)",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "Z",
+        "hXMeas"
+      ],
+      "derivation": "Real min with measurable constant",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hZMeas",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hZMeas : ∀ k : ℕ, Measurable (Z k)"
+    },
+    {
+      "name": "hZBounds",
+      "type": "∀ (k : ℕ) (o : Ω), 0 ≤ Z k o ∧ Z k o ≤ X o ∧ Z k o ≤ (k : ℝ)",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "Z",
+        "hXNonneg"
+      ],
+      "derivation": "min nonnegative; min_le_left/right; Nat cast nonnegative",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hZBounds",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hZBounds : ∀ (k : ℕ) (o : Ω), 0 ≤ Z k o ∧ Z k o ≤ X o ∧ Z k o ≤ (k : ℝ)"
+    },
+    {
+      "name": "hZInt",
+      "type": "∀ k : ℕ, Integrable (Z k) μ",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "hXInt",
+        "hZMeas",
+        "hZBounds"
+      ],
+      "derivation": "hXInt.mono' with norm Z=Z≤X",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hZInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hZInt : ∀ k : ℕ, Integrable (Z k) μ"
+    },
+    {
+      "name": "hCastLimit",
+      "type": "Filter.Tendsto (fun k : ℕ => (k : ℝ)) Filter.atTop Filter.atTop",
+      "scope": "before cutoff",
+      "dependsOn": [],
+      "derivation": "tendsto_natCast_atTop_atTop at R=ℝ",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hCastLimit",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hCastLimit : Filter.Tendsto (fun k : ℕ => (k : ℝ)) Filter.atTop Filter.atTop"
+    },
+    {
+      "name": "hZPointLimit",
+      "type": "∀ o : Ω, Filter.Tendsto (fun k : ℕ => Z k o) Filter.atTop (𝓝 (X o))",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "Z",
+        "hCastLimit"
+      ],
+      "derivation": "tendsto_order; pull eventually_ge_atTop(X o) through hCastLimit; lower eventual min=X; upper pointwise min≤X",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hZPointLimit",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hZPointLimit : ∀ o : Ω, Filter.Tendsto (fun k : ℕ => Z k o) Filter.atTop (𝓝 (X o))"
+    },
+    {
+      "name": "hZIntegralLimit",
+      "type": "Filter.Tendsto (fun k : ℕ => ∫ o : Ω, Z k o ∂μ) Filter.atTop (𝓝 (1 : ℝ))",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "hXInt",
+        "hZMeas",
+        "hZBounds",
+        "hZPointLimit"
+      ],
+      "derivation": "DCT bound=X, limit=X, then hgsecond; all norms dominated pointwise and lifted AE",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hZIntegralLimit",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hZIntegralLimit : Filter.Tendsto (fun k : ℕ => ∫ o : Ω, Z k o ∂μ) Filter.atTop (𝓝 (1 : ℝ))"
+    },
+    {
+      "name": "hIntegralEventually",
+      "type": "∀ᶠ k : ℕ in Filter.atTop, (7 / 8 : ℝ) ≤ ∫ o : Ω, Z k o ∂μ",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "hZIntegralLimit"
+      ],
+      "derivation": "Tendsto.eventually(eventually_ge_nhds(7/8<1))",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hIntegralEventually",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hIntegralEventually : ∀ᶠ k : ℕ in Filter.atTop, (7 / 8 : ℝ) ≤ ∫ o : Ω, Z k o ∂μ"
+    },
+    {
+      "name": "hKExists",
+      "type": "KExistsProp",
+      "scope": "before cutoff",
+      "dependsOn": [
+        "KExistsProp",
+        "hIntegralEventually"
+      ],
+      "derivation": "Eventually.and with eventually_ge_atTop (1:ℕ), then Eventually.exists, conjunction order corrected structurally",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hKExists",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hKExists : KExistsProp"
+    },
+    {
+      "name": "hkOne",
+      "type": "1 ≤ k",
+      "scope": "existential elimination",
+      "dependsOn": [
+        "k",
+        "hKExists"
+      ],
+      "derivation": "first conjunct of rcases witness",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hkOne",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hkOne : 1 ≤ k"
+    },
+    {
+      "name": "hkMoment",
+      "type": "(7 / 8 : ℝ) ≤ ∫ o : Ω, Z k o ∂μ",
+      "scope": "existential elimination",
+      "dependsOn": [
+        "k",
+        "hKExists"
+      ],
+      "derivation": "second conjunct; Z k definitionally Y",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hkMoment",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hkMoment : (7 / 8 : ℝ) ≤ ∫ o : Ω, Z k o ∂μ"
+    },
+    {
+      "name": "hKOne",
+      "type": "(1 : ℝ) ≤ K",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "K",
+        "hkOne"
+      ],
+      "derivation": "exact real cast of hkOne",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hKOne",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hKOne : (1 : ℝ) ≤ K"
+    },
+    {
+      "name": "hKPos",
+      "type": "0 < K",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hKOne"
+      ],
+      "derivation": "0<1≤K",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hKPos",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hKPos : 0 < K"
+    },
+    {
+      "name": "hYMeas",
+      "type": "Measurable Y",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "Y",
+        "hXMeas"
+      ],
+      "derivation": "Measurable.min with measurable constant K",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYMeas",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYMeas : Measurable Y"
+    },
+    {
+      "name": "hYBounds",
+      "type": "∀ o : Ω, 0 ≤ Y o ∧ Y o ≤ X o ∧ Y o ≤ K",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "Y",
+        "hXNonneg",
+        "hKPos"
+      ],
+      "derivation": "min bounds",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYBounds",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYBounds : ∀ o : Ω, 0 ≤ Y o ∧ Y o ≤ X o ∧ Y o ≤ K"
+    },
+    {
+      "name": "hYInt",
+      "type": "Integrable Y μ",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hXInt",
+        "hYMeas",
+        "hYBounds"
+      ],
+      "derivation": "mono' norm Y=Y≤X",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYInt : Integrable Y μ"
+    },
+    {
+      "name": "hYsqMeas",
+      "type": "Measurable (fun o : Ω => (Y o) ^ (2 : ℕ))",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hYMeas"
+      ],
+      "derivation": "Measurable.pow_const",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYsqMeas",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYsqMeas : Measurable (fun o : Ω => (Y o) ^ (2 : ℕ))"
+    },
+    {
+      "name": "hYsqPoint",
+      "type": "∀ o : Ω, (Y o) ^ (2 : ℕ) ≤ K * Y o",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hYBounds"
+      ],
+      "derivation": "multiply Y≤K by Y≥0",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYsqPoint",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYsqPoint : ∀ o : Ω, (Y o) ^ (2 : ℕ) ≤ K * Y o"
+    },
+    {
+      "name": "hYsqInt",
+      "type": "Integrable (fun o : Ω => (Y o) ^ (2 : ℕ)) μ",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hYInt",
+        "hYsqMeas",
+        "hYsqPoint"
+      ],
+      "derivation": "(hYInt.const_mul K).mono', norm square=square; no g⁴",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hYsqInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hYsqInt : Integrable (fun o : Ω => (Y o) ^ (2 : ℕ)) μ"
+    },
+    {
+      "name": "hEYBounds",
+      "type": "(7 / 8 : ℝ) ≤ (∫ o : Ω, Y o ∂μ) ∧ (∫ o : Ω, Y o ∂μ) ≤ 1",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hkMoment",
+        "hYInt",
+        "hXInt",
+        "hYBounds"
+      ],
+      "derivation": "first definally Z k=Y; second integral_mono Y X plus hgsecond",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hEYBounds",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hEYBounds : (7 / 8 : ℝ) ≤ (∫ o : Ω, Y o ∂μ) ∧ (∫ o : Ω, Y o ∂μ) ≤ 1"
+    },
+    {
+      "name": "hEYsqBound",
+      "type": "(∫ o : Ω, (Y o) ^ (2 : ℕ) ∂μ) ≤ K",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hYsqInt",
+        "hYInt",
+        "hYsqPoint",
+        "hEYBounds",
+        "hKPos"
+      ],
+      "derivation": "integral_mono Y² (K*Y), integral_const_mul, then K*EY≤K",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hEYsqBound",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hEYsqBound : (∫ o : Ω, (Y o) ^ (2 : ℕ) ∂μ) ≤ K"
+    },
+    {
+      "name": "hSPos",
+      "type": "0 < s",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "s",
+        "hKPos"
+      ],
+      "derivation": "div_pos 1 (8*K)",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hSPos",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hSPos : 0 < s"
+    },
+    {
+      "name": "hCPos",
+      "type": "0 < c",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "c",
+        "hSPos"
+      ],
+      "derivation": "div_pos s 4",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hCPos",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hCPos : 0 < c"
+    },
+    {
+      "name": "hSK",
+      "type": "s * K = (1 / 8 : ℝ)",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "s",
+        "hKPos"
+      ],
+      "derivation": "ordinary field algebra with K≠0",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hSK",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hSK : s * K = (1 / 8 : ℝ)"
+    },
+    {
+      "name": "hSsqK",
+      "type": "s ^ (2 : ℕ) * K = s / 8",
+      "scope": "fixed before ∀n",
+      "dependsOn": [
+        "hSK"
+      ],
+      "derivation": "pow_two and ring algebra",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hSsqK",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hSsqK : s ^ (2 : ℕ) * K = s / 8"
+    },
+    {
+      "name": "hExpOrder",
+      "type": "∀ (a b : ℝ), a ≤ b → Real.exp a ≤ Real.exp b",
+      "scope": "generic local scalar helper",
+      "dependsOn": [
+        "expOrder.hGapOne"
+      ],
+      "derivation": "add_one_le_exp(b-a), positivity exp a, exp_add, ring identity a+(b-a)=b",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hExpOrder",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hExpOrder : ∀ (a b : ℝ), a ≤ b → Real.exp a ≤ Real.exp b"
+    },
+    {
+      "name": "expOrder.hGapOne",
+      "type": "1 ≤ Real.exp (b - a)",
+      "scope": "inside hExpOrder: a b:ℝ, hab:a≤b",
+      "dependsOn": [],
+      "derivation": "Real.add_one_le_exp(b-a) and b-a≥0",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hGapOne",
+      "sourceContainer": "hExpOrder",
+      "sourceHead": "have hGapOne : 1 ≤ Real.exp (b - a)"
+    },
+    {
+      "name": "hScalar",
+      "type": "∀ u : ℝ, 0 ≤ u → Real.exp (-u) ≤ 1 - u + u ^ (2 : ℕ)",
+      "scope": "generic local scalar helper",
+      "dependsOn": [
+        "scalar.hReciprocal",
+        "scalar.hPolynomial"
+      ],
+      "derivation": "reciprocal and polynomial bound below; scalar0 automatically covered",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hScalar",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hScalar : ∀ u : ℝ, 0 ≤ u → Real.exp (-u) ≤ 1 - u + u ^ (2 : ℕ)"
+    },
+    {
+      "name": "scalar.hDen",
+      "type": "0 < 1 + u",
+      "scope": "inside hScalar: u:ℝ, hu:0≤u",
+      "dependsOn": [],
+      "derivation": "1>0 and u≥0",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hDen",
+      "sourceContainer": "hScalar",
+      "sourceHead": "have hDen : 0 < 1 + u"
+    },
+    {
+      "name": "scalar.hReciprocal",
+      "type": "Real.exp (-u) ≤ 1 / (1 + u)",
+      "scope": "inside hScalar: u:ℝ, hu:0≤u",
+      "dependsOn": [
+        "scalar.hDen"
+      ],
+      "derivation": "le_div_iff₀; multiply add_one_le_exp u by exp(-u)>0; exp_neg and exp_ne_zero",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hReciprocal",
+      "sourceContainer": "hScalar",
+      "sourceHead": "have hReciprocal : Real.exp (-u) ≤ 1 / (1 + u)"
+    },
+    {
+      "name": "scalar.hCubicNonneg",
+      "type": "0 ≤ u ^ (2 : ℕ) * u",
+      "scope": "inside hScalar: u:ℝ, hu:0≤u",
+      "dependsOn": [],
+      "derivation": "mul_nonneg (sq_nonneg u) hu",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hCubicNonneg",
+      "sourceContainer": "hScalar",
+      "sourceHead": "have hCubicNonneg : 0 ≤ u ^ (2 : ℕ) * u"
+    },
+    {
+      "name": "scalar.hPolynomial",
+      "type": "1 / (1 + u) ≤ 1 - u + u ^ (2 : ℕ)",
+      "scope": "inside hScalar: u:ℝ, hu:0≤u",
+      "dependsOn": [
+        "scalar.hDen",
+        "scalar.hCubicNonneg"
+      ],
+      "derivation": "div_le_iff₀; ring identity RHS*(1+u)=1+u³",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hPolynomial",
+      "sourceContainer": "hScalar",
+      "sourceHead": "have hPolynomial : 1 / (1 + u) ≤ 1 - u + u ^ (2 : ℕ)"
+    },
+    {
+      "name": "hfm",
+      "type": "Measurable f",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "f",
+        "hXMeas"
+      ],
+      "derivation": "const_mul (-s) then exp",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hfm",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hfm : Measurable f"
+    },
+    {
+      "name": "hfBounds",
+      "type": "∀ o : Ω, 0 < f o ∧ f o ≤ 1",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "f",
+        "hXNonneg",
+        "hSPos",
+        "hExpOrder"
+      ],
+      "derivation": "exp_pos and exponent≤0",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hfBounds",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hfBounds : ∀ o : Ω, 0 < f o ∧ f o ≤ 1"
+    },
+    {
+      "name": "hfInt",
+      "type": "Integrable f μ",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "hfm",
+        "hfBounds"
+      ],
+      "derivation": "(integrable_const (1:ℝ)).mono' using norm f=f≤1",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hfInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hfInt : Integrable f μ"
+    },
+    {
+      "name": "hLNonneg",
+      "type": "0 ≤ L",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "L",
+        "hfBounds"
+      ],
+      "derivation": "integral_nonneg",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hLNonneg",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hLNonneg : 0 ≤ L"
+    },
+    {
+      "name": "hUInt",
+      "type": "Integrable U μ",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "U",
+        "hYInt",
+        "hYsqInt"
+      ],
+      "derivation": "integrable_const1.sub ((hYInt.const_mul s).sub(hYsqInt.const_mul(s²)))",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hUInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hUInt : Integrable U μ"
+    },
+    {
+      "name": "hPointwise",
+      "type": "∀ o : Ω, f o ≤ U o",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "f",
+        "U",
+        "hYBounds",
+        "hSPos",
+        "hExpOrder",
+        "hScalar"
+      ],
+      "derivation": "X≥Y, negate multiplying s reverses order; scalar u=s*Y and ring (sY)²=s²Y²",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hPointwise",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hPointwise : ∀ o : Ω, f o ≤ U o"
+    },
+    {
+      "name": "hLLinear",
+      "type": "L ≤ 1 - 3 * s / 4",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "L",
+        "hfInt",
+        "hUInt",
+        "hPointwise",
+        "hEYBounds",
+        "hEYsqBound",
+        "hSsqK"
+      ],
+      "derivation": "integral_mono then both integral_sub, integral_const_mul and probability integral1=1; coefficient signs s≥0,s²≥0; exact arithmetic",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hLLinear",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hLLinear : L ≤ 1 - 3 * s / 4"
+    },
+    {
+      "name": "hLDecay",
+      "type": "L ≤ Real.exp (-3 * s / 4)",
+      "scope": "single coordinate",
+      "dependsOn": [
+        "hLLinear"
+      ],
+      "derivation": "add_one_le_exp (-3*s/4)",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hLDecay",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hLDecay : L ≤ Real.exp (-3 * s / 4)"
+    },
+    {
+      "name": "hNaturalPowerOrder",
+      "type": "∀ (a b : ℝ), 0 ≤ a → a ≤ b → ∀ k : ℕ, a ^ k ≤ b ^ k",
+      "scope": "generic local scalar helper",
+      "dependsOn": [],
+      "derivation": "natural induction, zero=1, succ mul_le_mul with a≥0,b^k≥0; induction binders k and ih fully scoped within helper",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hNaturalPowerOrder",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hNaturalPowerOrder : ∀ (a b : ℝ), 0 ≤ a → a ≤ b → ∀ k : ℕ, a ^ k ≤ b ^ k"
+    },
+    {
+      "name": "hSm",
+      "type": "Measurable S",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "S"
+      ],
+      "derivation": "measurable_pi_apply; hg.comp; pow_const2; Finset.measurable_fun_sum after unfolding exact sampleEnergy",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hSm",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hSm : Measurable S"
+    },
+    {
+      "name": "hEm",
+      "type": "MeasurableSet E",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "E",
+        "hSm"
+      ],
+      "derivation": "measurableSet_lt hSm measurable_const",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hEm",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hEm : MeasurableSet E"
+    },
+    {
+      "name": "hFmm",
+      "type": "Measurable F",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "F",
+        "hSm"
+      ],
+      "derivation": "const_mul(-s).exp",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hFmm",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hFmm : Measurable F"
+    },
+    {
+      "name": "hFactor",
+      "type": "F = (fun x : Fin n → Ω => ∏ i : Fin n, f (x i))",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "F",
+        "S",
+        "f"
+      ],
+      "derivation": "finite sum factorization Finset.mul_sum then Real.exp_sum",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hFactor",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hFactor : F = (fun x : Fin n → Ω => ∏ i : Fin n, f (x i))"
+    },
+    {
+      "name": "hFInt",
+      "type": "Integrable F P",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "P",
+        "hPprob",
+        "hfInt",
+        "hFactor"
+      ],
+      "derivation": "Integrable.fin_nat_prod μ_i=μ,f_i=f, then exact definitional sampleLaw",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hFInt",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hFInt : Integrable F P"
+    },
+    {
+      "name": "hIntegral",
+      "type": "(∫ x : Fin n → Ω, F x ∂P) = L ^ n",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "L",
+        "P",
+        "hFactor"
+      ],
+      "derivation": "integral_fintype_prod_eq_pow at Fin n then card_fin",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hIntegral",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hIntegral : (∫ x : Fin n → Ω, F x ∂P) = L ^ n"
+    },
+    {
+      "name": "hIntegralBound",
+      "type": "(∫ x : Fin n → Ω, F x ∂P) ≤ Real.exp (-3 * s * (n : ℝ) / 4)",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "hIntegral",
+        "hLNonneg",
+        "hLDecay",
+        "hNaturalPowerOrder"
+      ],
+      "derivation": "power order; ←Real.exp_nat_mul (-3*s/4) n; ring",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hIntegralBound",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hIntegralBound : (∫ x : Fin n → Ω, F x ∂P) ≤ Real.exp (-3 * s * (n : ℝ) / 4)"
+    },
+    {
+      "name": "hεPos",
+      "type": "0 < ε",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "ε"
+      ],
+      "derivation": "Real.exp_pos _",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hεPos",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hεPos : 0 < ε"
+    },
+    {
+      "name": "hESubset",
+      "type": "E ⊆ {x : Fin n → Ω | ε ≤ F x}",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "E",
+        "ε",
+        "F",
+        "hSPos",
+        "hExpOrder"
+      ],
+      "derivation": "S<n/2 implies ε≤F by negative coefficient and exponent order; no positive n",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hESubset",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hESubset : E ⊆ {x : Fin n → Ω | ε ≤ F x}"
+    },
+    {
+      "name": "hMeasure",
+      "type": "P.real E ≤ P.real {x : Fin n → Ω | ε ≤ F x}",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "hESubset",
+        "hPprob"
+      ],
+      "derivation": "measureReal_mono with actual finite default h₂",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hMeasure",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hMeasure : P.real E ≤ P.real {x : Fin n → Ω | ε ≤ F x}"
+    },
+    {
+      "name": "hMarkov",
+      "type": "ε * P.real {x : Fin n → Ω | ε ≤ F x} ≤ ∫ x : Fin n → Ω, F x ∂P",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "F",
+        "hFInt"
+      ],
+      "derivation": "mul_meas_ge_le_integral_of_nonneg at P,F,ε; AE exp nonneg",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hMarkov",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hMarkov : ε * P.real {x : Fin n → Ω | ε ≤ F x} ≤ ∫ x : Fin n → Ω, F x ∂P"
+    },
+    {
+      "name": "hPaid",
+      "type": "ε * P.real E ≤ Real.exp (-3 * s * (n : ℝ) / 4)",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "hMeasure",
+        "hεPos",
+        "hMarkov",
+        "hIntegralBound"
+      ],
+      "derivation": "multiply probability comparison by ε≥0, then transitive bounds",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hPaid",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hPaid : ε * P.real E ≤ Real.exp (-3 * s * (n : ℝ) / 4)"
+    },
+    {
+      "name": "hBound",
+      "type": "P.real E ≤ Real.exp (-c * (n : ℝ))",
+      "scope": "inside ∀n",
+      "dependsOn": [
+        "hPaid",
+        "hεPos",
+        "ε",
+        "c"
+      ],
+      "derivation": "le_div_iff₀ positive ε, Real.exp_sub, ring exponent difference",
+      "status": "PARENT_FROZEN_LOCAL_INTERFACE_NOT_IMPLEMENTED",
+      "sourceBinderName": "hBound",
+      "sourceContainer": "theoremBody",
+      "sourceHead": "have hBound : P.real E ≤ Real.exp (-c * (n : ℝ))"
+    }
+  ],
+  "embeddedExpressions": [
+    {
+      "name": "DCT_AE_meas_family",
+      "type": "∀ k : ℕ, AEStronglyMeasurable (Z k) μ",
+      "initializer": "fun k : ℕ => (hZMeas k).aestronglyMeasurable",
+      "scope": "before k witness",
+      "captures": [
+        "Z",
+        "hZMeas",
+        "μ"
+      ]
+    },
+    {
+      "name": "DCT_AE_bound_family",
+      "type": "∀ k : ℕ, ∀ᵐ o : Ω ∂μ, ‖Z k o‖ ≤ X o",
+      "initializer": "lift pointwise hZBounds and norm_eq_abs/abs_of_nonneg through Filter.Eventually.of_forall",
+      "scope": "before k witness",
+      "captures": [
+        "Z",
+        "X",
+        "hZBounds",
+        "μ"
+      ]
+    },
+    {
+      "name": "DCT_AE_limit",
+      "type": "∀ᵐ o : Ω ∂μ, Filter.Tendsto (fun k : ℕ => Z k o) Filter.atTop (𝓝 (X o))",
+      "initializer": "Filter.Eventually.of_forall hZPointLimit",
+      "scope": "before k witness",
+      "captures": [
+        "Z",
+        "X",
+        "hZPointLimit",
+        "μ"
+      ]
+    },
+    {
+      "name": "Pi_integrand_family",
+      "type": "(i : Fin n) → Ω → ℝ",
+      "initializer": "fun _ : Fin n => f",
+      "scope": "inside ∀n",
+      "captures": [
+        "n",
+        "f"
+      ]
+    },
+    {
+      "name": "Pi_integrability_family",
+      "type": "∀ i : Fin n, Integrable f μ",
+      "initializer": "fun _ : Fin n => hfInt",
+      "scope": "inside ∀n",
+      "captures": [
+        "n",
+        "μ",
+        "f",
+        "hfInt"
+      ]
+    },
+    {
+      "name": "Markov_nonnegative_AE",
+      "type": "0 ≤ᵐ[P] F",
+      "initializer": "Filter.Eventually.of_forall (fun x : Fin n → Ω => (Real.exp_pos (-s * S x)).le)",
+      "scope": "inside ∀n",
+      "captures": [
+        "n",
+        "P",
+        "F",
+        "S",
+        "s"
+      ]
+    }
+  ],
+  "declarationFreezeRule": "No additional named selector, data definition, top-level helper, mathematical premise, or changed local proposition interface without parent reading/freezing the delta. Ordinary anonymous proof/tactic obligations may implement these frozen contracts.",
+  "classicalChooseUsed": false,
+  "noCircularWitness": true,
+  "noNDependentSelection": true,
+  "qualified": false,
+  "implementationAuthorized": true,
+  "serverCalls": 0,
+  "LeanCalls": 0,
+  "AXCalls": 0,
+  "parentClarifications": [
+    "Source contract IDs scalar.* and expOrder.* identify lexically nested proof-local facts; sourceBinderName and sourceContainer are explicit. They are not new top-level or namespace declarations.",
+    "k is rcases-bound beforeforalln, not a Classical.choose data initializer. n is the later forall binder.",
+    "All data have explicit term/type captures; inherited ambient mathematical assumptions are only the exact global theorem head.",
+    "hPprob proof initializer made executable without changing its exact IsProbabilityMeasure P type or consumed Pi instance.",
+    "Stage1 resourcephase34 text is historical. Currentphase36 controls server resources; author implementation remains localonly.",
+    "Any actual added mathematical data/local Prop interface or changed assumption needs parentfreeze before implementation; ordinary tactic/anonymous proof obligations may prove these contracts."
+  ]
+}

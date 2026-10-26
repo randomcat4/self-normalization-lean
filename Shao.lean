@@ -730,6 +730,8 @@ import Shao.OQ6.NormalizedRemainderEnvelope
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
+import Shao.OQ6.OriginalLowEnergyTail
+import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalSelfNormalizedTail
 import Shao.OQ6.PairedSelfNormalizedTail
 import Shao.OQ6.PartialObservationTilt
