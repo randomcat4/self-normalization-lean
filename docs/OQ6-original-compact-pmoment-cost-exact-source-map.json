@@ -1,0 +1,566 @@
+{
+  "schema": "oq56-unit217-author-stage2-source-freeze-map-v1",
+  "utc": "2026-10-26T19:17:21.2688510Z",
+  "status": "LOCAL_FROZEN_CANDIDATE_COMPLETE_NOT_KERNEL_CHECKED_NOT_INDEPENDENTLY_REVIEWED",
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-01/stage2/OriginalCompactPMomentCost.lean",
+    "sha256": "3533103782350ceffb39db99ff7756d96c3accef94f651abd8bf181f61ce37f5",
+    "bytes": 12337,
+    "LF": 267
+  },
+  "freeze": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-compact-pmoment-consumer-217/parent-freeze-v1.json",
+    "sha256": "c3804f06e121421585a5f9c465f44b8a396fbc36dfee43d8f4fcf2c6807d74e7",
+    "bytes": 21246
+  },
+  "preamble": {
+    "exact": true,
+    "sha256": "45412b9b63bbda2e1d824bd2bdd2b37706affc2eb31bbc4045de6bfc7e5c082a",
+    "expectedSHA256": "45412b9b63bbda2e1d824bd2bdd2b37706affc2eb31bbc4045de6bfc7e5c082a",
+    "value": "import Shao.OQ6.OriginalCompactExpectationFees\nimport Shao.OQ6.ActualPhysicalCompactCDF\nimport Shao.OQ6.ActualQuadraticTiltMoments\nimport Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nuniverse u\n\nnamespace Shao.OQ6.OriginalCompactPMomentCost\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical"
+  },
+  "declarations": [
+    {
+      "name": "compact_rpow_le_eight",
+      "kind": "private theorem",
+      "startLine": 26,
+      "lastContentLine": 37,
+      "head": "private theorem compact_rpow_le_eight\n    (p z : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hz : 0 ≤ z) (hz1 : z ≤ 1) :\n    Real.rpow (1 + z) p ≤ 8",
+      "headSHA256": "160ca40593554a6c3a2af81cf1fdc115f44dc2ad969754e095d2cad40270070f",
+      "headBytes": 150,
+      "headLines": 4,
+      "expectedHeadSHA256": "160ca40593554a6c3a2af81cf1fdc115f44dc2ad969754e095d2cad40270070f",
+      "headExact": true,
+      "proofDelimiter": " := by",
+      "proofPayloadSHA256": "cbd3d2f2ae19581b5d88a714ba1f70a34a3a7030f70603fc07b5aba6d602b62b",
+      "proofPayloadBytes": 314,
+      "proofPayloadLF": 8,
+      "declarationSHA256": "52cdf3afe09aad2c7b792b1fc18b786ff92fe1a7d5c8b0d7429e4ef00072cf69",
+      "declarationBytes": 470,
+      "ambientCapturedVariables": [],
+      "newNonPropHelperData": 0
+    },
+    {
+      "name": "actual_original_compact_pmoment_cost",
+      "kind": "public theorem",
+      "startLine": 39,
+      "lastContentLine": 263,
+      "head": "theorem actual_original_compact_pmoment_cost\n    {Ω : Type u} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C₀ : ℝ) (hC₀ : 0 ≤ C₀) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let sigma : ℝ := 1 + rho\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.truncationF ((1 + z) * (g (ξ i) / N))\n    let Lcompact : ℝ :=\n      ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min (|g (ξ i)| / N) (1 / (1 + z))\n    let D : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.residualStatisticD n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.residualStatisticDDeleted n r\n    let J : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.residualEnergyJ n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B₁ : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1\n    let B₁del : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)\n    let residualFee : ℝ :=\n      (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\n    let sourceCost : ℝ := Lcompact + residualFee\n    (∀ i : Fin n, Integrable (fun ξ => projectionTest ξ i) P₀) ∧\n      Lcompact = (n : ℝ) *\n        (∫ o, Shao.truncationF ((1 + z) * (g o / N)) ∂μ) ∧\n      0 ≤ Lcompact ∧\n      Lcompact ≤ (1 + z) ^ 2 ∧\n      Lcompact ≤ 4 ∧\n      (∀ ξ : Fin n → Ω,\n        B₁ ξ = C₀ * (sigma / N + J ξ / (sigma * N))) ∧\n      (∀ (ξ : Fin n → Ω) (i : Fin n),\n        B₁del ξ i = C₀ * (sigma / N + Jdel ξ i / (sigma * N))) ∧\n      Integrable A P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Adel ξ i) P₀) ∧\n      Integrable B₁ P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => B₁del ξ i) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |A ξ - Adel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |B₁ ξ - B₁del ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) ∧\n      residualFee ≤\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N ∧\n      sourceCost ≤ Lcompact +\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N ∧\n      0 ≤ β ∧\n      Integrable (fun o => Shao.truncationF ((1 + z) * (g o / N))) μ ∧\n      Lcompact ≤ β * Real.rpow (1 + z) p /\n        Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n      Lcompact ≤ 8 * β / Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n      sourceCost ≤ 8 * β / Real.rpow (n : ℝ) ((p - 2) / 2) +\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N",
+      "headSHA256": "bd1460ba8a997b7b5409e642cf8aa10f874b691c9d73c0e48fb4e94e86fd3301",
+      "headBytes": 3893,
+      "headLines": 79,
+      "expectedHeadSHA256": "bd1460ba8a997b7b5409e642cf8aa10f874b691c9d73c0e48fb4e94e86fd3301",
+      "headExact": true,
+      "proofDelimiter": " := by",
+      "proofPayloadSHA256": "b58c5e592418060b109de4021f444aaabe2bf4d9741102ee04689d418bd4becc",
+      "proofPayloadBytes": 7091,
+      "proofPayloadLF": 146,
+      "declarationSHA256": "fbf7dcaf5c532853ec843c56cee8e5ee3b6278cb482e10dd920ad0ed856f675b",
+      "declarationBytes": 10990,
+      "ambientCapturedVariables": [],
+      "newNonPropHelperData": 0
+    }
+  ],
+  "allDeclarationHeadsExact": true,
+  "allProofMirrorDataTypesValuesExact": true,
+  "publicDataAndCaptures": [
+    {
+      "name": "g",
+      "proofLine": 119,
+      "typeAndValue": "Ω → ℝ := fun o => ∫ y, h o y ∂μ",
+      "expectedTypeAndValue": "Ω → ℝ := fun o => ∫ y, h o y ∂μ",
+      "exact": true,
+      "typeAndValueSHA256": "72102c2fc91813cb3688e9f24d9ff8296e400c66cfe0af49176980ad358880f9",
+      "captures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "μ",
+        "h"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "β",
+      "proofLine": 120,
+      "typeAndValue": "ℝ := ∫ o, Real.rpow |g o| p ∂μ",
+      "expectedTypeAndValue": "ℝ := ∫ o, Real.rpow |g o| p ∂μ",
+      "exact": true,
+      "typeAndValueSHA256": "a8d11654ac5c6ced49c5f713def5216417e7993563e2c6cbb0d3152eb02086e2",
+      "captures": [
+        "μ",
+        "g",
+        "p"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "r",
+      "proofLine": 121,
+      "typeAndValue": "Ω → Ω → ℝ := fun o y => h o y - g o - g y",
+      "expectedTypeAndValue": "Ω → Ω → ℝ := fun o y => h o y - g o - g y",
+      "exact": true,
+      "typeAndValueSHA256": "095657b8bf065574858cfc16196e308c721d5d9db41b06fb925c35ee911fbe49",
+      "captures": [
+        "h",
+        "g"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "v",
+      "proofLine": 122,
+      "typeAndValue": "ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "expectedTypeAndValue": "ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "exact": true,
+      "typeAndValueSHA256": "e4e3586e502f0d20433cafea1228352007f07b33413e4600a4cabacc017e06f7",
+      "captures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "μ",
+        "r"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "rho",
+      "proofLine": 123,
+      "typeAndValue": "ℝ := Real.sqrt v",
+      "expectedTypeAndValue": "ℝ := Real.sqrt v",
+      "exact": true,
+      "typeAndValueSHA256": "20fe9e1952d20d56b1d03d4b7c725dc6ca01f8a41b538ed4ce9d5c4ce60dcca5",
+      "captures": [
+        "v"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "sigma",
+      "proofLine": 124,
+      "typeAndValue": "ℝ := 1 + rho",
+      "expectedTypeAndValue": "ℝ := 1 + rho",
+      "exact": true,
+      "typeAndValueSHA256": "8a91f4239d2502954187948bae8f9e92d55f468bb18f0d6559952ae49640e015",
+      "captures": [
+        "rho"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "N",
+      "proofLine": 125,
+      "typeAndValue": "ℝ := Real.sqrt (n : ℝ)",
+      "expectedTypeAndValue": "ℝ := Real.sqrt (n : ℝ)",
+      "exact": true,
+      "typeAndValueSHA256": "994a06cc00a0aea7a37d7446bee1d9db3266351abec0c94b792ae81a3f397c05",
+      "captures": [
+        "n"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "P₀",
+      "proofLine": 126,
+      "typeAndValue": "Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)",
+      "expectedTypeAndValue": "Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)",
+      "exact": true,
+      "typeAndValueSHA256": "6d3749e15b1a1599ff4d30516307c0ce9ca793f3a90f5568550f11740b724f72",
+      "captures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "n",
+        "μ"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "projectionTest",
+      "proofLine": 127,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  Shao.truncationF ((1 + z) * (g (ξ i) / N))",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  Shao.truncationF ((1 + z) * (g (ξ i) / N))",
+      "exact": true,
+      "typeAndValueSHA256": "985890f5f63fc71a4f91233fb319658bec8170307fec704640f7372f068ffe85",
+      "captures": [
+        "n",
+        "z",
+        "g",
+        "N"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "Lcompact",
+      "proofLine": 129,
+      "typeAndValue": "ℝ := ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀",
+      "expectedTypeAndValue": "ℝ := ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀",
+      "exact": true,
+      "typeAndValueSHA256": "5814f73f16c30e4995de4b53fe1263b38874337e153921d37261d84cdfe43085",
+      "captures": [
+        "n",
+        "projectionTest",
+        "P₀"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "cap",
+      "proofLine": 130,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  min (|g (ξ i)| / N) (1 / (1 + z))",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  min (|g (ξ i)| / N) (1 / (1 + z))",
+      "exact": true,
+      "typeAndValueSHA256": "ade7f6b92dc875fec1d751762ba330efc04d2d1dd1c936311f6ba2b0b3f938fc",
+      "captures": [
+        "n",
+        "g",
+        "N",
+        "z"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "D",
+      "proofLine": 132,
+      "typeAndValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualStatisticD n r",
+      "expectedTypeAndValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualStatisticD n r",
+      "exact": true,
+      "typeAndValueSHA256": "41e63d31b08f4b113be23a43701b56fcceefe41583642724823a7737a06e6a0b",
+      "captures": [
+        "n",
+        "r"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "Ddel",
+      "proofLine": 133,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualStatisticDDeleted n r",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualStatisticDDeleted n r",
+      "exact": true,
+      "typeAndValueSHA256": "9c5c768c11865dc5f66f974c8de060c9da966b873c6b57346c4756f03568f456",
+      "captures": [
+        "n",
+        "r"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "J",
+      "proofLine": 135,
+      "typeAndValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualEnergyJ n r",
+      "expectedTypeAndValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualEnergyJ n r",
+      "exact": true,
+      "typeAndValueSHA256": "8b8783abda3a6951bc4f246a4c9c84ea289c7dd30d0a3440b8522dda89082b45",
+      "captures": [
+        "n",
+        "r"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "Jdel",
+      "proofLine": 136,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualEnergyJDeleted n r",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualEnergyJDeleted n r",
+      "exact": true,
+      "typeAndValueSHA256": "3c462506e9630f3977f6f417e7d2b2ec008f6bc8d563e7045fe2bf048983ebc0",
+      "captures": [
+        "n",
+        "r"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "A",
+      "proofLine": 138,
+      "typeAndValue": "(Fin n → Ω) → ℝ := fun ξ => |D ξ|",
+      "expectedTypeAndValue": "(Fin n → Ω) → ℝ := fun ξ => |D ξ|",
+      "exact": true,
+      "typeAndValueSHA256": "697c6d062b41cd4a3cbd18e7522ac96c899d2ef6f0d786581dc3283cb53741a1",
+      "captures": [
+        "n",
+        "D"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "Adel",
+      "proofLine": 139,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|",
+      "exact": true,
+      "typeAndValueSHA256": "f87db22f412ea2ce9443ece02cf98a652ba9343367da1a95a37b6878050254a1",
+      "captures": [
+        "n",
+        "Ddel"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "B₁",
+      "proofLine": 140,
+      "typeAndValue": "(Fin n → Ω) → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1",
+      "expectedTypeAndValue": "(Fin n → Ω) → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1",
+      "exact": true,
+      "typeAndValueSHA256": "866dc567bb7325dfe592b3f4c9cdefc3614777a091831c47fb8cfb366fcb0fdd",
+      "captures": [
+        "n",
+        "r",
+        "C₀",
+        "rho"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "B₁del",
+      "proofLine": 142,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1",
+      "exact": true,
+      "typeAndValueSHA256": "e0c0ea49e00488da1181cde22c3b012fa1b076a09626d2ec9c53bfc328f2193b",
+      "captures": [
+        "n",
+        "r",
+        "C₀",
+        "rho"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "deletedTest",
+      "proofLine": 144,
+      "typeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)",
+      "expectedTypeAndValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)",
+      "exact": true,
+      "typeAndValueSHA256": "c56f0b12156aebc8486d65d89be993d6fc18b27cd22db0f6c53a53b09ab3c23d",
+      "captures": [
+        "n",
+        "cap",
+        "A",
+        "Adel",
+        "z",
+        "B₁",
+        "B₁del"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "residualFee",
+      "proofLine": 146,
+      "typeAndValue": "ℝ :=\n  (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n    ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀",
+      "expectedTypeAndValue": "ℝ :=\n  (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n    ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀",
+      "exact": true,
+      "typeAndValueSHA256": "f9ba5b11edfb06660b9c571a24762ba11d9ad3d83aefffe10399b4a8cf28f5a5",
+      "captures": [
+        "P₀",
+        "A",
+        "z",
+        "B₁",
+        "n",
+        "deletedTest"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    },
+    {
+      "name": "sourceCost",
+      "proofLine": 149,
+      "typeAndValue": "ℝ := Lcompact + residualFee",
+      "expectedTypeAndValue": "ℝ := Lcompact + residualFee",
+      "exact": true,
+      "typeAndValueSHA256": "e920f634db594e63c7d59a0b34df05cfad741dbca183a00251fea68b5f12e6b1",
+      "captures": [
+        "Lcompact",
+        "residualFee"
+      ],
+      "kind": "Exact mirror of frozen public non-Prop let",
+      "additional": false
+    }
+  ],
+  "additionalProofData": [],
+  "globalNonTheoremValues": [],
+  "ambientCaptures": [],
+  "typeclassAndImplicitCapturePolicy": {
+    "explicitNonProp": "Single public MeasurableSpace Ω; public complete head binds Ω,μ,h,p,n,z,C₀. Canonical real/product/pi/Fin instances only.",
+    "probability": "Explicit IsProbabilityMeasure μ Prop; no new local instance written. Canonical inferred P0 probability Prop only if required through imported interfaces.",
+    "classical": "One public proof classical scope for canonical decidability; no choose datum, selector or alternate measure.",
+    "newInstanceOverrides": 0,
+    "sourceFreeSectionVariables": [
+      "universe u only; Ω explicitly bound in public head"
+    ]
+  },
+  "importedPropFacts": [
+    {
+      "local": "hbase",
+      "dependency": "Shao.OQ6.OriginalCompactExpectationFees.actual_original_compact_expectation_fees",
+      "arguments": "μ h hh hh2 hhsymm hcenter hprojectionsecond n hn z hz hz1 C₀ hC₀",
+      "completeActualTYPEAlreadyRead": "216/406logicalLF/31390B/76b4f481c4f202d7ea71c496472eff69a828634b8837843fe303e998e50de874",
+      "use": "All16 imported original conjuncts; no proof copy"
+    },
+    {
+      "local": "hactual",
+      "dependency": "Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments",
+      "arguments": "same actual h/model/n, derived hn3, tilt x=0, zero/nonnegative window",
+      "use": "Only .1 Measurable g and .2.1 MemLp g2μ",
+      "fullActualTYPEReading": "Stage1 exact1631-line public TYPE reused"
+    },
+    {
+      "local": "hnormalized",
+      "dependency": "Shao.OQ6.ActualPhysicalCompactCDF.normalized_observation_truncation_budget_le_rpow_moment",
+      "arguments": "μ g hgm hg2 p hp2.le hp3 hgp n hn1 z hz",
+      "use": "Genuine scalar L1 and normalized p-moment rate",
+      "fullActualTYPEReading": "Stage1 exact137-line public TYPE reused"
+    }
+  ],
+  "derivedPropFactLineStarts": [
+    {
+      "name": "hbase",
+      "line": 180,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hn3",
+      "line": 210,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hn1",
+      "line": 211,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hnposNat",
+      "line": 212,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hnpos",
+      "line": 213,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hactual",
+      "line": 214,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hgm",
+      "line": 218,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hg2",
+      "line": 219,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hnormalized",
+      "line": 220,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hbeta",
+      "line": 230,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hden",
+      "line": 233,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hfactor",
+      "line": 235,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hLmoment",
+      "line": 237,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hnumerator",
+      "line": 244,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hLmomentEight",
+      "line": 249,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    },
+    {
+      "name": "hcost",
+      "line": 252,
+      "indent": 2,
+      "classification": "Derived Prop fact; inferred imported facts are Prop according to complete bound actual TYPE, not new non-Prop data."
+    }
+  ],
+  "counts": {
+    "sourceLF": 267,
+    "sourceDeclarations": 2,
+    "publicTheorems": 1,
+    "privateTheorems": 1,
+    "publicHeaderTypedLets": 22,
+    "proofMirrorLets": 22,
+    "additionalNonPropData": 0,
+    "globalNonTheoremDeclarations": 0,
+    "publicTargetConjuncts": 21,
+    "lineStartHaveAtTwoSpaces": 16,
+    "branchLineStartHaveGreaterThanTwoSpaces": 0,
+    "allLineStartHave": 16,
+    "localLetIHaveI": 0,
+    "forbiddenTokens": 0,
+    "predictedCompiledOwners": null,
+    "actualCompiledTYPE_VALUE_AX": null
+  },
+  "formats": {
+    "strictUTF8Decode": true,
+    "noBOM": true,
+    "noCR": true,
+    "oneFinalLF": true,
+    "frozenClosingExact": true
+  },
+  "structuralExactnessPass": true,
+  "publicPremisesUnchanged": true,
+  "newCorollaryMomentPremisesExplicit": true,
+  "originalN_Nminus1_Nminus2_P0_B1_B1deletedContinuousCapPreserved": true,
+  "unit216Qualified": true,
+  "unit217Qualified": false,
+  "newLeanChecks": 0,
+  "independentReviewPerformed": false,
+  "oldProofReviewKernelAXReplay": 0,
+  "captureCoverageMethod": "Full frozen heads/preamble and each22 typed value mirror compared exactly; every local let accounted. Complete types of imported inferred-Prop facts bound to already read qualified actual interfaces. These are author structural checks, not compiled metadata or independent proof certification."
+}
