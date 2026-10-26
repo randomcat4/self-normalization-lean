@@ -1,0 +1,22 @@
+theorem iid_centered_scaled_law_double_comparison :
+    ∃ eta epsilon C : ℝ, 0 < eta ∧ 0 < epsilon ∧ 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+        IsBrownianReal Bm PB →
+        ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+          (n : ℕ) (hn : 0 < n) (mu t x : ℝ), 0 < t → 1 ≤ x →
+          x / Real.sqrt (n : ℝ) ≤ 1 / 2 →
+          let chi : Measure ℝ := Measure.map (fun z : ℝ => (z - mu) / t) rho
+          let delta : ℝ := (∫ z : ℝ, |z| ^ 3 ∂chi) / Real.sqrt (n : ℝ)
+          let h : ℝ := 3 * ((n : ℝ) * |mu|)
+          Integrable (fun z : ℝ => z ^ 2) chi →
+          Integrable (fun z : ℝ => |z| ^ 3) chi →
+          (∫ z : ℝ, z ∂chi) = 0 → (∫ z : ℝ, z ^ 2 ∂chi) = 1 →
+          (∀ᵐ z : ℝ ∂chi, |z| ≤ eta * Real.sqrt (n : ℝ) / (x + h)) →
+          1 / 2 ≤ (n : ℝ) * t ^ 2 → h ≤ 1 / 2 → (1 + x) * h ≤ 1 →
+          delta * (1 + x) ^ 3 ≤ epsilon →
+          |(Measure.pi (fun _ : Fin n => rho)).real (Shao.C2.doubleCrossing hn x) -
+              PB.real {omega |
+                (∃ s : BridgeTime, x ≤ Bm ⟨(s : ℝ), s.property.1⟩ omega) ∧
+                ∃ s : BridgeTime, Bm ⟨(s : ℝ), s.property.1⟩ omega ≤ -x}| ≤
+            C * (delta * (1 + x) ^ 3 + (1 + x) * h) * Shao.standardNormalTail x

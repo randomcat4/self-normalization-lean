@@ -1,0 +1,47 @@
+theorem sourceTruncation_sample_size
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (x epsilon : ℝ) (hx : 0 ≤ x)
+    (hepsilon : 0 < epsilon) (hepsilonHalf : epsilon ≤ 1 / 2)
+    (hR : truncationBudget nu n x ≤ epsilon ^ 3 / 8) :
+    let b : ℝ := (1 + x) / epsilon
+    2 ≤ b ∧ b ^ 6 ≤ (n : ℝ) ∧ 64 ≤ n ∧
+      (n : ℝ) * (∫ z : ℝ, truncationF (b * z) ∂nu) ≤ 1 / 8
+
+theorem sourceTruncation_law_data
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (x epsilon : ℝ) (hx : 0 ≤ x)
+    (hepsilon : 0 < epsilon) (hepsilonHalf : epsilon ≤ 1 / 2)
+    (hR : truncationBudget nu n x ≤ epsilon ^ 3 / 8) :
+    let B : Set ℝ := {z | |z| ≤ epsilon / (1 + x)}
+    let rho : Measure ℝ := ProbabilityTheory.cond nu B
+    (3 / 4 : ℝ) ≤ nu.real B ∧ nu.real B ≤ 1 ∧
+      IsProbabilityMeasure rho ∧
+      (∀ᵐ z : ℝ ∂rho, |z| ≤ epsilon / (1 + x)) ∧
+      Integrable (fun z : ℝ => z) rho ∧
+      Integrable (fun z : ℝ => z ^ 2) rho ∧
+      Integrable (fun z : ℝ => |z| ^ 3) rho ∧
+      Integrable (fun z : ℝ => z ^ 4) rho
+
+theorem sourceTruncation_paid_moments
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (x epsilon : ℝ) (hx : 0 ≤ x)
+    (hepsilon : 0 < epsilon) (hepsilonHalf : epsilon ≤ 1 / 2)
+    (hR : truncationBudget nu n x ≤ epsilon ^ 3 / 8) :
+    let a : ℝ := 1 + x
+    let rho : Measure ℝ := ProbabilityTheory.cond nu {z | |z| ≤ epsilon / a}
+    let mu : ℝ := ∫ z : ℝ, z ∂rho
+    let m3 : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+    let m4 : ℝ := ∫ z : ℝ, z ^ 4 ∂rho
+    let R : ℝ := truncationBudget nu n x
+    (n : ℝ) * |mu| ≤ 2 * R / (epsilon ^ 2 * a) ∧
+      (n : ℝ) * m3 ≤ 2 * R / a ^ 3 ∧
+      (n : ℝ) * m4 ≤ (epsilon / a) * ((n : ℝ) * m3) ∧
+      Integrable (fun z : ℝ => |z - mu| ^ 3) rho ∧
+      (∫ z : ℝ, |z - mu| ^ 3 ∂rho) ≤ 8 * m3

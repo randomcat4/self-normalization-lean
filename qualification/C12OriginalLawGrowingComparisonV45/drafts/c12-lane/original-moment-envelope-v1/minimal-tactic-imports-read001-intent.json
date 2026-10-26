@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,hashlib\nw=pathlib.Path('/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71');m=w/'.lake/packages/mathlib';mods=['Mathlib.Tactic.Linarith','Mathlib.Tactic.NormNum','Mathlib.Tactic.FieldSimp','Mathlib.Tactic.Ring'];rows=[]\nfor name in mods:\n stem=name.replace('.','/');src=m/(stem+'.lean');obj=m/'.lake/build/lib/lean'/(stem+'.olean');rows.append({'module':name,'sourceExists':src.is_file(),'sourceSHA256':hashlib.sha256(src.read_bytes()).hexdigest() if src.is_file() else None,'objectExists':obj.is_file(),'objectSHA256':hashlib.sha256(obj.read_bytes()).hexdigest() if obj.is_file() else None,'objectBytes':obj.stat().st_size if obj.is_file() else None,'sourceImports':[l for l in src.read_text().splitlines() if l.startswith(('import ','public import '))] if src.is_file() else []})\nprint(json.dumps({'status':'READ_ONLY_FOUR_TARGET_TACTIC_OBJECTS','rows':rows,'LeanAX':0,'cacheWrites':0}))\n",
+  "timeout": 60
+}

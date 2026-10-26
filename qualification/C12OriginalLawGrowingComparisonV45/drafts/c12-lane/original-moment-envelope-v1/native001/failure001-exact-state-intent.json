@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,hashlib\nb=pathlib.Path('/root/rivermind-data/shao-lean-20261021');w=b/'workspaces/c12-bridge-domination-v71';o=b/'outputs/c12-original-moment-envelope-v71';s=w/'Shao/C2/OriginalMomentEnvelope.lean';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();r=json.loads((o/'kernel001-result.json').read_text());assert r['naturalRC']==1 and r['objectSHA256'] is None and sha(s)=='024ad1fc433681af0c000db343fa4062354e383157d3b8cdd4eb7ad6dc9197af';assert not(o/'OriginalMomentEnvelope.olean').exists() and not(o/'audit001-start.json').exists();files=['kernel001-result.json','kernel001-start.json','kernel001-threads.json'];rows=[{'file':x,'bytes':(o/x).stat().st_size,'sha256':sha(o/x)} for x in files];p=w/'.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean';ls=p.read_text().splitlines();print(json.dumps({'oldSourceExact':True,'failedRC':1,'objectOrAX':False,'rows':rows,'namespaceHeader':list(enumerate(ls[:40],1)),'primarySourceSHA256':sha(p)}))\n",
+  "timeout": 60
+}
