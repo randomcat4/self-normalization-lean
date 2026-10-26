@@ -1,9 +1,11 @@
 from pathlib import Path
-import subprocess, json, hashlib, time
+import subprocess, json, hashlib, time, os, re
 
 w=Path.cwd()
 r=Path('/root/rivermind-data/shao-lean-20261021')
-logs=r/'logs/integration-v120'
+v=os.environ.get('SHAO_INTEGRATION_VERSION')
+assert v and re.fullmatch(r'v[0-9]+',v), 'Gate must supply the exact integration version'
+logs=r/'logs'/('integration-'+v)
 config=json.loads((logs/'scope-config.json').read_text())
 logdir=logs/'sequential'
 logdir.mkdir(exist_ok=True)
