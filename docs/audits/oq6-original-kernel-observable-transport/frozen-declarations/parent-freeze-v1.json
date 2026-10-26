@@ -1,0 +1,445 @@
+{
+  "schema": "oq56-unit219-parent-exact-freeze-v1",
+  "atUTC": "2026-10-26T20:28:27.733032+00:00",
+  "unit": 219,
+  "status": "FROZEN_EXACT_DECLARATIONS_ASSUMPTIONS_TYPED_DATA_BEFORE_IMPLEMENTATION",
+  "parentIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/parent-stage1-complete-intake.json",
+    "sha256": "fd96674aae07d54a1f5c0ef9ea4c0b5517f240dbae6b06b16b877a9116b89723",
+    "bytes": 1783
+  },
+  "canonicalCandidate": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "3b38e92165f60f1f6dffeb438274b9a7e9c113de407e0fa409b141196695deba",
+    "bytes": 17022
+  },
+  "dataLedger": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/DATA-CAPTURE-LEDGER.md",
+    "sha256": "799daf237f51e23ee7a892f4355b2ea4f9597d96a898539248d7c8ab0c45ac00",
+    "bytes": 5284
+  },
+  "architecture": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/ARCHITECTURE-AND-BOUNDARIES.md",
+    "sha256": "0556dd6083f8d9d4561f70ed038cb0ba1b24c3e1319a0c995519d8c9712ee10a",
+    "bytes": 7744
+  },
+  "sourceMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/SOURCE-INTERFACE-MAP.json",
+    "sha256": "6a83ab9229b788b6290db8091d9881d447a2a224f41ba926acb9349d8e6e2fb9",
+    "bytes": 27287
+  },
+  "module": "Shao.OQ6.OriginalKernelObservableTransport",
+  "sourcePath": "Shao/OQ6/OriginalKernelObservableTransport.lean",
+  "pinnedLean": "leanprover/lean4:v4.36.0-rc1",
+  "pinnedMathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "preamble": "import Mathlib.MeasureTheory.Measure.Trim\nimport Mathlib.MeasureTheory.Function.LpSeminorm.Trim\nimport Mathlib.MeasureTheory.Integral.Prod\nimport Mathlib.MeasureTheory.Constructions.Pi\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Constructions.BorelSpace.Real\n\nset_option autoImplicit false\n\nuniverse u v\n\nnamespace Shao.OQ6.OriginalKernelObservableTransport\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped MeasureTheory ENNReal\n",
+  "preambleBinding": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/PREAMBLE.txt",
+    "sha256": "fcaf9b2c81917bfdae8da9c8510c77a7219cbbec804ea31bddd5f1937f302474",
+    "bytes": 466
+  },
+  "globalDeclarations": [
+    {
+      "id": "H219_PUBLIC_ACTUAL_MODEL",
+      "kind": "public theorem",
+      "name": "actual_normalized_kernel_observable_trim_transport",
+      "head": "theorem actual_normalized_kernel_observable_trim_transport\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    {J : Type v} [Fintype J]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n    (hh₀ : Measurable[m₀.prod m₀, borel ℝ]\n      (fun t : Ω × Ω => h t.1 t.2)) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let rowIntegrable : Ω → Prop := fun o => Integrable (h o) μ\n    let gLp : ℝ≥0∞ → Prop := fun p => MemLp g p μ\n    let projectionLaw : Measure ℝ := μ.map g\n    let pairLaw : @Measure (Ω × Ω) (mΩ.prod mΩ) := μ.prod μ\n    let mJ : MeasurableSpace (J → Ω) :=\n      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)\n    let mJ₀ : MeasurableSpace (J → Ω) :=\n      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)\n    let P : @Measure (J → Ω) mJ := Measure.pi (fun _ : J => μ)\n    let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n    letI : MeasurableSpace Ω := m₀\n    let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀\n    let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y\n    let v₀ : ℝ := ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)\n    let rho₀ : ℝ := Real.sqrt v₀\n    let P₀ : @Measure (J → Ω) mJ₀ := Measure.pi (fun _ : J => μ₀)\n    IsProbabilityMeasure μ₀ ∧\n      (∀ o : Ω, g₀ o = g o) ∧\n      (∀ o y : Ω, r₀ o y = r o y) ∧\n      (∀ o : Ω, Integrable (h o) μ₀ ↔ rowIntegrable o) ∧\n      MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ₀.prod μ₀) ∧\n      (∫ t : Ω × Ω, h t.1 t.2 ∂(μ₀.prod μ₀)) = 0 ∧\n      Measurable g₀ ∧ MemLp g₀ 2 μ₀ ∧\n      (∫ o, g₀ o ∂μ₀) = 0 ∧\n      (∫ o, g₀ o ^ 2 ∂μ₀) = 1 ∧\n      Measurable (fun t : Ω × Ω => r₀ t.1 t.2) ∧\n      MemLp (fun t : Ω × Ω => r₀ t.1 t.2) 2 (μ₀.prod μ₀) ∧\n      (∀ o y : Ω, r₀ o y = r₀ y o) ∧\n      (∀ᵐ o ∂μ₀, (∫ y, r₀ o y ∂μ₀) = 0) ∧\n      v₀ = v ∧ rho₀ = rho ∧\n      μ₀.map g₀ = projectionLaw ∧\n      (∀ p : ℝ≥0∞, MemLp g₀ p μ₀ ↔ gLp p) ∧\n      μ₀.prod μ₀ =\n        @Measure.map (Ω × Ω) (Ω × Ω)\n          (mΩ.prod mΩ) (m₀.prod m₀) id pairLaw ∧\n      IsProbabilityMeasure P₀ ∧\n      P₀ = @Measure.map (J → Ω) (J → Ω) mJ mJ₀ id P ∧\n      (∀ T : (J → Ω) → ℝ,\n        Measurable[mJ₀, borel ℝ] T →\n          P₀.map T = @Measure.map (J → Ω) ℝ mJ (borel ℝ) T P)\n",
+      "headBinding": {
+        "path": "C:/game/shao lean/drafts/oq56/unit219/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "828568434d51e52c5affcfa82ae26fa616e6ece421ec4563dc56e9d8cac6d886",
+        "bytes": 3011,
+        "LF": 58,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "nonPropBinders": [
+        {
+          "name": "Ω",
+          "type": "Type u",
+          "value": null,
+          "valueSource": "caller; arbitrary observation type"
+        },
+        {
+          "name": "mΩ",
+          "type": "MeasurableSpace Ω",
+          "value": null,
+          "valueSource": "caller; named ambient instance; no countable generation or separation restriction"
+        },
+        {
+          "name": "J",
+          "type": "Type v",
+          "value": null,
+          "valueSource": "caller; arbitrary finite-index type"
+        },
+        {
+          "name": "anonymousFintypeJ",
+          "type": "Fintype J",
+          "value": null,
+          "valueSource": "caller instance; finite-index data, no cardinality lower bound"
+        },
+        {
+          "name": "μ",
+          "type": "@Measure Ω mΩ",
+          "value": null,
+          "valueSource": "caller; original law before any local instance change"
+        },
+        {
+          "name": "h",
+          "type": "Ω → Ω → ℝ",
+          "value": null,
+          "valueSource": "caller; same original pointwise kernel"
+        },
+        {
+          "name": "m₀",
+          "type": "MeasurableSpace Ω",
+          "value": null,
+          "valueSource": "caller; intended future qualified218 structural witness, not chosen here"
+        }
+      ],
+      "propBinders": [
+        {
+          "name": "anonymousProbability",
+          "type": "IsProbabilityMeasure μ",
+          "context": "ambient mΩ"
+        },
+        {
+          "name": "hh",
+          "type": "Measurable (fun t : Ω × Ω => h t.1 t.2)",
+          "context": "ambient mΩ.prod mΩ to canonical borel ℝ"
+        },
+        {
+          "name": "hh2",
+          "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ)",
+          "context": "ambient original model"
+        },
+        {
+          "name": "hhsymm",
+          "type": "∀ o y, h o y = h y o"
+        },
+        {
+          "name": "hcenter",
+          "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0",
+          "context": "ambient original model"
+        },
+        {
+          "name": "hprojectionsecond",
+          "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+          "context": "ambient original model; literal totalized projection"
+        },
+        {
+          "name": "hm₀",
+          "type": "m₀ ≤ mΩ",
+          "context": "structural input; not an independent original-model assumption"
+        },
+        {
+          "name": "hh₀",
+          "type": "Measurable[m₀.prod m₀, borel ℝ] (fun t : Ω × Ω => h t.1 t.2)",
+          "context": "structural input; SAME original h"
+        }
+      ],
+      "headerLets": [
+        {
+          "name": "g",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h",
+            "canonicalRealStructures"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "r",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g o - g y",
+          "captures": [
+            "Ω",
+            "h",
+            "g"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "v",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "r",
+            "canonicalOriginalProduct"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "rho",
+          "type": "ℝ",
+          "value": "Real.sqrt v",
+          "captures": [
+            "v"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "rowIntegrable",
+          "type": "Ω → Prop",
+          "value": "fun o => Integrable (h o) μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h",
+            "canonicalRealNorm"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": true
+        },
+        {
+          "name": "gLp",
+          "type": "ℝ≥0∞ → Prop",
+          "value": "fun p => MemLp g p μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g",
+            "canonicalRealStructures"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": true
+        },
+        {
+          "name": "projectionLaw",
+          "type": "Measure ℝ",
+          "value": "μ.map g",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g",
+            "canonicalRealBorel"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "pairLaw",
+          "type": "@Measure (Ω × Ω) (mΩ.prod mΩ)",
+          "value": "μ.prod μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "mJ",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)",
+          "captures": [
+            "J",
+            "Ω",
+            "mΩ"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "mJ₀",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)",
+          "captures": [
+            "J",
+            "Ω",
+            "m₀"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "P",
+          "type": "@Measure (J → Ω) mJ",
+          "value": "Measure.pi (fun _ : J => μ)",
+          "captures": [
+            "J",
+            "FintypeJ",
+            "Ω",
+            "mΩ",
+            "μ",
+            "mJ"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "μ₀",
+          "type": "@Measure Ω m₀",
+          "value": "μ.trim hm₀",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "m₀",
+            "hm₀"
+          ],
+          "binding": "typed header let",
+          "phase": "ambient mΩ; no instance shadowing",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "localReducedInstance",
+          "type": "MeasurableSpace Ω",
+          "value": "m₀",
+          "captures": [
+            "Ω",
+            "m₀"
+          ],
+          "binding": "header letI",
+          "phase": "local instance installation",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "g₀",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ₀",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "h",
+            "canonicalRealStructures"
+          ],
+          "binding": "typed header let",
+          "phase": "reduced m₀ after letI",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "r₀",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g₀ o - g₀ y",
+          "captures": [
+            "Ω",
+            "h",
+            "g₀"
+          ],
+          "binding": "typed header let",
+          "phase": "reduced m₀ after letI",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "v₀",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "r₀",
+            "canonicalReducedProduct"
+          ],
+          "binding": "typed header let",
+          "phase": "reduced m₀ after letI",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "rho₀",
+          "type": "ℝ",
+          "value": "Real.sqrt v₀",
+          "captures": [
+            "v₀"
+          ],
+          "binding": "typed header let",
+          "phase": "reduced m₀ after letI",
+          "dataFamilyNotAssumption": false
+        },
+        {
+          "name": "P₀",
+          "type": "@Measure (J → Ω) mJ₀",
+          "value": "Measure.pi (fun _ : J => μ₀)",
+          "captures": [
+            "J",
+            "FintypeJ",
+            "Ω",
+            "m₀",
+            "μ₀",
+            "mJ₀"
+          ],
+          "binding": "typed header let",
+          "phase": "reduced m₀ after letI",
+          "dataFamilyNotAssumption": false
+        }
+      ],
+      "existentialData": [],
+      "globalDefinitionValues": [],
+      "conclusionUniversalData": [
+        {
+          "name": "o,y",
+          "type": "Ω",
+          "value": null,
+          "valueSource": "universal observation variables in stated clauses"
+        },
+        {
+          "name": "p",
+          "type": "ℝ≥0∞",
+          "value": null,
+          "valueSource": "universal exponent in all-MemLp iff; no p-moment is inferred"
+        },
+        {
+          "name": "T",
+          "type": "(J → Ω) → ℝ",
+          "value": null,
+          "valueSource": "universal literal caller statistic; required Measurable[mJ₀,borel ℝ] T"
+        }
+      ],
+      "proofIncluded": false,
+      "placeholderProofIncluded": false,
+      "elaborated": false,
+      "kernelChecked": false,
+      "qualified": false,
+      "noAdditionalGlobalHeadAuthorized": true
+    }
+  ],
+  "sourcePublicTheoremsDerived": 1,
+  "sourcePrivateTheoremsDerived": 0,
+  "globalDefinitionValues": [],
+  "headerTypedValuesDerived": 18,
+  "sourceClosing": "end\n\nend Shao.OQ6.OriginalKernelObservableTransport\n",
+  "allOriginalAssumptionsPreserved": true,
+  "allProofBodyDataPolicy": "Transparent typed proof-local constructions from frozen inputs and derived Props are allowed following the read architecture. Fully ledger every local type/value/capture and all instance changes, including Prop-valued function families as data. No additional global head/definition/value, stronger premise, new arbitrary function/law, hidden measurable-space override, or changed header. Any extra global declaration or head/data/assumption change requires parent freeze BEFORE writing. No automatic per-unit execution grants or generic wrappers.",
+  "sourceFormat": "UTF-8 without BOM; LF; exactly one final LF",
+  "scope": "Actual normalized original kernel on the correctly typed trimmed law; same full/deleted finite-index sample transport for every reduced measurable statistic.",
+  "openScopes": [
+    "qualified218composition",
+    "scalarcodingapplication",
+    "literalcenteredclippedCDF",
+    "externalShaoZhouinput",
+    "atoms",
+    "zeroDenominator",
+    "S11/generalS15/DC/fullOQ56/novelty"
+  ],
+  "p54AndShaoZhou2016AttributionPreserved": true,
+  "independentCompleteSOURCEAndActualTYPE_VALUE_AXRequired": true,
+  "kernelChecked": false,
+  "qualified": false
+}
