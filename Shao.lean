@@ -590,6 +590,7 @@ import Shao.OQ5.P51.BoundedPolylogWindow
 import Shao.OQ5.P51.BoundedRemainderPayments
 import Shao.OQ5.P51.BoundedStudentizerGeometry
 import Shao.OQ5.P51.ClippedStudentizer
+import Shao.OQ5.P51.LiteralClippedComparison
 import Shao.OQ5.P51.LiteralStudentizerBudgetDomination
 import Shao.OQ5.P52.BackgroundMeasureBridges
 import Shao.OQ5.P52.FixedLayerAbsoluteMoments
@@ -731,6 +732,7 @@ import Shao.OQ6.NormalizedRawNumeratorBuffer
 import Shao.OQ6.NormalizedRemainderEnvelope
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalBoundedFourPayments
+import Shao.OQ6.OriginalClippedComparisonPayments
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
 import Shao.OQ6.OriginalGoodEventBridge
