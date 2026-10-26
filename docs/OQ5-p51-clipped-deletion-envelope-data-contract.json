@@ -1,0 +1,95 @@
+{
+  "schema": "oq56-unit212-parent-frozen-complete-data-prop-closure-contract-v1",
+  "atUTC": "2026-10-26T13:55:40.828747+00:00",
+  "module": "Shao.OQ5.P51.ClippedDeletionEnvelope",
+  "minimalPreamble": "import Shao.OQ5.P51.ClippedStudentizer\nimport Shao.OQ6.ResidualDeletionMeasurable\nset_option autoImplicit false\nuniverse u\nnoncomputable section\nopen scoped BigOperators Classical\nnamespace Shao.OQ5.P51",
+  "globalDeclarations": [
+    {
+      "kind": "def",
+      "name": "residualStatisticDDeleted",
+      "fullName": "Shao.OQ5.P51.residualStatisticDDeleted",
+      "completeDeclarationOrHead": "def residualStatisticDDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  Shao.OQ5.P35.unorderedPairSum\n      (Shao.OQ6.ResidualDeletion.eraseIncident\n        (fun j k : Fin n => r (x j) (x k)) i) /\n    (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))"
+    },
+    {
+      "kind": "def",
+      "name": "residualEnergyJDeleted",
+      "fullName": "Shao.OQ5.P51.residualEnergyJDeleted",
+      "completeDeclarationOrHead": "def residualEnergyJDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  (∑ j : Fin n,\n    (Shao.OQ6.ResidualDeletion.rowSum\n      (Shao.OQ6.ResidualDeletion.eraseIncident\n        (fun k l : Fin n => r (x k) (x l)) i) j) ^ 2) /\n    ((n : ℝ) - 2) ^ 2"
+    },
+    {
+      "kind": "def",
+      "name": "studentizerClipBudgetDeleted",
+      "fullName": "Shao.OQ5.P51.studentizerClipBudgetDeleted",
+      "completeDeclarationOrHead": "def studentizerClipBudgetDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +\n    residualEnergyJDeleted n r x i /\n      ((1 + rho) * y * Real.sqrt (n : ℝ)))"
+    },
+    {
+      "kind": "theorem",
+      "name": "residualEnergyJ_eq_rowSqSum",
+      "fullName": "Shao.OQ5.P51.residualEnergyJ_eq_rowSqSum",
+      "completeDeclarationOrHead": "theorem residualEnergyJ_eq_rowSqSum\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) :\n    residualEnergyJ n r x =\n      (∑ j : Fin n,\n        (Shao.OQ6.ResidualDeletion.rowSum\n          (fun k l : Fin n => r (x k) (x l)) j) ^ 2) /\n        ((n : ℝ) - 2) ^ 2"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedDeletion_envelopes_nonneg",
+      "fullName": "Shao.OQ5.P51.clippedDeletion_envelopes_nonneg",
+      "completeDeclarationOrHead": "theorem clippedDeletion_envelopes_nonneg\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)\n    (C0 rho y : ℝ) (x : Fin n → Ω) (i : Fin n)\n    (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    0 ≤ |residualStatisticD n r x| ∧\n    0 ≤ studentizerClipBudget n r C0 rho y x ∧\n    0 ≤ |residualStatisticDDeleted n r x i| ∧\n    0 ≤ studentizerClipBudgetDeleted n r C0 rho y x i"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedDeletion_coordinate_invariant",
+      "fullName": "Shao.OQ5.P51.clippedDeletion_coordinate_invariant",
+      "completeDeclarationOrHead": "theorem clippedDeletion_coordinate_invariant\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)\n    (C0 rho y : ℝ) (i : Fin n) (x z : Fin n → Ω)\n    (hxz : ∀ j : Fin n, j ≠ i → x j = z j) :\n    residualStatisticDDeleted n r x i = residualStatisticDDeleted n r z i ∧\n    residualEnergyJDeleted n r x i = residualEnergyJDeleted n r z i ∧\n    studentizerClipBudgetDeleted n r C0 rho y x i =\n      studentizerClipBudgetDeleted n r C0 rho y z i"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedDeletion_measurable_factorization",
+      "fullName": "Shao.OQ5.P51.clippedDeletion_measurable_factorization",
+      "completeDeclarationOrHead": "theorem clippedDeletion_measurable_factorization\n    (n : ℕ) {Ω : Type u} [MeasurableSpace Ω]\n    (r : Ω → Ω → ℝ)\n    (hr : Measurable (fun p : Ω × Ω => r p.1 p.2))\n    (C0 rho y : ℝ) (i : Fin n) :\n    Measurable (fun x : Fin n → Ω => |residualStatisticD n r x|) ∧\n    Measurable (fun x : Fin n → Ω => studentizerClipBudget n r C0 rho y x) ∧\n    ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ,\n      Measurable E ∧\n      ∀ x : Fin n → Ω,\n        (|residualStatisticDDeleted n r x i|,\n          studentizerClipBudgetDeleted n r C0 rho y x i) =\n            E (fun j : {j : Fin n // j ≠ i} => x j.val)"
+    },
+    {
+      "kind": "theorem",
+      "name": "clippedDeletion_cost_identities",
+      "fullName": "Shao.OQ5.P51.clippedDeletion_cost_identities",
+      "completeDeclarationOrHead": "theorem clippedDeletion_cost_identities\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (C0 rho y : ℝ) (x : Fin n → Ω) (i : Fin n)\n    (hn : 4 ≤ n) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : (1 : ℝ) ≤ y) :\n    let M : Fin n → Fin n → ℝ := fun j k : Fin n => r (x j) (x k)\n    let psi : Fin n → ℝ := fun j : Fin n =>\n      Shao.OQ6.ResidualDeletion.rowSum M j\n    let Lambda : ℝ := ∑ j : Fin n, (psi j) ^ 2\n    let LambdaDeleted : ℝ := ∑ j : Fin n,\n      (Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident M i) j) ^ 2\n    residualStatisticD n r x - residualStatisticDDeleted n r x i =\n      psi i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) ∧\n    ||residualStatisticD n r x| - |residualStatisticDDeleted n r x i|| ≤\n      |residualStatisticD n r x - residualStatisticDDeleted n r x i| ∧\n    residualEnergyJ n r x - residualEnergyJDeleted n r x i =\n      (Lambda - LambdaDeleted) / ((n : ℝ) - 2) ^ 2 ∧\n    Lambda - LambdaDeleted = (psi i) ^ 2 +\n      ∑ j ∈ Finset.univ.erase i,\n        (2 * M i j * (psi j - M i j) + (M i j) ^ 2) ∧\n    studentizerClipBudget n r C0 rho y x -\n        studentizerClipBudgetDeleted n r C0 rho y x i =\n      C0 * (residualEnergyJ n r x - residualEnergyJDeleted n r x i) /\n        ((1 + rho) * y * Real.sqrt (n : ℝ)) ∧\n    |studentizerClipBudget n r C0 rho y x -\n        studentizerClipBudgetDeleted n r C0 rho y x i| =\n      C0 * |Lambda - LambdaDeleted| /\n        (((n : ℝ) - 2) ^ 2 * ((1 + rho) * y * Real.sqrt (n : ℝ)))"
+    }
+  ],
+  "completeLocalDataTypesValuesPropsScopesAndClosures": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq5-original-clipped-deletion-envelope-212/author-stage1-01/local-closures-and-proofplan.md",
+    "sha256": "fd759b17f70099112db6e4e0c47b521b182133e2ad2b4b93b0946ca6e096b82a",
+    "bytes": 10784
+  },
+  "scopeConvention": "P01-P05 each inherits exactly its complete global binders and fullytyped locals/data/Prop/closures in frozen plan. P04 Ret,F,L,E completechoiceinitializers and retainedlambdas; P05 M,psi,Lambda,LambdaDeleted complete headerletvalues. No hidden premise.",
+  "ordinaryDerivedPropPolicy": "Only ordinary finite-sum/order/algebra/measurability/definition/propositional derivedlocalfacts. No new helper/import/nonPropalias/survivingcondition without typed narrowparentfreeze before implementation.",
+  "newDefinitions": 3,
+  "publicTheorems": 5,
+  "standaloneHelpers": 0,
+  "oldP35EvidenceDecision": {
+    "name": "Shao.OQ5.P35.unorderedPairSum",
+    "decision": "REUSE_COMPLETE_EXACT_ACCEPTED_SOURCE_DATA_CONTEXT_INITIALIZER_AND132133ACTUAL_APPLICATIONS; no standalone reflected packet claimed",
+    "source": {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P35/RowIdentity.lean",
+      "sha256": "73bb0809bc6d323b31775327e468677d6320b38f8fe87363936860164f17f975",
+      "bytes": 9971
+    },
+    "priorSameGap": {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-bounded-studentizer-geometry-196/author-stage1-01/producer-bindings.json",
+      "sha256": "08bc378ac665f7dbb3743a8280747787628d38e916e8d668cb07d9db7e6e1e0f",
+      "bytes": 27539
+    },
+    "completeDataDeclaration": "def unorderedPairSum (H : Fin n → Fin n → ℝ) : ℝ :=\n  ∑ i : Fin n, ∑ j : Fin n, if i < j then H i j else 0",
+    "effectiveContext": "originalimports;namespaceShao.OQ5.P35;noncomputablesection;openscopedBigOperators;variable{n:ℕ}; no other data captures",
+    "mathematicalInformationMissing": false,
+    "reason": "Original source header/context/body completely read. Existing132 source calls same constant with implicit n; actual132133TYPE prints @ application including n. This complete data body agrees with actual190 originalUpper finite sum. No unknown type/value/normalization; firstnewconsumer kernel gate and independent allnewowner review verify compatibility. No oldproof/leafAX replay for formatting.",
+    "actualStandaloneTYPE": null,
+    "actualStandaloneFULLVALUE": null
+  },
+  "parentIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq5-original-clipped-deletion-envelope-212/parent-stage1-complete-intake.json",
+    "sha256": "02c9819323e222d551f10f10309ddbf8cc8ac6a562a3fd7a374e7010936b9fae",
+    "bytes": 4275
+  },
+  "sourceScope": "p51S13 deterministicmeasurable original-length deletion support only; noS14fee/rootclaim",
+  "implementationAuthorized": true,
+  "priorToImplementation": true,
+  "qualified": false
+}

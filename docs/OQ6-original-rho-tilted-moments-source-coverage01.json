@@ -1,0 +1,1805 @@
+{
+  "schema": "oq56-unit213-independent-complete-SOURCE-coverage-v1",
+  "atUTC": "2026-10-26T15:13:09.479436+00:00",
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit213/author-01/stage2/OriginalRhoTiltedMoments.lean",
+    "sha256": "dfdac876cf2f374cec8c92cbb75b518810fefb9ff5649b27a4031f6ae98a16af",
+    "bytes": 20062
+  },
+  "all457SourceLinesRead": true,
+  "completeOriginalReadRanges": [
+    [
+      9,
+      26
+    ],
+    [
+      43,
+      96
+    ],
+    [
+      159,
+      184
+    ]
+  ],
+  "allFourCompleteFrozenHeadsAndProofsRead": true,
+  "declarations": [
+    {
+      "name": "rho_choose_bounds",
+      "private": true,
+      "startLine": 22,
+      "endLine": 33,
+      "completeHead": "private theorem rho_choose_bounds\n    (n : ℕ) (hn : 4 ≤ n) :\n    (n.choose 2 : ℝ) ≤ (n : ℝ) ^ 2 / 2 ∧\n      6 * (n.choose 3 : ℝ) ≤ (n : ℝ) ^ 3 ∧\n      6 * (n.choose 4 : ℝ) ≤ (n : ℝ) ^ 4 / 4",
+      "headSHA256": "f03a8c6a9803c635c8341fa02a84967d29b776c3bd8d7aceaa6448270a79edc9",
+      "exactFrozenHead": true,
+      "completeDeclarationSource": "private theorem rho_choose_bounds\n    (n : ℕ) (hn : 4 ≤ n) :\n    (n.choose 2 : ℝ) ≤ (n : ℝ) ^ 2 / 2 ∧\n      6 * (n.choose 3 : ℝ) ≤ (n : ℝ) ^ 3 ∧\n      6 * (n.choose 4 : ℝ) ≤ (n : ℝ) ^ 4 / 4 := by\n  have h2 := Nat.choose_le_pow_div (α := ℝ) 2 n\n  have h3 := Nat.choose_le_pow_div (α := ℝ) 3 n\n  have h4 := Nat.choose_le_pow_div (α := ℝ) 4 n\n  norm_num at h2 h3 h4\n  refine ⟨h2, ?_, ?_⟩\n  · linarith only [h3]\n  · linarith only [h4]",
+      "completeDeclarationSHA256": "0bd552d28b056f05c6656ab74a478ebaa197c4c10357a3ab0bc96bade6558500",
+      "context": "Exact imports/options/namespace/noncomputable/open context in source lines1-16; complete quantified head, preceding local scope and lexical lets; no ambient variables",
+      "completeProofRead": true,
+      "allDerivedPropositionsAndAnonymousClosuresReviewed": true,
+      "newMachineEvidence": "PENDING"
+    },
+    {
+      "name": "rho_coefficient_bounds",
+      "private": true,
+      "startLine": 35,
+      "endLine": 138,
+      "completeHead": "private theorem rho_coefficient_bounds\n    (n : ℕ) (hn : 4 ≤ n)\n    (y C : ℝ) (hC : 1 ≤ C) :\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    (4 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n      96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n    (8 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 2)",
+      "headSHA256": "c8c89cff677c6fc94c07b7be6d52e56820e38cd4285100c0ff60a8558ff5e3e2",
+      "exactFrozenHead": true,
+      "completeDeclarationSource": "private theorem rho_coefficient_bounds\n    (n : ℕ) (hn : 4 ≤ n)\n    (y C : ℝ) (hC : 1 ≤ C) :\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    (4 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n      96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n    (8 * C ^ 2 * (n.choose 2 : ℝ) +\n      48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ≤\n        14 * C ^ 4 * (n : ℝ) ^ 2 * (1 + y ^ 2) := by\n  dsimp only\n  let a : ℝ := y / Real.sqrt (n : ℝ)\n  have hN : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn\n  have hNpos : 0 < (n : ℝ) := lt_of_lt_of_le (by norm_num) hN\n  have hNne : (n : ℝ) ≠ 0 := ne_of_gt hNpos\n  have hq2 : Real.sqrt (n : ℝ) ^ 2 = (n : ℝ) :=\n    Real.sq_sqrt (Nat.cast_nonneg n)\n  have hq4 : Real.sqrt (n : ℝ) ^ 4 = (n : ℝ) ^ 2 := by\n    calc\n      _ = (Real.sqrt (n : ℝ) ^ 2) ^ 2 := by ring\n      _ = _ := by rw [hq2]\n  have ha2 : (n : ℝ) ^ 3 * a ^ 2 = (n : ℝ) ^ 2 * y ^ 2 := by\n    dsimp only [a]\n    rw [div_pow, hq2]\n    field_simp [hNne]\n    <;> ring\n  have ha4 : (n : ℝ) ^ 4 * a ^ 4 = (n : ℝ) ^ 2 * y ^ 4 := by\n    dsimp only [a]\n    rw [div_pow, hq4]\n    field_simp [hNne]\n    <;> ring\n  rcases rho_choose_bounds n hn with ⟨hc2, hc3, hc4⟩\n  have hC0 : 0 ≤ C := le_trans (by norm_num) hC\n  have hC2 : 1 ≤ C ^ 2 := by nlinarith only [hC, sq_nonneg (C - 1)]\n  have h24 : C ^ 2 ≤ C ^ 4 := by\n    have hm : 0 ≤ C ^ 2 * (C ^ 2 - 1) :=\n      mul_nonneg (sq_nonneg C) (sub_nonneg.mpr hC2)\n    nlinarith only [hm]\n  have h34 : C ^ 3 ≤ C ^ 4 := by\n    have hm : 0 ≤ C ^ 3 * (C - 1) :=\n      mul_nonneg (pow_nonneg hC0 3) (sub_nonneg.mpr hC)\n    nlinarith only [hm]\n  have h40 : 0 ≤ C ^ 4 := pow_nonneg hC0 4\n  have hy20 : 0 ≤ y ^ 2 := sq_nonneg y\n  have hy40 : 0 ≤ y ^ 4 := by positivity\n  have hy24 : y ^ 2 ≤ 1 + y ^ 4 := by\n    nlinarith only [sq_nonneg (y ^ 2 - 1), hy20]\n  have hA : 4 * C ^ 2 * (n.choose 2 : ℝ) ≤\n      2 * C ^ 2 * (n : ℝ) ^ 2 := by\n    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 4 * C ^ 2)\n    nlinarith only [hm]\n  have hB : 48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 ≤\n      8 * C ^ 3 * (n : ℝ) ^ 2 * y ^ 2 := by\n    calc\n      _ = (8 * C ^ 3 * a ^ 2) * (6 * (n.choose 3 : ℝ)) := by ring\n      _ ≤ (8 * C ^ 3 * a ^ 2) * (n : ℝ) ^ 3 :=\n        mul_le_mul_of_nonneg_left hc3 (by positivity)\n      _ = 8 * C ^ 3 * ((n : ℝ) ^ 3 * a ^ 2) := by ring\n      _ = _ := by rw [ha2]; ring\n  have hE : 96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4 ≤\n      4 * C ^ 4 * (n : ℝ) ^ 2 * y ^ 4 := by\n    calc\n      _ = (16 * C ^ 4 * a ^ 4) * (6 * (n.choose 4 : ℝ)) := by ring\n      _ ≤ (16 * C ^ 4 * a ^ 4) * ((n : ℝ) ^ 4 / 4) :=\n        mul_le_mul_of_nonneg_left hc4 (by positivity)\n      _ = 4 * C ^ 4 * ((n : ℝ) ^ 4 * a ^ 4) := by ring\n      _ = _ := by rw [ha4]; ring\n  have hAr : 8 * C ^ 2 * (n.choose 2 : ℝ) ≤\n      4 * C ^ 2 * (n : ℝ) ^ 2 := by\n    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 8 * C ^ 2)\n    nlinarith only [hm]\n  have hF0 : 2 * C ^ 2 ≤ 2 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [h24, mul_nonneg h40 hy40]\n  have hF2 : 8 * C ^ 3 * y ^ 2 ≤ 8 * C ^ 4 * (1 + y ^ 4) := by\n    calc\n      _ ≤ 8 * C ^ 4 * y ^ 2 :=\n        mul_le_mul_of_nonneg_right (by nlinarith only [h34]) hy20\n      _ ≤ _ := mul_le_mul_of_nonneg_left hy24 (by positivity)\n  have hF4 : 4 * C ^ 4 * y ^ 4 ≤ 4 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [h40]\n  have hFp : 2 * C ^ 2 + 8 * C ^ 3 * y ^ 2 + 4 * C ^ 4 * y ^ 4 ≤\n      14 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [hF0, hF2, hF4]\n  have hR0 : 4 * C ^ 2 ≤ 4 * C ^ 4 := by nlinarith only [h24]\n  have hR2 : 8 * C ^ 3 * y ^ 2 ≤ 8 * C ^ 4 * y ^ 2 :=\n    mul_le_mul_of_nonneg_right (by nlinarith only [h34]) hy20\n  have hRp : 4 * C ^ 2 + 8 * C ^ 3 * y ^ 2 ≤\n      14 * C ^ 4 * (1 + y ^ 2) := by\n    nlinarith only [hR0, hR2, h40, mul_nonneg h40 hy20]\n  constructor\n  · calc\n      _ ≤ (n : ℝ) ^ 2 *\n          (2 * C ^ 2 + 8 * C ^ 3 * y ^ 2 + 4 * C ^ 4 * y ^ 4) := by\n        nlinarith only [hA, hB, hE]\n      _ ≤ (n : ℝ) ^ 2 * (14 * C ^ 4 * (1 + y ^ 4)) :=\n        mul_le_mul_of_nonneg_left hFp (sq_nonneg _)\n      _ = _ := by ring\n  · calc\n      _ ≤ (n : ℝ) ^ 2 * (4 * C ^ 2 + 8 * C ^ 3 * y ^ 2) := by\n        nlinarith only [hAr, hB]\n      _ ≤ (n : ℝ) ^ 2 * (14 * C ^ 4 * (1 + y ^ 2)) :=\n        mul_le_mul_of_nonneg_left hRp (sq_nonneg _)\n      _ = _ := by ring",
+      "completeDeclarationSHA256": "d837480da6171e42bc855be72385a3927cba62d2b70892fe74f2679330d1d736",
+      "context": "Exact imports/options/namespace/noncomputable/open context in source lines1-16; complete quantified head, preceding local scope and lexical lets; no ambient variables",
+      "completeProofRead": true,
+      "allDerivedPropositionsAndAnonymousClosuresReviewed": true,
+      "newMachineEvidence": "PENDING"
+    },
+    {
+      "name": "integral_abs_sq_le_second",
+      "private": true,
+      "startLine": 140,
+      "endLine": 174,
+      "completeHead": "private theorem integral_abs_sq_le_second\n    {X : Type*} [MeasurableSpace X]\n    (P : Measure X) [IsProbabilityMeasure P]\n    (f : X → ℝ) (hf : MemLp f 2 P) :\n    Integrable (fun z => |f z|) P ∧\n      (∫ z, |f z| ∂P) ^ 2 ≤ ∫ z, f z ^ 2 ∂P",
+      "headSHA256": "9975266640153a24794cb7f8aa6c3a6dab3c30e297cb7bdfb50564279fbce626",
+      "exactFrozenHead": true,
+      "completeDeclarationSource": "private theorem integral_abs_sq_le_second\n    {X : Type*} [MeasurableSpace X]\n    (P : Measure X) [IsProbabilityMeasure P]\n    (f : X → ℝ) (hf : MemLp f 2 P) :\n    Integrable (fun z => |f z|) P ∧\n      (∫ z, |f z| ∂P) ^ 2 ≤ ∫ z, f z ^ 2 ∂P := by\n  have hAbs2 : MemLp (fun z => |f z|) 2 P := by\n    simpa only [Real.norm_eq_abs] using hf.norm\n  have hAbsI : Integrable (fun z => |f z|) P :=\n    MemLp.integrable (by norm_num : (1 : ENNReal) ≤ 2) hAbs2\n  let c : ℝ := ∫ z, |f z| ∂P\n  have hDiff2 : MemLp (fun z => |f z| - c) 2 P :=\n    hAbs2.sub (memLp_const c)\n  have hSqI : Integrable (fun z => |f z| ^ 2) P := hAbs2.integrable_sq\n  have hLinI : Integrable (fun z => 2 * c * |f z|) P :=\n    hAbsI.const_mul (2 * c)\n  have hExpand : (∫ z, (|f z| - c) ^ 2 ∂P) =\n      (∫ z, f z ^ 2 ∂P) - c ^ 2 := by\n    calc\n      _ = ∫ z, (|f z| ^ 2 - 2 * c * |f z|) + c ^ 2 ∂P := by\n        apply integral_congr_ae\n        exact Filter.Eventually.of_forall fun z => by ring\n      _ = ((∫ z, |f z| ^ 2 ∂P) - 2 * c * (∫ z, |f z| ∂P)) + c ^ 2 := by\n        rw [integral_add (hSqI.sub hLinI) (integrable_const (c ^ 2)),\n          integral_sub hSqI hLinI, integral_const_mul, integral_const,\n          probReal_univ, one_smul]\n      _ = (∫ z, f z ^ 2 ∂P) - c ^ 2 := by\n        simp only [sq_abs]\n        change (∫ z, f z ^ 2 ∂P) - 2 * c * c + c ^ 2 = _\n        ring\n  have hNonneg : 0 ≤ (∫ z, (|f z| - c) ^ 2 ∂P) :=\n    integral_nonneg fun z => sq_nonneg _\n  refine ⟨hAbsI, ?_⟩\n  change c ^ 2 ≤ _\n  linarith only [hNonneg, hExpand]",
+      "completeDeclarationSHA256": "a40021b7d838c3bff1b7628b0364e6885a4be2db46d10e49fffa62eb0d26d9c5",
+      "context": "Exact imports/options/namespace/noncomputable/open context in source lines1-16; complete quantified head, preceding local scope and lexical lets; no ambient variables",
+      "completeProofRead": true,
+      "allDerivedPropositionsAndAnonymousClosuresReviewed": true,
+      "newMachineEvidence": "PENDING"
+    },
+    {
+      "name": "actual_quadratic_rho_moments",
+      "private": false,
+      "startLine": 176,
+      "endLine": 453,
+      "completeHead": "theorem actual_quadratic_rho_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o z, h o z = h z o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ z, h o z ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (y : ℝ) (hy : 1 ≤ y)\n    (hwindow : y ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ z, h o z ∂μ\n    let r : Ω → Ω → ℝ := fun o z => h o z - g o - g z\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ν : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let u : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ψ ξ i / ((n : ℝ) - 2)\n    let J : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, u ξ i ^ 2\n    let D : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    0 ≤ rho ∧ rho ^ 2 = v ∧\n      μ.tilted φ = ν ∧ IsProbabilityMeasure ν ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ν) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      Integrable (fun ξ => |F ξ|) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧ Integrable J Pₐ ∧\n      Integrable D Pₐ ∧ Integrable (fun ξ => |D ξ|) Pₐ ∧\n      (∀ ξ, J ξ = Λsq ξ / ((n : ℝ) - 2) ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) =\n        (∫ ξ, Λsq ξ ∂Pₐ) / ((n : ℝ) - 2) ^ 2 ∧\n      (∫ ξ, |D ξ| ∂Pₐ) =\n        (∫ ξ, |F ξ| ∂Pₐ) /\n          (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ rho ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ rho ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) ≤\n        56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, |D ξ| ∂Pₐ) ≤\n        8 * C ^ 2 * rho * (1 + y ^ 2) / Real.sqrt (n : ℝ)",
+      "headSHA256": "936107391e6b3c3bbac1783f1acde3bd3072e8684c80591cef14b4ff64d06afe",
+      "exactFrozenHead": true,
+      "completeDeclarationSource": "theorem actual_quadratic_rho_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o z, h o z = h z o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ z, h o z ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (y : ℝ) (hy : 1 ≤ y)\n    (hwindow : y ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ z, h o z ∂μ\n    let r : Ω → Ω → ℝ := fun o z => h o z - g o - g z\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let a : ℝ := y / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ν : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let u : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ψ ξ i / ((n : ℝ) - 2)\n    let J : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, u ξ i ^ 2\n    let D : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    0 ≤ rho ∧ rho ^ 2 = v ∧\n      μ.tilted φ = ν ∧ IsProbabilityMeasure ν ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ν) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      Integrable (fun ξ => |F ξ|) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧ Integrable J Pₐ ∧\n      Integrable D Pₐ ∧ Integrable (fun ξ => |D ξ|) Pₐ ∧\n      (∀ ξ, J ξ = Λsq ξ / ((n : ℝ) - 2) ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) =\n        (∫ ξ, Λsq ξ ∂Pₐ) / ((n : ℝ) - 2) ^ 2 ∧\n      (∫ ξ, |D ξ| ∂Pₐ) =\n        (∫ ξ, |F ξ| ∂Pₐ) /\n          (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ rho ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ rho ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * rho ^ 2 * (n : ℝ) ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, J ξ ∂Pₐ) ≤\n        56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) ∧\n      (∫ ξ, |D ξ| ∂Pₐ) ≤\n        8 * C ^ 2 * rho * (1 + y ^ 2) / Real.sqrt (n : ℝ) := by\n  classical\n  dsimp only\n  let C : ℝ := Real.exp (1 / 2 : ℝ)\n  let g : Ω → ℝ := fun o => ∫ z, h o z ∂μ\n  let r : Ω → Ω → ℝ := fun o z => h o z - g o - g z\n  let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n  let rho : ℝ := Real.sqrt v\n  let a : ℝ := y / Real.sqrt (n : ℝ)\n  let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n  let w : Ω → ℝ := fun o => Real.exp (φ o)\n  let m : ℝ := ∫ o, w o ∂μ\n  let L : Ω → ℝ := fun o => w o / m\n  let ν : Measure Ω := μ.withDensity (fun o => ENNReal.ofReal (L o))\n  let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n  let S : (Fin n → Ω) → ℝ := fun ξ => ∑ j : Fin n, φ (ξ j)\n  let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n  let F : (Fin n → Ω) → ℝ := fun ξ =>\n    Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n  let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n    Shao.OQ6.ResidualDeletion.rowSum (fun j k => r (ξ j) (ξ k)) i\n  let Λsq : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, ψ ξ i ^ 2\n  let u : (Fin n → Ω) → Fin n → ℝ := fun ξ i => ψ ξ i / ((n : ℝ) - 2)\n  let J : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, u ξ i ^ 2\n  let D : (Fin n → Ω) → ℝ := fun ξ =>\n    F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n  let N : ℝ := (n : ℝ)\n  let q : ℝ := Real.sqrt N\n  let dD : ℝ := q * (N - 1)\n  let dJ : ℝ := (N - 2) ^ 2\n  let LF : ℝ := ∫ ξ, |F ξ| ∂Pₐ\n  let TF : ℝ := 4 * C ^ 2 * rho * N * (1 + y ^ 2)\n  have hn3 : 3 ≤ n := le_trans (by norm_num) hn\n  have hy0 : 0 ≤ y := le_trans (by norm_num) hy\n  have source := ActualQuadraticTiltMoments.actual_quadratic_source_moments\n    μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3 y hy0 hwindow\n  rcases source with\n    ⟨hg, hg2, hgmean, hgsecond, hr, hr2, hrsymm, hrcan,\n      hv, hs1, hvs, hw, hmlo, hmhi, hL, hL1, hLb, hLmass,\n      hdeltaInt, hdeltaBd, hNuEq, hNuProb, hFullExp, hFullNorm,\n      hFullPos, hprod, hPaDensity, hPaProd, hPaProb,\n      hF2, hFI, hrows, hLambdaI, hFid, hLambdaId, _, _, _, _, _, _⟩\n  letI : IsProbabilityMeasure Pₐ := hPaProb\n  have hN4 : (4 : ℝ) ≤ N := by exact_mod_cast hn\n  have hNpos : 0 < N := lt_of_lt_of_le (by norm_num) hN4\n  have hqpos : 0 < q := Real.sqrt_pos.2 hNpos\n  have hNm1 : 0 < N - 1 := by linarith only [hN4]\n  have hNm2 : 0 < N - 2 := by linarith only [hN4]\n  have hdD : 0 < dD := mul_pos hqpos hNm1\n  have hdJ : 0 < dJ := sq_pos_of_pos hNm2\n  have hCpos : 0 < C := Real.exp_pos _\n  have hC1 : 1 ≤ C := by\n    dsimp only [C]\n    exact Real.one_le_exp (by norm_num)\n  have hrho : 0 ≤ rho := Real.sqrt_nonneg v\n  have hrhosq : rho ^ 2 = v := Real.sq_sqrt hv\n  have hrsecond : (∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)) ≤ rho ^ 2 := by\n    change v ≤ rho ^ 2\n    exact hrhosq.ge\n  have ha : 0 ≤ a := div_nonneg hy0 (Real.sqrt_nonneg _)\n  have hepsilon : 0 ≤ 2 * C * a :=\n    mul_nonneg (mul_nonneg (by norm_num) hCpos.le) ha\n  have hdelta : (∫ o, (L o - 1) ^ 2 ∂μ) ≤ (2 * C * a) ^ 2 := by\n    calc\n      _ ≤ 4 * C ^ 2 * a ^ 2 := hdeltaBd\n      _ = _ := by ring\n  have hFgen := FiniteTiltedMoments.unordered_pair_sum_second_moment\n    μ r hr hr2 hrsymm hrcan rho hrho hrsecond L hL (2 * C)\n    (fun o => (hLb o).1.le) (fun o => (hLb o).2) hLmass\n    (2 * C * a) hepsilon hdelta n\n  rcases hFgen with ⟨_, _, _, _, _, hFbound⟩\n  have hRgen := FiniteTiltedMoments.row_square_sum_moment\n    μ r hr hr2 hrsymm hrcan rho hrho hrsecond L hL (2 * C)\n    (fun o => (hLb o).1.le) (fun o => (hLb o).2) hLmass\n    (2 * C * a) hepsilon hdelta n\n  rcases hRgen with ⟨_, _, _, _, _, hRbound⟩\n  change (∫ ξ, F ξ ^ 2 ∂Measure.pi (fun _ : Fin n => ν)) ≤\n    ((n.choose 2 : ℝ) * (2 * C) ^ 2 +\n      6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2 +\n      6 * (n.choose 4 : ℝ) * (2 * C * a) ^ 4) * rho ^ 2 at hFbound\n  change (∫ ξ, Λsq ξ ∂Measure.pi (fun _ : Fin n => ν)) ≤\n    (2 * (n.choose 2 : ℝ) * (2 * C) ^ 2 +\n      6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2) * rho ^ 2 at hRbound\n  rw [← hPaProd] at hFbound hRbound\n  have hFchoose : (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ rho ^ 2 *\n      (4 * C ^ 2 * (n.choose 2 : ℝ) +\n        48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n        96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) := by\n    calc\n      _ ≤ ((n.choose 2 : ℝ) * (2 * C) ^ 2 +\n          6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2 +\n          6 * (n.choose 4 : ℝ) * (2 * C * a) ^ 4) * rho ^ 2 := hFbound\n      _ = _ := by ring\n  have hRchoose : (∫ ξ, Λsq ξ ∂Pₐ) ≤ rho ^ 2 *\n      (8 * C ^ 2 * (n.choose 2 : ℝ) +\n        48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) := by\n    calc\n      _ ≤ (2 * (n.choose 2 : ℝ) * (2 * C) ^ 2 +\n          6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2) * rho ^ 2 := hRbound\n      _ = _ := by ring\n  rcases rho_coefficient_bounds n hn y C hC1 with ⟨hFcoef, hRcoef⟩\n  have hFfinal : (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n      14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 4) := by\n    calc\n      _ ≤ rho ^ 2 *\n          (4 * C ^ 2 * (n.choose 2 : ℝ) +\n            48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n            96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) := hFchoose\n      _ ≤ rho ^ 2 * (14 * C ^ 4 * N ^ 2 * (1 + y ^ 4)) :=\n        mul_le_mul_of_nonneg_left hFcoef (sq_nonneg rho)\n      _ = _ := by ring\n  have hRfinal : (∫ ξ, Λsq ξ ∂Pₐ) ≤\n      14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 2) := by\n    calc\n      _ ≤ rho ^ 2 *\n          (8 * C ^ 2 * (n.choose 2 : ℝ) +\n            48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) := hRchoose\n      _ ≤ rho ^ 2 * (14 * C ^ 4 * N ^ 2 * (1 + y ^ 2)) :=\n        mul_le_mul_of_nonneg_left hRcoef (sq_nonneg rho)\n      _ = _ := by ring\n  have hJpoint : ∀ ξ, J ξ = Λsq ξ / dJ := by\n    intro ξ\n    dsimp only [J, u, Λsq, dJ, N]\n    simp_rw [div_pow]\n    rw [← Finset.sum_div]\n  have hJfun : J = (fun ξ => Λsq ξ / dJ) := funext hJpoint\n  have hJI : Integrable J Pₐ := by\n    rw [hJfun]\n    exact hLambdaI.div_const dJ\n  have hJintegral : (∫ ξ, J ξ ∂Pₐ) = (∫ ξ, Λsq ξ ∂Pₐ) / dJ := by\n    rw [hJfun]\n    simp only [div_eq_mul_inv, integral_mul_const]\n  have hNtw : N ≤ 2 * (N - 2) := by linarith only [hN4]\n  have hNsquareRatio : N ^ 2 ≤ 4 * (N - 2) ^ 2 := by\n    have hs := pow_le_pow_left₀ hNpos.le hNtw 2\n    nlinarith only [hs]\n  have hJbound : (∫ ξ, J ξ ∂Pₐ) ≤ 56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) := by\n    rw [hJintegral]\n    apply (div_le_iff₀ hdJ).2\n    calc\n      _ ≤ 14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 2) := hRfinal\n      _ ≤ 56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) * dJ := by\n        have hm := mul_le_mul_of_nonneg_left hNsquareRatio\n          (by positivity : 0 ≤ 14 * C ^ 4 * rho ^ 2 * (1 + y ^ 2))\n        dsimp only [dJ]\n        nlinarith only [hm]\n  rcases integral_abs_sq_le_second Pₐ F hF2 with ⟨hFabsI, hLFsq⟩\n  have hFI1 : Integrable F Pₐ :=\n    MemLp.integrable (by norm_num : (1 : ENNReal) ≤ 2) hF2\n  have hLFnonneg : 0 ≤ LF := integral_nonneg fun ξ => abs_nonneg _\n  have hTFnonneg : 0 ≤ TF := by dsimp only [TF]; positivity\n  have hpolysq : 14 * (1 + y ^ 4) ≤ 16 * (1 + y ^ 2) ^ 2 := by\n    nlinarith only [sq_nonneg y, sq_nonneg (y ^ 2)]\n  have hLFsqTF : LF ^ 2 ≤ TF ^ 2 := by\n    calc\n      _ ≤ ∫ ξ, F ξ ^ 2 ∂Pₐ := hLFsq\n      _ ≤ 14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 4) := hFfinal\n      _ ≤ TF ^ 2 := by\n        have hm := mul_le_mul_of_nonneg_left hpolysq\n          (by positivity : 0 ≤ C ^ 4 * rho ^ 2 * N ^ 2)\n        dsimp only [TF]\n        nlinarith only [hm]\n  have hLFle : LF ≤ TF := by\n    by_contra hnot\n    have hlt : TF < LF := lt_of_not_ge hnot\n    have hd : 0 < LF - TF := sub_pos.mpr hlt\n    have hs : 0 < LF + TF := by linarith only [hlt, hTFnonneg]\n    have hp : 0 < (LF - TF) * (LF + TF) := mul_pos hd hs\n    nlinarith only [hp, hLFsqTF]\n  have hDI : Integrable D Pₐ := by\n    change Integrable (fun ξ => F ξ / dD) Pₐ\n    exact hFI1.div_const dD\n  have hDabsI : Integrable (fun ξ => |D ξ|) Pₐ := by\n    simpa only [Real.norm_eq_abs] using hDI.norm\n  have hDpoint : ∀ ξ, |D ξ| = |F ξ| / dD := by\n    intro ξ\n    change |F ξ / dD| = |F ξ| / dD\n    rw [abs_div, abs_of_pos hdD]\n  have hDintegral : (∫ ξ, |D ξ| ∂Pₐ) = LF / dD := by\n    calc\n      _ = ∫ ξ, |F ξ| / dD ∂Pₐ :=\n        integral_congr_ae (Filter.Eventually.of_forall hDpoint)\n      _ = LF / dD := by simp only [div_eq_mul_inv, integral_mul_const, LF]\n  have hNratio : N ≤ 2 * (N - 1) := by linarith only [hN4]\n  have hDbound : (∫ ξ, |D ξ| ∂Pₐ) ≤\n      8 * C ^ 2 * rho * (1 + y ^ 2) / q := by\n    rw [hDintegral]\n    apply (div_le_iff₀ hdD).2\n    calc\n      LF ≤ TF := hLFle\n      _ ≤ (8 * C ^ 2 * rho * (1 + y ^ 2) / q) * dD := by\n        have hm := mul_le_mul_of_nonneg_left hNratio\n          (by positivity : 0 ≤ 4 * C ^ 2 * rho * (1 + y ^ 2))\n        have heq : (8 * C ^ 2 * rho * (1 + y ^ 2) / q) * dD =\n            8 * C ^ 2 * rho * (1 + y ^ 2) * (N - 1) := by\n          dsimp only [dD]\n          field_simp [ne_of_gt hqpos]\n          <;> ring\n        rw [heq]\n        dsimp only [TF]\n        nlinarith only [hm]\n  exact ⟨hrho, hrhosq, hNuEq, hNuProb, hPaProd, hPaProb,\n    hF2, hFI, hFabsI, hrows, hLambdaI, hJI, hDI, hDabsI,\n    hJpoint, hJintegral, hDintegral, hFchoose, hRchoose,\n    hFfinal, hRfinal, hJbound, hDbound⟩",
+      "completeDeclarationSHA256": "7721ddc5461b4ace76eef1cfecff9cff42a62e2007fcf133812081f8e3d30e5f",
+      "context": "Exact imports/options/namespace/noncomputable/open context in source lines1-16; complete quantified head, preceding local scope and lexical lets; no ambient variables",
+      "completeProofRead": true,
+      "allDerivedPropositionsAndAnonymousClosuresReviewed": true,
+      "newMachineEvidence": "PENDING"
+    }
+  ],
+  "sourcePublicTheorems": 1,
+  "sourcePrivateTheorems": 3,
+  "newSourceNonTheorems": 0,
+  "headerLetOccurrences": 21,
+  "namedProofNonPropLocalCount": 28,
+  "proofNonPropLocals": [
+    {
+      "name": "a",
+      "scope": "H02",
+      "startLine": 47,
+      "endLine": 47,
+      "fullTypeAndInitializer": "let a : ℝ := y / Real.sqrt (n : ℝ)",
+      "lexicalDirectCaptures": [
+        "n",
+        "y"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "c",
+      "scope": "H03",
+      "startLine": 150,
+      "endLine": 150,
+      "fullTypeAndInitializer": "let c : ℝ := ∫ z, |f z| ∂P",
+      "lexicalDirectCaptures": [
+        "X",
+        "measurableInstance",
+        "P",
+        "f"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "C",
+      "scope": "P01",
+      "startLine": 252,
+      "endLine": 252,
+      "fullTypeAndInitializer": "let C : ℝ := Real.exp (1 / 2 : ℝ)",
+      "lexicalDirectCaptures": [],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "g",
+      "scope": "P01",
+      "startLine": 253,
+      "endLine": 253,
+      "fullTypeAndInitializer": "let g : Ω → ℝ := fun o => ∫ z, h o z ∂μ",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "mu",
+        "h"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "r",
+      "scope": "P01",
+      "startLine": 254,
+      "endLine": 254,
+      "fullTypeAndInitializer": "let r : Ω → Ω → ℝ := fun o z => h o z - g o - g z",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "h",
+        "g"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "v",
+      "scope": "P01",
+      "startLine": 255,
+      "endLine": 255,
+      "fullTypeAndInitializer": "let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "mu",
+        "r"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "rho",
+      "scope": "P01",
+      "startLine": 256,
+      "endLine": 256,
+      "fullTypeAndInitializer": "let rho : ℝ := Real.sqrt v",
+      "lexicalDirectCaptures": [
+        "v"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "a",
+      "scope": "P01",
+      "startLine": 257,
+      "endLine": 257,
+      "fullTypeAndInitializer": "let a : ℝ := y / Real.sqrt (n : ℝ)",
+      "lexicalDirectCaptures": [
+        "n",
+        "y"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "φ",
+      "scope": "P01",
+      "startLine": 258,
+      "endLine": 258,
+      "fullTypeAndInitializer": "let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "a",
+        "g"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "w",
+      "scope": "P01",
+      "startLine": 259,
+      "endLine": 259,
+      "fullTypeAndInitializer": "let w : Ω → ℝ := fun o => Real.exp (φ o)",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "phi"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "m",
+      "scope": "P01",
+      "startLine": 260,
+      "endLine": 260,
+      "fullTypeAndInitializer": "let m : ℝ := ∫ o, w o ∂μ",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "mu",
+        "w"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "L",
+      "scope": "P01",
+      "startLine": 261,
+      "endLine": 261,
+      "fullTypeAndInitializer": "let L : Ω → ℝ := fun o => w o / m",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "w",
+        "m"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "ν",
+      "scope": "P01",
+      "startLine": 262,
+      "endLine": 262,
+      "fullTypeAndInitializer": "let ν : Measure Ω := μ.withDensity (fun o => ENNReal.ofReal (L o))",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "mu",
+        "L"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "P₀",
+      "scope": "P01",
+      "startLine": 263,
+      "endLine": 263,
+      "fullTypeAndInitializer": "let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "n",
+        "mu"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "S",
+      "scope": "P01",
+      "startLine": 264,
+      "endLine": 264,
+      "fullTypeAndInitializer": "let S : (Fin n → Ω) → ℝ := fun ξ => ∑ j : Fin n, φ (ξ j)",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "phi"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "Pₐ",
+      "scope": "P01",
+      "startLine": 265,
+      "endLine": 265,
+      "fullTypeAndInitializer": "let Pₐ : Measure (Fin n → Ω) := P₀.tilted S",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "n",
+        "P0",
+        "S"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "F",
+      "scope": "P01",
+      "startLine": 266,
+      "endLine": 267,
+      "fullTypeAndInitializer": "let F : (Fin n → Ω) → ℝ := fun ξ =>\n    Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "r"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "ψ",
+      "scope": "P01",
+      "startLine": 268,
+      "endLine": 269,
+      "fullTypeAndInitializer": "let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n    Shao.OQ6.ResidualDeletion.rowSum (fun j k => r (ξ j) (ξ k)) i",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "r"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "Λsq",
+      "scope": "P01",
+      "startLine": 270,
+      "endLine": 270,
+      "fullTypeAndInitializer": "let Λsq : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, ψ ξ i ^ 2",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "psi"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "u",
+      "scope": "P01",
+      "startLine": 271,
+      "endLine": 271,
+      "fullTypeAndInitializer": "let u : (Fin n → Ω) → Fin n → ℝ := fun ξ i => ψ ξ i / ((n : ℝ) - 2)",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "psi"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "J",
+      "scope": "P01",
+      "startLine": 272,
+      "endLine": 272,
+      "fullTypeAndInitializer": "let J : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, u ξ i ^ 2",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "u"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "D",
+      "scope": "P01",
+      "startLine": 273,
+      "endLine": 274,
+      "fullTypeAndInitializer": "let D : (Fin n → Ω) → ℝ := fun ξ =>\n    F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "n",
+        "F"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "N",
+      "scope": "P01",
+      "startLine": 275,
+      "endLine": 275,
+      "fullTypeAndInitializer": "let N : ℝ := (n : ℝ)",
+      "lexicalDirectCaptures": [
+        "n"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "q",
+      "scope": "P01",
+      "startLine": 276,
+      "endLine": 276,
+      "fullTypeAndInitializer": "let q : ℝ := Real.sqrt N",
+      "lexicalDirectCaptures": [
+        "N"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "dD",
+      "scope": "P01",
+      "startLine": 277,
+      "endLine": 277,
+      "fullTypeAndInitializer": "let dD : ℝ := q * (N - 1)",
+      "lexicalDirectCaptures": [
+        "q",
+        "N"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "dJ",
+      "scope": "P01",
+      "startLine": 278,
+      "endLine": 278,
+      "fullTypeAndInitializer": "let dJ : ℝ := (N - 2) ^ 2",
+      "lexicalDirectCaptures": [
+        "N"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "LF",
+      "scope": "P01",
+      "startLine": 279,
+      "endLine": 279,
+      "fullTypeAndInitializer": "let LF : ℝ := ∫ ξ, |F ξ| ∂Pₐ",
+      "lexicalDirectCaptures": [
+        "Omega",
+        "measurableInstance",
+        "n",
+        "F",
+        "Pa"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    },
+    {
+      "name": "TF",
+      "scope": "P01",
+      "startLine": 280,
+      "endLine": 280,
+      "fullTypeAndInitializer": "let TF : ℝ := 4 * C ^ 2 * rho * N * (1 + y ^ 2)",
+      "lexicalDirectCaptures": [
+        "C",
+        "rho",
+        "N",
+        "y"
+      ],
+      "standardGlobalConstantsAndDerivedInstances": "Exact containing declaration context; no extra hidden instance/data parameter",
+      "independentlyReviewed": true
+    }
+  ],
+  "localInstance": {
+    "line": 291,
+    "literal": "letI : IsProbabilityMeasure Pₐ := hPaProb",
+    "sort": "Prop",
+    "sameActualMeasure": true
+  },
+  "derivedPropSourceBlockCount": 92,
+  "derivedPropSourceBlocks": [
+    {
+      "name": "h2",
+      "startLine": 27,
+      "endLine": 27,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h2 := Nat.choose_le_pow_div (α := ℝ) 2 n",
+      "literalSHA256": "9a692e5961c68381853a14f2c77932350013002cb5d9b8c9fdd343805cf070e6",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(n.choose 2 : Real) <= (n : Real)^2 / (2.factorial : Real)"
+    },
+    {
+      "name": "h3",
+      "startLine": 28,
+      "endLine": 28,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h3 := Nat.choose_le_pow_div (α := ℝ) 3 n",
+      "literalSHA256": "260e4d05f77d631df045d0a15ce0fe12b22f300d0667c6968b0a7f194e38d34b",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(n.choose 3 : Real) <= (n : Real)^3 / (3.factorial : Real)"
+    },
+    {
+      "name": "h4",
+      "startLine": 29,
+      "endLine": 29,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h4 := Nat.choose_le_pow_div (α := ℝ) 4 n",
+      "literalSHA256": "93ed43fc1fda1ec98aa1a018cab700fb7061a94f08f364a547bac2d32ac4bd94",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(n.choose 4 : Real) <= (n : Real)^4 / (4.factorial : Real)"
+    },
+    {
+      "name": "hN",
+      "startLine": 48,
+      "endLine": 48,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hN : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn",
+      "literalSHA256": "88fe5ef8e5e3d6138c62c29f6a556f96b2e280ac7b697974f96c3682e22b2d26",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNpos",
+      "startLine": 49,
+      "endLine": 49,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNpos : 0 < (n : ℝ) := lt_of_lt_of_le (by norm_num) hN",
+      "literalSHA256": "3707d660d15c8d8b7d44c84568fc516172637d2f5e8bc680ebfbe3121339b04c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNne",
+      "startLine": 50,
+      "endLine": 50,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNne : (n : ℝ) ≠ 0 := ne_of_gt hNpos",
+      "literalSHA256": "e45e73dd0c3f022093fb8552e1b16c31cc7bc0b8ec751d523c170a44576c52c8",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hq2",
+      "startLine": 51,
+      "endLine": 52,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hq2 : Real.sqrt (n : ℝ) ^ 2 = (n : ℝ) :=\n    Real.sq_sqrt (Nat.cast_nonneg n)",
+      "literalSHA256": "582697c69e377e4fd3794a457e86bd86b0c1878bd002dfaeacdfd0eb8c3bedc4",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hq4",
+      "startLine": 53,
+      "endLine": 56,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hq4 : Real.sqrt (n : ℝ) ^ 4 = (n : ℝ) ^ 2 := by\n    calc\n      _ = (Real.sqrt (n : ℝ) ^ 2) ^ 2 := by ring\n      _ = _ := by rw [hq2]",
+      "literalSHA256": "4c505abbd082fd6fd3ac15eb9c0fc8f30ecb56adc229bcbb1f66e960f1f8f1d5",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "ha2",
+      "startLine": 57,
+      "endLine": 61,
+      "literalCompleteTypedOrAppliedProofBlock": "  have ha2 : (n : ℝ) ^ 3 * a ^ 2 = (n : ℝ) ^ 2 * y ^ 2 := by\n    dsimp only [a]\n    rw [div_pow, hq2]\n    field_simp [hNne]\n    <;> ring",
+      "literalSHA256": "a4d7d7ddcbc5047bd7514f933e1de373e03eecd59ee005e6de8b6bc896bd7dcd",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "ha4",
+      "startLine": 62,
+      "endLine": 66,
+      "literalCompleteTypedOrAppliedProofBlock": "  have ha4 : (n : ℝ) ^ 4 * a ^ 4 = (n : ℝ) ^ 2 * y ^ 4 := by\n    dsimp only [a]\n    rw [div_pow, hq4]\n    field_simp [hNne]\n    <;> ring",
+      "literalSHA256": "b509378ccf05db3c3cbb4ff6a4938fd72d3b8c7629dbc1b0defdf5c8b58fd044",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hC0",
+      "startLine": 68,
+      "endLine": 68,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hC0 : 0 ≤ C := le_trans (by norm_num) hC",
+      "literalSHA256": "96b773e3edab3b399eef08766e26c6f0c9e547cc9564db166afb36ab78a4f68f",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hC2",
+      "startLine": 69,
+      "endLine": 69,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hC2 : 1 ≤ C ^ 2 := by nlinarith only [hC, sq_nonneg (C - 1)]",
+      "literalSHA256": "0f0c2600fc377de18900d0d93a211efc54fb6b55574a6f52c87c23ad76ac140b",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "h24",
+      "startLine": 70,
+      "endLine": 73,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h24 : C ^ 2 ≤ C ^ 4 := by\n    have hm : 0 ≤ C ^ 2 * (C ^ 2 - 1) :=\n      mul_nonneg (sq_nonneg C) (sub_nonneg.mpr hC2)\n    nlinarith only [hm]",
+      "literalSHA256": "5c0f38bb65a64f0ec4f6e628dda987cec04a948c01b93e332affeaf0e3f628e7",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 71,
+      "endLine": 72,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hm : 0 ≤ C ^ 2 * (C ^ 2 - 1) :=\n      mul_nonneg (sq_nonneg C) (sub_nonneg.mpr hC2)",
+      "literalSHA256": "fd127675744019c44fa6cddf6401b7da00fc978b2452e7a80b617a0bbb2af2e1",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "h34",
+      "startLine": 74,
+      "endLine": 77,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h34 : C ^ 3 ≤ C ^ 4 := by\n    have hm : 0 ≤ C ^ 3 * (C - 1) :=\n      mul_nonneg (pow_nonneg hC0 3) (sub_nonneg.mpr hC)\n    nlinarith only [hm]",
+      "literalSHA256": "35274d0f88bee633802611893bb44087e0996ac03378e6742dc4919c960f5a4c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 75,
+      "endLine": 76,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hm : 0 ≤ C ^ 3 * (C - 1) :=\n      mul_nonneg (pow_nonneg hC0 3) (sub_nonneg.mpr hC)",
+      "literalSHA256": "7506917452134953359a3ac670dc383d8592e05ed1a29d1e2e6a960583627ad3",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "h40",
+      "startLine": 78,
+      "endLine": 78,
+      "literalCompleteTypedOrAppliedProofBlock": "  have h40 : 0 ≤ C ^ 4 := pow_nonneg hC0 4",
+      "literalSHA256": "e401c0b1ed0525a76df664761ef74d1e89e830e2d0e88e4b6a7f53f2cc558f18",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hy20",
+      "startLine": 79,
+      "endLine": 79,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hy20 : 0 ≤ y ^ 2 := sq_nonneg y",
+      "literalSHA256": "72cd6a3a56d7e32ab0ee42d1067b8502601a1d5173942df60a330a4f72a2723f",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hy40",
+      "startLine": 80,
+      "endLine": 80,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hy40 : 0 ≤ y ^ 4 := by positivity",
+      "literalSHA256": "814999a4cd0345e7b05e2295878456c9c227dbcc34c8744745cc9b9841ea6d7e",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hy24",
+      "startLine": 81,
+      "endLine": 82,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hy24 : y ^ 2 ≤ 1 + y ^ 4 := by\n    nlinarith only [sq_nonneg (y ^ 2 - 1), hy20]",
+      "literalSHA256": "a3f01dd169964361a0c2ef0603f34eefbf8b8e8acc08730f4f35be94de580039",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hA",
+      "startLine": 83,
+      "endLine": 86,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hA : 4 * C ^ 2 * (n.choose 2 : ℝ) ≤\n      2 * C ^ 2 * (n : ℝ) ^ 2 := by\n    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 4 * C ^ 2)\n    nlinarith only [hm]",
+      "literalSHA256": "3eef8673b22053ab493653c8f257c8f6e34acaa81e7a02cdc7fc1aec7dfe652e",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 85,
+      "endLine": 85,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 4 * C ^ 2)",
+      "literalSHA256": "34c39e232e056cab63a441cdecfd1757a59c53be8f32529715f39985c6806614",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(4*C^2)*(n.choose 2 : Real) <= (4*C^2)*((n : Real)^2/2)"
+    },
+    {
+      "name": "hB",
+      "startLine": 87,
+      "endLine": 94,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hB : 48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 ≤\n      8 * C ^ 3 * (n : ℝ) ^ 2 * y ^ 2 := by\n    calc\n      _ = (8 * C ^ 3 * a ^ 2) * (6 * (n.choose 3 : ℝ)) := by ring\n      _ ≤ (8 * C ^ 3 * a ^ 2) * (n : ℝ) ^ 3 :=\n        mul_le_mul_of_nonneg_left hc3 (by positivity)\n      _ = 8 * C ^ 3 * ((n : ℝ) ^ 3 * a ^ 2) := by ring\n      _ = _ := by rw [ha2]; ring",
+      "literalSHA256": "f585679d37a8bad49c87454e9b97a75447c51ba8c15679484ef33d2f228cf8e7",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hE",
+      "startLine": 95,
+      "endLine": 102,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hE : 96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4 ≤\n      4 * C ^ 4 * (n : ℝ) ^ 2 * y ^ 4 := by\n    calc\n      _ = (16 * C ^ 4 * a ^ 4) * (6 * (n.choose 4 : ℝ)) := by ring\n      _ ≤ (16 * C ^ 4 * a ^ 4) * ((n : ℝ) ^ 4 / 4) :=\n        mul_le_mul_of_nonneg_left hc4 (by positivity)\n      _ = 4 * C ^ 4 * ((n : ℝ) ^ 4 * a ^ 4) := by ring\n      _ = _ := by rw [ha4]; ring",
+      "literalSHA256": "b276c7106be6e094a66cebf4807cf1ae782417090a301994c68b0c09dba2f6fa",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hAr",
+      "startLine": 103,
+      "endLine": 106,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hAr : 8 * C ^ 2 * (n.choose 2 : ℝ) ≤\n      4 * C ^ 2 * (n : ℝ) ^ 2 := by\n    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 8 * C ^ 2)\n    nlinarith only [hm]",
+      "literalSHA256": "3024772000fbd16cf5c7b2aa0528e7377c75d239588a723eb9aadc7d7a0dcc42",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 105,
+      "endLine": 105,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hm := mul_le_mul_of_nonneg_left hc2 (by positivity : 0 ≤ 8 * C ^ 2)",
+      "literalSHA256": "e527bac02aa71c2ea99e120a4c3cb7a17e5e47882c640c2dd10f0660245cae4c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(8*C^2)*(n.choose 2 : Real) <= (8*C^2)*((n : Real)^2/2)"
+    },
+    {
+      "name": "hF0",
+      "startLine": 107,
+      "endLine": 108,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hF0 : 2 * C ^ 2 ≤ 2 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [h24, mul_nonneg h40 hy40]",
+      "literalSHA256": "ef103d09db7ff02a37d6de0759d8e98511c9753b64a945c90d030d88cc2dec5f",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hF2",
+      "startLine": 109,
+      "endLine": 113,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hF2 : 8 * C ^ 3 * y ^ 2 ≤ 8 * C ^ 4 * (1 + y ^ 4) := by\n    calc\n      _ ≤ 8 * C ^ 4 * y ^ 2 :=\n        mul_le_mul_of_nonneg_right (by nlinarith only [h34]) hy20\n      _ ≤ _ := mul_le_mul_of_nonneg_left hy24 (by positivity)",
+      "literalSHA256": "f85f017a4dcdd0d1c05396aa39a6dad3e48c0006b5f71544684a453963f68e14",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hF4",
+      "startLine": 114,
+      "endLine": 115,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hF4 : 4 * C ^ 4 * y ^ 4 ≤ 4 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [h40]",
+      "literalSHA256": "23931ca56ce10e964e99f9ad667e1af9250b5b95b1f726194fd296da49198343",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hFp",
+      "startLine": 116,
+      "endLine": 118,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hFp : 2 * C ^ 2 + 8 * C ^ 3 * y ^ 2 + 4 * C ^ 4 * y ^ 4 ≤\n      14 * C ^ 4 * (1 + y ^ 4) := by\n    nlinarith only [hF0, hF2, hF4]",
+      "literalSHA256": "d712dee2b560ee502ab73fa4337280be9812dd05f644935715dff0fae6f91770",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hR0",
+      "startLine": 119,
+      "endLine": 119,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hR0 : 4 * C ^ 2 ≤ 4 * C ^ 4 := by nlinarith only [h24]",
+      "literalSHA256": "9c2ee4819ba8d97966db8e0e3b674641678658e9d3b57a1cdf1389a36303fd83",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hR2",
+      "startLine": 120,
+      "endLine": 121,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hR2 : 8 * C ^ 3 * y ^ 2 ≤ 8 * C ^ 4 * y ^ 2 :=\n    mul_le_mul_of_nonneg_right (by nlinarith only [h34]) hy20",
+      "literalSHA256": "bfa401ef36f0887255b8e4b29e9f27b372d55e0e6bbc85d2847c885ffba7d350",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hRp",
+      "startLine": 122,
+      "endLine": 124,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hRp : 4 * C ^ 2 + 8 * C ^ 3 * y ^ 2 ≤\n      14 * C ^ 4 * (1 + y ^ 2) := by\n    nlinarith only [hR0, hR2, h40, mul_nonneg h40 hy20]",
+      "literalSHA256": "71f14f52c204abf0990c1be6ff9de95f0baae662c7d459e8498f9bb28328c41f",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hAbs2",
+      "startLine": 146,
+      "endLine": 147,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hAbs2 : MemLp (fun z => |f z|) 2 P := by\n    simpa only [Real.norm_eq_abs] using hf.norm",
+      "literalSHA256": "b6781b148f65cb0532b636209453fff522aab1a5f6ffad49a044e9785f3a2f53",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hAbsI",
+      "startLine": 148,
+      "endLine": 149,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hAbsI : Integrable (fun z => |f z|) P :=\n    MemLp.integrable (by norm_num : (1 : ENNReal) ≤ 2) hAbs2",
+      "literalSHA256": "25e5da142cf2edef981e3b4dd7986105b9892175388cf09317f9b21ec367bfdb",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDiff2",
+      "startLine": 151,
+      "endLine": 152,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDiff2 : MemLp (fun z => |f z| - c) 2 P :=\n    hAbs2.sub (memLp_const c)",
+      "literalSHA256": "aebef19f03842eca9b503fbe839bc2f1d4559bc4feb25f70929d61845434c5e2",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hSqI",
+      "startLine": 153,
+      "endLine": 153,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hSqI : Integrable (fun z => |f z| ^ 2) P := hAbs2.integrable_sq",
+      "literalSHA256": "5b175f23eb461f04bdfd61d6f023f9b7b3971e1126eac2b0b0b7dc68df74bf85",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hLinI",
+      "startLine": 154,
+      "endLine": 155,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hLinI : Integrable (fun z => 2 * c * |f z|) P :=\n    hAbsI.const_mul (2 * c)",
+      "literalSHA256": "d4fdc178874ea467359e8d06775ae7e2d09de9e41c1d65d2c8476612954d8bc1",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hExpand",
+      "startLine": 156,
+      "endLine": 169,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hExpand : (∫ z, (|f z| - c) ^ 2 ∂P) =\n      (∫ z, f z ^ 2 ∂P) - c ^ 2 := by\n    calc\n      _ = ∫ z, (|f z| ^ 2 - 2 * c * |f z|) + c ^ 2 ∂P := by\n        apply integral_congr_ae\n        exact Filter.Eventually.of_forall fun z => by ring\n      _ = ((∫ z, |f z| ^ 2 ∂P) - 2 * c * (∫ z, |f z| ∂P)) + c ^ 2 := by\n        rw [integral_add (hSqI.sub hLinI) (integrable_const (c ^ 2)),\n          integral_sub hSqI hLinI, integral_const_mul, integral_const,\n          probReal_univ, one_smul]\n      _ = (∫ z, f z ^ 2 ∂P) - c ^ 2 := by\n        simp only [sq_abs]\n        change (∫ z, f z ^ 2 ∂P) - 2 * c * c + c ^ 2 = _\n        ring",
+      "literalSHA256": "036c76c2131f2ef2733c2a2b6062b9487d76542a91b661fa7fe3b4a93ee22b1e",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNonneg",
+      "startLine": 170,
+      "endLine": 171,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNonneg : 0 ≤ (∫ z, (|f z| - c) ^ 2 ∂P) :=\n    integral_nonneg fun z => sq_nonneg _",
+      "literalSHA256": "b80d2717647eb1cd5c90ff706a085bd1ac83783bd2aabf55464cb2e8d57df763",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hn3",
+      "startLine": 281,
+      "endLine": 281,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hn3 : 3 ≤ n := le_trans (by norm_num) hn",
+      "literalSHA256": "384223ae4d8213d93dd39941113c7eb4d5604c3e0d5beefe471fc5541e304b07",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hy0",
+      "startLine": 282,
+      "endLine": 282,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hy0 : 0 ≤ y := le_trans (by norm_num) hy",
+      "literalSHA256": "136d24573af3b2671ca38b27ee78d8d6ec36f414c246442cdd2accc02759852c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "source",
+      "startLine": 283,
+      "endLine": 284,
+      "literalCompleteTypedOrAppliedProofBlock": "  have source := ActualQuadraticTiltMoments.actual_quadratic_source_moments\n    μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3 y hy0 hwindow",
+      "literalSHA256": "ffee7fc477772e6ecb931573dfa783d0fd800cbdf7df7d605935b9eef4afc709",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hN4",
+      "startLine": 292,
+      "endLine": 292,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hN4 : (4 : ℝ) ≤ N := by exact_mod_cast hn",
+      "literalSHA256": "e2034877c655fca181eb06ce3ed464ffa56485e4dbf5b152ed8d200ab1b717f1",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNpos",
+      "startLine": 293,
+      "endLine": 293,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNpos : 0 < N := lt_of_lt_of_le (by norm_num) hN4",
+      "literalSHA256": "019172fe80b848f48e4b9fb0d1b429d0415c00121391b7de5ff79e3e50c4d38a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hqpos",
+      "startLine": 294,
+      "endLine": 294,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hqpos : 0 < q := Real.sqrt_pos.2 hNpos",
+      "literalSHA256": "3519aae54fa9c24500b17b9ab2c344446cc340682933edda01c6d5a6cfa5cf88",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNm1",
+      "startLine": 295,
+      "endLine": 295,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNm1 : 0 < N - 1 := by linarith only [hN4]",
+      "literalSHA256": "4e32699c2c08a1f76eb34949186089e1ea163c2c38bbcc899e059d2dd9e074ee",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNm2",
+      "startLine": 296,
+      "endLine": 296,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNm2 : 0 < N - 2 := by linarith only [hN4]",
+      "literalSHA256": "e0748f4a326171c6c94e4cffbdf68791d26b5c056286d757f1dd2ec9f0d126dc",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hdD",
+      "startLine": 297,
+      "endLine": 297,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hdD : 0 < dD := mul_pos hqpos hNm1",
+      "literalSHA256": "1c4928cbf4793badf0791b84c6d0631b917bca0ccd41097ed4463954b10171fc",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hdJ",
+      "startLine": 298,
+      "endLine": 298,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hdJ : 0 < dJ := sq_pos_of_pos hNm2",
+      "literalSHA256": "588f97c171092ff713e89d848fe9d3ed4948d142dcf35dd120677d24fa90d651",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hCpos",
+      "startLine": 299,
+      "endLine": 299,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hCpos : 0 < C := Real.exp_pos _",
+      "literalSHA256": "76683b6f58a65d73c2baf48b31f1e61d0a71f0ced5e5f60d16737d0a4c5857e6",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hC1",
+      "startLine": 300,
+      "endLine": 302,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hC1 : 1 ≤ C := by\n    dsimp only [C]\n    exact Real.one_le_exp (by norm_num)",
+      "literalSHA256": "679fbffbab786af5092a38c27f703e80e45b26bf8e6a42ca4e07b7b0e2c6ee3c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hrho",
+      "startLine": 303,
+      "endLine": 303,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hrho : 0 ≤ rho := Real.sqrt_nonneg v",
+      "literalSHA256": "896f35e37f0b307e1ffdba8df459a29465f680a44c8886b514fd235b3194de00",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hrhosq",
+      "startLine": 304,
+      "endLine": 304,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hrhosq : rho ^ 2 = v := Real.sq_sqrt hv",
+      "literalSHA256": "fe7476e6f10c60d00febcfaa0c3b5a814a911aeac3b045ebf289a99deb2d508a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hrsecond",
+      "startLine": 305,
+      "endLine": 307,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hrsecond : (∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)) ≤ rho ^ 2 := by\n    change v ≤ rho ^ 2\n    exact hrhosq.ge",
+      "literalSHA256": "0f8dbcdb38f12bd9ceb2210dbf675b15342170e0437ad9da13f69b05f3bf6d62",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "ha",
+      "startLine": 308,
+      "endLine": 308,
+      "literalCompleteTypedOrAppliedProofBlock": "  have ha : 0 ≤ a := div_nonneg hy0 (Real.sqrt_nonneg _)",
+      "literalSHA256": "93e5d7cd5e54c6ecedc3a01798944beb69319a8f7bc44171c53de244db30d98a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hepsilon",
+      "startLine": 309,
+      "endLine": 310,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hepsilon : 0 ≤ 2 * C * a :=\n    mul_nonneg (mul_nonneg (by norm_num) hCpos.le) ha",
+      "literalSHA256": "db8a84cacd4ff859c6c23cb471ac6b98d2abab6e7daaa411446815a4b322c27e",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hdelta",
+      "startLine": 311,
+      "endLine": 314,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hdelta : (∫ o, (L o - 1) ^ 2 ∂μ) ≤ (2 * C * a) ^ 2 := by\n    calc\n      _ ≤ 4 * C ^ 2 * a ^ 2 := hdeltaBd\n      _ = _ := by ring",
+      "literalSHA256": "e806fd58e7e5504d247f354ff6fb26feceaf8c846bcddb7406db77fe953eb94e",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hFgen",
+      "startLine": 315,
+      "endLine": 318,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hFgen := FiniteTiltedMoments.unordered_pair_sum_second_moment\n    μ r hr hr2 hrsymm hrcan rho hrho hrsecond L hL (2 * C)\n    (fun o => (hLb o).1.le) (fun o => (hLb o).2) hLmass\n    (2 * C * a) hepsilon hdelta n",
+      "literalSHA256": "e1c04fc962810b580a621f16693bd0398b2b4b8ea5eca17fd874a11d2e168cf2",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hRgen",
+      "startLine": 320,
+      "endLine": 323,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hRgen := FiniteTiltedMoments.row_square_sum_moment\n    μ r hr hr2 hrsymm hrcan rho hrho hrsecond L hL (2 * C)\n    (fun o => (hLb o).1.le) (fun o => (hLb o).2) hLmass\n    (2 * C * a) hepsilon hdelta n",
+      "literalSHA256": "73c8dff5cf503081e87cb55fe46a2c9afd03d2a724432cecc24d94ff8b5fbd8f",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hFchoose",
+      "startLine": 333,
+      "endLine": 341,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hFchoose : (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ rho ^ 2 *\n      (4 * C ^ 2 * (n.choose 2 : ℝ) +\n        48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n        96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) := by\n    calc\n      _ ≤ ((n.choose 2 : ℝ) * (2 * C) ^ 2 +\n          6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2 +\n          6 * (n.choose 4 : ℝ) * (2 * C * a) ^ 4) * rho ^ 2 := hFbound\n      _ = _ := by ring",
+      "literalSHA256": "2fbc53f4d8b544de232f81783bace314cc2a5376d2246e132492ca84306df9a4",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hRchoose",
+      "startLine": 342,
+      "endLine": 348,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hRchoose : (∫ ξ, Λsq ξ ∂Pₐ) ≤ rho ^ 2 *\n      (8 * C ^ 2 * (n.choose 2 : ℝ) +\n        48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) := by\n    calc\n      _ ≤ (2 * (n.choose 2 : ℝ) * (2 * C) ^ 2 +\n          6 * (n.choose 3 : ℝ) * (2 * C) * (2 * C * a) ^ 2) * rho ^ 2 := hRbound\n      _ = _ := by ring",
+      "literalSHA256": "ad6e13a3627f4d601c76c666575b0cb6f3367307a8e43a8545fb8c600df4b103",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hFfinal",
+      "startLine": 350,
+      "endLine": 359,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hFfinal : (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n      14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 4) := by\n    calc\n      _ ≤ rho ^ 2 *\n          (4 * C ^ 2 * (n.choose 2 : ℝ) +\n            48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n            96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) := hFchoose\n      _ ≤ rho ^ 2 * (14 * C ^ 4 * N ^ 2 * (1 + y ^ 4)) :=\n        mul_le_mul_of_nonneg_left hFcoef (sq_nonneg rho)\n      _ = _ := by ring",
+      "literalSHA256": "ad1071513baaf7f384c7a87bd4aea5bca9057e07162ef2f46ec0669d3fc9f17d",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hRfinal",
+      "startLine": 360,
+      "endLine": 368,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hRfinal : (∫ ξ, Λsq ξ ∂Pₐ) ≤\n      14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 2) := by\n    calc\n      _ ≤ rho ^ 2 *\n          (8 * C ^ 2 * (n.choose 2 : ℝ) +\n            48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) := hRchoose\n      _ ≤ rho ^ 2 * (14 * C ^ 4 * N ^ 2 * (1 + y ^ 2)) :=\n        mul_le_mul_of_nonneg_left hRcoef (sq_nonneg rho)\n      _ = _ := by ring",
+      "literalSHA256": "420a9b491bc0aa653fad366dfa771b8b3c96561e76fa7fda20b76336513c6a20",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hJpoint",
+      "startLine": 369,
+      "endLine": 373,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hJpoint : ∀ ξ, J ξ = Λsq ξ / dJ := by\n    intro ξ\n    dsimp only [J, u, Λsq, dJ, N]\n    simp_rw [div_pow]\n    rw [← Finset.sum_div]",
+      "literalSHA256": "135b01c538380bb48b62b2079bbcc16c6195ba072623f0730fb1d03d9c9966ec",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hJfun",
+      "startLine": 374,
+      "endLine": 374,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hJfun : J = (fun ξ => Λsq ξ / dJ) := funext hJpoint",
+      "literalSHA256": "ebe59c6b3f87c9a5551cb64bad43d5fa66eac60c9d36d0a9713d2b31c57d0075",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hJI",
+      "startLine": 375,
+      "endLine": 377,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hJI : Integrable J Pₐ := by\n    rw [hJfun]\n    exact hLambdaI.div_const dJ",
+      "literalSHA256": "227e86dc34e1ba5bc25b0ab9b53acd9e33df6836a89bd1dbef801d7bc8dd75e4",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hJintegral",
+      "startLine": 378,
+      "endLine": 380,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hJintegral : (∫ ξ, J ξ ∂Pₐ) = (∫ ξ, Λsq ξ ∂Pₐ) / dJ := by\n    rw [hJfun]\n    simp only [div_eq_mul_inv, integral_mul_const]",
+      "literalSHA256": "453789ddaff8bfa74b2b86a7d38ea75d04f226a116b0851924d81ec8e0132b34",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNtw",
+      "startLine": 381,
+      "endLine": 381,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNtw : N ≤ 2 * (N - 2) := by linarith only [hN4]",
+      "literalSHA256": "5deba1c2cc7dad7e8fd1abff6f5d7f71ca8b196d7a956717bca67b40c31251d9",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNsquareRatio",
+      "startLine": 382,
+      "endLine": 384,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNsquareRatio : N ^ 2 ≤ 4 * (N - 2) ^ 2 := by\n    have hs := pow_le_pow_left₀ hNpos.le hNtw 2\n    nlinarith only [hs]",
+      "literalSHA256": "618b7abcd9fde49ca358468044971d493d05adaf1470d5512b9d8240f9da2144",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hs",
+      "startLine": 383,
+      "endLine": 383,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hs := pow_le_pow_left₀ hNpos.le hNtw 2",
+      "literalSHA256": "b99c01920096ef6097456ba78503659da378e105e8ba7cb589efdb6f7fd3e92a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "N^2 <= (2*(N-2))^2"
+    },
+    {
+      "name": "hJbound",
+      "startLine": 385,
+      "endLine": 394,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hJbound : (∫ ξ, J ξ ∂Pₐ) ≤ 56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) := by\n    rw [hJintegral]\n    apply (div_le_iff₀ hdJ).2\n    calc\n      _ ≤ 14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 2) := hRfinal\n      _ ≤ 56 * C ^ 4 * rho ^ 2 * (1 + y ^ 2) * dJ := by\n        have hm := mul_le_mul_of_nonneg_left hNsquareRatio\n          (by positivity : 0 ≤ 14 * C ^ 4 * rho ^ 2 * (1 + y ^ 2))\n        dsimp only [dJ]\n        nlinarith only [hm]",
+      "literalSHA256": "05d35cf08481c56499c5f148aff1e33c614a792442651419eb0f454dc631937a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 391,
+      "endLine": 392,
+      "literalCompleteTypedOrAppliedProofBlock": "        have hm := mul_le_mul_of_nonneg_left hNsquareRatio\n          (by positivity : 0 ≤ 14 * C ^ 4 * rho ^ 2 * (1 + y ^ 2))",
+      "literalSHA256": "daa2a7848a9855b27d1817b445ee2a189c237cc5623f63fe7bf66f39de550ea8",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(14*C^4*rho^2*(1+y^2))*N^2 <= (14*C^4*rho^2*(1+y^2))*(4*(N-2)^2)"
+    },
+    {
+      "name": "hFI1",
+      "startLine": 396,
+      "endLine": 397,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hFI1 : Integrable F Pₐ :=\n    MemLp.integrable (by norm_num : (1 : ENNReal) ≤ 2) hF2",
+      "literalSHA256": "9e82bd133679851a9c49e3799da0da2007f17b0d908674d07b0b31c00b5adece",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hLFnonneg",
+      "startLine": 398,
+      "endLine": 398,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hLFnonneg : 0 ≤ LF := integral_nonneg fun ξ => abs_nonneg _",
+      "literalSHA256": "f932420626cd3f64b6b3c3d68f8f73eef3c2f251ff6a987dbdffe478aa12fb9c",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hTFnonneg",
+      "startLine": 399,
+      "endLine": 399,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hTFnonneg : 0 ≤ TF := by dsimp only [TF]; positivity",
+      "literalSHA256": "364d7bc5b517416206fe7015997cefb28438458b37f1aa3ba29f95667b2edbb1",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hpolysq",
+      "startLine": 400,
+      "endLine": 401,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hpolysq : 14 * (1 + y ^ 4) ≤ 16 * (1 + y ^ 2) ^ 2 := by\n    nlinarith only [sq_nonneg y, sq_nonneg (y ^ 2)]",
+      "literalSHA256": "4cbbb36697104dfc0fb36336c1bc0d34ac8833bb474edf426f226eae856d5a90",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hLFsqTF",
+      "startLine": 402,
+      "endLine": 410,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hLFsqTF : LF ^ 2 ≤ TF ^ 2 := by\n    calc\n      _ ≤ ∫ ξ, F ξ ^ 2 ∂Pₐ := hLFsq\n      _ ≤ 14 * C ^ 4 * rho ^ 2 * N ^ 2 * (1 + y ^ 4) := hFfinal\n      _ ≤ TF ^ 2 := by\n        have hm := mul_le_mul_of_nonneg_left hpolysq\n          (by positivity : 0 ≤ C ^ 4 * rho ^ 2 * N ^ 2)\n        dsimp only [TF]\n        nlinarith only [hm]",
+      "literalSHA256": "91f477c43b6b043b32a76003b929c3bda428bbd85f5d14b41111e13543ef8316",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 407,
+      "endLine": 408,
+      "literalCompleteTypedOrAppliedProofBlock": "        have hm := mul_le_mul_of_nonneg_left hpolysq\n          (by positivity : 0 ≤ C ^ 4 * rho ^ 2 * N ^ 2)",
+      "literalSHA256": "be85272aec2259a704d442eee4a34d45084c397b3aa4182137356861a9f088cc",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(C^4*rho^2*N^2)*(14*(1+y^4)) <= (C^4*rho^2*N^2)*(16*(1+y^2)^2)"
+    },
+    {
+      "name": "hLFle",
+      "startLine": 411,
+      "endLine": 417,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hLFle : LF ≤ TF := by\n    by_contra hnot\n    have hlt : TF < LF := lt_of_not_ge hnot\n    have hd : 0 < LF - TF := sub_pos.mpr hlt\n    have hs : 0 < LF + TF := by linarith only [hlt, hTFnonneg]\n    have hp : 0 < (LF - TF) * (LF + TF) := mul_pos hd hs\n    nlinarith only [hp, hLFsqTF]",
+      "literalSHA256": "983969063e2266263a7e092a6b6116e17199d81a43e98dc0aa996e114c75598a",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hlt",
+      "startLine": 413,
+      "endLine": 413,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hlt : TF < LF := lt_of_not_ge hnot",
+      "literalSHA256": "dc50a74b6ecc0f6c143b228869c7476cda9b24c6c6d6efc06a8e114055b2c535",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hd",
+      "startLine": 414,
+      "endLine": 414,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hd : 0 < LF - TF := sub_pos.mpr hlt",
+      "literalSHA256": "13e8a00e52fb5833bbf5a7b4680641b5fffab58171fbb76f7c5da0dfea0ad4f8",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hs",
+      "startLine": 415,
+      "endLine": 415,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hs : 0 < LF + TF := by linarith only [hlt, hTFnonneg]",
+      "literalSHA256": "0461811358e98b5533bdb1c5788c82c23ac16214698f1e7e119868c0d583df71",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hp",
+      "startLine": 416,
+      "endLine": 416,
+      "literalCompleteTypedOrAppliedProofBlock": "    have hp : 0 < (LF - TF) * (LF + TF) := mul_pos hd hs",
+      "literalSHA256": "5b6928c5b1b1269a84240622868b0d6b565309b23b44b1403b85aab89aa10447",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDI",
+      "startLine": 418,
+      "endLine": 420,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDI : Integrable D Pₐ := by\n    change Integrable (fun ξ => F ξ / dD) Pₐ\n    exact hFI1.div_const dD",
+      "literalSHA256": "8fd40b6d3b4bd7593d154586530430ecf63718b02d3581d8e3aa9f2fe9bf0737",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDabsI",
+      "startLine": 421,
+      "endLine": 422,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDabsI : Integrable (fun ξ => |D ξ|) Pₐ := by\n    simpa only [Real.norm_eq_abs] using hDI.norm",
+      "literalSHA256": "d16472e9d65c0a65739d4841d2cb99b421190c9c715ce9ee8b86db137d1ce630",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDpoint",
+      "startLine": 423,
+      "endLine": 426,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDpoint : ∀ ξ, |D ξ| = |F ξ| / dD := by\n    intro ξ\n    change |F ξ / dD| = |F ξ| / dD\n    rw [abs_div, abs_of_pos hdD]",
+      "literalSHA256": "910d8cdafede76141e8657473c79d5d84d3270920a63e96225a7ddfd08c86887",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDintegral",
+      "startLine": 427,
+      "endLine": 431,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDintegral : (∫ ξ, |D ξ| ∂Pₐ) = LF / dD := by\n    calc\n      _ = ∫ ξ, |F ξ| / dD ∂Pₐ :=\n        integral_congr_ae (Filter.Eventually.of_forall hDpoint)\n      _ = LF / dD := by simp only [div_eq_mul_inv, integral_mul_const, LF]",
+      "literalSHA256": "53174a9abe58a79babf8b3bb7f4263e1eef1cde3e4a9c969628e3201946840ae",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hNratio",
+      "startLine": 432,
+      "endLine": 432,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hNratio : N ≤ 2 * (N - 1) := by linarith only [hN4]",
+      "literalSHA256": "49051d6bb8bb5c6beca68c49188f8e8bc8adb3a51ebe6615335ec7c7c525b9af",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hDbound",
+      "startLine": 433,
+      "endLine": 449,
+      "literalCompleteTypedOrAppliedProofBlock": "  have hDbound : (∫ ξ, |D ξ| ∂Pₐ) ≤\n      8 * C ^ 2 * rho * (1 + y ^ 2) / q := by\n    rw [hDintegral]\n    apply (div_le_iff₀ hdD).2\n    calc\n      LF ≤ TF := hLFle\n      _ ≤ (8 * C ^ 2 * rho * (1 + y ^ 2) / q) * dD := by\n        have hm := mul_le_mul_of_nonneg_left hNratio\n          (by positivity : 0 ≤ 4 * C ^ 2 * rho * (1 + y ^ 2))\n        have heq : (8 * C ^ 2 * rho * (1 + y ^ 2) / q) * dD =\n            8 * C ^ 2 * rho * (1 + y ^ 2) * (N - 1) := by\n          dsimp only [dD]\n          field_simp [ne_of_gt hqpos]\n          <;> ring\n        rw [heq]\n        dsimp only [TF]\n        nlinarith only [hm]",
+      "literalSHA256": "b58c42f3f056aeaf8aa044352dbb4c028f02ab0f105066e04f5565d00c971085",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    },
+    {
+      "name": "hm",
+      "startLine": 440,
+      "endLine": 441,
+      "literalCompleteTypedOrAppliedProofBlock": "        have hm := mul_le_mul_of_nonneg_left hNratio\n          (by positivity : 0 ≤ 4 * C ^ 2 * rho * (1 + y ^ 2))",
+      "literalSHA256": "6eba71e1438f08897b481fcb755a8bd6316b764b5eb300eb0e9a51c4bc4ce7c5",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true,
+      "independentlyExpandedInferredPropType": "(4*C^2*rho*(1+y^2))*N <= (4*C^2*rho*(1+y^2))*(2*(N-1))"
+    },
+    {
+      "name": "heq",
+      "startLine": 442,
+      "endLine": 446,
+      "literalCompleteTypedOrAppliedProofBlock": "        have heq : (8 * C ^ 2 * rho * (1 + y ^ 2) / q) * dD =\n            8 * C ^ 2 * rho * (1 + y ^ 2) * (N - 1) := by\n          dsimp only [dD]\n          field_simp [ne_of_gt hqpos]\n          <;> ring",
+      "literalSHA256": "236a873b771dde6f6741f2d7d84f87bcffa7fd2e3c0af8e3631b66316acaaed5",
+      "effectiveContext": "Complete containing declaration, inherited lexical lets, and all preceding in-scope Prop proofs; bound variables introduced locally are scoped normally",
+      "kind": "Prop proof, no new assumption",
+      "reviewed": true
+    }
+  ],
+  "inferredPropositions": {
+    "h2_h3_h4": "Nat.choose_le_pow_div (alpha=Real) at2,3,4 with exact scalar effective context from pinned complete head; numeric factorial reductions read",
+    "source": "Complete actual140 public TYPE instantiated at mu,h,hh,hh2,hhsymm,hcenter,hprojectionsecond,n,hn3,y,hy0,hwindow; full conjunction/effective lets bound through direct TYPE dictionary",
+    "hFgen_hRgen": "Complete actual139 pair/row TYPEs instantiated at unchanged mu,r,hr,hr2,hrsymm,hrcan,rho,hrho,hrsecond,L,hL,2*C,nonnegativeL,boundedL,hLmass,2*C*a,hepsilon,hdelta,n; all six conjunction outputs read",
+    "hm_hs": "Each literal theorem application and its whole proof scope recorded in derivedPropSourceBlocks; ordinary scalar Prop side facts only"
+  },
+  "destructuredPropGroups": [
+    {
+      "lines": [
+        285,
+        290
+      ],
+      "origin": "exact full actual140 TYPE and local instantiated source proof",
+      "allOutputOrderAndTypesRead": true,
+      "sixOldScaleSensitiveBoundsDiscarded": true
+    },
+    {
+      "line": 319,
+      "origin": "actual139pair",
+      "firstFiveUnusedConjunctsRead": true,
+      "boundRead": true
+    },
+    {
+      "line": 324,
+      "origin": "actual139row",
+      "firstFiveUnusedConjunctsRead": true,
+      "boundRead": true
+    },
+    {
+      "line": 349,
+      "origin": "newH02",
+      "outputs": "both complete scalar coefficient bounds"
+    },
+    {
+      "line": 395,
+      "origin": "newH03",
+      "outputs": "Integrable absF and LF squared <=integral F squared"
+    }
+  ],
+  "anonymousH03Data": [
+    {
+      "type": "X -> Real",
+      "value": "fun z => |f z|",
+      "captures": [
+        "X",
+        "f"
+      ]
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun _ => c",
+      "captures": [
+        "X",
+        "c"
+      ],
+      "origin": "memLp_const c"
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun z => |f z|-c",
+      "captures": [
+        "X",
+        "f",
+        "c"
+      ]
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun z => (|f z|-c)^2",
+      "captures": [
+        "X",
+        "f",
+        "c"
+      ]
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun z => |f z|^2",
+      "captures": [
+        "X",
+        "f"
+      ]
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun z => 2*c*|f z|",
+      "captures": [
+        "X",
+        "f",
+        "c"
+      ]
+    },
+    {
+      "type": "X -> Real",
+      "value": "fun _ => c^2",
+      "captures": [
+        "X",
+        "c"
+      ],
+      "origin": "integrable_const (c^2)"
+    }
+  ],
+  "allOtherAnonymousClosures": "All sample, pair, row, square, abs, density, finite-sum and fixed scalar functions are literal in the complete source/heads; each binder/capture/context was read, not inferred from author counts. Tactic-generated owners are not yet enumerated.",
+  "directOldTYPECoverage": [
+    {
+      "name": "Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments",
+      "sha256": "d7cf963877f0914c7bc2e4e2d59ede1643d58ec009054c99d440876954d9f2f9",
+      "bytes": 162125,
+      "lines": 1631,
+      "exactRoundTrip": true,
+      "completeDictionaryAndPositionStreamReviewed": true
+    },
+    {
+      "name": "Shao.OQ6.FiniteTiltedMoments.row_square_sum_moment",
+      "sha256": "d2b0a5233ca4ad412628c54db7496ce5e6ea934d1c12bf9718f68cc5101fc587",
+      "bytes": 19004,
+      "lines": 262,
+      "exactRoundTrip": true,
+      "completeDictionaryAndPositionStreamReviewed": true
+    },
+    {
+      "name": "Shao.OQ6.FiniteTiltedMoments.unordered_pair_sum_second_moment",
+      "sha256": "d98cb3d890b2378cfb8dfccf080a2fd4c32a993d43d9aa5dc4302f3c98626030",
+      "bytes": 21810,
+      "lines": 299,
+      "exactRoundTrip": true,
+      "completeDictionaryAndPositionStreamReviewed": true
+    }
+  ],
+  "oldInterfaces": [
+    {
+      "name": "Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments",
+      "unit": 140,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit140/qualified-evidence.json",
+        "sha256": "cce196803b7e95fc88f8b59f6f49c3ee8e7e8b85cb7bfa1e001b3b3996712275",
+        "bytes": 19539
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/ActualQuadraticTiltMoments.olean",
+        "sha256": "deb3d07e617f7a56215ceffbd3e2472730fe0597f34d719cd9a3fee50da6cb00",
+        "bytes": 2412656,
+        "mtime_ns": "1792811490014939125"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit140/successor-review-01/final-object-review-01/owned-object-evidence.json",
+        "sha256": "b23a89bd84de6acb9db7276a17eef7309e9f9616597a30c78442f7dd4f7bd98b",
+        "bytes": 213162
+      },
+      "actualTypeSHA256": "d7cf963877f0914c7bc2e4e2d59ede1643d58ec009054c99d440876954d9f2f9",
+      "actualTypeBytes": 162125,
+      "actualTypeLines": 1631,
+      "localPayloadHashExact": true,
+      "actualTypeSemanticReview": "COMPLETE_WITH_LOSSLESS_EXACT_REPETITION_REUSE",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.FiniteTiltedMoments.unordered_pair_sum_second_moment",
+      "unit": 139,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/FiniteTiltedMoments.lean",
+        "sha256": "b0a34e401746e2b4637a4ff317f3b082de9b302b1fb0f04995afa9cbd2dcf2b7",
+        "bytes": 36372
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit139/qualified-evidence.json",
+        "sha256": "77d18efd2d4cd40003d7d4579705825d29a32ec0d1e74082c6edab51a700ed0b",
+        "bytes": 17121
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/FiniteTiltedMoments.olean",
+        "sha256": "631b9718c2c0aa67c6e611e4831adb3202b7d21ce3885bdd14cd265d814b4a95",
+        "bytes": 1397848,
+        "mtime_ns": "1792806573732545722"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit139/successor-review-01/final-object-review-01/owned-object-evidence.json",
+        "sha256": "e18222489ade087c33d96c31baaec3d3255300359c36338165c5c91e33af9784",
+        "bytes": 212601
+      },
+      "actualTypeSHA256": "d98cb3d890b2378cfb8dfccf080a2fd4c32a993d43d9aa5dc4302f3c98626030",
+      "actualTypeBytes": 21810,
+      "actualTypeLines": 299,
+      "localPayloadHashExact": true,
+      "actualTypeSemanticReview": "COMPLETE_WITH_LOSSLESS_EXACT_REPETITION_REUSE",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.FiniteTiltedMoments.row_square_sum_moment",
+      "unit": 139,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/FiniteTiltedMoments.lean",
+        "sha256": "b0a34e401746e2b4637a4ff317f3b082de9b302b1fb0f04995afa9cbd2dcf2b7",
+        "bytes": 36372
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit139/qualified-evidence.json",
+        "sha256": "77d18efd2d4cd40003d7d4579705825d29a32ec0d1e74082c6edab51a700ed0b",
+        "bytes": 17121
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/FiniteTiltedMoments.olean",
+        "sha256": "631b9718c2c0aa67c6e611e4831adb3202b7d21ce3885bdd14cd265d814b4a95",
+        "bytes": 1397848,
+        "mtime_ns": "1792806573732545722"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit139/successor-review-01/final-object-review-01/owned-object-evidence.json",
+        "sha256": "e18222489ade087c33d96c31baaec3d3255300359c36338165c5c91e33af9784",
+        "bytes": 212601
+      },
+      "actualTypeSHA256": "d2b0a5233ca4ad412628c54db7496ce5e6ea934d1c12bf9718f68cc5101fc587",
+      "actualTypeBytes": 19004,
+      "actualTypeLines": 262,
+      "localPayloadHashExact": true,
+      "actualTypeSemanticReview": "COMPLETE_WITH_LOSSLESS_EXACT_REPETITION_REUSE",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.CanonicalTilt.pair_contraction",
+      "unit": 136,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalTilt.lean",
+        "sha256": "6d7709cf90b9e746251155221788e634e3ded8ede2700cc34bdf86355165fa23",
+        "bytes": 20664
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit136/qualified-evidence.json",
+        "sha256": "7a6c1b6f008e104eac86dfb2e9bb400c0c0c7306873f386184681a33d72945f9",
+        "bytes": 13362
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/CanonicalTilt.olean",
+        "sha256": "d731862ea0297daeb0d82e07e4c1b94d44c91e1515f0d73c2d211690b2132a48",
+        "bytes": 637240,
+        "mtime_ns": "1792801616114266772"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit136/successor-review-01/owned-object-metadata.json",
+        "sha256": "1923c0ad6a346394dc2f853d33200c2d646cfb67a3ebb2034eedc56ad2c134a9",
+        "bytes": 109052
+      },
+      "actualTypeSHA256": "35888639628e4fa65b9e6d1e914bc9fa39c3a547cdaf20530e522d72ad40e35c",
+      "actualTypeBytes": 26329,
+      "actualTypeLines": 350,
+      "localPayloadHashExact": false,
+      "actualTypeSemanticReview": "SECONDARY_HEADER_CONTEXT_ONLY_PRIOR_QUALIFIED_TYPE_REUSED",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.CanonicalTilt.section_contraction",
+      "unit": 136,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalTilt.lean",
+        "sha256": "6d7709cf90b9e746251155221788e634e3ded8ede2700cc34bdf86355165fa23",
+        "bytes": 20664
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit136/qualified-evidence.json",
+        "sha256": "7a6c1b6f008e104eac86dfb2e9bb400c0c0c7306873f386184681a33d72945f9",
+        "bytes": 13362
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/CanonicalTilt.olean",
+        "sha256": "d731862ea0297daeb0d82e07e4c1b94d44c91e1515f0d73c2d211690b2132a48",
+        "bytes": 637240,
+        "mtime_ns": "1792801616114266772"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit136/successor-review-01/owned-object-metadata.json",
+        "sha256": "1923c0ad6a346394dc2f853d33200c2d646cfb67a3ebb2034eedc56ad2c134a9",
+        "bytes": 109052
+      },
+      "actualTypeSHA256": "6b6bdbb365d091883205051762dc697236a7b03ae787137eed5ab5790be05cb9",
+      "actualTypeBytes": 42096,
+      "actualTypeLines": 535,
+      "localPayloadHashExact": false,
+      "actualTypeSemanticReview": "SECONDARY_HEADER_CONTEXT_ONLY_PRIOR_QUALIFIED_TYPE_REUSED",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.QuadraticTilt.normalizer_density_L2",
+      "unit": 134,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/QuadraticTilt.lean",
+        "sha256": "8d699d267afed1d0617127e45efb0820e46ecd1bb123aaed24a11094a474629b",
+        "bytes": 10065
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit134/lead-qualified-final-acceptance-01.json",
+        "sha256": "1b3225a59300f3c40d2e41dd5de0e4995ee8c1b4aaa2e5af104dc08c048b8613",
+        "bytes": 5165
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/QuadraticTilt.olean",
+        "sha256": "ff210df9416616498a453b39cc36f623e24b9687328d15cee5406fbdc2160ecf",
+        "bytes": 684616,
+        "mtime_ns": "1792799372196477195"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit134/successor-review-01/owned-expression-coverage.json",
+        "sha256": "702aa34dd8bd01694488533ab753dfafd4c47992b402fb95b5d0671cd57982dd",
+        "bytes": 56842
+      },
+      "actualTypeSHA256": "36f7875d14c96230697b8f8b3a2762771b77b5ea5a8d4a0c4d8aab3823d7273a",
+      "actualTypeBytes": 17108,
+      "actualTypeLines": 235,
+      "localPayloadHashExact": false,
+      "actualTypeSemanticReview": "SECONDARY_HEADER_CONTEXT_ONLY_PRIOR_QUALIFIED_TYPE_REUSED",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    },
+    {
+      "name": "Shao.OQ6.PartialObservationTilt.actual_quadratic_partial_source_transport",
+      "unit": 141,
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/PartialObservationTilt.lean",
+        "sha256": "b448bf02e7983c25d4b3635009762153d4aa6b459c10b69df647c71a3910325d",
+        "bytes": 30847
+      },
+      "qualification": {
+        "path": "C:/game/shao lean/drafts/oq56/unit141/qualified-evidence.json",
+        "sha256": "f56a33ae08638887314872bf3542b5a7dca78a710429cde871dffae5ec894e09",
+        "bytes": 17667
+      },
+      "existingOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/PartialObservationTilt.olean",
+        "sha256": "a6d355cb93fcdb4852dea5f6f9d89b9c6e41023304bd1f72bc44388ab528f465",
+        "bytes": 3124032,
+        "mtime_ns": "1792815170060754030"
+      },
+      "actualTYPEAuthority": {
+        "path": "C:/game/shao lean/drafts/oq56/unit141/successor-review-01/final-object-review-01/owned-object-evidence.json",
+        "sha256": "41dcabe473e9f3ea2c95d0fa81360bad9ce916608b93af31fc853b52d742cdf1",
+        "bytes": 156558
+      },
+      "actualTypeSHA256": "9b1a17ffdce79cc7baa0befedb03fdf35f999ecb41084ff03cc9ef65a3955b0d",
+      "actualTypeBytes": 67921,
+      "actualTypeLines": 782,
+      "localPayloadHashExact": true,
+      "actualTypeSemanticReview": "SECONDARY_HEADER_CONTEXT_ONLY_PRIOR_QUALIFIED_TYPE_REUSED",
+      "oldProofReviewReused": true,
+      "newOldProofReview": false,
+      "remoteObjectObservedThisReview": false
+    }
+  ],
+  "losslessTYPEReviewMethod": "Lossless exact line-content dictionary with separate literal leading-space count. No expression or context omitted; full byte-for-byte string round-trip.",
+  "dictionaryDistinctLineContents": 450,
+  "oldFullProofsReviewedAgain": false,
+  "P35Decision": {
+    "sourceBodyAndCompleteContextRead": true,
+    "qualifiedActual139140ExplicitApplicationsRead": true,
+    "standaloneReflectedTYPEVALUEPacketPresent": false,
+    "newP35UnfoldOrProofCall": false,
+    "sourceOnlyDecisionIndependentlyAccepted": true,
+    "noMathematicalDataGap": true,
+    "newElaborationAndAllOwnedAuditPending": true
+  },
+  "machineOwnerCount": null,
+  "newActualTypesReviewed": false,
+  "newActualNonTheoremValuesReviewed": false,
+  "recursiveAxiomsReviewedForNewSource": false,
+  "acceptedForNative": true,
+  "qualified": false,
+  "standardClassicalContext": {
+    "line": 250,
+    "command": "classical",
+    "effect": "Standard classical decidability instances; no substantive mathematical premise or new source-declared data head",
+    "actualElaboratedDependences": "Pending same-first-object all-owner recursive axiom audit"
+  }
+}
