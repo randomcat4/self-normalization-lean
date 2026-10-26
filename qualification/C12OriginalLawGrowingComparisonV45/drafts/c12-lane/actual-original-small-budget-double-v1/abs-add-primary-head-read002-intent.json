@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "from pathlib import Path\nimport subprocess,json\nroot=Path(\"/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib\")\np=subprocess.run([\"rg\",\"-n\",r\"(?:theorem|lemma).*\\babs_add(?:[ \\t:(]|$)|to_additive[^\\n]*\\babs_add(?:[ \\t:\\]]|$)\",str(root)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=40)\nq=subprocess.run([\"rg\",\"-n\",r\"(?:theorem|lemma).*\\babs_add_le(?:[ \\t:(]|$)|to_additive[^\\n]*\\babs_add_le(?:[ \\t:\\]]|$)\",str(root/\"Algebra\")],stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=40)\nprint(json.dumps({\"absAddExactRC\":p.returncode,\"absAddExactMatches\":p.stdout.decode().splitlines()[:15],\"absAddLeRC\":q.returncode,\"absAddLeMatches\":q.stdout.decode().splitlines()[:15],\"stderr\":(p.stderr+q.stderr).decode()},ensure_ascii=False))\n",
+  "timeout": 60
+}

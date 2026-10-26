@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "from pathlib import Path\nimport re,json,hashlib\nbase=Path(\"/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Algebra/Order\");out=[]\nfor p in base.rglob(\"*.lean\"):\n ls=p.read_text().splitlines()\n for i,l in enumerate(ls):\n  if re.search(r\"^(?:theorem|lemma) abs_add(?: |\\b)\",l):\n   j=i\n   while j<min(i+7,len(ls))and\":=\"not in ls[j]:j+=1\n   out.append({\"file\":str(p.relative_to(base)),\"sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"line\":i+1,\"head\":\"\\n\".join(ls[i:j+1]).split(\":=\")[0]})\nprint(json.dumps(out,ensure_ascii=False))\n",
+  "timeout": 60
+}

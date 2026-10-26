@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "from pathlib import Path\nimport re,json,hashlib\nroot=Path(\"/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib\");patterns={\"abs_add\":re.compile(r\"(?:theorem|lemma).*\\babs_add(?=[ \\t:(]|$)|to_additive[^\\n]*\\babs_add(?=[ \\t:\\]]|$)\"),\"abs_add_le\":re.compile(r\"(?:theorem|lemma).*\\babs_add_le(?=[ \\t:(]|$)|to_additive[^\\n]*\\babs_add_le(?=[ \\t:\\]]|$)\")};out={k:[]for k in patterns};n=0\nfor p in root.rglob(\"*.lean\"):\n n+=1;ls=p.read_text().splitlines()\n for i,l in enumerate(ls):\n  for k,pat in patterns.items():\n   if pat.search(l):out[k].append({\"file\":str(p.relative_to(root)),\"line\":i+1,\"headContext\":\"\\n\".join(ls[max(0,i-1):i+4]),\"fileSHA256\":hashlib.sha256(p.read_bytes()).hexdigest()})\nprint(json.dumps({\"filesSearched\":n,\"matchCounts\":{k:len(v)for k,v in out.items()},\"matches\":out,\"note\":\"Previousreadonlyrgqueryfailedbecause rg absent; no Lean/sourceeffects.\"},ensure_ascii=False))\n",
+  "timeout": 60
+}

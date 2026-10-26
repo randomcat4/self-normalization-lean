@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "import pathlib,json,hashlib,re,subprocess\nb=pathlib.Path('/root/rivermind-data/shao-lean-20261021');o=b/'outputs/c12-original-growing-double-comparison-v71';w=b/'workspaces/c12-bridge-domination-v71';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();p=max((b/'coordination').glob('HEAVY-PHASE-*.json'),key=lambda p:int(re.search(r'-(\\d+)\\.json$',p.name).group(1)));assert p.name=='HEAVY-PHASE-C12-OQ56-35.json' and sha(p)=='9ef3396f9862e945f006aec1185c6235757383ccec0b8e8906163f7b41561994';assert sha(w/'Shao/C2/OriginalGrowingDoubleComparison.lean')=='797e7c8816835cd8f3dc772808f7591b3554396b53355d6eb23c052fb48d5245';assert json.loads((o/'kernel001-result.json').read_text())['naturalRC']==1;assert not(o/'OriginalGrowingDoubleComparison.olean').exists() and not(o/'kernel002-start.json').exists() and not(o/'audit001-start.json').exists();assert subprocess.run(['flock','-n',str(b/'locks/c12-heavy.lock'),'true']).returncode==0;print(json.dumps({'oldSourceExact':True,'previousRC':1,'noObjectNoAX':True,'phase':35}))\n",
+  "timeout": 60
+}
