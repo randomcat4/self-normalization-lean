@@ -723,6 +723,7 @@ import Shao.OQ6.FiniteRows
 import Shao.OQ6.FiniteSignExponential
 import Shao.OQ6.FiniteTiltedMoments
 import Shao.OQ6.FiniteUniformCodingAssembly
+import Shao.OQ6.KernelObservableReduction
 import Shao.OQ6.LogarithmicConditionalLowEnergy
 import Shao.OQ6.LogarithmicConditionalRates
 import Shao.OQ6.NormalizedAnalyticCostLimits

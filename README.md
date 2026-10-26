@@ -11,7 +11,7 @@ The accepted mathematical snapshot, exact inventory and remaining work are recor
 | C1 | Original signed half-line theorem on the full nonnegative original I_n, both signs, accepted at immutable v85. [Scope and receipt](docs/EVIDENCE.md#c1) |
 | C2 / assigned C12 | All five original labels g:double, g:absolute, m:B, m:A and m:C accepted by v112. Assigned C1/C2 work is complete; broader common extensions remain separate. [Evidence](docs/EVIDENCE.md#c2) |
 | OQ3 | Paused by the human. The accepted fixed jointly nonlattice counterexample remains in Lean; paused B/D directions are not declared complete. [Counterexample](Shao/OQ3/SourceCounterexampleRoot.lean) |
-| OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. Ready/idle without a new source-bound assignment; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
+| OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. The human has resumed autonomous source-bound extensions; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
 | OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. The rho-sensitive capped partial-law deletion producer and original-window four S14 expectation fees are accepted; compact fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
 
 ## Selected accepted OQ56 components
@@ -37,3 +37,5 @@ All Lean compilation and heavy computation run on the designated server, using t
 Versioned scope/review/receipt files are immutable historical evidence. Their old inventory counts or planning comments are not the current project status. Documentation-only commits may advance main while the mathematical snapshot and its receipt remain at the accepted proof version.
 
 Source baseline: [shao@35d4580](https://github.com/randomcat4/shao/tree/35d4580b61e22e7145f47730045a09874ef93259). The separate unified-124 research objective is not a prerequisite for the accepted original scopes.
+
+- v122: one common countably generated sub-sigma algebra preserving the same original jointly measurable kernel and all countable scalar observables, including empty spaces. Law/integral/moment/CDF transport remains open.

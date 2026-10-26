@@ -1,6 +1,6 @@
 # Current mathematical status
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v121. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v122. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
 
 ## C1 and C2
 
@@ -14,7 +14,7 @@ OQ3 remains separately paused by the human. The fixed jointly nonlattice saddle-
 
 ## OQ4
 
-The assigned original fixed-law weak-window concentration and universal sharp sixth-root criterion were accepted at v79. The lane remains ready/idle without a new concrete source dependency. This limited original acceptance does not certify all historical subclauses or unrelated OQ4 extensions.
+The assigned original fixed-law weak-window concentration and universal sharp sixth-root criterion were accepted at v79. The human has resumed autonomous source-bound extensions under the current resource phase; those extensions are not included in v79 acceptance. This limited original acceptance does not certify all historical subclauses or unrelated OQ4 extensions.
 
 ## OQ56
 
@@ -31,12 +31,13 @@ OQ56 remains open. The following are accepted components, rather than a full-roo
 | v119 | 215 four original S14 expectation fees and combined budget | Original y>=1 explicit window/model, genuine integrability, rho=0/C0=0; compact fees/general S15/full S11 remain open |
 | v120 | 216 original untilted compact continuous-cap combined fees and exact projection cost | Original n and (n-2)^2, endpoints and L1; projection-cost L2<=4 only, p-moment rate remains pending |
 | v121 | 217 actual projection p-moment rate and combined compact analytic cost | Explicit2<p<=3 and true projection p-integrability; original n/law/continuouscap and all21 outputs; probability/CDF application remains open |
+| v122 | 218 common countably generated observable sub-sigma reduction | Same arbitrary space, pointwise joint kernel and all countable scalar observables, including empty spaces; law/integral/moment/CDF transport remains open |
 
 The v117 deletion quantities omit the deleted coordinate and do not carry a good-event indicator. They retain the original n, n-1 and n-2 normalizations. Their exact signed identities, reverse-triangle bound, measurable retained-coordinate factorization and full definition values are reviewed.
 
 The v117 moment producer uses the actual residual scale rho = sqrt(integral r squared), actual full quadratic tilt and original y <= sqrt(n)/(2 exp(1/2)) window. Its J moment is quadratic in rho, its absolute-D moment is linear in rho, and rho = 0 is included. An old 1 + rho estimate is not a substitute for these scales.
 
-Unit214 now supplies the public rho-sensitive capped partial-law deletion interface. Its exact source/first object, all four actual owned theorem types and recursive axioms are independently qualified and integrated at v118. Unit215 now supplies all four genuine S14 expectation fees and their combined bound 256 exp(2)(1+C0)(1+rho+rho^2)(1+y)^3/sqrt(n), with the exact original law, y>=1 window and sample coefficients. Unit216 now supplies original untilted compact-level continuous-cap combined fees, with the original (n-2)^2 energy normalization recovered by an explicit parameter shift. It also proves the actual Lcompact identity and L2 bound <=4; this constant bound does not give decay. Unit217 now supplies the genuine bound Lcompact<=8 beta_p/n^((p-2)/2) and the combined cost obtained by adding 128(1+C0)(1+rho+rho^2)/sqrt(n), with explicit2<p<=3 and actual projection p-integrability. These are finite-n analytic estimates, not a CDF theorem. The next source-bound work is unit218 countably generated observable reduction, followed by the required law/integral transport, random-interval/CDF application and remaining original S11/general-S15 dependencies. A deterministic deletion identity, full-law moment bound or bounded-class payment estimate cannot by itself close that chain. Existing S17 does not replace literal S10. The common K/Xi derivative, high-frequency and inversion work is advanced only when an actual missing source-bound interface requires it.
+Unit214 now supplies the public rho-sensitive capped partial-law deletion interface. Its exact source/first object, all four actual owned theorem types and recursive axioms are independently qualified and integrated at v118. Unit215 now supplies all four genuine S14 expectation fees and their combined bound 256 exp(2)(1+C0)(1+rho+rho^2)(1+y)^3/sqrt(n), with the exact original law, y>=1 window and sample coefficients. Unit216 now supplies original untilted compact-level continuous-cap combined fees, with the original (n-2)^2 energy normalization recovered by an explicit parameter shift. It also proves the actual Lcompact identity and L2 bound <=4; this constant bound does not give decay. Unit217 now supplies the genuine bound Lcompact<=8 beta_p/n^((p-2)/2) and the combined cost obtained by adding 128(1+C0)(1+rho+rho^2)/sqrt(n), with explicit2<p<=3 and actual projection p-integrability. These are finite-n analytic estimates, not a CDF theorem. Unit218 now supplies one common countably generated m0<=mOmega preserving the same jointly measurable h and every same scalar observable, on arbitrary Omega including the empty space. It does not supply trimmed/product/sample laws or preserve integrals, projection moments, literal statistics or probabilities. The remaining source-bound chain includes that law/integral transport, random-interval/CDF application and original S11/general-S15 dependencies; the lane owner chooses and advances its exact active unit autonomously. A deterministic deletion identity, full-law moment bound or bounded-class payment estimate cannot by itself close that chain. Existing S17 does not replace literal S10. The common K/Xi derivative, high-frequency and inversion work is advanced only when an actual missing source-bound interface requires it.
 
 ## Acceptance meaning
 
