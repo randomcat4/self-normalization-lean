@@ -1,0 +1,41 @@
+import Shao.Probability.OriginalCDFPullback
+import Shao.C2.TwoSided
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 800000
+noncomputable section
+namespace Shao.C2.ActualOriginalDoublePullback
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators Classical
+
+theorem source_truncation_original_double_pullback :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n),
+        Integrable (fun z : ℝ => z ^ 2) nu →
+        (∫ z : ℝ, z ∂nu) = 0 →
+        (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1 →
+        ∀ x epsilon : ℝ, 0 < x → 0 < epsilon → epsilon ≤ 1 / 800 →
+          Shao.truncationBudget nu n x ≤ epsilon ^ 3 / 8 →
+          let h : ℝ := epsilon / (1 + x)
+          let N : Set (Shao.Path n) := {v | ∀ j : Fin n, |v j| ≤ h}
+          let P0 : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => nu)
+          let rho : Measure ℝ := ProbabilityTheory.cond nu {z | |z| ≤ h}
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          let p : ℝ := P0.real N
+          let R : ℝ := Shao.truncationBudget nu n x
+          (7 / 8 : ℝ) ≤ p ∧ p ≤ 1 ∧ 1 - p ≤ R / epsilon ^ 3 ∧
+            IsProbabilityMeasure rho ∧ IsProbabilityMeasure P ∧
+            ProbabilityTheory.cond P0 N = P ∧
+            ∀ d : ℝ, 0 ≤ d → d ≤ 2 * Shao.standardNormalTail x →
+              P0.real (Shao.C2.doubleCrossing hn x) - d =
+                p * (P.real (Shao.C2.doubleCrossing hn x) - d) +
+                  P0.real (Shao.C2.doubleCrossing hn x ∩ Nᶜ) - (1 - p) * d ∧
+              0 ≤ P0.real (Shao.C2.doubleCrossing hn x ∩ Nᶜ) ∧
+              P0.real (Shao.C2.doubleCrossing hn x ∩ Nᶜ) + (1 - p) * d ≤
+                C / epsilon ^ 3 * R * Shao.standardNormalTail x ∧
+              |(P0.real (Shao.C2.doubleCrossing hn x) - d) -
+                  p * (P.real (Shao.C2.doubleCrossing hn x) - d)| ≤
+                C / epsilon ^ 3 * R * Shao.standardNormalTail x
+
+end Shao.C2.ActualOriginalDoublePullback
