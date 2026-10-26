@@ -1,0 +1,30 @@
+theorem original_iid_two_sided_uniform_subpower_convergence
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    {Ω ΩB : Type*} [MeasurableSpace Ω] [MeasurableSpace ΩB]
+    (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hBrownian : IsBrownianReal Bm PB)
+    (mu : Measure Ω) (rho : Measure ℝ)
+    [IsProbabilityMeasure mu] [IsProbabilityMeasure rho]
+    (X : ℕ → Ω → ℝ)
+    (hX : ∀ i : ℕ, AEMeasurable (X i) mu)
+    (hIndep : iIndepFun X mu)
+    (hLaw : ∀ i : ℕ, IdentDistrib (X i) (id : ℝ → ℝ) mu rho)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) rho)
+    (hmean : (∫ z : ℝ, z ∂rho) = 0)
+    (hsecond : 0 < ∫ z : ℝ, z ^ 2 ∂rho)
+    (hp : Integrable (fun z : ℝ => Real.rpow |z| p) rho) :
+    let sigma : ℝ := Real.sqrt (∫ z : ℝ, z ^ 2 ∂rho)
+    ∀ (b : ℕ → ℝ), (∀ n : ℕ, 0 ≤ b n) →
+      Tendsto (fun n : ℕ => b n / Real.rpow (n : ℝ) ((p - 2) / (2 * p)))
+        atTop (𝓝 0) →
+      ∀ epsilon : ℝ, 0 < epsilon →
+        ∃ N : ℕ, ∀ (n : ℕ) (hn : 0 < n), N ≤ n →
+          let Xn : Fin n → Ω → ℝ := fun i => X i.val
+          let population : Ω → Shao.Path n := Shao.Probability.samplePath Xn
+          let rawEnergy : Ω → ℝ := fun omega => ∑ i : Fin n, (Xn i omega) ^ 2
+          ∀ x : ℝ, 0 ≤ x → x ≤ b n →
+            let A : Set Ω := {omega |
+              x * Real.sqrt (rawEnergy omega) ≤ Shao.absMax (population omega) hn}
+            let H : ℝ := PB.real {omega |
+              ∃ s : BridgeTime, x ≤ |Bm ⟨(s : ℝ), s.property.1⟩ omega|}
+            0 < H ∧ |mu.real A / H - 1| < epsilon
