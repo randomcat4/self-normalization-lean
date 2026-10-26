@@ -1,0 +1,27 @@
+  have hScaleM : Measurable (fun z : ℝ => z / Real.sqrt (n : ℝ)) :=
+    measurable_id.div_const _
+  letI : IsProbabilityMeasure normalizedLaw := by
+    dsimp only [normalizedLaw]
+    exact (Measure.isProbabilityMeasure_map_iff hScaleM.aemeasurable).mpr inferInstance
+  have hNmean : (∫ z : ℝ, z ∂normalizedLaw) = 0 := by
+    dsimp only [normalizedLaw]
+    rw [integral_map (μ := rho) (φ := fun z : ℝ => z / Real.sqrt (n : ℝ))
+        (f := fun z : ℝ => z) hScaleM.aemeasurable (by fun_prop),
+      integral_div, hmean, zero_div]
+  have hNsecond : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂normalizedLaw) = 1 := by
+    dsimp only [normalizedLaw]
+    rw [integral_map (μ := rho) (φ := fun z : ℝ => z / Real.sqrt (n : ℝ))
+      (f := fun z : ℝ => z ^ 2) hScaleM.aemeasurable (by fun_prop)]
+    simp only [div_pow]
+    rw [integral_div, hsecond, Real.sq_sqrt hnR.le]
+    exact mul_one_div_cancel hnR.ne'
+  have hNthird : (n : ℝ) * (∫ z : ℝ, |z| ^ 3 ∂normalizedLaw) = delta := by
+    dsimp only [normalizedLaw]
+    rw [integral_map (μ := rho) (φ := fun z : ℝ => z / Real.sqrt (n : ℝ))
+      (f := fun z : ℝ => |z| ^ 3) hScaleM.aemeasurable (by fun_prop)]
+    simp only [abs_div, abs_of_pos hsn, div_pow]
+    rw [integral_div]
+    change (n : ℝ) * (beta / Real.sqrt (n : ℝ) ^ 3) = beta / Real.sqrt (n : ℝ)
+    rw [show Real.sqrt (n : ℝ) ^ 3 = (n : ℝ) * Real.sqrt (n : ℝ) by
+      rw [pow_succ, Real.sq_sqrt hnR.le]]
+    field_simp [hnR.ne', hsn.ne'] <;> ring

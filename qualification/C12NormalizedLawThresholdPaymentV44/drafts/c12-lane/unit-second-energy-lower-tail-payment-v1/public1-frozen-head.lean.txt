@@ -1,0 +1,12 @@
+theorem iid_unit_second_energy_lower_tail_gaussian_payment
+    (rho : Measure ℝ) [IsProbabilityMeasure rho] (n : ℕ) (hn : 0 < n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) rho)
+    (h3 : Integrable (fun z : ℝ => |z| ^ 3) rho)
+    (hsecond : (∫ z : ℝ, z ^ 2 ∂rho) = 1)
+    (x : ℝ) (hx : 0 ≤ x) :
+    let delta : ℝ := (∫ z : ℝ, |z| ^ 3 ∂rho) / Real.sqrt (n : ℝ)
+    delta * (1 + x) ^ 3 ≤ 1 / 16 →
+      0 < delta ∧
+        (Measure.pi (fun _ : Fin n => rho)).real
+          {v : Shao.Path n | Shao.energy v ≤ (n : ℝ) / 2} ≤
+          32 * delta * (1 + x) ^ 3 * Shao.standardNormalTail x

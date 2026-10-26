@@ -1,0 +1,14 @@
+theorem iid_centered_scaled_product_transport
+    (rho : Measure ℝ) [IsProbabilityMeasure rho] (n : ℕ) (hn : 0 < n)
+    (mu t : ℝ) (ht : 0 < t) :
+    let chi : Measure ℝ := Measure.map (fun z : ℝ => (z - mu) / t) rho
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+    let Pc : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => chi)
+    IsProbabilityMeasure chi ∧
+      Measure.map (fun v : Shao.Path n => (fun i => (v i - mu) / t)) P = Pc ∧
+      (∀ x : ℝ,
+        P.real {v : Shao.Path n | (fun i => v i - mu) ∈ Shao.C2.doubleCrossing hn x} =
+          Pc.real (Shao.C2.doubleCrossing hn x)) ∧
+      ∀ q : ℝ,
+        P.real {v : Shao.Path n | Shao.energy (fun i => v i - mu) ≤ q} =
+          Pc.real {w : Shao.Path n | t ^ 2 * Shao.energy w ≤ q}
