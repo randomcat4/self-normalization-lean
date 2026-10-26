@@ -2,7 +2,7 @@
 
 Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 
-The current mathematical snapshot is **v119**: **913 modules, 4,067 public source theorems, 7,950 Shao-namespace theorem constants, and 16,133 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v119 server receipt](verification/receipt-v119.json).
+The current mathematical snapshot is **v120**: **914 modules, 4,068 public source theorems, 7,952 Shao-namespace theorem constants, and 16,145 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v120 server receipt](verification/receipt-v120.json).
 
 ## Accepted scope and current state
 
@@ -23,6 +23,7 @@ The current mathematical snapshot is **v119**: **913 modules, 4,067 public sourc
 - v117: original-length deterministic/measurable deletion envelopes and genuine rho/rho-squared moments under the full quadratic tilt, including rho = 0.
 - v118: original-length rho-sensitive capped deletion bounds under the actual partial weight, with full integrability and rho = 0; this supplies S13 absolute-D/J ingredients within the original explicit window.
 - v119: all four original S14 expectation fees and their combined polynomial budget, preserving the original law/window/n and rho = 0; this is not a general probability-payment or full-root theorem.
+- v120: original untilted compact continuous-cap combined expectation fees, retaining the original (n-2)^2 budget via an explicit parameter transform. The actual projection cost remains separate; its L2 bound of at most 4 is not a decay rate.
 
 The bounded-class exponential payment bound retains the three terms exp(-cn) + 4 exp(-y sqrt(n)/2) + 9 exp(-k_n). It is not a theorem for the unrestricted original S15 class. Symmetry, normalization, original sample-length denominators, threshold windows, zero-denominator guards and genuine remainder fees remain where the exact statements require them.
 

@@ -735,6 +735,7 @@ import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalBoundedFourPayments
 import Shao.OQ6.OriginalClippedComparisonPayments
 import Shao.OQ6.OriginalClippedExpectationFees
+import Shao.OQ6.OriginalCompactExpectationFees
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
 import Shao.OQ6.OriginalGoodEventBridge
