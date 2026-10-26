@@ -1,0 +1,443 @@
+{
+  "schema": "oq56-unit214-parent-substantive-public-homogeneous-family-declaration-freeze-v1",
+  "atUTC": "2026-10-26T16:04:10.513573+00:00",
+  "unit": 214,
+  "module": "Shao.OQ6.RhoWeightedDeletionMoments",
+  "sourceP51": {
+    "path": "C:/game/shao/current/oq56/inputs02/p51.md",
+    "sha256": "96920f428b8fc09788a6388103cefe398e3ec739129a5922b984babd09e99359",
+    "bytes": 17326
+  },
+  "parentSelectedRoute": "PUBLIC142_EXPLICIT_HOMOGENEOUS_AUXILIARY_KERNEL_FAMILY",
+  "minimalPreamble": "import Shao.OQ6.WeightedDeletionMoments\nimport Mathlib.Analysis.SpecificLimits.Basic\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.RhoWeightedDeletionMoments\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory Filter\nopen scoped BigOperators\n",
+  "globalDeclarations": [
+    {
+      "id": "H01",
+      "name": "scaled_centered_kernel_model",
+      "kind": "private theorem",
+      "completeHead": "private theorem scaled_centered_kernel_model\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o, g o ∂μ) = 0)\n    (hgsecond : (∫ o, g o ^ 2 ∂μ) = 1)\n    (r : Ω → Ω → ℝ)\n    (hr : Measurable (fun z : Ω × Ω => r z.1 z.2))\n    (hr2 : MemLp (fun z : Ω × Ω => r z.1 z.2) 2 (μ.prod μ))\n    (hrsymm : ∀ o y, r o y = r y o)\n    (hrcan : ∀ᵐ o ∂μ, (∫ y, r o y ∂μ) = 0)\n    (t : ℝ) (ht : 0 ≤ t) :\n    let k : Ω → Ω → ℝ := fun o y => g o + g y + t * r o y\n    let gk : Ω → ℝ := fun o => ∫ y, k o y ∂μ\n    let rk : Ω → Ω → ℝ := fun o y => k o y - gk o - gk y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let vk : ℝ := ∫ z : Ω × Ω, rk z.1 z.2 ^ 2 ∂(μ.prod μ)\n    Measurable (fun z : Ω × Ω => k z.1 z.2) ∧\n      MemLp (fun z : Ω × Ω => k z.1 z.2) 2 (μ.prod μ) ∧\n      (∀ o y, k o y = k y o) ∧\n      (∫ z : Ω × Ω, k z.1 z.2 ∂(μ.prod μ)) = 0 ∧\n      (∫ o, (∫ y, k o y ∂μ) ^ 2 ∂μ) = 1 ∧\n      gk =ᵐ[μ] g ∧\n      (∀ o y, gk o = g o → gk y = g y → rk o y = t * r o y) ∧\n      (fun z : Ω × Ω => rk z.1 z.2) =ᵐ[μ.prod μ]\n        (fun z : Ω × Ω => t * r z.1 z.2) ∧\n      vk = t ^ 2 * v ∧\n      Real.sqrt vk = t * Real.sqrt v\n",
+      "universeContext": "Ω:Type*wherepresent;autoImplicitfalse;allbindersshown;noambientvariables",
+      "dataLetsCountDerived": 5
+    },
+    {
+      "id": "H02",
+      "name": "remove_positive_scale_offset",
+      "kind": "private theorem",
+      "completeHead": "private theorem remove_positive_scale_offset\n    (A B ρr : ℝ) (p : ℕ)\n    (hscaled : ∀ t : ℝ, 0 < t →\n      t ^ p * A ≤ B * (1 + t * ρr) ^ p) :\n    A ≤ B * ρr ^ p\n",
+      "universeContext": "Ω:Type*wherepresent;autoImplicitfalse;allbindersshown;noambientvariables",
+      "dataLetsCountDerived": 0
+    },
+    {
+      "id": "P01",
+      "name": "actual_quadratic_rho_weighted_deletion_bounds",
+      "kind": "public theorem",
+      "completeHead": "theorem actual_quadratic_rho_weighted_deletion_bounds\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (x : ℝ) (hx : 0 ≤ x)\n    (hwindow : x ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let ρr : ℝ := Real.sqrt v\n    let a : ℝ := x / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let I : ℝ := m ^ n\n    let R : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Real.exp (∑ j ∈ Finset.univ.erase i, φ (ξ j)) / I\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min |a * g (ξ i)| 1\n    let e : (Fin n → Ω) → Fin n → Fin n → ℝ :=\n      fun ξ j k => r (ξ j) (ξ k)\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (e ξ)\n    let Fdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ j =>\n      Shao.OQ6.ResidualDeletion.rowSum (e ξ) j\n    let ψdel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, ψ ξ j ^ 2\n    let Λdelsq : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j : Fin n, ψdel ξ i j ^ 2\n    let u : (Fin n → Ω) → Fin n → ℝ := fun ξ j =>\n      ψ ξ j / ((n : ℝ) - 2)\n    let udel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>\n      ψdel ξ i j / ((n : ℝ) - 2)\n    let J : (Fin n → Ω) → ℝ := fun ξ => ∑ j : Fin n, u ξ j ^ 2\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j : Fin n, udel ξ i j ^ 2\n    let D₁ : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let D₁del : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Fdel ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let cross : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j ∈ Finset.univ.erase i,\n        2 * r (ξ i) (ξ j) * (ψ ξ j - r (ξ i) (ξ j))\n    (∀ ξ i, Λsq ξ - Λdelsq ξ i = ψ ξ i ^ 2 + cross ξ i +\n      ∑ j ∈ Finset.univ.erase i, r (ξ i) (ξ j) ^ 2) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => R ξ i * cap ξ i * |D₁ ξ - D₁del ξ i|) P₀) ∧\n      (∑ i : Fin n,\n        ∫ ξ, R ξ i * cap ξ i * |D₁ ξ - D₁del ξ i| ∂P₀) ≤\n          4 * Real.sqrt 2 * C * ρr * (1 + x) ^ 2 /\n            Real.sqrt (n : ℝ) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => R ξ i * cap ξ i * |cross ξ i|) P₀) ∧\n      (∑ i : Fin n,\n        ∫ ξ, R ξ i * cap ξ i * |cross ξ i| ∂P₀) ≤\n          16 * C ^ 2 * ρr ^ 2 * (n : ℝ) ^ 2 * x * (1 + x) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => R ξ i * cap ξ i * |Λsq ξ - Λdelsq ξ i|) P₀) ∧\n      (∑ i : Fin n,\n        ∫ ξ, R ξ i * cap ξ i * |Λsq ξ - Λdelsq ξ i| ∂P₀) ≤\n          24 * C ^ 2 * ρr ^ 2 * (n : ℝ) ^ 2 * (1 + x) ^ 2 ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => R ξ i * cap ξ i * abs (abs (D₁ ξ) - abs (D₁del ξ i))) P₀) ∧\n      (∑ i : Fin n,\n        ∫ ξ, R ξ i * cap ξ i * abs (abs (D₁ ξ) - abs (D₁del ξ i)) ∂P₀) ≤\n          4 * Real.sqrt 2 * C * ρr * (1 + x) ^ 2 /\n            Real.sqrt (n : ℝ) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => R ξ i * cap ξ i * |J ξ - Jdel ξ i|) P₀) ∧\n      (∑ i : Fin n,\n        ∫ ξ, R ξ i * cap ξ i * |J ξ - Jdel ξ i| ∂P₀) ≤\n          96 * C ^ 2 * ρr ^ 2 * (1 + x) ^ 2 \n",
+      "universeContext": "Ω:Type*wherepresent;autoImplicitfalse;allbindersshown;noambientvariables",
+      "dataLetsCountDerived": 29
+    }
+  ],
+  "noNewGlobalDefinitions": true,
+  "completeLocalDataTypesValuesCaptures": {
+    "status": "PROPOSED_LOCAL_VALUES_ONLY_NO_IMPLEMENTATION",
+    "mainData": "Every let and complete type/value is written in proposed-public-head.md; no new global definitions are proposed.",
+    "mainGlobalCaptures": [
+      "Ω",
+      "MeasurableSpace Ω",
+      "μ",
+      "IsProbabilityMeasure μ",
+      "h",
+      "n",
+      "x"
+    ],
+    "auxiliaryData": [
+      {
+        "name": "t",
+        "type": "ℝ",
+        "value": "Universally quantified auxiliary positive scale; never a replacement of the final input model."
+      },
+      {
+        "name": "kₜ",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => g o + g y + t * r o y",
+        "captures": [
+          "g",
+          "r",
+          "t"
+        ]
+      },
+      {
+        "name": "gₜ",
+        "type": "Ω → ℝ",
+        "value": "fun o => ∫ y, kₜ o y ∂μ",
+        "captures": [
+          "kₜ",
+          "μ"
+        ]
+      },
+      {
+        "name": "rₜ",
+        "type": "Ω → Ω → ℝ",
+        "value": "fun o y => kₜ o y - gₜ o - gₜ y",
+        "captures": [
+          "kₜ",
+          "gₜ"
+        ]
+      },
+      {
+        "name": "vₜ",
+        "type": "ℝ",
+        "value": "∫ z : Ω × Ω, rₜ z.1 z.2 ^ 2 ∂(μ.prod μ)",
+        "captures": [
+          "rₜ",
+          "μ"
+        ]
+      },
+      {
+        "name": "φₜ",
+        "type": "Ω → ℝ",
+        "value": "fun o => a * gₜ o - (a * gₜ o) ^ 2 / 2",
+        "captures": [
+          "a",
+          "gₜ"
+        ]
+      },
+      {
+        "name": "wₜ",
+        "type": "Ω → ℝ",
+        "value": "fun o => Real.exp (φₜ o)",
+        "captures": [
+          "φₜ"
+        ]
+      },
+      {
+        "name": "mₜ",
+        "type": "ℝ",
+        "value": "∫ o, wₜ o ∂μ",
+        "captures": [
+          "wₜ",
+          "μ"
+        ]
+      },
+      {
+        "name": "Lₜ",
+        "type": "Ω → ℝ",
+        "value": "fun o => wₜ o / mₜ",
+        "captures": [
+          "wₜ",
+          "mₜ"
+        ]
+      },
+      {
+        "name": "νₜ",
+        "type": "Measure Ω",
+        "value": "μ.withDensity (fun o => ENNReal.ofReal (Lₜ o))",
+        "captures": [
+          "μ",
+          "Lₜ"
+        ]
+      },
+      {
+        "name": "Iₜ",
+        "type": "ℝ",
+        "value": "mₜ ^ n",
+        "captures": [
+          "mₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "Rₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => Real.exp (∑ j ∈ Finset.univ.erase i, φₜ (ξ j)) / Iₜ",
+        "captures": [
+          "φₜ",
+          "Iₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "capₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => min |a * gₜ (ξ i)| 1",
+        "captures": [
+          "a",
+          "gₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "eₜ",
+        "type": "(Fin n → Ω) → Fin n → Fin n → ℝ",
+        "value": "fun ξ j k => rₜ (ξ j) (ξ k)",
+        "captures": [
+          "rₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "Fₜ",
+        "type": "(Fin n → Ω) → ℝ",
+        "value": "fun ξ => Shao.OQ5.P35.unorderedPairSum (eₜ ξ)",
+        "captures": [
+          "eₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "Fdelₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => Shao.OQ5.P35.unorderedPairSum (Shao.OQ6.ResidualDeletion.eraseIncident (eₜ ξ) i)",
+        "captures": [
+          "eₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "ψₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ j => Shao.OQ6.ResidualDeletion.rowSum (eₜ ξ) j",
+        "captures": [
+          "eₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "ψdelₜ",
+        "type": "(Fin n → Ω) → Fin n → Fin n → ℝ",
+        "value": "fun ξ i j => Shao.OQ6.ResidualDeletion.rowSum (Shao.OQ6.ResidualDeletion.eraseIncident (eₜ ξ) i) j",
+        "captures": [
+          "eₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "Λsqₜ",
+        "type": "(Fin n → Ω) → ℝ",
+        "value": "fun ξ => ∑ j : Fin n, ψₜ ξ j ^ 2",
+        "captures": [
+          "ψₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "Λdelsqₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => ∑ j : Fin n, ψdelₜ ξ i j ^ 2",
+        "captures": [
+          "ψdelₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "D₁ₜ",
+        "type": "(Fin n → Ω) → ℝ",
+        "value": "fun ξ => Fₜ ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+        "captures": [
+          "Fₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "D₁delₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => Fdelₜ ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+        "captures": [
+          "Fdelₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "crossₜ",
+        "type": "(Fin n → Ω) → Fin n → ℝ",
+        "value": "fun ξ i => ∑ j ∈ Finset.univ.erase i, 2 * rₜ (ξ i) (ξ j) * (ψₜ ξ j - rₜ (ξ i) (ξ j))",
+        "captures": [
+          "rₜ",
+          "ψₜ",
+          "n"
+        ]
+      },
+      {
+        "name": "A_D",
+        "type": "ℝ",
+        "value": "∑ i : Fin n, ∫ ξ, R ξ i * cap ξ i * |D₁ ξ - D₁del ξ i| ∂P₀",
+        "captures": [
+          "R",
+          "cap",
+          "D₁",
+          "D₁del",
+          "P₀",
+          "n"
+        ]
+      },
+      {
+        "name": "A_X",
+        "type": "ℝ",
+        "value": "∑ i : Fin n, ∫ ξ, R ξ i * cap ξ i * |cross ξ i| ∂P₀",
+        "captures": [
+          "R",
+          "cap",
+          "cross",
+          "P₀",
+          "n"
+        ]
+      },
+      {
+        "name": "A_Λ",
+        "type": "ℝ",
+        "value": "∑ i : Fin n, ∫ ξ, R ξ i * cap ξ i * |Λsq ξ - Λdelsq ξ i| ∂P₀",
+        "captures": [
+          "R",
+          "cap",
+          "Λsq",
+          "Λdelsq",
+          "P₀",
+          "n"
+        ]
+      },
+      {
+        "name": "B_D",
+        "type": "ℝ",
+        "value": "4 * Real.sqrt 2 * C * (1 + x) ^ 2 / Real.sqrt (n : ℝ)",
+        "captures": [
+          "C",
+          "x",
+          "n"
+        ]
+      },
+      {
+        "name": "B_X",
+        "type": "ℝ",
+        "value": "16 * C ^ 2 * (n : ℝ) ^ 2 * x * (1 + x)",
+        "captures": [
+          "C",
+          "n",
+          "x"
+        ]
+      },
+      {
+        "name": "B_Λ",
+        "type": "ℝ",
+        "value": "24 * C ^ 2 * (n : ℝ) ^ 2 * (1 + x) ^ 2",
+        "captures": [
+          "C",
+          "n",
+          "x"
+        ]
+      }
+    ],
+    "proposedProofLocalPropositions": "Exact statements and their argument closures are listed in PROPOSAL.md; this is a declaration/route proposal, not a completed implementation or a claim that all future tactic-local terms already exist.",
+    "closures": "No unmentioned ambient variables; every auxiliary value closes over only the listed captures. Finite sums retain Fin n and original n."
+  },
+  "auxiliaryDataCountDerived": 29,
+  "completeProofRoute": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-weighted-deletion-214/author-stage1-01/PROPOSAL.md",
+    "sha256": "74e0187103dc9ac693cd34cab483ec86b170382f7bad1a889f69fb2ff81fb6f5",
+    "bytes": 14647
+  },
+  "completeImportedInterfacePacket": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-weighted-deletion-214/author-stage1-01/imported-interface-packet.json",
+    "sha256": "9a560974524b9454f6dce99f2bcdbb37df0c78ebea26f10577e2f88ec533c678",
+    "bytes": 32804
+  },
+  "stage1Manifest": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-weighted-deletion-214/author-stage1-01/MANIFEST.json",
+    "sha256": "286766f74811c773726c0aae353a2c0ab1ae341be5792916937e1d07286a9be1",
+    "bytes": 3985
+  },
+  "stage1Release0": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-weighted-deletion-214/author-stage1-01/RELEASE.json",
+    "sha256": "2077b056033c78008f1e09568b766db81959350d28fac5adaaa1b8cd1982f41f",
+    "bytes": 716
+  },
+  "qualifiedInterfacesConsumed": [
+    {
+      "unit": 140,
+      "qualifiedEvidence": {
+        "path": "C:/game/shao lean/drafts/oq56/unit140/qualified-evidence.json",
+        "sha256": "cce196803b7e95fc88f8b59f6f49c3ee8e7e8b85cb7bfa1e001b3b3996712275",
+        "bytes": 19539
+      },
+      "localCuratedSource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460
+      },
+      "originalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/ActualQuadraticTiltMoments.olean",
+        "sha256": "deb3d07e617f7a56215ceffbd3e2472730fe0597f34d719cd9a3fee50da6cb00",
+        "bytes": 2412656,
+        "mtime_ns": "1792811490014939125"
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460,
+        "mtime_ns": "1792811468298999227"
+      },
+      "reuse": "Exactacceptedcompleteindependentsource/proofandallactualTYPE/AXevidence;nooldproofcheckreplay"
+    },
+    {
+      "unit": 142,
+      "qualifiedEvidence": {
+        "path": "C:/game/shao lean/drafts/oq56/unit142/qualified-evidence.json",
+        "sha256": "e86532b03fa6b555ac5d36a0cdfc5cb85a2491e11539131007d7c13b4ea634e9",
+        "bytes": 35024
+      },
+      "localCuratedSource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/WeightedDeletionMoments.lean",
+        "sha256": "16bf3df8202d9303e2aab275f401b02824fda2f113e8d86fef83f45db8399cd3",
+        "bytes": 75057
+      },
+      "originalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/WeightedDeletionMoments.olean",
+        "sha256": "513cd06e19116576e3651750d845435a5e3adf036c95d983c2330718d6f63f51",
+        "bytes": 6260960,
+        "mtime_ns": "1792820236434732031"
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/WeightedDeletionMoments.lean",
+        "sha256": "16bf3df8202d9303e2aab275f401b02824fda2f113e8d86fef83f45db8399cd3",
+        "bytes": 75057,
+        "mtime_ns": "1792820222774769837"
+      },
+      "reuse": "Exactacceptedcompleteindependentsource/proofandallactualTYPE/AXevidence;nooldproofcheckreplay"
+    }
+  ],
+  "specificLimitsPinnedReadOnlyLookup": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-rho-weighted-deletion-214/parent-pinned-specificlimits-readonly01.json",
+    "sha256": "135980f51299d6c2585cf1314ab610cd3743dc10cf438fe2f927943e526e3ebd",
+    "bytes": 4561
+  },
+  "scopeNeutralNotationAmendments": [
+    {
+      "before": "| |D₁ ξ| - |D₁del ξ i| |",
+      "after": "abs (abs (D₁ ξ) - abs (D₁del ξ i))",
+      "occurrencesDerived": 2,
+      "reason": "Unambiguousnestedabsolutevalue;identicalmathematicalexpression;prior212parserrepairlesson.Onlynotationchangedfromproposal."
+    }
+  ],
+  "mathematicalArgumentFrozen": [
+    "For everypositive t constructactualk_t=g+g+t*r withvalidmeasurable/symmetric/L2/centered/unitprojectionmodel.",
+    "Proveactualprojectiong_t=gonlymuAE;deriveexactresidualscalingonjointgoodcoordinates,eventunderoriginalP0,productAEenergyscalingv_t=t^2*v andsqrtt=t*rho.",
+    "Proveactualnormalizerm_t=m,density/cap/partialR AEequalfororiginalP0;retainI=m^nandextram^-1alreadyinpublic142;nochangeofsamplelength/window/finalmodel.",
+    "Applyqualifiedpublic142atvalidk_t;transportintegralsonlyafterAEequalities;derivepositive-scalefamilieswithlinearDandquadraticcross/Lambdadeletion.",
+    "Removeadditive1offsetbypositive-scaleclosed-limitargumentwithp1and2;neverdividerho.",
+    "Original142atunedh suppliesgenuineL1/exactsignedidentity;abs-Dconsequencebyreverse-triangle/domination;Jdeletionbyexactoriginal(n-2)^2normalizationandn^2/(n-2)^2<=4forn>=4."
+  ],
+  "noHiddenAssumptions": [
+    "Noalteredmodel,noassumedtargetmoment/deletionbound,norhopositivity/noadditionalmomentassumptions,noAEcanonicalityusedpointwiseoffgoodset.",
+    "Originalwindowx>=0andx<=sqrt(n)/(2exp(1/2));n>=4;rho0andx0included.",
+    "Noimportedprivateconstantcall,noold142edit/export/metaprogram;nooldproof/kernel/leafAXreplay."
+  ],
+  "ordinaryDerivedPropPolicy": "OrdinaryderivedPropstepsinsidefrozenproofscopeallowedwithoutadministrativeprefreeze;newglobalhelper/newnonPropdataoutsidecompleteledgerrequiresprecisemathematicalamendmentbeforeimplementation.",
+  "sourceEncoding": "UTF8noBOM_LF_singlefinalnewline_beforefirstsourceboundgate",
+  "implementationTarget": "drafts/oq56/unit214/author-01/stage2/RhoWeightedDeletionMoments.lean",
+  "sourceMapRequired": "EveryfrozenglobalheadandnonProplocaldata/value/capturemapping;exactnewdataamendmentsbeforeimplementationifneeded.",
+  "frozenBeforeImplementation": true,
+  "implementationAuthorized": false,
+  "requiredNext": "Samefreshindependent214interfacecontextassessesthisexactfreeze;parentactivationthenSAME214authorimplementsfullsourcepurelocal.Qualifiedindependentcompletesource/proofandallactualTYPE/AXreviewplusfirstnewconsumerkernelrequiredforacceptance.",
+  "qualified": false,
+  "heavy": 0,
+  "inflight": 0,
+  "pendingExternal": 0
+}

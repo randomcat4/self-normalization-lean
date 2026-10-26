@@ -1,0 +1,42 @@
+--- source01/RhoWeightedDeletionMoments.lean
++++ repair-proof01/RhoWeightedDeletionMoments.lean
+@@ -62,7 +62,9 @@
+   have hProjectionAE : gk =ᵐ[μ] g := by
+     filter_upwards [hr1.prod_right_ae, hrcan] with o ho hcan
+     change (∫ y, g o + g y + t * r o y ∂μ) = g o
+-    rw [integral_add ((integrable_const (g o)).add hg1) (ho.const_mul t),
++    have hsum : Integrable (fun y : Ω => g o + g y) μ :=
++      (integrable_const (g o)).add hg1
++    rw [integral_add hsum (ho.const_mul t),
+       integral_add (integrable_const (g o)) hg1, integral_const_mul,
+       integral_const, probReal_univ, one_smul, hgmean, hcan]
+     ring
+@@ -118,7 +120,7 @@
+       congr 1
+       field_simp [ht.ne']
+       <;> ring
+-    apply (mul_le_mul_left (pow_pos ht p)).mp
++    apply (mul_le_mul_iff_right₀ (pow_pos ht p)).mp
+     calc
+       ((k : ℝ) + 1) ^ p * A ≤ B * (1 + ((k : ℝ) + 1) * ρr) ^ p :=
+         hscaled ((k : ℝ) + 1) ht
+@@ -126,7 +128,7 @@
+         rw [hpower]
+         ring
+   have hlim : Tendsto (fun k : ℕ => B * (ρr + 1 / ((k : ℝ) + 1)) ^ p)
+-      atTop (𝓝 (B * ρr ^ p)) := by
++      atTop (nhds (B * ρr ^ p)) := by
+     simpa only [add_zero] using
+       ((((tendsto_const_nhds (x := ρr)).add
+         (tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ))).pow p).const_mul B)
+@@ -574,7 +576,9 @@
+       _ ≤ B_Λ * ρr ^ 2 := hΛB
+       _ = _ := by dsimp only [B_Λ]; ring
+   have hEdgeM (j k : Fin n) : Measurable (fun ξ : Fin n → Ω => e ξ j k) := by
+-    exact hr.comp ((measurable_pi_apply j).prodMk (measurable_pi_apply k))
++    have hpair : Measurable (fun ξ : Fin n → Ω => (ξ j, ξ k)) :=
++      (measurable_pi_apply j).prodMk (measurable_pi_apply k)
++    simpa only [e, Function.comp_def] using hr.comp hpair
+   have hEraseM (i j k : Fin n) : Measurable
+       (fun ξ : Fin n → Ω => Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i j k) := by
+     by_cases hjk : j = i ∨ k = i
