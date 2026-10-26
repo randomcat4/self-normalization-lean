@@ -1,0 +1,179 @@
+{
+  "schema": "oq56-unit200-parent-prior-repair01-five-helper-freeze-v1",
+  "utc": "2026-10-26T03:27:15.489314+00:00",
+  "oldSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit200/author-01/stage2/OriginalGhostGoodEvent.lean",
+    "sha256": "23a1f72752bfc8e6681069f3ecafe58a2b4d44727bdeb025ead4c93dfd41226a",
+    "bytes": 15138
+  },
+  "native01Diagnostics": {
+    "path": "C:/game/shao lean/drafts/oq56/unit200/lead-execution-01/author-kernel-01-affected-diagnostics.json",
+    "sha256": "7837586edfb055930ef0d362084c0e377b99d33815381d30d2168a7106b0f70d",
+    "bytes": 13362
+  },
+  "native01State": "KNOWN_END RC1/7errors4warnings/noO;12428oldFULLFPexact/ownLean[]",
+  "native01Receipt": {
+    "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit200-01/OriginalGhostGoodEvent/author-kernel-01/receipt.json",
+    "sha256": "3ffdd5afb61b792a3944d37ffd75e3f0104d2b3a276047462ec0b714bc85f46a",
+    "bytes": 11668776,
+    "mtime_ns": "1792984740339439866"
+  },
+  "onlyAuthorizedCompleteHelperProofChanges": [
+    {
+      "helper": "T01.hSMeas",
+      "oldCompleteHelper": "  have hSMeas : Measurable S := by\n    dsimp [S, sampleSum]\n    fun_prop",
+      "newCompleteHelper": "  have hSMeas : Measurable S := by\n    change Measurable (fun x : Fin n → Ω => ∑ i : Fin n, g (x i))\n    exact Finset.measurable_sum Finset.univ\n      (fun (i : Fin n) (_ : i ∈ (Finset.univ : Finset (Fin n))) =>\n        hg.comp (measurable_pi_apply i))",
+      "oldCharStart0": 2075,
+      "oldCharEnd0Exclusive": 2147,
+      "oldByteStart0": 2257,
+      "oldByteEnd0Exclusive": 2329,
+      "oldLine1": 57,
+      "oldEndLine1": 59,
+      "changedTypeOrAssumption": false
+    },
+    {
+      "helper": "T01.hQMeas",
+      "oldCompleteHelper": "  have hQMeas : Measurable Q := by\n    dsimp [Q, sampleEnergy]\n    fun_prop",
+      "newCompleteHelper": "  have hQMeas : Measurable Q := by\n    change Measurable (fun x : Fin n → Ω =>\n      ∑ i : Fin n, (g (x i)) ^ (2 : ℕ))\n    exact Finset.measurable_sum Finset.univ\n      (fun (i : Fin n) (_ : i ∈ (Finset.univ : Finset (Fin n))) =>\n        (hg.comp (measurable_pi_apply i)).pow_const (2 : ℕ))",
+      "oldCharStart0": 2148,
+      "oldCharEnd0Exclusive": 2223,
+      "oldByteStart0": 2330,
+      "oldByteEnd0Exclusive": 2405,
+      "oldLine1": 60,
+      "oldEndLine1": 62,
+      "changedTypeOrAssumption": false
+    },
+    {
+      "helper": "T02.hAprob",
+      "oldCompleteHelper": "  have hAprob : M.real A ≤ (1 / 4 : ℝ) := by\n    apply (mul_le_mul_left hH).mp\n    rw [hQuarter]\n    exact hMarkA",
+      "newCompleteHelper": "  have hAprob : M.real A ≤ (1 / 4 : ℝ) := by\n    by_contra hnot\n    have hprod : (0 : ℝ) < H * (M.real A - (1 / 4 : ℝ)) :=\n      mul_pos hH (sub_pos.mpr (lt_of_not_ge hnot))\n    nlinarith only [hprod, hMarkA, hQuarter]",
+      "oldCharStart0": 10832,
+      "oldCharEnd0Exclusive": 10945,
+      "oldByteStart0": 11563,
+      "oldByteEnd0Exclusive": 11680,
+      "oldLine1": 274,
+      "oldEndLine1": 277,
+      "changedTypeOrAssumption": false
+    },
+    {
+      "helper": "T02.hCprob",
+      "oldCompleteHelper": "  have hCprob : M.real C ≤ (1 / 4 : ℝ) := by\n    apply (mul_le_mul_left hH).mp\n    rw [hQuarter]\n    exact hMarkC",
+      "newCompleteHelper": "  have hCprob : M.real C ≤ (1 / 4 : ℝ) := by\n    by_contra hnot\n    have hprod : (0 : ℝ) < H * (M.real C - (1 / 4 : ℝ)) :=\n      mul_pos hH (sub_pos.mpr (lt_of_not_ge hnot))\n    nlinarith only [hprod, hMarkC, hQuarter]",
+      "oldCharStart0": 10946,
+      "oldCharEnd0Exclusive": 11059,
+      "oldByteStart0": 11681,
+      "oldByteEnd0Exclusive": 11798,
+      "oldLine1": 278,
+      "oldEndLine1": 281,
+      "changedTypeOrAssumption": false
+    },
+    {
+      "helper": "T03.hBMeas",
+      "oldCompleteHelper": "  have hBMeas : MeasurableSet B := by\n    change MeasurableSet {x : Fin n → Ω |\n      |S x| ≤ (2 : ℝ) * Real.sqrt N ∧ Q x ≤ (4 : ℝ) * N}\n    exact (measurableSet_le hSMeas.abs measurable_const).inter\n      (measurableSet_le hQMeas measurable_const)",
+      "newCompleteHelper": "  have hBMeas : MeasurableSet B := by\n    change MeasurableSet {x : Fin n → Ω |\n      |S x| ≤ (2 : ℝ) * Real.sqrt N ∧ Q x ≤ (4 : ℝ) * N}\n    exact (measurableSet_le\n      (continuous_abs.measurable.comp hSMeas) measurable_const).inter\n      (measurableSet_le hQMeas measurable_const)",
+      "oldCharStart0": 12204,
+      "oldCharEnd0Exclusive": 12452,
+      "oldByteStart0": 13021,
+      "oldByteEnd0Exclusive": 13282,
+      "oldLine1": 309,
+      "oldEndLine1": 313,
+      "changedTypeOrAssumption": false
+    }
+  ],
+  "expectedNewSource": {
+    "sha256": "fc4127fadfab83ff08605b50b0cfa0525084201b7a5b78293d42d9826d82e83a",
+    "bytes": 15804,
+    "LF": 370,
+    "BOM": false,
+    "CR": 0
+  },
+  "allOtherSourceBytesMustRemainExact": true,
+  "all6Heads3RHS31WrittenLetAnd3LocalInstanceInitializersUnchanged": true,
+  "allMathematicalAssumptionsAndOldPrimaryWitnessScopeUnchanged": true,
+  "newImports": [],
+  "newNamedMathematicalDataInstancesChoiceSelectors": 0,
+  "newlyExplicitDeterministicAnonymousData": [
+    {
+      "id": "T01.hSMeas.coordinateFamily",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "initializer": "fun (i : Fin n) (x : Fin n → Ω) => g (x i)",
+      "typeCaptures": [
+        "n : ℕ",
+        "Ω : Type u"
+      ],
+      "initializerCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ"
+      ],
+      "scope": "Only the Finset.measurable_sum application in complete hSMeas proof; equivalent curried coordinate family of frozen sampleSum RHS, no escape or globaldefinition.",
+      "localInstancesAdded": 0,
+      "choice": "NONE"
+    },
+    {
+      "id": "T01.hSMeas.coordinateFunction_i",
+      "type": "(Fin n → Ω) → ℝ",
+      "initializer": "fun x : Fin n → Ω => g (x i)",
+      "initializerCaptures": [
+        "n : ℕ",
+        "Ω : Type u",
+        "g : Ω → ℝ",
+        "i : Fin n"
+      ],
+      "scope": "Only fixedi underhSMeas finite prooflambda; original eval_i composition, neverselectedsample."
+    }
+  ],
+  "existingAnonymousDataReused": "T01.hQMeas uses exact previouslyfrozen squareFamily andcoordinateSq_i; no changedinitializer. GoodB absolutecomposition specializes existing primaryabs:Real→Real withinfrozen event.",
+  "newOrdinaryPropHelpers": [
+    {
+      "owner": "T02.hAprob",
+      "name": "hprod",
+      "completeType": "(0 : ℝ) < H * (M.real A - (1 / 4 : ℝ))",
+      "initializer": "mul_pos hH (sub_pos.mpr (lt_of_not_ge hnot))",
+      "captures": [
+        "H",
+        "M",
+        "A",
+        "hH",
+        "hnot : ¬ M.real A ≤ (1 / 4 : ℝ)"
+      ],
+      "scope": "Inside hAprob proof only; no data witness."
+    },
+    {
+      "owner": "T02.hCprob",
+      "name": "hprod",
+      "completeType": "(0 : ℝ) < H * (M.real C - (1 / 4 : ℝ))",
+      "initializer": "mul_pos hH (sub_pos.mpr (lt_of_not_ge hnot))",
+      "captures": [
+        "H",
+        "M",
+        "C",
+        "hH",
+        "hnot : ¬ M.real C ≤ (1 / 4 : ℝ)"
+      ],
+      "scope": "Inside hCprob proof only; no data witness."
+    }
+  ],
+  "expectedNamedHaveCount": 59,
+  "primaryPackets": [
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit200/lead-primary-api-01/repair01-measurability-primary-source.json",
+      "sha256": "8b0093e4c53ce02e143201f21b89e0b41c8df2a8ea1c94b31f18c767bd23501c",
+      "bytes": 51915
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit200/lead-primary-api-01/repair01-coordinate-measurability-primary-source.json",
+      "sha256": "a7c4324ce1bc6bfdd4efb1008b5ff9de5dc9f56b9133809a19ea2615f80d3ff9",
+      "bytes": 51775
+    }
+  ],
+  "primaryBasis": "Parent read Finset.measurable_prod/to_additive831 and completeactiveCommMonoidprefix, generated realFinset.measurable_sum; measurable_pi_apply584 andfullactivePi prefix; continuous_mabs/to_additive57 andfullactiveorderedgroup prefix givingrootcontinuous_abs. ActualTYPEUNKNOWN_NOT_PROBED. No cachewrite/Leanprobe.",
+  "mathematicalAssessment": "Exact same finite coordinate measurability viaexplicit change andfinite measurable sums. Quarterbounds avoidincorrect mul_le_mul_left name: ifmass>1/4, positiveH timespositivegap contradicts hMark andhQuarter byring-normalized nlinarith. Bmeas usesexplicit continuous_abs.measurable composition. All strict/weak event atoms andn0branches unchanged.",
+  "sourceReviewReuse": "OriginalcompleteSOURCE+55table/2bullet addendum reused at exactunchangedbytes; sameindependentreviewer must completely review all5changedhelperproofs/newclosuretyping andbyte/scope/mapcomposition, thennewexactnative/sameFIRSTO. Do not redo unchangedoldproofs.",
+  "authorExclusiveRepairRoot": "C:/game/shao lean/drafts/oq56/unit200/author-01/stage2/repair-01",
+  "authorOriginal": "oq56_ghost200_stage1",
+  "authorMustPreserveOriginalSourceAllSealsFailuresWarnings": true,
+  "parentSourceWritten": false,
+  "native02Invoked": false,
+  "qualified": false
+}
