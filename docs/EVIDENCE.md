@@ -1,6 +1,6 @@
 # Evidence index
 
-The current proof snapshot is v119. Start with its [integration scope](integration-v119.md), [server receipt](../verification/receipt-v119.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
+The current proof snapshot is v120. Start with its [integration scope](integration-v120.md), [server receipt](../verification/receipt-v120.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
 
 ## C1
 
@@ -29,6 +29,7 @@ The current proof snapshot is v119. Start with its [integration scope](integrati
 | v117 | [212 deletion / 213 rho moments](integration-v117.md) | [Receipt](../verification/receipt-v117.json) |
 | v118 | [214 rho-sensitive capped deletion](integration-v118.md) | [Receipt](../verification/receipt-v118.json) |
 | v119 | [215 original S14 four expectation fees](integration-v119.md) | [Receipt](../verification/receipt-v119.json) |
+| v120 | [216 original compact expectation fees and projection-cost identity/L2](integration-v120.md) | [Receipt](../verification/receipt-v120.json) |
 
 Each integration directory links the exact independent final reviews and source/object qualifications. Full non-theorem values, private helpers and imported-definition equations are included where actually owned. Accepted old producer objects are reused; the new aggregate and current whole-project coverage/recursive axioms are checked at integration.
 
