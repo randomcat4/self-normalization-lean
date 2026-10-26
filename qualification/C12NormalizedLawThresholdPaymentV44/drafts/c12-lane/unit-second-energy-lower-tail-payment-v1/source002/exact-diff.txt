@@ -1,0 +1,19 @@
+--- source001
++++ source002
+@@ -34,12 +34,14 @@
+   have hEta2 : Integrable (fun z : ℝ => z ^ 2) eta := by
+     dsimp only [eta]
+     apply (integrable_map_measure (by fun_prop) hScale.aemeasurable).mpr
+-    simpa only [Function.comp_apply, div_pow] using
++    change Integrable (fun z : ℝ => (z / Real.sqrt (n : ℝ)) ^ 2) rho
++    simpa only [div_pow] using
+       (h2.div_const (Real.sqrt (n : ℝ) ^ 2))
+   have hEta3 : Integrable (fun z : ℝ => |z| ^ 3) eta := by
+     dsimp only [eta]
+     apply (integrable_map_measure (by fun_prop) hScale.aemeasurable).mpr
+-    simpa only [Function.comp_apply, abs_div, abs_of_pos hsn, div_pow] using
++    change Integrable (fun z : ℝ => |z / Real.sqrt (n : ℝ)| ^ 3) rho
++    simpa only [abs_div, abs_of_pos hsn, div_pow] using
+       (h3.div_const (Real.sqrt (n : ℝ) ^ 3))
+   have hEtaSecond : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂eta) = 1 := by
+     dsimp only [eta]

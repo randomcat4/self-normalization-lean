@@ -1,0 +1,10 @@
+theorem brownian_double_threshold_difference
+    {ΩB : Type*} [MeasurableSpace ΩB]
+    (B : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB]
+    (hB : IsBrownianReal B PB) (s t : ℝ) (hs : 0 < s) (hst : s ≤ t) :
+    let D : ℝ → Set ΩB := fun z => {omega |
+      (∃ r : BridgeTime, z ≤ B ⟨(r : ℝ), r.property.1⟩ omega) ∧
+      ∃ r : BridgeTime, B ⟨(r : ℝ), r.property.1⟩ omega ≤ -z}
+    0 ≤ PB.real (D s) - PB.real (D t) ∧
+      PB.real (D s) - PB.real (D t) ≤
+        4 * (Shao.standardNormalTail s - Shao.standardNormalTail t)

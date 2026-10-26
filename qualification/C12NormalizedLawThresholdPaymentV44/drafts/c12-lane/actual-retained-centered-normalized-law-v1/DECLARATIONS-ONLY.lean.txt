@@ -1,0 +1,38 @@
+import Shao.Probability.SourceTruncationBridge
+import Shao.Probability.RetainedComparison
+
+set_option autoImplicit false
+set_option Elab.async false
+set_option maxHeartbeats 800000
+noncomputable section
+namespace Shao.C2.ActualRetainedCenteredNormalizedLaw
+open MeasureTheory ProbabilityTheory Set
+open scoped BigOperators Classical
+
+theorem source_truncation_centered_normalized_law_data
+    (nu : Measure ℝ) [IsProbabilityMeasure nu] (n : ℕ) (hn : 0 < n)
+    (h2 : Integrable (fun z : ℝ => z ^ 2) nu)
+    (hnorm : (n : ℝ) * (∫ z : ℝ, z ^ 2 ∂nu) = 1)
+    (hmean : (∫ z : ℝ, z ∂nu) = 0)
+    (x epsilon : ℝ) (hx : 0 ≤ x) (hepsilon : 0 < epsilon)
+    (hepsilonHalf : epsilon ≤ 1 / 2)
+    (hR : Shao.truncationBudget nu n x ≤ epsilon ^ 3 / 8) :
+    let a : ℝ := 1 + x
+    let rho : Measure ℝ := ProbabilityTheory.cond nu {z | |z| ≤ epsilon / a}
+    let mu : ℝ := ∫ z : ℝ, z ∂rho
+    let V : ℝ := ∫ z : ℝ, (z - mu) ^ 2 ∂rho
+    let chi : Measure ℝ := Measure.map (fun z : ℝ => (z - mu) / Real.sqrt V) rho
+    let R : ℝ := Shao.truncationBudget nu n x
+    IsProbabilityMeasure chi ∧
+      Integrable (fun z : ℝ => z) chi ∧
+      Integrable (fun z : ℝ => z ^ 2) chi ∧
+      Integrable (fun z : ℝ => |z| ^ 3) chi ∧
+      (∫ z : ℝ, z ∂chi) = 0 ∧
+      (∫ z : ℝ, z ^ 2 ∂chi) = 1 ∧
+      (∀ᵐ z : ℝ ∂chi, |z| ≤ 2 * (epsilon / a) / Real.sqrt V) ∧
+      0 < V ∧ (1 / 2 : ℝ) ≤ (n : ℝ) * V ∧ (n : ℝ) * V ≤ 4 / 3 ∧
+      (∫ z : ℝ, |z| ^ 3 ∂chi) =
+        (∫ z : ℝ, |z - mu| ^ 3 ∂rho) / (Real.sqrt V) ^ 3 ∧
+      (∫ z : ℝ, |z| ^ 3 ∂chi) / Real.sqrt (n : ℝ) ≤ 64 * R / a ^ 3
+
+end Shao.C2.ActualRetainedCenteredNormalizedLaw
