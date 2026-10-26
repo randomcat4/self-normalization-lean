@@ -1,0 +1,32 @@
+import Shao.OQ6.OriginalGoodEventProbability
+import Shao.OQ5.P51.BoundedStudentizerGeometry
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.NormNum
+
+set_option autoImplicit false
+
+namespace Shao.OQ6.OriginalGoodEventBridge
+
+theorem normalizedGoodEvent_eq_projectionGood
+    (n : ℕ) {Ω : Type*} (g : Ω → ℝ) (y : ℝ) :
+    Shao.OQ6.OriginalGoodEventProbability.normalizedGoodEvent n g y =
+      Shao.OQ5.P51.projectionGood n g y := by
+  have hNnonneg : 0 ≤ (n : ℝ) := Nat.cast_nonneg n
+  have hQuarter : Real.rpow (n : ℝ) ((1 : ℝ) / 4) =
+      Real.sqrt (Real.sqrt (n : ℝ)) := by
+    calc
+      Real.rpow (n : ℝ) ((1 : ℝ) / 4) =
+          Real.rpow (n : ℝ) (((1 : ℝ) / 2) * ((1 : ℝ) / 2)) := by norm_num
+      _ = Real.rpow (Real.rpow (n : ℝ) ((1 : ℝ) / 2)) ((1 : ℝ) / 2) :=
+        Real.rpow_mul hNnonneg _ _
+      _ = Real.sqrt (Real.sqrt (n : ℝ)) := by
+        rw [Real.sqrt_eq_rpow, Real.sqrt_eq_rpow]
+  apply Set.ext
+  intro x
+  simp only [Shao.OQ6.OriginalGoodEventProbability.normalizedGoodEvent,
+    Shao.OQ5.P51.projectionGood, Shao.OQ5.P51.projectionV,
+    Shao.OQ5.P51.projectionEnergy, Shao.OQ5.P51.projectionW,
+    Shao.OQ6.OriginalGhostGoodEvent.sampleEnergy,
+    Shao.OQ6.OriginalGhostGoodEvent.sampleSum, hQuarter]
+
+end Shao.OQ6.OriginalGoodEventBridge
