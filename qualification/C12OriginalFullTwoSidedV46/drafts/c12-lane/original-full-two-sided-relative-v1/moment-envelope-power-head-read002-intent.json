@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "from pathlib import Path\nimport json,re\np=Path(\"/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean\");ls=p.read_text().splitlines()\nfor i,l in enumerate(ls):\n if re.search(r\"^(theorem|lemma|protected theorem) (div_rpow|mul_rpow|rpow_neg)(?: |\\b)\",l):\n  j=i\n  while j<min(i+6,len(ls))and\":=\"not in ls[j]:j+=1\n  print(json.dumps({\"line\":i+1,\"head\":\"\\n\".join(ls[i:j+1]).split(\":=\")[0]},ensure_ascii=False))\n",
+  "timeout": 60
+}

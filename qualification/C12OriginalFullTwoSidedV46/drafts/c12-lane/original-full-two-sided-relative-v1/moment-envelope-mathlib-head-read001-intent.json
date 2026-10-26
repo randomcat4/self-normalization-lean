@@ -1,0 +1,6 @@
+{
+  "action": "exec",
+  "command": "taskset -c 44-47 python3 -",
+  "stdin": "from pathlib import Path\nimport re,json,hashlib\nroot=Path(\"/root/rivermind-data/shao-lean-20261021/workspaces/c12-bridge-domination-v71/.lake/packages/mathlib/Mathlib\")\nfiles=[\"Analysis/SpecialFunctions/Pow/Asymptotics.lean\",\"Analysis/SpecialFunctions/Pow/Continuity.lean\",\"Analysis/SpecialFunctions/Pow/Real.lean\"]\nfor n in files:\n p=root/n\n if not p.exists():continue\n s=p.read_text();ls=s.splitlines();out=[]\n for i,l in enumerate(ls):\n  if re.search(r\"^(theorem|lemma|protected theorem|@[a-z]+ theorem).*\",l) and any(k in l for k in [\"tendsto_rpow\",\"Tendsto.rpow\",\"rpow_div\",\"rpow_mul\"]):\n   j=i\n   while j<min(i+9,len(ls)):\n    if \":=\"in ls[j]or\" :=\"in ls[j]:break\n    j+=1\n   out.append({\"line\":i+1,\"head\":\"\\n\".join(ls[i:j+1]).split(\":=\")[0]})\n print(json.dumps({\"file\":n,\"sha256\":hashlib.sha256(p.read_bytes()).hexdigest(),\"heads\":out},ensure_ascii=False))\n",
+  "timeout": 60
+}
