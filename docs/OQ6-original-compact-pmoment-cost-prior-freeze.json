@@ -1,0 +1,230 @@
+{
+  "schema": "oq56-unit217-parent-prior-full-declaration-data-freeze-v1",
+  "atUTC": "2026-10-26T19:09:59.834999+00:00",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION_AFTER_216_QUALIFIED_ACTUAL_TYPE_O_BINDING",
+  "unit": 217,
+  "module": "Shao.OQ6.OriginalCompactPMomentCost",
+  "authorRole": "/root/oq56_compactmoment217_author",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "parentIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/parent-stage1-complete-intake.json",
+    "sha256": "e82fc9845140bd5409d0e9c3cb42eaa008f4c6cffb2b66e860013ce79bf0c58a",
+    "bytes": 4061
+  },
+  "proposal": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-stage1-01/PROPOSAL.md",
+    "sha256": "7f90aa0e208530fb93ba1cbfaf5abf5034493a3a55ecc421d9dd961155614934",
+    "bytes": 6005
+  },
+  "canonicalCandidate": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "1fff88d6b60406bce14d1799400e330e64e3709b8f893498a0bf958a31b5a95a",
+    "bytes": 9022
+  },
+  "dataLedger": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-stage1-01/DATA-CAPTURE-LEDGER.md",
+    "sha256": "f8efa04b2df20a591f820666bf799e4f713acc362489e5514696e0ea437787d8",
+    "bytes": 7434
+  },
+  "sourceMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-stage1-01/SOURCE-INTERFACE-MAP.json",
+    "sha256": "186a7509d7ad88ed65bc543712e41b7d5955d21a2066c32c9054bfca3c5cc47c",
+    "bytes": 12863
+  },
+  "architecture": {
+    "path": "C:/game/shao lean/drafts/oq56/unit217/author-stage1-01/ARCHITECTURE-AND-BOUNDARIES.md",
+    "sha256": "da0c4aa698dfba471bf683b1ee8a6764e6e022f9946afbefcbcd16f616c226dd",
+    "bytes": 12071
+  },
+  "preamble": "import Shao.OQ6.OriginalCompactExpectationFees\nimport Shao.OQ6.ActualPhysicalCompactCDF\nimport Shao.OQ6.ActualQuadraticTiltMoments\nimport Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nuniverse u\n\nnamespace Shao.OQ6.OriginalCompactPMomentCost\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical",
+  "preambleSHA256": "45412b9b63bbda2e1d824bd2bdd2b37706affc2eb31bbc4045de6bfc7e5c082a",
+  "globalDeclarations": [
+    {
+      "name": "compact_rpow_le_eight",
+      "kind": "private theorem",
+      "head": "private theorem compact_rpow_le_eight\n    (p z : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hz : 0 ≤ z) (hz1 : z ≤ 1) :\n    Real.rpow (1 + z) p ≤ 8",
+      "ambientCapturedVariables": [],
+      "proofBody": null,
+      "headSHA256": "160ca40593554a6c3a2af81cf1fdc115f44dc2ad969754e095d2cad40270070f",
+      "headBytes": 150,
+      "headLines": 4
+    },
+    {
+      "name": "actual_original_compact_pmoment_cost",
+      "kind": "public theorem",
+      "head": "theorem actual_original_compact_pmoment_cost\n    {Ω : Type u} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C₀ : ℝ) (hC₀ : 0 ≤ C₀) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let sigma : ℝ := 1 + rho\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.truncationF ((1 + z) * (g (ξ i) / N))\n    let Lcompact : ℝ :=\n      ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min (|g (ξ i)| / N) (1 / (1 + z))\n    let D : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.residualStatisticD n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.residualStatisticDDeleted n r\n    let J : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.residualEnergyJ n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B₁ : (Fin n → Ω) → ℝ :=\n      Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1\n    let B₁del : (Fin n → Ω) → Fin n → ℝ :=\n      Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)\n    let residualFee : ℝ :=\n      (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\n    let sourceCost : ℝ := Lcompact + residualFee\n    (∀ i : Fin n, Integrable (fun ξ => projectionTest ξ i) P₀) ∧\n      Lcompact = (n : ℝ) *\n        (∫ o, Shao.truncationF ((1 + z) * (g o / N)) ∂μ) ∧\n      0 ≤ Lcompact ∧\n      Lcompact ≤ (1 + z) ^ 2 ∧\n      Lcompact ≤ 4 ∧\n      (∀ ξ : Fin n → Ω,\n        B₁ ξ = C₀ * (sigma / N + J ξ / (sigma * N))) ∧\n      (∀ (ξ : Fin n → Ω) (i : Fin n),\n        B₁del ξ i = C₀ * (sigma / N + Jdel ξ i / (sigma * N))) ∧\n      Integrable A P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Adel ξ i) P₀) ∧\n      Integrable B₁ P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => B₁del ξ i) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |A ξ - Adel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |B₁ ξ - B₁del ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) ∧\n      residualFee ≤\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N ∧\n      sourceCost ≤ Lcompact +\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N ∧\n      0 ≤ β ∧\n      Integrable (fun o => Shao.truncationF ((1 + z) * (g o / N))) μ ∧\n      Lcompact ≤ β * Real.rpow (1 + z) p /\n        Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n      Lcompact ≤ 8 * β / Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n      sourceCost ≤ 8 * β / Real.rpow (n : ℝ) ((p - 2) / 2) +\n        128 * (1 + C₀) * (1 + rho + rho ^ 2) / N",
+      "ambientCapturedVariables": [],
+      "proofBody": null,
+      "headSHA256": "bd1460ba8a997b7b5409e642cf8aa10f874b691c9d73c0e48fb4e94e86fd3301",
+      "headBytes": 3893,
+      "headLines": 79
+    }
+  ],
+  "publicDataTemplates": [
+    {
+      "name": "g",
+      "typedValue": "Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+    },
+    {
+      "name": "β",
+      "typedValue": "ℝ := ∫ o, Real.rpow |g o| p ∂μ"
+    },
+    {
+      "name": "r",
+      "typedValue": "Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+    },
+    {
+      "name": "v",
+      "typedValue": "ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)"
+    },
+    {
+      "name": "rho",
+      "typedValue": "ℝ := Real.sqrt v"
+    },
+    {
+      "name": "sigma",
+      "typedValue": "ℝ := 1 + rho"
+    },
+    {
+      "name": "N",
+      "typedValue": "ℝ := Real.sqrt (n : ℝ)"
+    },
+    {
+      "name": "P₀",
+      "typedValue": "Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)"
+    },
+    {
+      "name": "projectionTest",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  Shao.truncationF ((1 + z) * (g (ξ i) / N))"
+    },
+    {
+      "name": "Lcompact",
+      "typedValue": "ℝ := ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀"
+    },
+    {
+      "name": "cap",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  min (|g (ξ i)| / N) (1 / (1 + z))"
+    },
+    {
+      "name": "D",
+      "typedValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualStatisticD n r"
+    },
+    {
+      "name": "Ddel",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualStatisticDDeleted n r"
+    },
+    {
+      "name": "J",
+      "typedValue": "(Fin n → Ω) → ℝ := Shao.OQ5.P51.residualEnergyJ n r"
+    },
+    {
+      "name": "Jdel",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualEnergyJDeleted n r"
+    },
+    {
+      "name": "A",
+      "typedValue": "(Fin n → Ω) → ℝ := fun ξ => |D ξ|"
+    },
+    {
+      "name": "Adel",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|"
+    },
+    {
+      "name": "B₁",
+      "typedValue": "(Fin n → Ω) → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1"
+    },
+    {
+      "name": "B₁del",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1"
+    },
+    {
+      "name": "deletedTest",
+      "typedValue": "(Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)"
+    },
+    {
+      "name": "residualFee",
+      "typedValue": "ℝ :=\n  (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n    ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀"
+    },
+    {
+      "name": "sourceCost",
+      "typedValue": "ℝ := Lcompact + residualFee"
+    }
+  ],
+  "additionalProofBodyDataTemplates": [],
+  "completeDataCaptureLedger": "# Unit 217 complete proposed data and capture ledger\n\nStatus: stage1 proposal only. Not frozen; implementation unauthorized. The complete public/private heads and preamble are in PROPOSAL.md and candidate-declarations-data.json. No Lean file or proof body exists.\n\n## Explicit external binders\n\n| Binder | Full type/kind | Capture and constraint |\n|---|---|---|\n| u | universe | The only proposed universe variable. |\n| Ω | Type u | Explicit implicit public binder; arbitrary observation space. |\n| [MeasurableSpace Ω] | non-Prop typeclass | Exactly the input measurable-space instance. Never replaced or coarsened. |\n| μ | Measure Ω | Explicit actual observation law. |\n| [IsProbabilityMeasure μ] | Prop typeclass | Explicit input hypothesis. |\n| h | Ω → Ω → ℝ | Explicit actual original kernel. |\n| hh | Measurable (fun t : Ω × Ω => h t.1 t.2) | Explicit Prop; original216 condition. |\n| hh2 | MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ) | Explicit Prop; original216 condition. |\n| hhsymm | ∀ o y, h o y = h y o | Explicit Prop, pointwise symmetry, not weakened to an unstated version. |\n| hcenter | (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0 | Explicit Prop; original216 condition. |\n| hprojectionsecond | (∫ o, (∫ y, h o y ∂μ)^2 ∂μ) = 1 | Explicit Prop; original216 condition. |\n| p | ℝ | NEW explicit corollary input. |\n| hp2 | 2 < p | NEW explicit Prop, source range. |\n| hp3 | p ≤ 3 | NEW explicit Prop, source range. |\n| hgp | Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ | NEW explicit Prop; actual projection p-moment integrability. Not inferred from joint L² and not inserted into216. |\n| n | ℕ | Explicit original sample size. |\n| hn | 4 ≤ n | Explicit Prop, original216 condition. |\n| z | ℝ | Explicit compact threshold. |\n| hz | 0 ≤ z | Explicit Prop. |\n| hz1 | z ≤ 1 | Explicit Prop. |\n| C₀ | ℝ | Explicit nonnegative budget parameter. |\n| hC₀ | 0 ≤ C₀ | Explicit Prop. |\n\nThe private scalar helper has only explicit `(p z : ℝ)`, `hp2 : 2 < p`, `hp3 : p ≤ 3`, `hz : 0 ≤ z`, and `hz1 : z ≤ 1`. It has no type parameter, measure, model, ambient section capture, public-let capture or non-Prop local datum.\n\n## All public non-Prop lets and exact permitted mirrors\n\nThese are the complete22 public data templates, in dependency order. All21 original216 templates are retained with exactly the same types and values; β is the only new template. If a future authorized proof mirrors any of them, the displayed type and value are mandatory. This is not authorization to mirror or implement now.\n\n```lean\ng : Ω → ℝ := fun o => ∫ y, h o y ∂μ\nβ : ℝ := ∫ o, Real.rpow |g o| p ∂μ\nr : Ω → Ω → ℝ := fun o y => h o y - g o - g y\nv : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\nrho : ℝ := Real.sqrt v\nsigma : ℝ := 1 + rho\nN : ℝ := Real.sqrt (n : ℝ)\nP₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\nprojectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  Shao.truncationF ((1 + z) * (g (ξ i) / N))\nLcompact : ℝ := ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\ncap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  min (|g (ξ i)| / N) (1 / (1 + z))\nD : (Fin n → Ω) → ℝ := Shao.OQ5.P51.residualStatisticD n r\nDdel : (Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualStatisticDDeleted n r\nJ : (Fin n → Ω) → ℝ := Shao.OQ5.P51.residualEnergyJ n r\nJdel : (Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.residualEnergyJDeleted n r\nA : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\nAdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\nB₁ : (Fin n → Ω) → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudget n r C₀ rho 1\nB₁del : (Fin n → Ω) → Fin n → ℝ :=\n  Shao.OQ5.P51.studentizerClipBudgetDeleted n r C₀ rho 1\ndeletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n  cap ξ i * (|A ξ - Adel ξ i| + z * |B₁ ξ - B₁del ξ i|)\nresidualFee : ℝ :=\n  (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B₁ ξ ∂P₀) +\n    ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\nsourceCost : ℝ := Lcompact + residualFee\n```\n\nThe proposed helper has zero local lets. The public proof has zero additional planned non-Prop aliases beyond exact mirrors of those22 templates. In particular it does not recreate140's tilted laws/densities,170's scalar-normalization aliases, or216's kappa/Cprime/delta/row-sum assembly. Imported theorem application facts and projections are Prop-valued; any proposed non-Prop choice, new function, auxiliary datum or helper requires a prior parent ledger amendment. Function/lambda-bound ξ, i, o, y are bound arguments of the displayed templates, not free captures.\n\n## Global values and instances\n\n- New global `def`, `abbrev`, structure, inductive, opaque/non-theorem constant, local notation and user-defined instance: zero. All new owned source declarations are theorem heads only.\n- No ambient section variables are proposed; both heads bind every needed argument. `set_option autoImplicit false` prevents accidental implicit model parameters.\n- Product measurable spaces on Ω×Ω and finite-product measurable spaces on Fin n→Ω are the canonical imported instances determined by the single public MeasurableSpace Ω. Real's measurable/topological/normed/ring/lattice/integral structures are canonical Mathlib instances; none is an extra parameter or override.\n- Fin n uses its canonical Fintype and decidable-equality/order structures. There is no alternate index space, external enumeration, retained law or measurable selector.\n- `[IsProbabilityMeasure μ]` is the explicit Prop instance. If a later proof needs `IsProbabilityMeasure P₀`, its complete type is `MeasureTheory.IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ))`; its intended value is the canonical existing finite-product probability instance inferred from the public input. This is a derived Prop instance/fact, not a new measure or non-Prop override. No additional instance is proposed.\n- A `classical` scope uses canonical imported classical decidability only. No `Classical.choose` datum or selector is planned. The allowed transitive axiom whitelist remains propext, Classical.choice and Quot.sound; no actual217 axiom result exists at stage1.\n- `noncomputable section` is proposed for real integrals and existing data expressions. It grants no unsafe execution or new axiom.\n\n## Captures of the22 templates\n\n`g` captures Ω, its measurable-space instance, μ and h. `β` additionally captures p through g. `r` uses h and g; v uses r, μ and the canonical product measurable space; rho/sigma/N use only earlier listed values and n. P₀ uses Ω, its measurable-space instance, μ and the original n. ProjectionTest/Lcompact/cap additionally use z and g/N. D/Ddel/J/Jdel use n and r. A/Adel use their named D/Ddel; B₁/B₁del additionally use C₀ and rho, at literal last parameter1. deletedTest uses cap,A,Adel,z,B₁,B₁del. residualFee uses P₀,A,z,B₁,deletedTest. sourceCost is literally Lcompact+residualFee. No proof of integrability is captured as non-Prop data.\n\nThe hgp input and β expression agree definitionally after unfolding g. The helper170's N=(n:ℝ), q=sqrt(N) must not be confused with217's N=sqrt(n:ℝ). The consumer uses Real.rpow for both `(1+z)^p` and `n^((p−2)/2)`; `rho ^ 2` is the natural square already used by216. No norm, moment or denominator is silently exchanged.\n",
+  "globalDeclarationCountDerived": 2,
+  "sourcePublicTheoremsDerived": 1,
+  "sourcePrivateTheoremsDerived": 1,
+  "publicTypedDataCountDerived": 22,
+  "publicTargetConjunctsDerived": 21,
+  "exact216QualifiedDependency": {
+    "qualification": {
+      "path": "C:/game/shao lean/drafts/oq56/unit216/qualified-evidence.json",
+      "sha256": "9897a9475be0712797ed9cc15d29a5fcf8231e97652c6e49a3adaba895ecde11",
+      "bytes": 11025
+    },
+    "independentQualifiedEvidence": {
+      "path": "C:/game/shao lean/drafts/oq56/unit216/final-review-01/final-machine-source348-01/independent-qualified-evidence.json",
+      "sha256": "04b51dd1de6baa0ccd23a89be0c6edf965483811cf600cae9b44e1cdce24fd0a",
+      "bytes": 13760
+    },
+    "completeIndependentFinalReport": {
+      "path": "C:/game/shao lean/drafts/oq56/unit216/final-review-01/final-machine-source348-01/REPORT-FINAL.md",
+      "sha256": "3cd69176b9fe6594609e6d6c3a7d7243216efb3954d14a1290b36da27c09b257",
+      "bytes": 12528
+    },
+    "source": {
+      "path": "C:/game/shao lean/drafts/oq56/unit216/author-01/stage2/OriginalCompactExpectationFees.lean",
+      "sha256": "e7bb2776751571d424c9dea142ff5df7760b89e47ee65e49984e57748167bf65",
+      "bytes": 16022
+    },
+    "originalObject": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalCompactExpectationFees.olean",
+      "sha256": "09dfa79c61ba421f0965eda049cc6b27338c85207a74b6180e1ab7b4e04f8de1",
+      "bytes": 1003784,
+      "mtime_ns": "1793040792696305605"
+    },
+    "actualMetadata": {
+      "path": "C:/game/shao lean/drafts/oq56/unit216/lead-execution-01/owner-evidence-01/actual-owned-metadata.json",
+      "sha256": "3c0b92766698b27e1ffb5aa69eaaa7f0e7809ce18797b6a92ce57df64fe62d8d",
+      "bytes": 75090
+    },
+    "name": "Shao.OQ6.OriginalCompactExpectationFees.actual_original_compact_expectation_fees",
+    "actualPublicTYPE": {
+      "sha256": "76b4f481c4f202d7ea71c496472eff69a828634b8837843fe303e998e50de874",
+      "bytes": 31390,
+      "logicalLines": 406,
+      "completeIndependentTYPEAndContextReviewQualified": true
+    },
+    "frozenSourceContract": {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-compact-expectation-fees-216/parent-freeze-v1.json",
+      "sha256": "c55680f16fa5a139556df337ca9e94c80cd6d9bdeddfba24918fa3d2c39d993f",
+      "bytes": 23785
+    },
+    "parentProofReviewReuse": "QualifiedexactSOURCE/native/sameFIRSTO/full13TYPE674/AX reused; no second complete216proof review or kernel call",
+    "replacesStage1ConditionalBinding": true
+  },
+  "otherAcceptedPublicInterfacePolicy": "170normalizedmomenthelper137LF and140actualprojectionmoments1631LF exact inputs/endpoints from stage1 inputvalidation/sourceinterface map reused; helper140calledatx=0, no new publicwindow. No oldproof/kernel/leafAX replay.",
+  "allProofBodyDataPolicy": "Only exacttypedvalue mirrors of the22 public templates are permitted; helperhasnolocalnonPropdata. No additionaldata/globaldefs/instances/captures without prior amendment. Ordinary derivedProp facts and inferredcanonicalP0probabilityProp allowed.",
+  "newExplicitCorollaryPremises": [
+    "p:Real,2<p<=3",
+    "Integrable(fun o=>rpow |int_y h(o,y)dmu| p)mu"
+  ],
+  "old216ModelAssumptionsAndOriginalDefinitionsPreserved": true,
+  "sourceFormat": "UTF8noBOM/LF/exactlyonefinalLF beforefirstsourceboundgate",
+  "sourceClosing": "end\n\nend Shao.OQ6.OriginalCompactPMomentCost\n",
+  "scope": "Actualoriginalcompactmoment+combinedfee analyticbudget; sourceCost<=8beta/n^((p-2)/2)+128(1+C0)(1+rho+rho²)/sqrt n",
+  "openScopes": [
+    "sharpindividualS26leaves",
+    "CDF/SZ2.2/sourceapplication/atoms/zeroDenominator",
+    "S11",
+    "generalS15",
+    "DC",
+    "fullOQ56/rootclosure",
+    "novelty"
+  ],
+  "p54AndShaoZhou2016AttributionPreserved": true,
+  "independentCompleteSOURCEAndActualTYPE_VALUE_AXQualificationRequired": true,
+  "qualified": false
+}
