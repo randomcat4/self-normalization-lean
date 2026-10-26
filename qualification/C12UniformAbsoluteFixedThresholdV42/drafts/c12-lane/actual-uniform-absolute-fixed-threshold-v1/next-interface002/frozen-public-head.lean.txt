@@ -1,0 +1,27 @@
+theorem iid_actual_bounded_centered_uniform_absolute_fixed_threshold_comparison :
+    ∃ epsilonF CA KD : ℝ, 0 < epsilonF ∧ epsilonF ≤ 1 / 8 ∧ 0 < CA ∧ 0 < KD ∧
+      ∀ (M : ℝ), (1 / 2 : ℝ) ≤ M → ∃ CF : ℝ, 0 < CF ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ) (hn : 0 < n) (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonF →
+          ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+            (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+            IsBrownianReal Bm PB →
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+            let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+            let brownianDouble : Set ΩB := {omegaB |
+              (∃ t : BridgeTime, x ≤ Bm ⟨(t : ℝ), t.property.1⟩ omegaB) ∧
+              (∃ t : BridgeTime, Bm ⟨(t : ℝ), t.property.1⟩ omegaB ≤ -x)}
+            Shao.truncationBudget normalizedLaw n 0 = delta ∧
+              Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+              |P.real (doubleCrossingEvent x) - PB.real brownianDouble| ≤ KD * delta ∧
+              (x ≤ M → |P.real (doubleCrossingEvent x) - PB.real brownianDouble| ≤
+                CF * delta * (1 + x) ^ 3 * Shao.standardNormalTail x) ∧
+              |P.real {a | x * Real.sqrt (Shao.energy a) ≤ Shao.absMax a hn} -
+                PB.real {omegaB | ∃ t : BridgeTime,
+                  x ≤ |Bm ⟨(t : ℝ), t.property.1⟩ omegaB|}| ≤ CA * delta

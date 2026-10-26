@@ -1,0 +1,20 @@
+private theorem uaf_legal_c1_all_thresholds :
+    ∃ rhoStar epsilonF C1 K1 : ℝ,
+      0 < rhoStar ∧ rhoStar ≤ 1 / 16 ∧
+      epsilonF = min (rhoStar / 27) (1 / 8) ∧ 0 < epsilonF ∧ 0 < C1 ∧ 0 < K1 ∧
+      ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+        (bound : ℝ), 0 < bound → (∀ᵐ z : ℝ ∂rho, |z| ≤ bound) →
+        (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+        ∀ (n : ℕ) (hn : 0 < n) (x : ℝ), (1 / 2 : ℝ) ≤ x →
+          bound ≤ Real.sqrt (n : ℝ) / (100 * x) →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonF →
+          let normalizedLaw : Measure ℝ := Measure.map (fun z : ℝ => z / Real.sqrt (n : ℝ)) rho
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => rho)
+          Shao.truncationBudget normalizedLaw n x = delta * (1 + x) ^ 3 ∧
+          Shao.truncationBudget normalizedLaw n x ≤ rhoStar ∧ delta ≤ 1 ∧
+          ∀ s : ℝ, (s = 1 ∨ s = -1) →
+            let U : Set (Shao.Path n) := {a | x * Real.sqrt (Shao.energy a) ≤ Shao.upperMax (s • a) hn}
+            |P.real U - 2 * Shao.standardNormalTail x| ≤ C1 * delta * (1 + x) ^ 3 * Shao.standardNormalTail x ∧
+            |P.real U - 2 * Shao.standardNormalTail x| ≤ K1 * delta
