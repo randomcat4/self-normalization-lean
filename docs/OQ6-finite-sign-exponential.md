@@ -1,0 +1,27 @@
+# Finite sign exponential factorization and sharp two-sided tail
+
+This module supplies the finite deterministic producer needed by the original self-normalized ghost-sample route. For arbitrary n and real coefficients a_i it defines Z(s)=sum_i signValue(s_i)*a_i and Q=sum_i a_i^2, reusing qualified185 signValue and cubeMean. The mean is exactly (2^n)^(-1) times the sum over every s:Fin n->Bool.
+
+For every real lambda, the first theorem factors cubeMean(exp(lambda Z)) into the product of (exp(lambda*a_i)+exp(-lambda*a_i))/2. The second proves cubeMean(exp(lambda Z))<=exp(lambda^2 Q/2), using the pinned cosh<=exp(x^2/2) primary theorem and finite product algebra. Neither theorem restricts lambda to be nonnegative.
+
+For every t>=0 the third theorem proves cubeMean(if t*sqrt(Q)<abs(Z) then1 else0)<=2exp(-t^2/2). It keeps the strict event, arbitrary signed coefficients, n=0, Q=0 and t=0. Zero energy forces every coefficient zero, so the strict event is empty. In the positive-energy branch sqrt(Q)>0 is proved before division; lambda=t/sqrt(Q), both exponential signs, and a fixed weight give the pointwise bound. The exact average identity and lambda*t*sqrt(Q)=lambda^2 Q=t^2 finish the proof. No future iid or probability tail assertion is an input.
+
+## Exact independent and server evidence
+
+The accepted source is SHA2564e3cfd9fcd4e8b943b45e90b75ed54ca34cc1805de99c90ed66c2cd5c917ce88,9992B,236LF,UTF8BOM0. FIRST successful original object is SHA256df6abfcfc488b27698a891324b90788edf4a65089101eccfaf94198f2a8b4546,332160B,mtime_ns1792982607773342104.
+
+Native03 actual Lean RC0/5.462861584499478seconds,0errors/6warnings, receiptd536fa5e80e00b93045d6e936a60397b26159f021c43e3883c3ad0cb9ba5b4de. SAME FIRST original-object audit actual RC0/5.323136184364557seconds, receipt9879fee12c9f0cab84d059f2087449c9c963348749e5598b52190e6c028beff9. Actual FULLFP preservation counts12321/12333 and natural process-group endings are retained. CPU52-55/originalOQ56lock/-M8192-j4/phase29 heavy1/max2project/80GiBproject process budget remain.
+
+The unfiltered actual module index has15owners=13theorems+2definitions=5source declarations+10generated descendants,0foreign owners. Independent review read all180TYPE/9non-theoremFULLVALUE lines, bodies present, every name component, all level parameters and every recursiveAX. Seven generated propositions have explicit polymorphic universe levels; the five source declarations have none. The10generated are2defining equations, the real cosh identity, and7generic simp propositions. Only propext,Classical.choice,Quot.sound occur, in15/9/9 entries. The18756B original audit output reconstructs losslessly with SHA2569e24c166e3259c299fb17c3388738d941648acfc36965a578e488cf349d21add.
+
+Complete originalSOURCE review covers all3proofs and source-to-statement scope. It initially missed the L193 sum-binder parsing error; native02 exposed the unbound s. The parent froze an exact repair before implementation: add2ASCII parentheses around the whole sum-add body. The same independent role then read the full affected helper L190-197, its complete type and prior scope, checked the reversible whole-source patch, all127source spans and32prefix pairs, and composed the unchanged proof coverage by exact bytes. Original501c source is retained as a failed version, never retrospectively passed. No declaration, assumption, RHS, data initializer, capture, instance or numeric type changed.
+
+The parent repair intake has887checks; the independent source delta has427checks; final machine review has173checks; parent final intake has143checks. These are source/evidence binding checks in addition to complete mathematical reading, not extra proof compiles. The full review reports and exact coverage/qualification, patch provenance, prior repair freeze and complete actual metadata are included.
+
+Six warnings remain: three deprecated if names, and three redundant/unreachable tactic warnings after field_simp closes its goal. Both strict wrapper results=false, FIRSTEMPTY=false, outer transport RC1 and134B Lake stderr remain as observed; qualification uses actual Lean RC0 and same-object all-owner evidence. No warning cleanup or proof replay occurred. Native01 missing Series and native02 binder failure receipts are preserved. Root alone hydrated the exact pinned missing Series cache files, without changes to48111old artifact metadata or old proof checks. The first native03 launch had an old hash/byte-count metadata header and stopped before STARTED/Lean; config02 corrected those metadata fields. A normalization-only old-template path error is also retained; neither failure is a proof result.
+
+## Source boundary
+
+This closes only the finite full-Bool-cube exponential producer. It does not yet prove an iid paired law, an original sample tail, actual W/V normalization, Gy complement payment, S11 or an OQ56 root. Unit199 now consumes the exact qualified three-interface package and is being implemented;200 supplies the separate original ghost-good-event mass,201 the deterministic vector comparison, and actual product rectangles/pair transport still need assembly.
+
+OriginalC1immutablev85 remains complete; C2/C12/OQ56OPEN; OQ3PAUSED_BY_USER. Keep p54 repairs, Shao-Zhou2016(92)/Jing-Shao-Wang2003Lemma6.4 attribution and unified124notprerequisite. No novelty or full mathematical closure is claimed. This PR is based on PR418's exact head, already absorbed by Rootv107; lane does not merge.
