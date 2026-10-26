@@ -1,0 +1,83 @@
+--- C:/game/shao lean/drafts/oq56/unit193/author-01/stage2/BoundedProductEnvelopeTails.lean
++++ C:/game/shao lean/drafts/oq56/unit193/author-01/stage2/repair-01/BoundedProductEnvelopeTails.lean
+@@ -247,7 +247,11 @@
+   have hA : 0 < A := Real.rpow_pos_of_pos (mul_pos (Real.exp_pos 1) hK) p
+   have hJBound : J ≤ Real.rpow K p := by
+     have hh := Real.rpow_le_rpow (Real.rpow_nonneg hJ (1 / p)) hMoment hp.le
+-    simpa only [one_div, Real.rpow_inv_rpow hJ (ne_of_gt hp)] using hh
++    have hInverse : Real.rpow (Real.rpow J (1 / p)) p = J := by
++      simpa only [Real.rpow_eq_pow, one_div] using
++        (Real.rpow_inv_rpow hJ (ne_of_gt hp))
++    change Real.rpow (Real.rpow J (1 / p)) p ≤ Real.rpow K p at hh
++    simpa only [hInverse] using hh
+   have hsubset : bad ⊆ powerClosed := by
+     intro a ha
+     change Real.rpow (Real.exp 1 * K) p ≤ Real.rpow (X a) p
+@@ -256,18 +260,21 @@
+     exact mul_meas_ge_le_integral_of_nonneg (Filter.Eventually.of_forall hY) hXp A
+   have hAeq : A = Real.exp p * Real.rpow K p := by
+     dsimp [A]
+-    rw [Real.rpow_eq_pow, Real.mul_rpow (le_of_lt (Real.exp_pos 1)) hK.le,
+-      Real.exp_one_rpow]
++    rw [Real.mul_rpow (le_of_lt (Real.exp_pos 1)) hK.le, Real.exp_one_rpow]
+   have hmass : mass ≤ Real.exp (-p) := by
+-    have hineq : (Real.exp p * Real.rpow K p) * mass ≤ Real.rpow K p := by
+-      rw [← hAeq]
++    have hCancel : A * Real.exp (-p) = Real.rpow K p := by
++      rw [hAeq]
++      calc
++        (Real.exp p * Real.rpow K p) * Real.exp (-p) =
++            (Real.exp p * Real.exp (-p)) * Real.rpow K p := by ring
++        _ = Real.rpow K p := by rw [← Real.exp_add]; simp
++    have hScaledBound : A * mass ≤ A * Real.exp (-p) := by
++      rw [hCancel]
+       exact hmarkov.trans hJBound
+-    have hmul : Real.exp p * mass ≤ 1 := by
+-      apply (mul_le_mul_right hKp).mp
+-      nlinarith [hineq]
+-    rw [Real.exp_neg]
+-    simpa only [one_div] using
+-      (le_div_iff₀ (Real.exp_pos p)).2 (by simpa [mul_comm] using hmul)
++    by_contra hNot
++    have hPositiveGap : 0 < A * (mass - Real.exp (-p)) :=
++      mul_pos hA (sub_pos.mpr (lt_of_not_ge hNot))
++    nlinarith only [hScaledBound, hPositiveGap]
+   calc
+     μ.real bad ≤ μ.real powerClosed := measureReal_mono hsubset
+     _ ≤ Real.exp (-p) := hmass
+@@ -617,7 +624,7 @@
+   (sampleLaw n ν).real {x : Fin n → Ω | squareTailScale M * (n : ℝ) < squareSum n w x}
+   ≤ Real.exp (-q) := by
+   let μ : Measure (Fin n → Ω) := sampleLaw n ν
+-  letI instμ : IsProbabilityMeasure μ := inferInstance
++  letI instμ : IsProbabilityMeasure μ := by dsimp only [μ, sampleLaw]; infer_instance
+   let X : (Fin n → Ω) → ℝ := squareSum n w
+   let powerX : (Fin n → Ω) → ℝ := fun (x : Fin n → Ω) => Real.rpow (X x) (q)
+   by_cases hn : n = 0
+@@ -668,7 +675,7 @@
+   (sampleLaw n ν).real {x : Fin n → Ω | scalarTailScale M * (n : ℝ) * q < |originalUpper n r x|}
+   ≤ Real.exp (-q) := by
+   let μ : Measure (Fin n → Ω) := sampleLaw n ν
+-  letI instμ : IsProbabilityMeasure μ := inferInstance
++  letI instμ : IsProbabilityMeasure μ := by dsimp only [μ, sampleLaw]; infer_instance
+   let X : (Fin n → Ω) → ℝ := fun (x : Fin n → Ω) => |originalUpper n r x|
+   let powerX : (Fin n → Ω) → ℝ := fun (x : Fin n → Ω) => Real.rpow (X x) (q)
+   by_cases hn : n = 0
+@@ -723,7 +730,7 @@
+   (sampleLaw n ν).real {x : Fin n → Ω | rowTailScale M * (n : ℝ) ^ 2 * q < ‖originalRows n r x‖ ^ 2}
+   ≤ Real.exp (-(2 * q)) := by
+   let μ : Measure (Fin n → Ω) := sampleLaw n ν
+-  letI instμ : IsProbabilityMeasure μ := inferInstance
++  letI instμ : IsProbabilityMeasure μ := by dsimp only [μ, sampleLaw]; infer_instance
+   let X : (Fin n → Ω) → ℝ := fun (x : Fin n → Ω) => ‖originalRows n r x‖
+   let powerX : (Fin n → Ω) → ℝ := fun (x : Fin n → Ω) => Real.rpow (X x) (2 * q)
+   by_cases hn : n = 0
+@@ -808,7 +815,7 @@
+     (sampleLaw n ν).real {x : Fin n → Ω | tailScale M * (n : ℝ) * q < |originalUpper n r x|} +
+     (sampleLaw n ν).real {x : Fin n → Ω | tailScale M * (n : ℝ) ^ 2 * q < ‖originalRows n r x‖ ^ 2} ≤ 3 * Real.exp (-q) := by
+   let μ : Measure (Fin n → Ω) := sampleLaw n ν
+-  letI instμ : IsProbabilityMeasure μ := inferInstance
++  letI instμ : IsProbabilityMeasure μ := by dsimp only [μ, sampleLaw]; infer_instance
+   let badQ : Set (Fin n → Ω) := {x : Fin n → Ω | tailScale M * (n : ℝ) < squareSum n w x}
+   let badF : Set (Fin n → Ω) := {x : Fin n → Ω | tailScale M * (n : ℝ) * q < |originalUpper n r x|}
+   let badL : Set (Fin n → Ω) := {x : Fin n → Ω | tailScale M * (n : ℝ) ^ 2 * q < ‖originalRows n r x‖ ^ 2}
