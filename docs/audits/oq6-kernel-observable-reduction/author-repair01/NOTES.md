@@ -1,0 +1,15 @@
+# Unit 218 exact repair 01
+
+STATUS: EXACT AUTHORIZED SOURCE REPAIR COMPLETE; NOT KERNEL CHECKED; NOT QUALIFIED.
+
+This directory contains a new complete source version. The sealed original source and author packet remain unchanged. Only the parent-frozen two string substitutions were applied: `open scoped Classical` becomes `open scoped Classical MeasureTheory`, and `measurableSet_empty` becomes `MeasurableSet.empty`. The first activates the pinned scope for the existing `MeasurableSet[...]` and single/double `Measurable[...]` notation; the second names the pinned empty-set measurability theorem. The two full theorem heads, all other proof text, all typed data constructions and captures, and the proof route are byte-identical to the original source.
+
+The exact new source SHA256 is `2c756840018e99a3df019df1ee0f3381a7e15c251b711091799a1907be7b6cc5`, 8686 bytes, 198 LF. It is UTF-8 without BOM and has exactly one final LF. Reverse application of precisely the two frozen replacements reproduces the entire original byte string. The repaired source's other 196 lines are unchanged. Both theorem heads and all 13 earlier typed local construction records are checked unchanged against the sealed source/map; no additional data VALUE, global declaration, premise or instance override was introduced.
+
+The parent supplied the actual failed native01 receipt: actual RC1, 4.201165525242686 seconds, no first object, all native processes ended. The corrected affected-diagnostics record reports all 11 error headers and zero warnings. The earlier invalid diagnostic JSON and earlier descriptive undercount are retained as metadata history; no Lean command is replayed by this repair. An error-recovery context printed by Lean is not source text, a proof term, an accepted object or an axiom receipt. This source contains no forbidden proof-bypass token.
+
+The pinned source evidence is query11 at Mathlib HEAD `807d3836b165983210ee2ecf3cd28f239436949c`: Defs.lean 67 scopes the explicit `MeasurableSet` notation under `MeasureTheory`; 504 and 507 scope the explicit one- and two-structure `Measurable` notation; 76 provides `MeasurableSet.empty`. No theorem assumption or mathematical interface is changed.
+
+This author ran no Lean, server command, network call, API/publication, upload, Git operation, child, Goal or automation. Parent arranges the same independent reviewer's affected scope/name check, complete new-version native02, and same FIRST O all-actual TYPE/VALUE/transitive-axiom audit if native02 succeeds, followed by final independent qualification. No prefix or old accepted proof/producer/leaf audit is replayed here.
+
+The result's scope remains one common countably generated observable sub-sigma algebra for the same original measurable kernel and countable scalar family, with arbitrary original observation space, including the empty type. Law, integral, product/sample/statistic transport, CDF/Shao-Zhou application and full OQ56 remain OPEN. Inherited p54 repairs and Shao-Zhou (2016) attribution remain unchanged; no novelty or root completion is claimed.

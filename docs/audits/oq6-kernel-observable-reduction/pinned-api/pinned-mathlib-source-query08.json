@@ -1,0 +1,78 @@
+{
+  "pinnedMathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "queries": [
+    {
+      "pattern": "countable_iUnion|countable_range|Countable.to_subtype",
+      "exitCode": 0,
+      "matches": "Mathlib/Data/Set/Countable.lean:56:alias ⟨_root_.Countable.to_set, Countable.to_subtype⟩ := countable_coe_iff\nMathlib/Data/Set/Countable.lean:116:theorem countable_range [Countable ι] (f : ι → β) : (range f).Countable :=\nMathlib/Data/Set/Countable.lean:124:    (countable_range f).mono hsf⟩\nMathlib/Data/Set/Countable.lean:162:  apply countable_range\nMathlib/Data/Set/Countable.lean:169:  · exact countable_range (Subtype.val ∘ f)\nMathlib/Data/Set/Countable.lean:191:    refine ⟨range s, countable_range s, forall_mem_range.2 hps, ?_⟩\nMathlib/Data/Set/Countable.lean:212:theorem countable_iUnion {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :\nMathlib/Data/Set/Countable.lean:216:  apply countable_range\nMathlib/Data/Set/Countable.lean:219:theorem countable_iUnion_iff [Countable ι] {t : ι → Set α} :\nMathlib/Data/Set/Countable.lean:221:  ⟨fun h _ => h.mono <| subset_iUnion _ _, countable_iUnion⟩\nMathlib/Data/Set/Countable.lean:226:  rw [biUnion_eq_iUnion, countable_iUnion_iff, SetCoe.forall']\nMathlib/Data/Set/Countable.lean:274:  refine (countable_range fun t : Finset s => Subtype.val '' (t : Set s)).mono ?_\nMathlib/Data/Set/Countable.lean:294:    Set.preimage_iUnion, Set.countable_iUnion h]\n",
+      "stderr": ""
+    },
+    {
+      "pattern": "generateFrom_mono|measurable_generateFrom|measurable_iff_comap_le|comap_generateFrom",
+      "exitCode": 0,
+      "matches": "Mathlib/MeasureTheory/MeasurableSpace/Basic.lean:170:theorem comap_generateFrom {f : α → β} {s : Set (Set β)} :\nMathlib/MeasureTheory/MeasurableSpace/Basic.lean:189:theorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSpace β} {f : α → β} :\nMathlib/MeasureTheory/MeasurableSpace/Basic.lean:193:alias ⟨Measurable.comap_le, Measurable.of_comap_le⟩ := measurable_iff_comap_le\nMathlib/MeasureTheory/MeasurableSpace/Basic.lean:208:  simp [measurable_iff_comap_le]\nMathlib/MeasureTheory/MeasurableSpace/Basic.lean:238:theorem measurable_generateFrom [MeasurableSpace α] {s : Set (Set β)} {f : α → β}\nMathlib/MeasureTheory/MeasurableSpace/Constructions.lean:580:  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\nMathlib/MeasureTheory/MeasurableSpace/Defs.lean:398:theorem generateFrom_mono {s t : Set (Set α)} (h : s ⊆ t) : generateFrom s ≤ generateFrom t :=\n",
+      "stderr": ""
+    }
+  ],
+  "excerpts": [
+    {
+      "path": "Mathlib/Data/Set/Countable.lean",
+      "fileSHA256": "5e88b61290d5ac43069c32d84ab95e7152c3208b18e2b4df47a2278047cf4e2c",
+      "startLine": 114,
+      "endLine": 127,
+      "source": "  have := hs.to_subtype; (inclusion_injective h).countable\n\ntheorem countable_range [Countable ι] (f : ι → β) : (range f).Countable :=\n  rangeFactorization_surjective.countable.to_set\n\ntheorem countable_iff_exists_subset_range [Nonempty α] {s : Set α} :\n    s.Countable ↔ ∃ f : ℕ → α, s ⊆ range f :=\n  ⟨fun h => by\n    inhabit α\n    exact ⟨enumerateCountable h default, subset_range_enumerate _ _⟩, fun ⟨f, hsf⟩ =>\n    (countable_range f).mono hsf⟩\n\n/-- A non-empty set is countable iff there exists a surjection from the\nnatural numbers onto the subtype induced by the set.\n",
+      "excerptSHA256": "02ee7bcf66de9fdda4d69cefc5092426010df66287ed25183ea9c65fa6020988"
+    },
+    {
+      "path": "Mathlib/Data/Set/Countable.lean",
+      "fileSHA256": "5e88b61290d5ac43069c32d84ab95e7152c3208b18e2b4df47a2278047cf4e2c",
+      "startLine": 210,
+      "endLine": 223,
+      "source": "  (mapsTo_image _ _).countable_of_injOn hf hs\n\ntheorem countable_iUnion {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :\n    (⋃ i, t i).Countable := by\n  have := fun i ↦ (ht i).to_subtype\n  rw [iUnion_eq_range_psigma]\n  apply countable_range\n\n@[simp]\ntheorem countable_iUnion_iff [Countable ι] {t : ι → Set α} :\n    (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=\n  ⟨fun h _ => h.mono <| subset_iUnion _ _, countable_iUnion⟩\n\ntheorem Countable.biUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :\n",
+      "excerptSHA256": "236b5a9425c3ac1462c3499e7cb64e06126b6ffde423562a310114c85bc4de50"
+    },
+    {
+      "path": "Mathlib/Data/Set/Countable.lean",
+      "fileSHA256": "5e88b61290d5ac43069c32d84ab95e7152c3208b18e2b4df47a2278047cf4e2c",
+      "startLine": 217,
+      "endLine": 230,
+      "source": "\n@[simp]\ntheorem countable_iUnion_iff [Countable ι] {t : ι → Set α} :\n    (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=\n  ⟨fun h _ => h.mono <| subset_iUnion _ _, countable_iUnion⟩\n\ntheorem Countable.biUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :\n    (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a (ha : a ∈ s), (t a ha).Countable := by\n  have := hs.to_subtype\n  rw [biUnion_eq_iUnion, countable_iUnion_iff, SetCoe.forall']\n\ntheorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :\n    (⋃₀ s).Countable ↔ ∀ a ∈ s, a.Countable := by rw [sUnion_eq_biUnion, hs.biUnion_iff]\n\n",
+      "excerptSHA256": "2fd5a1f7a54379e55258fea6449d8335af7baacfc8d8cf989ecdf477ed7f95b5"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Basic.lean",
+      "fileSHA256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935",
+      "startLine": 168,
+      "endLine": 181,
+      "source": "  eq_bot_iff.2 <| by rintro _ ⟨s, -, rfl⟩; by_cases b ∈ s <;> simp [*]\n\ntheorem comap_generateFrom {f : α → β} {s : Set (Set β)} :\n    (generateFrom s).comap f = generateFrom (preimage f '' s) :=\n  le_antisymm\n    (comap_le_iff_le_map.2 <|\n      generateFrom_le fun _t hts => GenerateMeasurable.basic _ <| mem_image_of_mem _ hts)\n    (generateFrom_le fun _t ⟨u, hu, Eq⟩ => Eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)\n\nend MeasurableSpace\n\nsection MeasurableFunctions\n\nopen MeasurableSpace\n",
+      "excerptSHA256": "0babf09e76fde4d1951eb958464629c841c1c2ee334cf4d174a5f61431469029"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Basic.lean",
+      "fileSHA256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935",
+      "startLine": 187,
+      "endLine": 200,
+      "source": "alias ⟨Measurable.le_map, Measurable.of_le_map⟩ := measurable_iff_le_map\n\ntheorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSpace β} {f : α → β} :\n    Measurable f ↔ m₂.comap f ≤ m₁ :=\n  comap_le_iff_le_map.symm\n\nalias ⟨Measurable.comap_le, Measurable.of_comap_le⟩ := measurable_iff_comap_le\n\n/-- If `g = h ∘ f`, then the sigma-algebra generated by `g` is\nsmaller than the one generated by `f`. -/\nlemma MeasurableSpace.comap_le_comap_of_eq_comp {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}\n    {f : α → β} {g : α → γ} (h : β → γ) (mh : Measurable h) (heq : g = h ∘ f) :\n    mγ.comap g ≤ mβ.comap f := by\n  rw [heq, ← MeasurableSpace.comap_comp]\n",
+      "excerptSHA256": "f1df8b154e4d5b41a2b8e5a395f8933adcc8f5e4be4a60ea554fc46fdefb911f"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Basic.lean",
+      "fileSHA256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935",
+      "startLine": 236,
+      "endLine": 249,
+      "source": "theorem measurable_from_top [MeasurableSpace β] {f : α → β} : Measurable[⊤] f := fun _ _ => trivial\n\ntheorem measurable_generateFrom [MeasurableSpace α] {s : Set (Set β)} {f : α → β}\n    (h : ∀ t ∈ s, MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generateFrom s) f :=\n  Measurable.of_le_map <| generateFrom_le h\n\ntheorem measurableSet_generateFrom_of_mem_supClosure {s : Set (Set α)} {t : Set α}\n    (ht : t ∈ supClosure s) : MeasurableSet[generateFrom s] t := by\n  rcases ht with ⟨P, hP, PC, rfl⟩\n  rw [Finset.sup'_eq_sup, Finset.sup_id_set_eq_sUnion]\n  exact MeasurableSet.sUnion (Finset.countable_toSet P)\n    (fun s hs ↦ measurableSet_generateFrom (PC hs))\n\nvariable {f g : α → β}\n",
+      "excerptSHA256": "17b4b5113f158bfa8768f2ce9c652abb3bdbd9c8a2b7cc2202ef36aaa637342e"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Defs.lean",
+      "fileSHA256": "bbb025056bb49e962516e9d495bbda6356251a19fde31544d820ecbe50894ecf",
+      "startLine": 396,
+      "endLine": 409,
+      "source": "\n@[gcongr, mono]\ntheorem generateFrom_mono {s t : Set (Set α)} (h : s ⊆ t) : generateFrom s ≤ generateFrom t :=\n  giGenerateFrom.gc.monotone_l h\n\ntheorem generateFrom_sup_generateFrom {s t : Set (Set α)} :\n    generateFrom s ⊔ generateFrom t = generateFrom (s ∪ t) :=\n  (@giGenerateFrom α).gc.l_sup.symm\n\nlemma iSup_generateFrom (s : ι → Set (Set α)) :\n    ⨆ i, generateFrom (s i) = generateFrom (⋃ i, s i) :=\n  (@MeasurableSpace.giGenerateFrom α).gc.l_iSup.symm\n\n@[simp]\n",
+      "excerptSHA256": "138c70a27739fa413065c12505578f035b40c8cc53599e98dca7f0e8ef71e629"
+    }
+  ],
+  "LeanCalls": 0,
+  "sourceMutation": 0,
+  "allProcessesEnded": true
+}

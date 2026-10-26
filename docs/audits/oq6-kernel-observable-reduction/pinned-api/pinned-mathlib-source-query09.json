@@ -1,0 +1,145 @@
+{
+  "pinnedMathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "queries": [
+    {
+      "pattern": "MeasurableSet.iUnion|Countable.union",
+      "paths": [
+        "Mathlib/MeasureTheory/MeasurableSpace/Defs.lean",
+        "Mathlib/MeasureTheory/MeasurableSpace/Basic.lean",
+        "Mathlib/Data/Set/Countable.lean"
+      ],
+      "exitCode": 0,
+      "matches": "Mathlib/Data/Set/Countable.lean:239:theorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=\nMathlib/MeasureTheory/MeasurableSpace/Defs.lean:56:  `MeasurableSet.iUnion` instead. -/\nMathlib/MeasureTheory/MeasurableSpace/Defs.lean:104:protected theorem MeasurableSet.iUnion [Countable ι] ⦃f : ι → Set α⦄\nMathlib/MeasureTheory/MeasurableSpace/Defs.lean:116:  exact MeasurableSet.iUnion (by simpa using h)\n",
+      "stderr": ""
+    },
+    {
+      "pattern": "BorelSpace ℝ|MeasurableSpace ℝ",
+      "paths": [
+        "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+        "Mathlib/MeasureTheory/Constructions/BorelSpace/Real.lean",
+        "Mathlib/MeasureTheory/Constructions/BorelSpace/Order.lean"
+      ],
+      "exitCode": 0,
+      "matches": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:711:instance Real.measurableSpace : MeasurableSpace ℝ :=\nMathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:714:instance Real.borelSpace : BorelSpace ℝ :=\nMathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:717:instance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=\nMathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:720:instance NNReal.borelSpace : BorelSpace ℝ≥0 :=\nMathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:723:instance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\nMathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean:726:instance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n",
+      "stderr": ""
+    },
+    {
+      "pattern": "SecondCountableTopology ℝ",
+      "paths": [
+        "Mathlib"
+      ],
+      "exitCode": 0,
+      "matches": "Mathlib/Topology/MetricSpace/ProperSpace.lean:121:instance : SecondCountableTopology ℝ := inferInstance\nMathlib/Topology/MetricSpace/ProperSpace/Real.lean:44:instance : SecondCountableTopology ℝ≥0 :=\nMathlib/Topology/MetricSpace/ProperSpace/Real.lean:56:instance : SecondCountableTopology ℝ≥0∞ :=\n",
+      "stderr": ""
+    }
+  ],
+  "excerpts": [
+    {
+      "path": "Mathlib/Data/Set/Countable.lean",
+      "fileSHA256": "5e88b61290d5ac43069c32d84ab95e7152c3208b18e2b4df47a2278047cf4e2c",
+      "startLine": 234,
+      "endLine": 259,
+      "source": "\n@[simp]\ntheorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by\n  simp [union_eq_iUnion, and_comm]\n\ntheorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=\n  countable_union.2 ⟨hs, ht⟩\n\ntheorem Countable.of_sdiff {s t : Set α} (h : (s \\ t).Countable) (ht : t.Countable) : s.Countable :=\n  (h.union ht).mono (subset_sdiff_union _ _)\n\n@[deprecated (since := \"2026-06-03\")] alias Countable.of_diff := Countable.of_sdiff\n\n@[simp]\ntheorem countable_insert {s : Set α} {a : α} : (insert a s).Countable ↔ s.Countable := by\n  simp only [insert_eq, countable_union, countable_singleton, true_and]\n\nprotected theorem Countable.insert {s : Set α} (a : α) (h : s.Countable) : (insert a s).Countable :=\n  countable_insert.2 h\n\ntheorem Finite.countable {s : Set α} (hs : s.Finite) : s.Countable :=\n  have := hs.to_subtype; s.to_countable\n\n@[nontriviality]\ntheorem Countable.of_subsingleton [Subsingleton α] (s : Set α) : s.Countable :=\n  (Finite.of_subsingleton s).countable\n",
+      "excerptSHA256": "dc78c9a3a6dff93d587783c2d35ea8a6b0006f30bb6020f77613f39970d42c7f"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Defs.lean",
+      "fileSHA256": "bbb025056bb49e962516e9d495bbda6356251a19fde31544d820ecbe50894ecf",
+      "startLine": 99,
+      "endLine": 124,
+      "source": "\ntheorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : MeasurableSet t := by\n  rwa [← h]\n\n@[measurability]\nprotected theorem MeasurableSet.iUnion [Countable ι] ⦃f : ι → Set α⦄\n    (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃ b, f b) := by\n  cases isEmpty_or_nonempty ι\n  · simp\n  · rcases exists_surjective_nat ι with ⟨e, he⟩\n    rw [← iUnion_congr_of_surjective _ he (fun _ => rfl)]\n    exact m.measurableSet_iUnion _ fun _ => h _\n\nprotected theorem MeasurableSet.biUnion {f : β → Set α} {s : Set β} (hs : s.Countable)\n    (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) := by\n  rw [biUnion_eq_iUnion]\n  have := hs.to_subtype\n  exact MeasurableSet.iUnion (by simpa using h)\n\ntheorem Set.Finite.measurableSet_biUnion {f : β → Set α} {s : Set β} (hs : s.Finite)\n    (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=\n  .biUnion hs.countable h\n\ntheorem Finset.measurableSet_biUnion {f : β → Set α} (s : Finset β)\n    (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=\n  s.finite_toSet.measurableSet_biUnion h\n",
+      "excerptSHA256": "430735a8752520bfaaf090e9ad19eddbeb12e1c4b195787985ddaeab8be16a7d"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 706,
+      "endLine": 731,
+      "source": "instance Rat.borelSpace : BorelSpace ℚ :=\n  ⟨borel_eq_top_of_countable.symm⟩\n\n/- Instances on `Real` and `Complex` are special cases of `RCLike` but without these instances,\nLean fails to prove `BorelSpace (ι → ℝ)`, so we leave them here. -/\ninstance Real.measurableSpace : MeasurableSpace ℝ :=\n  borel ℝ\n\ninstance Real.borelSpace : BorelSpace ℝ :=\n  ⟨rfl⟩\n\ninstance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=\n  inferInstanceAs <| MeasurableSpace (Subtype _)\n\ninstance NNReal.borelSpace : BorelSpace ℝ≥0 :=\n  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\n",
+      "excerptSHA256": "fdf55459f04887f227262d1c402ae5ebff91c1a859e837ee22be5ad01c701035"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 709,
+      "endLine": 734,
+      "source": "/- Instances on `Real` and `Complex` are special cases of `RCLike` but without these instances,\nLean fails to prove `BorelSpace (ι → ℝ)`, so we leave them here. -/\ninstance Real.measurableSpace : MeasurableSpace ℝ :=\n  borel ℝ\n\ninstance Real.borelSpace : BorelSpace ℝ :=\n  ⟨rfl⟩\n\ninstance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=\n  inferInstanceAs <| MeasurableSpace (Subtype _)\n\ninstance NNReal.borelSpace : BorelSpace ℝ≥0 :=\n  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\ninstance EReal.borelSpace : BorelSpace EReal :=\n  ⟨rfl⟩\n\n",
+      "excerptSHA256": "381b956e69ca3caf916b25e0ea04b7c7d696da7e1b8b5cbf8e7d760525f58501"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 712,
+      "endLine": 737,
+      "source": "  borel ℝ\n\ninstance Real.borelSpace : BorelSpace ℝ :=\n  ⟨rfl⟩\n\ninstance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=\n  inferInstanceAs <| MeasurableSpace (Subtype _)\n\ninstance NNReal.borelSpace : BorelSpace ℝ≥0 :=\n  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\ninstance EReal.borelSpace : BorelSpace EReal :=\n  ⟨rfl⟩\n\nnamespace MeasureTheory.Measure.IsFiniteMeasureOnCompacts\n\nvariable {mα} in\n",
+      "excerptSHA256": "f97ed50f5bdd92e17f8c8aefd2a386a16ccfe894a4be1dd158c33a40079a177f"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 715,
+      "endLine": 740,
+      "source": "  ⟨rfl⟩\n\ninstance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=\n  inferInstanceAs <| MeasurableSpace (Subtype _)\n\ninstance NNReal.borelSpace : BorelSpace ℝ≥0 :=\n  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\ninstance EReal.borelSpace : BorelSpace EReal :=\n  ⟨rfl⟩\n\nnamespace MeasureTheory.Measure.IsFiniteMeasureOnCompacts\n\nvariable {mα} in\nprotected theorem map (μ : Measure α) [IsFiniteMeasureOnCompacts μ] (f : α ≃ₜ β) :\n    IsFiniteMeasureOnCompacts (μ.map f) := by\n  refine ⟨fun K hK ↦ ?_⟩\n",
+      "excerptSHA256": "182cfcb4c083741176ca7c97a98485de67848661bae3b97b9f64b68c258dc7d7"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 718,
+      "endLine": 743,
+      "source": "  inferInstanceAs <| MeasurableSpace (Subtype _)\n\ninstance NNReal.borelSpace : BorelSpace ℝ≥0 :=\n  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\ninstance EReal.borelSpace : BorelSpace EReal :=\n  ⟨rfl⟩\n\nnamespace MeasureTheory.Measure.IsFiniteMeasureOnCompacts\n\nvariable {mα} in\nprotected theorem map (μ : Measure α) [IsFiniteMeasureOnCompacts μ] (f : α ≃ₜ β) :\n    IsFiniteMeasureOnCompacts (μ.map f) := by\n  refine ⟨fun K hK ↦ ?_⟩\n  rw [← f.toMeasurableEquiv_coe, MeasurableEquiv.map_apply]\n  exact IsCompact.measure_lt_top (f.isCompact_preimage.2 hK)\n\n",
+      "excerptSHA256": "d21ebf3bc9c5228b3c43d0b942b0a975e3310d85074e2595f802c2f448de44f7"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+      "fileSHA256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+      "startLine": 721,
+      "endLine": 746,
+      "source": "  inferInstanceAs <| BorelSpace (Subtype _)\n\ninstance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=\n  borel ℝ≥0∞\n\ninstance ENNReal.borelSpace : BorelSpace ℝ≥0∞ :=\n  ⟨rfl⟩\n\ninstance EReal.measurableSpace : MeasurableSpace EReal :=\n  borel EReal\n\ninstance EReal.borelSpace : BorelSpace EReal :=\n  ⟨rfl⟩\n\nnamespace MeasureTheory.Measure.IsFiniteMeasureOnCompacts\n\nvariable {mα} in\nprotected theorem map (μ : Measure α) [IsFiniteMeasureOnCompacts μ] (f : α ≃ₜ β) :\n    IsFiniteMeasureOnCompacts (μ.map f) := by\n  refine ⟨fun K hK ↦ ?_⟩\n  rw [← f.toMeasurableEquiv_coe, MeasurableEquiv.map_apply]\n  exact IsCompact.measure_lt_top (f.isCompact_preimage.2 hK)\n\nvariable {mβ} in\nprotected theorem comap (μ : Measure β) [IsFiniteMeasureOnCompacts μ] (f : α ≃ₜ β) :\n    IsFiniteMeasureOnCompacts (μ.comap f) :=\n",
+      "excerptSHA256": "0efac0292442284f69a60aa0fe9594ea99c0bb878d35503019f293611c7d42cc"
+    },
+    {
+      "path": "Mathlib/Topology/MetricSpace/ProperSpace.lean",
+      "fileSHA256": "089dca88178da523cc604341cfaccdf500534fa7fcdee47f32c07861e81de55d",
+      "startLine": 116,
+      "endLine": 141,
+      "source": "\ninstance : ProperSpace ℝ where isCompact_closedBall _ _ :=\n  Real.closedBall_eq_Icc ▸ ConditionallyCompleteLinearOrder.isCompact_Icc _ _\n\n-- shortcut instance for performance reasons\ninstance : SecondCountableTopology ℝ := inferInstance\n\n/-- A binary product of proper spaces is proper. -/\ninstance prod_properSpace {α : Type*} {β : Type*} [PseudoMetricSpace α] [PseudoMetricSpace β]\n    [ProperSpace α] [ProperSpace β] : ProperSpace (α × β) where\n  isCompact_closedBall := by\n    rintro ⟨x, y⟩ r\n    rw [← closedBall_prod_same x y]\n    exact (isCompact_closedBall x r).prod (isCompact_closedBall y r)\n\n/-- A finite product of proper spaces is proper. -/\ninstance pi_properSpace {X : β → Type*} [Fintype β] [∀ b, PseudoMetricSpace (X b)]\n    [h : ∀ b, ProperSpace (X b)] : ProperSpace (∀ b, X b) := by\n  refine .of_isCompact_closedBall_of_le 0 fun x r hr => ?_\n  rw [closedBall_pi _ hr]\n  exact isCompact_univ_pi fun _ => isCompact_closedBall _ _\n\n/-- A closed subspace of a proper space is proper.\nThis is true for any proper lipschitz map. See `LipschitzWith.properSpace`. -/\nlemma ProperSpace.of_isClosed {X : Type*} [PseudoMetricSpace X] [ProperSpace X]\n    {s : Set X} (hs : IsClosed s) :\n",
+      "excerptSHA256": "6bb254b7871f997deab8b2cf22c8fa3dabfcb25888e89fa8349dde9603e4b99d"
+    },
+    {
+      "path": "Mathlib/Topology/MetricSpace/ProperSpace/Real.lean",
+      "fileSHA256": "d791124ec34453866839588fa0c703a968ed394ca1f2e307ee64c0efe9d2f232",
+      "startLine": 39,
+      "endLine": 59,
+      "source": "\n/-!\nInstances for `ℝ≥0` are inherited from the corresponding structures on the reals.\n-/\n\ninstance : SecondCountableTopology ℝ≥0 :=\n  inferInstanceAs (SecondCountableTopology { x : ℝ | 0 ≤ x })\n\ninstance instProperSpace : ProperSpace ℝ≥0 where\n  isCompact_closedBall x r := by\n    have emb : IsClosedEmbedding ((↑) : ℝ≥0 → ℝ) := Isometry.isClosedEmbedding fun _ ↦ congrFun rfl\n    exact emb.isCompact_preimage (K := Metric.closedBall x r) (isCompact_closedBall _ _)\n\nend NNReal\n\nnamespace ENNReal\n\ninstance : SecondCountableTopology ℝ≥0∞ :=\n  orderIsoUnitIntervalBirational.toHomeomorph.isEmbedding.secondCountableTopology\n\nend ENNReal\n",
+      "excerptSHA256": "89436dc92cf18f7706b3907c43e05beb139f1981d7c61c4565dd38f5456fffe5"
+    },
+    {
+      "path": "Mathlib/Topology/MetricSpace/ProperSpace/Real.lean",
+      "fileSHA256": "d791124ec34453866839588fa0c703a968ed394ca1f2e307ee64c0efe9d2f232",
+      "startLine": 51,
+      "endLine": 59,
+      "source": "\nend NNReal\n\nnamespace ENNReal\n\ninstance : SecondCountableTopology ℝ≥0∞ :=\n  orderIsoUnitIntervalBirational.toHomeomorph.isEmbedding.secondCountableTopology\n\nend ENNReal\n",
+      "excerptSHA256": "eac86e3fac0425121005a7c7253cea880ca51e060e06dc3f01531fc32d7a52c6"
+    },
+    {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+      "fileSHA256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+      "startLine": 1,
+      "endLine": 75,
+      "source": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro\n-/\nmodule\n\npublic import Mathlib.Data.Finset.Update\npublic import Mathlib.Data.Prod.TProd\npublic import Mathlib.Data.Set.UnionLift\npublic import Mathlib.GroupTheory.Coset.Defs\npublic import Mathlib.MeasureTheory.MeasurableSpace.Basic\npublic import Mathlib.MeasureTheory.MeasurableSpace.Instances\npublic import Mathlib.Order.Disjointed\n\n/-!\n# Constructions for measurable spaces and functions\n\nThis file provides several ways to construct new measurable spaces and functions from old ones:\n`Quotient`, `Subtype`, `Prod`, `Pi`, etc.\n-/\n\n@[expose] public section\n\nassert_not_exists Filter\n\nopen Set Function MeasureTheory\n\nuniverse uι\n\nvariable {α β γ δ δ' : Type*} {ι : Sort uι} {s : Set α}\n\ntheorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableSpace β] {f : β → α}\n    (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) : Measurable f := fun s _ => by\n  rw [← biUnion_preimage_singleton]\n  refine MeasurableSet.iUnion fun y => MeasurableSet.iUnion fun hy => ?_\n  by_cases hyf : y ∈ range f\n  · rcases hyf with ⟨y, rfl⟩\n    apply h\n  · simp only [preimage_singleton_eq_empty.2 hyf, MeasurableSet.empty]\n\ntheorem measurable_to_countable' [MeasurableSpace α] [Countable α] [MeasurableSpace β] {f : β → α}\n    (h : ∀ x, MeasurableSet (f ⁻¹' {x})) : Measurable f :=\n  measurable_to_countable fun y => h (f y)\n\nset_option backward.isDefEq.respectTransparency false in\ntheorem ENat.measurable_iff {α : Type*} [MeasurableSpace α] {f : α → ℕ∞} :\n    Measurable f ↔ ∀ n : ℕ, MeasurableSet (f ⁻¹' {↑n}) := by\n  refine ⟨fun hf n ↦ hf <| measurableSet_singleton _, fun h ↦ measurable_to_countable' fun n ↦ ?_⟩\n  cases n with\n  | top =>\n    rw [← WithTop.none_eq_top, ← compl_range_some, preimage_compl, ← iUnion_singleton_eq_range,\n      preimage_iUnion]\n    exact .compl <| .iUnion h\n  | coe n => exact h n\n\ntheorem measurable_unit [MeasurableSpace α] (f : Unit → α) : Measurable f :=\n  measurable_from_top\n\nsection ULift\nvariable [MeasurableSpace α]\n\ninstance _root_.ULift.instMeasurableSpace : MeasurableSpace (ULift α) :=\n  ‹MeasurableSpace α›.map ULift.up\n\nlemma measurable_down : Measurable (ULift.down : ULift α → α) := fun _ ↦ id\nlemma measurable_up : Measurable (ULift.up : α → ULift α) := fun _ ↦ id\n\n@[simp] lemma measurableSet_preimage_down {s : Set α} :\n    MeasurableSet (ULift.down ⁻¹' s) ↔ MeasurableSet s := Iff.rfl\n@[simp] lemma measurableSet_preimage_up {s : Set (ULift α)} :\n    MeasurableSet (ULift.up ⁻¹' s) ↔ MeasurableSet s := Iff.rfl\n\nend ULift\n\n",
+      "excerptSHA256": "ba226121638a8db06148dbd406f8df91155fc99e7d89d4964e8b55721382c0c9"
+    },
+    {
+      "path": "Mathlib/Data/Set/Countable.lean",
+      "fileSHA256": "5e88b61290d5ac43069c32d84ab95e7152c3208b18e2b4df47a2278047cf4e2c",
+      "startLine": 35,
+      "endLine": 68,
+      "source": "\nvariable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}\n\nnamespace Set\n\n/-- A set `s` is countable if the corresponding subtype is countable,\ni.e., there exists an injective map `f : s → ℕ`.\n\nNote that this is an abbreviation, so `hs : Set.Countable s` in the proof context\nis the same as an instance `Countable s`.\nFor a constructive version, see `Encodable`.\n-/\nprotected def Countable (s : Set α) : Prop := Countable s\n\n@[simp]\ntheorem countable_coe_iff {s : Set α} : Countable s ↔ s.Countable := .rfl\n\n/-- Prove `Set.Countable` from a `Countable` instance on the subtype. -/\ntheorem to_countable (s : Set α) [Countable s] : s.Countable := ‹_›\n\n/-- Restate `Set.Countable` as a `Countable` instance. -/\nalias ⟨_root_.Countable.to_set, Countable.to_subtype⟩ := countable_coe_iff\n\nprotected theorem countable_iff_exists_injective {s : Set α} :\n    s.Countable ↔ ∃ f : s → ℕ, Injective f :=\n  countable_iff_exists_injective s\n\n/-- A set `s : Set α` is countable if and only if there exists a function `α → ℕ` injective\non `s`. -/\ntheorem countable_iff_exists_injOn {s : Set α} : s.Countable ↔ ∃ f : α → ℕ, InjOn f s :=\n  Set.countable_iff_exists_injective.trans exists_injOn_iff_injective.symm\n\ntheorem countable_iff_nonempty_encodable {s : Set α} : s.Countable ↔ Nonempty (Encodable s) :=\n  Encodable.nonempty_encodable.symm\n",
+      "excerptSHA256": "078dd9db0c38f5c5c5520418c440b0dbab7c65dbeac0a118c0031c10009dd928"
+    }
+  ],
+  "LeanCalls": 0,
+  "sourceMutation": 0,
+  "allProcessesEnded": true
+}
