@@ -1,0 +1,17 @@
+theorem iid_actual_centered_ordinary_energy_relative_comparison :
+    ∃ etaG epsilonG C : ℝ, 0 < etaG ∧ 0 < epsilonG ∧ 0 < C ∧
+      ∀ {ΩB : Type*} [MeasurableSpace ΩB]
+        (Bm : ℝ≥0 → ΩB → ℝ) (PB : Measure ΩB) [IsProbabilityMeasure PB],
+        IsBrownianReal Bm PB →
+        ∀ (rho : Measure ℝ) [IsProbabilityMeasure rho]
+          (n : ℕ) (hn : 0 < n) (x : ℝ), 1 / 2 ≤ x →
+          (∀ᵐ z : ℝ ∂rho, |z| ≤ etaG * Real.sqrt (n : ℝ) / x) →
+          (∫ z : ℝ, z ∂rho) = 0 → (∫ z : ℝ, z ^ 2 ∂rho) = 1 →
+          let beta : ℝ := ∫ z : ℝ, |z| ^ 3 ∂rho
+          let delta : ℝ := beta / Real.sqrt (n : ℝ)
+          delta * x ^ 3 ≤ epsilonG →
+          |(Measure.pi (fun _ : Fin n => rho)).real (Shao.C2.doubleCrossing hn x) -
+              PB.real {omega |
+                (∃ t : BridgeTime, x ≤ Bm ⟨(t : ℝ), t.property.1⟩ omega) ∧
+                ∃ t : BridgeTime, Bm ⟨(t : ℝ), t.property.1⟩ omega ≤ -x}| ≤
+            C * delta * (1 + x) ^ 3 * Shao.standardNormalTail x
