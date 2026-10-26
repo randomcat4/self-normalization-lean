@@ -1,28 +1,21 @@
-# Whole-corpus formalization programme
+# Whole-corpus continuation plan
 
-The user authorized the orchestrator to advance all four latest result packages on 2026-10-21. The source baseline remains shao@35d4580; earlier mathematical conclusions and review history are preserved. This file and programme.json track Lean implementation only.
+This is the current continuation plan as of 2026-10-27. It supersedes the initial PR1-era scheduling narrative; versioned scope/review/receipt artifacts remain unchanged. See [current status](CURRENT-STATUS.md) for exact acceptance boundaries.
 
-## Completion boundary
+## Completed assigned original scope
 
-Cover the scoped final conclusions, counterexamples, repairs, sharpness and all necessary proof dependencies of C1/C2, OQ3, OQ4 and OQ5–6. Historical alternative proofs are not independently reimplemented unless needed for those conclusions. The 124 common-mechanism research objective is separate and is not a prerequisite. Source-bound root groups in programme.json are an inventory; they are not yet all frozen Lean statements or a claim that every intermediate lemma is enumerated.
+C1 is accepted at immutable v85. All five assigned original C2 labels and the assigned C12 C1/C2 scope are accepted at v112. Preserve their source hypotheses, original domains, repairs, zero-energy conventions, weak/strict event boundaries and existing proof credit.
 
-An external published theorem used as an unproved assumption permits only a conditional reduction. Final completion requires its precise required instance to be formally proved or imported from an audited axiom-clean dependency. No placeholder axiom, stronger moment condition, changed denominator or shortened window may be hidden in the assembly.
+OQ4's assigned original fixed-law weak-window and universal sharp sixth-root scope is accepted, with the lane ready/idle. OQ3 is separately paused by the human and its accepted Lean counterexample remains available. Neither lane is reactivated merely because a coordinator changes.
 
-## Scheduling
+## Active source-bound frontier
 
-1. Freeze result/source inventory and define exact declarations just before each work unit.
-2. Complete measurable finite paths and finite iid/fixed-permutation probability transport, then ordered deletion, truncation budgets and conditional laws.
-3. In parallel, develop p35 OQ5 row algebra and its fixed-law counterexample dependency chain as the first candidate complete result. Its later p52/p53 strengthenings remain distinct targets.
-4. Build Lindley joint reflection/telescoping and the self-normalized scalar inputs. Advance C1 toward full closure, with independent C2 true-wall modules developed before C1 finishes where possible.
-5. Close C2, and expand OQ4 long-time killed kernels/true denominators plus OQ5–6 positive theory branches. Finite spectrum and U-statistic algebra may start earlier.
-6. Concentrate on OQ3's more independent local asymptotics/curved boundaries/fixed-law transfer. Probe its exact difficult interfaces early rather than waiting until the end to discover a mismatch.
+The current OQ56 owner continues from its compact checkpoint. v117 supplies original-length deterministic/measurable deletion support and full-tilt rho/rho-squared moments. Next is the public weighted partial-law deletion interface and genuine S14 fees, then the remaining original S11/general-S15 closure chain. Preserve rho = 0, the actual residual/tilted law, original n normalizations, windows, symmetry and all constant/quantifier ordering. An old 1 + rho scale, deterministic identity or bounded-class payment bound does not close these obligations.
 
-Two authors and one independent reviewer are active at a time. The OQ5 dependency analyst initially occupies a slot, then hands it to a fresh reviewer. Work units have exact file ownership, source anchors, theorem contracts and source-bound receipts. Progress is measured by closed dependency chains/root conclusions; theorem counts are descriptive, not completion percentages.
+Broader common fullRootOD extensions remain open. Public K/Xi cone derivatives, high-frequency and inversion interfaces are worked only where an actual source-bound dependency is missing. The separate unified-124 research programme is not a prerequisite and is not counted as completed here.
 
-## Current milestone
+## Working method
 
-PR1 is merged: genuine finite-path/event foundations, 83 public theorem declarations. Next milestone: MeasurablePath and FiniteIID, with an OQ5 p35 contract. It will not claim the OQ5 counterexample or any quantitative main theorem is already proved. All builds and heavy library work stay on the server. Repositories remain shao (sources/history) and shao-lean (formal code/evidence).
+Freeze substantive declarations before implementation. Keep authors and qualified independent reviewers separate, with fresh gpt-6.1-sol/xhigh mathematical contexts. Reuse exact qualified source/hash/first-object evidence, and add review only for an actual mathematical change, uncovered evidence or integration risk. Root checks scope/interfaces/interactions, integrates exact PRs and preserves author history and every failed/interrupted receipt.
 
-## Resources and reporting
-
-Retain the 40-core/200-GiB server; the first milestone's roughly 2.49-GiB maximum individual child RSS does not predict future Fourier or probability workloads. Start with bounded module checks and one integration build, then adjust from measured demand. Do not extrapolate the old PDF's expert-year estimates or basic-lemma throughput into a whole-project deadline. Publish checked milestones through PRs, keeping raw logs/caches/credentials remote and returning curated source/evidence only.
+Continue a next real dependency at a natural unit boundary, but distinguish actual runtime from an ACTIVE lease or dispatched message. No duplicate writers, extra administrative model context, replacement automation or unsupported completion percentages are created. The existing heartbeat is only a fallback; current owners and resource allowances are held in the shared compact registry.

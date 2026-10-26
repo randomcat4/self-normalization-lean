@@ -1,63 +1,35 @@
-# Shao C1/C2 Lean foundations
+# Shao Lean formalization
 
-Private formalization of the shared finite-path and event interfaces of C1 and C2. This milestone provides genuine square-sum energy, nonempty-prefix maxima, weak multiplication crossings, strict survival, zero-energy normalization, and two-sided event identities. It does not claim the quantitative C1/C2 probability theorems or a unified 124 proof mechanism.
+Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 
-## Modules
+The current mathematical snapshot is **v117**: **911 modules, 4,065 public source theorems, 7,937 Shao-namespace theorem constants, and 16,110 actual owned constants**. These are inventory counts, not completion percentages. See the [current scope and remaining work](docs/CURRENT-STATUS.md), [evidence index](docs/EVIDENCE.md) and [v117 server receipt](verification/receipt-v117.json).
 
-- Shao/Basic/FinitePath.lean: actual finite paths, prefixes, energy, extrema, negation and scaling.
-- Shao/Basic/Events.lean: weak crossing and strict complement semantics.
-- Shao/C1/Normalization.lean: zero-energy conventions and positive-threshold strict event comparisons.
-- Shao/C2/TwoSided.lean: double-hit intersection, absolute-event union and complements.
-- Shao/Checks/Boundaries.lean: zero paths, singleton paths, threshold equality and the time-zero distinction.
+## Accepted scope and current state
 
-See [frozen scope](docs/scope-v1.md), [delivery plan](docs/plan.md) and [independent review](docs/review-v1.md). Source: [randomcat4/shao at 35d4580](https://github.com/randomcat4/shao/tree/35d4580b61e22e7145f47730045a09874ef93259); exact manuscript hashes and source anchors are in the scope contract.
+| Package | Accepted result and current boundary |
+| --- | --- |
+| C1 | Original signed half-line theorem on the full nonnegative original I_n, both signs, accepted at immutable v85. [Scope and receipt](docs/EVIDENCE.md#c1) |
+| C2 / assigned C12 | All five original labels g:double, g:absolute, m:B, m:A and m:C accepted by v112. Assigned C1/C2 work is complete; broader common extensions remain separate. [Evidence](docs/EVIDENCE.md#c2) |
+| OQ3 | Paused by the human. The accepted fixed jointly nonlattice counterexample remains in Lean; paused B/D directions are not declared complete. [Counterexample](Shao/OQ3/SourceCounterexampleRoot.lean) |
+| OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. Ready/idle without a new source-bound assignment; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
+| OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. Weighted partial-law deletion, S14 fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
 
-## Reproducibility
+## Latest accepted OQ56 components
 
-Lean is pinned in lean-toolchain; mathlib and transitive dependencies are pinned in lake-manifest.json. On the designated server, populate the required fixed-version mathlib cache, run lake build, then lake env lean scripts/Audit.lean. Audit prints every exported project theorem's actual type and transitive axioms and rejects axioms outside propext, Classical.choice and Quot.sound. Receipt details are stored under verification/. No local Lean checks or duplicate preparation tests are part of this workflow.
+- v113: original low-energy and normalized upper-tail components.
+- v114: literal good-event probability and conditional finite clipping construction.
+- v115: all-n/all-real-y event identity, literal constant-512 studentizer domination with its window, and bounded-product/polylog-envelope four-payment bound.
+- v116: literal clipped comparison without an external domination premise, and comparison-exception/payment composition in that bounded class.
+- v117: original-length deterministic/measurable deletion envelopes and genuine rho/rho-squared moments under the full quadratic tilt, including rho = 0.
 
-All computations, dependency caches and raw logs stay on the server. The repository contains curated source and evidence only. Independent statement review complements kernel checks; it does not replace them.
+The bounded-class exponential payment bound retains the three terms exp(-cn) + 4 exp(-y sqrt(n)/2) + 9 exp(-k_n). It is not a theorem for the unrestricted original S15 class. Symmetry, normalization, original sample-length denominators, threshold windows, zero-denominator guards and genuine remainder fees remain where the exact statements require them.
 
-## Probability milestone
+## Verification and reproduction
 
-49 additional public theorems establish path/event measurability, the finite iid product law and fixed-permutation probability invariance. The library now contains 132 public theorems; the kernel audit covers 168 theorem declarations including generated declarations. See [scope](docs/scope-v2.md), [independent review](docs/review-v2.md), [verification receipt](verification/receipt-v2.json), and [whole-corpus roadmap](docs/whole-corpus-plan.md). No complete root probability theorem is claimed.
+Lean is pinned to `leanprover/lean4:v4.36.0-rc1`; mathlib is pinned to `807d3836b165983210ee2ecf3cd28f239436949c`. Complete independent source-to-statement/proof review complements server kernel checks and recursive axiom audits of every actual module owner, including private/generated declarations and required full non-theorem values. The axiom whitelist is `propext`, `Classical.choice`, `Quot.sound`.
 
-## OQ5 p35 finite algebra milestone
+All Lean compilation and heavy computation run on the designated server, using the existing pinned package view and lane lock. Reuse qualified exact-source evidence and first original objects; do not update packages, rebuild mathlib or repeat accepted producers to refresh documentation. See the [execution and delivery rules](docs/plan.md). Curated sources and receipts are committed; caches, binaries, raw logs, environments and credentials remain outside Git.
 
-11 further public theorems prove the unordered-pair double counting, centered-row studentizer identity and exact target-category cancellation, for arbitrary deterministic vectors with n>=3. Target sets may be empty, singleton or full. The complete library has 143 public theorems and 223 audited theorem declarations including generated declarations. See [scope](docs/oq5-row-scope.md), [independent review](docs/oq5-row-review.md) and [receipt](verification/receipt-v3.json). The fixed-law counterexample and all four root groups remain open.
+Versioned scope/review/receipt files are immutable historical evidence. Their old inventory counts or planning comments are not the current project status. Documentation-only commits may advance main while the mathematical snapshot and its receipt remain v117.
 
-## Shared deletion, survival and Lindley milestone
-
-43 additional public theorems establish ordered sample compression, the source weak crossing deletion implication, closed-wall survival and coordinate bounds, the actual Lindley recursion, and its finite-iid joint law with the true square-sum energy. There are now 186 public theorems and 295 audited theorem declarations including generated ones. See [scope](docs/scope-v4.md), [independent review](docs/review-v4.md) and [server receipt](verification/receipt-v4.json). All complete root groups remain open.
-
-## OQ4 foundation milestone
-
-15 additional public theorems cover finite recurrence, overshoot sums and moments, and variance scaling. The integrated library has 201 public theorems and 327 audited theorem declarations. See [scope and review](docs/integration-v5.md) and [server receipt](verification/receipt-v5.json). K/Kv and the complete OQ4 root remain formally unclosed.
-
-## OQ5 fixed-law milestone
-
-43 additional public theorems construct the fixed probability law, Borel observation encoding and exact feature moments. The integrated library has 244 public theorems and 395 audited theorem declarations. See [scope and review](docs/integration-v6.md) and [server receipt](verification/receipt-v6.json). The full counterexample remains formally unclosed.
-
-## Conditioning and truncation milestone
-
-43 additional public theorems establish genuine fixed-pattern conditional iid laws, exact retained-set events, and the original truncation budget with integral estimates, continuity, strict growth and its normalized limit. The library has 287 public theorems and 443 audited theorem declarations. See [scope and independent reviews](docs/integration-v7.md) and [server receipt](verification/receipt-v7.json). Full root theorems remain formally unclosed.
-
-## OQ4 one-step and occupation milestone
-
-11 additional public theorems establish global trigonometric third-moment bounds, exact one-step killed-cosine/overshoot estimates and finite-layer integral payment. The shared library covers 298 public theorems and 463 audited theorem declarations. See [scope and reviews](docs/integration-v8.md) and [server receipt](verification/receipt-v8.json). The O0 mass bound and complete OQ4 root remain formally unclosed.
-
-## Actual p35 construction and rare events
-
-81 additional public theorems cover the genuine iid construction, moments, L2 residual operator and rare-event lower bound. Shared coverage is now 379 public and 572 audited theorem declarations. See [scope and independent evidence](docs/integration-v9.md) and [server receipt](verification/receipt-v9.json). Full roots remain open.
-
-## Retained moments and finite Duhamel identity
-
-29 additional public theorems supply genuine retained-sample centered moments, sample-size and Lyapunov bounds, and the actual finite-product Lindley/Duhamel identity. Shared coverage is 408 public and 628 audited theorem declarations. See [scope and independent evidence](docs/integration-v10.md) and [server receipt](verification/receipt-v10.json). Final probability comparisons remain open.
-
-## Killed-kernel iteration and conditional residual payment
-
-34 additional public theorems construct the genuine killed kernel and finite powers, and prove the conditional averaged residual estimate. Shared coverage is now 442 public and 677 audited theorem declarations. See [scope and independent evidence](docs/integration-v11.md) and [server receipt](verification/receipt-v11.json). Full roots remain open.
-
-## Localized signed blocks and retained-path comparison
-
-7 additional public theorems supply history-localized signed-block payment and actual transformed retained-path laws and weak-crossing comparison. Shared coverage is 449 public and 689 audited theorem declarations. See [scope and independent evidence](docs/integration-v12.md) and [server receipt](verification/receipt-v12.json). Final probability comparisons remain open.
+Source baseline: [shao@35d4580](https://github.com/randomcat4/shao/tree/35d4580b61e22e7145f47730045a09874ef93259). The separate unified-124 research objective is not a prerequisite for the accepted original scopes.
