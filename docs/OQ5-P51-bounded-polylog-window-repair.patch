@@ -1,0 +1,39 @@
+--- a/Shao/OQ5/P51/BoundedPolylogWindow.lean
++++ b/Shao/OQ5/P51/BoundedPolylogWindow.lean
+@@ -67,29 +67,32 @@
+     have hlog : 0 < Real.log (n : ℝ) := Real.log_pos hn1
+     have hlogpow : (Real.rpow (Real.log (n : ℝ)) a) ^ (2 : ℕ) =
+         Real.rpow (Real.log (n : ℝ)) (2 * a) := by
+-      rw [← Real.rpow_mul_natCast hlog.le a (2 : ℕ)]
++      simp only [Real.rpow_eq_pow]
++      rw [← Real.rpow_mul_natCast hlog.le a (2 : ℕ)]
+       congr 1
+       ring
+     have hthird : Real.rpow (n : ℝ) (1 / 3 : ℝ) / (n : ℝ) =
+         1 / Real.rpow (n : ℝ) (2 / 3 : ℝ) := by
+       calc
+         _ = Real.rpow (n : ℝ) ((1 / 3 : ℝ) - (1 : ℝ)) := by
+-          simpa only [Real.rpow_one] using
++          simpa only [Real.rpow_eq_pow, Real.rpow_one] using
+             (Real.rpow_sub hn0 (1 / 3 : ℝ) (1 : ℝ)).symm
+         _ = Real.rpow (n : ℝ) (-(2 / 3 : ℝ)) := by
+           congr 1
+           norm_num
+         _ = _ := by
+-          simpa only [one_div] using Real.rpow_neg hn0.le (2 / 3 : ℝ)
++          simpa only [Real.rpow_eq_pow, one_div] using Real.rpow_neg hn0.le (2 / 3 : ℝ)
+     unfold boundedPolylogHeight boundedPolylogMomentOrder
+     rw [mul_pow, hlogpow]
+     calc
+       _ = (C ^ (2 : ℕ) * Real.rpow (Real.log (n : ℝ)) (2 * a) * t0) *
+           (Real.rpow (n : ℝ) (1 / 3 : ℝ) / (n : ℝ)) := by ring
+       _ = _ := by
+         rw [hthird]
+         ring
+-  exact hscaled.congr' heq.symm
++  apply hscaled.congr'
++  filter_upwards [heq] with n hn
++  exact hn.symm
+ 
+ theorem eventually_boundedPolylog_window
+     (C a t0 : ℝ) (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) :

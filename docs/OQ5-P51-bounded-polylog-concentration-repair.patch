@@ -1,0 +1,20 @@
+--- a/Shao/OQ5/P51/BoundedPolylogConcentration.lean
++++ b/Shao/OQ5/P51/BoundedPolylogConcentration.lean
+@@ -80,7 +80,7 @@
+       (sampleLaw n ν).real ({x : Fin n → Ω | tailScale M * (n : ℝ) < squareSum n w x}) +
+       (sampleLaw n ν).real ({x : Fin n → Ω | tailScale M * (n : ℝ) * q < |originalUpper n r x|}) +
+       (sampleLaw n ν).real ({x : Fin n → Ω | tailScale M * (n : ℝ) ^ (2 : ℕ) * q < ‖originalRows n r x‖ ^ (2 : ℕ)}) :=
+-    add_le_add_right hInner ((sampleLaw n ν).real ({x : Fin n → Ω | tailScale M * (n : ℝ) ^ (2 : ℕ) * q < ‖originalRows n r x‖ ^ (2 : ℕ)}))
++    by linarith only [hInner]
+   have hUnionSum :
+       (sampleLaw n ν).real (({x : Fin n → Ω | tailScale M * (n : ℝ) < squareSum n w x} ∪ {x : Fin n → Ω | tailScale M * (n : ℝ) * q < |originalUpper n r x|}) ∪ {x : Fin n → Ω | tailScale M * (n : ℝ) ^ (2 : ℕ) * q < ‖originalRows n r x‖ ^ (2 : ℕ)}) ≤
+       (sampleLaw n ν).real ({x : Fin n → Ω | tailScale M * (n : ℝ) < squareSum n w x}) +
+@@ -183,7 +183,7 @@
+   have hBase0 : 0 ≤ A * Real.log (n : ℝ) / tau :=
+     div_nonneg (mul_nonneg (le_of_lt hA) hlog0) (le_of_lt htau)
+   have hR0 : 0 ≤ boundedLogCutoffHeight A tau alpha n := by
+-    simpa only [boundedLogCutoffHeight] using
++    simpa only [boundedLogCutoffHeight, Real.rpow_eq_pow] using
+       Real.rpow_nonneg hBase0 (1 / alpha : ℝ)
+   have hq : (2 : ℝ) ≤ boundedPolylogMomentOrder t0 n :=
+     hp.2.1
