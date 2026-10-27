@@ -1,0 +1,50 @@
+DECL Shao.OQ3.six_order_word_weight_one
+TYPE ∀ (a : Fin 6 → ℂ),
+  (∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) = 1 then ∏ i, a (sigma i) else 0) = a 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.six_order_word_weight_one._proof_1_4
+TYPE ∀ (q : Fin 7), 2 ≤ ↑q → ∀ (sigma : Fin ↑q → Fin 6), ↑q ≤ ∑ i, (↑(sigma i) + 1) → ∑ i, (↑(sigma i) + 1) = 1 → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.six_order_word_weight_one._proof_1_1
+TYPE ∀ (sigma : Fin 1 → Fin 6), ↑(sigma 0) + 1 = 1 → ¬↑(sigma 0) = 0 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.six_order_word_weight_one._proof_1_2
+TYPE ∀ (q : Fin 7), ↑q ≠ 0 → ↑q ≠ 1 → ¬2 ≤ ↑q → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_cgf_six_order_weight_one_gaussian_integral_zero
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (j : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ j) mu) →
+      ∀ (n : ℕ),
+        have kappa := fun z j => iteratedDeriv j (ProbabilityTheory.cgf (fun y => z.1 * y 0 + z.2 * y 1) mu) 0;
+        have a := fun z j => Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa z (↑j + 3)) / ↑√↑n ^ (↑j + 1);
+        have S1 := fun z =>
+          ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) = 1 then ∏ i, a z (sigma i) else 0;
+        MeasureTheory.Integrable (fun z => S1 z * Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2)) MeasureTheory.volume ∧
+          ∫ (z : ℝ × ℝ), S1 z * Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) = 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.six_order_word_weight_one._proof_1_3
+TYPE ∀ (q : Fin 7) (sigma : Fin ↑q → Fin 6) (i : Fin ↑q), ¬1 ≤ ↑(sigma i) + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_cgf_cubic_gaussian_integral_zero
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (j : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ j) mu) →
+      ∀ (c : ℂ),
+        MeasureTheory.Integrable
+            (fun z =>
+              c * Complex.I ^ 3 * ↑(iteratedDeriv 3 (ProbabilityTheory.cgf (fun y => z.1 * y 0 + z.2 * y 1) mu) 0) *
+                Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+            MeasureTheory.volume ∧
+          ∫ (z : ℝ × ℝ),
+              c * Complex.I ^ 3 * ↑(iteratedDeriv 3 (ProbabilityTheory.cgf (fun y => z.1 * y 0 + z.2 * y 1) mu) 0) *
+                Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+            0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
