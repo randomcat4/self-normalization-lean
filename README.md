@@ -1,5 +1,7 @@
 # Shao Lean formalization
 
+v126 accepts original-model canonical coding and event transfer (unit222), including the original projection-zero-event discrepancy bound, plus a fixed-model deleted remainder envelope (unit225) whose integral payments vanish with epsilon. The zero-event bound has no smallness estimate. The actual original-model normalized-cost/SAME-witness application, weighted passage, CDF/ShaoZhou and full OQ56 remain open.
+
 Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 
 The accepted mathematical snapshot, exact inventory and remaining work are recorded in the [current scope](docs/CURRENT-STATUS.md) and [evidence index](docs/EVIDENCE.md). Inventory counts are not completion percentages.

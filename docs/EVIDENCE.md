@@ -1,6 +1,8 @@
 # Evidence index
 
-The current proof snapshot is v125. Start with its [integration scope](integration-v125.md), [server receipt](../verification/receipt-v125.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
+v126 accepts original-model canonical coding and event transfer (unit222), including the original projection-zero-event discrepancy bound, plus a fixed-model deleted remainder envelope (unit225) whose integral payments vanish with epsilon. The zero-event bound has no smallness estimate. The actual original-model normalized-cost/SAME-witness application, weighted passage, CDF/ShaoZhou and full OQ56 remain open.
+
+The current proof snapshot is v126. Start with its [integration scope](integration-v126.md), [server receipt](../verification/receipt-v126.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
 
 ## C1
 
