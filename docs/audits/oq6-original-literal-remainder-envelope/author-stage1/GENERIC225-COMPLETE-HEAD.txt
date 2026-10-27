@@ -1,0 +1,100 @@
+theorem literal_deleted_remainder_envelope_spec
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (ν : Measure Ω) [hν : IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)
+    (hξ : ∀ i : Fin n, Measurable (ξ i))
+    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)
+    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)
+    (B : Ω → ℝ) (Bdelete : Fin n → Ω → ℝ)
+    (hB : Measurable B)
+    (hBdelete : ∀ i : Fin n, Measurable (Bdelete i))
+    (hBnonneg : ∀ ω : Ω, 0 ≤ B ω)
+    (hBdeletenonneg : ∀ (i : Fin n) (ω : Ω), 0 ≤ Bdelete i ω)
+    (hBint : Integrable B ν)
+    (hBdeleteint : ∀ i : Fin n, Integrable (Bdelete i) ν)
+    (z : ℝ) (hz : 0 ≤ z) :
+    let V : Ω → ℝ :=
+      fun ω : Ω => Real.sqrt (∑ j : Fin n, (ξ j ω) ^ 2)
+    let Vdelete : Fin n → Ω → ℝ :=
+      fun (i : Fin n) (ω : Ω) =>
+        Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j ω) ^ 2)
+    let C : Ω → ℝ := fun ω : Ω => Real.sqrt (1 + B ω)
+    let Cdelete : Fin n → Ω → ℝ :=
+      fun (i : Fin n) (ω : Ω) => Real.sqrt (1 + Bdelete i ω)
+    let H : Ω → ℝ :=
+      fun ω : Ω => (1 + V ω) * (Real.sqrt (n : ℝ) + z * C ω)
+    let Hdelete : Fin n → Ω → ℝ :=
+      fun (i : Fin n) (ω : Ω) =>
+        (1 + Vdelete i ω) * (Real.sqrt (n : ℝ) + z * Cdelete i ω)
+    let ρ : ℝ → ℝ := fun ε : ℝ => 4 * ε * Real.sqrt (n : ℝ)
+    let M : ℝ → Ω → ℝ :=
+      fun (ε : ℝ) (ω : Ω) => ρ ε * H ω
+    let Mdelete : ℝ → Fin n → Ω → ℝ :=
+      fun (ε : ℝ) (i : Fin n) (ω : Ω) => ρ ε * Hdelete i ω
+    let κ : Fin n → ℝ :=
+      fun i : Fin n => 4 * Real.sqrt (n : ℝ) *
+        ((∫ ω, H ω ∂ν) + (∫ ω, Hdelete i ω ∂ν))
+    let Δ : (Ω → ℝ) → (Fin n → Ω → ℝ) → ℝ → Fin n → Ω → ℝ :=
+      fun (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ) (i : Fin n) (ω : Ω) =>
+          (A ω + M ε ω) - (Adelete i ω + Mdelete ε i ω) -
+            (A ω - Adelete i ω)
+    Measurable V ∧
+    (∀ i : Fin n, Measurable (Vdelete i)) ∧
+    (∀ (i : Fin n) (ω : Ω), 0 ≤ Vdelete i ω ∧ Vdelete i ω ≤ V ω) ∧
+    Measurable C ∧
+    (∀ i : Fin n, Measurable (Cdelete i)) ∧
+    (∀ ω : Ω, 1 ≤ C ω) ∧
+    (∀ (i : Fin n) (ω : Ω), 1 ≤ Cdelete i ω) ∧
+    Measurable H ∧ Integrable H ν ∧
+    (∀ i : Fin n, Measurable (Hdelete i) ∧ Integrable (Hdelete i) ν) ∧
+    (∀ ω : Ω, 0 < H ω) ∧
+    (∀ (i : Fin n) (ω : Ω), 0 < Hdelete i ω) ∧
+    (∀ ε : ℝ, Measurable (M ε) ∧
+      ∀ i : Fin n, Measurable (Mdelete ε i)) ∧
+    (∀ ε : ℝ, Integrable (M ε) ν ∧
+      ∀ i : Fin n, Integrable (Mdelete ε i) ν) ∧
+    (∀ ε : ℝ, Integrable (fun ω : Ω => |M ε ω|) ν ∧
+      ∀ i : Fin n, Integrable (fun ω : Ω => |Mdelete ε i ω|) ν) ∧
+    (∀ ε : ℝ, 0 ≤ ε → ∀ ω : Ω,
+      0 ≤ M ε ω ∧ ∀ i : Fin n, 0 ≤ Mdelete ε i ω) ∧
+    (∀ ε : ℝ, (∫ ω, M ε ω ∂ν) = ρ ε * (∫ ω, H ω ∂ν)) ∧
+    (∀ (ε : ℝ) (i : Fin n),
+      (∫ ω, Mdelete ε i ω ∂ν) = ρ ε * (∫ ω, Hdelete i ω ∂ν)) ∧
+    (∀ ε : ℝ,
+      (∫ ω, |M ε ω| ∂ν) = |ρ ε| * (∫ ω, H ω ∂ν)) ∧
+    (∀ (ε : ℝ) (i : Fin n),
+      (∫ ω, |Mdelete ε i ω| ∂ν) = |ρ ε| * (∫ ω, Hdelete i ω ∂ν)) ∧
+    (∀ i : Fin n, 0 ≤ κ i) ∧
+    (∀ (ε : ℝ) (i : Fin n),
+      (∫ ω, M ε ω ∂ν) + (∫ ω, Mdelete ε i ω ∂ν) = ε * κ i) ∧
+    (∀ (ε : ℝ) (i : Fin n),
+      (∫ ω, |M ε ω| ∂ν) + (∫ ω, |Mdelete ε i ω| ∂ν) = |ε| * κ i) ∧
+    Filter.Tendsto (fun ε : ℝ => ∫ ω, M ε ω ∂ν)
+      (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧
+    Filter.Tendsto (fun ε : ℝ => ∫ ω, |M ε ω| ∂ν)
+      (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ω, Mdelete ε i ω ∂ν)
+      (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ω, |Mdelete ε i ω| ∂ν)
+      (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ) (i : Fin n) (ω : Ω),
+      Δ A Adelete ε i ω = M ε ω - Mdelete ε i ω) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ) (i : Fin n) (ω : Ω),
+      |Δ A Adelete ε i ω| ≤ |M ε ω| + |Mdelete ε i ω|) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ), 0 ≤ ε → ∀ (i : Fin n) (ω : Ω),
+      |Δ A Adelete ε i ω| ≤ M ε ω + Mdelete ε i ω) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ) (i : Fin n),
+      Measurable (Δ A Adelete ε i) ∧
+      Integrable (Δ A Adelete ε i) ν ∧
+      Integrable (fun ω : Ω => |Δ A Adelete ε i ω|) ν) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)
+        (ε : ℝ) (i : Fin n),
+      (∫ ω, |Δ A Adelete ε i ω| ∂ν) ≤ |ε| * κ i) ∧
+    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ) (i : Fin n),
+      Filter.Tendsto (fun ε : ℝ => ∫ ω, |Δ A Adelete ε i ω| ∂ν)
+        (nhds (0 : ℝ)) (nhds (0 : ℝ)))

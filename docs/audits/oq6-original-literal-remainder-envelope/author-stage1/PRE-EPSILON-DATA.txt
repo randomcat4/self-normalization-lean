@@ -1,0 +1,34 @@
+        let mFixedLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+        let mFixed : MeasurableSpace (Fin n → Ω × ℝ) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mFixedLocal)
+        let νFixedLocal : Fin n → @Measure (Ω × ℝ) mFixedLocal :=
+          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀
+            ((volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1))
+        let νFixed : @Measure (Fin n → Ω × ℝ) mFixed :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mFixedLocal) νFixedLocal
+        let ξFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun (i : Fin n) (x : Fin n → Ω × ℝ) => g (x i).1 / Real.sqrt (n : ℝ)
+        let VFixed : (Fin n → Ω × ℝ) → ℝ :=
+          fun x : Fin n → Ω × ℝ => Real.sqrt (∑ j : Fin n, (ξFixed j x) ^ 2)
+        let VdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>
+            Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξFixed j x) ^ 2)
+        let BFixed : (Fin n → Ω × ℝ) → ℝ :=
+          fun x : Fin n → Ω × ℝ => studentizerClipBudget n r C0 rho 1 (fun j : Fin n => (x j).1)
+        let BdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>
+            studentizerClipBudgetDeleted n r C0 rho 1 (fun j : Fin n => (x j).1) i
+        let HFixed : (Fin n → Ω × ℝ) → ℝ :=
+          fun x : Fin n → Ω × ℝ =>
+            (1 + VFixed x) * (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + BFixed x))
+        let HdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>
+            (1 + VdeleteFixed i x) *
+              (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + BdeleteFixed i x))
+        let payment : Fin n → ℝ :=
+          fun i : Fin n => K *
+            ((∫ x, HFixed x ∂νFixed) + (∫ x, HdeleteFixed i x ∂νFixed))
+        let paymentTotal : ℝ := ∑ i : Fin n, payment i

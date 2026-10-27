@@ -1,0 +1,174 @@
+{
+  "schema": "oq56-unit226-pinned-MemLp-MapMeasure-ambient-source-v1",
+  "source": {
+    "physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/LpSeminorm/Basic.lean",
+    "sha256": "8e7b53565147a97607ebb09d26073084d0e926edbc9349db90f69859990762cd",
+    "bytes": 54108,
+    "mtime_ns": "1792382595000000000"
+  },
+  "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "window": {
+    "first": 1006,
+    "last": 1055,
+    "source": "end ENormedAddMonoid\n\nsection MapMeasure\n\nvariable {ε : Type*} [TopologicalSpace ε] [ContinuousENorm ε]\n  {β : Type*} {mβ : MeasurableSpace β} {f : α → β} {g : β → ε}\n\ntheorem eLpNormEssSup_map_measure (hg : AEStronglyMeasurable g (Measure.map f μ))\n    (hf : AEMeasurable f μ) : eLpNormEssSup g (Measure.map f μ) = eLpNormEssSup (g ∘ f) μ :=\n  essSup_map_measure hg.enorm hf\n\ntheorem eLpNorm_map_measure (hg : AEStronglyMeasurable g (Measure.map f μ))\n    (hf : AEMeasurable f μ) : eLpNorm g p (Measure.map f μ) = eLpNorm (g ∘ f) p μ := by\n  have hgf := hg.comp_aemeasurable hf\n  by_cases hp_zero : p = 0\n  · simp only [hp_zero, eLpNorm_exponent_zero hg, eLpNorm_exponent_zero hgf]\n  by_cases hp_top : p = ∞\n  · rw [hp_top, eLpNorm_exponent_top hg, eLpNorm_exponent_top hgf]\n    exact eLpNormEssSup_map_measure hg hf\n  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_zero hp_top hg,\n    eLpNorm_eq_lintegral_rpow_enorm_toReal hp_zero hp_top hgf]\n  congr 1\n  rw [lintegral_map' (hg.enorm.pow_const p.toReal) hf]\n  rfl\n\ntheorem memLp_map_measure_iff (hg : AEStronglyMeasurable g (Measure.map f μ))\n    (hf : AEMeasurable f μ) : MemLp g p (Measure.map f μ) ↔ MemLp (g ∘ f) p μ := by\n  simp [MemLp, eLpNorm_map_measure hg hf]\n\ntheorem MemLp.comp_of_map (hg : MemLp g p (Measure.map f μ)) (hf : AEMeasurable f μ) :\n    MemLp (g ∘ f) p μ :=\n  (memLp_map_measure_iff hg.aestronglyMeasurable hf).1 hg\n\ntheorem eLpNorm_comp_measurePreserving {ν : MeasureTheory.Measure β} (hg : AEStronglyMeasurable g ν)\n    (hf : MeasurePreserving f μ ν) : eLpNorm (g ∘ f) p μ = eLpNorm g p ν :=\n  Eq.symm <| hf.map_eq ▸ eLpNorm_map_measure (hf.map_eq ▸ hg) hf.aemeasurable\n\ntheorem AEEqFun.eLpNorm_compMeasurePreserving {ν : MeasureTheory.Measure β} (g : β →ₘ[ν] E)\n    (hf : MeasurePreserving f μ ν) :\n    eLpNorm (g.compMeasurePreserving f hf) p μ = eLpNorm g p ν := by\n  rw [eLpNorm_congr_ae (g.coeFn_compMeasurePreserving _)]\n  exact eLpNorm_comp_measurePreserving g.aestronglyMeasurable hf\n\ntheorem MemLp.comp_measurePreserving {ν : MeasureTheory.Measure β} (hg : MemLp g p ν)\n    (hf : MeasurePreserving f μ ν) : MemLp (g ∘ f) p μ :=\n  .comp_of_map (hf.map_eq.symm ▸ hg) hf.aemeasurable\n\ntheorem _root_.MeasurableEmbedding.eLpNormEssSup_map_measure (hf : MeasurableEmbedding f) :\n    eLpNormEssSup g (Measure.map f μ) = eLpNormEssSup (g ∘ f) μ :=\n  hf.essSup_map_measure\n"
+  },
+  "actualHeader1to80": {
+    "first": 1,
+    "last": 80,
+    "source": "/-\nCopyright (c) 2020 Rémy Degenne. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Rémy Degenne, Sébastien Gouëzel\n-/\nmodule\n\npublic import Mathlib.MeasureTheory.Function.AEEqFun\npublic import Mathlib.MeasureTheory.Function.LpSeminorm.Defs\npublic import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic\n\nimport Mathlib.Analysis.MeanInequalitiesPow\nimport Mathlib.Analysis.SpecialFunctions.Pow.Continuity\nimport Mathlib.Data.Fintype.Order\nimport Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas\n\n/-!\n# Basic theorems about ℒp space\n-/\n\npublic section\n\nopen TopologicalSpace MeasureTheory Filter\n\nopen scoped NNReal ENNReal Topology ComplexConjugate\n\nvariable {α ε ε' ε'' E F G : Type*} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measure α}\n  [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G] [ENorm ε]\n  [TopologicalSpace ε] [ENorm ε'] [ENorm ε'']\n\nnamespace MeasureTheory\n\nsection Lp\n\nsection Top\n\ntheorem MemLp.eLpNorm_lt_top {f : α → ε} (hfp : MemLp f p μ) :\n    eLpNorm f p μ < ∞ :=\n  hfp\n\n@[aesop (rule_sets := [finiteness]) unsafe 95% apply]\ntheorem MemLp.eLpNorm_ne_top {f : α → ε} (hfp : MemLp f p μ) :\n    eLpNorm f p μ ≠ ∞ :=\n  hfp.ne\n\ntheorem lintegral_rpow_enorm_lt_top_of_eLpNorm'_lt_top {f : α → ε'} (hq0_lt : 0 < q)\n    (hfq : eLpNorm' f q μ < ∞) : ∫⁻ a, ‖f a‖ₑ ^ q ∂μ < ∞ := by\n  rw [lintegral_rpow_enorm_eq_rpow_eLpNorm' hq0_lt]\n  exact ENNReal.rpow_lt_top_of_nonneg (le_of_lt hq0_lt) (ne_of_lt hfq)\n\ntheorem lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top\n    {f : α → ε} (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)\n    (hfp : eLpNorm f p μ < ∞) :\n    ∫⁻ a, ‖f a‖ₑ ^ p.toReal ∂μ < ∞ := by\n  apply lintegral_rpow_enorm_lt_top_of_eLpNorm'_lt_top\n  · exact ENNReal.toReal_pos hp_ne_zero hp_ne_top\n  · simpa [eLpNorm_eq_eLpNorm' hp_ne_zero hp_ne_top (aestronglyMeasurable_of_eLpNorm_ne_top hfp.ne)]\n      using hfp\n\ntheorem eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top\n    {f : α → ε} (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) (hf : AEStronglyMeasurable f μ) :\n    eLpNorm f p μ < ∞ ↔ ∫⁻ a, ‖f a‖ₑ ^ p.toReal ∂μ < ∞ :=\n  ⟨lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top hp_ne_zero hp_ne_top, by\n    intro h\n    have hp' := ENNReal.toReal_pos hp_ne_zero hp_ne_top\n    have : 0 < 1 / p.toReal := div_pos zero_lt_one hp'\n    simpa [eLpNorm_eq_lintegral_rpow_enorm_toReal hp_ne_zero hp_ne_top hf] using\n      ENNReal.rpow_lt_top_of_nonneg (le_of_lt this) (ne_of_lt h)⟩\n\nend Top\n\nsection Zero\n\n@[simp]\ntheorem eLpNorm'_exponent_zero {f : α → ε'} : eLpNorm' f 0 μ = 1 := by\n  rw [eLpNorm', div_zero, ENNReal.rpow_zero]\n\n@[simp]\ntheorem eLpNorm_exponent_zero {f : α → ε} (hf : AEStronglyMeasurable f μ) :\n    eLpNorm f 0 μ = 0 := by\n"
+  },
+  "LeanCalls": 0,
+  "proofOrAXReplay": 0,
+  "priorPinnedPacket": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-finite-uniform-assembly-frontier-01/parent-api-01/finite-product-law-moment-pinned-api-01.json",
+    "sha256": "f9b523644f19f6a99dd2bd959c79939877cd96f72a95c3edac104f322e951e37",
+    "bytes": 45839
+  },
+  "savedHeaderFinalLFOnlyDifference": true,
+  "contextMarkerTrail": [
+    {
+      "line": 27,
+      "text": "variable {α ε ε' ε'' E F G : Type*} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measure α}"
+    },
+    {
+      "line": 31,
+      "text": "namespace MeasureTheory"
+    },
+    {
+      "line": 33,
+      "text": "section Lp"
+    },
+    {
+      "line": 35,
+      "text": "section Top"
+    },
+    {
+      "line": 70,
+      "text": "end Top"
+    },
+    {
+      "line": 72,
+      "text": "section Zero"
+    },
+    {
+      "line": 88,
+      "text": "section ESeminormedAddMonoid"
+    },
+    {
+      "line": 90,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ESeminormedAddMonoid ε]"
+    },
+    {
+      "line": 124,
+      "text": "variable [MeasurableSpace α]"
+    },
+    {
+      "line": 135,
+      "text": "end ESeminormedAddMonoid"
+    },
+    {
+      "line": 164,
+      "text": "end Zero"
+    },
+    {
+      "line": 166,
+      "text": "section Neg"
+    },
+    {
+      "line": 196,
+      "text": "end Neg"
+    },
+    {
+      "line": 198,
+      "text": "section Const"
+    },
+    {
+      "line": 292,
+      "text": "end Const"
+    },
+    {
+      "line": 294,
+      "text": "variable {f : α → F}"
+    },
+    {
+      "line": 673,
+      "text": "section ENormedAddMonoid"
+    },
+    {
+      "line": 675,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ENormedAddMonoid ε]"
+    },
+    {
+      "line": 703,
+      "text": "end ENormedAddMonoid"
+    },
+    {
+      "line": 713,
+      "text": "section SMul"
+    },
+    {
+      "line": 714,
+      "text": "variable {R : Type*} [Semiring R] [IsDomain R] [Module R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]"
+    },
+    {
+      "line": 722,
+      "text": "end SMul"
+    },
+    {
+      "line": 818,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ENorm ε] [PseudoMetrizableSpace ε] in"
+    },
+    {
+      "line": 843,
+      "text": "variable {ε : Type*} [ENorm ε] in"
+    },
+    {
+      "line": 847,
+      "text": "variable {ε : Type*} [ENorm ε] in"
+    },
+    {
+      "line": 876,
+      "text": "section ESeminormedAddMonoid"
+    },
+    {
+      "line": 878,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ESeminormedAddMonoid ε]"
+    },
+    {
+      "line": 896,
+      "text": "variable {ε : Type*} [ENorm ε] in"
+    },
+    {
+      "line": 908,
+      "text": "variable {ε : Type*} [ENorm ε] in"
+    },
+    {
+      "line": 932,
+      "text": "end ESeminormedAddMonoid"
+    },
+    {
+      "line": 934,
+      "text": "section ENormedAddMonoid"
+    },
+    {
+      "line": 936,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ENormedAddMonoid ε]"
+    },
+    {
+      "line": 951,
+      "text": "variable {ε : Type*} [ENorm ε] in"
+    },
+    {
+      "line": 1006,
+      "text": "end ENormedAddMonoid"
+    },
+    {
+      "line": 1008,
+      "text": "section MapMeasure"
+    },
+    {
+      "line": 1010,
+      "text": "variable {ε : Type*} [TopologicalSpace ε] [ContinuousENorm ε]"
+    }
+  ]
+}
