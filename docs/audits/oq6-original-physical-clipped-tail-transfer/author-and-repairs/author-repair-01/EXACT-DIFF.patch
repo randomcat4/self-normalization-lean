@@ -1,0 +1,16 @@
+--- author-01/OriginalPhysicalClippedTailTransfer.lean
++++ author-repair-01/OriginalPhysicalClippedTailTransfer.lean
+@@ -44,9 +44,12 @@
+       Measurable (fun x : Fin n → Ω => g (x i)) :=
+     hg.comp (measurable_pi_apply i)
+   have hrcoord (i j : Fin n) :
+       Measurable (fun x : Fin n → Ω => r (x i) (x j)) := by
+-    exact hr.comp ((measurable_pi_apply i).prodMk (measurable_pi_apply j))
++    have hpair : Measurable (fun x : Fin n → Ω => (x i, x j)) :=
++      (measurable_pi_apply i).prodMk (measurable_pi_apply j)
++    change Measurable (Function.uncurry r ∘ (fun x : Fin n → Ω => (x i, x j)))
++    exact hr.comp hpair
+   have hW : Measurable W := by
+     change Measurable (fun x : Fin n → Ω =>
+       (∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ))
+     exact (Finset.measurable_sum Finset.univ
