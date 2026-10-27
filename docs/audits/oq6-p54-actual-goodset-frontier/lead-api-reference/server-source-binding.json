@@ -1,0 +1,311 @@
+{
+  "schema": "oq56-unit233-pinned-standard-api-source-reference-v1",
+  "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "references": [
+    {
+      "relativePath": "Mathlib/MeasureTheory/Measure/Real.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean",
+        "sha256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+        "bytes": 24359,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 145,
+          "text": "/-\nCopyright (c) 2025 Sébastien Gouëzel. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Sébastien Gouëzel\n-/\nmodule\n\npublic import Mathlib.MeasureTheory.Measure.Typeclasses.Probability\npublic import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite\n\n/-!\n# Measures as real-valued functions\n\nGiven a measure `μ`, we have defined `μ.real` as the function sending a set `s` to `(μ s).toReal`.\nIn this file, we develop a basic API around this notion.\n\nWe essentially copy relevant lemmas from the files `MeasureSpaceDef.lean`, `NullMeasurable.lean` and\n`MeasureSpace.lean`, and adapt them by replacing in their name `measure` with `measureReal`.\n\nMany lemmas require an assumption that some set has finite measure. These assumptions are written\nin the form `(h : μ s ≠ ∞ := by finiteness)`, where `finiteness` is a tactic for goals of\nthe form `≠ ∞`.\n\nThere are certainly many missing lemmas. The missing ones should be added as they are needed.\n\nThere are no lemmas on infinite sums, as summability issues are really\nmore painful with reals than nonnegative extended reals. They should probably be added in the long\nrun.\n-/\n\npublic section\n\nopen MeasureTheory Measure Set\nopen scoped ENNReal NNReal Function symmDiff\n\nnamespace MeasureTheory\n\nvariable {α β ι : Type*} {_ : MeasurableSpace α} {μ : Measure α} {s s₁ s₂ s₃ t t₁ t₂ u : Set α}\n\ntheorem measureReal_eq_zero_iff (h : μ s ≠ ∞ := by finiteness) :\n    μ.real s = 0 ↔ μ s = 0 := by\n  rw [Measure.real, ENNReal.toReal_eq_zero_iff]\n  exact or_iff_left h\n\ntheorem measureReal_ne_zero_iff (h : μ s ≠ ∞ := by finiteness) :\n    μ.real s ≠ 0 ↔ μ s ≠ 0 := by\n  simp [measureReal_eq_zero_iff, h]\n\n@[simp] theorem measureReal_zero : (0 : Measure α).real = 0 := rfl\n\ntheorem measureReal_zero_apply (s : Set α) : (0 : Measure α).real s = 0 := rfl\n\n@[simp] theorem measureReal_nonneg : 0 ≤ μ.real s := ENNReal.toReal_nonneg\n\n@[simp] theorem measureReal_empty : μ.real ∅ = 0 := by simp [Measure.real]\n\n@[simp]\ntheorem measureReal_univ_pos [IsFiniteMeasure μ] [NeZero μ] : 0 < μ.real Set.univ :=\n  ENNReal.toReal_pos (NeZero.ne (μ Set.univ)) (by finiteness)\n\ntheorem measureReal_univ_ne_zero [IsFiniteMeasure μ] [NeZero μ] : μ.real Set.univ ≠ 0 :=\n  measureReal_univ_pos.ne'\n\n@[simp]\ntheorem ofReal_measureReal (h : μ s ≠ ∞ := by finiteness) : ENNReal.ofReal (μ.real s) = μ s := by\n  simp [measureReal_def, h]\n\ntheorem nonempty_of_measureReal_ne_zero (h : μ.real s ≠ 0) : s.Nonempty :=\n  nonempty_iff_ne_empty.2 fun h' ↦ h <| h'.symm ▸ measureReal_empty\n\n@[simp] theorem measureReal_ennreal_smul_apply (c : ℝ≥0∞) :\n    (c • μ).real s = c.toReal * μ.real s := by\n  simp [Measure.real]\n\n@[simp] theorem measureReal_nnreal_smul_apply (c : ℝ≥0) :\n    (c • μ).real s = c * μ.real s := by\n  simp [measureReal_def]\n\ntheorem map_measureReal_apply_of_aemeasurable [MeasurableSpace β] {f : α → β}\n    (hf : AEMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :\n    (μ.map f).real s = μ.real (f ⁻¹' s) := by\n  simp_rw [measureReal_def, map_apply_of_aemeasurable hf hs]\n\ntheorem map_measureReal_apply [MeasurableSpace β] {f : α → β} (hf : Measurable f)\n    {s : Set β} (hs : MeasurableSet s) : (μ.map f).real s = μ.real (f ⁻¹' s) :=\n  map_measureReal_apply_of_aemeasurable hf.aemeasurable hs\n\n@[gcongr] theorem measureReal_mono (h : s₁ ⊆ s₂) (h₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real s₁ ≤ μ.real s₂ :=\n  ENNReal.toReal_mono h₂ (measure_mono h)\n\ntheorem measureReal_eq_measureReal_iff {m : MeasurableSpace β} {ν : Measure β} {t : Set β}\n    (h₁ : μ s ≠ ∞ := by finiteness) (h₂ : ν t ≠ ∞ := by finiteness) :\n    μ.real s = ν.real t ↔ μ s = ν t := by\n  simp [measureReal_def, ENNReal.toReal_eq_toReal_iff' h₁ h₂]\n\ntheorem measureReal_restrict_apply₀ (ht : NullMeasurableSet t (μ.restrict s)) :\n    (μ.restrict s).real t = μ.real (t ∩ s) := by\n  simp only [measureReal_def, restrict_apply₀ ht]\n\n@[simp]\ntheorem measureReal_restrict_apply (ht : MeasurableSet t) :\n    (μ.restrict s).real t = μ.real (t ∩ s) := by\n  simp only [measureReal_def, restrict_apply ht]\n\ntheorem measureReal_restrict_apply_univ (s : Set α) : (μ.restrict s).real univ = μ.real s := by\n  simp\n\n@[simp]\ntheorem measureReal_restrict_apply' (hs : MeasurableSet s) :\n    (μ.restrict s).real t = μ.real (t ∩ s) := by\n  simp only [measureReal_def, restrict_apply' hs]\n\ntheorem measureReal_restrict_apply₀' (hs : NullMeasurableSet s μ) : μ.restrict s t = μ (t ∩ s) := by\n  simp only [restrict_apply₀' hs]\n\n@[simp]\ntheorem measureReal_restrict_apply_self (s : Set α) : (μ.restrict s).real s = μ.real s := by\n  simp [measureReal_def]\n\ntheorem measureReal_mono_null (h : s₁ ⊆ s₂) (h₂ : μ.real s₂ = 0) (h'₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real s₁ = 0 := by\n  rw [measureReal_eq_zero_iff h'₂] at h₂\n  simp [Measure.real, measure_mono_null h h₂]\n\ntheorem measureReal_le_measureReal_union_left (h : μ t ≠ ∞ := by finiteness) :\n    μ.real s ≤ μ.real (s ∪ t) := by\n  rcases eq_top_or_lt_top (μ s) with hs | hs\n  · simp [Measure.real, hs]\n  · exact measureReal_mono subset_union_left (measure_union_lt_top hs h.lt_top).ne\n\ntheorem measureReal_le_measureReal_union_right (h : μ s ≠ ∞ := by finiteness) :\n    μ.real t ≤ μ.real (s ∪ t) := by\n  rw [union_comm]\n  exact measureReal_le_measureReal_union_left h\n\ntheorem measureReal_union_le (s₁ s₂ : Set α) : μ.real (s₁ ∪ s₂) ≤ μ.real s₁ + μ.real s₂ := by\n  rcases eq_top_or_lt_top (μ (s₁ ∪ s₂)) with h | h\n  · simp only [Measure.real, h, ENNReal.toReal_top]\n    exact add_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg\n  · have A : μ s₁ ≠ ∞ := measure_ne_top_of_subset subset_union_left h.ne\n    have B : μ s₂ ≠ ∞ := measure_ne_top_of_subset subset_union_right h.ne\n    simp only [Measure.real, ← ENNReal.toReal_add A B]\n    exact ENNReal.toReal_mono (by simp [A, B]) (measure_union_le _ _)\n\n"
+        }
+      ],
+      "precedingContexts": []
+    },
+    {
+      "relativePath": "Mathlib/Analysis/InnerProductSpace/PiL2.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/PiL2.lean",
+        "sha256": "09f7411be71df0ce97a761db4551b3d9cf090fd5d771492a570dfa8b6c1de57a",
+        "bytes": 58210,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 178,
+          "text": "/-\nCopyright (c) 2020 Joseph Myers. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth\n-/\nmodule\n\npublic import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional\npublic import Mathlib.Analysis.Normed.Lp.Matrix\npublic import Mathlib.Analysis.Normed.Order.Lattice\npublic import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas\npublic import Mathlib.LinearAlgebra.UnitaryGroup\npublic import Mathlib.Util.Superscript\n\nimport Mathlib.LinearAlgebra.Matrix.InvariantBasisNumber\n\n/-!\n# `L²` inner product space structure on finite products of inner product spaces\n\nThe `L²` norm on a finite product of inner product spaces is compatible with an inner product\n$$\n\\langle x, y\\rangle = \\sum \\langle x_i, y_i \\rangle.\n$$\nThis is recorded in this file as an inner product space instance on `PiLp 2`.\n\nThis file develops the notion of a finite-dimensional Hilbert space over `𝕜 = ℂ, ℝ`, referred to as\n`E`. We define an `OrthonormalBasis 𝕜 ι E` as a linear isometric equivalence\nbetween `E` and `EuclideanSpace 𝕜 ι`. Then `stdOrthonormalBasis` shows that such an equivalence\nalways exists if `E` is finite dimensional. We provide language for converting between a basis\nthat is orthonormal and an orthonormal basis (e.g. `Basis.toOrthonormalBasis`). We show that\northonormal bases for each summand in a direct sum of spaces can be combined into an orthonormal\nbasis for the whole sum in `DirectSum.IsInternal.subordinateOrthonormalBasis`. In\nthe last section, various properties of matrices are explored.\n\n## Main definitions\n\n- `EuclideanSpace 𝕜 n`: defined to be `PiLp 2 (n → 𝕜)` for any `Fintype n`, i.e., the space\n  from functions to `n` to `𝕜` with the `L²` norm. We register several instances on it (notably\n  that it is a finite-dimensional inner product space), and provide a `!ₚ[]` notation (for numeric\n  subscripts like `₂`) for the case when the indexing type is `Fin n`.\n\n- `OrthonormalBasis 𝕜 ι`: defined to be an isometry to Euclidean space from a given\n  finite-dimensional inner product space, `E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 ι`.\n\n- `Basis.toOrthonormalBasis`: constructs an `OrthonormalBasis` for a finite-dimensional\n  Euclidean space from a `Basis` which is `Orthonormal`.\n\n- `Orthonormal.exists_orthonormalBasis_extension`: provides an existential result of an\n  `OrthonormalBasis` extending a given orthonormal set\n\n- `exists_orthonormalBasis`: provides an orthonormal basis on a finite-dimensional vector space\n\n- `stdOrthonormalBasis`: provides an arbitrarily-chosen `OrthonormalBasis` of a given\n  finite-dimensional inner product space\n\n- `orthonormalBasisSingleton`: an orthonormal basis formed by a single unit vector in a\n  one-dimensional inner product space.\n\nFor consequences in infinite dimension (Hilbert bases, etc.), see the file\n`Analysis.InnerProductSpace.L2Space`.\n\n-/\n\n@[expose] public section\n\n\nopen Module Real Set Filter RCLike Submodule Function Uniformity Topology NNReal ENNReal\n  ComplexConjugate DirectSum WithLp\n\nnoncomputable section\n\nvariable {ι ι' 𝕜 : Type*} [RCLike 𝕜]\nvariable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]\nvariable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F]\nvariable {F' : Type*} [NormedAddCommGroup F'] [InnerProductSpace ℝ F']\n\nlocal notation \"⟪\" x \", \" y \"⟫\" => inner 𝕜 x y\n\n/-\nIf `ι` is a finite type and each space `f i`, `i : ι`, is an inner product space,\nthen `Π i, f i` is an inner product space as well. Since `Π i, f i` is endowed with the sup norm,\nwe use instead `PiLp 2 f` for the product space, which is endowed with the `L^2` norm.\n-/\ninstance PiLp.innerProductSpace {ι : Type*} [Fintype ι] (f : ι → Type*)\n    [∀ i, NormedAddCommGroup (f i)] [∀ i, InnerProductSpace 𝕜 (f i)] :\n    InnerProductSpace 𝕜 (PiLp 2 f) where\n  inner x y := ∑ i, ⟪x i, y i⟫\n  norm_sq_eq_re_inner x := by\n    simp only [PiLp.norm_sq_eq_of_L2, map_sum, ← norm_sq_eq_re_inner]\n  conj_inner_symm := by\n    intro x y\n    unfold inner\n    rw [map_sum]\n    apply Finset.sum_congr rfl\n    rintro z -\n    apply inner_conj_symm\n  add_left x y z :=\n    show (∑ i, ⟪x i + y i, z i⟫ = ∑ i, ⟪x i, z i⟫ + ∑ i, ⟪y i, z i⟫) by\n      simp only [inner_add_left, Finset.sum_add_distrib]\n  smul_left x y r :=\n    show (∑ i : ι, ⟪r • x i, y i⟫ = conj r * ∑ i, ⟪x i, y i⟫) by\n      simp only [Finset.mul_sum, inner_smul_left]\n\ntheorem PiLp.inner_apply {ι : Type*} [Fintype ι] {f : ι → Type*} [∀ i, NormedAddCommGroup (f i)]\n    [∀ i, InnerProductSpace 𝕜 (f i)] (x y : PiLp 2 f) : ⟪x, y⟫ = ∑ i, ⟪x i, y i⟫ :=\n  rfl\n\n/-- The standard real/complex Euclidean space, functions on a finite type. For an `n`-dimensional\nspace use `EuclideanSpace 𝕜 (Fin n)`.\n\nFor the case when `n = Fin _`, there is `!₂[x, y, ...]` notation for building elements of this type,\nanalogous to `![x, y, ...]` notation. -/\n@[wikidata Q17295]\nabbrev EuclideanSpace (𝕜 : Type*) (n : Type*) : Type _ :=\n  PiLp 2 fun _ : n => 𝕜\n\nnamespace EuclideanSpace\n\nvariable {n : Type*}\n\ninstance : Lattice (EuclideanSpace ℝ n) := (WithLp.equiv 2 (n → ℝ)).lattice\n\ninstance : IsOrderedAddMonoid (EuclideanSpace ℝ n) :=\n  Function.Injective.isOrderedAddMonoid WithLp.ofLp (fun _ _ ↦ rfl) .rfl\n\nend EuclideanSpace\n\nsection Notation\nopen Lean Meta Elab Term Macro TSyntax PrettyPrinter.Delaborator SubExpr\nopen Mathlib.Tactic (subscriptTerm)\n\n/-- Notation for vectors in Lp space. `!₂[x, y, ...]` is a shorthand for\n`WithLp.toLp 2 ![x, y, ...]`, of type `EuclideanSpace _ (Fin _)`.\n\nThis also works for other subscripts. -/\nsyntax (name := PiLp.vecNotation) \"!\" noWs subscriptTerm noWs \"[\" term,* \"]\" : term\nmacro_rules | `(!$p:subscript[$e:term,*]) => do\n  -- override the `Fin n.succ` to a literal\n  let n := e.getElems.size\n  `(WithLp.toLp $p (V := ∀ _ : Fin $(quote n), _) ![$e,*])\n\n/-- Unexpander for the `!₂[x, y, ...]` notation. -/\n@[app_delab WithLp.toLp]\nmeta def EuclideanSpace.delabVecNotation : Delab :=\n  whenNotPPOption getPPExplicit <| whenPPOption getPPNotation <| withOverApp 3 do\n    -- check that the `WithLp.toLp _` is present\n    let p : Term ← withNaryArg 0 delab\n    -- to be conservative, only allow subscripts which are numerals\n    guard <| p matches `($_:num)\n    let `(![$elems,*]) ← withNaryArg 2 delab | failure\n    `(!$p[$elems,*])\n\nend Notation\n\ntheorem EuclideanSpace.nnnorm_eq {𝕜 : Type*} [RCLike 𝕜] {n : Type*} [Fintype n]\n    (x : EuclideanSpace 𝕜 n) : ‖x‖₊ = NNReal.sqrt (∑ i, ‖x i‖₊ ^ 2) :=\n  PiLp.nnnorm_eq_of_L2 x\n\ntheorem EuclideanSpace.norm_eq {𝕜 : Type*} [RCLike 𝕜] {n : Type*} [Fintype n]\n    (x : EuclideanSpace 𝕜 n) : ‖x‖ = √(∑ i, ‖x i‖ ^ 2) := by\n  simpa only [Real.coe_sqrt, NNReal.coe_sum] using! congr(($x.nnnorm_eq : ℝ))\n\ntheorem EuclideanSpace.norm_sq_eq {𝕜 : Type*} [RCLike 𝕜] {n : Type*} [Fintype n]\n    (x : EuclideanSpace 𝕜 n) : ‖x‖ ^ 2 = ∑ i, ‖x i‖ ^ 2 :=\n  PiLp.norm_sq_eq_of_L2 _ x\n\ntheorem EuclideanSpace.real_norm_sq_eq {n : Type*} [Fintype n] (x : EuclideanSpace ℝ n) :\n    ‖x‖ ^ 2 = ∑ i, (x i) ^ 2 := by\n  simp [EuclideanSpace.norm_sq_eq]\n\ninstance {n : Type*} [Fintype n] : HasSolidNorm (EuclideanSpace ℝ n) where\n  solid {x y} h := by\n    rw [← sq_le_sq₀ (norm_nonneg x) (norm_nonneg y), EuclideanSpace.real_norm_sq_eq,\n      EuclideanSpace.real_norm_sq_eq]\n    exact Finset.sum_le_sum fun i _ ↦ sq_le_sq.2 (h i)\n\n@[wikidata Q847073]\ntheorem EuclideanSpace.dist_eq {𝕜 : Type*} [RCLike 𝕜] {n : Type*} [Fintype n]\n"
+        }
+      ],
+      "precedingContexts": []
+    },
+    {
+      "relativePath": "Mathlib/MeasureTheory/Group/Arithmetic.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Group/Arithmetic.lean",
+        "sha256": "d9e37392e603459e76d9799dd8cc59d62a514a0c79716098d0352e1455f7c200",
+        "bytes": 37803,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 95,
+          "text": "/-\nCopyright (c) 2021 Yury Kudryashov. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Yury Kudryashov\n-/\nmodule\n\npublic import Mathlib.MeasureTheory.Measure.AEMeasurable\n\n/-!\n# Typeclasses for measurability of operations\n\nIn this file we define classes `MeasurableMul` etc. and prove dot-style lemmas\n(`Measurable.mul`, `AEMeasurable.mul` etc). For binary operations we define two typeclasses:\n\n- `MeasurableMul` says that both left and right multiplication are measurable;\n- `MeasurableMul₂` says that `fun p : α × α => p.1 * p.2` is measurable,\n\nand similarly for other binary operations. The reason for introducing these classes is that in case\nof topological space `α` equipped with the Borel `σ`-algebra, instances for `MeasurableMul₂`\netc. require `α` to have a second countable topology.\n\nWe define separate classes for `MeasurableDiv`/`MeasurableSub`\nbecause on some types (e.g., `ℕ`, `ℝ≥0∞`) division and/or subtraction are not defined as `a * b⁻¹` /\n`a + (-b)`.\n\nFor instances relating, e.g., `ContinuousMul` to `MeasurableMul` see file\n`MeasureTheory.BorelSpace`.\n\n## Implementation notes\n\nFor the heuristics of `@[to_additive]` it is important that the type with a multiplication\n(or another multiplicative operation) is the first (implicit) argument of all declarations.\n\n## Tags\n\nmeasurable function, arithmetic operator\n\n## TODO\n\n* Uniformize the treatment of `pow` and `smul`.\n* Use `@[to_additive]` to send `MeasurablePow` to `MeasurableSMul₂`.\n* This might require changing the definition (swapping the arguments in the function that is\n  in the conclusion of `MeasurableSMul`.)\n-/\n\npublic section\n\nopen MeasureTheory\nopen scoped Pointwise\n\nuniverse u v\nvariable {α : Type*}\n\n/-!\n### Binary operations: `(· + ·)`, `(· * ·)`, `(· - ·)`, `(· / ·)`\n-/\n\n\n/-- We say that a type has `MeasurableAdd` if `(c + ·)` and `(· + c)` are measurable functions.\nFor a typeclass assuming measurability of `uncurry (· + ·)` see `MeasurableAdd₂`. -/\nclass MeasurableAdd (M : Type*) [MeasurableSpace M] [Add M] : Prop where\n  measurable_const_add : ∀ c : M, Measurable (c + ·) := by intro; fun_prop\n  measurable_add_const : ∀ c : M, Measurable (· + c) := by intro; fun_prop\n\nexport MeasurableAdd (measurable_const_add measurable_add_const)\n\n/-- We say that a type has `MeasurableAdd₂` if `uncurry (· + ·)` is a measurable function.\nFor a typeclass assuming measurability of `(c + ·)` and `(· + c)` see `MeasurableAdd`. -/\nclass MeasurableAdd₂ (M : Type*) [MeasurableSpace M] [Add M] : Prop where\n  measurable_add : Measurable fun p : M × M => p.1 + p.2\n\nexport MeasurableAdd₂ (measurable_add)\n\n/-- We say that a type has `MeasurableMul` if `(c * ·)` and `(· * c)` are measurable functions.\nFor a typeclass assuming measurability of `uncurry (*)` see `MeasurableMul₂`. -/\n@[to_additive]\nclass MeasurableMul (M : Type*) [MeasurableSpace M] [Mul M] : Prop where\n  measurable_const_mul : ∀ c : M, Measurable (c * ·) := by intro; fun_prop\n  measurable_mul_const : ∀ c : M, Measurable (· * c) := by intro; fun_prop\n\nexport MeasurableMul (measurable_const_mul measurable_mul_const)\n\n/-- We say that a type has `MeasurableMul₂` if `uncurry (· * ·)` is a measurable function.\nFor a typeclass assuming measurability of `(c * ·)` and `(· * c)` see `MeasurableMul`. -/\n@[to_additive MeasurableAdd₂]\nclass MeasurableMul₂ (M : Type*) [MeasurableSpace M] [Mul M] : Prop where\n  measurable_mul : Measurable fun p : M × M => p.1 * p.2\n\nexport MeasurableMul₂ (measurable_mul)\n\nsection Mul\n\nvariable {M α β : Type*} [MeasurableSpace M] [Mul M] {m : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {f g : α → M} {μ : Measure α}\n"
+        },
+        {
+          "start": 735,
+          "end": 838,
+          "text": "/-- If a scalar is central, then its right action is measurable when its left action is. -/\nnonrec instance MeasurableSMul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [SMul M α]\n    [SMul Mᵐᵒᵖ α] [IsCentralScalar M α] [MeasurableSMul₂ M α] : MeasurableSMul₂ Mᵐᵒᵖ α :=\n  ⟨show Measurable fun x : Mᵐᵒᵖ × α => op (unop x.1) • x.2 by\n      simp_rw [op_smul_eq_smul]\n      exact (measurable_mul_unop.comp measurable_fst).smul measurable_snd⟩\n\n@[to_additive]\ninstance measurableSMul_opposite_of_mul {M : Type*} [Mul M] [MeasurableSpace M]\n    [MeasurableMul M] : MeasurableSMul Mᵐᵒᵖ M where\n  measurable_smul_const x := measurable_mul_unop.const_mul x\n\n@[to_additive]\ninstance measurableSMul₂_opposite_of_mul {M : Type*} [Mul M] [MeasurableSpace M]\n    [MeasurableMul₂ M] : MeasurableSMul₂ Mᵐᵒᵖ M :=\n  ⟨measurable_snd.mul (measurable_mul_unop.comp measurable_fst)⟩\n\nend Opposite\n\n/-!\n### Big operators: `∏` and `∑`\n-/\n\n\nsection Monoid\n\nvariable {M α : Type*} [Monoid M] [MeasurableSpace M] [MeasurableMul₂ M] {m : MeasurableSpace α}\n  {μ : Measure α}\n\n-- TODO: `fun_prop` cannot use lemmas with a condition quantifying over the function\n@[to_additive (attr := fun_prop)]\ntheorem List.measurable_prod (l : List (α → M)) (hl : ∀ f ∈ l, Measurable f) :\n    Measurable l.prod := by\n  induction l with\n  | nil => exact measurable_one\n  | cons f l ihl =>\n    rw [List.forall_mem_cons] at hl\n    rw [List.prod_cons]\n    exact hl.1.mul (ihl hl.2)\n\n@[to_additive (attr := fun_prop)]\ntheorem List.aemeasurable_prod (l : List (α → M)) (hl : ∀ f ∈ l, AEMeasurable f μ) :\n    AEMeasurable l.prod μ := by\n  induction l with\n  | nil => exact aemeasurable_one\n  | cons f l ihl =>\n    rw [List.forall_mem_cons] at hl\n    rw [List.prod_cons]\n    exact hl.1.mul (ihl hl.2)\n\n@[to_additive (attr := fun_prop)]\ntheorem List.measurable_fun_prod (l : List (α → M)) (hl : ∀ f ∈ l, Measurable f) :\n    Measurable fun x => (l.map fun f : α → M => f x).prod := by\n  simpa only [← Pi.list_prod_apply] using l.measurable_prod hl\n\n@[to_additive (attr := fun_prop)]\ntheorem List.aemeasurable_fun_prod (l : List (α → M)) (hl : ∀ f ∈ l, AEMeasurable f μ) :\n    AEMeasurable (fun x => (l.map fun f : α → M => f x).prod) μ := by\n  simpa only [← Pi.list_prod_apply] using l.aemeasurable_prod hl\n\nend Monoid\n\nsection CommMonoid\n\nvariable {M ι α β : Type*} [CommMonoid M] [MeasurableSpace M] [MeasurableMul₂ M]\n  {m : MeasurableSpace α} {mβ : MeasurableSpace β} {μ : Measure α} {f : ι → α → M}\n\n@[to_additive (attr := fun_prop)]\ntheorem Multiset.measurable_prod (l : Multiset (α → M)) (hl : ∀ f ∈ l, Measurable f) :\n    Measurable l.prod := by\n  rcases l with ⟨l⟩\n  simpa using l.measurable_prod (by simpa using hl)\n\n@[to_additive (attr := fun_prop)]\ntheorem Multiset.aemeasurable_prod (l : Multiset (α → M)) (hl : ∀ f ∈ l, AEMeasurable f μ) :\n    AEMeasurable l.prod μ := by\n  rcases l with ⟨l⟩\n  simpa using l.aemeasurable_prod (by simpa using hl)\n\n@[to_additive (attr := fun_prop)]\ntheorem Multiset.measurable_fun_prod (s : Multiset (α → M)) (hs : ∀ f ∈ s, Measurable f) :\n    Measurable fun x => (s.map fun f : α → M => f x).prod := by\n  simpa only [← Pi.multiset_prod_apply] using s.measurable_prod hs\n\n@[to_additive (attr := fun_prop)]\ntheorem Multiset.aemeasurable_fun_prod (s : Multiset (α → M)) (hs : ∀ f ∈ s, AEMeasurable f μ) :\n    AEMeasurable (fun x => (s.map fun f : α → M => f x).prod) μ := by\n  simpa only [← Pi.multiset_prod_apply] using s.aemeasurable_prod hs\n\n@[to_additive (attr := fun_prop)]\ntheorem Finset.measurable_fun_prod (s : Finset ι) (hf : ∀ i ∈ s, Measurable (f i)) :\n    Measurable fun a ↦ ∏ i ∈ s, f i a := by\n  simp_rw [← Finset.prod_apply]\n  exact Finset.prod_induction _ _ (fun _ _ => Measurable.mul) (@measurable_one M _ _ _ _) hf\n\n@[to_additive (attr := fun_prop)]\ntheorem Finset.measurable_prod (s : Finset ι) (hf : ∀ i ∈ s, Measurable (f i)) :\n    Measurable fun a ↦ ∏ i ∈ s, f i a := by\n  simp_rw [← Finset.prod_apply]\n  exact Finset.prod_induction _ _ (fun _ _ => Measurable.mul) (@measurable_one M _ _ _ _) hf\n\n/-- Compositional version of `Finset.measurable_prod` for use by `fun_prop`. -/\n@[to_additive (attr := fun_prop)\n/-- Compositional version of `Finset.measurable_sum` for use by `fun_prop`. -/]\n"
+        }
+      ],
+      "precedingContexts": [
+        {
+          "start": 53,
+          "end": 53,
+          "text": "variable {α : Type*}\n"
+        },
+        {
+          "start": 92,
+          "end": 92,
+          "text": "section Mul\n"
+        },
+        {
+          "start": 94,
+          "end": 95,
+          "text": "variable {M α β : Type*} [MeasurableSpace M] [Mul M] {m : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {f g : α → M} {μ : Measure α}\n"
+        },
+        {
+          "start": 152,
+          "end": 152,
+          "text": "end Mul\n"
+        },
+        {
+          "start": 177,
+          "end": 177,
+          "text": "section Pow\n"
+        },
+        {
+          "start": 179,
+          "end": 180,
+          "text": "variable {β γ α : Type*} [MeasurableSpace β] [MeasurableSpace γ] [Pow β γ] [MeasurablePow β γ]\n  {m : MeasurableSpace α} {μ : Measure α} {f : α → β} {g : α → γ}\n"
+        },
+        {
+          "start": 209,
+          "end": 209,
+          "text": "end Pow\n"
+        },
+        {
+          "start": 243,
+          "end": 243,
+          "text": "section Div\n"
+        },
+        {
+          "start": 245,
+          "end": 246,
+          "text": "variable {G α β : Type*} [MeasurableSpace G] [Div G] {m : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {f g : α → G} {μ : Measure α}\n"
+        },
+        {
+          "start": 316,
+          "end": 316,
+          "text": "end Div\n"
+        },
+        {
+          "start": 343,
+          "end": 343,
+          "text": "section Inv\n"
+        },
+        {
+          "start": 345,
+          "end": 346,
+          "text": "variable {G α : Type*} [Inv G] [MeasurableSpace G] [MeasurableInv G] {m : MeasurableSpace α}\n  {f : α → G} {μ : Measure α}\n"
+        },
+        {
+          "start": 380,
+          "end": 380,
+          "text": "end Inv\n"
+        },
+        {
+          "start": 503,
+          "end": 503,
+          "text": "section SMul\n"
+        },
+        {
+          "start": 504,
+          "end": 505,
+          "text": "variable {M X α β : Type*} [MeasurableSpace X] [SMul M X]\n  {m : MeasurableSpace α} {mβ : MeasurableSpace β} {μ : Measure α} {f : α → M} {g : α → X}\n"
+        },
+        {
+          "start": 507,
+          "end": 507,
+          "text": "section MeasurableConstSMul\n"
+        },
+        {
+          "start": 508,
+          "end": 508,
+          "text": "variable [MeasurableConstSMul M X]\n"
+        },
+        {
+          "start": 531,
+          "end": 531,
+          "text": "end MeasurableConstSMul\n"
+        },
+        {
+          "start": 533,
+          "end": 533,
+          "text": "variable [MeasurableSpace M]\n"
+        },
+        {
+          "start": 556,
+          "end": 556,
+          "text": "variable [MeasurableSMul M X]\n"
+        },
+        {
+          "start": 598,
+          "end": 598,
+          "text": "end SMul\n"
+        },
+        {
+          "start": 600,
+          "end": 600,
+          "text": "section IterateMulAct\n"
+        },
+        {
+          "start": 602,
+          "end": 602,
+          "text": "variable {α : Type*} {_ : MeasurableSpace α} {f : α → α}\n"
+        },
+        {
+          "start": 621,
+          "end": 621,
+          "text": "end IterateMulAct\n"
+        },
+        {
+          "start": 623,
+          "end": 623,
+          "text": "section MulAction\n"
+        },
+        {
+          "start": 624,
+          "end": 624,
+          "text": "variable {G G₀ M β α : Type*} [MeasurableSpace β] [MeasurableSpace α] {f : α → β} {μ : Measure α}\n"
+        },
+        {
+          "start": 626,
+          "end": 626,
+          "text": "section Group\n"
+        },
+        {
+          "start": 627,
+          "end": 627,
+          "text": "variable {G : Type*} [Group G] [MulAction G β] [MeasurableConstSMul G β]\n"
+        },
+        {
+          "start": 638,
+          "end": 638,
+          "text": "end Group\n"
+        },
+        {
+          "start": 640,
+          "end": 640,
+          "text": "section Monoid\n"
+        },
+        {
+          "start": 641,
+          "end": 641,
+          "text": "variable [Monoid M] [MulAction M β]\n"
+        },
+        {
+          "start": 643,
+          "end": 643,
+          "text": "section MeasurableConstSMul\n"
+        },
+        {
+          "start": 644,
+          "end": 644,
+          "text": "variable [MeasurableConstSMul M β]\n"
+        },
+        {
+          "start": 662,
+          "end": 662,
+          "text": "end MeasurableConstSMul\n"
+        },
+        {
+          "start": 664,
+          "end": 664,
+          "text": "section MeasurableSMul\n"
+        },
+        {
+          "start": 665,
+          "end": 665,
+          "text": "variable [MeasurableSpace M] [MeasurableSMul M β]\n"
+        },
+        {
+          "start": 675,
+          "end": 675,
+          "text": "end MeasurableSMul\n"
+        },
+        {
+          "start": 676,
+          "end": 676,
+          "text": "end Monoid\n"
+        },
+        {
+          "start": 678,
+          "end": 678,
+          "text": "section GroupWithZero\n"
+        },
+        {
+          "start": 679,
+          "end": 679,
+          "text": "variable [GroupWithZero G₀] [MulAction G₀ β] [MeasurableConstSMul G₀ β]\n"
+        },
+        {
+          "start": 689,
+          "end": 689,
+          "text": "end GroupWithZero\n"
+        },
+        {
+          "start": 690,
+          "end": 690,
+          "text": "end MulAction\n"
+        },
+        {
+          "start": 697,
+          "end": 697,
+          "text": "section Opposite\n"
+        },
+        {
+          "start": 752,
+          "end": 752,
+          "text": "end Opposite\n"
+        },
+        {
+          "start": 759,
+          "end": 759,
+          "text": "section Monoid\n"
+        },
+        {
+          "start": 761,
+          "end": 762,
+          "text": "variable {M α : Type*} [Monoid M] [MeasurableSpace M] [MeasurableMul₂ M] {m : MeasurableSpace α}\n  {μ : Measure α}\n"
+        },
+        {
+          "start": 795,
+          "end": 795,
+          "text": "end Monoid\n"
+        },
+        {
+          "start": 797,
+          "end": 797,
+          "text": "section CommMonoid\n"
+        },
+        {
+          "start": 799,
+          "end": 800,
+          "text": "variable {M ι α β : Type*} [CommMonoid M] [MeasurableSpace M] [MeasurableMul₂ M]\n  {m : MeasurableSpace α} {mβ : MeasurableSpace β} {μ : Measure α} {f : ι → α → M}\n"
+        }
+      ]
+    }
+  ],
+  "Lean": 0,
+  "sourceCacheWrites": 0,
+  "oldProofAXReplay": 0
+}

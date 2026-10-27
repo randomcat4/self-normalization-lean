@@ -225,6 +225,7 @@ import Shao.C2.TwoSided
 import Shao.C2.UniformGaussianTailPolynomial
 import Shao.C2.UnitSecondEnergyLowerTailPayment
 import Shao.Checks.Boundaries
+import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
 import Shao.OQ3.AffineWeakCramer
@@ -254,6 +255,7 @@ import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCharacteristicMoments
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
+import Shao.OQ3.CompactOpenDomainEdgeworthPolynomialError
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainLogMomentApproximation
 import Shao.OQ3.CompactOpenDomainNormalizedIIDLogExponent
@@ -324,6 +326,7 @@ import Shao.OQ3.NormalizedIIDPairMiddleFrequency
 import Shao.OQ3.NormalizedIIDPairSuperpolynomialDecay
 import Shao.OQ3.OpenBallOscillation
 import Shao.OQ3.OpenDomainAffineMoments
+import Shao.OQ3.OpenDomainAffinePairCGFCumulants
 import Shao.OQ3.OpenDomainBoundaryJet
 import Shao.OQ3.OpenDomainBoundaryLaplaceIntegral
 import Shao.OQ3.OpenDomainBoundaryLaplaceNatNormalization
@@ -353,6 +356,7 @@ import Shao.OQ3.PairCharacteristicMomentRemainder
 import Shao.OQ3.PairCharacteristicQuadraticRemainder
 import Shao.OQ3.PairCharacteristicWeightedIntegral
 import Shao.OQ3.PairDirectionalMomentScaling
+import Shao.OQ3.PairMomentEdgeworthExponentialError
 import Shao.OQ3.PairProjectionAbsoluteMoments
 import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
@@ -389,6 +393,7 @@ import Shao.OQ3.ResonantLimit
 import Shao.OQ3.SampleBoundary
 import Shao.OQ3.SampleChangeOfMeasure
 import Shao.OQ3.SampleParabolaTailDomain
+import Shao.OQ3.ScalarCGFThirdFourthDerivatives
 import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
 import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
@@ -425,6 +430,7 @@ import Shao.OQ3.StandardizedCellChangeOfMeasure
 import Shao.OQ3.StandardizedCellOscillation
 import Shao.OQ3.StandardizedFrontierTransport
 import Shao.OQ3.StandardizedGaussianCellOscillation
+import Shao.OQ3.StandardizedPairEdgeworthPolynomialError
 import Shao.OQ3.StandardizedPairLogMomentApproximation
 import Shao.OQ3.StandardizedPairNormalizedLogExponent
 import Shao.OQ3.StandardizedPairQuarticExponentialError
@@ -763,8 +769,11 @@ import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
+import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSelfNormalizedTail
+import Shao.OQ6.OriginalSingleWitnessAnalyticStrictFrontier
+import Shao.OQ6.P54ActualGoodsetFrontier
 import Shao.OQ6.PairedSelfNormalizedTail
 import Shao.OQ6.PartialObservationTilt
 import Shao.OQ6.PhysicalCompact

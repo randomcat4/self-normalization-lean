@@ -1,0 +1,225 @@
+{
+  "schema": "oq56-unit235-pinned-finite-product-probability-instance-source-v1",
+  "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "references": [
+    {
+      "relativePath": "Mathlib/MeasureTheory/Constructions/Pi.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 90,
+          "text": "/-\nCopyright (c) 2020 Floris van Doorn. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Floris van Doorn\n-/\nmodule\n\npublic import Mathlib.Logic.Encodable.Pi\npublic import Mathlib.MeasureTheory.Group.Measure\npublic import Mathlib.MeasureTheory.MeasurableSpace.Pi\n\nimport Mathlib.Algebra.BigOperators.Fin\n\n/-!\n# Indexed product measures\n\nIn this file we define and prove properties about finite products of measures\n(and at some point, countable products of measures).\n\n## Main definition\n\n* `MeasureTheory.Measure.pi`: The product of finitely many σ-finite measures.\n  Given `μ : (i : ι) → Measure (α i)` for `[Fintype ι]` it has type `Measure ((i : ι) → α i)`.\n\nTo apply Fubini's theorem or Tonelli's theorem along some subset, we recommend using the marginal\nconstruction `MeasureTheory.lmarginal` and (todo) `MeasureTheory.marginal`. This allows you to\napply these theorems without any bookkeeping with measurable equivalences.\n\n## Implementation Notes\n\nWe define `MeasureTheory.OuterMeasure.pi`, the product of finitely many outer measures, as the\nmaximal outer measure `n` with the property that `n (pi univ s) ≤ ∏ i, m i (s i)`,\nwhere `pi univ s` is the product of the sets `{s i | i : ι}`.\n\nWe then show that this induces a product of measures, called `MeasureTheory.Measure.pi`.\nFor a collection of σ-finite measures `μ` and a collection of measurable sets `s` we show that\n`Measure.pi μ (pi univ s) = ∏ i, m i (s i)`. To do this, we follow the following steps:\n* We know that there is some ordering on `ι`, given by an element of `[Countable ι]`.\n* Using this, we have an equivalence `MeasurableEquiv.piMeasurableEquivTProd` between\n  `∀ i, α i` and an iterated product of `α i`, called `List.tprod α l` for some list `l`.\n* On this iterated product we can easily define a product measure `MeasureTheory.Measure.tprod`\n  by iterating `MeasureTheory.Measure.prod`\n* Using the previous two steps we construct `MeasureTheory.Measure.pi'` on `(i : ι) → α i` for\n  countable `ι`.\n* We know that `MeasureTheory.Measure.pi'` sends products of sets to products of measures, and\n  since `MeasureTheory.Measure.pi` is the maximal such measure (or at least, it comes from an outer\n  measure which is the maximal such outer measure), we get the same rule for\n  `MeasureTheory.Measure.pi`.\n\n## Tags\n\nfinitary product measure\n\n-/\n\n@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n\n/-- An upper bound for the measure in a finite product space.\n  It is defined by taking the image of the set under all projections, and taking the product\n  of the measures of these images.\n  For measurable boxes it is equal to the correct measure. -/\ndef piPremeasure (m : ∀ i, OuterMeasure (α i)) (s : Set (∀ i, α i)) : ℝ≥0∞ :=\n  ∏ i, m i (eval i '' s)\n\ntheorem piPremeasure_pi {s : ∀ i, Set (α i)} (hs : (pi univ s).Nonempty) :\n    piPremeasure m (pi univ s) = ∏ i, m i (s i) := by simp [hs, piPremeasure]\n\ntheorem piPremeasure_pi' {s : ∀ i, Set (α i)} : piPremeasure m (pi univ s) = ∏ i, m i (s i) := by\n  cases isEmpty_or_nonempty ι\n  · simp [piPremeasure]\n  rcases (pi univ s).eq_empty_or_nonempty with h | h\n  · rcases univ_pi_eq_empty_iff.mp h with ⟨i, hi⟩\n    have : ∃ i, m i (s i) = 0 := ⟨i, by simp [hi]⟩\n    simpa [h, Finset.card_univ, zero_pow Fintype.card_ne_zero, @eq_comm _ (0 : ℝ≥0∞),\n      Finset.prod_eq_zero_iff, piPremeasure]\n  · simp [h, piPremeasure]\n"
+        },
+        {
+          "start": 290,
+          "end": 316,
+          "text": "@[simp]\ntheorem pi_pi [∀ i, SigmaFinite (μ i)] (s : (i : ι) → Set (α i)) :\n    Measure.pi μ (pi univ s) = ∏ i, μ i (s i) := by\n  have : Encodable ι := Fintype.toEncodable ι\n  rw [← pi'_eq_pi, pi'_pi]\n\nnonrec theorem pi_univ [∀ i, SigmaFinite (μ i)] : Measure.pi μ univ = ∏ i, μ i univ := by\n  rw [← pi_univ, pi_pi μ]\n\n@[simp] lemma pi_singleton [∀ i, SigmaFinite (μ i)] (f : ∀ i, α i) :\n    Measure.pi μ {f} = ∏ i, μ i {f i} := by\n  simpa [Set.univ_pi_singleton, -pi_pi] using pi_pi μ fun i ↦ {f i}\n\ninstance pi.instIsFiniteMeasure [∀ i, IsFiniteMeasure (μ i)] :\n    IsFiniteMeasure (Measure.pi μ) :=\n  ⟨Measure.pi_univ μ ▸ ENNReal.prod_lt_top (fun i _ ↦ measure_lt_top (μ i) _)⟩\n\ninstance {α : ι → Type*} [∀ i, MeasureSpace (α i)] [∀ i, IsFiniteMeasure (volume : Measure (α i))] :\n    IsFiniteMeasure (volume : Measure (∀ i, α i)) :=\n  pi.instIsFiniteMeasure _\n\ninstance pi.instIsProbabilityMeasure [∀ i, IsProbabilityMeasure (μ i)] :\n    IsProbabilityMeasure (Measure.pi μ) :=\n  ⟨by simp only [Measure.pi_univ, measure_univ, Finset.prod_const_one]⟩\n\n@[simp]\ntheorem pi_pi_finset [∀ i, IsProbabilityMeasure (μ i)] (f : (i : ι) → Set (α i)) (s : Finset ι) :\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 60,
+          "end": 60,
+          "text": "open Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n"
+        },
+        {
+          "start": 62,
+          "end": 62,
+          "text": "open scoped Topology ENNReal\n"
+        },
+        {
+          "start": 66,
+          "end": 66,
+          "text": "variable {ι ι' : Type*} {α : ι → Type*}\n"
+        },
+        {
+          "start": 68,
+          "end": 68,
+          "text": "namespace MeasureTheory\n"
+        },
+        {
+          "start": 70,
+          "end": 70,
+          "text": "variable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "start": 100,
+          "end": 100,
+          "text": "namespace OuterMeasure\n"
+        },
+        {
+          "start": 123,
+          "end": 123,
+          "text": "end OuterMeasure\n"
+        },
+        {
+          "start": 125,
+          "end": 125,
+          "text": "namespace Measure\n"
+        },
+        {
+          "start": 127,
+          "end": 127,
+          "text": "variable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        },
+        {
+          "start": 129,
+          "end": 129,
+          "text": "section Tprod\n"
+        },
+        {
+          "start": 131,
+          "end": 131,
+          "text": "open List\n"
+        },
+        {
+          "start": 133,
+          "end": 133,
+          "text": "variable {δ : Type*} {X : δ → Type*} [∀ i, MeasurableSpace (X i)]\n"
+        },
+        {
+          "start": 169,
+          "end": 169,
+          "text": "end Tprod\n"
+        },
+        {
+          "start": 171,
+          "end": 171,
+          "text": "section Encodable\n"
+        },
+        {
+          "start": 173,
+          "end": 173,
+          "text": "open List\n"
+        },
+        {
+          "start": 175,
+          "end": 175,
+          "text": "variable [Encodable ι]\n"
+        },
+        {
+          "start": 177,
+          "end": 177,
+          "text": "open scoped Classical in\n"
+        },
+        {
+          "start": 193,
+          "end": 193,
+          "text": "end Encodable\n"
+        },
+        {
+          "start": 232,
+          "end": 232,
+          "text": "variable {μ}\n"
+        },
+        {
+          "start": 285,
+          "end": 285,
+          "text": "variable (μ)\n"
+        }
+      ]
+    },
+    {
+      "relativePath": "Mathlib/MeasureTheory/Measure/Typeclasses/Probability.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Typeclasses/Probability.lean",
+        "sha256": "00ef2a106c0ae4032944cec021ad58d04c370cc9b84547bed95462ca5205e25b",
+        "bytes": 10640,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 80,
+          "text": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro\n-/\nmodule\n\npublic import Mathlib.MeasureTheory.Measure.Typeclasses.Finite\npublic import Mathlib.Topology.UnitInterval\n\n/-!\n# Classes for probability measures\n\nWe introduce the following typeclasses for measures:\n\n* `IsZeroOrProbabilityMeasure μ`: `μ univ = 0 ∨ μ univ = 1`;\n* `IsProbabilityMeasure μ`: `μ univ = 1`.\n-/\n\npublic section\n\nnamespace MeasureTheory\n\nopen Set Measure Filter Function ENNReal\n\nvariable {α β : Type*} {m0 : MeasurableSpace α} [MeasurableSpace β] {μ : Measure α} {s : Set α}\n\nsection IsZeroOrProbabilityMeasure\n\n/-- A measure `μ` is zero or a probability measure if `μ univ = 0` or `μ univ = 1`. This class\nof measures appears naturally when conditioning on events, and many results which are true for\nprobability measures hold more generally over this class. -/\nclass IsZeroOrProbabilityMeasure (μ : Measure α) : Prop where\n  measure_univ : μ univ = 0 ∨ μ univ = 1\n\nlemma isZeroOrProbabilityMeasure_iff : IsZeroOrProbabilityMeasure μ ↔ μ univ = 0 ∨ μ univ = 1 :=\n  ⟨fun _ ↦ IsZeroOrProbabilityMeasure.measure_univ, IsZeroOrProbabilityMeasure.mk⟩\n\nlemma prob_le_one {μ : Measure α} [IsZeroOrProbabilityMeasure μ] {s : Set α} : μ s ≤ 1 := by\n  apply (measure_mono (subset_univ _)).trans\n  rcases IsZeroOrProbabilityMeasure.measure_univ (μ := μ) with h | h <;> simp [h]\n\n@[simp]\nlemma measureReal_le_one {μ : Measure α} [IsZeroOrProbabilityMeasure μ] {s : Set α} :\n    μ.real s ≤ 1 :=\n  ENNReal.toReal_le_of_le_ofReal zero_le_one (ENNReal.ofReal_one.symm ▸ prob_le_one)\n\n@[simp]\ntheorem one_le_prob_iff {μ : Measure α} [IsZeroOrProbabilityMeasure μ] : 1 ≤ μ s ↔ μ s = 1 :=\n  ⟨fun h => le_antisymm prob_le_one h, fun h => h ▸ le_refl _⟩\n\ninstance (priority := 100) IsZeroOrProbabilityMeasure.toIsFiniteMeasure (μ : Measure α)\n    [IsZeroOrProbabilityMeasure μ] : IsFiniteMeasure μ :=\n  ⟨prob_le_one.trans_lt one_lt_top⟩\n\ninstance : IsZeroOrProbabilityMeasure (0 : Measure α) :=\n  ⟨Or.inl rfl⟩\n\nend IsZeroOrProbabilityMeasure\n\nsection IsProbabilityMeasure\n\n/-- A measure `μ` is called a probability measure if `μ univ = 1`. -/\nclass IsProbabilityMeasure (μ : Measure α) : Prop where\n  measure_univ : μ univ = 1\n\nexport MeasureTheory.IsProbabilityMeasure (measure_univ)\n\nattribute [simp] IsProbabilityMeasure.measure_univ\n\nlemma isProbabilityMeasure_iff : IsProbabilityMeasure μ ↔ μ univ = 1 :=\n  ⟨fun _ ↦ measure_univ, IsProbabilityMeasure.mk⟩\n\ninstance (priority := 100) (μ : Measure α) [IsProbabilityMeasure μ] :\n    IsZeroOrProbabilityMeasure μ :=\n  ⟨Or.inr measure_univ⟩\n\ntheorem nonempty_of_isProbabilityMeasure (μ : Measure α) [IsProbabilityMeasure μ] : Nonempty α := by\n  by_contra! maybe_empty\n  have : μ Set.univ = 0 := by\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 22,
+          "end": 22,
+          "text": "namespace MeasureTheory\n"
+        },
+        {
+          "start": 24,
+          "end": 24,
+          "text": "open Set Measure Filter Function ENNReal\n"
+        },
+        {
+          "start": 26,
+          "end": 26,
+          "text": "variable {α β : Type*} {m0 : MeasurableSpace α} [MeasurableSpace β] {μ : Measure α} {s : Set α}\n"
+        },
+        {
+          "start": 28,
+          "end": 28,
+          "text": "section IsZeroOrProbabilityMeasure\n"
+        },
+        {
+          "start": 59,
+          "end": 59,
+          "text": "end IsZeroOrProbabilityMeasure\n"
+        },
+        {
+          "start": 61,
+          "end": 61,
+          "text": "section IsProbabilityMeasure\n"
+        }
+      ]
+    },
+    {
+      "relativePath": "Mathlib/MeasureTheory/Measure/Typeclasses/Finite.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Typeclasses/Finite.lean",
+        "sha256": "a8ef0ba0a9b953a5aae9fb16188cd7ad93e0e8d5767c564d02e9f2e8c57eedf2",
+        "bytes": 31964,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 58,
+          "text": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro\n-/\nmodule\n\npublic import Mathlib.MeasureTheory.Measure.Restrict\n\n/-!\n# Classes for finite measures\n\nWe introduce the following typeclasses for measures:\n\n* `IsFiniteMeasure μ`: `μ univ < ∞`;\n* `IsLocallyFiniteMeasure μ` : `∀ x, ∃ s ∈ 𝓝 x, μ s < ∞`.\n-/\n\n@[expose] public section\n\nopen scoped NNReal Topology\nopen Set MeasureTheory Measure Filter Function MeasurableSpace ENNReal\n\nvariable {α β δ ι : Type*}\n\nnamespace MeasureTheory\n\nvariable {m0 : MeasurableSpace α} [mβ : MeasurableSpace β] {μ ν ν₁ ν₂ : Measure α}\n  {s t : Set α}\n\nsection IsFiniteMeasure\n\n/-- A measure `μ` is called finite if `μ univ < ∞`. -/\n@[mk_iff]\nclass IsFiniteMeasure (μ : Measure α) : Prop where\n  measure_univ_lt_top : μ univ < ∞\n\nlemma not_isFiniteMeasure_iff : ¬IsFiniteMeasure μ ↔ μ univ = ∞ := by simp [isFiniteMeasure_iff]\n\nlemma isFiniteMeasure_restrict : IsFiniteMeasure (μ.restrict s) ↔ μ s ≠ ∞ := by\n  simp [isFiniteMeasure_iff, lt_top_iff_ne_top]\n\ninstance Restrict.isFiniteMeasure (μ : Measure α) [hs : Fact (μ s < ∞)] :\n    IsFiniteMeasure (μ.restrict s) :=\n  ⟨by simpa using hs.elim⟩\n\n@[simp]\ntheorem measure_lt_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ s < ∞ :=\n  (measure_mono (subset_univ s)).trans_lt IsFiniteMeasure.measure_univ_lt_top\n\ninstance isFiniteMeasureRestrict (μ : Measure α) (s : Set α) [h : IsFiniteMeasure μ] :\n    IsFiniteMeasure (μ.restrict s) := ⟨by simp⟩\n\n@[simp, aesop (rule_sets := [finiteness]) safe apply]\ntheorem measure_ne_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ s ≠ ∞ :=\n  ne_of_lt (measure_lt_top μ s)\n\ntheorem measure_compl_le_add_of_le_add [IsFiniteMeasure μ] (hs : MeasurableSet s)\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 21,
+          "end": 21,
+          "text": "open scoped NNReal Topology\n"
+        },
+        {
+          "start": 22,
+          "end": 22,
+          "text": "open Set MeasureTheory Measure Filter Function MeasurableSpace ENNReal\n"
+        },
+        {
+          "start": 24,
+          "end": 24,
+          "text": "variable {α β δ ι : Type*}\n"
+        },
+        {
+          "start": 26,
+          "end": 26,
+          "text": "namespace MeasureTheory\n"
+        },
+        {
+          "start": 28,
+          "end": 29,
+          "text": "variable {m0 : MeasurableSpace α} [mβ : MeasurableSpace β] {μ ν ν₁ ν₂ : Measure α}\n  {s t : Set α}\n"
+        },
+        {
+          "start": 31,
+          "end": 31,
+          "text": "section IsFiniteMeasure\n"
+        }
+      ]
+    }
+  ]
+}
