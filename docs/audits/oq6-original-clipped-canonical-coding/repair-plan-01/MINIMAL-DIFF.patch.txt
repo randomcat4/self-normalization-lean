@@ -1,0 +1,35 @@
+--- frozen-author-source-a458e7a1
++++ proposed-Prop-conversion-repair01
+@@ -365,15 +365,28 @@
+       fun y => (E_i (retainedFirstProjection y)).2.1
+     let dB : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ :=
+       fun y => (E_i (retainedFirstProjection y)).2.2
+-    have hdD : Measurable dD := hEmeas.fst.comp hFirstMeas
+-    have hdJ : Measurable dJ := hEmeas.snd.fst.comp hFirstMeas
+-    have hdB : Measurable dB := hEmeas.snd.snd.comp hFirstMeas
++    have hTripleBorel :
++        (inferInstance : MeasurableSpace (ℝ × ℝ × ℝ)) =
++          borel (ℝ × ℝ × ℝ) := BorelSpace.measurable_eq
++    have hEproduct :
++        Measurable[retainedMeasurableSpace,
++          (inferInstance : MeasurableSpace (ℝ × ℝ × ℝ))] E_i := by
++      rw [hTripleBorel]
++      exact hEmeas
++    have hdD : Measurable dD := hEproduct.fst.comp hFirstMeas
++    have hdJ : Measurable dJ := hEproduct.snd.fst.comp hFirstMeas
++    have hdB : Measurable dB := hEproduct.snd.snd.comp hFirstMeas
+     rcases hretained i dD hdD with ⟨FD, hFDm, hFDpoint, hFDlift, hFDfull⟩
+     rcases hretained i dJ hdJ with ⟨FJ, hFJm, hFJpoint, hFJlift, hFJfull⟩
+     rcases hretained i dB hdB with ⟨FB, hFBm, hFBpoint, hFBlift, hFBfull⟩
+     let FdelWitness : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ :=
+       fun t => (FD t, FJ t, FB t)
+-    refine ⟨FdelWitness, hFDm.prodMk (hFJm.prodMk hFBm), ?_⟩
++    have hFdelBorel :
++        Measurable[borel ({j : Fin n // j ≠ i} → ℝ),
++          borel (ℝ × ℝ × ℝ)] FdelWitness := by
++      rw [← hTripleBorel]
++      exact hFDm.prodMk (hFJm.prodMk hFBm)
++    refine ⟨FdelWitness, hFdelBorel, ?_⟩
+     intro x
+     have hDpoint : Ddel (q x) i = dD (fun j => x j.val) :=
+       congrArg Prod.fst (hEpoint (q x))

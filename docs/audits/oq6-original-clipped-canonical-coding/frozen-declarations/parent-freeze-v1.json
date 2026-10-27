@@ -1,0 +1,2066 @@
+{
+  "schema": "oq56-unit222-exact-original-clipped-canonical-coding-freeze-v1",
+  "atUTC": "2026-10-27T00:04:51.054617+00:00",
+  "unit": 222,
+  "module": "Shao.OQ6.OriginalClippedCanonicalCoding",
+  "sourcePath": "Shao/OQ6/OriginalClippedCanonicalCoding.lean",
+  "publicName": "actual_original_clipped_canonical_normalized_coding",
+  "preamble": "import Shao.OQ6.OriginalCountablyGeneratedModel\nimport Shao.OQ6.AmbientCanonicalCodingTransport\n\nset_option autoImplicit false\n\nuniverse u\n\nopen MeasureTheory ProbabilityTheory\nopen scoped BigOperators Classical symmDiff\nopen Shao.OQ5.P51\n\nnamespace Shao.OQ6.OriginalClippedCanonicalCoding\n\nnoncomputable section\n",
+  "head": "theorem actual_original_clipped_canonical_normalized_coding\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),\n      let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n      letI : MeasurableSpace Ω := m₀\n      letI : MeasurableSpace.CountablyGenerated Ω := hcg\n      IsProbabilityMeasure μ₀ ∧\n      ∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)\n          (ε : ℝ) (hε : 0 < ε)\n          (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ))),\n        let mN : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)\n        let mN₀ : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)\n        let P : @Measure (Fin n → Ω) mN :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)\n        let P₀ : @Measure (Fin n → Ω) mN₀ :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let O : Fin n → (Fin n → Ω) → Ω := fun i ξ => ξ i\n        let gcoord : Fin n → Ω → ℝ := fun _ o => g o / N\n        let Q : (Fin n → Ω) → (Fin n → Ω) := fun ξ i => O i ξ\n        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r\n        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n        let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n        let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n        let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n        let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n        let κ : (Fin n → Ω) → ℝ := fun _ => 0\n        let W0 : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, gcoord i (O i ξ)\n        let V0 : (Fin n → Ω) → ℝ :=\n          fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)\n        let T0 : (Fin n → Ω) → ℝ := fun ξ =>\n          if V0 ξ = 0 then κ ξ else\n            (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))\n        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)\n        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mAugLocal)\n        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=\n          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01\n        let ν : @Measure (Fin n → Ω × ℝ) mAug :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mAugLocal) νlocal\n        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1\n        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>\n          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode\n            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))\n        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => gcoord i t.1\n        let Ylocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n          Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)\n        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => gcoord i (x i).1\n        let Y : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => Ylocal i (x i)\n        let a : Fin n → ℝ := Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y\n        let s : ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y\n        let ηlocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)\n        let η : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n        let C : (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun x i => η i x\n        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x\n        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)\n        let Wη : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, η i x\n        let Vη : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)\n        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))\n        let Dη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n          fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)\n        let Tη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n          fun z x => (Wη x + Dη z x) / (Vη x * b x)\n        let Z0 : Set (Fin n → Ω) := {ξ | projectionV n g ξ = 0}\n        let Z : Set (Fin n → Ω × ℝ) := {x | V x = 0}\n        let p0 : ℝ := P.real Z0\n        let comparisons : Set (ℝ → ℝ → Prop) :=\n          {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n            R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n            R = (fun a b : ℝ => a = b)}\n        let F0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) := fun R z =>\n          {ξ | R (projectionW n g ξ + D1 ξ)\n            (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}\n        let A0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) :=\n          fun R z => {ξ | R (Tclip ξ) z}\n        let Eη : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) :=\n          fun R z => {x | R (Tη z x) z}\n        @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧\n        P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧\n        (∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀) ∧\n        iIndepFun O P₀ ∧\n        (∀ i : Fin n, Measurable (gcoord i) ∧\n          MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧\n          (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧\n          (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ)) ∧\n        (∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 ∧\n        Q = id ∧ W0 = projectionW n g ∧ V0 = projectionV n g ∧ T0 = Tclip ∧\n        Measurable D1 ∧ Measurable D2 ∧\n        (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ) ∧\n        Measurable[mN₀, borel ℝ] Tclip ∧ Measurable[mN, borel ℝ] Tclip ∧\n        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P ∧\n        IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧\n        (1 / 2 : ℝ) < s ∧\n        (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i)) ∧\n        iIndepFun η ν ∧\n        (∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν) ∧\n        (∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν) ∧\n        (∀ i : Fin n, (∫ x, η i x ∂ν) = 0) ∧\n        (∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1 ∧\n        (∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0) ∧\n        ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0 ∧\n        (∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x) ∧\n        Measurable[mAug, borel (Fin n → ℝ)] C ∧\n        MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug ∧\n        (∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n          ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n            ∀ x : Fin n → Ω × ℝ, H x = F (C x)) ∧\n        (∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n          ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n            (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n              d y = F (fun j => ηlocal j.val (y j))) ∧\n            Measurable[borel (Fin n → ℝ), borel ℝ]\n              (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n            ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x)) ∧\n        (∃ G2 : (Fin n → ℝ) → ℝ,\n          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n          (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n          ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n            ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x)) ∧\n        (∀ i : Fin n,\n          ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =\n                Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x)) ∧\n        (∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z)) ∧\n        MeasurableSet[mN₀] Z0 ∧ MeasurableSet[mN] Z0 ∧ MeasurableSet Z ∧\n        ν Z = P₀ Z0 ∧ P₀ Z0 = P Z0 ∧ ν.real Z = p0 ∧\n        (∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n          Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x) ∧\n        (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n          MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n          MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n          MeasurableSet (Eη R z) ∧\n          ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n          (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n          P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n          |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)\n",
+  "closing": "end\n\nend Shao.OQ6.OriginalClippedCanonicalCoding\n",
+  "preambleRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/PREAMBLE.txt",
+    "sha256": "fa550dcfc4aa958adf06637ac48aa3a9f76edabd11b05c79bb866bffdeffedf9",
+    "bytes": 313
+  },
+  "headRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/CANDIDATE-HEAD.txt",
+    "sha256": "8bc4652e2de4d7557b817df8392af9b5e6bb70c2395339e6d9b2cf82bc6ff151",
+    "bytes": 10638
+  },
+  "closingRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/CLOSING.txt",
+    "sha256": "6595775d1fc084c7068195e92e5d35d6d18d88a763b5049e69414cb5306a2584",
+    "bytes": 49
+  },
+  "stage1Manifest": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/MANIFEST.json",
+    "sha256": "32166be0597d0c0d8956db8d3c688aa5e47ec6e987820f6c1bb6b18fda0c0f5f",
+    "bytes": 4907
+  },
+  "stage1Release": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/RELEASE0.json",
+    "sha256": "0b4a9b0adc958a1c4c54a12bcdc054dc26454e46c99d4dd3981b404fee493f36",
+    "bytes": 1868
+  },
+  "parentStage1Intake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/parent-stage1-intake.json",
+    "sha256": "9bcf01c6a144f77283fbd0c8c6b66b6dbb5a5b2fc64a9900370aea1e117c357f",
+    "bytes": 4089
+  },
+  "parentQualified221CompatibilityIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/parent-qualified221-compatibility-intake.json",
+    "sha256": "cb4940241e8b7eb14772e99d0c6f772fa695038eec9cb692664124de63fa4bf2",
+    "bytes": 3077
+  },
+  "declarationData": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "f56ab6e4bf37b9119e7dd64f083818749b56c7c2b0dd7f8ad8e15d4e3d1a9fcc",
+    "bytes": 94115
+  },
+  "captureLedger": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/DATA-CAPTURE-LEDGER.md",
+    "sha256": "5179b75ba8d30c24ee0e4f60b06ee22c0cf761299b3c081b7094902c1935d58c",
+    "bytes": 5826
+  },
+  "sourceInterfaceMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/SOURCE-INTERFACE-MAP.json",
+    "sha256": "8c5c921c2d181485cf4e0824a8cdca7f77deac49a66a694b8fefe60ee061336e",
+    "bytes": 12223
+  },
+  "globalDeclarations": 1,
+  "publicTheorems": 1,
+  "newGlobalDefinitions": 0,
+  "newHelpers": 0,
+  "ordinaryTypedHeadValues": [
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, h o y ∂μ",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "sourceLines": [
+        11,
+        11
+      ],
+      "measurableContext": "ORIGINAL_mOmega"
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => h o y - g o - g y",
+      "captures": [
+        "Ω",
+        "h",
+        "g"
+      ],
+      "sourceLines": [
+        12,
+        12
+      ],
+      "measurableContext": "ORIGINAL_mOmega"
+    },
+    {
+      "name": "v",
+      "type": "ℝ",
+      "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "r"
+      ],
+      "sourceLines": [
+        13,
+        14
+      ],
+      "measurableContext": "ORIGINAL_mOmega"
+    },
+    {
+      "name": "rho",
+      "type": "ℝ",
+      "value": "Real.sqrt v",
+      "captures": [
+        "v"
+      ],
+      "sourceLines": [
+        15,
+        15
+      ],
+      "measurableContext": "ORIGINAL_mOmega"
+    },
+    {
+      "name": "μ₀",
+      "type": "@Measure Ω m₀",
+      "value": "μ.trim hm₀",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "m₀",
+        "hm₀"
+      ],
+      "sourceLines": [
+        18,
+        18
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mN",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mΩ"
+      ],
+      "sourceLines": [
+        25,
+        26
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mN₀",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀"
+      ],
+      "sourceLines": [
+        27,
+        28
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "P",
+      "type": "@Measure (Fin n → Ω) mN",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mN",
+        "mΩ",
+        "μ"
+      ],
+      "sourceLines": [
+        29,
+        31
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "P₀",
+      "type": "@Measure (Fin n → Ω) mN₀",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+      "captures": [
+        "Ω",
+        "n",
+        "mN₀",
+        "m₀",
+        "μ₀"
+      ],
+      "sourceLines": [
+        32,
+        34
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "N",
+      "type": "ℝ",
+      "value": "Real.sqrt (n : ℝ)",
+      "captures": [
+        "n"
+      ],
+      "sourceLines": [
+        35,
+        35
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "O",
+      "type": "Fin n → (Fin n → Ω) → Ω",
+      "value": "fun i ξ => ξ i",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        36,
+        36
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "gcoord",
+      "type": "Fin n → Ω → ℝ",
+      "value": "fun _ o => g o / N",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "N"
+      ],
+      "sourceLines": [
+        37,
+        37
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Q",
+      "type": "(Fin n → Ω) → (Fin n → Ω)",
+      "value": "fun ξ i => O i ξ",
+      "captures": [
+        "Ω",
+        "n",
+        "O"
+      ],
+      "sourceLines": [
+        38,
+        38
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "D1",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualStatisticD n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        39,
+        39
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "D2",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredDelta n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        40,
+        40
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Tclip",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredStatistic n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        41,
+        41
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Ddel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualStatisticDDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        42,
+        42
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Jdel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualEnergyJDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        43,
+        43
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "B1del",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        44,
+        44
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "κ",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun _ => 0",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        45,
+        45
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "W0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => ∑ i : Fin n, gcoord i (O i ξ)",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O"
+      ],
+      "sourceLines": [
+        46,
+        46
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "V0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O"
+      ],
+      "sourceLines": [
+        47,
+        48
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "T0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ =>\n          if V0 ξ = 0 then κ ξ else\n            (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))",
+      "captures": [
+        "Ω",
+        "n",
+        "V0",
+        "κ",
+        "W0",
+        "D1",
+        "Q",
+        "D2"
+      ],
+      "sourceLines": [
+        49,
+        51
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "lambda01",
+      "type": "Measure ℝ",
+      "value": "(volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)",
+      "captures": [],
+      "sourceLines": [
+        52,
+        52
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mAugLocal",
+      "type": "MeasurableSpace (Ω × ℝ)",
+      "value": "m₀.prod (borel ℝ)",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "sourceLines": [
+        53,
+        53
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mAug",
+      "type": "MeasurableSpace (Fin n → Ω × ℝ)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mAugLocal)",
+      "captures": [
+        "Ω",
+        "n",
+        "mAugLocal"
+      ],
+      "sourceLines": [
+        54,
+        56
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "νlocal",
+      "type": "Fin n → @Measure (Ω × ℝ) mAugLocal",
+      "value": "fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "μ₀",
+        "lambda01",
+        "mAugLocal"
+      ],
+      "sourceLines": [
+        57,
+        58
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "ν",
+      "type": "@Measure (Fin n → Ω × ℝ) mAug",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mAugLocal) νlocal",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "mAugLocal",
+        "νlocal"
+      ],
+      "sourceLines": [
+        59,
+        62
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "q",
+      "type": "(Fin n → Ω × ℝ) → (Fin n → Ω)",
+      "value": "fun x i => (x i).1",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        63,
+        63
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "c",
+      "type": "Fin n → (Ω × ℝ) → ℝ",
+      "value": "fun _ =>\n          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode\n            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg",
+        "mAugLocal"
+      ],
+      "sourceLines": [
+        64,
+        66
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "ξlocal",
+      "type": "Fin n → (Ω × ℝ) → ℝ",
+      "value": "fun i t => gcoord i t.1",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord"
+      ],
+      "sourceLines": [
+        67,
+        67
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Ylocal",
+      "type": "Fin n → (Ω × ℝ) → ℝ",
+      "value": "fun i =>\n          Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)",
+      "captures": [
+        "Ω",
+        "n",
+        "ε",
+        "ξlocal",
+        "c"
+      ],
+      "sourceLines": [
+        68,
+        69
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "ξ",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun i x => gcoord i (x i).1",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord"
+      ],
+      "sourceLines": [
+        70,
+        70
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Y",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun i x => Ylocal i (x i)",
+      "captures": [
+        "Ω",
+        "n",
+        "Ylocal"
+      ],
+      "sourceLines": [
+        71,
+        71
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "a",
+      "type": "Fin n → ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        72,
+        72
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "s",
+      "type": "ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        73,
+        73
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "ηlocal",
+      "type": "Fin n → (Ω × ℝ) → ℝ",
+      "value": "fun i =>\n          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)",
+      "captures": [
+        "Ω",
+        "n",
+        "a",
+        "s",
+        "Ylocal"
+      ],
+      "sourceLines": [
+        74,
+        75
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "η",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        76,
+        77
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "C",
+      "type": "(Fin n → Ω × ℝ) → (Fin n → ℝ)",
+      "value": "fun x i => η i x",
+      "captures": [
+        "Ω",
+        "n",
+        "η"
+      ],
+      "sourceLines": [
+        78,
+        78
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "W",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => ∑ i : Fin n, ξ i x",
+      "captures": [
+        "Ω",
+        "n",
+        "ξ"
+      ],
+      "sourceLines": [
+        79,
+        79
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "V",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)",
+      "captures": [
+        "Ω",
+        "n",
+        "ξ"
+      ],
+      "sourceLines": [
+        80,
+        80
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Wη",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => ∑ i : Fin n, η i x",
+      "captures": [
+        "Ω",
+        "n",
+        "η"
+      ],
+      "sourceLines": [
+        81,
+        81
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Vη",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)",
+      "captures": [
+        "Ω",
+        "n",
+        "η"
+      ],
+      "sourceLines": [
+        82,
+        82
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "b",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => Real.sqrt (1 + D2 (q x))",
+      "captures": [
+        "Ω",
+        "n",
+        "D2",
+        "q"
+      ],
+      "sourceLines": [
+        83,
+        83
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Dη",
+      "type": "ℝ → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)",
+      "captures": [
+        "Ω",
+        "n",
+        "D1",
+        "q",
+        "W",
+        "Wη",
+        "b",
+        "Vη",
+        "V"
+      ],
+      "sourceLines": [
+        84,
+        85
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Tη",
+      "type": "ℝ → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun z x => (Wη x + Dη z x) / (Vη x * b x)",
+      "captures": [
+        "Ω",
+        "n",
+        "Wη",
+        "Dη",
+        "Vη",
+        "b"
+      ],
+      "sourceLines": [
+        86,
+        87
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Z0",
+      "type": "Set (Fin n → Ω)",
+      "value": "{ξ | projectionV n g ξ = 0}",
+      "captures": [
+        "Ω",
+        "n",
+        "g"
+      ],
+      "sourceLines": [
+        88,
+        88
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Z",
+      "type": "Set (Fin n → Ω × ℝ)",
+      "value": "{x | V x = 0}",
+      "captures": [
+        "Ω",
+        "n",
+        "V"
+      ],
+      "sourceLines": [
+        89,
+        89
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "p0",
+      "type": "ℝ",
+      "value": "P.real Z0",
+      "captures": [
+        "Ω",
+        "n",
+        "mN",
+        "P",
+        "Z0"
+      ],
+      "sourceLines": [
+        90,
+        90
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "comparisons",
+      "type": "Set (ℝ → ℝ → Prop)",
+      "value": "{R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n            R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n            R = (fun a b : ℝ => a = b)}",
+      "captures": [],
+      "sourceLines": [
+        91,
+        94
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "F0",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω)",
+      "value": "fun R z =>\n          {ξ | R (projectionW n g ξ + D1 ξ)\n            (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "D1",
+        "D2"
+      ],
+      "sourceLines": [
+        95,
+        97
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "A0",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω)",
+      "value": "fun R z => {ξ | R (Tclip ξ) z}",
+      "captures": [
+        "Ω",
+        "n",
+        "Tclip"
+      ],
+      "sourceLines": [
+        98,
+        99
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Eη",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ)",
+      "value": "fun R z => {x | R (Tη z x) z}",
+      "captures": [
+        "Ω",
+        "n",
+        "Tη"
+      ],
+      "sourceLines": [
+        100,
+        101
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    }
+  ],
+  "headMSDataInstances": 1,
+  "headCGPropInstances": 1,
+  "instances": [
+    {
+      "name": "originalMeasurableSpace",
+      "type": "MeasurableSpace Ω",
+      "value": "mΩ",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ],
+      "kind": "original nonProp input instance"
+    },
+    {
+      "name": "smallerMeasurableSpace",
+      "type": "MeasurableSpace Ω",
+      "value": "m₀",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "kind": "HEAD letI nonProp data"
+    },
+    {
+      "name": "smallerCountablyGenerated",
+      "type": "@MeasurableSpace.CountablyGenerated Ω m₀",
+      "value": "hcg",
+      "captures": [
+        "Ω",
+        "m₀",
+        "hcg"
+      ],
+      "kind": "HEAD letI Prop instance"
+    },
+    {
+      "name": "ambientFamilyMeasurableSpace",
+      "type": "∀ i:Fin n,MeasurableSpace (ambientX i)",
+      "value": "ambientMX",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "ambientX",
+        "ambientMX"
+      ],
+      "kind": "PLANNED nonProp instance with exact value above"
+    },
+    {
+      "name": "ambientFamilyCG",
+      "type": "∀ i:Fin n,@MeasurableSpace.CountablyGenerated Ω m₀",
+      "value": "fun _ => hcg",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg"
+      ],
+      "kind": "PLANNED derived Prop family instance"
+    },
+    {
+      "name": "smallerProbability",
+      "type": "@IsProbabilityMeasure Ω m₀ μ₀",
+      "valueSource": "planned221 probability conjunct for SAME m0",
+      "captures": [
+        "Ω",
+        "m₀",
+        "μ₀"
+      ],
+      "kind": "PLANNED Prop instance"
+    },
+    {
+      "name": "sampleProbability",
+      "type": "@IsProbabilityMeasure (Fin n→Ω) mN₀ P₀",
+      "valueSource": "planned221 finite-product probability conjunct or existing pi probability instance from smallerProbability",
+      "captures": [
+        "Ω",
+        "n",
+        "mN₀",
+        "P₀",
+        "μ₀"
+      ],
+      "kind": "PLANNED derived Prop instance"
+    },
+    {
+      "name": "augmentedProductCG",
+      "type": "@MeasurableSpace.CountablyGenerated (Ω×ℝ) mAugLocal",
+      "valueSource": "existing product instance from hcg and standard Borel Real CG; fixed structure mAugLocal",
+      "captures": [
+        "Ω",
+        "m₀",
+        "mAugLocal",
+        "hcg"
+      ],
+      "kind": "PLANNED derived Prop instance"
+    },
+    {
+      "name": "finiteIndex",
+      "type": "Fintype (Fin n)",
+      "value": "inferInstance : Fintype (Fin n)",
+      "captures": [
+        "n"
+      ],
+      "kind": "existing deterministic instance used at all explicit pi sites"
+    },
+    {
+      "name": "guardDecider",
+      "type": "Decidable (V0 ξ=0)",
+      "value": "Classical.propDecidable (V0 ξ=0)",
+      "captures": [
+        "Ω",
+        "n",
+        "V0",
+        "ξ"
+      ],
+      "kind": "implicit classical data instance of the displayed T0 if"
+    },
+    {
+      "name": "borelReal",
+      "type": "MeasurableSpace ℝ",
+      "value": "borel ℝ",
+      "captures": [],
+      "kind": "existing standard data instance"
+    },
+    {
+      "name": "borelRealPi",
+      "type": "MeasurableSpace (Fin n→ℝ)",
+      "value": "borel (Fin n→ℝ)",
+      "captures": [
+        "n"
+      ],
+      "kind": "explicit scalar output structure"
+    },
+    {
+      "name": "borelRetainedRealPi",
+      "type": "MeasurableSpace ({j:Fin n//j≠i}→ℝ)",
+      "value": "borel ({j:Fin n//j≠i}→ℝ)",
+      "captures": [
+        "n",
+        "i"
+      ],
+      "kind": "explicit scalar retained output structure"
+    }
+  ],
+  "plannedProofData": [
+    {
+      "name": "ambientA",
+      "type": "Type u",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "Fin n → Ω"
+    },
+    {
+      "name": "ambientX",
+      "type": "Fin n → Type u",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun _ : Fin n => Ω"
+    },
+    {
+      "name": "ambientMX",
+      "type": "∀ i : Fin n, MeasurableSpace (ambientX i)",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "ambientX"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun _ : Fin n => m₀"
+    },
+    {
+      "name": "identityCoordinate",
+      "type": "Ω → Ω",
+      "captures": [
+        "Ω"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "id"
+    },
+    {
+      "name": "coordinateMarginal",
+      "type": "Fin n → @Measure Ω m₀",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "mN₀",
+        "P₀",
+        "O"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun i => @Measure.map (Fin n → Ω) Ω mN₀ m₀ (O i) P₀"
+    },
+    {
+      "name": "ambientProductLaw",
+      "type": "@Measure (Fin n → Ω) mN₀",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "mN₀",
+        "coordinateMarginal"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => m₀) coordinateMarginal"
+    },
+    {
+      "name": "squareProjection",
+      "type": "Ω → ℝ",
+      "captures": [
+        "Ω",
+        "g"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun o => g o ^ 2"
+    },
+    {
+      "name": "pullbackTest",
+      "type": "(Fin n → Ω) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "f"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun ξ => f (ξ i)"
+    },
+    {
+      "name": "zeroLevel",
+      "type": "ℝ",
+      "captures": [],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "0"
+    },
+    {
+      "name": "retainedMeasurableSpace",
+      "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω)",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "m₀"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "@MeasurableSpace.pi {j : Fin n // j ≠ i} (fun _ => Ω) (fun _ => m₀)"
+    },
+    {
+      "name": "retainedAugmentedMeasurableSpace",
+      "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω × ℝ)",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "mAugLocal"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "@MeasurableSpace.pi {j : Fin n // j ≠ i} (fun _ => Ω × ℝ) (fun _ => mAugLocal)"
+    },
+    {
+      "name": "retainedFirstProjection",
+      "type": "({j : Fin n // j ≠ i} → Ω × ℝ) → ({j : Fin n // j ≠ i} → Ω)",
+      "captures": [
+        "Ω",
+        "n",
+        "i"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun y j => (y j).1"
+    },
+    {
+      "name": "E_i",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hcenter",
+        "hprojectionsecond",
+        "g",
+        "r",
+        "rho",
+        "m₀",
+        "hm₀",
+        "hcg",
+        "μ₀",
+        "n",
+        "hn",
+        "i",
+        "C0",
+        "hC0",
+        "zeroLevel"
+      ],
+      "status": "PLANNED221_UNQUALIFIED",
+      "valueSource": "Eliminate planned221 SAME m0 witness at n hn z=0 hz=(0<=0) hz1=(0<=1) C0 hC0; its retained E existential. No other E, observation or global selector. Qualified221 actualTYPE/source/firstO/review binding required first."
+    },
+    {
+      "name": "dD",
+      "type": "({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "E_i",
+        "retainedFirstProjection"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun y => (E_i (retainedFirstProjection y)).1"
+    },
+    {
+      "name": "dJ",
+      "type": "({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "E_i",
+        "retainedFirstProjection"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun y => (E_i (retainedFirstProjection y)).2.1"
+    },
+    {
+      "name": "dB",
+      "type": "({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "E_i",
+        "retainedFirstProjection"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun y => (E_i (retainedFirstProjection y)).2.2"
+    },
+    {
+      "name": "FD",
+      "type": "({j : Fin n // j ≠ i} → ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "dD",
+        "ηlocal",
+        "η",
+        "ν",
+        "mAug",
+        "mAugLocal"
+      ],
+      "status": "QUALIFIED_AMBIENT_VALUE_SOURCE_AFTER_UNQUALIFIED221_E_i",
+      "valueSource": "Existential retained scalar F from QUALIFIED ambient output at i,d=dD, with measurability obtained from E_i; eliminate that existential, do not install a family/global selector."
+    },
+    {
+      "name": "FJ",
+      "type": "({j : Fin n // j ≠ i} → ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "dJ",
+        "ηlocal",
+        "η",
+        "ν",
+        "mAug",
+        "mAugLocal"
+      ],
+      "status": "QUALIFIED_AMBIENT_VALUE_SOURCE_AFTER_UNQUALIFIED221_E_i",
+      "valueSource": "Existential retained scalar F from QUALIFIED ambient output at i,d=dJ, with measurability obtained from E_i; eliminate that existential, do not install a family/global selector."
+    },
+    {
+      "name": "FB",
+      "type": "({j : Fin n // j ≠ i} → ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "dB",
+        "ηlocal",
+        "η",
+        "ν",
+        "mAug",
+        "mAugLocal"
+      ],
+      "status": "QUALIFIED_AMBIENT_VALUE_SOURCE_AFTER_UNQUALIFIED221_E_i",
+      "valueSource": "Existential retained scalar F from QUALIFIED ambient output at i,d=dB, with measurability obtained from E_i; eliminate that existential, do not install a family/global selector."
+    },
+    {
+      "name": "FdelWitness",
+      "type": "({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ",
+      "captures": [
+        "n",
+        "i",
+        "FD",
+        "FJ",
+        "FB"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "fun t => (FD t, FJ t, FB t)"
+    },
+    {
+      "name": "generatorSequence",
+      "type": "ℕ → Set (Ω × ℝ)",
+      "captures": [
+        "Ω",
+        "m₀",
+        "mAugLocal",
+        "hcg"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "MeasurableSpace.natGeneratingSequence (Ω × ℝ)"
+    },
+    {
+      "name": "codingCenteredFamily",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualCenteredFamily ν Y"
+    }
+  ],
+  "implicitIntegralFunctions": [
+    {
+      "location": "assumption hprojectionsecond inner",
+      "type": "Ω → ℝ",
+      "value": "fun y => h o y",
+      "captures": [
+        "Ω",
+        "h",
+        "o"
+      ],
+      "measure": "μ/mΩ"
+    },
+    {
+      "location": "assumption hprojectionsecond outer",
+      "type": "Ω → ℝ",
+      "value": "fun o => (∫ y, h o y ∂μ) ^ 2",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "h",
+        "μ"
+      ],
+      "measure": "μ/mΩ"
+    },
+    {
+      "location": "g definition",
+      "type": "Ω → ℝ",
+      "value": "fun y => h o y",
+      "captures": [
+        "Ω",
+        "h",
+        "o"
+      ],
+      "measure": "μ/mΩ"
+    },
+    {
+      "location": "v definition",
+      "type": "Ω × Ω → ℝ",
+      "value": "fun t => r t.1 t.2 ^ 2",
+      "captures": [
+        "Ω",
+        "r"
+      ],
+      "measure": "@Measure.prod Ω Ω mΩ mΩ μ μ"
+    },
+    {
+      "location": "normalized coordinate mean",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => gcoord i (O i ξ)",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O",
+        "i"
+      ],
+      "measure": "P₀/mN₀"
+    },
+    {
+      "location": "normalized coordinate second",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => (gcoord i (O i ξ)) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O",
+        "i"
+      ],
+      "measure": "P₀/mN₀"
+    },
+    {
+      "location": "normalized total second",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => (gcoord i (O i ξ)) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O",
+        "i"
+      ],
+      "measure": "P₀/mN₀"
+    },
+    {
+      "location": "eta mean",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => η i x",
+      "captures": [
+        "Ω",
+        "n",
+        "η",
+        "i"
+      ],
+      "measure": "ν/mAug"
+    },
+    {
+      "location": "eta total second",
+      "type": "(Fin n → Ω × ℝ) → ℝ",
+      "value": "fun x => (η i x) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "η",
+        "i"
+      ],
+      "measure": "ν/mAug"
+    },
+    {
+      "location": "original kernel centering assumption",
+      "type": "Ω × Ω → ℝ",
+      "value": "fun t => h t.1 t.2",
+      "captures": [
+        "Ω",
+        "h"
+      ],
+      "measure": "@Measure.prod Ω Ω mΩ mΩ μ μ"
+    }
+  ],
+  "predicatesAndBindersExactReference": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "f56ab6e4bf37b9119e7dd64f083818749b56c7c2b0dd7f8ad8e15d4e3d1a9fcc",
+    "bytes": 94115
+  },
+  "quantifierWitnessOrder": [
+    {
+      "order": 1,
+      "kind": "original inputs",
+      "nonProp": [
+        "Ω:Type u",
+        "mΩ:MeasurableSpace Ω",
+        "μ:@Measure Ω mΩ",
+        "h:Ω→Ω→ℝ"
+      ],
+      "Prop": [
+        "IsProbabilityMeasure μ",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hcenter",
+        "hprojectionsecond"
+      ]
+    },
+    {
+      "order": 2,
+      "kind": "original typed lets",
+      "names": [
+        "g",
+        "r",
+        "v",
+        "rho"
+      ]
+    },
+    {
+      "order": 3,
+      "kind": "existential smaller model",
+      "nonProp": [
+        "m₀:MeasurableSpace Ω"
+      ],
+      "Prop": [
+        "hm₀:m₀≤mΩ",
+        "hcg:@MeasurableSpace.CountablyGenerated Ω m₀"
+      ],
+      "valueSource": "planned221 SAME existential, unqualified"
+    },
+    {
+      "order": 4,
+      "kind": "literal trim/local instances",
+      "names": [
+        "μ₀",
+        "local MS Ω=m₀",
+        "local CG Ω=hcg"
+      ]
+    },
+    {
+      "order": 5,
+      "kind": "universal construction parameters",
+      "nonProp": [
+        "n:ℕ",
+        "C0:ℝ",
+        "ε:ℝ"
+      ],
+      "Prop": [
+        "hn:4≤n",
+        "hC0:0≤C0",
+        "hε:0<ε",
+        "hεsmall:ε<1/(4sqrt n)"
+      ]
+    },
+    {
+      "order": 6,
+      "kind": "remaining actual typed lets",
+      "names": [
+        "mN",
+        "mN₀",
+        "P",
+        "P₀",
+        "N",
+        "O",
+        "gcoord",
+        "Q",
+        "D1",
+        "D2",
+        "Tclip",
+        "Ddel",
+        "Jdel",
+        "B1del",
+        "κ",
+        "W0",
+        "V0",
+        "T0",
+        "lambda01",
+        "mAugLocal",
+        "mAug",
+        "νlocal",
+        "ν",
+        "q",
+        "c",
+        "ξlocal",
+        "Ylocal",
+        "ξ",
+        "Y",
+        "a",
+        "s",
+        "ηlocal",
+        "η",
+        "C",
+        "W",
+        "V",
+        "Wη",
+        "Vη",
+        "b",
+        "Dη",
+        "Tη",
+        "Z0",
+        "Z",
+        "p0",
+        "comparisons",
+        "F0",
+        "A0",
+        "Eη"
+      ]
+    },
+    {
+      "order": 7,
+      "kind": "normalized coordinates and AE outputs",
+      "nonProp": [
+        "i:Fin n",
+        "x:Fin n→Ω×ℝ",
+        "t:ℝ"
+      ],
+      "scope": "each corresponding output quantifier; no additional data selection"
+    },
+    {
+      "order": 8,
+      "kind": "full scalar factor",
+      "forall": [
+        "H:(Fin n→Ω×ℝ)→ℝ",
+        "Measurable H"
+      ],
+      "exists": [
+        "F:(Fin n→ℝ)→ℝ"
+      ],
+      "then": [
+        "x:Fin n→Ω×ℝ"
+      ],
+      "valueSource": "qualified ambient full scalar existential; captures all fixed coding data and H, no global selector"
+    },
+    {
+      "order": 9,
+      "kind": "generic retained scalar factor",
+      "forall": [
+        "i:Fin n",
+        "d:({j:Fin n//j≠i}→Ω×ℝ)→ℝ",
+        "Measurable d"
+      ],
+      "exists": [
+        "F:({j:Fin n//j≠i}→ℝ)→ℝ"
+      ],
+      "then": [
+        "y:{j:Fin n//j≠i}→Ω×ℝ",
+        "t:Fin n→ℝ",
+        "x:Fin n→Ω×ℝ"
+      ],
+      "valueSource": "qualified ambient retained scalar existential; captures all fixed coding data,i,d"
+    },
+    {
+      "order": 10,
+      "kind": "actual signed correction factors",
+      "exists": [
+        "G2:(Fin n→ℝ)→ℝ"
+      ],
+      "thenForall": [
+        "z:ℝ"
+      ],
+      "thenExists": [
+        "G1:(Fin n→ℝ)→ℝ"
+      ],
+      "then": [
+        "x:Fin n→Ω×ℝ"
+      ],
+      "valueSource": "qualified ambient output; G2 captures fixed data/D2 and G1 additionally z/Deta; no global G1 selector"
+    },
+    {
+      "order": 11,
+      "kind": "actual retained triple",
+      "forall": [
+        "i:Fin n"
+      ],
+      "exists": [
+        "Fdel:({j:Fin n//j≠i}→ℝ)→ℝ×ℝ×ℝ"
+      ],
+      "then": [
+        "x:Fin n→Ω×ℝ"
+      ],
+      "value": "FdelWitness from the three retained factors of E_i"
+    },
+    {
+      "order": 12,
+      "kind": "event transport",
+      "forall": [
+        "z:ℝ",
+        "R:ℝ→ℝ→Prop",
+        "R∈comparisons"
+      ],
+      "then": [
+        "ξ:Fin n→Ω"
+      ],
+      "scope": "all real thresholds, five fixed relations; no analytic claim"
+    }
+  ],
+  "outputWitnesses": [
+    {
+      "name": "m₀",
+      "type": "MeasurableSpace Ω",
+      "quantifierScope": "exists before all n,C0,ε",
+      "valueSource": "planned221 SAME existential; no new sigma-algebra selection",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "PropSourceArguments": [
+        "IsProbabilityMeasure μ",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hcenter",
+        "hprojectionsecond"
+      ],
+      "qualified": false
+    },
+    {
+      "name": "F_full",
+      "type": "(Fin n→ℝ)→ℝ",
+      "quantifierScope": "forall measurable H, exists F, forall x",
+      "valueSource": "qualified ambient full scalar factorization at the exact ambientApplication and the particular H",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg",
+        "mN₀",
+        "P₀",
+        "O",
+        "gcoord",
+        "D1",
+        "D2",
+        "κ",
+        "ε",
+        "H"
+      ],
+      "PropSourceArguments": [
+        "hn1 derived from hn",
+        "sampleProbability from planned221",
+        "hO from measurable_pi_apply",
+        "hOindep from iIndepFun_pi",
+        "hgcoord from planned221 same g measurable/div_const",
+        "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+        "hgcoordmean from planned221/pullback/integral_div",
+        "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+        "hD1/hD2 from planned221 at z0",
+        "hkappa from measurable_const",
+        "hD2pos from planned221 global half bound",
+        "hε",
+        "hεsmall",
+        "Measurable H"
+      ],
+      "globalSelector": false
+    },
+    {
+      "name": "F_retained",
+      "type": "({j:Fin n//j≠i}→ℝ)→ℝ",
+      "quantifierScope": "forall i,d, Measurable d, exists F",
+      "valueSource": "qualified ambient retained scalar factorization at exact ambientApplication,i,d",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg",
+        "mN₀",
+        "P₀",
+        "O",
+        "gcoord",
+        "D1",
+        "D2",
+        "κ",
+        "ε",
+        "i",
+        "d"
+      ],
+      "PropSourceArguments": [
+        "hn1 derived from hn",
+        "sampleProbability from planned221",
+        "hO from measurable_pi_apply",
+        "hOindep from iIndepFun_pi",
+        "hgcoord from planned221 same g measurable/div_const",
+        "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+        "hgcoordmean from planned221/pullback/integral_div",
+        "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+        "hD1/hD2 from planned221 at z0",
+        "hkappa from measurable_const",
+        "hD2pos from planned221 global half bound",
+        "hε",
+        "hεsmall",
+        "Measurable d"
+      ],
+      "globalSelector": false
+    },
+    {
+      "name": "G2",
+      "type": "(Fin n→ℝ)→ℝ",
+      "quantifierScope": "exists G2 before forall z",
+      "valueSource": "qualified ambient D2/G1 combined existential at exact ambientApplication",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg",
+        "mN₀",
+        "P₀",
+        "O",
+        "gcoord",
+        "D1",
+        "D2",
+        "κ",
+        "ε"
+      ],
+      "PropSourceArguments": [
+        "hn1 derived from hn",
+        "sampleProbability from planned221",
+        "hO from measurable_pi_apply",
+        "hOindep from iIndepFun_pi",
+        "hgcoord from planned221 same g measurable/div_const",
+        "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+        "hgcoordmean from planned221/pullback/integral_div",
+        "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+        "hD1/hD2 from planned221 at z0",
+        "hkappa from measurable_const",
+        "hD2pos from planned221 global half bound",
+        "hε",
+        "hεsmall"
+      ],
+      "globalSelector": false
+    },
+    {
+      "name": "G1",
+      "type": "(Fin n→ℝ)→ℝ",
+      "quantifierScope": "after G2, forall z, exists G1",
+      "valueSource": "qualified ambient Deta scalar factor witness at exact ambientApplication and z",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "hcg",
+        "mN₀",
+        "P₀",
+        "O",
+        "gcoord",
+        "D1",
+        "D2",
+        "κ",
+        "ε",
+        "z"
+      ],
+      "PropSourceArguments": [
+        "hn1 derived from hn",
+        "sampleProbability from planned221",
+        "hO from measurable_pi_apply",
+        "hOindep from iIndepFun_pi",
+        "hgcoord from planned221 same g measurable/div_const",
+        "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+        "hgcoordmean from planned221/pullback/integral_div",
+        "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+        "hD1/hD2 from planned221 at z0",
+        "hkappa from measurable_const",
+        "hD2pos from planned221 global half bound",
+        "hε",
+        "hεsmall"
+      ],
+      "globalSelector": false
+    },
+    {
+      "name": "Fdel",
+      "type": "({j:Fin n//j≠i}→ℝ)→ℝ×ℝ×ℝ",
+      "quantifierScope": "forall i, exists Fdel",
+      "value": "fun t => (FD t,FJ t,FB t)",
+      "captures": [
+        "n",
+        "i",
+        "FD",
+        "FJ",
+        "FB"
+      ],
+      "valueSource": "FdelWitness; FD/FJ/FB exact scalar factors of planned221 E_i components; see plannedProofLocalData",
+      "globalSelector": false
+    }
+  ],
+  "localUniversalHelper": {
+    "kind": "local Prop helper only, no proof body in stage1",
+    "name": "pullbackIntegral",
+    "binders": [
+      {
+        "name": "i",
+        "type": "Fin n"
+      },
+      {
+        "name": "f",
+        "type": "Ω→ℝ"
+      },
+      {
+        "name": "hf",
+        "type": "Measurable[m₀,borel ℝ] f",
+        "Prop": true
+      }
+    ],
+    "result": "(∫ ξ : Fin n→Ω, f (ξ i) ∂P₀) = ∫ o, f o ∂μ₀",
+    "captures": [
+      "Ω",
+      "n",
+      "m₀",
+      "mN₀",
+      "P₀",
+      "μ₀"
+    ],
+    "valueSource": "existing evaluation measure-preserving map plus integral_map; already accepted exact usage ActualUncenteredCompactCDF272-277; new specialization not checked"
+  },
+  "qualifiedProducerBindings": [
+    {
+      "unit": 218,
+      "parentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit218/qualified-evidence.json",
+        "sha256": "52f771786605cb090bb0e7b1ec7ad1f1c5829cf6fe5375faa4daafa39050efe8",
+        "bytes": 12624
+      },
+      "independentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit218/final-review-01/final-machine-source198-03/independent-qualified-evidence.json",
+        "sha256": "d591f415e415610ccf19b8bca05794571c09dd541440638275571fbdebe7d838",
+        "bytes": 8015
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/KernelObservableReduction.lean",
+        "sha256": "cb8dcc89e43c7ce79252bfd67bced38cf9ef2aa1bb52075ee9a38cbcd7a38c88",
+        "bytes": 8739,
+        "mtime_ns": "1793047243830450993"
+      },
+      "firstOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/KernelObservableReduction.olean",
+        "sha256": "346321016125d27f15517ca7fa61dc89a00ba5bc72741a7ea0afc7941077fffe",
+        "bytes": 147512,
+        "mtime_ns": "1793047250082433690"
+      },
+      "qualified": true
+    },
+    {
+      "unit": 219,
+      "parentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit219/qualified-evidence.json",
+        "sha256": "e814f03893dfd0907b0b6cf12f598353ab7c8c7b94e97e5d35485d5bfc55070c",
+        "bytes": 9516
+      },
+      "independentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit219/final-review-01/final-machine-source319-02/qualified-evidence.json",
+        "sha256": "f4196064bc046f0d480b42f816eb5d62b6ed196bcfeb43113fa5a0eb5b3d7146",
+        "bytes": 6076
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalKernelObservableTransport.lean",
+        "sha256": "616d2145fc8be92ac3d9aea92c28ab801e32b447ad62c4123838b45c95f1832f",
+        "bytes": 13850,
+        "mtime_ns": "1793051470894751878"
+      },
+      "firstOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalKernelObservableTransport.olean",
+        "sha256": "4efb457b5d14bb0103dd960a798cb97c123cfc58c532b9d5850a5bf53e3c4f13",
+        "bytes": 218296,
+        "mtime_ns": "1793051494462686650"
+      },
+      "qualified": true
+    },
+    {
+      "unit": 220,
+      "parentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/qualified-evidence.json",
+        "sha256": "5365a2fadae33b5074a98427ec99caa81f6b4ecf82371a70bf119b3e21e988a0",
+        "bytes": 8942
+      },
+      "independentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/final-review-01/final-machine-source324-03/qualified-evidence.json",
+        "sha256": "134d484fcd0efbb1f2e50da534c1d70bcd409e78b7b4c5cc1e2b3df0e4474b10",
+        "bytes": 10002
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalClippedStatisticMeasurable.lean",
+        "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+        "bytes": 15983,
+        "mtime_ns": "1793054580586145279"
+      },
+      "firstOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalClippedStatisticMeasurable.olean",
+        "sha256": "dbeb5d9d50fa291ba7ba7da570a738e0bdc66620df2a52a87da19a0279d46c31",
+        "bytes": 324688,
+        "mtime_ns": "1793054599042094199"
+      },
+      "qualified": true
+    },
+    {
+      "unit": 221,
+      "parentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit221/qualified-evidence.json",
+        "sha256": "d79339b0fae301b389e079efee416f496b8555555ceb4d1dcc033082ddcd8c65",
+        "bytes": 11628
+      },
+      "independentQ": {
+        "path": "C:/game/shao lean/drafts/oq56/unit221/final-review-01/final-machine-source412-02/qualified-evidence.json",
+        "sha256": "45e9ba5693823aae4d016b5ce2e58d5572f482115ee9aa817d599764a30d520e",
+        "bytes": 12037
+      },
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalCountablyGeneratedModel.lean",
+        "sha256": "8691f69ca9ab84649f92b20385c415a2129250cc8f64375d6296e2d59a381627",
+        "bytes": 21808,
+        "mtime_ns": "1793058423479509419"
+      },
+      "firstOriginalObject": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalCountablyGeneratedModel.olean",
+        "sha256": "3b1dd126d9efe2ddc543e59e63228afb275be155de16a491b3654e7b3bfa07ff",
+        "bytes": 3453368,
+        "mtime_ns": "1793058443575453801"
+      },
+      "qualified": true
+    }
+  ],
+  "actual221TYPE": {
+    "metadata": {
+      "path": "C:/game/shao lean/drafts/oq56/unit221/lead-execution-02/owner-evidence-01/actual-owned-metadata.json",
+      "sha256": "905d7c2458eea821e575ceb3e75590148b06ad374edc72f2faff41756d6eb8e1",
+      "bytes": 203848
+    },
+    "fullTYPEBytes": 198842,
+    "fullTYPESHA256": "5f522a86491e338b66e43c50635fa138bee741adf9bc811f3ffcf5b96ef5d415",
+    "TYPElines": 1792,
+    "independentCompleteReview": {
+      "path": "C:/game/shao lean/drafts/oq56/unit221/final-review-01/final-machine-source412-02/REPORT-FINAL.md",
+      "sha256": "0d03cfc21b042e7aa6bfa3da66db7d666a063276fb8cd3cd5b94921610992789",
+      "bytes": 16016
+    },
+    "losslessTYPEReviewCoverage": {
+      "path": "C:/game/shao lean/drafts/oq56/unit221/final-review-01/final-machine-source412-02/TYPE-reading-coverage.json",
+      "sha256": "568ebe5537d060f7aa74dab363b881e921acf342645fcaf42ba78d833759657c",
+      "bytes": 123808
+    }
+  },
+  "approvedAmbientApplication": {
+    "constant": "Shao.OQ6.AmbientCanonicalCodingTransport.ambient_canonical_normalized_observation_consumer",
+    "qualifiedSource": "library/Shao/OQ6/AmbientCanonicalCodingTransport.lean SHA2561fa31e038c6cb375c014e08d4f76489e7239df7a920b9d212588bd97a3e3229b/31959B",
+    "exactDataArguments": {
+      "A": "ambientA = Fin n→Ω",
+      "P": "P₀",
+      "n": "n",
+      "X": "ambientX = fun _ : Fin n => Ω",
+      "mX": "ambientMX = fun _ : Fin n => m₀",
+      "O": "O",
+      "g": "gcoord",
+      "D1": "D1",
+      "D2": "D2",
+      "κ": "κ",
+      "ε": "ε"
+    },
+    "PropArguments": [
+      "hn1 derived from hn",
+      "sampleProbability from planned221",
+      "hO from measurable_pi_apply",
+      "hOindep from iIndepFun_pi",
+      "hgcoord from planned221 same g measurable/div_const",
+      "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+      "hgcoordmean from planned221/pullback/integral_div",
+      "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+      "hD1/hD2 from planned221 at z0",
+      "hkappa from measurable_const",
+      "hD2pos from planned221 global half bound",
+      "hε",
+      "hεsmall"
+    ],
+    "marginalRewrite": "coordinateMarginal i=μ₀ from measurePreserving_eval.map_eq; ambientProductLaw=P₀; transport all exact ambient canonical values across these equalities; no new value selection"
+  },
+  "acceptedAmbientSource": {
+    "path": "C:/game/shao lean/library/Shao/OQ6/AmbientCanonicalCodingTransport.lean",
+    "sha256": "1fa31e038c6cb375c014e08d4f76489e7239df7a920b9d212588bd97a3e3229b",
+    "bytes": 31959
+  },
+  "acceptedNormalizationPublicUsage": "ActualUncenteredCompactCDF265-293; sameoriginalg/sqrt n/eval underliteraltrim",
+  "singleCommonM0BeforeAllnC0epsilon": true,
+  "sameOriginalGRRhoNoRecomputedVersion": true,
+  "explicitOriginalReducedAugmentedPiSpacesAndMeasures": true,
+  "originalPZeroVFeeNotTrimOnlyFee": true,
+  "retainedWitnessSource": "Qualified221 at realz0/samenC0 beforeepsilon-independentE values; componentfactors from exactambient retainedscalar output, rightassociatedtuple; no cap/deletedTest factor",
+  "proofDataPolicy": "Only53frozenheadvalues/22plannedlocalvalues, listedcanonicaldata and qualifiedproducerexistentials with frozen contexts; every nonProp helper/value/instance/predicate/lambda/capture addition requires reportbeforeintroduction. LocalderivedProp proofs cannot add assumptions. Existingoldstage1 planned-unqualified status preserved as historical; current explicit221Q binding replaces only operational status.",
+  "implementationScope": "drafts/oq56/unit222/author-01/**",
+  "sameAuthorRole": "/root/oq56_originalcoding222_stage1_author",
+  "serverLeanChildrenAuthorizedToAuthor": 0,
+  "requiredNextEvidence": "Freshindependent completeSOURCE review, servernewcomplete native, sameFIRSTOallactualTYPE/VALUE/recursiveAX and samefinalindependentqualifiedreview. No oldproducerleafreplay.",
+  "scopeOpen": "No epsilonselector/measurableselector/physicals0fee bound/analyticlimits/externalSZapplication/CDF/S11/generalS15/DC/OQ56rootcompletion; p51candidate/p54repairs/externalattribution retained; OQ3userpaused",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "kernelChecked": false,
+  "qualified": false
+}
