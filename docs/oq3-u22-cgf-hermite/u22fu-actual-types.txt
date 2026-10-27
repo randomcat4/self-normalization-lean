@@ -1,0 +1,57 @@
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_7
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ), (↑n + 1 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu) →
+      ∀ (n : ℕ),
+        1 ≤ n →
+          have kappa := fun z j => iteratedDeriv j (ProbabilityTheory.cgf (fun y => z.1 * y 0 + z.2 * y 1) mu) 0;
+          have a := fun z j => Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa z (↑j + 3)) / ↑√↑n ^ (↑j + 1);
+          have S := fun z =>
+            ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, a z (sigma i) else 0;
+          ∃ P,
+            (∀ (z : ℝ × ℝ), MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑z.1, Complex.I * ↑z.2] P = S z) ∧
+              ∀ (x : ℝ × ℝ),
+                MeasureTheory.Integrable
+                    (fun z =>
+                      Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * S z *
+                        Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+                    MeasureTheory.volume ∧
+                  ∫ (z : ℝ × ℝ),
+                      Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * S z *
+                        Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+                    ↑((2 * Real.pi *
+                          ∑ d ∈ P.support,
+                            P.coeff d * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial (d 0)) *
+                              Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (d 1))) *
+                        Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_2
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 3] [NeZero 3], (3 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_3
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 4] [NeZero 4], (4 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_1
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 2] [NeZero 2], (2 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_5
+TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero M₀] {a : M₀} [IsReduced M₀] (n : ℕ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_4
+TYPE ∀ {M₀ : Type u_1} [inst : Mul M₀] [inst_1 : Zero M₀] [NoZeroDivisors M₀] {a b : M₀},
+  a ≠ 0 → b ≠ 0 → (a * b = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_six_order_gaussian_hermite_integral._simp_1_6
+TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero G₀] {a : G₀} (n : ℤ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

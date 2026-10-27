@@ -1,0 +1,32 @@
+FILE .lake/packages/mathlib/Mathlib/Algebra/MvPolynomial/Eval.lean SHA256 fb0dd2f7f249f9234abcf7cba2deca0cbdcc6cbf05e07adc18714579ba3a3e72
+76: theorem eval₂_eq' [Fintype σ] (g : R →+* S₁) (X : σ → S₁) (f : MvPolynomial σ R) :
+77:     f.eval₂ g X = ∑ d ∈ f.support, g (f.coeff d) * ∏ i, X i ^ d i := by
+78:   simp only [eval₂_eq, ← Finsupp.prod_pow]
+79:   rfl
+FILE .lake/packages/mathlib/Mathlib/Algebra/BigOperators/Group/Finset/Basic.lean SHA256 45b548e8d8491da4820c71eb29b0a2c92786f98e300d947e677f6fbe16e6f78a
+91: See also `prod_image_of_pairwise_eq_one` for a version with weaker assumptions. -/
+92: @[to_additive (attr := simp) /-- If a function is injective on a finset, sums over the original
+93: finset or its image coincide.
+94: See also `sum_image_of_pairwise_eq_zero` for a version with weaker assumptions. -/]
+95: theorem prod_image [DecidableEq ι] {s : Finset κ} {g : κ → ι} :
+96:     Set.InjOn g s → ∏ x ∈ s.image g, f x = ∏ x ∈ s, f (g x) :=
+97:   fold_image
+98: 
+99: @[to_additive]
+100: lemma prod_attach (s : Finset ι) (f : ι → M) : ∏ x ∈ s.attach, f x = ∏ x ∈ s, f x := by
+101:   classical rw [← prod_image Subtype.coe_injective.injOn, attach_image_val]
+102: 
+103: @[to_additive (attr := congr)]
+295:     ∏ i ∈ s.diag, f i = ∏ i ∈ s, f (i, i) := by
+296:   simp [diag]
+297: 
+298: @[to_additive]
+299: theorem prod_image' [DecidableEq ι] {s : Finset κ} {g : κ → ι} (h : κ → M)
+300:     (eq : ∀ i ∈ s, f (g i) = ∏ j ∈ s with g j = g i, h j) :
+301:     ∏ a ∈ s.image g, f a = ∏ i ∈ s, h i :=
+302:   calc
+303:     ∏ a ∈ s.image g, f a = ∏ a ∈ s.image g, ∏ j ∈ s with g j = a, h j :=
+304:       (prod_congr rfl) fun _a hx =>
+305:         let ⟨i, his, hi⟩ := mem_image.1 hx
+306:         hi ▸ eq i his
+307:     _ = ∏ i ∈ s, h i := prod_fiberwise_of_maps_to (fun _ => mem_image_of_mem g) _

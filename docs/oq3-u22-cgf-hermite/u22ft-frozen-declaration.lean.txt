@@ -1,0 +1,17 @@
+theorem pair_mv_polynomial_gaussian_hermite_integral
+    (P : MvPolynomial (Fin 2) ℝ) (x : ℝ × ℝ) :
+    Integrable (fun z : ℝ × ℝ =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+        MvPolynomial.eval₂ Complex.ofRealHom
+          ![Complex.I * (z.1 : ℂ), Complex.I * (z.2 : ℂ)] P *
+            Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+      (∫ z : ℝ × ℝ,
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+          MvPolynomial.eval₂ Complex.ofRealHom
+            ![Complex.I * (z.1 : ℂ), Complex.I * (z.2 : ℂ)] P *
+              Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) =
+        ((2 * Real.pi *
+          (∑ d ∈ P.support, P.coeff d *
+            (gaussianHermitePolynomial (d 0)).eval x.1 *
+              (gaussianHermitePolynomial (d 1)).eval x.2) *
+                Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2) : ℝ) : ℂ)

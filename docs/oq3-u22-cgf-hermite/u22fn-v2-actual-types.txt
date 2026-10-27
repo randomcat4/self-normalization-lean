@@ -1,0 +1,30 @@
+DECL Shao.OQ3.gaussian_hermite_iterated_derivative
+TYPE ∀ (n : ℕ) (x : ℝ),
+  iteratedDeriv n (fun y => Real.exp (-y ^ 2 / 2)) x =
+    (-1) ^ n * Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial n) * Real.exp (-x ^ 2 / 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussianHermitePolynomial.eq_1
+TYPE ∀ (n : ℕ),
+  Shao.OQ3.gaussianHermitePolynomial n = Nat.rec 1 (fun x P => Polynomial.X * P - Polynomial.derivative P) n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussianHermitePolynomial
+TYPE ℕ → Polynomial ℝ
+AXIOMS [propext, Classical.choice, Quot.sound]
+SAFETY Lean.DefinitionSafety.safe
+VALUE fun n => Nat.rec 1 (fun x P => Polynomial.X * P - Polynomial.derivative P) n
+DECL Shao.OQ3.gaussian_hermite_polynomial_recursion
+TYPE Shao.OQ3.gaussianHermitePolynomial 0 = 1 ∧
+  ∀ (n : ℕ),
+    Shao.OQ3.gaussianHermitePolynomial (n + 1) =
+      Polynomial.X * Shao.OQ3.gaussianHermitePolynomial n - Polynomial.derivative (Shao.OQ3.gaussianHermitePolynomial n)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussian_hermite_polynomial_first_four
+TYPE Shao.OQ3.gaussianHermitePolynomial 0 = 1 ∧
+  Shao.OQ3.gaussianHermitePolynomial 1 = Polynomial.X ∧
+    Shao.OQ3.gaussianHermitePolynomial 2 = Polynomial.X ^ 2 - 1 ∧
+      Shao.OQ3.gaussianHermitePolynomial 3 = Polynomial.X ^ 3 - 3 * Polynomial.X
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

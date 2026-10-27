@@ -1,0 +1,19 @@
+DECL Shao.OQ3.pair_mv_polynomial_gaussian_hermite_integral
+TYPE ∀ (P : MvPolynomial (Fin 2) ℝ) (x : ℝ × ℝ),
+  MeasureTheory.Integrable
+      (fun z =>
+        Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+            MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑z.1, Complex.I * ↑z.2] P *
+          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+      MeasureTheory.volume ∧
+    ∫ (z : ℝ × ℝ),
+        Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+            MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑z.1, Complex.I * ↑z.2] P *
+          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+      ↑((2 * Real.pi *
+            ∑ d ∈ P.support,
+              P.coeff d * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial (d 0)) *
+                Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (d 1))) *
+          Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

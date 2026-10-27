@@ -1,0 +1,111 @@
+PINNED_PRIMARY_SOURCE RingTheory/MvPolynomial/Homogeneous.lean SHA256 b39c0dfe5de107efdb5ec74c13e248777ba5d8d0acf9d37e363d9b2159a6148f
+38: namespace MvPolynomial
+39: 
+40: variable {σ : Type*} {τ : Type*} {R : Type*} {S : Type*}
+41: 
+42: open Finsupp
+43: 
+44: /-- A multivariate polynomial `φ` is homogeneous of degree `n`
+45: if all monomials occurring in `φ` have degree `n`. -/
+46: def IsHomogeneous [CommSemiring R] (φ : MvPolynomial σ R) (n : ℕ) :=
+47:   IsWeightedHomogeneous 1 φ n
+48: 
+49: variable [CommSemiring R]
+155: theorem isHomogeneous_C (r : R) : IsHomogeneous (C r : MvPolynomial σ R) 0 := by
+156:   apply isHomogeneous_monomial
+157:   simp only [degree_apply, Finsupp.support_zero, zero_apply, Finset.sum_const_zero]
+158: 
+159: variable (R)
+160: 
+161: theorem isHomogeneous_zero (n : ℕ) : IsHomogeneous (0 : MvPolynomial σ R) n :=
+162:   (homogeneousSubmodule σ R n).zero_mem
+163: 
+164: theorem isHomogeneous_one : IsHomogeneous (1 : MvPolynomial σ R) 0 :=
+165:   isHomogeneous_C _ _
+166: 
+167: lemma isHomogeneous_of_isEmpty [IsEmpty σ] (f : MvPolynomial σ R) : f.IsHomogeneous 0 := by
+168:   rw [eq_C_of_isEmpty f]
+169:   exact isHomogeneous_C _ _
+170: 
+171: variable {σ}
+172: 
+173: theorem isHomogeneous_X (i : σ) : IsHomogeneous (X i : MvPolynomial σ R) 1 := by
+174:   apply isHomogeneous_monomial
+175:   simp only [degree_apply, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
+220: theorem add (hφ : IsHomogeneous φ n) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ + ψ) n :=
+221:   (homogeneousSubmodule σ R n).add_mem hφ hψ
+222: 
+223: theorem sum {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ)
+224:     (h : ∀ i ∈ s, IsHomogeneous (φ i) n) : IsHomogeneous (∑ i ∈ s, φ i) n :=
+225:   (homogeneousSubmodule σ R n).sum_mem h
+226: 
+227: theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ * ψ) (m + n) :=
+228:   homogeneousSubmodule_mul m n <| Submodule.mul_mem_mul hφ hψ
+242: lemma C_mul (hφ : φ.IsHomogeneous m) (r : R) :
+243:     (C r * φ).IsHomogeneous m := by
+244:   simpa only [zero_add] using (isHomogeneous_C _ _).mul hφ
+245: 
+246: lemma _root_.MvPolynomial.isHomogeneous_C_mul_X (r : R) (i : σ) :
+247:     (C r * X i).IsHomogeneous 1 :=
+248:   (isHomogeneous_X _ _).C_mul _
+249: 
+250: lemma pow (hφ : φ.IsHomogeneous m) (n : ℕ) : (φ ^ n).IsHomogeneous (m * n) := by
+251:   rw [show φ ^ n = ∏ _i ∈ Finset.range n, φ by simp]
+252:   rw [show m * n = ∑ _i ∈ Finset.range n, m by simp [mul_comm]]
+253:   apply IsHomogeneous.prod _ _ _ (fun _ _ ↦ hφ)
+254: 
+255: lemma _root_.MvPolynomial.isHomogeneous_X_pow (i : σ) (n : ℕ) :
+256:     (X (R := R) i ^ n).IsHomogeneous n := by
+257:   simpa only [one_mul] using (isHomogeneous_X _ _).pow n
+258: 
+259: lemma _root_.MvPolynomial.isHomogeneous_C_mul_X_pow (r : R) (i : σ) (n : ℕ) :
+260:     (C r * X i ^ n).IsHomogeneous n :=
+261:   (isHomogeneous_X_pow _ _).C_mul _
+290: section CommRing
+291: 
+292: -- In this section we shadow the semiring `R` with a ring `R`.
+293: variable {R σ : Type*} [CommRing R] {φ ψ : MvPolynomial σ R} {n : ℕ}
+294: 
+295: theorem neg (hφ : IsHomogeneous φ n) : IsHomogeneous (-φ) n :=
+296:   (homogeneousSubmodule σ R n).neg_mem hφ
+297: 
+298: theorem sub (hφ : IsHomogeneous φ n) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ - ψ) n :=
+299:   (homogeneousSubmodule σ R n).sub_mem hφ hψ
+PINNED_PRIMARY_SOURCE Algebra/MvPolynomial/Eval.lean SHA256 fb0dd2f7f249f9234abcf7cba2deca0cbdcc6cbf05e07adc18714579ba3a3e72
+266: 
+267: theorem eval_monomial : eval f (monomial s a) = a * s.prod fun n e => f n ^ e :=
+268:   eval₂_monomial _ _
+269: 
+270: @[simp]
+271: theorem eval_C : ∀ a, eval f (C a) = a :=
+272:   eval₂_C _ _
+273: 
+274: @[simp]
+275: theorem eval_X : ∀ n, eval f (X n) = f n :=
+276:   eval₂_X _ _
+290:   eval₂_mul _ _
+291: 
+292: theorem eval_pow : ∀ n, eval f (p ^ n) = eval f p ^ n :=
+293:   fun _ => eval₂_pow _ _
+294: 
+295: theorem eval_sum {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial σ R) (g : σ → R) :
+296:     eval g (∑ i ∈ s, f i) = ∑ i ∈ s, eval g (f i) :=
+297:   map_sum (eval g) _ _
+PINNED_PRIMARY_SOURCE Probability/Moments/Basic.lean SHA256 73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa
+157: 
+158: @[simp]
+159: theorem cgf_const [IsProbabilityMeasure μ] (c : ℝ) : cgf (fun _ => c) μ t = t * c := by
+160:   simp only [cgf, mgf_const, log_exp]
+161: 
+162: @[simp]
+163: theorem mgf_zero' : mgf X μ 0 = μ.real Set.univ := by
+164:   simp only [mgf, zero_mul, exp_zero, integral_const, smul_eq_mul, mul_one]
+165: 
+166: theorem mgf_zero [IsProbabilityMeasure μ] : mgf X μ 0 = 1 := by
+167:   simp [mgf_zero']
+168: 
+169: theorem cgf_zero' : cgf X μ 0 = log (μ.real Set.univ) := by simp only [cgf, mgf_zero']
+170: 
+171: @[simp]
+172: theorem cgf_zero [IsZeroOrProbabilityMeasure μ] : cgf X μ 0 = 0 := by
+173:   rcases eq_zero_or_isProbabilityMeasure μ with rfl | h <;> simp [cgf_zero']
