@@ -1,0 +1,9 @@
+# Unperturbed deleted weighted cost bridge
+
+The perturbed deletion factor differs from the literal unperturbed factor by K*epsilon*Hdelete. This theorem cancels the common B/Bdelete term before measurability, bounds the weighted difference by abs(epsilon)*exp(n/2)*K*Hdelete, and transfers integrability and the fixed-n deleted-cost limits. The optional normalized cost clause keeps the same full integral and denominator and requires a positive limiting denominator; finite-index zero denominators remain allowed.
+
+The frozen interface permits arbitrary measures and signed epsilon sequences. It adds no B/Bdelete measurability premise. It is a conditional analytic bridge; the combined original same-witness consumer, external Shao-Zhou input, CDF and full OQ56 conclusion remain open.
+
+Exact source a3f6a76b636d66b1049289293c12884bcc8474379b059f835507f3f49f73e5f8, 19004 bytes/372 LF. Native002 actual RC0 with zero errors/warnings; the same first original object db90616ef89ccee4a06ea18d3fd1a9c264cb866f4f9d1de5f8dac773f879b931 passed the import-only all-owned audit. The actual module contains one body-present theorem, 412 complete TYPE lines and zero non-theorem VALUEs. All transitive axioms are propext, Classical.choice and Quot.sound. The same original never-author reviewer completed source, affected repair and full compiled evidence review; parent intake rehashed49 local bindings. Strict-wrapper false/outer1 and standing134-byte stderr remain explicit in the exact receipts. Native001 failure and old source bytes/ns remain preserved.
+
+No accepted old producer or leaf axiom check was replayed. Source/freeze/review/normalized evidence and failed-attempt provenance accompany this leaf. Raw logs, objects, caches and large raw receipts remain on the designated server. Root integration acceptance is separate.
