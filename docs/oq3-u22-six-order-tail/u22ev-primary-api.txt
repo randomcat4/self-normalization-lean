@@ -1,0 +1,84 @@
+FILE .lake/packages/mathlib/Mathlib/Analysis/Complex/Exponential.lean SHA256 35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146
+
+CONTEXT end
+end Complex
+namespace Real
+end
+end Real
+namespace Complex
+variable (x y : ℂ)
+end Complex
+namespace Real
+variable (x y : ℝ)
+end Real
+namespace Complex
+
+COMPLETE norm_exp_sub_sum_le_norm_mul_exp
+
+lemma norm_exp_sub_sum_le_norm_mul_exp (x : ℂ) (n : ℕ) :
+    ‖exp x - ∑ m ∈ range n, x ^ m / m.factorial‖ ≤ ‖x‖ ^ n * Real.exp ‖x‖ := by
+  rw [← CauSeq.lim_const (abv := norm) (∑ m ∈ range n, _), Complex.exp, sub_eq_add_neg,
+    ← CauSeq.lim_neg, CauSeq.lim_add, ← lim_norm]
+  refine CauSeq.lim_le (CauSeq.le_of_exists ⟨n, fun j hj => ?_⟩)
+  change ‖(∑ m ∈ range j, x ^ m / m.factorial) - ∑ m ∈ range n, x ^ m / m.factorial‖ ≤ _
+  rw [← sum_Ico_eq_sub _ hj]
+  calc
+    ‖∑ m ∈ Ico n j, (x ^ m / m.factorial : ℂ)‖
+      = ‖∑ m ∈ Ico n j, (x ^ n * (x ^ (m - n) / m.factorial) : ℂ)‖ := by
+      congrm norm $(sum_congr rfl fun m hm => ?_)
+      rw [mem_Ico] at hm
+      rw [← mul_div_assoc, ← pow_add, add_tsub_cancel_of_le hm.1]
+    _ ≤ ∑ m ∈ Ico n j, ‖x ^ n * (x ^ (m - n) / m.factorial)‖ :=
+      IsAbsoluteValue.abv_sum norm ..
+    _ ≤ ∑ m ∈ Ico n j, ‖x‖ ^ n * (‖x‖ ^ (m - n) / (m - n).factorial) := by
+      simp_rw [Complex.norm_mul, Complex.norm_pow, Complex.norm_div, norm_natCast]
+      gcongr with i hi
+      · rw [Complex.norm_pow]
+      · simp
+    _ = ‖x‖ ^ n * ∑ m ∈ range (j - n), (‖x‖ ^ m / m.factorial) := by
+      simp [← mul_sum, sum_Ico_eq_sum_range]
+    _ ≤ ‖x‖ ^ n * Real.exp ‖x‖ := by
+      gcongr
+      refine Real.sum_le_exp_of_nonneg ?_ _
+      exact norm_nonneg _
+
+
+CONTEXT namespace Complex
+end
+end Complex
+namespace Real
+end
+end Real
+namespace Complex
+variable (x y : ℂ)
+end Complex
+namespace Real
+variable (x y : ℝ)
+
+COMPLETE exp_le_exp
+
+theorem exp_le_exp {x y : ℝ} : exp x ≤ exp y ↔ x ≤ y :=
+  exp_strictMono.le_iff_le
+
+
+FILE .lake/packages/mathlib/Mathlib/Analysis/Complex/Trigonometric.lean SHA256 f6f2c2bb6da4d7dac960bef8d07dc2e337c474b417726c1fd15e30c6b74caafb
+
+CONTEXT end Real
+namespace Complex
+variable (x y : ℂ)
+end Complex
+namespace Real
+variable (x y : ℝ)
+end Real
+namespace Real
+end Real
+namespace Mathlib.Meta.Positivity
+end Mathlib.Meta.Positivity
+namespace Complex
+
+COMPLETE norm_exp
+
+theorem norm_exp (z : ℂ) : ‖exp z‖ = Real.exp z.re := by
+  rw [exp_eq_exp_re_mul_sin_add_cos, Complex.norm_mul, norm_exp_ofReal, norm_cos_add_sin_mul_I,
+    mul_one]
+

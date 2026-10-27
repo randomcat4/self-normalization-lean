@@ -1,0 +1,13 @@
+theorem complex_gaussian_six_order_exponential_polynomial_error
+    (A : Fin 6 → ℝ) (hA : ∀ j, 0 ≤ A j) :
+    let P : (Fin 6 → ℂ) → ℂ := fun a =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a (sigma i) else 0
+    ∃ K : ℝ, 0 < K ∧ ∀ t r : ℝ, 0 ≤ t → t ≤ 1 → 0 ≤ r →
+      ∀ a : Fin 6 → ℂ,
+        (∀ j, ‖a j‖ ≤ A j * t ^ (j.val + 1) * r ^ (j.val + 3)) →
+        ‖∑ j, a j‖ ≤ r ^ 2 / 4 →
+        ‖Complex.exp (-((r ^ 2 : ℝ) : ℂ) / 2) *
+            (Complex.exp (∑ j, a j) - P a)‖ ≤
+          K * t ^ 7 * (r ^ 9 + r ^ 56) * Real.exp (-(r ^ 2) / 4)

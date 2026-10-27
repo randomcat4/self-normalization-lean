@@ -1,0 +1,13 @@
+theorem complex_two_scale_weighted_polynomial_tail_bound
+    {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (c : ι → ℂ) (p : ι → κ → ℕ) (w : κ → ℕ) (A : κ → ℝ)
+    (hA : ∀ j, 0 ≤ A j)
+    (hdeg : ∀ i,
+      7 ≤ ∑ j, w j * p i j ∧
+        9 ≤ ∑ j, (w j + 2) * p i j ∧
+          (∑ j, (w j + 2) * p i j) ≤ 48) :
+    ∃ K : ℝ, 0 < K ∧ ∀ t r : ℝ, 0 ≤ t → t ≤ 1 → 0 ≤ r →
+      ∀ a : κ → ℂ,
+        (∀ j, ‖a j‖ ≤ A j * t ^ (w j) * r ^ (w j + 2)) →
+        ‖∑ i, c i * ∏ j, (a j) ^ (p i j)‖ ≤
+          K * t ^ 7 * (r ^ 9 + r ^ 48)
