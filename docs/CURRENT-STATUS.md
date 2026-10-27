@@ -1,8 +1,8 @@
 # Current mathematical status
 
-v126 accepts original-model canonical coding and event transfer (unit222), including the original projection-zero-event discrepancy bound, plus a fixed-model deleted remainder envelope (unit225) whose integral payments vanish with epsilon. The zero-event bound has no smallness estimate. The actual original-model normalized-cost/SAME-witness application, weighted passage, CDF/ShaoZhou and full OQ56 remain open.
+v127 accepts unit224: the SAME original canonical coding witness now also carries finite unweighted normalized cost measurability and L1, including literal deleted differences and total costs under the reduced law and the same augmented pullbacks. Original g/r/v/rho, n/(n-2)^2 normalizations and the unestimated projection-zero-event p0 are preserved. Unit225 actual independently deleted-envelope application, quantitative Qepsilon, weighted limits, CDF/ShaoZhou and full OQ56 remain open.
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v126. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v127. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
 
 ## C1 and C2
 
