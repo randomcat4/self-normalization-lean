@@ -1,6 +1,6 @@
 # Whole-corpus continuation plan
 
-v127 accepts unit224: the SAME original canonical coding witness now also carries finite unweighted normalized cost measurability and L1, including literal deleted differences and total costs under the reduced law and the same augmented pullbacks. Original g/r/v/rho, n/(n-2)^2 normalizations and the unestimated projection-zero-event p0 are preserved. Unit225 actual independently deleted-envelope application, quantitative Qepsilon, weighted limits, CDF/ShaoZhou and full OQ56 remain open.
+v128 accepts unit226 original-model literal full/deleted envelopes with genuine unweighted L1, pointwise retained-coordinate factors and epsilon-independent fixed payments; its all-real theta limits remain inside each current coding-epsilon packet. Unit227 separately proves generic fixed-model signed full/deleted weighted and compact integral/ratio/finite-cost convergence with one common full normalizer. Original-model sequence instantiation, Qepsilon coefficient control, strict source budgets, CDF/ShaoZhou and full OQ56 remain open.
 
 This is the current continuation plan as of 2026-10-27. It supersedes the initial PR1-era scheduling narrative; versioned scope/review/receipt artifacts remain unchanged. See [current status](CURRENT-STATUS.md) for exact acceptance boundaries.
 

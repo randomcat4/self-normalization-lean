@@ -730,6 +730,7 @@ import Shao.OQ6.FiniteTiltedMoments
 import Shao.OQ6.FiniteUniformCodingAssembly
 import Shao.OQ6.KernelObservableReduction
 import Shao.OQ6.LiteralDeletedRemainderEnvelope
+import Shao.OQ6.LiteralDeletedWeightedCosts
 import Shao.OQ6.LogarithmicConditionalLowEnergy
 import Shao.OQ6.LogarithmicConditionalRates
 import Shao.OQ6.NormalizedAnalyticCostLimits
@@ -754,6 +755,7 @@ import Shao.OQ6.OriginalGhostGoodEvent
 import Shao.OQ6.OriginalGoodEventBridge
 import Shao.OQ6.OriginalGoodEventProbability
 import Shao.OQ6.OriginalKernelObservableTransport
+import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalRhoTiltedMoments

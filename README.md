@@ -1,6 +1,6 @@
 # Shao Lean formalization
 
-v127 accepts unit224: the SAME original canonical coding witness now also carries finite unweighted normalized cost measurability and L1, including literal deleted differences and total costs under the reduced law and the same augmented pullbacks. Original g/r/v/rho, n/(n-2)^2 normalizations and the unestimated projection-zero-event p0 are preserved. Unit225 actual independently deleted-envelope application, quantitative Qepsilon, weighted limits, CDF/ShaoZhou and full OQ56 remain open.
+v128 accepts unit226 original-model literal full/deleted envelopes with genuine unweighted L1, pointwise retained-coordinate factors and epsilon-independent fixed payments; its all-real theta limits remain inside each current coding-epsilon packet. Unit227 separately proves generic fixed-model signed full/deleted weighted and compact integral/ratio/finite-cost convergence with one common full normalizer. Original-model sequence instantiation, Qepsilon coefficient control, strict source budgets, CDF/ShaoZhou and full OQ56 remain open.
 
 Source-faithful Lean formalization of the C1/C2 and OQ3–OQ6 result packages. The original C1 theorem and the five assigned original C2 conclusions have been accepted. OQ56 and broader shared extensions remain open. Acceptance always refers to an exact frozen statement and source version, including its explicit domain, repairs and external-result attribution.
 

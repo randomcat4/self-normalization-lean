@@ -1,0 +1,189 @@
+CLAUSE 65: hNew01
+(∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν)
+
+CLAUSE 66: hNew02
+(∀ i : Fin n, (∫ x, (ξ i x) ^ 2 ∂ν) = 1 / (n : ℝ))
+
+CLAUSE 67: hNew03
+(∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1
+
+CLAUSE 68: hNew04
+Measurable[mAug, borel ℝ] V
+
+CLAUSE 69: hNew05
+(∀ i : Fin n, Measurable[mAug, borel ℝ] (Vdelete i))
+
+CLAUSE 70: hNew06
+(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Vdelete i x ∧ Vdelete i x ≤ V x)
+
+CLAUSE 71: hNew07
+Measurable[mAug, borel ℝ] Cbudget
+
+CLAUSE 72: hNew08
+(∀ i : Fin n, Measurable[mAug, borel ℝ] (CbudgetDelete i))
+
+CLAUSE 73: hNew09
+(∀ x : Fin n → Ω × ℝ, 1 ≤ Cbudget x)
+
+CLAUSE 74: hNew10
+(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 1 ≤ CbudgetDelete i x)
+
+CLAUSE 75: hNew11
+Measurable[mAug, borel ℝ] H
+
+CLAUSE 76: hNew12
+Integrable[mAug] H ν
+
+CLAUSE 77: hNew13
+(∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν)
+
+CLAUSE 78: hNew14
+(∀ x : Fin n → Ω × ℝ, 0 < H x)
+
+CLAUSE 79: hNew15
+(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 < Hdelete i x)
+
+CLAUSE 80: hNew16
+(∀ θ : ℝ, Measurable[mAug, borel ℝ] (M θ) ∧
+          ∀ i : Fin n, Measurable[mAug, borel ℝ] (Mdelete θ i))
+
+CLAUSE 81: hNew17
+(∀ θ : ℝ, Integrable[mAug] (M θ) ν ∧
+          ∀ i : Fin n, Integrable[mAug] (Mdelete θ i) ν)
+
+CLAUSE 82: hNew18
+(∀ θ : ℝ, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |M θ x|) ν ∧
+          ∀ i : Fin n, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Mdelete θ i x|) ν)
+
+CLAUSE 83: hNew19
+(∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,
+          0 ≤ M θ x ∧ ∀ i : Fin n, 0 ≤ Mdelete θ i x)
+
+CLAUSE 84: hNew20
+(∀ θ : ℝ, (∫ x, M θ x ∂ν) = K * θ * (∫ x, H x ∂ν))
+
+CLAUSE 85: hNew21
+(∀ (θ : ℝ) (i : Fin n),
+          (∫ x, Mdelete θ i x ∂ν) = K * θ * (∫ x, Hdelete i x ∂ν))
+
+CLAUSE 86: hNew22
+(∀ θ : ℝ, (∫ x, |M θ x| ∂ν) = K * |θ| * (∫ x, H x ∂ν))
+
+CLAUSE 87: hNew23
+(∀ (θ : ℝ) (i : Fin n),
+          (∫ x, |Mdelete θ i x| ∂ν) = K * |θ| * (∫ x, Hdelete i x ∂ν))
+
+CLAUSE 88: hNew24
+(∀ i : Fin n, payment i = K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)))
+
+CLAUSE 89: hNew25
+(∀ i : Fin n, 0 ≤ payment i)
+
+CLAUSE 90: hNew26
+0 ≤ paymentTotal
+
+CLAUSE 91: hNew27
+(∀ (θ : ℝ) (i : Fin n),
+          (∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν) = θ * payment i)
+
+CLAUSE 92: hNew28
+(∀ (θ : ℝ) (i : Fin n),
+          (∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν) = |θ| * payment i)
+
+CLAUSE 93: hNew29
+(∀ θ : ℝ,
+          (∑ i : Fin n, ((∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν))) = θ * paymentTotal)
+
+CLAUSE 94: hNew30
+(∀ θ : ℝ,
+          (∑ i : Fin n, ((∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν))) = |θ| * paymentTotal)
+
+CLAUSE 95: hNew31
+Filter.Tendsto (fun θ : ℝ => ∫ x, M θ x ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ))
+
+CLAUSE 96: hNew32
+Filter.Tendsto (fun θ : ℝ => ∫ x, |M θ x| ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ))
+
+CLAUSE 97: hNew33
+(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, Mdelete θ i x ∂ν)
+          (nhds (0 : ℝ)) (nhds (0 : ℝ)))
+
+CLAUSE 98: hNew34
+(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Mdelete θ i x| ∂ν)
+          (nhds (0 : ℝ)) (nhds (0 : ℝ)))
+
+CLAUSE 99: hNew35
+(∀ θ : ℝ, Measurable[mAug, borel ℝ] (Aenvelope θ) ∧ Integrable[mAug] (Aenvelope θ) ν)
+
+CLAUSE 100: hNew36
+(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (AenvelopeDelete θ i) ∧
+          Integrable[mAug] (AenvelopeDelete θ i) ν)
+
+CLAUSE 101: hNew37
+(∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,
+          0 ≤ Aenvelope θ x ∧ ∀ i : Fin n, 0 ≤ AenvelopeDelete θ i x)
+
+CLAUSE 102: hNew38
+(∀ θ : ℝ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,
+          Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧
+          ∀ x : Fin n → Ω × ℝ,
+            (M θ x, Aenvelope θ x, B x) = Ffull (C x))
+
+CLAUSE 103: hNew39
+(∀ (θ : ℝ) (i : Fin n),
+          ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧
+            ∀ x : Fin n → Ω × ℝ,
+              (Mdelete θ i x, AenvelopeDelete θ i x, Bdelete i x) =
+                Fdelete (fun j : {j : Fin n // j ≠ i} => η j.val x))
+
+CLAUSE 104: hNew40
+(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),
+          Δ θ i x = M θ x - Mdelete θ i x)
+
+CLAUSE 105: hNew41
+(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),
+          |Δ θ i x| ≤ |M θ x| + |Mdelete θ i x|)
+
+CLAUSE 106: hNew42
+(∀ θ : ℝ, 0 ≤ θ → ∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+          |Δ θ i x| ≤ M θ x + Mdelete θ i x)
+
+CLAUSE 107: hNew43
+(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (Δ θ i) ∧
+          Integrable[mAug] (Δ θ i) ν ∧
+          Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Δ θ i x|) ν)
+
+CLAUSE 108: hNew44
+(∀ (θ : ℝ) (i : Fin n), (∫ x, |Δ θ i x| ∂ν) ≤ |θ| * payment i)
+
+CLAUSE 109: hNew45
+(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Δ θ i x| ∂ν)
+          (nhds (0 : ℝ)) (nhds (0 : ℝ)))
+
+CLAUSE 110: hNew46
+(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (fee θ i) ∧
+          Integrable[mAug] (fee θ i) ν)
+
+CLAUSE 111: hNew47
+(∀ θ : ℝ, Measurable[mAug, borel ℝ] (feeTotal θ) ∧ Integrable[mAug] (feeTotal θ) ν)
+
+CLAUSE 112: hNew48
+(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),
+          |fee θ i x - deletionMass (q x) i| ≤ |M θ x| + |Mdelete θ i x|)
+
+CLAUSE 113: hNew49
+(∀ (θ : ℝ) (i : Fin n),
+          |(∫ x, fee θ i x ∂ν) - (∫ x, deletionMass (q x) i ∂ν)| ≤ |θ| * payment i)
+
+CLAUSE 114: hNew50
+(∀ θ : ℝ,
+          |(∫ x, feeTotal θ x ∂ν) - (∫ x, deletionTotal (q x) ∂ν)| ≤ |θ| * paymentTotal)
+
+CLAUSE 115: hNew51
+(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, fee θ i x ∂ν)
+          (nhds (0 : ℝ)) (nhds (∫ x, deletionMass (q x) i ∂ν)))
+
+CLAUSE 116: hNew52
+Filter.Tendsto (fun θ : ℝ => ∫ x, feeTotal θ x ∂ν)
+          (nhds (0 : ℝ)) (nhds (∫ x, deletionTotal (q x) ∂ν))

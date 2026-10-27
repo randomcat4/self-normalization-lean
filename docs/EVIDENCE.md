@@ -1,8 +1,8 @@
 # Evidence index
 
-v127 accepts unit224: the SAME original canonical coding witness now also carries finite unweighted normalized cost measurability and L1, including literal deleted differences and total costs under the reduced law and the same augmented pullbacks. Original g/r/v/rho, n/(n-2)^2 normalizations and the unestimated projection-zero-event p0 are preserved. Unit225 actual independently deleted-envelope application, quantitative Qepsilon, weighted limits, CDF/ShaoZhou and full OQ56 remain open.
+v128 accepts unit226 original-model literal full/deleted envelopes with genuine unweighted L1, pointwise retained-coordinate factors and epsilon-independent fixed payments; its all-real theta limits remain inside each current coding-epsilon packet. Unit227 separately proves generic fixed-model signed full/deleted weighted and compact integral/ratio/finite-cost convergence with one common full normalizer. Original-model sequence instantiation, Qepsilon coefficient control, strict source budgets, CDF/ShaoZhou and full OQ56 remain open.
 
-The current proof snapshot is v127. Start with its [integration scope](integration-v127.md), [server receipt](../verification/receipt-v127.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
+The current proof snapshot is v128. Start with its [integration scope](integration-v128.md), [server receipt](../verification/receipt-v128.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
 
 ## C1
 

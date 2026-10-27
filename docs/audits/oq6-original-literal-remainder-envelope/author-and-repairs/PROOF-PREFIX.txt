@@ -1,0 +1,201 @@
+  classical
+  intro g r v rho
+  have hcanonical :=
+    Shao.OQ6.OriginalClippedCanonicalCostPacket.actual_original_clipped_canonical_cost_packet
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+  dsimp only at hcanonical
+  rcases hcanonical with ⟨m₀, hm₀, hcg, hbase⟩
+  refine ⟨m₀, hm₀, hcg, ?_⟩
+  intro μ₀
+  letI : MeasurableSpace Ω := m₀
+  letI : MeasurableSpace.CountablyGenerated Ω := hcg
+  rcases hbase with ⟨hμ₀prob, hfor⟩
+  refine ⟨hμ₀prob, ?_⟩
+  intro n hn C0 hC0 z hz K hK
+  intro mFixedLocal mFixed νFixedLocal νFixed ξFixed VFixed VdeleteFixed
+    BFixed BdeleteFixed HFixed HdeleteFixed payment paymentTotal
+  intro ε hε hεsmall
+  intro mN mN₀ P P₀ N O gcoord Q D1 D2 Tclip Ddel Jdel B1del κ W0 V0 T0
+    lambda01 mAugLocal mAug νlocal ν q c ξlocal Ylocal ξ Y a s ηlocal η C W V
+    Wη Vη b Dη Tη Z0 Z p0 comparisons F0 A0 Eη
+    J A Adel B1 deletionMass deletionTotal
+  have hcan := hfor n hn C0 hC0 ε hε hεsmall
+  rcases hcan with
+    ⟨hP₀prob, hP₀map, hO, hOindep, hgcoord, hgenergy,
+      hQid, hW0eq, hV0eq, hT0eq, hD1m, hD2m, hhalf,
+      hTclipm, hTclipOriginal, hTcliplaw, hνprob, hqpres,
+      hs, hηeval, hηindep, hηL2, hηInts, hηmean, hηenergy,
+      hηnull, hVηnull, hpositiveDenominator, hCmeas, hCcomap,
+      hfactor, hretained, hscalar, hdeletedFactor, hTηmeas,
+      hZ0m, hZ0Original, hZmeas, hZcodedlaw, hZ0law,
+      hZcodedreal, hsigned, hcomparison, hFullBounds, hDeletedBounds,
+      hJm, hAm, hB1m, hDeletedMeasurableAndAbs, hAI, hB1I, heI,
+      hDeletedCostsAndDifferences, hTotalm, hTotalI, hAugAm, hAugB1m,
+      hAugD2m, hAugAI, hAugB1I, hAugD2I, hAugDeletedCostsAndDifferences,
+      hAugTotalm, hAugTotalI⟩
+  refine ⟨hP₀prob, hP₀map, hO, hOindep, hgcoord, hgenergy,
+    hQid, hW0eq, hV0eq, hT0eq, hD1m, hD2m, hhalf,
+    hTclipm, hTclipOriginal, hTcliplaw, hνprob, hqpres,
+    hs, hηeval, hηindep, hηL2, hηInts, hηmean, hηenergy,
+    hηnull, hVηnull, hpositiveDenominator, hCmeas, hCcomap,
+    hfactor, hretained, hscalar, hdeletedFactor, hTηmeas,
+    hZ0m, hZ0Original, hZmeas, hZcodedlaw, hZ0law,
+    hZcodedreal, hsigned, hcomparison, hFullBounds, hDeletedBounds,
+    hJm, hAm, hB1m, hDeletedMeasurableAndAbs, hAI, hB1I, heI,
+    hDeletedCostsAndDifferences, hTotalm, hTotalI, hAugAm, hAugB1m,
+    hAugD2m, hAugAI, hAugB1I, hAugD2I, hAugDeletedCostsAndDifferences,
+    hAugTotalm, hAugTotalI, ?_⟩
+  intro Afull Adelete B Bdelete Vdelete Cbudget CbudgetDelete H Hdelete
+    M Mdelete Aenvelope AenvelopeDelete Δ fee feeTotal
+  have hLiteralNu : νFixed = ν := rfl
+  have hLiteralXi : ξFixed = ξ := rfl
+  have hLiteralV : VFixed = V := rfl
+  have hLiteralVdelete : VdeleteFixed = Vdelete := rfl
+  have hLiteralB : BFixed = B := rfl
+  have hLiteralBdelete : BdeleteFixed = Bdelete := rfl
+  have hLiteralH : HFixed = H := rfl
+  have hLiteralHdelete : HdeleteFixed = Hdelete := rfl
+  have hPaymentTypeJoin (i : Fin n) :
+      payment i = K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)) := rfl
+  have hPaymentTotalTypeJoin : paymentTotal = ∑ i : Fin n, payment i := rfl
+  have hn1 : 1 ≤ n := by omega
+  have hn4R : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hNpos : 0 < N := Real.sqrt_pos.2 (by linarith only [hn4R])
+  have hFourNpos : 0 < 4 * Real.sqrt (n : ℝ) :=
+    mul_pos (by norm_num) hNpos
+  have hFourNne : 4 * Real.sqrt (n : ℝ) ≠ 0 := ne_of_gt hFourNpos
+  change @MeasurePreserving (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀
+    q ν P₀ at hqpres
+  have hGiMeas (i : Fin n) :
+      Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => gcoord i (O i ζ)) :=
+    ((hgcoord i).1).comp (hO i).1
+  have hGiSquareMeas (i : Fin n) :
+      Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => (gcoord i (O i ζ)) ^ 2) :=
+    (hGiMeas i).pow_const (2 : ℕ)
+  have hGiSquareMapAESM (i : Fin n) :
+      AEStronglyMeasurable (fun ζ : Fin n → Ω => (gcoord i (O i ζ)) ^ 2)
+        (@Measure.map (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν) := by
+    rw [hqpres.map_eq]
+    exact (hGiSquareMeas i).aestronglyMeasurable
+  have hOriginalXiMeas (i : Fin n) : Measurable[mAug, borel ℝ] (ξ i) := by
+    simpa only [ξ, O, q, Function.comp_def] using
+      (hGiMeas i).comp hqpres.measurable
+  have hOriginalXiL2 (i : Fin n) : MemLp (ξ i) 2 ν := by
+    simpa only [ξ, O, q, Function.comp_def] using
+      ((hgcoord i).2.1).comp_measurePreserving hqpres
+  have hOriginalXiSecondTransport (i : Fin n) :
+      (∫ x, (ξ i x) ^ 2 ∂ν) =
+        (∫ ζ : Fin n → Ω, (gcoord i (O i ζ)) ^ 2 ∂P₀) := by
+    have hmap := integral_map hqpres.aemeasurable (hGiSquareMapAESM i)
+    rw [hqpres.map_eq] at hmap
+    simpa only [ξ, O, q] using hmap.symm
+  have hOriginalXiSecond (i : Fin n) :
+      (∫ x, (ξ i x) ^ 2 ∂ν) = 1 / (n : ℝ) := by
+    rw [hOriginalXiSecondTransport i]
+    exact (hgcoord i).2.2.2
+  have hOriginalXiEnergy : (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1 := by
+    simp_rw [hOriginalXiSecondTransport]
+    exact hgenergy
+  have hBNonnegative (x : Fin n → Ω × ℝ) : 0 ≤ B x := (hFullBounds (q x)).2.1
+  have hBdeleteNonnegative (i : Fin n) (x : Fin n → Ω × ℝ) :
+      0 ≤ Bdelete i x := (hDeletedBounds i (q x)).2
+  let δ : ℝ → ℝ := fun θ : ℝ => (K / (4 * Real.sqrt (n : ℝ))) * θ
+  let Uret : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ :=
+    fun (i : Fin n) (y : ({j : Fin n // j ≠ i} → Ω × ℝ)) =>
+      ∑ j : {j : Fin n // j ≠ i}, (gcoord j.val (y j).1) ^ 2
+  have hDeltaScale (θ : ℝ) : 4 * δ θ * Real.sqrt (n : ℝ) = K * θ := by
+    dsimp only [δ]
+    field_simp [hFourNne, ne_of_gt hNpos] <;> ring
+  have hDeltaAbs (θ : ℝ) :
+      |δ θ| = (K / (4 * Real.sqrt (n : ℝ))) * |θ| := by
+    dsimp only [δ]
+    rw [abs_mul, abs_of_nonneg (div_nonneg hK hFourNpos.le)]
+  have hDeltaScaleAbs (θ : ℝ) :
+      |4 * δ θ * Real.sqrt (n : ℝ)| = K * |θ| := by
+    rw [hDeltaScale θ, abs_mul, abs_of_nonneg hK]
+  have hDeltaNonnegative (θ : ℝ) (hθ : 0 ≤ θ) : 0 ≤ δ θ :=
+    mul_nonneg (div_nonneg hK hFourNpos.le) hθ
+  have hDeltaLimit : Filter.Tendsto δ (nhds (0 : ℝ)) (nhds (0 : ℝ)) := by
+    simpa only [δ, mul_zero] using
+      (Filter.Tendsto.const_mul (K / (4 * Real.sqrt (n : ℝ)))
+        (Filter.tendsto_id : Filter.Tendsto (fun θ : ℝ => θ)
+          (nhds (0 : ℝ)) (nhds (0 : ℝ))))
+  have hScaledGenericPayment (θ : ℝ) (i : Fin n) :
+      δ θ * (4 * Real.sqrt (n : ℝ) * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) =
+        θ * payment i := by
+    rw [hPaymentTypeJoin i]
+    calc
+      δ θ * (4 * Real.sqrt (n : ℝ) * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) =
+          (4 * δ θ * Real.sqrt (n : ℝ)) *
+            ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)) := by ring
+      _ = θ * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) := by
+        rw [hDeltaScale θ]
+        ring
+  have hScaledGenericAbsPayment (θ : ℝ) (i : Fin n) :
+      |δ θ| * (4 * Real.sqrt (n : ℝ) * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) =
+        |θ| * payment i := by
+    rw [hDeltaAbs θ, hPaymentTypeJoin i]
+    field_simp [hFourNne, ne_of_gt hNpos] <;> ring
+  have hLinearFiniteSum (θ : ℝ) :
+      (∑ i : Fin n, θ * payment i) = θ * paymentTotal := by
+    rw [hPaymentTotalTypeJoin, Finset.mul_sum]
+  have hAbsoluteLinearFiniteSum (θ : ℝ) :
+      (∑ i : Fin n, |θ| * payment i) = |θ| * paymentTotal := by
+    rw [hPaymentTotalTypeJoin, Finset.mul_sum]
+  have hTripleBorel :
+      (inferInstance : MeasurableSpace (ℝ × ℝ × ℝ)) = borel (ℝ × ℝ × ℝ) :=
+    BorelSpace.measurable_eq
+  have hFullCodeBorel :
+      (inferInstance : MeasurableSpace (Fin n → ℝ)) = borel (Fin n → ℝ) :=
+    BorelSpace.measurable_eq
+  have hRetainedCodeBorel (i : Fin n) :
+      (inferInstance : MeasurableSpace ({j : Fin n // j ≠ i} → ℝ)) =
+        borel ({j : Fin n // j ≠ i} → ℝ) := BorelSpace.measurable_eq
+  have hUretMeas (i : Fin n) :
+      Measurable[
+        @MeasurableSpace.pi {j : Fin n // j ≠ i}
+          (fun _ : {j : Fin n // j ≠ i} => Ω × ℝ)
+          (fun _ : {j : Fin n // j ≠ i} => mAugLocal), borel ℝ] (Uret i) := by
+    exact Finset.measurable_sum Finset.univ
+      (fun (j : {j : Fin n // j ≠ i})
+        (_hj : j ∈ (Finset.univ : Finset {j : Fin n // j ≠ i})) =>
+          (((hgcoord j.val).1).comp
+            (measurable_fst.comp (measurable_pi_apply j))).pow_const (2 : ℕ))
+  have hSubtypeSum (i : Fin n) (f : Fin n → ℝ) :
+      (∑ j : {j : Fin n // j ≠ i}, f j.val) = ∑ j ∈ Finset.univ.erase i, f j := by
+    letI : Fintype {j : Fin n // j = i} := Subtype.fintype (fun j : Fin n => j = i)
+    have hsplit := Fintype.sum_subtype_add_sum_subtype (fun j : Fin n => j = i) f
+    have hSingleSubtypeSum : (∑ j : {j : Fin n // j = i}, f j.val) = f i := by
+      letI : Unique {j : Fin n // j = i} :=
+        { default := ⟨i, rfl⟩
+          uniq := fun j => Subtype.ext j.property }
+      simp only [Fintype.sum_unique]
+      rw [(default : {j : Fin n // j = i}).property]
+    rw [hSingleSubtypeSum] at hsplit
+    rw [Finset.sum_erase_eq_sub (Finset.mem_univ i)]
+    linarith
+  have hUretPoint (i : Fin n) (x : Fin n → Ω × ℝ) :
+      Uret i (fun j : {j : Fin n // j ≠ i} => x j.val) =
+        ∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2 := by
+    simpa only [Uret, ξ] using
+      hSubtypeSum i (fun j : Fin n => (ξ j x) ^ 2)
+  have hVretPoint (i : Fin n) (x : Fin n → Ω × ℝ) :
+      Real.sqrt (Uret i (fun j : {j : Fin n // j ≠ i} => x j.val)) = Vdelete i x := by
+    rw [hUretPoint i x]
+    rfl
+  have hgeneric :=
+    @Shao.OQ6.LiteralDeletedRemainderEnvelope.literal_deleted_remainder_envelope_spec
+      (Fin n → Ω × ℝ) mAug ν hνprob n hn1 ξ hOriginalXiMeas hOriginalXiL2
+      hOriginalXiEnergy B Bdelete hAugB1m
+      (fun i : Fin n => (hAugDeletedCostsAndDifferences i).2.1)
+      hBNonnegative hBdeleteNonnegative hAugB1I
+      (fun i : Fin n => (hAugDeletedCostsAndDifferences i).2.2.2.1) z hz
+  rcases hgeneric with
+    ⟨hVm225, hVdeleteM225, hVdeleteBounds225, hCm225, hCdeleteM225,
+      hCone225, hCdeleteOne225, hHm225, hHint225, hHdeleteSpec225,
+      hHpositive225, hHdeletePositive225, hMMeas225, hMInt225, hMAbsInt225,
+      hMnonneg225, hMIntegral225, hMdeleteIntegral225, hMAbsIntegral225,
+      hMdeleteAbsIntegral225, hκnonnegative225, hPairIntegral225,
+      hPairAbsIntegral225, hMLimit225, hMAbsLimit225, hMdeleteLimit225,
+      hMdeleteAbsLimit225, hΔeq225, hΔabsbound225, hΔsourcebound225,
+      hΔspec225, hΔintegral225, hΔlimit225⟩
