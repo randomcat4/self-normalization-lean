@@ -1,0 +1,178 @@
+import Shao.OQ4.RowRandomDenominatorAsymptotic
+import Shao.OQ4.RowPositiveBoundaryStudentized
+import Shao.OQ4.UnconditionalKernelAsymptotic
+import Shao.Probability.BrownianFirstTerm
+import Shao.OQ4.BrownianPositiveCDF
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Topology.Sequences
+import Mathlib.Topology.Instances.Real.Lemmas
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Order.Filter.AtTopBot.CountablyGenerated
+import Mathlib.Topology.Algebra.Order.Field
+import Mathlib.Tactic.FieldSimp
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+namespace Shao.OQ4.RowWindowProduct
+
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped BigOperators NNReal Topology
+
+universe uB
+variable {ΩB : Type uB} [MeasurableSpace ΩB]
+
+-- NEW NON-THEOREM VALUE 1: complete exact value; actual ν/n/a finite arguments.
+-- Closed interval includes BOTH endpoints. There is no limit/boundedness premise.
+def actualWindowErrors
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) (n : ℕ) (a : ℝ) : Set ℝ :=
+  (fun x : ℝ =>
+    |(Measure.pi (fun _ : Fin n => ν)).real
+        {v : Shao.Path n |
+          v ∈ Shao.closedStrip (x * Real.sqrt (Shao.energy v))} /
+      Shao.Probability.BrownianSup.probability B P hB x - 1|) '' Icc a 1
+
+-- PRIVATE 1. Exact real-rpow identities only after N>0 and x>0.
+private theorem scale_identities (n : ℕ) (hn : 0 < n) (x : ℝ) (hx : 0 < x) :
+    x * Real.sqrt (n : ℝ) =
+        (x * (n : ℝ) ^ ((1 : ℝ) / 6)) * (n : ℝ) ^ ((1 : ℝ) / 3) ∧
+    (n : ℝ) / (x * Real.sqrt (n : ℝ)) ^ 2 = 1 / x ^ 2 ∧
+    (n : ℝ) / (x * Real.sqrt (n : ℝ)) ^ 3 =
+        1 / (x * (n : ℝ) ^ ((1 : ℝ) / 6)) ^ 3
+
+-- PRIVATE 2. No all-index sign or monotonicity assumption is introduced.
+private theorem small_boundary_scales
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => xSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    Tendsto (fun j => xSeq j * Real.sqrt (nSeq j : ℝ)) atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) /
+      (xSeq j * Real.sqrt (nSeq j : ℝ)) ^ 2) atTop atTop ∧
+    Tendsto (fun j => (nSeq j : ℝ) /
+      (xSeq j * Real.sqrt (nSeq j : ℝ)) ^ 3) atTop (𝓝 (0 : ℝ))
+
+-- PRIVATE 3. Literal equality of actual weak events, with no Q division.
+private theorem actual_event_eq_randomDenominatorEvent
+    (n : ℕ) (hn : 0 < n) (x : ℝ) :
+    {v : Shao.Path n |
+      v ∈ Shao.closedStrip (x * Real.sqrt (Shao.energy v))} =
+    RandomDenominatorFarTail.randomDenominatorEvent n (x * Real.sqrt (n : ℝ))
+
+-- PRIVATE 4. Qualified changing-row K, with a body-local positive-prefix patch.
+private theorem varying_row_closedStrip_relative_main_tendsto
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)) /
+        RandomDenominatorFarTail.farMainTerm (n j) (h j))
+      atTop (𝓝 (1 : ℝ))
+
+-- PRIVATE 5. The actual supplied Brownian CDF and actual firstTerm producer.
+private theorem actual_firstTerm_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      Shao.Probability.BrownianSup.probability B P hB (xSeq j) /
+        Shao.Probability.BrownianSup.firstTerm (xSeq j))
+      atTop (𝓝 (1 : ℝ))
+
+-- PUBLIC 1. Full actual changing-row small-boundary relative probability.
+theorem varying_row_studentized_small_boundary_ratio_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (xSeq : ℕ → ℝ) (hxpos : ∀ᶠ j in atTop, 0 < xSeq j)
+    (hx : Tendsto xSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => xSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+        {v : Shao.Path (nSeq j) |
+          v ∈ Shao.closedStrip (xSeq j * Real.sqrt (Shao.energy v))} /
+        Shao.Probability.BrownianSup.probability B P hB (xSeq j))
+      atTop (𝓝 (1 : ℝ))
+
+-- PRIVATE 6. A cofinal bad-index sequence, followed by compact-radius extraction.
+private theorem bad_closed_window_subsequence
+    (e : ℕ → ℝ → ℝ) (aSeq : ℕ → ℝ) (ε : ℝ)
+    (hapos : ∀ᶠ j in atTop, 0 < aSeq j)
+    (hbad : ∃ᶠ j in atTop, ∃ x ∈ Icc (aSeq j) 1, ε ≤ e j x) :
+    ∃ κ : ℕ → ℕ, ∃ xSeq : ℕ → ℝ, ∃ c : ℝ,
+      StrictMono κ ∧ c ∈ Icc 0 1 ∧ Tendsto xSeq atTop (𝓝 c) ∧
+      (∀ k, 0 < xSeq k ∧ xSeq k ∈ Icc (aSeq (κ k)) 1 ∧
+        ε ≤ e (κ k) (xSeq k))
+
+-- PUBLIC 2. New CLOSED window: includes x=aSeq j and x=1, no Antitone.
+theorem varying_row_closed_window_eventually
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (aSeq : ℕ → ℝ) (hapos : ∀ᶠ j in atTop, 0 < aSeq j)
+    (ha : Tendsto aSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => aSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    ∀ ε : ℝ, 0 < ε → ∀ᶠ j in atTop, ∀ x ∈ Icc (aSeq j) 1,
+      |(Measure.pi (fun _ : Fin (nSeq j) => νSeq j)).real
+          {v : Shao.Path (nSeq j) |
+            v ∈ Shao.closedStrip (x * Real.sqrt (Shao.energy v))} /
+        Shao.Probability.BrownianSup.probability B P hB x - 1| < ε
+
+-- PRIVATE 7. A real, nonempty, bounded actual errors image at a finite good row.
+-- n=0 is permitted; ν probability and 0<a≤1 pay every order prerequisite.
+private theorem actualWindowErrors_spec
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P) (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (n : ℕ) (a : ℝ) (ha0 : 0 < a) (ha1 : a ≤ 1) :
+    (actualWindowErrors B P hB ν n a).Nonempty ∧
+      BddAbove (actualWindowErrors B P hB ν n a) ∧
+      IsLUB (actualWindowErrors B P hB ν n a)
+        (sSup (actualWindowErrors B P hB ν n a)) ∧
+      0 ≤ sSup (actualWindowErrors B P hB ν n a)
+
+-- PUBLIC 3. Exact real sSup of the new actual CLOSED-window absolute errors.
+theorem varying_row_closed_window_sSup_tendsto
+    (B : ℝ≥0 → ΩB → ℝ) (P : Measure ΩB) [IsProbabilityMeasure P]
+    (hB : IsBrownianReal B P)
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun z : ℝ => |z| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ z : ℝ, z ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ z : ℝ, z ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ z : ℝ, |z| ^ 3 ∂(νSeq j)) ≤ M)
+    (nSeq : ℕ → ℕ) (hn : Tendsto nSeq atTop atTop)
+    (aSeq : ℕ → ℝ) (hapos : ∀ᶠ j in atTop, 0 < aSeq j)
+    (ha : Tendsto aSeq atTop (𝓝 (0 : ℝ)))
+    (hslow : Tendsto (fun j => aSeq j * (nSeq j : ℝ) ^ ((1 : ℝ) / 6))
+      atTop atTop) :
+    Tendsto (fun j => sSup
+      (actualWindowErrors B P hB (νSeq j) (nSeq j) (aSeq j)))
+      atTop (𝓝 (0 : ℝ))
+
+end Shao.OQ4.RowWindowProduct
+end
