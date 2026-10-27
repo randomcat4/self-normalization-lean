@@ -1,0 +1,1649 @@
+{
+  "schema": "oq56-unit220-stage2-source-capture-map-v1",
+  "unit": 220,
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION_UNELABORATED_UNREVIEWED",
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+    "sha256": "05835d00b91a71a93d12dd5b6ff8ba80e49aa0f71c716b948153764b23993303",
+    "bytes": 15590,
+    "LF": 315,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "module": "Shao.OQ6.OriginalClippedStatisticMeasurable",
+  "freeze": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-statistic-measurable-220/parent-freeze-v1.json",
+    "sha256": "bd1457c6c0c74ff2504978e006436d671aaddd7a927f2422a9a4ea7b04461f46",
+    "bytes": 26932,
+    "LF": 790,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "activation": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-statistic-measurable-220/stage2-activation-v1.json",
+    "sha256": "94225839c1711e6261166b0feb34e7f7c763014c8a1b323a10beada2ced4c38b",
+    "bytes": 1241,
+    "LF": 29,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "exactFrozenHead": "theorem actual_normalized_compact_clipped_observables\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)\n    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧\n      Measurable A ∧ Measurable B1 ∧\n      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧\n      Measurable Tclip ∧ Measurable Tactual ∧\n      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧\n      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧\n      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n      (∀ ξ : Fin n → Ω, V ξ = 0 →\n        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))\n",
+  "preambleExact": true,
+  "sourceClosingExact": true,
+  "newGlobalHeads": 1,
+  "newPrivateHeads": 0,
+  "newGlobalDataDefinitions": 0,
+  "headerTypedValues": [
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o => ∫ y, h o y ∂μ",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y => h o y - g o - g y",
+      "captures": [
+        "Ω",
+        "h",
+        "g"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "v",
+      "type": "ℝ",
+      "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "rho",
+      "type": "ℝ",
+      "value": "Real.sqrt v",
+      "captures": [
+        "v"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "N",
+      "type": "ℝ",
+      "value": "Real.sqrt (n : ℝ)",
+      "captures": [
+        "n"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "W",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "projectionW n g",
+      "captures": [
+        "n",
+        "Ω",
+        "g"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "V",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "projectionV n g",
+      "captures": [
+        "n",
+        "Ω",
+        "g"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualStatisticD n r",
+      "captures": [
+        "n",
+        "Ω",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "J",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualEnergyJ n r",
+      "captures": [
+        "n",
+        "Ω",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "Ddel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualStatisticDDeleted n r",
+      "captures": [
+        "n",
+        "Ω",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "Jdel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualEnergyJDeleted n r",
+      "captures": [
+        "n",
+        "Ω",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "A",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => |D ξ|",
+      "captures": [
+        "n",
+        "Ω",
+        "D"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "Adel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun ξ i => |Ddel ξ i|",
+      "captures": [
+        "n",
+        "Ω",
+        "Ddel"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "B1",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "studentizerClipBudget n r C0 rho 1",
+      "captures": [
+        "n",
+        "Ω",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "B1del",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+      "captures": [
+        "n",
+        "Ω",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "s2",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "centeredSq n g r",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "s",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => Real.sqrt (s2 ξ)",
+      "captures": [
+        "n",
+        "Ω",
+        "s2"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "d",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "centeredDelta n g r",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "r"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "e",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredDelta n g r C0 rho 1",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "Tclip",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredStatistic n g r C0 rho 1",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "Tactual",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ",
+      "captures": [
+        "n",
+        "Ω",
+        "s",
+        "W",
+        "D"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "cap",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))",
+      "captures": [
+        "n",
+        "Ω",
+        "g",
+        "N",
+        "z"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    },
+    {
+      "name": "deletedTest",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)",
+      "captures": [
+        "n",
+        "Ω",
+        "cap",
+        "A",
+        "Adel",
+        "z",
+        "B1",
+        "B1del"
+      ],
+      "binding": "typed theorem-header let",
+      "dataFamilyNotAssumption": false
+    }
+  ],
+  "headerLocalBindings": "All 23 frozen header lets are introduced directly by intro; no substitute/duplicate header data definition occurs in the proof.",
+  "newProofLocalData": [
+    {
+      "name": "F",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ",
+      "value": "existential elimination of Shao.OQ6.ResidualDeletion.erasedSamplePairSum_measurable_factorization r hr i",
+      "binding": "typed obtain witness",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "r",
+        "hr",
+        "i"
+      ],
+      "constraints": [
+        "Measurable F",
+        "∀ ξ, erased unorderedPairSum = F (fun j => ξ j.val)"
+      ],
+      "sourceLine": 225
+    },
+    {
+      "name": "Lrow",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ",
+      "value": "existential elimination of Shao.OQ6.ResidualDeletion.erasedSampleRowSqSum_measurable_factorization r hr i",
+      "binding": "typed obtain witness",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "r",
+        "hr",
+        "i"
+      ],
+      "constraints": [
+        "Measurable Lrow",
+        "∀ ξ, erased row-square sum = Lrow (fun j => ξ j.val)"
+      ],
+      "sourceLine": 233
+    },
+    {
+      "name": "pdel",
+      "type": "(Fin n → Ω) → ({j : Fin n // j ≠ i} → Ω)",
+      "value": "fun (ξ : Fin n → Ω) (j : {j : Fin n // j ≠ i}) => ξ j.val",
+      "binding": "typed proof-local let",
+      "captures": [
+        "Ω",
+        "n",
+        "i"
+      ],
+      "sourceLine": 242
+    },
+    {
+      "name": "Dret",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ",
+      "value": "fun q : {j : Fin n // j ≠ i} → Ω => F q / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+      "binding": "typed proof-local let",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "F"
+      ],
+      "sourceLine": 244
+    },
+    {
+      "name": "Jret",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ",
+      "value": "fun q : {j : Fin n // j ≠ i} → Ω => Lrow q / ((n : ℝ) - 2) ^ 2",
+      "binding": "typed proof-local let",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "Lrow"
+      ],
+      "sourceLine": 247
+    },
+    {
+      "name": "Bret",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ",
+      "value": "fun q : {j : Fin n // j ≠ i} → Ω => C0 * (((1 + rho) * 1) / Real.sqrt (n : ℝ) + Jret q / ((1 + rho) * 1 * Real.sqrt (n : ℝ)))",
+      "binding": "typed proof-local let",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "C0",
+        "rho",
+        "Jret"
+      ],
+      "sourceLine": 249
+    },
+    {
+      "name": "E",
+      "type": "({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ",
+      "value": "fun q : {j : Fin n // j ≠ i} → Ω => (Dret q, Jret q, Bret q)",
+      "binding": "typed proof-local let and final existential witness",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "Dret",
+        "Jret",
+        "Bret"
+      ],
+      "sourceLine": 253
+    }
+  ],
+  "localPropProofs": [
+    {
+      "name": "hn3",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hn3 : 3 ≤ n",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 77,
+        "endLine": 77
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hwindow0",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hwindow0 :\n      (0 : ℝ) ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ))",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 78,
+        "endLine": 81
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hmodel",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hmodel",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 82,
+        "endLine": 84
+      },
+      "inferredTypeOnlyForExistingProvider": true,
+      "existingProviderTYPE": {
+        "inputPath": "C:/game/shao lean/drafts/oq56/unit220/parent-interfaces01/existing-qualified-project-types01.json",
+        "entry": 0,
+        "name": "Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments",
+        "typeSHA256": "d7cf963877f0914c7bc2e4e2d59ede1643d58ec009054c99d440876954d9f2f9",
+        "instantiation": "μ,h,hh,hh2,hhsymm,hcenter,hprojectionsecond,n,hn3,0,le_refl 0,hwindow0; no altered data"
+      }
+    },
+    {
+      "name": "hg",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hg : Measurable g",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 85,
+        "endLine": 85
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hr",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hr : Measurable (fun t : Ω × Ω => r t.1 t.2)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 86,
+        "endLine": 87
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "habs",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have habs (f : (Fin n → Ω) → ℝ) (hf : Measurable f) :\n      Measurable (fun ξ : Fin n → Ω => |f ξ|)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 88,
+        "endLine": 90
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hgcoord",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hgcoord (i : Fin n) :\n      Measurable (fun ξ : Fin n → Ω => g (ξ i))",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 91,
+        "endLine": 93
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hrcoord",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hrcoord (i j : Fin n) :\n      Measurable (fun ξ : Fin n → Ω => r (ξ i) (ξ j))",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 94,
+        "endLine": 96
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hW",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hW : Measurable W",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 97,
+        "endLine": 101
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hgsquares",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hgsquares :\n      Measurable (fun ξ : Fin n → Ω => ∑ i : Fin n, g (ξ i) ^ 2)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 102,
+        "endLine": 106
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hV",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hV : Measurable V",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 107,
+        "endLine": 110
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hupper",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hupper : Measurable (fun ξ : Fin n → Ω =>\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ξ)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 111,
+        "endLine": 121
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hD",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hD : Measurable D",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 122,
+        "endLine": 126
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hrrow",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hrrow (i : Fin n) : Measurable (fun ξ : Fin n → Ω =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k : Fin n => r (ξ j) (ξ k)) i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 127,
+        "endLine": 132
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hrowsquares",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n, (Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 133,
+        "endLine": 138
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hJ",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hJ : Measurable J",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 139,
+        "endLine": 141
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hA",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hA : Measurable A",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 142,
+        "endLine": 142
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hB1",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hB1 : Measurable B1",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 143,
+        "endLine": 148
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hsample",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hsample (i j : Fin n) : Measurable (fun ξ : Fin n → Ω =>\n      sampledKernel n g r ξ i j)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 149,
+        "endLine": 151
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hrowmean",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hrowmean (i : Fin n) : Measurable (fun ξ : Fin n → Ω =>\n      Shao.OQ6.FiniteRows.rowMean (sampledKernel n g r ξ) i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 152,
+        "endLine": 157
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hustat",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hustat : Measurable (fun ξ : Fin n → Ω =>\n      Shao.OQ6.FiniteRows.uStatistic (sampledKernel n g r ξ))",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 158,
+        "endLine": 169
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hcenteredrowsquares",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hcenteredrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n,\n        (Shao.OQ6.FiniteRows.rowMean (sampledKernel n g r ξ) i -\n          Shao.OQ6.FiniteRows.uStatistic (sampledKernel n g r ξ)) ^ 2)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 170,
+        "endLine": 177
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hs2",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hs2 : Measurable s2",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 178,
+        "endLine": 184
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hs",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hs : Measurable s",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 185,
+        "endLine": 185
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hVzero",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hVzero : MeasurableSet {ξ : Fin n → Ω | V ξ = 0}",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 186,
+        "endLine": 187
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hszero",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hszero : MeasurableSet {ξ : Fin n → Ω | s ξ = 0}",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 188,
+        "endLine": 189
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hV2",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hV2 : Measurable (fun ξ : Fin n → Ω => V ξ ^ 2)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 190,
+        "endLine": 191
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hd",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hd : Measurable d",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 192,
+        "endLine": 196
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hclipvalue",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hclipvalue : Measurable (fun ξ : Fin n → Ω =>\n      studentizerClip (B1 ξ) (d ξ))",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 197,
+        "endLine": 200
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "he",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have he : Measurable e",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 201,
+        "endLine": 204
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hTclip",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hTclip : Measurable Tclip",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 205,
+        "endLine": 210
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hTactual",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hTactual : Measurable Tactual",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 211,
+        "endLine": 212
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hpositive",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hpositive (ξ : Fin n → Ω) : (1 / 2 : ℝ) ≤ 1 + e ξ",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 213,
+        "endLine": 215
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hzero",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hzero (ξ : Fin n → Ω) (hξ : V ξ = 0) :\n      d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 216,
+        "endLine": 218
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hcap",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hcap : Measurable (fun ξ : Fin n → Ω => cap ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 222,
+        "endLine": 224
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hpdel",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hpdel : Measurable pdel",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 255,
+        "endLine": 257
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hDret",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hDret : Measurable Dret",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 258,
+        "endLine": 258
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hJret",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hJret : Measurable Jret",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 259,
+        "endLine": 259
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hBret",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hBret : Measurable Bret",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 260,
+        "endLine": 261
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hE",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hE : Measurable E",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 262,
+        "endLine": 262
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hDdeleq",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hDdeleq (ξ : Fin n → Ω) : Ddel ξ i = Dret (pdel ξ)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 263,
+        "endLine": 270
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hJdeleq",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hJdeleq (ξ : Fin n → Ω) : Jdel ξ i = Jret (pdel ξ)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 271,
+        "endLine": 278
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hB1deleq",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hB1deleq (ξ : Fin n → Ω) : B1del ξ i = Bret (pdel ξ)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 279,
+        "endLine": 284
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hDdel",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hDdel : Measurable (fun ξ : Fin n → Ω => Ddel ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 285,
+        "endLine": 289
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hJdel",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hJdel : Measurable (fun ξ : Fin n → Ω => Jdel ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 290,
+        "endLine": 294
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hAdel",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hAdel : Measurable (fun ξ : Fin n → Ω => Adel ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 295,
+        "endLine": 296
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hB1del",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hB1del : Measurable (fun ξ : Fin n → Ω => B1del ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 297,
+        "endLine": 301
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    },
+    {
+      "name": "hdeletedTest",
+      "classification": "derived Prop proof or universally quantified Prop proof",
+      "typeHeader": "have hdeletedTest : Measurable (fun ξ : Fin n → Ω => deletedTest ξ i)",
+      "valueSource": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/OriginalClippedStatisticMeasurable.lean",
+        "startLine": 302,
+        "endLine": 306
+      },
+      "inferredTypeOnlyForExistingProvider": false,
+      "existingProviderTYPE": null
+    }
+  ],
+  "proofParameterData": [
+    {
+      "names": [
+        "f"
+      ],
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "universal local parameter of derived habs; not a new theorem premise",
+      "captures": [
+        "Ω",
+        "n",
+        "mΩ"
+      ],
+      "scope": "habs"
+    },
+    {
+      "names": [
+        "i",
+        "j",
+        "k",
+        "l"
+      ],
+      "type": "Fin n",
+      "value": "universal finite indices in helper Prop families and finite-sum/matrix lambdas",
+      "captures": [
+        "n"
+      ],
+      "scope": "hgcoord/hrcoord/hrrow/hsample/hrowmean and explicitly typed sums"
+    },
+    {
+      "name": "i",
+      "type": "Fin n",
+      "value": "universal deleted index of the final conclusion, introduced after full packet",
+      "captures": [
+        "n"
+      ],
+      "scope": "source line221 onward"
+    },
+    {
+      "name": "ξ",
+      "type": "Fin n → Ω",
+      "value": "universal sample in change statements, pointwise identities and term-level funext proofs",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "scope": "as explicitly typed in each expression; intro ξ final inherits exact frozen universal domain"
+    },
+    {
+      "name": "q",
+      "type": "{j : Fin n // j ≠ i} → Ω",
+      "value": "universal retained sample parameter of Dret/Jret/Bret/E",
+      "captures": [
+        "Ω",
+        "n",
+        "i"
+      ]
+    },
+    {
+      "name": "j",
+      "type": "{j : Fin n // j ≠ i}",
+      "value": "retained subtype index in pdel, restrictions and measurable_pi_iff callback",
+      "captures": [
+        "n",
+        "i"
+      ]
+    },
+    {
+      "name": "t",
+      "type": "Ω × Ω",
+      "value": "pair variable in hr; inherited frozen r",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "name": "_ξ",
+      "type": "Fin n → Ω",
+      "value": "dummy argument of the real-zero constant function in the two order branches",
+      "captures": [
+        "Ω",
+        "n"
+      ]
+    }
+  ],
+  "proofLambdaOccurrences": [
+    {
+      "line": 86,
+      "text": "  have hr : Measurable (fun t : Ω × Ω => r t.1 t.2) :="
+    },
+    {
+      "line": 89,
+      "text": "      Measurable (fun ξ : Fin n → Ω => |f ξ|) := by"
+    },
+    {
+      "line": 92,
+      "text": "      Measurable (fun ξ : Fin n → Ω => g (ξ i)) :="
+    },
+    {
+      "line": 95,
+      "text": "      Measurable (fun ξ : Fin n → Ω => r (ξ i) (ξ j)) :="
+    },
+    {
+      "line": 98,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 101,
+      "text": "      (fun (i : Fin n) (_hi : i ∈ Finset.univ) => hgcoord i)).div_const _"
+    },
+    {
+      "line": 103,
+      "text": "      Measurable (fun ξ : Fin n → Ω => ∑ i : Fin n, g (ξ i) ^ 2) := by"
+    },
+    {
+      "line": 108,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 111,
+      "text": "  have hupper : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 121,
+      "text": "        (measurable_const : Measurable (fun _ξ : Fin n → Ω => (0 : ℝ)))"
+    },
+    {
+      "line": 123,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 127,
+      "text": "  have hrrow (i : Fin n) : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 129,
+      "text": "        (fun j k : Fin n => r (ξ j) (ξ k)) i) := by"
+    },
+    {
+      "line": 132,
+      "text": "      (fun (j : Fin n) (_hj : j ∈ Finset.univ.erase i) => hrcoord i j)"
+    },
+    {
+      "line": 133,
+      "text": "  have hrowsquares : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 135,
+      "text": "        (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2) := by"
+    },
+    {
+      "line": 144,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 149,
+      "text": "  have hsample (i j : Fin n) : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 152,
+      "text": "  have hrowmean (i : Fin n) : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 157,
+      "text": "        (fun (j : Fin n) (_hj : j ∈ Finset.univ.erase i) => hsample i j))"
+    },
+    {
+      "line": 158,
+      "text": "  have hustat : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 169,
+      "text": "        (measurable_const : Measurable (fun _ξ : Fin n → Ω => (0 : ℝ)))"
+    },
+    {
+      "line": 170,
+      "text": "  have hcenteredrowsquares : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 179,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 190,
+      "text": "  have hV2 : Measurable (fun ξ : Fin n → Ω => V ξ ^ 2) := by"
+    },
+    {
+      "line": 193,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 197,
+      "text": "  have hclipvalue : Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 202,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 206,
+      "text": "    change Measurable (fun ξ : Fin n → Ω =>"
+    },
+    {
+      "line": 222,
+      "text": "  have hcap : Measurable (fun ξ : Fin n → Ω => cap ξ i) := by"
+    },
+    {
+      "line": 223,
+      "text": "    exact ((habs (fun ξ : Fin n → Ω => g (ξ i)) (hgcoord i)).div_const N).min"
+    },
+    {
+      "line": 230,
+      "text": "              (fun j k : Fin n => r (ξ j) (ξ k)) i) ="
+    },
+    {
+      "line": 231,
+      "text": "            F (fun j : {j : Fin n // j ≠ i} => ξ j.val) :="
+    },
+    {
+      "line": 239,
+      "text": "                (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2) ="
+    },
+    {
+      "line": 240,
+      "text": "            Lrow (fun j : {j : Fin n // j ≠ i} => ξ j.val) :="
+    },
+    {
+      "line": 243,
+      "text": "    fun (ξ : Fin n → Ω) (j : {j : Fin n // j ≠ i}) => ξ j.val"
+    },
+    {
+      "line": 245,
+      "text": "    fun q : {j : Fin n // j ≠ i} → Ω =>"
+    },
+    {
+      "line": 248,
+      "text": "    fun q : {j : Fin n // j ≠ i} → Ω => Lrow q / ((n : ℝ) - 2) ^ 2"
+    },
+    {
+      "line": 250,
+      "text": "    fun q : {j : Fin n // j ≠ i} → Ω =>"
+    },
+    {
+      "line": 254,
+      "text": "    fun q : {j : Fin n // j ≠ i} → Ω => (Dret q, Jret q, Bret q)"
+    },
+    {
+      "line": 257,
+      "text": "      (fun j : {j : Fin n // j ≠ i} => measurable_pi_apply j.val)"
+    },
+    {
+      "line": 266,
+      "text": "          (fun j k : Fin n => r (ξ j) (ξ k)) i) /"
+    },
+    {
+      "line": 268,
+      "text": "      F (fun j : {j : Fin n // j ≠ i} => ξ j.val) /"
+    },
+    {
+      "line": 275,
+      "text": "            (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2) /"
+    },
+    {
+      "line": 277,
+      "text": "      Lrow (fun j : {j : Fin n // j ≠ i} => ξ j.val) / ((n : ℝ) - 2) ^ 2"
+    },
+    {
+      "line": 285,
+      "text": "  have hDdel : Measurable (fun ξ : Fin n → Ω => Ddel ξ i) := by"
+    },
+    {
+      "line": 286,
+      "text": "    rw [show (fun ξ : Fin n → Ω => Ddel ξ i) ="
+    },
+    {
+      "line": 287,
+      "text": "        (fun ξ : Fin n → Ω => Dret (pdel ξ)) from"
+    },
+    {
+      "line": 288,
+      "text": "      funext (fun ξ : Fin n → Ω => hDdeleq ξ)]"
+    },
+    {
+      "line": 290,
+      "text": "  have hJdel : Measurable (fun ξ : Fin n → Ω => Jdel ξ i) := by"
+    },
+    {
+      "line": 291,
+      "text": "    rw [show (fun ξ : Fin n → Ω => Jdel ξ i) ="
+    },
+    {
+      "line": 292,
+      "text": "        (fun ξ : Fin n → Ω => Jret (pdel ξ)) from"
+    },
+    {
+      "line": 293,
+      "text": "      funext (fun ξ : Fin n → Ω => hJdeleq ξ)]"
+    },
+    {
+      "line": 295,
+      "text": "  have hAdel : Measurable (fun ξ : Fin n → Ω => Adel ξ i) :="
+    },
+    {
+      "line": 296,
+      "text": "    habs (fun ξ : Fin n → Ω => Ddel ξ i) hDdel"
+    },
+    {
+      "line": 297,
+      "text": "  have hB1del : Measurable (fun ξ : Fin n → Ω => B1del ξ i) := by"
+    },
+    {
+      "line": 298,
+      "text": "    rw [show (fun ξ : Fin n → Ω => B1del ξ i) ="
+    },
+    {
+      "line": 299,
+      "text": "        (fun ξ : Fin n → Ω => Bret (pdel ξ)) from"
+    },
+    {
+      "line": 300,
+      "text": "      funext (fun ξ : Fin n → Ω => hB1deleq ξ)]"
+    },
+    {
+      "line": 302,
+      "text": "  have hdeletedTest : Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) := by"
+    },
+    {
+      "line": 304,
+      "text": "      ((habs (fun ξ : Fin n → Ω => A ξ - Adel ξ i) (hA.sub hAdel)).add"
+    },
+    {
+      "line": 306,
+      "text": "          (habs (fun ξ : Fin n → Ω => B1 ξ - B1del ξ i) (hB1.sub hB1del))))"
+    }
+  ],
+  "implicitPredicateData": [
+    {
+      "type": "(Fin n → Ω) → Prop",
+      "value": "fun ξ : Fin n → Ω => V ξ = 0",
+      "captures": [
+        "Ω",
+        "n",
+        "V"
+      ],
+      "use": "guard, hVzero, Measurable.ite"
+    },
+    {
+      "type": "(Fin n → Ω) → Prop",
+      "value": "fun ξ : Fin n → Ω => s ξ = 0",
+      "captures": [
+        "Ω",
+        "n",
+        "s"
+      ],
+      "use": "physical guard, hszero, Measurable.ite"
+    },
+    {
+      "type": "Set (Fin n → Ω)",
+      "value": "{ξ : Fin n → Ω | V ξ = 0}",
+      "captures": [
+        "Ω",
+        "n",
+        "V"
+      ]
+    },
+    {
+      "type": "Set (Fin n → Ω)",
+      "value": "{ξ : Fin n → Ω | s ξ = 0}",
+      "captures": [
+        "Ω",
+        "n",
+        "s"
+      ]
+    }
+  ],
+  "implicitInstanceData": [
+    {
+      "type": "∀ p : Prop, Decidable p",
+      "value": "Classical.propDecidable",
+      "mechanism": "existing decision instance enabled by the standard classical tactic at line74; no new local instance declaration or axiom",
+      "captures": []
+    },
+    {
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mΩ"
+      ]
+    },
+    {
+      "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω)",
+      "value": "@MeasurableSpace.pi {j : Fin n // j ≠ i} (fun _ => Ω) (fun _ => mΩ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mΩ",
+        "i"
+      ]
+    },
+    {
+      "type": "MeasurableSpace (ℝ × ℝ × ℝ)",
+      "value": "(borel ℝ).prod ((borel ℝ).prod (borel ℝ))",
+      "captures": []
+    },
+    {
+      "type": "Fintype (Fin n)",
+      "value": "canonical Fin.fintype n",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "type": "DecidableEq (Fin n)",
+      "value": "(inferInstance : DecidableEq (Fin n))",
+      "captures": [
+        "n"
+      ],
+      "resolutionContext": "proof scope after classical; existing decision instance, no new data declaration"
+    },
+    {
+      "type": "DecidableEq ℝ",
+      "value": "(inferInstance : DecidableEq ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "MeasurableEq ℝ",
+      "value": "(inferInstance : MeasurableEq ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "MeasurableDiv₂ ℝ",
+      "value": "(inferInstance : MeasurableDiv₂ ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "MeasurableMul₂ ℝ",
+      "value": "(inferInstance : MeasurableMul₂ ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "MeasurableAdd₂ ℝ",
+      "value": "(inferInstance : MeasurableAdd₂ ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "MeasurableNeg ℝ",
+      "value": "(inferInstance : MeasurableNeg ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "BorelSpace ℝ",
+      "value": "(inferInstance : BorelSpace ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    },
+    {
+      "type": "OpensMeasurableSpace ℝ",
+      "value": "(inferInstance : OpensMeasurableSpace ℝ)",
+      "captures": [],
+      "resolutionContext": "existing canonical real structures in the frozen imports and proof scope; no new local instance declaration; actual selected values remain subject to server audit"
+    }
+  ],
+  "existingQualifiedTYPEInputs": [
+    {
+      "entry": 0,
+      "name": "Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments",
+      "typeSHA256": "d7cf963877f0914c7bc2e4e2d59ede1643d58ec009054c99d440876954d9f2f9",
+      "typeUTF8Bytes": 162125,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit140/successor-review-01/final-object-review-01/owned-object-evidence.json",
+        "sha256": "b23a89bd84de6acb9db7276a17eef7309e9f9616597a30c78442f7dd4f7bd98b",
+        "bytes": 213162
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete source public mathematical head read in stage1; supplied actualTYPE parameter/header-let prefix and first five output clauses read for the two bearing projection fields; whole exact existing TYPE hash verified mechanically, no old-proof re-review"
+    },
+    {
+      "entry": 1,
+      "name": "Shao.OQ5.P51.clippedCenteredDelta_bounds",
+      "typeSHA256": "57db1c03d6b1380e727683fccc5e2f2193c9ba651f4dc855b314761c305d06be",
+      "typeUTF8Bytes": 2458,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit208/lead-execution-01/owner-evidence-01/actual-owned-metadata.json",
+        "sha256": "c2d6b95f3368b4c1d649969d27a8ce65c604d8565fc1aa74873e7fb2f63ddbd3",
+        "bytes": 42826
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    },
+    {
+      "entry": 2,
+      "name": "Shao.OQ5.P51.clippedCentered_zero",
+      "typeSHA256": "55cb974804df499641796f3ba172005871b60d1d8fd6de12bca0cf71da9dcc19",
+      "typeUTF8Bytes": 758,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit208/lead-execution-01/owner-evidence-01/actual-owned-metadata.json",
+        "sha256": "c2d6b95f3368b4c1d649969d27a8ce65c604d8565fc1aa74873e7fb2f63ddbd3",
+        "bytes": 42826
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    },
+    {
+      "entry": 3,
+      "name": "Shao.OQ5.P51.residualEnergyJ_eq_rowSqSum",
+      "typeSHA256": "db25ee8e61338d46fd9fc6be4695313e734be7d81615ad5165ebe097c8886bf4",
+      "typeUTF8Bytes": 1347,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit212/lead-execution-03/owner-evidence-01/actual-owned-metadata.json",
+        "sha256": "0c4558fa78ee42fc9d01c13a079d7c1da623473cd5a48e78db315031c33c7a2f",
+        "bytes": 34233
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    },
+    {
+      "entry": 4,
+      "name": "Shao.OQ5.P51.clippedDeletion_measurable_factorization",
+      "typeSHA256": "556d1f09eb64dfe8d78d175853d026671077aa529d0b083f0147d2be8751af3b",
+      "typeUTF8Bytes": 2184,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit212/lead-execution-03/owner-evidence-01/actual-owned-metadata.json",
+        "sha256": "0c4558fa78ee42fc9d01c13a079d7c1da623473cd5a48e78db315031c33c7a2f",
+        "bytes": 34233
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    },
+    {
+      "entry": 5,
+      "name": "Shao.OQ6.ResidualDeletion.erasedSamplePairSum_measurable_factorization",
+      "typeSHA256": "bdffcc87cd60017cb3dee753ed89c66ba6671b70490283075d5cb206ee1d5a84",
+      "typeUTF8Bytes": 1379,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit133/successor-review-01/final-review.json",
+        "sha256": "2ade2e43473e7fc0256afa1b715b2f7b38c16d2ce4f04fd82f0801c083aed271",
+        "bytes": 22600
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    },
+    {
+      "entry": 6,
+      "name": "Shao.OQ6.ResidualDeletion.erasedSampleRowSqSum_measurable_factorization",
+      "typeSHA256": "660ee89abe5d963b1467d1f075ad6c26521b9be21f68e0b41d3c136885cb4c0a",
+      "typeUTF8Bytes": 1767,
+      "origin": {
+        "path": "C:/game/shao lean/drafts/oq56/unit133/successor-review-01/final-review.json",
+        "sha256": "2ade2e43473e7fc0256afa1b715b2f7b38c16d2ce4f04fd82f0801c083aed271",
+        "bytes": 22600
+      },
+      "existingQualifiedEvidenceReuseOnly": true,
+      "authorReadScope": "complete supplied fullActualTYPE read; exact hash verified mechanically"
+    }
+  ],
+  "pinnedClosureContexts": [
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/parent-interfaces01/pinned-closure-context01.json",
+      "sha256": "173bc653145eb1274ed35d0f3a2104bf5196d8679a15d87155467acfd164d0f7",
+      "bytes": 32342,
+      "LF": 832,
+      "CR": 0,
+      "utf8Bom": false
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/parent-interfaces01/pinned-closure-context02.json",
+      "sha256": "5c46ca5ca10f46e4a2e05b95b2dca6c57f3d53ad3f6d2d6f9360720062c83988",
+      "bytes": 20490,
+      "LF": 516,
+      "CR": 0,
+      "utf8Bom": false
+    },
+    {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/parent-interfaces01/pinned-closure-context03.json",
+      "sha256": "86cc5432884dd145099ec71a89284ba5625ae6a7686d2e79669fddf1070d970a",
+      "bytes": 6446,
+      "LF": 149,
+      "CR": 0,
+      "utf8Bom": false
+    }
+  ],
+  "pinnedPiContextReuse": {
+    "binding": {
+      "path": "C:/game/shao lean/drafts/oq56/unit219/parent-pinned-interfaces01/pinned-trim-api-query03.json",
+      "sha256": "d158d216c54fdbf3ef84bfbe4bd98d29affe28f2f6152b0219d026595eb4359a",
+      "bytes": 65800,
+      "LF": 235,
+      "CR": 0,
+      "utf8Bom": false
+    },
+    "excerpt": {
+      "path": "Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+      "fileSHA256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+      "startLine": 545,
+      "endLine": 590,
+      "source": "\nWe only need the assumption `[Nonempty ι]` to prove `[Nonempty (α → β)]`. -/\ntheorem exists_measurable_piecewise {ι} [Countable ι] [Nonempty ι] (t : ι → Set α)\n    (t_meas : ∀ n, MeasurableSet (t n)) (g : ι → α → β) (hg : ∀ n, Measurable (g n))\n    (ht : Pairwise fun i j => EqOn (g i) (g j) (t i ∩ t j)) :\n    ∃ f : α → β, Measurable f ∧ ∀ n, EqOn f (g n) (t n) := by\n  inhabit ι\n  set g' : (i : ι) → t i → β := fun i => g i ∘ (↑)\n  -- see https://github.com/leanprover-community/mathlib4/issues/2184\n  have ht' : ∀ (i j) (x : α) (hxi : x ∈ t i) (hxj : x ∈ t j), g' i ⟨x, hxi⟩ = g' j ⟨x, hxj⟩ := by\n    intro i j x hxi hxj\n    rcases eq_or_ne i j with rfl | hij\n    · rfl\n    · exact ht hij ⟨hxi, hxj⟩\n  set f : (⋃ i, t i) → β := iUnionLift t g' ht' _ Subset.rfl\n  have hfm : Measurable f := measurable_iUnionLift _ _ t_meas\n    (fun i => (hg i).comp measurable_subtype_coe)\n  classical\n    refine ⟨fun x => if hx : x ∈ ⋃ i, t i then f ⟨x, hx⟩ else g default x,\n      hfm.dite ((hg default).comp measurable_subtype_coe) (.iUnion t_meas), fun i x hx => ?_⟩\n    simp only [dite_eq_left (mem_iUnion.2 ⟨i, hx⟩)]\n    exact iUnionLift_of_mem ⟨x, mem_iUnion.2 ⟨i, hx⟩⟩ hx\n\nend Prod\n\nsection Pi\n\nvariable {X : δ → Type*} [MeasurableSpace α]\n\ninstance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\ntheorem MeasurableSpace.comap_le_comap_pi {g : (a : δ) → β → X a} (a : δ) :\n    .comap (g a) inferInstance ≤ pi.comap (fun b c ↦ g c b) := by\n  simpa only [pi, comap_iSup] using le_iSup_of_le a <| by measurability\n\n",
+      "excerptSHA256": "dd704a7c24403cf20b9a8705e0eebb1703097bbb8d5d0a117212b3806bf4547c"
+    },
+    "scope": "only pinned coordinate pi/Measurable APIs at lines570–590 and their current context; not a219proof invocation"
+  },
+  "proofDataPolicy": "Every new data witness and let is explicitly typed; the frozen header provides types of introduced header locals. Lambdas and mathematical parameters have exact domains above/source. Ordinary derived Prop proofs are inventoried by source range; no extra mathematical assumptions are present.",
+  "semanticBoundaries": {
+    "sameKernelProjectionResidual": true,
+    "originalCoefficients": true,
+    "noFillerObservation": true,
+    "noCapDeletionIndependenceClaim": true,
+    "noLawReplacement": true,
+    "noPointwiseCanonicalityClaim": true,
+    "noHigherMomentClaim": true,
+    "unit219UnqualifiedPlannedOnly": true,
+    "p51CandidateAndP54RepairStatusPreserved": true,
+    "ShaoZhou2016AttributionPreserved": true
+  },
+  "kernelChecked": false,
+  "independentReviewed": false,
+  "qualified": false
+}
