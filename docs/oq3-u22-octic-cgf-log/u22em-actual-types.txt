@@ -1,0 +1,22 @@
+DECL Shao.OQ3.centered_actual_cgf_octic_log_polynomial
+TYPE ∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (mu : MeasureTheory.Measure Ω) [MeasureTheory.IsProbabilityMeasure mu]
+  (X : Ω → ℝ),
+  0 ∈ interior (ProbabilityTheory.integrableExpSet X mu) →
+    ∫ (w : Ω), X w ∂mu = 0 →
+      have m := fun k => ∫ (w : Ω), X w ^ k ∂mu;
+      have kappa := fun k => iteratedDeriv k (ProbabilityTheory.cgf X mu) 0;
+      have a := -↑(m 2) / 2;
+      have b := -Complex.I * ↑(m 3) / 6;
+      have c := ↑(m 4) / 24;
+      have d := Complex.I * ↑(m 5) / 120;
+      have e := -↑(m 6) / 720;
+      have f := -Complex.I * ↑(m 7) / 5040;
+      have g := ↑(m 8) / 40320;
+      have Q :=
+        a + b + c + d + e + f + g -
+              (a ^ 2 + 2 * a * b + 2 * a * c + b ^ 2 + 2 * a * d + 2 * b * c + 2 * a * e + 2 * b * d + c ^ 2) / 2 +
+            (a ^ 3 + 3 * a ^ 2 * b + 3 * a ^ 2 * c + 3 * a * b ^ 2) / 3 -
+          a ^ 4 / 4;
+      Q = ∑ j ∈ Finset.range 9, Complex.I ^ j / ↑j.factorial * ↑(kappa j)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

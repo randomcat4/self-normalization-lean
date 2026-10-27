@@ -1,0 +1,506 @@
+{
+  "schema": "oq56-unit236-stage1-complete-interface-inventory-v1",
+  "atUTC": "2026-10-27T14:16:10.980491+00:00",
+  "status": "LEAD_ADOPTED_EXACT_INTERFACE_FROZEN_BEFORE_PROOF",
+  "moduleProposed": "Shao.OQ6.OriginalExceptionalTailAbsorption",
+  "publicTheoremProposed": "Shao.OQ6.OriginalExceptionalTailAbsorption.eventually_original_exceptional_payment_absorbed",
+  "candidateFile": {
+    "path": "C:/game/shao lean/drafts/oq56/unit236/author-stage1-01/CANDIDATE-DECLARATION.lean",
+    "sha256": "8f86dc21ec26bb47564cded9516121f159ae68408d4b5020f5e631fefb84c12e",
+    "bytes": 1486
+  },
+  "candidateFullFile": "import Shao.Probability.GaussianTail\nimport Shao.OQ5.P51.BoundedPolylogWindow\nimport Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics\n\n/-!\nStage1 declaration candidate only. This file deliberately contains a theorem\nhead without a proof body and is not a compilable production module.\nNo declaration is frozen by this file. The lane lead must freeze the complete\ninterface before any proof implementation. No new helper declaration is proposed.\n-/\n\nset_option autoImplicit false\n\nopen Filter\nopen scoped Topology\n\nnamespace Shao.OQ6.OriginalExceptionalTailAbsorption\n\ntheorem eventually_original_exceptional_payment_absorbed\n    (t0 cg : ℝ) (ht0 : 0 < t0) (hcg : 0 < cg) :\n    let cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))\n    0 < cWindow ∧\n      ∀ᶠ n : ℕ in atTop,\n        4 ≤ n ∧\n          (1 : ℝ) ≤ cWindow * Real.rpow (n : ℝ) (1 / 6 : ℝ) ∧\n          ∀ z : ℝ, (1 : ℝ) ≤ z →\n            z ≤ cWindow * Real.rpow (n : ℝ) (1 / 6 : ℝ) →\n            (6 : ℝ) *\n                Real.exp (-Shao.OQ5.P51.boundedPolylogMomentOrder t0 n) +\n              (2 : ℝ) * Real.exp (-cg * (n : ℝ)) +\n              (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) ≤\n              Real.exp (-(t0 / (2 : ℝ)) *\n                Real.rpow (n : ℝ) (1 / 3 : ℝ)) *\n                Shao.standardNormalTail z\n\n-- No proof body follows: Stage1 ends at the complete proposed result type.\nend Shao.OQ6.OriginalExceptionalTailAbsorption\n",
+  "proposedDeclarationCounts": {
+    "publicTheorems": 1,
+    "helperTheorems": 0,
+    "definitions": 0,
+    "instances": 0,
+    "structures": 0,
+    "axioms": 0,
+    "proofBodies": 0
+  },
+  "inputBinders": [
+    {
+      "name": "t0",
+      "type": "ℝ"
+    },
+    {
+      "name": "cg",
+      "type": "ℝ"
+    },
+    {
+      "name": "ht0",
+      "type": "0 < t0"
+    },
+    {
+      "name": "hcg",
+      "type": "0 < cg"
+    }
+  ],
+  "allOtherResultQuantifiers": [
+    {
+      "name": "cWindow",
+      "kind": "fully defined result-type let before all eventual n and all z",
+      "type": "ℝ",
+      "value": "min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+      "dependencies": [
+        "t0"
+      ]
+    },
+    {
+      "name": "n",
+      "kind": "eventual universal",
+      "type": "ℕ",
+      "filter": "Filter.atTop",
+      "cutoffMayDependOn": [
+        "t0",
+        "cg"
+      ],
+      "cutoffMayNotDependOn": [
+        "z"
+      ]
+    },
+    {
+      "name": "z",
+      "kind": "universal inside the same eventual n set",
+      "type": "ℝ",
+      "premises": [
+        "(1 : ℝ) ≤ z",
+        "z ≤ cWindow * Real.rpow (n : ℝ) (1 / 6 : ℝ)"
+      ]
+    }
+  ],
+  "ordinaryRHS": [
+    {
+      "symbol": "q",
+      "type": "ℝ → ℕ → ℝ",
+      "body": "fun (t0 : ℝ) (n : ℕ) => t0 * Real.rpow (n : ℝ) (1 / 3 : ℝ)",
+      "actualName": "Shao.OQ5.P51.boundedPolylogMomentOrder"
+    },
+    {
+      "symbol": "cWindow",
+      "type": "ℝ",
+      "body": "min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))"
+    },
+    {
+      "symbol": "literalPayment",
+      "type": "ℝ",
+      "body": "(6 : ℝ) * Real.exp (-Shao.OQ5.P51.boundedPolylogMomentOrder t0 n) + (2 : ℝ) * Real.exp (-cg * (n : ℝ)) + (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ))",
+      "newDefinition": false
+    },
+    {
+      "symbol": "relativeTarget",
+      "type": "ℝ",
+      "body": "Real.exp (-(t0 / (2 : ℝ)) * Real.rpow (n : ℝ) (1 / 3 : ℝ)) * Shao.standardNormalTail z",
+      "newDefinition": false
+    }
+  ],
+  "witnesses": {
+    "existentialInputWitnesses": [],
+    "existentialOutputWitnesses": [],
+    "definitionalChoice": "cWindow fixed by t0 before n/z; no choice callback",
+    "eventualCutoff": "implicit mathematical consequence of Filter.Eventually atTop on ℕ, uniform in z; not an input",
+    "oldCgWitnesses": "qualified233 cg233 and qualified235 cg235 stay independent; future caller may set cg=min cg233 cg235 and prove positive, without equating them",
+    "modelOrCodingWitnesses": []
+  },
+  "callbacks": [],
+  "customOrLocalInstances": [],
+  "ambientParameters": [],
+  "standardTypeclassUse": [
+    "ordinary fixed real field/order/sqrt/exp/rpow instances from imports",
+    "ordinary natural linear order and Filter.atTop",
+    "fixed GaussianReal measure instances inside the accepted tail definition; no caller instance parameter"
+  ],
+  "namespace": "Shao.OQ6.OriginalExceptionalTailAbsorption",
+  "options": [
+    "set_option autoImplicit false"
+  ],
+  "opens": [
+    "open Filter",
+    "open scoped Topology"
+  ],
+  "imports": [
+    "Shao.Probability.GaussianTail",
+    "Shao.OQ5.P51.BoundedPolylogWindow",
+    "Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics"
+  ],
+  "scopeGuards": [
+    "deterministic fixed t0,cg scalar absorption only",
+    "n≥4 and nonempty window are output obligations",
+    "full closed window [1,cWindow*n^(1/6)] and one uniform eventual cutoff",
+    "no finite n claim",
+    "no probability/event/model/coding/SZ/CDF/atom/zero-denominator/root consumer"
+  ],
+  "newHelperDeclarations": [],
+  "unimplementedCompleteProofLocalRouteFacts": [
+    {
+      "id": "window_geometry",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))"
+      ],
+      "type": "0 < cWindow ∧ cWindow ≤ (1 : ℝ) ∧ cWindow ^ (2 : ℕ) ≤ t0 / (4 : ℝ)",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "positive_power_identities",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+        "n : ℕ",
+        "hn : 4 ≤ n",
+        "x : ℝ := (n : ℝ)",
+        "s : ℝ := Real.rpow x (1 / 3 : ℝ)",
+        "u : ℝ := Real.rpow x (1 / 6 : ℝ)"
+      ],
+      "type": "(1 : ℝ) ≤ x ∧ 0 < s ∧ 0 < u ∧ u ^ (2 : ℕ) = s ∧ u ≤ s ∧ s * Real.rpow x (2 / 3 : ℝ) = x ∧ s * u = Real.sqrt x",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "eventual_nonempty_window",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))"
+      ],
+      "type": "∀ᶠ n : ℕ in Filter.atTop, (1 : ℝ) ≤ cWindow * Real.rpow (n : ℝ) (1 / 6 : ℝ)",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "eventual_fast_rates",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))"
+      ],
+      "type": "∀ᶠ n : ℕ in Filter.atTop, t0 * Real.rpow (n : ℝ) (1 / 3 : ℝ) ≤ cg * (n : ℝ) ∧ t0 * Real.rpow (n : ℝ) (1 / 3 : ℝ) ≤ Real.sqrt (n : ℝ) / (2 : ℝ)",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "reverse_public_ratio_lower_bound",
+      "context": [
+        "z : ℝ",
+        "hz0 : 0 ≤ z"
+      ],
+      "type": "(3 / 8 : ℝ) * Real.exp (-(z ^ (2 : ℕ)) / (2 : ℝ)) / (1 + z) ≤ Shao.standardNormalTail z",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "window_gaussian_exponent_and_denominator",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+        "n : ℕ",
+        "hn : 4 ≤ n",
+        "x : ℝ := (n : ℝ)",
+        "s : ℝ := Real.rpow x (1 / 3 : ℝ)",
+        "u : ℝ := Real.rpow x (1 / 6 : ℝ)",
+        "z : ℝ",
+        "hz : (1 : ℝ) ≤ z",
+        "hzw : z ≤ cWindow * u"
+      ],
+      "type": "z ^ (2 : ℕ) / (2 : ℝ) ≤ (t0 / (8 : ℝ)) * s ∧ 1 + z ≤ 1 + s",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "literal_numerator_domination",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+        "n : ℕ",
+        "hn : 4 ≤ n",
+        "x : ℝ := (n : ℝ)",
+        "s : ℝ := Real.rpow x (1 / 3 : ℝ)",
+        "u : ℝ := Real.rpow x (1 / 6 : ℝ)",
+        "hlinear : t0 * s ≤ cg * x",
+        "hsqrt : t0 * s ≤ Real.sqrt x / (2 : ℝ)"
+      ],
+      "type": "(6 : ℝ) * Real.exp (-Shao.OQ5.P51.boundedPolylogMomentOrder t0 n) + (2 : ℝ) * Real.exp (-cg * x) + (8 : ℝ) * Real.exp (-(Real.sqrt x) / (2 : ℝ)) ≤ (16 : ℝ) * Real.exp (-t0 * s)",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "polynomial_exponential_residual_limit",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))"
+      ],
+      "type": "Filter.Tendsto (fun n : ℕ => (128 / 3 : ℝ) * (1 + Real.rpow (n : ℝ) (1 / 3 : ℝ)) * Real.exp (-(3 * t0 / (8 : ℝ)) * Real.rpow (n : ℝ) (1 / 3 : ℝ))) Filter.atTop (nhds (0 : ℝ))",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    },
+    {
+      "id": "final_scalar_factoring",
+      "context": [
+        "t0 cg : ℝ",
+        "ht0 : 0 < t0",
+        "hcg : 0 < cg",
+        "cWindow : ℝ := min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+        "n : ℕ",
+        "hn : 4 ≤ n",
+        "x : ℝ := (n : ℝ)",
+        "s : ℝ := Real.rpow x (1 / 3 : ℝ)",
+        "u : ℝ := Real.rpow x (1 / 6 : ℝ)",
+        "hsmall : (128 / 3 : ℝ) * (1 + s) * Real.exp (-(3 * t0 / (8 : ℝ)) * s) ≤ (1 : ℝ)"
+      ],
+      "type": "(16 : ℝ) * Real.exp (-t0 * s) ≤ Real.exp (-(t0 / (2 : ℝ)) * s) * ((3 / 8 : ℝ) * Real.exp (-(t0 / (8 : ℝ)) * s) / (1 + s))",
+      "status": "UNIMPLEMENTED_ROUTE_OBLIGATION_NOT_AN_INPUT_PREMISE",
+      "newLeanDeclaration": false
+    }
+  ],
+  "acceptedActualDefinitions": [
+    {
+      "name": "Shao.standardNormalDensity",
+      "head": "noncomputable def standardNormalDensity (x : ℝ) : ℝ",
+      "body": "ProbabilityTheory.gaussianPDFReal 0 1 x"
+    },
+    {
+      "name": "Shao.standardNormalTail",
+      "head": "noncomputable def standardNormalTail (x : ℝ) : ℝ",
+      "body": "((ProbabilityTheory.gaussianReal 0 1) (Set.Ioi x)).toReal"
+    },
+    {
+      "name": "Shao.OQ5.P51.boundedPolylogMomentOrder",
+      "head": "def boundedPolylogMomentOrder (t0 : ℝ) (n : ℕ) : ℝ",
+      "body": "t0 * Real.rpow (n : ℝ) (1 / 3 : ℝ)"
+    },
+    {
+      "name": "Real.rpow",
+      "head": "noncomputable def rpow (x y : ℝ)",
+      "body": "((x : ℂ) ^ (y : ℂ)).re"
+    }
+  ],
+  "gaussianTailPublicHeadsExactSource": [
+    {
+      "sourceName": "standardNormalTail_representation",
+      "head": "theorem standardNormalTail_representation (x : ℝ) :\n    standardNormalTail x =\n        ((ProbabilityTheory.gaussianReal 0 1) (Set.Ici x)).toReal ∧\n      standardNormalTail x =\n        1 - ProbabilityTheory.cdf (ProbabilityTheory.gaussianReal 0 1) x ∧\n      standardNormalTail x =\n        ∫ a : ℝ in Set.Ioi x, standardNormalDensity a",
+      "sourceLine": 43
+    },
+    {
+      "sourceName": "standardNormalTail_basic",
+      "head": "theorem standardNormalTail_basic :\n    Antitone standardNormalTail ∧\n      standardNormalTail 0 = (1 / 2 : ℝ) ∧\n      (∀ x : ℝ, 0 < standardNormalTail x ∧ standardNormalTail x < 1) ∧\n      ∀ x : ℝ, standardNormalTail (-x) = 1 - standardNormalTail x",
+      "sourceLine": 91
+    },
+    {
+      "sourceName": "standardNormal_derivatives",
+      "head": "theorem standardNormal_derivatives (x : ℝ) :\n    HasDerivAt standardNormalDensity (-x * standardNormalDensity x) x ∧\n      HasDerivAt standardNormalTail (-standardNormalDensity x) x",
+      "sourceLine": 108
+    },
+    {
+      "sourceName": "standardNormal_mills_bounds",
+      "head": "theorem standardNormal_mills_bounds (x : ℝ) (hx : 0 ≤ x) :\n    standardNormalDensity x / (1 + x) ≤ standardNormalTail x ∧\n      standardNormalTail x ≤\n        (4 / 3 : ℝ) * standardNormalDensity x / (1 + x) ∧\n      standardNormalDensity x / standardNormalTail x ≤ 1 + x",
+      "sourceLine": 147
+    },
+    {
+      "sourceName": "standardNormalTail_ratio_bound",
+      "head": "theorem standardNormalTail_ratio_bound (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) :\n    standardNormalTail y ≤\n      (4 / 3 : ℝ) * ((1 + x) / (1 + y)) *\n        Real.exp ((x ^ 2 - y ^ 2) / 2) * standardNormalTail x",
+      "sourceLine": 225
+    },
+    {
+      "sourceName": "standardNormalTail_local_comparison",
+      "head": "theorem standardNormalTail_local_comparison (x t : ℝ)\n    (hx : 0 ≤ x) (ht : 0 ≤ t)\n    (hneigh : |t - x| ≤ 1 / (1 + x)) :\n    Real.exp (-2) * standardNormalTail x ≤ standardNormalTail t ∧\n      standardNormalTail t ≤ Real.exp 2 * standardNormalTail x",
+      "sourceLine": 242
+    },
+    {
+      "sourceName": "standardNormalTail_deletion_comparison",
+      "head": "theorem standardNormalTail_deletion_comparison (j : ℕ) (x : ℝ)\n    (hx : 0 ≤ x) (hj : (j : ℝ) ≤ x ^ 2 / 2) :\n    standardNormalTail (Real.sqrt (x ^ 2 - (j : ℝ))) ≤\n      3 * Real.exp ((j : ℝ) / 2) * standardNormalTail x",
+      "sourceLine": 284
+    }
+  ],
+  "accepted233235PublicInterfacesExactSource": [
+    {
+      "unit": 233,
+      "module": "Shao.OQ6.P54ActualGoodsetFrontier",
+      "publicTheorem": "Shao.OQ6.P54.fixed_original_boundedPolylog_goodset_frontier",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit233/author-repair-01/P54ActualGoodsetFrontier.lean",
+        "sha256": "8281cbb3a10297297d6e92fce7c258ad2d0c0ccd7406aae63aefd3194beccbab",
+        "bytes": 14141
+      },
+      "sourceContextBeforeTheorem": "import Shao.OQ5.P51.ClippedStudentizer\nimport Shao.OQ6.OriginalGoodEventBridge\nimport Mathlib.MeasureTheory.Measure.Real\n\nset_option autoImplicit false\nuniverse u\nopen Filter MeasureTheory\nopen scoped BigOperators ENNReal\nopen Shao.OQ5.P51\nopen Shao.OQ6.BoundedProductEnvelopeTails (tailScale)\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (sampleLaw originalRows)\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ6.P54",
+      "completeSourceHead": "theorem fixed_original_boundedPolylog_goodset_frontier\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ)\n        (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) (hM : 0 ≤ M),\n        ∀ᶠ n : ℕ in atTop,\n          4 ≤ n ∧\n          ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n            (hr : Measurable (Function.uncurry r))\n            (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n            (hcR : ∀ᵐ o : Ω ∂μ, (∫ o' : Ω, r o o' ∂μ) = 0)\n            (hcL : ∀ᵐ o' : Ω ∂μ, (∫ o : Ω, r o o' ∂μ) = 0)\n            (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n            (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n            (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n            (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n            (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n              |r p.1 p.2| ≤ w p.1 * w p.2)\n            (hsym : ∀ o o' : Ω, r o o' = r o' o)\n            (C0 rho z : ℝ) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho)\n            (hz : (1 : ℝ) ≤ z)\n            (hzWindow : z ≤ remainderWindowScale (tailScale M) t0 *\n              Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n            let q : ℝ := boundedPolylogMomentOrder t0 n\n            let K : ℝ := tailScale M\n            let G : Set (Fin n → Ω) := projectionGood n g z\n            let C2 : Set (Fin n → Ω) :=\n              {x : Fin n → Ω |\n                |originalUpper n r x| ≤ K * (n : ℝ) * q ∧\n                ‖originalRows n r x‖ ^ (2 : ℕ) ≤\n                  K * (n : ℝ) ^ (2 : ℕ) * q}\n            let H : Set (Fin n → Ω) := G ∩ C2\n            let e1 : (Fin n → Ω) → ℝ :=\n              fun x : Fin n → Ω => clippedCenteredDelta n g r C0 rho 1 x\n            MeasurableSet H ∧\n              (∀ x : Fin n → Ω, x ∈ H →\n                0 < projectionV n g x ∧\n                (1 / 2 : ℝ) ≤ projectionEnergy n g x ∧\n                z * |residualStatisticD n r x| ≤ projectionV n g x / 8 ∧\n                z * |residualStatisticD n r x| < projectionV n g x / 4 ∧\n                z ^ (2 : ℕ) * |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                -(1 / 8 : ℝ) < centeredDelta n g r x ∧\n                |e1 x| ≤ |centeredDelta n g r x| ∧\n                z ^ (2 : ℕ) * |e1 x| ≤ (1 / 32 : ℝ) ∧\n                z ^ (2 : ℕ) * |e1 x| < (1 / 8 : ℝ) ∧\n                |e1 x| ≤ (1 / 32 : ℝ) ∧\n                0 < projectionV n g x * Real.sqrt (1 + e1 x) ∧\n                0 < Real.sqrt (centeredSq n g r x) ∧\n                Real.sqrt (centeredSq n g r x) =\n                  projectionV n g x *\n                    Real.sqrt (1 + centeredDelta n g r x)) ∧\n              (({x : Fin n → Ω | projectionV n g x = 0} ∪\n                  {x : Fin n → Ω | Real.sqrt (centeredSq n g r x) = 0}) ⊆ Hᶜ) ∧\n              (sampleLaw n μ).real Hᶜ ≤\n                (3 : ℝ) * Real.exp (-q) + Real.exp (-cg * (n : ℝ)) +\n                  (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))",
+      "headIncludesAllOrdinaryLetRHS": true,
+      "independentQualificationReused": {
+        "status": "QUALIFIED_EXACT_SOURCE_FIRST_ORIGINAL_OBJECT_INDEPENDENT_FULL_REVIEW",
+        "qualified": true,
+        "review": {
+          "path": "C:/game/shao lean/drafts/oq56/unit233/final-review-01/verdict.json",
+          "sha256": "e1c339cfb3c821e4c44827b67bf1269eeae0fcadaf7c743a0deac50df05dadd6",
+          "bytes": 3325
+        },
+        "firstOriginalObject": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/P54ActualGoodsetFrontier.olean",
+          "sha256": "b9d985696e9820554421e78424123ad8c7fdc11607b74794c6bb669b3c015d78",
+          "bytes": 540296,
+          "mtime_ns": "1793108995235543662"
+        },
+        "nativeActualRC": 0,
+        "auditActualRC": 0,
+        "allTransitiveAxioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "scope": "Fixed original mu/g cg before C/a/t0/M/n/r/w/C0/rho/z, genuinecanonical/product-envelope bounded-polylog residual assumptions. Actual measurable H=G_z intersection C2; all14 pointwise margins, retainedclip1 contraction/positivity, actual-d true-studentizerfactorization, actualzero-eventunion subset Hc, and originalP(Hc)<=3exp(-q)+exp(-cg*n)+4exp(-z*sqrt n/2). No globalMeasurablew.",
+      "nonClaims": [
+        "changing/conditional law uniformcg",
+        "clip1=d or physical/clipped identity on H_z",
+        "fullmodel/m0/actualeta witnessbinding",
+        "original/trim/augmented same-witness consumer",
+        "continuous epsilon/source analytic/SZ/CDF/rootclosure",
+        "false p-moment polynomialvariation rate ornovelty"
+      ],
+      "oldProofReviewRepeated": false,
+      "oldCheckReplayed": false,
+      "roleIn236": "source motivation only; scalar candidate does not import or assume this probability theorem"
+    },
+    {
+      "unit": 235,
+      "module": "Shao.OQ6.OriginalRetainedClipComparisonPayment",
+      "publicTheorem": "Shao.OQ6.OriginalRetainedClipComparisonPayment.fixed_original_retained_clip_comparison_payment",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit235/author-01/OriginalRetainedClipComparisonPayment.lean",
+        "sha256": "b16dcd02c4a14518bdbbd64b33ce94bcefe7c7770496e8f1a8a7c92872e3fb55",
+        "bytes": 5430
+      },
+      "sourceContextBeforeTheorem": "import Shao.OQ5.P51.LiteralClippedComparison\nimport Shao.OQ6.OriginalGoodEventBridge\nimport Mathlib.MeasureTheory.Measure.Real\n\nset_option autoImplicit false\nuniverse u\nopen Filter MeasureTheory\nopen scoped BigOperators Classical ENNReal\nopen Shao.OQ5.P51\nopen Shao.OQ6.BoundedProductEnvelopeTails (tailScale)\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (sampleLaw)\nnamespace Shao.OQ6.OriginalRetainedClipComparisonPayment\nnoncomputable section",
+      "completeSourceHead": "theorem fixed_original_retained_clip_comparison_payment\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ) (hC : 0 ≤ C) (ha : 0 ≤ a)\n        (ht0 : 0 < t0) (hM : 0 ≤ M),\n        ∀ᶠ n : ℕ in atTop,\n          4 ≤ n ∧\n          ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n            (hr : Measurable (Function.uncurry r))\n            (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n            (hcR : ∀ᵐ o : Ω ∂μ, (∫ y : Ω, r o y ∂μ) = 0)\n            (hcL : ∀ᵐ y : Ω ∂μ, (∫ o : Ω, r o y ∂μ) = 0)\n            (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n            (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n            (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n            (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n            (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n              |r p.1 p.2| ≤ w p.1 * w p.2)\n            (hsym : ∀ o y : Ω, r o y = r y o)\n            (rho : ℝ) (hrho : 0 ≤ rho)\n            (hStudentizerWindow : 1 + rho ≤ Real.sqrt (n : ℝ))\n            (hSmallWindow : (1 : ℝ) ≤ remainderWindowScale (tailScale M) t0 *\n              Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n            let q : ℝ := boundedPolylogMomentOrder t0 n\n            let physical : (Fin n → Ω) → ℝ := fun x =>\n              if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n                (projectionW n g x + residualStatisticD n r x) /\n                  Real.sqrt (centeredSq n g r x)\n            let clipped : (Fin n → Ω) → ℝ :=\n              clippedCenteredStatistic n g r 512 rho 1\n            let Eclip : Set (Fin n → Ω) := {x | clipped x ≠ physical x}\n            Eclip ⊆ (projectionGood n g 1)ᶜ ∪ lowerStudentizerBad n g r 1 ∧\n              (sampleLaw n μ).real Eclip ≤\n                (3 : ℝ) * Real.exp (-q) + Real.exp (-cg * (n : ℝ)) +\n                  (4 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ))",
+      "headIncludesAllOrdinaryLetRHS": true,
+      "independentQualificationReused": {
+        "status": "QUALIFIED_EXACT_SOURCE_FIRST_ORIGINAL_OBJECT_INDEPENDENT_FULL_REVIEW",
+        "qualified": true,
+        "review": {
+          "path": "C:/game/shao lean/drafts/oq56/unit235/final-review-01/verdict.json",
+          "sha256": "aea16c9eac37e31e4278e8a53c6e6ca6fec1cba2ce40eb8332f31b30beb6ad68",
+          "bytes": 2271
+        },
+        "firstOriginalObject": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalRetainedClipComparisonPayment.olean",
+          "sha256": "a5a8bdb264e88b97b4202a01a945ea06700a7c32c6b6d22520dd141c5ea4a07c",
+          "bytes": 205488,
+          "mtime_ns": "1793108432849100162"
+        },
+        "nativeActualRC": 0,
+        "auditActualRC": 0,
+        "allTransitiveAxioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "scope": "Fixed original mu/g cg before all concentration choices; genuinecanonical/envelope residual data; explicitn>=4/rho>=0/1+rho<=sqrt n/y1smallwindow. Actual retained512/rho/clip1-vsphysicalzero-branch exception subset G1c union lowerBad1; actualrealmeasure three-term payment3exp(-q)+exp(-cg*n)+4exp(-sqrt n/2).",
+      "nonClaims": [
+        "clip1=d throughout H_z",
+        "new Eclip measurability",
+        "uniformconditionalcg",
+        "m0/model-witness equality",
+        "continuous epsilon/SZ/CDF/rootclosure",
+        "dropping or absorbing extra4exp(-sqrt n/2)"
+      ],
+      "oldProofReviewRepeated": false,
+      "oldCheckReplayed": false,
+      "roleIn236": "source motivation only; scalar candidate does not import or assume this probability theorem"
+    }
+  ],
+  "pinnedLimits": [
+    {
+      "name": "tendsto_rpow_atTop",
+      "type": "{y : ℝ} → 0 < y → Filter.Tendsto (fun x : ℝ => Real.rpow x y) Filter.atTop Filter.atTop",
+      "globalNotRealNamespaced": true,
+      "primary": "coordination/pinned-api-20261026/full-positive-log-exp/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean:35"
+    },
+    {
+      "name": "tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero",
+      "type": "∀ (s b : ℝ), 0 < b → Filter.Tendsto (fun x : ℝ => Real.rpow x s * Real.exp (-b * x)) Filter.atTop (nhds (0 : ℝ))",
+      "globalNotRealNamespaced": true,
+      "primary": "coordination/pinned-api-20261026/full-positive-log-exp/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean:140"
+    },
+    {
+      "name": "tendsto_natCast_atTop_atTop",
+      "head": "theorem tendsto_natCast_atTop_atTop {R : Type*} [Semiring R] [PartialOrder R] [IsOrderedRing R] [Archimedean R] : Filter.Tendsto ((↑) : ℕ → R) Filter.atTop Filter.atTop",
+      "globalNotRealNamespaced": true,
+      "primary": "drafts/oq56/unit236/lead-api-reference-01/Mathlib__Order__Filter__AtTopBot__Archimedean.lean.md",
+      "primarySourceSha256": "0ba4137bb8d0837d43b1140379163e3cdf89e88675c26807c51f5e801ad31df3"
+    }
+  ],
+  "remainingGaps": {
+    "mathematicalRoute": [],
+    "criticalPinnedLimitAPIProvenance": [],
+    "notPerformed": [
+      "parent freeze",
+      "proof implementation",
+      "qualified independent complete final source-to-statement/proof review",
+      "server native kernel",
+      "same-original-object all-owned full types/required values/transitive axiom audit"
+    ]
+  },
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "inputTokens": null,
+    "cachedInputTokens": null,
+    "outputTokens": null,
+    "reasoningSubsetTokens": null
+  },
+  "atFreezeUTC": "2026-10-27T14:26:04.866757+00:00",
+  "stage1Inventory": {
+    "path": "C:/game/shao lean/drafts/oq56/unit236/author-stage1-01/INTERFACE-INVENTORY.json",
+    "sha256": "3a3fdd4f4a1133a2122c1518c58f0e035e58f914cfbae5681b5d06bd0e84e81a",
+    "bytes": 27551
+  },
+  "approvedProofLocalOrdinaryData": [
+    {
+      "name": "cWindow",
+      "type": "ℝ",
+      "rhs": "min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ))",
+      "scope": "proof-local mirror of the exact result let; t0 only"
+    },
+    {
+      "name": "b",
+      "type": "ℝ",
+      "rhs": "3 * t0 / (8 : ℝ)",
+      "scope": "proof-local scalar before eventual n, dependent only on t0"
+    },
+    {
+      "name": "x",
+      "type": "ℝ",
+      "rhs": "(n : ℝ)",
+      "scope": "within each natural n branch only"
+    },
+    {
+      "name": "s",
+      "type": "ℝ",
+      "rhs": "Real.rpow x (1 / 3 : ℝ)",
+      "scope": "within each natural n branch; exact expansion Real.rpow (n : ℝ) (1 / 3 : ℝ)"
+    },
+    {
+      "name": "u",
+      "type": "ℝ",
+      "rhs": "Real.rpow x (1 / 6 : ℝ)",
+      "scope": "within each natural n branch; exact expansion Real.rpow (n : ℝ) (1 / 6 : ℝ)"
+    }
+  ],
+  "ordinaryDataRestriction": "Only these fully typed scalar abbreviations may be introduced as local let/set data; inline expressions in Prop-valued have statements do not introduce a new ordinary helper. No new declaration/helper/function/instance/witness/callback or altered premise. Any actual new ordinary-data need returns to lead for a concrete amendment before implementation of that data.",
+  "leadAssessment": "Complete closed nonempty sixth-root window with n/z-uniform cutoff; reverse public ratio at (z,0), exact 3/8 loss, 16 numerator and 128/3 residual, 3t0/8 exponent verified analytically. No event/model/root closure."
+}

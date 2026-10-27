@@ -1,0 +1,13 @@
+# OQ6 deterministic exceptional-payment absorption
+
+The new exact theorem `Shao.OQ6.OriginalExceptionalTailAbsorption.eventually_original_exceptional_payment_absorbed` fixes positive real `t0,cg`, defines `cWindow=min(1,sqrt(t0)/2)>0`, and supplies one eventual natural cutoff before every real `z` on the closed interval `1≤z≤cWindow*n^(1/6)`. It also proves `n≥4` and that the interval is nonempty.
+
+The literal payment `6 exp(-boundedPolylogMomentOrder t0 n)+2 exp(-cg*n)+8 exp(-sqrt(n)/2)` is bounded by `exp(-(t0/2)*n^(1/3))*Shao.standardNormalTail z`. The proof uses the existing public reverse Gaussian tail ratio, its actual tail at zero, a `3/8` Gaussian lower bound and the exact `128/3` residual with exponent `3*t0/8`. All five proof-local scalar definitions and the complete statement were frozen before implementation.
+
+Exact source: SHA256 `cb1ed434c1029e674ddff14a1be07ab55b2fb064060acbe92bea389a93f7df8f`,11444 bytes,245 LF. The original native001 source and RC1/no-object result are preserved. The four narrowly reviewed elaboration repairs expose two function compositions and apply two positive-base real-power identities directly; no mathematical assumption, statement or ordinary RHS changed.
+
+Native002 and the same-first-original-object all-owner audit returned actual0/0. The first object is SHA256 `99a8ccfe353e26adef88d524e78418952f840906bb0a63ba886156a88a53d716`,634024 bytes,mtime_ns1793114673007829467. All1 actual theorem owner/99TYPE/0VALUE were independently read; recursive axioms are exactly `propext`, `Classical.choice`, `Quot.sound`. Standing134-byte mathlib stderr leaves both strict wrapper success fields false and outer exits1; those fields are retained separately from actual0/0.
+
+Independent qualification reuses the exact original complete source-to-statement/proof review and the affected four-span review, then joins the exact successful kernel/object evidence. No accepted old producer or leaf axiom check was replayed. Full source, freeze, author/repaired source, qualified independent evidence, normalized owner types and machine bindings accompany this PR; raw logs, large raw receipts, caches and binary objects remain on the server.
+
+This is a deterministic helper for the actual exceptional union. It does not yet join the separately chosen233/235 constants, construct an original event/model consumer, assert conditional-uniform constants or apply Shao-Zhou/CDF results. p54's bounded/convergent conditional p-moment repair is retained; the false arbitrary-polynomial moment-variation claim is not restored. Original assigned C1/C2-C12 scopes remain complete; OQ56/S11/generalS15/DC/broader extensions remain OPEN. This PR is unmerged and awaits Root integration intake.
