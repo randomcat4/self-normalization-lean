@@ -1,0 +1,20 @@
+theorem complex_gaussian_damped_local_weighted_integral_bound
+    (f : (ℝ × ℝ) → ℂ) (hf : Continuous f) (n : ℕ) (delta C : ℝ) (hC : 0 ≤ C)
+    (herror : ∀ z : ℝ × ℝ,
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ delta * Real.sqrt (n : ℝ) →
+        ‖f z‖ ≤ C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ)) *
+          (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 9 +
+            Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 56) *
+              Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)) (k : ℕ) :
+    let small : Set (ℝ × ℝ) := {z |
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ delta * Real.sqrt (n : ℝ)}
+    let weight : (ℝ × ℝ) → ℝ := fun z => Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k
+    let envelope : (ℝ × ℝ) → ℝ := fun z =>
+      (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 9) +
+        Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 56)) *
+          Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)
+    Integrable envelope ∧ IntegrableOn (fun z => weight z * ‖f z‖) small ∧
+      0 ≤ (∫ z in small, weight z * ‖f z‖) ∧
+      (∫ z in small, weight z * ‖f z‖) ≤
+        C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ)) *
+          (∫ z : ℝ × ℝ, envelope z)

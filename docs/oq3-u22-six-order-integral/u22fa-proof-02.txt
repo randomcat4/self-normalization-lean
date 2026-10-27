@@ -1,0 +1,18 @@
+  intro X kappa a Pn
+  have hk (k : ℕ) : Continuous (kappa k) :=
+    continuous_directional_actual_cgf_cumulants mu h0 hM k
+  have ha (j : Fin 6) : Continuous (fun z : ℝ × ℝ => a z j) := by
+    dsimp only [a]
+    exact (continuous_const.mul (Complex.continuous_ofReal.comp (hk (j.val + 3)))).div_const _
+  dsimp only [Pn]
+  apply Continuous.mul (by fun_prop)
+  apply continuous_finset_sum
+  intro q hq
+  apply continuous_const.mul
+  apply continuous_finset_sum
+  intro sigma hsigma
+  by_cases h : (∑ i, ((sigma i).val + 1)) ≤ 6
+  · simp only [if_pos h]
+    exact continuous_finset_prod _ (fun i hi => ha (sigma i))
+  · simp only [if_neg h]
+    exact continuous_const

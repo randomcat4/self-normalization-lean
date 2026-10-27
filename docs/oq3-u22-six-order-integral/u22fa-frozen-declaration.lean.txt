@@ -1,0 +1,31 @@
+theorem continuous_directional_actual_cgf_cumulants
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior (ProbabilityTheory.integrableExpSet
+      (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ k : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) :
+    let X : (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+      fun z y => z.1 * y 0 + z.2 * y 1
+    let kappa : ℕ → (ℝ × ℝ) → ℝ :=
+      fun k z => iteratedDeriv k (ProbabilityTheory.cgf (X z) mu) 0
+    ∀ k : ℕ, Continuous (kappa k)
+
+theorem continuous_actual_cgf_six_order_edgeworth_polynomial
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior (ProbabilityTheory.integrableExpSet
+      (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ k : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) (n : ℕ) :
+    let X : (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+      fun z y => z.1 * y 0 + z.2 * y 1
+    let kappa : ℕ → (ℝ × ℝ) → ℝ :=
+      fun k z => iteratedDeriv k (ProbabilityTheory.cgf (X z) mu) 0
+    let a : (ℝ × ℝ) → Fin 6 → ℂ := fun z j =>
+      (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+    let Pn : (ℝ × ℝ) → ℂ := fun z =>
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2) *
+        ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+          ∑ sigma : Fin q.val → Fin 6,
+            if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a z (sigma i) else 0
+    Continuous Pn

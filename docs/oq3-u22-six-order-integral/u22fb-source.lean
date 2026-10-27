@@ -1,0 +1,84 @@
+import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
+import Mathlib.Analysis.Complex.Norm
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+namespace Shao.OQ3
+open MeasureTheory
+open scoped BigOperators
+noncomputable section
+
+theorem complex_gaussian_damped_local_weighted_integral_bound
+    (f : (ℝ × ℝ) → ℂ) (hf : Continuous f) (n : ℕ) (delta C : ℝ) (hC : 0 ≤ C)
+    (herror : ∀ z : ℝ × ℝ,
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ delta * Real.sqrt (n : ℝ) →
+        ‖f z‖ ≤ C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ)) *
+          (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 9 +
+            Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 56) *
+              Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)) (k : ℕ) :
+    let small : Set (ℝ × ℝ) := {z |
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ delta * Real.sqrt (n : ℝ)}
+    let weight : (ℝ × ℝ) → ℝ := fun z => Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k
+    let envelope : (ℝ × ℝ) → ℝ := fun z =>
+      (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 9) +
+        Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 56)) *
+          Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)
+    Integrable envelope ∧ IntegrableOn (fun z => weight z * ‖f z‖) small ∧
+      0 ≤ (∫ z in small, weight z * ‖f z‖) ∧
+      (∫ z in small, weight z * ‖f z‖) ≤
+        C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ)) *
+          (∫ z : ℝ × ℝ, envelope z) := by
+  intro small weight envelope
+  let c : ℝ := C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ))
+  have hc : 0 ≤ c := by dsimp [c]; positivity
+  have hpow (j : ℕ) : Integrable (fun z : ℝ × ℝ =>
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ j *
+        Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)) := by
+    have h := integrable_euclidean_radius_power_gaussian j (1 / 8) (by norm_num)
+    have hexp (z : ℝ × ℝ) :
+        Real.exp (-(1 / 8 : ℝ) * (z.1 ^ 2 + z.2 ^ 2)) =
+          Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8) := by
+      congr 1
+      ring
+    simpa only [hexp] using h
+  have hen : Integrable envelope := by
+    apply ((hpow (k + 9)).add (hpow (k + 56))).congr
+    filter_upwards [] with z
+    dsimp [envelope]
+    ring
+  have hg : Integrable (fun z => c * envelope z) := hen.const_mul c
+  have hw : Continuous weight := by dsimp [weight]; fun_prop
+  have hsmall : MeasurableSet small :=
+    (isClosed_le (by fun_prop) continuous_const).measurableSet
+  have hnonneg (z : ℝ × ℝ) : 0 ≤ weight z * ‖f z‖ :=
+    mul_nonneg (pow_nonneg (Real.sqrt_nonneg _) k) (norm_nonneg _)
+  have hbound (z : ℝ × ℝ) (hz : z ∈ small) :
+      weight z * ‖f z‖ ≤ c * envelope z := by
+    have h := mul_le_mul_of_nonneg_left (herror z hz)
+      (pow_nonneg (Real.sqrt_nonneg (z.1 ^ 2 + z.2 ^ 2)) k)
+    calc
+      weight z * ‖f z‖ ≤ Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k *
+          (C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ)) *
+            (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 9 +
+              Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ 56) *
+                Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)) := h
+      _ = c * envelope z := by
+        dsimp [c, envelope, weight]
+        simp only [pow_add]
+        ring
+  have hei : IntegrableOn (fun z => weight z * ‖f z‖) small := by
+    apply hg.integrableOn.mono' (hw.mul hf.norm).aestronglyMeasurable
+    filter_upwards [ae_restrict_mem hsmall] with z hz
+    change ‖weight z * ‖f z‖‖ ≤ c * envelope z
+    rw [Real.norm_eq_abs, abs_of_nonneg (hnonneg z)]
+    exact hbound z hz
+  refine ⟨hen, hei, integral_nonneg hnonneg, ?_⟩
+  calc
+    (∫ z in small, weight z * ‖f z‖) ≤ ∫ z in small, c * envelope z :=
+      setIntegral_mono_on hei hg.integrableOn hsmall hbound
+    _ ≤ ∫ z : ℝ × ℝ, c * envelope z :=
+      setIntegral_le_integral hg (Filter.Eventually.of_forall (fun z =>
+        mul_nonneg hc (by dsimp [envelope]; positivity)))
+    _ = c * (∫ z : ℝ × ℝ, envelope z) := by rw [integral_const_mul]
+
+end
+end Shao.OQ3

@@ -1,0 +1,22 @@
+DECL Shao.OQ3.actual_cgf_six_order_edgeworth_polynomial_identification
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) (n : ℕ) (u v : ℝ),
+  have X := fun y => u * y 0 + v * y 1;
+  have kappa := fun j => iteratedDeriv j (ProbabilityTheory.cgf X mu) 0;
+  have A := fun j => Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa (↑j + 3));
+  have a := fun j => A j / ↑√↑n ^ (↑j + 1);
+  have B1 := A 0;
+  have B2 := A 1 + A 0 ^ 2 / 2;
+  have B3 := A 2 + A 0 * A 1 + A 0 ^ 3 / 6;
+  have B4 := A 3 + A 0 * A 2 + A 1 ^ 2 / 2 + A 0 ^ 2 * A 1 / 2 + A 0 ^ 4 / 24;
+  have B5 := A 4 + A 0 * A 3 + A 1 * A 2 + A 0 ^ 2 * A 2 / 2 + A 0 * A 1 ^ 2 / 2 + A 0 ^ 3 * A 1 / 6 + A 0 ^ 5 / 120;
+  have B6 :=
+    A 5 + A 0 * A 4 + A 1 * A 3 + A 2 ^ 2 / 2 + A 0 ^ 2 * A 3 / 2 + A 0 * A 1 * A 2 + A 1 ^ 3 / 6 + A 0 ^ 3 * A 2 / 6 +
+          A 0 ^ 2 * A 1 ^ 2 / 4 +
+        A 0 ^ 4 * A 1 / 24 +
+      A 0 ^ 6 / 720;
+  (Complex.exp (-↑(u ^ 2 + v ^ 2) / 2) *
+      ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, a (sigma i) else 0) =
+    Complex.exp (-↑(u ^ 2 + v ^ 2) / 2) *
+      (1 + B1 / ↑√↑n + B2 / ↑√↑n ^ 2 + B3 / ↑√↑n ^ 3 + B4 / ↑√↑n ^ 4 + B5 / ↑√↑n ^ 5 + B6 / ↑√↑n ^ 6)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

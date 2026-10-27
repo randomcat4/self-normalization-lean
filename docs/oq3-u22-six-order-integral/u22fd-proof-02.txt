@@ -1,0 +1,59 @@
+  classical
+  intro P
+  let ι := Σ q : Fin 7, {sigma : Fin q.val → Fin 6 //
+    (∑ i, ((sigma i).val + 1)) ≤ 6}
+  let p : ι → Fin 6 → ℕ := fun i j => Fintype.card {l : Fin i.1.val // i.2.val l = j}
+  let w : Fin 6 → ℕ := fun j => j.val + 3
+  let c : ι → ℂ := fun i => 1 / (i.1.val.factorial : ℂ)
+  have hdegree (i : ι) : (∑ j, w j * p i j) ≤ 18 := by
+    have he := (finite_word_monomial_encoding i.2.val).2.1 w
+    change (∑ j, w j * p i j) = ∑ l, ((i.2.val l).val + 3) at he
+    rw [he]
+    have hs : (∑ l, ((i.2.val l).val + 3)) =
+        (∑ l, ((i.2.val l).val + 1)) + 2 * i.1.val := by
+      calc
+        _ = ∑ l, (((i.2.val l).val + 1) + 2) := by
+          apply Finset.sum_congr rfl
+          intro l hl
+          omega
+        _ = _ := by simp [Finset.sum_add_distrib, Nat.mul_comm]
+    rw [hs]
+    have hq : i.1.val ≤ 6 := Nat.le_of_lt_succ i.1.isLt
+    have hw := i.2.property
+    omega
+  obtain ⟨K, hK, hbound⟩ := complex_finite_weighted_polynomial_growth_bound
+    A hA w c p 18 hdegree
+  have hmonomial (i : ι) (a : Fin 6 → ℂ) :
+      (∏ j, a j ^ p i j) = ∏ l, a (i.2.val l) :=
+    (finite_word_monomial_encoding i.2.val).2.2 a
+  have hidentity (a : Fin 6 → ℂ) : P a = ∑ i : ι, c i * ∏ j, a j ^ p i j := by
+    have hsub (q : Fin 7) :
+        (∑ sigma : Fin q.val → Fin 6,
+          if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a (sigma l) else 0) =
+          ∑ sigma : {sigma : Fin q.val → Fin 6 //
+            (∑ l, ((sigma l).val + 1)) ≤ 6}, ∏ l, a (sigma.val l) := by
+      rw [← Finset.sum_filter]
+      exact Finset.sum_subtype _ (by intro sigma; simp) _
+    calc
+      P a = ∑ q : Fin 7, ∑ sigma : {sigma : Fin q.val → Fin 6 //
+          (∑ l, ((sigma l).val + 1)) ≤ 6}, c ⟨q, sigma⟩ * ∏ j, a j ^ p ⟨q, sigma⟩ j := by
+        dsimp only [P]
+        apply Finset.sum_congr rfl
+        intro q hq
+        rw [hsub, Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro sigma hsigma
+        rw [hmonomial]
+      _ = ∑ i : ι, c i * ∏ j, a j ^ p i j :=
+        (Fintype.sum_sigma (fun i : ι => c i * ∏ j, a j ^ p i j)).symm
+  refine ⟨K, hK, ?_⟩
+  intro t r ht0 ht1 hr a ha
+  have ha' (j : Fin 6) : ‖a j‖ ≤ A j * r ^ w j := by
+    calc
+      ‖a j‖ ≤ A j * t ^ (j.val + 1) * r ^ (j.val + 3) := ha j
+      _ ≤ (A j * 1) * r ^ (j.val + 3) :=
+        mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left (pow_le_one₀ ht0 ht1) (hA j)) (pow_nonneg hr _)
+      _ = A j * r ^ w j := by dsimp [w]; ring
+  rw [hidentity]
+  exact hbound r hr a ha'

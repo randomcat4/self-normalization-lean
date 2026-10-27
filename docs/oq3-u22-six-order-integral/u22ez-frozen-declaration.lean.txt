@@ -1,0 +1,14 @@
+theorem pair_directional_moment_binomial_continuous
+    (mu : Measure (Fin 2 → ℝ)) (k : ℕ)
+    (hM : Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) :
+    let M : (ℝ × ℝ) → ℝ := fun z =>
+      ∫ y : Fin 2 → ℝ, (z.1 * y 0 + z.2 * y 1) ^ k ∂mu
+    let b : ℕ → ℝ := fun j =>
+      ∫ y : Fin 2 → ℝ, y 0 ^ j * y 1 ^ (k - j) ∂mu
+    (∀ j : ℕ, j ≤ k → Integrable
+      (fun y : Fin 2 → ℝ => y 0 ^ j * y 1 ^ (k - j)) mu) ∧
+      (∀ z : ℝ × ℝ, M z =
+        ∑ j ∈ Finset.range (k + 1),
+          z.1 ^ j * z.2 ^ (k - j) * (k.choose j : ℝ) * b j) ∧
+      Continuous M
