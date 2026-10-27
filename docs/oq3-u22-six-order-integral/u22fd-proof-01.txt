@@ -1,0 +1,29 @@
+  classical
+  let B : ℝ := ∑ i, ‖c i‖ * ∏ j, A j ^ p i j
+  have hB : 0 ≤ B := by dsimp [B]; positivity
+  refine ⟨B + 1, by positivity, ?_⟩
+  intro r hr a ha
+  have hrad (i : τ) : r ^ (∑ j, w j * p i j) ≤ 1 + r ^ d := by
+    by_cases hr1 : r ≤ 1
+    · exact (pow_le_one₀ hr hr1).trans (le_add_of_nonneg_right (pow_nonneg hr _))
+    · exact (pow_le_pow_right₀ (le_of_lt (lt_of_not_ge hr1)) (hdegree i)).trans
+        (le_add_of_nonneg_left (by norm_num))
+  calc
+    ‖∑ i, c i * ∏ j, a j ^ p i j‖ ≤
+        ∑ i, ‖c i * ∏ j, a j ^ p i j‖ := norm_sum_le _ _
+    _ ≤ ∑ i, ‖c i‖ * ((∏ j, A j ^ p i j) * r ^ (∑ j, w j * p i j)) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      rw [norm_mul]
+      exact mul_le_mul_of_nonneg_left
+        (complex_weighted_monomial_bound a A w (p i) r hr hA ha) (norm_nonneg _)
+    _ ≤ ∑ i, (‖c i‖ * ∏ j, A j ^ p i j) * (1 + r ^ d) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      calc
+        _ = (‖c i‖ * ∏ j, A j ^ p i j) * r ^ (∑ j, w j * p i j) := by ring
+        _ ≤ _ := mul_le_mul_of_nonneg_left (hrad i)
+          (mul_nonneg (norm_nonneg _) (Finset.prod_nonneg (fun j hj => pow_nonneg (hA j) _)))
+    _ = B * (1 + r ^ d) := by rw [← Finset.sum_mul]; rfl
+    _ ≤ (B + 1) * (1 + r ^ d) :=
+      mul_le_mul_of_nonneg_right (le_add_of_nonneg_right (by norm_num)) (by positivity)

@@ -1,0 +1,21 @@
+DECL Shao.OQ3.complex_gaussian_damped_local_weighted_integral_bound
+TYPE ∀ (f : ℝ × ℝ → ℂ),
+  Continuous f →
+    ∀ (n : ℕ) (delta C : ℝ),
+      0 ≤ C →
+        (∀ (z : ℝ × ℝ),
+            √(z.1 ^ 2 + z.2 ^ 2) ≤ delta * √↑n →
+              ‖f z‖ ≤
+                C / (↑n ^ 3 * √↑n) * (√(z.1 ^ 2 + z.2 ^ 2) ^ 9 + √(z.1 ^ 2 + z.2 ^ 2) ^ 56) *
+                  Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)) →
+          ∀ (k : ℕ),
+            have small := {z | √(z.1 ^ 2 + z.2 ^ 2) ≤ delta * √↑n};
+            have weight := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k;
+            have envelope := fun z =>
+              (√(z.1 ^ 2 + z.2 ^ 2) ^ (k + 9) + √(z.1 ^ 2 + z.2 ^ 2) ^ (k + 56)) * Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8);
+            MeasureTheory.Integrable envelope MeasureTheory.volume ∧
+              MeasureTheory.IntegrableOn (fun z => weight z * ‖f z‖) small MeasureTheory.volume ∧
+                0 ≤ ∫ (z : ℝ × ℝ) in small, weight z * ‖f z‖ ∧
+                  ∫ (z : ℝ × ℝ) in small, weight z * ‖f z‖ ≤ C / (↑n ^ 3 * √↑n) * ∫ (z : ℝ × ℝ), envelope z
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

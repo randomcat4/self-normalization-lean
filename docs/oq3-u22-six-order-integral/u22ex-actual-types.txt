@@ -1,0 +1,33 @@
+DECL Shao.OQ3.complex_six_letter_cutoff_word_recurrence._proof_1_1
+TYPE ∀ (q d : ℕ) (j : Fin 6),
+  ↑j + 1 ≤ d →
+    ∀ (sigma : Fin q → Fin 6), ¬(↑j + 1 + ∑ i, (↑(sigma i) + 1) ≤ d ↔ ∑ i, (↑(sigma i) + 1) ≤ d - (↑j + 1)) → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_letter_cutoff_word_recurrence
+TYPE ∀ (a : Fin 6 → ℂ),
+  have W := fun q d => ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ d then ∏ i, a (sigma i) else 0;
+  (∀ (d : ℕ), W 0 d = 1) ∧ ∀ (q d : ℕ), W (q + 1) d = ∑ j, if ↑j + 1 ≤ d then a j * W q (d - (↑j + 1)) else 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_letter_cutoff_word_recurrence._proof_1_2
+TYPE ∀ (q d : ℕ) (j : Fin 6), ¬↑j + 1 ≤ d → ∀ (sigma : Fin q → Fin 6), ↑j + 1 + ∑ i, (↑(sigma i) + 1) ≤ d → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_order_weighted_polynomial_coefficients
+TYPE ∀ (A : Fin 6 → ℂ) (t : ℂ),
+  have a := fun j => A j * t ^ (↑j + 1);
+  have P := fun b => ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, b (sigma i) else 0;
+  have B1 := A 0;
+  have B2 := A 1 + A 0 ^ 2 / 2;
+  have B3 := A 2 + A 0 * A 1 + A 0 ^ 3 / 6;
+  have B4 := A 3 + A 0 * A 2 + A 1 ^ 2 / 2 + A 0 ^ 2 * A 1 / 2 + A 0 ^ 4 / 24;
+  have B5 := A 4 + A 0 * A 3 + A 1 * A 2 + A 0 ^ 2 * A 2 / 2 + A 0 * A 1 ^ 2 / 2 + A 0 ^ 3 * A 1 / 6 + A 0 ^ 5 / 120;
+  have B6 :=
+    A 5 + A 0 * A 4 + A 1 * A 3 + A 2 ^ 2 / 2 + A 0 ^ 2 * A 3 / 2 + A 0 * A 1 * A 2 + A 1 ^ 3 / 6 + A 0 ^ 3 * A 2 / 6 +
+          A 0 ^ 2 * A 1 ^ 2 / 4 +
+        A 0 ^ 4 * A 1 / 24 +
+      A 0 ^ 6 / 720;
+  P a = 1 + B1 * t + B2 * t ^ 2 + B3 * t ^ 3 + B4 * t ^ 4 + B5 * t ^ 5 + B6 * t ^ 6
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,39 @@
+FILE Mathlib/Algebra/BigOperators/Group/Finset/Defs.lean SHA256 14b2f485c336d67733ad3f3dd105699009d9c24a50c786e4f266e3db445c945d
+
+-/
+@[to_additive /-- `Fintype.sum_equiv` is a specialization of `Finset.sum_bij` that
+automatically fills in most arguments.
+
+See `Equiv.sum_comp` for a version without `h`. -/]
+lemma prod_equiv (e : ι ≃ κ) (f : ι → M) (g : κ → M) (h : ∀ x, f x = g (e x)) :
+    ∏ x, f x = ∏ x, g x := prod_bijective _ e.bijective _ _ h
+
+@[to_additive]
+lemma _root_.Function.Bijective.prod_comp {e : ι → κ} (he : e.Bijective) (g : κ → M) :
+    ∏ i, g (e i) = ∏ i, g i := prod_bijective _ he _ _ fun _ ↦ rfl
+
+@[to_additive]
+lemma _root_.Equiv.prod_comp (e : ι ≃ κ) (g : κ → M) : ∏ i, g (e i) = ∏ i, g i :=
+  prod_equiv e _ _ fun _ ↦ rfl
+
+@[to_additive]
+
+FILE Mathlib/Algebra/BigOperators/Fin.lean SHA256 b68854ca28f56de8a58284ae90ae2fc07887b75c720ad6e3a81fd58e6340da50
+
+
+/-- A product of a function `f : Fin (n + 1) → M` over all `Fin (n + 1)`
+is the product of `f 0` times the remaining product -/
+@[to_additive /-- A sum of a function `f : Fin (n + 1) → M` over all `Fin (n + 1)` is the sum of
+`f 0` plus the remaining sum -/]
+theorem prod_univ_succ (f : Fin (n + 1) → M) :
+    ∏ i, f i = f 0 * ∏ i : Fin n, f i.succ :=
+  prod_univ_succAbove f 0
+
+/-- A product of a function `f : Fin (n + 1) → M` over all `Fin (n + 1)`
+is the product of `f (Fin.last n)` times the remaining product -/
+@[to_additive /-- A sum of a function `f : Fin (n + 1) → M` over all `Fin (n + 1)` is the sum of
+`f (Fin.last n)` plus the remaining sum -/]
+theorem prod_univ_castSucc (f : Fin (n + 1) → M) :
+    ∏ i, f i = (∏ i : Fin n, f (Fin.castSucc i)) * f (last n) := by
+  simpa [mul_comm] using prod_univ_succAbove f (last n)
+

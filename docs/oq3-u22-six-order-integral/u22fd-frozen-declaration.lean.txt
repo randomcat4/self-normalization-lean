@@ -1,0 +1,19 @@
+theorem complex_finite_weighted_polynomial_growth_bound
+    {ι τ : Type*} [Fintype ι] [Fintype τ]
+    (A : ι → ℝ) (hA : ∀ j, 0 ≤ A j) (w : ι → ℕ)
+    (c : τ → ℂ) (p : τ → ι → ℕ) (d : ℕ)
+    (hdegree : ∀ i, (∑ j, w j * p i j) ≤ d) :
+    ∃ K : ℝ, 0 < K ∧ ∀ r : ℝ, 0 ≤ r → ∀ a : ι → ℂ,
+      (∀ j, ‖a j‖ ≤ A j * r ^ w j) →
+        ‖∑ i, c i * ∏ j, a j ^ p i j‖ ≤ K * (1 + r ^ d)
+
+theorem complex_six_order_filtered_polynomial_growth_bound
+    (A : Fin 6 → ℝ) (hA : ∀ j, 0 ≤ A j) :
+    let P : (Fin 6 → ℂ) → ℂ := fun a =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a (sigma i) else 0
+    ∃ K : ℝ, 0 < K ∧ ∀ t r : ℝ, 0 ≤ t → t ≤ 1 → 0 ≤ r →
+      ∀ a : Fin 6 → ℂ,
+        (∀ j, ‖a j‖ ≤ A j * t ^ (j.val + 1) * r ^ (j.val + 3)) →
+        ‖P a‖ ≤ K * (1 + r ^ 18)

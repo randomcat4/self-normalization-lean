@@ -1,0 +1,35 @@
+      ∃ deltaInt : ℝ, 0 < deltaInt ∧ deltaInt ≤ 1 ∧ ∀ k : ℕ,
+        let envelope : (ℝ × ℝ) → ℝ := fun z =>
+          (Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 9) +
+            Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ (k + 56)) *
+              Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 8)
+        Integrable envelope ∧ ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, 1 ≤ n → ∀ p : Theta,
+          let Qsample : Measure (Fin n → ℝ) := Measure.pi (fun _ : Fin n => tilt p)
+          let M : (Fin n → ℝ) → (ℝ × ℝ) := fun z =>
+            ((∑ i : Fin n, z i) / (n : ℝ), Shao.energy z / (n : ℝ))
+          let T : (Fin n → ℝ) → (ℝ × ℝ) := fun z =>
+            Real.sqrt (n : ℝ) • E p (M z - (means p 0, means p 1))
+          let rho : Measure (ℝ × ℝ) := Qsample.map T
+          let X : (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+            fun z y => z.1 * y 0 + z.2 * y 1
+          let kappa : ℕ → (ℝ × ℝ) → ℝ :=
+            fun j z => iteratedDeriv j (ProbabilityTheory.cgf (X z) (laws p)) 0
+          let a : (ℝ × ℝ) → Fin 6 → ℂ := fun z j =>
+            (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+              (kappa (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+          let Pn : (ℝ × ℝ) → ℂ := fun z =>
+            Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2) *
+              ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+                ∑ sigma : Fin q.val → Fin 6,
+                  if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a z (sigma i) else 0
+          let small : Set (ℝ × ℝ) := {z |
+            Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ deltaInt * Real.sqrt (n : ℝ)}
+          let weight : (ℝ × ℝ) → ℝ := fun z => Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k
+          let error : (ℝ × ℝ) → ℂ := fun z =>
+            (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) *
+              Complex.I) ∂rho) - Pn z
+          IsProbabilityMeasure rho ∧ Continuous Pn ∧ Continuous error ∧
+            IntegrableOn (fun z => weight z * ‖error z‖) small ∧
+              0 ≤ (∫ z in small, weight z * ‖error z‖) ∧
+              (∫ z in small, weight z * ‖error z‖) ≤
+                C / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ))
