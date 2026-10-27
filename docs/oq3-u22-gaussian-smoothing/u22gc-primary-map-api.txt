@@ -1,0 +1,37 @@
+105:     IsProbabilityMeasure (dite p μ ν) := by split <;> infer_instance
+106: 
+107: instance isProbabilityMeasure_ite {p : Prop} [Decidable p] {μ ν : Measure α}
+108:     [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] :
+109:     IsProbabilityMeasure (ite p μ ν) := by split <;> infer_instance
+110: 
+111: open unitInterval in
+112: instance {μ ν : Measure α} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] {p : I} :
+113:     IsProbabilityMeasure (toNNReal p • μ + toNNReal (σ p) • ν) where
+114:   measure_univ := by simp [← ENNReal.coe_add]
+115: 
+116: variable [IsProbabilityMeasure μ] {p : α → Prop} {f : β → α}
+117: 
+118: @[simp] lemma probReal_univ : μ.real univ = 1 := by simp [Measure.real]
+119: 
+120: lemma isProbabilityMeasure_iff_real {μ : Measure α} :
+121:     IsProbabilityMeasure μ ↔ μ.real univ = 1 := by
+122:   refine ⟨fun h ↦ probReal_univ, fun h ↦ ⟨(ENNReal.toReal_eq_one_iff (μ univ)).mp h⟩⟩
+123: 
+124: instance {f : α → β} : IsProbabilityMeasure (map f μ) where
+125:   measure_univ := by
+126:     rw [Measure.map]
+127:     split_ifs with hf hμ
+128:     · simp [mapₗ_mk_apply_of_aemeasurable, hf]
+129:     · have := measure_univ (μ := μ)
+130:       simp [hμ] at this
+131:     · exact dirac_apply_of_mem <| mem_univ _
+132: 
+133: theorem Measure.isProbabilityMeasure_of_map {μ : Measure α} {f : α → β}
+134:     [IsProbabilityMeasure (μ.map f)] (hf : AEMeasurable f μ) : IsProbabilityMeasure μ where
+135:   measure_univ := by
+136:     rw [← Set.preimage_univ (f := f), ← map_apply_of_aemeasurable hf .univ]
+137:     exact IsProbabilityMeasure.measure_univ
+138: 
+139: theorem Measure.isProbabilityMeasure_map_iff {μ : Measure α} {f : α → β}
+140:     (hf : AEMeasurable f μ) : IsProbabilityMeasure (μ.map f) ↔ IsProbabilityMeasure μ :=
+141:   ⟨fun _ ↦ isProbabilityMeasure_of_map hf, fun _ ↦ inferInstance⟩

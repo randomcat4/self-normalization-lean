@@ -1,0 +1,102 @@
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Prod.lean SHA256 007561e86f53a65ad411fcbd20d05df9e922f01c5a93eff0f9de26ac49f12ca3
+226: theorem prod_apply {s : Set (α × β)} (hs : MeasurableSet s) :
+227:     μ.prod ν s = ∫⁻ x, ν (Prod.mk x ⁻¹' s) ∂μ := by
+228:   simp_rw [Measure.prod_eq_of_sfinite, bind_apply hs
+229:     (Measurable.map_prodMk_left (ν := ν)).aemeasurable, map_apply measurable_prodMk_left hs]
+230: 
+231: /-- The product measure of the product of two sets is the product of their measures. Note that we
+232: do not need the sets to be measurable. -/
+233: @[simp]
+234: theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν t := by
+235:   apply (prod_prod_le s t).antisymm
+236:   -- Formalization is based on https://mathoverflow.net/a/254134/136589
+237:   set ST := toMeasurable (μ.prod ν) (s ×ˢ t)
+238:   have hSTm : MeasurableSet ST := measurableSet_toMeasurable _ _
+FILE .lake/packages/mathlib/Mathlib/Analysis/Normed/Group/Constructions.lean SHA256 098a249c756acb481b5ca22d6563e3f21e29dd7318689034eabaf971a12e1216
+42: 
+43: instance norm : Norm (ULift E) where norm x := ‖x.down‖
+44: 
+45: lemma norm_def (x : ULift E) : ‖x‖ = ‖x.down‖ := rfl
+46: 
+47: @[simp] lemma norm_up (x : E) : ‖ULift.up x‖ = ‖x‖ := rfl
+48: 
+49: @[simp] lemma norm_down (x : ULift E) : ‖x.down‖ = ‖x‖ := rfl
+55: 
+56: instance nnnorm : NNNorm (ULift E) where nnnorm x := ‖x.down‖₊
+57: 
+58: lemma nnnorm_def (x : ULift E) : ‖x‖₊ = ‖x.down‖₊ := rfl
+59: 
+60: @[simp] lemma nnnorm_up (x : E) : ‖ULift.up x‖₊ = ‖x‖₊ := rfl
+61: 
+62: @[simp] lemma nnnorm_down (x : ULift E) : ‖x.down‖₊ = ‖x‖₊ := rfl
+234: 
+235: instance Prod.toNorm : Norm (E × F) where norm x := ‖x.1‖ ⊔ ‖x.2‖
+236: 
+237: lemma Prod.norm_def (x : E × F) : ‖x‖ = max ‖x.1‖ ‖x.2‖ := rfl
+238: 
+239: @[simp] lemma Prod.norm_mk (x : E) (y : F) : ‖(x, y)‖ = max ‖x‖ ‖y‖ := rfl
+240: 
+241: lemma norm_fst_le (x : E × F) : ‖x.1‖ ≤ ‖x‖ := le_max_left _ _
+236: 
+237: lemma Prod.norm_def (x : E × F) : ‖x‖ = max ‖x.1‖ ‖x.2‖ := rfl
+238: 
+239: @[simp] lemma Prod.norm_mk (x : E) (y : F) : ‖(x, y)‖ = max ‖x‖ ‖y‖ := rfl
+240: 
+241: lemma norm_fst_le (x : E × F) : ‖x.1‖ ≤ ‖x‖ := le_max_left _ _
+242: 
+243: lemma norm_snd_le (x : E × F) : ‖x.2‖ ≤ ‖x‖ := le_max_right _ _
+252: /-- Product of seminormed groups, using the sup norm. -/
+253: @[to_additive /-- Product of seminormed groups, using the sup norm. -/]
+254: instance Prod.seminormedGroup : SeminormedGroup (E × F) where
+255:   dist_eq x y := by simp [Prod.norm_def, Prod.dist_eq, dist_eq_norm_inv_mul]
+256: 
+257: /-- Multiplicative version of `Prod.nnnorm_def`.
+258: Earlier, this name was used for the additive version. -/
+259: @[to_additive Prod.nnnorm_def /-- Additive version of `Prod.nnnorm_def'`.
+260: Earlier, this name was used for the multiplicative version. -/]
+261: lemma Prod.nnnorm_def' (x : E × F) : ‖x‖₊ = max ‖x.1‖₊ ‖x.2‖₊ := rfl
+262: 
+263: /-- Multiplicative version of `Prod.nnnorm_mk`. -/
+264: @[to_additive (attr := simp) Prod.nnnorm_mk /-- Additive version of `Prod.nnnorm_mk'`. -/]
+265: lemma Prod.nnnorm_mk' (x : E) (y : F) : ‖(x, y)‖₊ = max ‖x‖₊ ‖y‖₊ := rfl
+266: 
+267: end SeminormedGroup
+261: lemma Prod.nnnorm_def' (x : E × F) : ‖x‖₊ = max ‖x.1‖₊ ‖x.2‖₊ := rfl
+262: 
+263: /-- Multiplicative version of `Prod.nnnorm_mk`. -/
+264: @[to_additive (attr := simp) Prod.nnnorm_mk /-- Additive version of `Prod.nnnorm_mk'`. -/]
+265: lemma Prod.nnnorm_mk' (x : E) (y : F) : ‖(x, y)‖₊ = max ‖x‖₊ ‖y‖₊ := rfl
+266: 
+267: end SeminormedGroup
+268: 
+262: 
+263: /-- Multiplicative version of `Prod.nnnorm_mk`. -/
+264: @[to_additive (attr := simp) Prod.nnnorm_mk /-- Additive version of `Prod.nnnorm_mk'`. -/]
+265: lemma Prod.nnnorm_mk' (x : E) (y : F) : ‖(x, y)‖₊ = max ‖x‖₊ ‖y‖₊ := rfl
+266: 
+267: end SeminormedGroup
+268: 
+269: namespace Prod
+505: 
+506: lemma nnnorm_unop [SeminormedAddGroup E] (a : Eᵐᵒᵖ) : ‖MulOpposite.unop a‖₊ = ‖a‖₊ := rfl
+507: 
+508: instance instNormedAddGroup [NormedAddGroup E] : NormedAddGroup Eᵐᵒᵖ where
+509:   __ := instMetricSpace
+510:   __ := instSeminormedAddGroup
+511: 
+512: instance instSeminormedAddCommGroup [SeminormedAddCommGroup E] : SeminormedAddCommGroup Eᵐᵒᵖ where
+512: instance instSeminormedAddCommGroup [SeminormedAddCommGroup E] : SeminormedAddCommGroup Eᵐᵒᵖ where
+513:   dist_eq _ _ := dist_eq_norm_neg_add _ _
+514: 
+515: instance instNormedAddCommGroup [NormedAddCommGroup E] : NormedAddCommGroup Eᵐᵒᵖ where
+516:   __ := instSeminormedAddCommGroup
+517:   __ := instNormedAddGroup
+518: 
+519: end MulOpposite
+514: 
+515: instance instNormedAddCommGroup [NormedAddCommGroup E] : NormedAddCommGroup Eᵐᵒᵖ where
+516:   __ := instSeminormedAddCommGroup
+517:   __ := instNormedAddGroup
+518: 
+519: end MulOpposite
+CONSTRUCTIONS_COMPILED True

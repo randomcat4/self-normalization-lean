@@ -1,0 +1,143 @@
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean SHA256 8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05
+48: variable {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} {ν : Measure β}
+49: variable [NormedAddCommGroup E]
+50: 
+51: /-! ### Measurability
+52: 
+53: Before we define the product measure, we can talk about the measurability of operations on binary
+54: functions. We show that if `f` is a binary measurable function, then the function that integrates
+55: along one of the variables (using either the Lebesgue or Bochner integral) is measurable.
+56: -/
+57: 
+58: section
+59: 
+60: variable [NormedSpace ℝ E]
+61: 
+62: /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
+63:   Fubini's theorem is measurable.
+64:   This version has `f` in curried form. -/
+65: theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SFinite ν] ⦃f : α → β → E⦄
+66:     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by
+67:   simp only [integral_eq_setToFun]
+68:   apply StronglyMeasurable.setToFun_prod_right _ (fun s hs ↦ ?_) hf
+69:   refine (Measurable.ennreal_toReal ?_).stronglyMeasurable.smul_const _
+70:   exact measurable_measure_prodMk_left hs
+71: 
+72: /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
+73:   Fubini's theorem is measurable. -/
+74: theorem MeasureTheory.StronglyMeasurable.integral_prod_right' [SFinite ν] ⦃f : α × β → E⦄
+75:     (hf : StronglyMeasurable f) : StronglyMeasurable fun x => ∫ y, f (x, y) ∂ν := by
+76:   rw [← uncurry_curry f] at hf; exact hf.integral_prod_right
+77: 
+78: /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
+79:   the symmetric version of Fubini's theorem is measurable.
+80:   This version has `f` in curried form. -/
+81: theorem MeasureTheory.StronglyMeasurable.integral_prod_left [SFinite μ] ⦃f : α → β → E⦄
+82:     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun y => ∫ x, f x y ∂μ :=
+83:   (hf.comp_measurable measurable_swap).integral_prod_right'
+84: 
+85: /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
+86:   the symmetric version of Fubini's theorem is measurable. -/
+87: theorem MeasureTheory.StronglyMeasurable.integral_prod_left' [SFinite μ] ⦃f : α × β → E⦄
+88:     (hf : StronglyMeasurable f) : StronglyMeasurable fun y => ∫ x, f (x, y) ∂μ :=
+89:   (hf.comp_measurable measurable_swap).integral_prod_right'
+228: /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every
+229:   `x` and the function `x ↦ ∫ ‖f (x, y)‖ dy` is integrable. -/
+230: theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.prod ν)) :
+231:     Integrable f (μ.prod ν) ↔
+232:       (∀ᵐ x ∂μ, Integrable (fun y => f (x, y)) ν) ∧ Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ := by
+233:   simp [Integrable, h1f, hasFiniteIntegral_prod_iff', h1f.norm.integral_prod_right',
+234:     h1f.prodMk_left]
+235: 
+236: /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every
+237:   `y` and the function `y ↦ ∫ ‖f (x, y)‖ dx` is integrable. -/
+238: theorem integrable_prod_iff' [SFinite μ] ⦃f : α × β → E⦄
+239:     (h1f : AEStronglyMeasurable f (μ.prod ν)) :
+240:     Integrable f (μ.prod ν) ↔
+241:       (∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ) ∧ Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν := by
+242:   convert! integrable_prod_iff h1f.prod_swap using 1
+243:   rw [funext fun _ => Function.comp_apply.symm, integrable_swap_iff]
+244: 
+245: theorem Integrable.prod_left_ae [SFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.prod ν)) :
+246:     ∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ :=
+247:   ((integrable_prod_iff' hf.aestronglyMeasurable).mp hf).1
+328:   ⟨(.of_comp_fst · hν), (.comp_fst · ν)⟩
+329: 
+330: end
+331: 
+332: variable [NormedSpace ℝ E]
+333: 
+334: theorem Integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.prod ν)) :
+335:     Integrable (fun x => ∫ y, f (x, y) ∂ν) μ := by
+336:   apply Integrable.mono hf.integral_norm_prod_left hf.aestronglyMeasurable.integral_prod_right'
+337:   filter_upwards with x
+338:   grw [norm_integral_le_integral_norm]
+339:   exact le_abs_self _
+340: 
+341: theorem Integrable.integral_prod_right [SFinite μ] ⦃f : α × β → E⦄
+342:     (hf : Integrable f (μ.prod ν)) : Integrable (fun y => ∫ x, f (x, y) ∂μ) ν :=
+343:   hf.swap.integral_prod_left
+344: 
+345: /-! ### The Bochner integral on a product -/
+440:   `integrable_prod_iff` can be useful to show that the function in question in integrable.
+441:   `MeasureTheory.Integrable.integral_prod_right` is useful to show that the inner integral
+442:   of the right-hand side is integrable. -/
+443: theorem integral_prod (f : α × β → E) (hf : Integrable f (μ.prod ν)) :
+444:     ∫ z, f z ∂μ.prod ν = ∫ x, ∫ y, f (x, y) ∂ν ∂μ := by
+445:   by_cases hE : CompleteSpace E; swap; · simp only [integral, dite_eq_right hE]
+446:   revert f
+447:   apply Integrable.induction
+448:   · intro c s hs h2s
+449:     simp_rw [integral_indicator hs, ← indicator_comp_right, Function.comp_def,
+450:       integral_indicator (measurable_prodMk_left hs), setIntegral_const, integral_smul_const,
+451:       measureReal_def,
+452:       integral_toReal (measurable_measure_prodMk_left hs).aemeasurable
+453:         (ae_measure_lt_top hs h2s.ne)]
+454:     rw [Measure.prod_apply hs]
+455:   · rintro f g - i_f i_g hf hg
+456:     simp_rw [integral_add' i_f i_g, integral_integral_add' i_f i_g, hf, hg]
+457:   · exact isClosed_eq continuous_integral continuous_integral_integral
+458:   · rintro f g hfg - hf; convert hf using 1
+459:     · exact integral_congr_ae hfg.symm
+460:     · apply integral_congr_ae
+461:       filter_upwards [ae_ae_of_ae_prod hfg] with x hfgx using integral_congr_ae (ae_eq_symm hfgx)
+462: 
+463: /-- Symmetric version of **Fubini's Theorem**: For integrable functions on `α × β`,
+464:   the Bochner integral of `f` is equal to the iterated Bochner integral.
+465:   This version has the integrals on the right-hand side in the other order. -/
+466: theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.prod ν)) :
+467:     ∫ z, f z ∂μ.prod ν = ∫ y, ∫ x, f (x, y) ∂μ ∂ν := by
+468:   rw [← integral_prod_swap f]; exact integral_prod _ hf.swap
+469: 
+470: /-- Reversed version of **Fubini's Theorem**. -/
+471: theorem integral_integral {f : α → β → E} (hf : Integrable (uncurry f) (μ.prod ν)) :
+472:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.1 z.2 ∂μ.prod ν :=
+473:   (integral_prod _ hf).symm
+474: 
+475: /-- Reversed version of **Fubini's Theorem** (symmetric version). -/
+476: theorem integral_integral_symm {f : α → β → E} (hf : Integrable (uncurry f) (μ.prod ν)) :
+477:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.2 z.1 ∂ν.prod μ :=
+478:   (integral_prod_symm _ hf.swap).symm
+479: 
+480: /-- Change the order of Bochner integration. -/
+481: theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncurry f) (μ.prod ν)) :
+482:     ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ y, ∫ x, f x y ∂μ ∂ν :=
+483:   (integral_integral hf).trans (integral_prod_symm _ hf)
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+990: theorem integral_const (c : E) : ∫ _ : α, c ∂μ = μ.real univ • c := by
+991:   by_cases hμ : IsFiniteMeasure μ
+992:   · simp only [integral_eq_setToFun]
+993:     exact setToFun_const (dominatedFinMeasAdditive_weightedSMul _) _
+994:   by_cases hc : c = 0
+995:   · simp [hc, integral_zero]
+996:   · simp [measureReal_def, (integrable_const_iff_isFiniteMeasure hc).not.2 hμ,
+997:       integral_undef, MeasureTheory.not_isFiniteMeasure_iff.mp hμ]
+998: 
+999: lemma integral_eq_const [IsProbabilityMeasure μ] {f : α → E} {c : E} (hf : ∀ᵐ x ∂μ, f x = c) :
+1000:     ∫ x, f x ∂μ = c := by simp [integral_congr_ae hf]
+1001: 
+1002: theorem norm_integral_le_of_norm_le_const [IsFiniteMeasure μ] {f : α → G} {C : ℝ}
+1003:     (h : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : ‖∫ x, f x ∂μ‖ ≤ C * μ.real univ :=
+1004:   calc
+1005:     ‖∫ x, f x ∂μ‖ ≤ ∫ _, C ∂μ := norm_integral_le_of_norm_le (integrable_const C) h
+1006:     _ = C * μ.real univ := by rw [integral_const, smul_eq_mul, mul_comm]

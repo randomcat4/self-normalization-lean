@@ -1,0 +1,43 @@
+DECL Shao.OQ3.pair_independent_sum_characteristic
+TYPE ∀ (nu eta : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu]
+  [MeasureTheory.IsProbabilityMeasure eta],
+  have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod eta);
+  MeasureTheory.IsProbabilityMeasure rho ∧
+    ∀ (z : ℝ × ℝ),
+      ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho =
+        (∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂nu) *
+          ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂eta
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_gaussian_noise_characteristic
+TYPE ∀ (v : NNReal),
+  have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+  MeasureTheory.IsProbabilityMeasure gamma ∧
+    ∀ (z : ℝ × ℝ),
+      ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂gamma =
+        Complex.exp (-↑↑v * ↑(z.1 ^ 2 + z.2 ^ 2) / 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussian_smoothed_pair_law_fourier_integral
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (b : ℝ),
+  0 < b →
+    have v := (2 * b).toNNReal;
+    have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+    have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+    MeasureTheory.IsProbabilityMeasure rho ∧
+      (∀ (z : ℝ × ℝ),
+          ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho =
+            (∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂nu) *
+              Complex.exp (-↑b * ↑(z.1 ^ 2 + z.2 ^ 2))) ∧
+        ∀ (x : ℝ × ℝ),
+          MeasureTheory.Integrable
+              (fun z =>
+                Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+                  ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho)
+              MeasureTheory.volume ∧
+            ∫ (z : ℝ × ℝ),
+                Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+                  ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho =
+              ↑(Real.pi / b) * ∫ (w : ℝ × ℝ), Complex.exp (-↑(((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b))) ∂nu
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

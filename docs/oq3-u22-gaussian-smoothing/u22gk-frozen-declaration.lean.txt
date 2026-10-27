@@ -1,0 +1,18 @@
+theorem pair_real_gaussian_integral
+    (b : ℝ) (hb : 0 < b) :
+    Integrable (fun z : ℝ × ℝ => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))) ∧
+      (∫ z : ℝ × ℝ, Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))) = Real.pi / b
+
+theorem gaussian_smoothed_pair_inverse_tail_bound
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b R : ℝ) (hb : 0 < b) (hR : 0 ≤ R) (x : ℝ × ℝ) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let tail : Set (ℝ × ℝ) := {z | R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2}
+    let f : (ℝ × ℝ) → ℂ := fun z =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+        ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho
+    Integrable f ∧ IntegrableOn f tail ∧
+      ‖∫ z in tail, f z‖ ≤ (2 * Real.pi / b) * Real.exp (-b * R ^ 2 / 2)

@@ -1,0 +1,13 @@
+theorem independent_sum_cthickening_bounds
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (s : Set (ℝ × ℝ)) (hs : MeasurableSet s) (eps : ℝ) :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    nu s ≤ rho (Metric.cthickening eps s) + eta {y : ℝ × ℝ | eps < ‖y‖} ∧
+      rho ((Metric.cthickening eps sᶜ)ᶜ) ≤ nu s + eta {y : ℝ × ℝ | eps < ‖y‖}
+
+theorem independent_sum_cthickening_real_sandwich
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (s : Set (ℝ × ℝ)) (hs : MeasurableSet s) (eps : ℝ) :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    rho.real ((Metric.cthickening eps sᶜ)ᶜ) - eta.real {y : ℝ × ℝ | eps < ‖y‖} ≤ nu.real s ∧
+      nu.real s ≤ rho.real (Metric.cthickening eps s) + eta.real {y : ℝ × ℝ | eps < ‖y‖}

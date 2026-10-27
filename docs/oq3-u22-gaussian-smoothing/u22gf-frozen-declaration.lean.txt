@@ -1,0 +1,13 @@
+theorem independent_sum_source_set_le
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (s t : Set (ℝ × ℝ)) (hs : MeasurableSet s) (ht : MeasurableSet t) (eps : ℝ)
+    (hshift : ∀ x ∈ s, ∀ y : ℝ × ℝ, ‖y‖ ≤ eps → x + y ∈ t) :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    nu s ≤ rho t + eta {y : ℝ × ℝ | eps < ‖y‖}
+
+theorem independent_sum_image_set_le
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (s t : Set (ℝ × ℝ)) (hs : MeasurableSet s) (ht : MeasurableSet t) (eps : ℝ)
+    (hshift : ∀ x y : ℝ × ℝ, x + y ∈ s → ‖y‖ ≤ eps → x ∈ t) :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    rho s ≤ nu t + eta {y : ℝ × ℝ | eps < ‖y‖}

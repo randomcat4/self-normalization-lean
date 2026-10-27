@@ -1,0 +1,30 @@
+DECL Shao.OQ3.gaussian_smoothed_pair_law_density
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (v : NNReal),
+  v ≠ 0 →
+    have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+    have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+    have K := fun x =>
+      ∫⁻ (w : ℝ × ℝ), ProbabilityTheory.gaussianPDF 0 v (x.1 - w.1) * ProbabilityTheory.gaussianPDF 0 v (x.2 - w.2) ∂nu;
+    MeasureTheory.IsProbabilityMeasure rho ∧
+      rho = MeasureTheory.volume.withDensity K ∧ Measurable K ∧ rho.AbsolutelyContinuous MeasureTheory.volume
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_sum_withDensity_kernel
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (k : ℝ × ℝ → ENNReal),
+  Measurable k →
+    have gamma := MeasureTheory.volume.withDensity k;
+    have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+    have K := fun x => ∫⁻ (w : ℝ × ℝ), k (x - w) ∂nu;
+    rho = MeasureTheory.volume.withDensity K ∧ Measurable K ∧ rho.AbsolutelyContinuous MeasureTheory.volume
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_gaussian_noise_withDensity
+TYPE ∀ (v : NNReal),
+  v ≠ 0 →
+    have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+    (gamma =
+        MeasureTheory.volume.withDensity fun x =>
+          ProbabilityTheory.gaussianPDF 0 v x.1 * ProbabilityTheory.gaussianPDF 0 v x.2) ∧
+      gamma.AbsolutelyContinuous MeasureTheory.volume
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

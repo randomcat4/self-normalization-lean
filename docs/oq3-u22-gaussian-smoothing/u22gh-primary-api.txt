@@ -1,0 +1,30 @@
+FILE .lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean SHA256 0c2f73c5a7d1a27efc9e44d02ead60112bfe10e3cfbba2407ad3dbcd1c363a97
+350: /-- The real logarithm function tends to `+∞` at `+∞`. -/
+351: theorem tendsto_log_atTop : Tendsto log atTop atTop :=
+352:   tendsto_comp_exp_atTop.1 <| by simpa only [log_exp] using! tendsto_id
+353: 
+354: lemma tendsto_log_nhdsGT_zero : Tendsto log (𝓝[>] 0) atBot := by
+355:   simpa [← tendsto_comp_exp_atBot] using! tendsto_id
+356: 
+357: theorem tendsto_log_nhdsNE_zero : Tendsto log (𝓝[≠] 0) atBot := by
+358:   simpa [comp_def] using tendsto_log_nhdsGT_zero.comp tendsto_abs_nhdsNE_zero
+FILE .lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean SHA256 f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd
+49: 
+50: theorem rpow_def_of_pos {x : ℝ} (hx : 0 < x) (y : ℝ) : x ^ y = exp (log x * y) := by
+51:   rw [rpow_def_of_nonneg (le_of_lt hx), ite_eq_right (ne_of_gt hx)]
+52: 
+53: theorem exp_mul (x y : ℝ) : exp (x * y) = exp x ^ y := by rw [rpow_def_of_pos (exp_pos _), log_exp]
+54: 
+55: @[simp, norm_cast]
+56: theorem rpow_intCast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
+57:   simp only [rpow_def, ← Complex.ofReal_zpow, Complex.cpow_intCast, Complex.ofReal_intCast,
+FILE .lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean SHA256 f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd
+52: 
+53: theorem exp_mul (x y : ℝ) : exp (x * y) = exp x ^ y := by rw [rpow_def_of_pos (exp_pos _), log_exp]
+54: 
+55: @[simp, norm_cast]
+56: theorem rpow_intCast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
+57:   simp only [rpow_def, ← Complex.ofReal_zpow, Complex.cpow_intCast, Complex.ofReal_intCast,
+58:     Complex.ofReal_re]
+59: 
+60: @[simp, norm_cast]

@@ -1,0 +1,63 @@
+FILE .lake/packages/mathlib/Mathlib/Topology/MetricSpace/Thickening.lean SHA256 6429465471cb6e7121b79c0509583ea258efadd837133350e9faf7c47775a220
+175: section Cthickening
+176: 
+177: variable [PseudoEMetricSpace α] {δ ε : ℝ} {s t : Set α} {x : α}
+178: 
+179: /-- The closed `δ`-thickening `Metric.cthickening δ E` of a subset `E` in a pseudo emetric space
+180: consists of those points that are at infimum distance at most `δ` from `E`. -/
+181: def cthickening (δ : ℝ) (E : Set α) : Set α :=
+182:   { x : α | infEDist x E ≤ ENNReal.ofReal δ }
+183: 
+184: @[simp]
+185: theorem mem_cthickening_iff : x ∈ cthickening δ s ↔ infEDist x s ≤ ENNReal.ofReal δ :=
+186:   Iff.rfl
+187: 
+188: /-- An exterior point of a subset `E` (i.e., a point outside the closure of `E`) is not in the
+189: closed `δ`-thickening of `E` for small enough positive `δ`. -/
+190: lemma eventually_notMem_cthickening_of_infEDist_pos {E : Set α} {x : α} (h : x ∉ closure E) :
+191:     ∀ᶠ δ in 𝓝 (0 : ℝ), x ∉ Metric.cthickening δ E := by
+192:   obtain ⟨ε, ⟨ε_pos, ε_lt⟩⟩ := exists_real_pos_lt_infEDist_of_notMem_closure h
+193:   filter_upwards [eventually_lt_nhds ε_pos] with δ hδ
+194:   simp only [cthickening, mem_ofPred_eq, not_le]
+195:   exact ((ofReal_lt_ofReal_iff ε_pos).mpr hδ).trans ε_lt
+196: 
+197: theorem mem_cthickening_of_edist_le (x y : α) (δ : ℝ) (E : Set α) (h : y ∈ E)
+198:     (h' : edist x y ≤ ENNReal.ofReal δ) : x ∈ cthickening δ E :=
+199:   (infEDist_le_edist_of_mem h).trans h'
+200: 
+201: theorem mem_cthickening_of_dist_le {α : Type*} [PseudoMetricSpace α] (x y : α) (δ : ℝ) (E : Set α)
+202:     (h : y ∈ E) (h' : dist x y ≤ δ) : x ∈ cthickening δ E := by
+203:   apply mem_cthickening_of_edist_le x y δ E h
+204:   rw [edist_dist]
+205:   exact ENNReal.ofReal_le_ofReal h'
+206: 
+207: theorem cthickening_eq_preimage_infEDist (δ : ℝ) (E : Set α) :
+208:     cthickening δ E = (fun x => infEDist x E) ⁻¹' Iic (ENNReal.ofReal δ) :=
+209:   rfl
+210: 
+211: /-- The closed thickening is a closed set. -/
+212: theorem isClosed_cthickening {δ : ℝ} {E : Set α} : IsClosed (cthickening δ E) :=
+213:   IsClosed.preimage continuous_infEDist isClosed_Iic
+214: 
+296: 
+297: /-- The closed thickening of a set contains the closure of the set. -/
+298: theorem closure_subset_cthickening (δ : ℝ) (E : Set α) : closure E ⊆ cthickening δ E := by
+299:   rw [← cthickening_of_nonpos (min_le_right δ 0)]
+300:   exact cthickening_mono (min_le_left δ 0) E
+301: 
+302: /-- The (open) thickening of a set contains the closure of the set. -/
+303: theorem closure_subset_thickening {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
+304:     closure E ⊆ thickening δ E := by
+305:   rw [← cthickening_zero]
+306:   exact cthickening_subset_thickening' δ_pos δ_pos E
+307: 
+308: /-- A set is contained in its own (open) thickening. -/
+309: theorem self_subset_thickening {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : E ⊆ thickening δ E :=
+310:   (@subset_closure _ _ E).trans (closure_subset_thickening δ_pos E)
+311: 
+312: /-- A set is contained in its own closed thickening. -/
+313: theorem self_subset_cthickening {δ : ℝ} (E : Set α) : E ⊆ cthickening δ E :=
+314:   subset_closure.trans (closure_subset_cthickening δ E)
+315: 
+316: theorem thickening_mem_nhdsSet (E : Set α) {δ : ℝ} (hδ : 0 < δ) : thickening δ E ∈ 𝓝ˢ E :=
+COMPILED True

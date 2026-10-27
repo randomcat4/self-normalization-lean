@@ -1,0 +1,76 @@
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Prod.lean SHA256 007561e86f53a65ad411fcbd20d05df9e922f01c5a93eff0f9de26ac49f12ca3
+121: /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
+122:   Tonelli's theorem is measurable. -/
+123: theorem Measurable.lintegral_prod_right' [SFinite ν] :
+124:     ∀ {f : α × β → ℝ≥0∞}, Measurable f → Measurable fun x => ∫⁻ y, f (x, y) ∂ν := by
+125:   have m := @measurable_prodMk_left
+126:   refine Measurable.ennreal_induction (motive := fun f ↦ Measurable fun (x : α) ↦ ∫⁻ y, f (x, y) ∂ν)
+127:     ?_ ?_ ?_
+128:   · intro c s hs
+129:     simp only [← indicator_comp_right]
+130:     suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by simpa [lintegral_indicator (m hs)]
+131:     exact (measurable_measure_prodMk_left hs).const_mul _
+132:   · rintro f g - hf - h2f h2g
+133:     simp only [Pi.add_apply]
+134:     conv => enter [1, x]; erw [lintegral_add_left (hf.comp m)]
+135:     exact h2f.add h2g
+136:   · intro f hf h2f h3f
+137:     have : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
+138:     conv => enter [1, x]; erw [lintegral_iSup (fun n => (hf n).comp m) (this x)]
+139:     exact .iSup h3f
+140: 
+141: /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
+142:   Tonelli's theorem is measurable.
+143:   This version has the argument `f` in curried form. -/
+144: @[fun_prop]
+145: theorem Measurable.lintegral_prod_right [SFinite ν] {f : α → β → ℝ≥0∞}
+146:     (hf : Measurable (uncurry f)) : Measurable fun x => ∫⁻ y, f x y ∂ν :=
+147:   hf.lintegral_prod_right'
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Lebesgue/Add.lean SHA256 d73fc73d67ec8b51f15f0f36919ce0e101047a74933c2eeaa2f09010fc875aae
+373: end Add
+374: 
+375: section Mul
+376: 
+377: @[simp]
+378: theorem lintegral_const_mul (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) :
+379:     ∫⁻ a, r * f a ∂μ = r * ∫⁻ a, f a ∂μ :=
+380:   calc
+381:     ∫⁻ a, r * f a ∂μ = ∫⁻ a, ⨆ n, (const α r * eapprox f n) a ∂μ := by
+382:       congr
+383:       funext a
+384:       rw [← iSup_eapprox_apply hf, ENNReal.mul_iSup]
+385:       simp
+386:     _ = ⨆ n, r * (eapprox f n).lintegral μ := by
+387:       rw [lintegral_iSup]
+388:       · congr
+425:     exact rinv
+426:   have := lintegral_const_mul_le (μ := μ) r⁻¹ fun x => r * f x
+427:   simp only [(mul_assoc _ _ _).symm, rinv'] at this
+428:   simpa [(mul_assoc _ _ _).symm, rinv] using mul_le_mul_right this r
+429: 
+430: theorem lintegral_mul_const (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) :
+431:     ∫⁻ a, f a * r ∂μ = (∫⁻ a, f a ∂μ) * r := by simp_rw [mul_comm, lintegral_const_mul r hf]
+432: 
+433: theorem lintegral_mul_const'' (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) :
+434:     ∫⁻ a, f a * r ∂μ = (∫⁻ a, f a ∂μ) * r := by simp_rw [mul_comm, lintegral_const_mul'' r hf]
+435: 
+436: theorem lintegral_mul_const_le (r : ℝ≥0∞) (f : α → ℝ≥0∞) :
+437:     (∫⁻ a, f a ∂μ) * r ≤ ∫⁻ a, f a * r ∂μ := by
+438:   simp_rw [mul_comm, lintegral_const_mul_le r f]
+439: 
+440: theorem lintegral_mul_const' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r ≠ ∞) :
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Lebesgue/Basic.lean SHA256 d223414bdf3e645294e7d60093522e19dc762b0bf06c578030771a4057836c45
+579:   exact h (s.indicator 1) ((measurable_indicator_const_iff 1).mpr hs)
+580: 
+581: theorem Measure.ext_of_lintegral (ν : Measure α)
+582:     (hμν : ∀ f : α → ℝ≥0∞, Measurable f → ∫⁻ a, f a ∂μ = ∫⁻ a, f a ∂ν) : μ = ν :=
+583:   (μ.ext_iff_lintegral ν).mpr hμν
+584: 
+585: open Measure
+586: 
+587: open scoped Function -- required for scoped `on` notation
+588: 
+589: theorem lintegral_iUnion₀ [Countable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
+590:     (hd : Pairwise (AEDisjoint μ on s)) (f : α → ℝ≥0∞) :
+591:     ∫⁻ a in ⋃ i, s i, f a ∂μ = ∑' i, ∫⁻ a in s i, f a ∂μ := by
+592:   simp only [Measure.restrict_iUnion_ae hd hm, lintegral_sum_measure]
