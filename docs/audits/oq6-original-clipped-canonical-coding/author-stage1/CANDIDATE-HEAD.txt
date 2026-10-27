@@ -1,0 +1,165 @@
+theorem actual_original_clipped_canonical_normalized_coding
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ :=
+      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+    let rho : ℝ := Real.sqrt v
+    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)
+        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),
+      let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+      letI : MeasurableSpace Ω := m₀
+      letI : MeasurableSpace.CountablyGenerated Ω := hcg
+      IsProbabilityMeasure μ₀ ∧
+      ∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)
+          (ε : ℝ) (hε : 0 < ε)
+          (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ))),
+        let mN : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+        let mN₀ : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+        let P : @Measure (Fin n → Ω) mN :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+        let P₀ : @Measure (Fin n → Ω) mN₀ :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+        let N : ℝ := Real.sqrt (n : ℝ)
+        let O : Fin n → (Fin n → Ω) → Ω := fun i ξ => ξ i
+        let gcoord : Fin n → Ω → ℝ := fun _ o => g o / N
+        let Q : (Fin n → Ω) → (Fin n → Ω) := fun ξ i => O i ξ
+        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+        let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1
+        let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r
+        let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r
+        let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1
+        let κ : (Fin n → Ω) → ℝ := fun _ => 0
+        let W0 : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, gcoord i (O i ξ)
+        let V0 : (Fin n → Ω) → ℝ :=
+          fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)
+        let T0 : (Fin n → Ω) → ℝ := fun ξ =>
+          if V0 ξ = 0 then κ ξ else
+            (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))
+        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=
+          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+        let ν : @Measure (Fin n → Ω × ℝ) mAug :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mAugLocal) νlocal
+        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => gcoord i t.1
+        let Ylocal : Fin n → (Ω × ℝ) → ℝ := fun i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)
+        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => gcoord i (x i).1
+        let Y : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => Ylocal i (x i)
+        let a : Fin n → ℝ := Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y
+        let s : ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y
+        let ηlocal : Fin n → (Ω × ℝ) → ℝ := fun i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)
+        let η : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y
+        let C : (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun x i => η i x
+        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+        let Wη : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, η i x
+        let Vη : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)
+        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+        let Dη : ℝ → (Fin n → Ω × ℝ) → ℝ :=
+          fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)
+        let Tη : ℝ → (Fin n → Ω × ℝ) → ℝ :=
+          fun z x => (Wη x + Dη z x) / (Vη x * b x)
+        let Z0 : Set (Fin n → Ω) := {ξ | projectionV n g ξ = 0}
+        let Z : Set (Fin n → Ω × ℝ) := {x | V x = 0}
+        let p0 : ℝ := P.real Z0
+        let comparisons : Set (ℝ → ℝ → Prop) :=
+          {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨
+            R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨
+            R = (fun a b : ℝ => a = b)}
+        let F0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) := fun R z =>
+          {ξ | R (projectionW n g ξ + D1 ξ)
+            (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}
+        let A0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) :=
+          fun R z => {ξ | R (Tclip ξ) z}
+        let Eη : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) :=
+          fun R z => {x | R (Tη z x) z}
+        @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧
+        P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧
+        (∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀) ∧
+        iIndepFun O P₀ ∧
+        (∀ i : Fin n, Measurable (gcoord i) ∧
+          MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧
+          (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧
+          (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ)) ∧
+        (∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 ∧
+        Q = id ∧ W0 = projectionW n g ∧ V0 = projectionV n g ∧ T0 = Tclip ∧
+        Measurable D1 ∧ Measurable D2 ∧
+        (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ) ∧
+        Measurable[mN₀, borel ℝ] Tclip ∧ Measurable[mN, borel ℝ] Tclip ∧
+        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =
+          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P ∧
+        IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧
+        (1 / 2 : ℝ) < s ∧
+        (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i)) ∧
+        iIndepFun η ν ∧
+        (∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν) ∧
+        (∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν) ∧
+        (∀ i : Fin n, (∫ x, η i x ∂ν) = 0) ∧
+        (∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1 ∧
+        (∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0) ∧
+        ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0 ∧
+        (∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x) ∧
+        Measurable[mAug, borel (Fin n → ℝ)] C ∧
+        MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug ∧
+        (∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →
+          ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧
+            ∀ x : Fin n → Ω × ℝ, H x = F (C x)) ∧
+        (∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →
+          ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧
+            (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,
+              d y = F (fun j => ηlocal j.val (y j))) ∧
+            Measurable[borel (Fin n → ℝ), borel ℝ]
+              (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧
+            ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x)) ∧
+        (∃ G2 : (Fin n → ℝ) → ℝ,
+          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧
+          (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧
+          ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,
+            Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧
+            ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x)) ∧
+        (∀ i : Fin n,
+          ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧
+            ∀ x : Fin n → Ω × ℝ,
+              (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =
+                Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x)) ∧
+        (∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z)) ∧
+        MeasurableSet[mN₀] Z0 ∧ MeasurableSet[mN] Z0 ∧ MeasurableSet Z ∧
+        ν Z = P₀ Z0 ∧ P₀ Z0 = P Z0 ∧ ν.real Z = p0 ∧
+        (∀ (z : ℝ) (x : Fin n → Ω × ℝ),
+          Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x) ∧
+        (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+          MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧
+          MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧
+          MeasurableSet (Eη R z) ∧
+          ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧
+          (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧
+          P (A0 R z ∆ F0 R z) ≤ P Z0 ∧
+          |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)

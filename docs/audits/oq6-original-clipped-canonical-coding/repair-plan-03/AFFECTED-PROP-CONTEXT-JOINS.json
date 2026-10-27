@@ -1,0 +1,737 @@
+{
+  "schema": "oq56-unit222-repair-plan03-full-typed-context-joins-v1",
+  "unit": 222,
+  "baseline": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/author-01/repair-02/OriginalClippedCanonicalCoding.lean",
+    "sha256": "0458d801ed7eb34f76caa9fc74214a867e681fb280be5ed75aa857f2d529c2f3",
+    "bytes": 27458,
+    "LF": 500,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "proposed": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/repair-plan-03/PROPOSED-FULL-SOURCE.txt",
+    "sha256": "c0897fcb5e4b2d476c7001ccab911b87fdfb5b293032351782ca8797cfa35bca",
+    "bytes": 27476,
+    "LF": 500,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "classification": "OBSERVED_NATIVE002_COMPARISON_PREDICATE_PRESENTATION_MISMATCH",
+  "diagnostic": {
+    "path": "C:/game/shao lean/drafts/oq56/unit222/lead-execution-02/author-kernel-02-affected-diagnostics.json",
+    "sha256": "35349a371cabb37f404aec83a2f92a2a3918421000c4ad9ba89fc64410f8acce",
+    "bytes": 6787,
+    "LF": 91,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "typeEvidenceStatus": "Full source-derived local types plus exact hc/goal type renderings from the failed native002 diagnostic. No222 object or successful actualTYPE is claimed.",
+  "noNewPropLambdaDataInstanceWitnessHelperCapturePremise": true,
+  "ambientProducer": {
+    "qualifiedSource": {
+      "path": "C:/game/shao lean/library/Shao/OQ6/AmbientCanonicalCodingTransport.lean",
+      "sha256": "1fa31e038c6cb375c014e08d4f76489e7239df7a920b9d212588bd97a3e3229b",
+      "bytes": 31959,
+      "LF": 557,
+      "CR": 0,
+      "utf8Bom": false
+    },
+    "fullHeadLines1": [
+      171,
+      264
+    ],
+    "fullHeadText": "theorem ambient_canonical_normalized_observation_consumer\n    {A : Type*} [MeasurableSpace A]\n    (P : Measure A) [IsProbabilityMeasure P]\n    (n : ℕ) (hn : 1 ≤ n) {X : Fin n → Type*}\n    [mX : ∀ i : Fin n, MeasurableSpace (X i)]\n    [∀ i : Fin n, MeasurableSpace.CountablyGenerated (X i)]\n    (O : ∀ i : Fin n, A → X i)\n    (hO : ∀ i : Fin n, Measurable (O i))\n    (hOindep : iIndepFun O P)\n    (g : ∀ i : Fin n, X i → ℝ)\n    (hg : ∀ i : Fin n, Measurable (g i))\n    (hg2 : ∀ i : Fin n, MemLp (fun ω : A => g i (O i ω)) 2 P)\n    (hgmean : ∀ i : Fin n, (∫ ω, g i (O i ω) ∂P) = 0)\n    (hgenergy : (∑ i : Fin n, ∫ ω, (g i (O i ω)) ^ 2 ∂P) = 1)\n    (D1 D2 : (∀ i : Fin n, X i) → ℝ)\n    (hD1 : Measurable D1) (hD2 : Measurable D2)\n    (κ : A → ℝ) (hκ : Measurable κ)\n    (hD2pos : ∀ᵐ ω ∂P, 0 < 1 + D2 (fun i => O i ω))\n    (ε : ℝ) (hε : 0 < ε)\n    (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ))) :\n    let μ : ∀ i : Fin n, Measure (X i) := fun i => P.map (O i)\n    let μ0 : Measure (∀ i : Fin n, X i) := Measure.pi μ\n    let Q : A → (∀ i : Fin n, X i) := fun ω i => O i ω\n    let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n    let νlocal : ∀ i : Fin n, Measure (X i × ℝ) := fun i => (μ i).prod lambda01\n    let ν : Measure (∀ i : Fin n, X i × ℝ) := Measure.pi νlocal\n    let q : (∀ i : Fin n, X i × ℝ) → (∀ i : Fin n, X i) := fun x i => (x i).1\n    let c : ∀ i : Fin n, (X i × ℝ) → ℝ := fun i => Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode (MeasurableSpace.natGeneratingSequence (X i × ℝ))\n    let ξlocal : ∀ i : Fin n, (X i × ℝ) → ℝ := fun i z => g i z.1\n    let Ylocal : ∀ i : Fin n, (X i × ℝ) → ℝ := fun i => Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)\n    let ξ : Fin n → (∀ i : Fin n, X i × ℝ) → ℝ := fun i x => g i (x i).1\n    let Y : Fin n → (∀ i : Fin n, X i × ℝ) → ℝ := fun i x => Ylocal i (x i)\n    let a : Fin n → ℝ := Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y\n    let s : ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y\n    let ηlocal : ∀ i : Fin n, (X i × ℝ) → ℝ := fun i => Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)\n    let η : Fin n → (∀ i : Fin n, X i × ℝ) → ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n    let C : (∀ i : Fin n, X i × ℝ) → (Fin n → ℝ) := fun x i => η i x\n    let W0 : A → ℝ := fun ω => ∑ i : Fin n, g i (O i ω)\n    let V0 : A → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (g i (O i ω)) ^ 2)\n    let W : (∀ i : Fin n, X i × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x\n    let V : (∀ i : Fin n, X i × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)\n    let Wη : (∀ i : Fin n, X i × ℝ) → ℝ := fun x => ∑ i : Fin n, η i x\n    let Vη : (∀ i : Fin n, X i × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)\n    let b : (∀ i : Fin n, X i × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))\n    let Dη : ℝ → (∀ i : Fin n, X i × ℝ) → ℝ := fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)\n    let T0 : A → ℝ := fun ω => if V0 ω = 0 then κ ω else (W0 ω + D1 (Q ω)) / (V0 ω * Real.sqrt (1 + D2 (Q ω)))\n    let Tη : ℝ → (∀ i : Fin n, X i × ℝ) → ℝ := fun z x => (Wη x + Dη z x) / (Vη x * b x)\n    let Z0 : Set A := {ω : A | V0 ω = 0}\n    let Z : Set (∀ i : Fin n, X i × ℝ) := {x : (∀ i : Fin n, X i × ℝ) | V x = 0}\n    let p0 : ℝ := P.real Z0\n    let comparisons : Set (ℝ → ℝ → Prop) := {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨ R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨ R = (fun a b : ℝ => a = b)}\n    let F0 : (ℝ → ℝ → Prop) → ℝ → Set A := fun R z => {ω : A | R (W0 ω + D1 (Q ω)) (z * V0 ω * Real.sqrt (1 + D2 (Q ω)))}\n    let A0 : (ℝ → ℝ → Prop) → ℝ → Set A := fun R z => {ω : A | R (T0 ω) z}\n    let Eη : (ℝ → ℝ → Prop) → ℝ → Set (∀ i : Fin n, X i × ℝ) := fun R z => {x : (∀ i : Fin n, X i × ℝ) | R (Tη z x) z}\n    IsProbabilityMeasure ν ∧\n    MeasurePreserving Q P μ0 ∧ MeasurePreserving q ν μ0 ∧\n    (1 / 2 : ℝ) < s ∧\n    (∀ (i : Fin n) (x : ∀ j : Fin n, X j × ℝ), η i x = ηlocal i (x i)) ∧\n    iIndepFun η ν ∧\n    (∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν) ∧\n    (∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν) ∧\n    (∀ i : Fin n, (∫ x, η i x ∂ν) = 0) ∧\n    (∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1 ∧\n    (∀ (i : Fin n) (t : ℝ), ν ({x : (∀ j : Fin n, X j × ℝ) | η i x = t}) = 0) ∧\n    ν ({x : (∀ i : Fin n, X i × ℝ) | Vη x = 0}) = 0 ∧\n    (∀ᵐ x ∂ν, 0 < Vη x) ∧\n    Measurable[(inferInstance : MeasurableSpace (∀ i : Fin n, X i × ℝ)), borel (Fin n → ℝ)] C ∧\n    MeasurableSpace.comap C (borel (Fin n → ℝ)) = (inferInstance : MeasurableSpace (∀ i : Fin n, X i × ℝ)) ∧\n    (∀ (h : (∀ i : Fin n, X i × ℝ) → ℝ), Measurable h →\n      ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n        ∀ x : (∀ i : Fin n, X i × ℝ), h x = F (C x)) ∧\n    (∀ (i : Fin n) (d : (∀ j : {j : Fin n // j ≠ i}, X j.1 × ℝ) → ℝ), Measurable d →\n      ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n        Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n        (∀ y : (∀ j : {j : Fin n // j ≠ i}, X j.1 × ℝ), d y = F (fun j => ηlocal j.1 (y j))) ∧\n        Measurable[borel (Fin n → ℝ), borel ℝ] (fun v : Fin n → ℝ => F (fun j => v j.1)) ∧\n        ∀ x : (∀ j : Fin n, X j × ℝ), d (fun j => x j.1) = F (fun j => η j.1 x)) ∧\n    (∃ G2 : (Fin n → ℝ) → ℝ,\n      Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n      (∀ x : (∀ i : Fin n, X i × ℝ), D2 (q x) = G2 (C x)) ∧\n      ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n        Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n        ∀ x : (∀ i : Fin n, X i × ℝ), Dη z x = G1 (C x)) ∧\n    Measurable T0 ∧ (∀ z : ℝ, Measurable (Tη z)) ∧\n    MeasurableSet Z0 ∧ MeasurableSet Z ∧\n    ν Z = P Z0 ∧ ν.real Z = p0 ∧\n    (∀ (z : ℝ) (x : ∀ i : Fin n, X i × ℝ),\n      Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x) ∧\n    (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n      MeasurableSet (A0 R z) ∧ MeasurableSet (F0 R z) ∧ MeasurableSet (Eη R z) ∧\n      ν (Eη R z) = P (F0 R z) ∧\n      (∀ᵐ ω ∂P, ω ∈ (A0 R z ∆ F0 R z) → ω ∈ Z0) ∧\n      P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n      |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0) := by",
+    "exactApplicationText": "  have hcanonical :=\n    Shao.OQ6.AmbientCanonicalCodingTransport.ambient_canonical_normalized_observation_consumer\n      (X := ambientX) P₀ n hn1 O hO hOindep gcoord hgcoordm hgcoord₂ hgcoordmean\n      hgcoordenergy D1 D2 hD1m hD2m κ (by exact measurable_const) hD2pos ε hε hεsmall\n  dsimp only at hcanonical\n  simp only [hcoordMap] at hcanonical\n  rcases hcanonical with\n    ⟨hνprob, hQpres, hqpres, hs, hηeval, hηindep, hηL2, hηInts,\n      hηmean, hηenergy, hηnull, hVηnull, hVηpos, hCmeas, hCcomap,\n      hfactor, hretained, hscalar, hT0meas, hTηmeas, hZambientmeas,\n      hZmeas, hZlaw, hZreal, hsigned, hcompare⟩",
+    "approvedFrozenDataApplication": {
+      "constant": "Shao.OQ6.AmbientCanonicalCodingTransport.ambient_canonical_normalized_observation_consumer",
+      "qualifiedSource": "library/Shao/OQ6/AmbientCanonicalCodingTransport.lean SHA2561fa31e038c6cb375c014e08d4f76489e7239df7a920b9d212588bd97a3e3229b/31959B",
+      "exactDataArguments": {
+        "A": "ambientA = Fin n→Ω",
+        "P": "P₀",
+        "n": "n",
+        "X": "ambientX = fun _ : Fin n => Ω",
+        "mX": "ambientMX = fun _ : Fin n => m₀",
+        "O": "O",
+        "g": "gcoord",
+        "D1": "D1",
+        "D2": "D2",
+        "κ": "κ",
+        "ε": "ε"
+      },
+      "PropArguments": [
+        "hn1 derived from hn",
+        "sampleProbability from planned221",
+        "hO from measurable_pi_apply",
+        "hOindep from iIndepFun_pi",
+        "hgcoord from planned221 same g measurable/div_const",
+        "hgcoord2 from MemLp comp_measurePreserving/mul_const",
+        "hgcoordmean from planned221/pullback/integral_div",
+        "hgcoordenergy from planned221/pullback/div_pow/finite sum",
+        "hD1/hD2 from planned221 at z0",
+        "hkappa from measurable_const",
+        "hD2pos from planned221 global half bound",
+        "hε",
+        "hεsmall"
+      ],
+      "marginalRewrite": "coordinateMarginal i=μ₀ from measurePreserving_eval.map_eq; ambientProductLaw=P₀; transport all exact ambient canonical values across these equalities; no new value selection"
+    },
+    "operationalProducerStatus": "Qualified ambient producer and qualified221; historical planned221 prose inside the original freeze is preserved as historical text, not current status.",
+    "outputUsed": "last hcompare conjunction from this exact hcanonical, normalized by existing dsimp and hcoordMap rewrite; no new model/coding choice"
+  },
+  "ambientMeasurableContext": [
+    {
+      "name": "Ω",
+      "type": "Type u"
+    },
+    {
+      "name": "mΩ",
+      "type": "MeasurableSpace Ω"
+    },
+    {
+      "name": "m₀",
+      "type": "MeasurableSpace Ω",
+      "valueSource": "same qualified221 existential witness before all n/C0/ε"
+    },
+    {
+      "name": "hm₀",
+      "type": "m₀ ≤ mΩ"
+    },
+    {
+      "name": "μ",
+      "type": "@Measure Ω mΩ"
+    },
+    {
+      "name": "μ₀",
+      "type": "@Measure Ω m₀",
+      "value": "μ.trim hm₀"
+    },
+    {
+      "name": "n",
+      "type": "ℕ"
+    },
+    {
+      "name": "hn",
+      "type": "4 ≤ n"
+    },
+    {
+      "name": "C0",
+      "type": "ℝ"
+    },
+    {
+      "name": "hC0",
+      "type": "0 ≤ C0"
+    },
+    {
+      "name": "ε",
+      "type": "ℝ"
+    },
+    {
+      "name": "hε",
+      "type": "0 < ε"
+    },
+    {
+      "name": "hεsmall",
+      "type": "ε < 1 / (4 * Real.sqrt (n : ℝ))"
+    }
+  ],
+  "frozenHeadTypedValuesAndCapturesUsed": [
+    {
+      "name": "mN",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mΩ"
+      ],
+      "sourceLines": [
+        25,
+        26
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mN₀",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀"
+      ],
+      "sourceLines": [
+        27,
+        28
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "P",
+      "type": "@Measure (Fin n → Ω) mN",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+      "captures": [
+        "Ω",
+        "n",
+        "mN",
+        "mΩ",
+        "μ"
+      ],
+      "sourceLines": [
+        29,
+        31
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "P₀",
+      "type": "@Measure (Fin n → Ω) mN₀",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+      "captures": [
+        "Ω",
+        "n",
+        "mN₀",
+        "m₀",
+        "μ₀"
+      ],
+      "sourceLines": [
+        32,
+        34
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "O",
+      "type": "Fin n → (Fin n → Ω) → Ω",
+      "value": "fun i ξ => ξ i",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        36,
+        36
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "gcoord",
+      "type": "Fin n → Ω → ℝ",
+      "value": "fun _ o => g o / N",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "N"
+      ],
+      "sourceLines": [
+        37,
+        37
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Q",
+      "type": "(Fin n → Ω) → (Fin n → Ω)",
+      "value": "fun ξ i => O i ξ",
+      "captures": [
+        "Ω",
+        "n",
+        "O"
+      ],
+      "sourceLines": [
+        38,
+        38
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "D1",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualStatisticD n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        39,
+        39
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "D2",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredDelta n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        40,
+        40
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Tclip",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredStatistic n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        41,
+        41
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "κ",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun _ => 0",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        45,
+        45
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "W0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => ∑ i : Fin n, gcoord i (O i ξ)",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O"
+      ],
+      "sourceLines": [
+        46,
+        46
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "V0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)",
+      "captures": [
+        "Ω",
+        "n",
+        "gcoord",
+        "O"
+      ],
+      "sourceLines": [
+        47,
+        48
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "T0",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ =>\n          if V0 ξ = 0 then κ ξ else\n            (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))",
+      "captures": [
+        "Ω",
+        "n",
+        "V0",
+        "κ",
+        "W0",
+        "D1",
+        "Q",
+        "D2"
+      ],
+      "sourceLines": [
+        49,
+        51
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mAugLocal",
+      "type": "MeasurableSpace (Ω × ℝ)",
+      "value": "m₀.prod (borel ℝ)",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "sourceLines": [
+        53,
+        53
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "mAug",
+      "type": "MeasurableSpace (Fin n → Ω × ℝ)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mAugLocal)",
+      "captures": [
+        "Ω",
+        "n",
+        "mAugLocal"
+      ],
+      "sourceLines": [
+        54,
+        56
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "νlocal",
+      "type": "Fin n → @Measure (Ω × ℝ) mAugLocal",
+      "value": "fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀",
+        "μ₀",
+        "lambda01",
+        "mAugLocal"
+      ],
+      "sourceLines": [
+        57,
+        58
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "ν",
+      "type": "@Measure (Fin n → Ω × ℝ) mAug",
+      "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mAugLocal) νlocal",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "mAugLocal",
+        "νlocal"
+      ],
+      "sourceLines": [
+        59,
+        62
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "q",
+      "type": "(Fin n → Ω × ℝ) → (Fin n → Ω)",
+      "value": "fun x i => (x i).1",
+      "captures": [
+        "Ω",
+        "n"
+      ],
+      "sourceLines": [
+        63,
+        63
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Y",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun i x => Ylocal i (x i)",
+      "captures": [
+        "Ω",
+        "n",
+        "Ylocal"
+      ],
+      "sourceLines": [
+        71,
+        71
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "a",
+      "type": "Fin n → ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        72,
+        72
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "s",
+      "type": "ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        73,
+        73
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "η",
+      "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+      "value": "Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "Y"
+      ],
+      "sourceLines": [
+        76,
+        77
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Tη",
+      "type": "ℝ → (Fin n → Ω × ℝ) → ℝ",
+      "value": "fun z x => (Wη x + Dη z x) / (Vη x * b x)",
+      "captures": [
+        "Ω",
+        "n",
+        "Wη",
+        "Dη",
+        "Vη",
+        "b"
+      ],
+      "sourceLines": [
+        86,
+        87
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Z0",
+      "type": "Set (Fin n → Ω)",
+      "value": "{ξ | projectionV n g ξ = 0}",
+      "captures": [
+        "Ω",
+        "n",
+        "g"
+      ],
+      "sourceLines": [
+        88,
+        88
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "p0",
+      "type": "ℝ",
+      "value": "P.real Z0",
+      "captures": [
+        "Ω",
+        "n",
+        "mN",
+        "P",
+        "Z0"
+      ],
+      "sourceLines": [
+        90,
+        90
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "comparisons",
+      "type": "Set (ℝ → ℝ → Prop)",
+      "value": "{R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n            R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n            R = (fun a b : ℝ => a = b)}",
+      "captures": [],
+      "sourceLines": [
+        91,
+        94
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "F0",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω)",
+      "value": "fun R z =>\n          {ξ | R (projectionW n g ξ + D1 ξ)\n            (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "D1",
+        "D2"
+      ],
+      "sourceLines": [
+        95,
+        97
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "A0",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω)",
+      "value": "fun R z => {ξ | R (Tclip ξ) z}",
+      "captures": [
+        "Ω",
+        "n",
+        "Tclip"
+      ],
+      "sourceLines": [
+        98,
+        99
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    },
+    {
+      "name": "Eη",
+      "type": "(ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ)",
+      "value": "fun R z => {x | R (Tη z x) z}",
+      "captures": [
+        "Ω",
+        "n",
+        "Tη"
+      ],
+      "sourceLines": [
+        100,
+        101
+      ],
+      "measurableContext": "AFTER_EXISTENTIAL_m0_WITH_EXPLICIT_ORIGINAL_P_STRUCTURES"
+    }
+  ],
+  "all53FrozenValuesInstancesWitnessQuantifierCaptures": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-canonical-coding-222/parent-freeze-v1.json",
+    "sha256": "2542b87aac0ef57328238b60d6350f0b9148e3e2027496be47d5fcc03a4b63a8",
+    "bytes": 66966,
+    "LF": 2066,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "existingPropRewriteInputs": [
+    {
+      "name": "hT0eq",
+      "type": "T0 = Tclip",
+      "sourceLine1": 308
+    },
+    {
+      "name": "hW0eq",
+      "type": "W0 = projectionW n g",
+      "sourceLine1": 297
+    },
+    {
+      "name": "hV0eq",
+      "type": "V0 = projectionV n g",
+      "sourceLine1": 301
+    },
+    {
+      "name": "hQid",
+      "type": "Q = id",
+      "sourceLine1": 255
+    }
+  ],
+  "hcomparison0": {
+    "quantifierOrder": [
+      {
+        "name": "z",
+        "type": "ℝ"
+      },
+      {
+        "name": "R",
+        "type": "ℝ → ℝ → Prop"
+      },
+      {
+        "name": "hR",
+        "type": "R ∈ comparisons"
+      }
+    ],
+    "fullType": "      MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN₀] (F0 R z) ∧\n      MeasurableSet (Eη R z) ∧ ν (Eη R z) = P₀ (F0 R z) ∧\n      (∀ᵐ ξ ∂P₀, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n      P₀ (A0 R z ∆ F0 R z) ≤ P₀ Z0 ∧\n      |P₀.real (A0 R z) - ν.real (Eη R z)| ≤ P₀.real Z0",
+    "dataCaptures": [
+      "Ω",
+      "n",
+      "mN₀",
+      "mAug",
+      "P₀",
+      "ν",
+      "A0",
+      "F0",
+      "Eη",
+      "Z0",
+      "comparisons"
+    ],
+    "proofCaptures": [
+      "hcompare",
+      "z",
+      "R",
+      "hR",
+      "hT0eq",
+      "hW0eq",
+      "hV0eq",
+      "hQid"
+    ],
+    "completeSourceBlockLines1": [
+      398,
+      421
+    ],
+    "completeSourceBlock": "  have hcomparison0 (z : ℝ) (R : ℝ → ℝ → Prop) (hR : R ∈ comparisons) :\n      MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN₀] (F0 R z) ∧\n      MeasurableSet (Eη R z) ∧ ν (Eη R z) = P₀ (F0 R z) ∧\n      (∀ᵐ ξ ∂P₀, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n      P₀ (A0 R z ∆ F0 R z) ≤ P₀ Z0 ∧\n      |P₀.real (A0 R z) - ν.real (Eη R z)| ≤ P₀.real Z0 := by\n    have hc := hcompare z R hR\n    change\n      MeasurableSet {ξ : Fin n → Ω | R (T0 ξ) z} ∧\n      MeasurableSet {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n        (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))} ∧\n      MeasurableSet (Eη R z) ∧\n      ν (Eη R z) = P₀ {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n        (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))} ∧\n      (∀ᵐ ξ ∂P₀, ξ ∈ ({ξ : Fin n → Ω | R (T0 ξ) z} ∆\n        {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n          (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))}) → V0 ξ = 0) ∧\n      P₀ ({ξ : Fin n → Ω | R (T0 ξ) z} ∆\n        {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n          (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))}) ≤\n        P₀ {ξ : Fin n → Ω | V0 ξ = 0} ∧\n      |P₀.real {ξ : Fin n → Ω | R (T0 ξ) z} - ν.real (Eη R z)| ≤\n        P₀.real {ξ : Fin n → Ω | V0 ξ = 0} at hc\n    simpa only [hT0eq, hW0eq, hV0eq, hQid, id_eq, A0, F0, Z0] using hc",
+    "hcSource": "have hc := hcompare z R hR",
+    "fullHcTypeAfterExistingChange": "      MeasurableSet {ξ : Fin n → Ω | R (T0 ξ) z} ∧\n      MeasurableSet {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n        (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))} ∧\n      MeasurableSet (Eη R z) ∧\n      ν (Eη R z) = P₀ {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n        (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))} ∧\n      (∀ᵐ ξ ∂P₀, ξ ∈ ({ξ : Fin n → Ω | R (T0 ξ) z} ∆\n        {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n          (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))}) → V0 ξ = 0) ∧\n      P₀ ({ξ : Fin n → Ω | R (T0 ξ) z} ∆\n        {ξ : Fin n → Ω | R (W0 ξ + D1 (Q ξ))\n          (z * V0 ξ * Real.sqrt (1 + D2 (Q ξ)))}) ≤\n        P₀ {ξ : Fin n → Ω | V0 ξ = 0} ∧\n      |P₀.real {ξ : Fin n → Ω | R (T0 ξ) z} - ν.real (Eη R z)| ≤\n        P₀.real {ξ : Fin n → Ω | V0 ξ = 0}",
+    "normalizationInputSourceTypeObserved": "  And (MeasurableSet {ξ | R (Tclip ξ) z})\n    (MeasurableSet {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n      MeasurableSet (Eη R z) ∧\n        ν (Eη R z) = P₀ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n          (∀ᵐ (ξ : Fin n → Ω) ∂P₀,\n              ξ ∈ {ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} →\n                projectionV n g ξ = 0) ∧\n            P₀ ({ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))}) ≤\n                P₀ {ξ | projectionV n g ξ = 0} ∧\n              |P₀.real {ξ | R (Tclip ξ) z} - ν.real (Eη R z)| ≤ P₀.real {ξ | projectionV n g ξ = 0})",
+    "normalizationInputGoalTypeObserved": "  And (MeasurableSet {ξ | R (Tclip ξ) z})\n    (MeasurableSet {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n      MeasurableSet (Eη R z) ∧\n        ν (Eη R z) = P₀ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n          (∀ᵐ (ξ : Fin n → Ω) ∂P₀,\n              ξ ∈ {ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} →\n                ξ ∈ {ξ | projectionV n g ξ = 0}) ∧\n            P₀ ({ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))}) ≤\n                P₀ {ξ | projectionV n g ξ = 0} ∧\n              |P₀.real {ξ | R (Tclip ξ) z} - ν.real (Eη R z)| ≤ P₀.real {ξ | projectionV n g ξ = 0})",
+    "soleObservedDifference": "Consequent projectionV n g ξ = 0 versus ξ ∈ {ξ | projectionV n g ξ = 0}, under the same P₀ AE implication; all other six conjunction fields and the implication antecedent are identical.",
+    "proposedTacticLine": "    simpa only [hT0eq, hW0eq, hV0eq, hQid, id_eq, A0, F0, Z0, Set.mem_setOf_eq] using hc",
+    "commonOutputNormalForm": "  And (MeasurableSet {ξ | R (Tclip ξ) z})\n    (MeasurableSet {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n      MeasurableSet (Eη R z) ∧\n        ν (Eη R z) = P₀ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} ∧\n          (∀ᵐ (ξ : Fin n → Ω) ∂P₀,\n              ξ ∈ {ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))} →\n                projectionV n g ξ = 0) ∧\n            P₀ ({ξ | R (Tclip ξ) z} ∆ {ξ | R (projectionW n g ξ + D1 ξ) (z * projectionV n g ξ * √(1 + D2 ξ))}) ≤\n                P₀ {ξ | projectionV n g ξ = 0} ∧\n              |P₀.real {ξ | R (Tclip ξ) z} - ν.real (Eη R z)| ≤ P₀.real {ξ | projectionV n g ξ = 0})",
+    "normalizationRule": "Set.mem_setOf_eq removes set-builder membership on the goal side; source equality consequent remains identical. It is a definitional presentation normalization, not an AE-to-pointwise inference.",
+    "finalDeclaredTypeUnchanged": true
+  },
+  "downstreamJoins": {
+    "rcasesLine1": 445,
+    "componentOrder": [
+      "hA0m",
+      "hF0m",
+      "hEηm",
+      "hEηlaw",
+      "hAFae",
+      "hAF₀",
+      "hreal₀"
+    ],
+    "fullComponentTypes": {
+      "hA0m": "MeasurableSet[mN₀] (A0 R z)",
+      "hF0m": "MeasurableSet[mN₀] (F0 R z)",
+      "hEηm": "MeasurableSet[mAug] (Eη R z)",
+      "hEηlaw": "ν (Eη R z) = P₀ (F0 R z)",
+      "hAFae": "∀ᵐ ξ ∂P₀, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0",
+      "hAF₀": "P₀ (A0 R z ∆ F0 R z) ≤ P₀ Z0",
+      "hreal₀": "|P₀.real (A0 R z) - ν.real (Eη R z)| ≤ P₀.real Z0"
+    },
+    "completeExistingTailLines1": [
+      444,
+      496
+    ],
+    "completeExistingTailSource": "  · intro z R hR\n    rcases hcomparison0 z R hR with ⟨hA0m, hF0m, hEηm, hEηlaw, hAFae, hAF₀, hreal₀⟩\n    have hA0Original : MeasurableSet[mN] (A0 R z) := hA0m.preimage hidmeas\n    have hF0Original : MeasurableSet[mN] (F0 R z) := hF0m.preimage hidmeas\n    have hF0law : P₀ (F0 R z) = P (F0 R z) := by\n      rw [hP₀map]\n      exact Measure.map_apply hidmeas hF0m\n    have hA0law : P₀ (A0 R z) = P (A0 R z) := by\n      rw [hP₀map]\n      exact Measure.map_apply hidmeas hA0m\n    have hA0real : P₀.real (A0 R z) = P.real (A0 R z) := by\n      change (P₀ (A0 R z)).toReal = (P (A0 R z)).toReal\n      exact congrArg ENNReal.toReal hA0law\n    have hpoint : ∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0 := by\n      intro ξ hdiff\n      by_contra hnot\n      have hvne : projectionV n g ξ ≠ 0 := hnot\n      have hvpos : 0 < projectionV n g ξ :=\n        lt_of_le_of_ne (Real.sqrt_nonneg _) (Ne.symm hvne)\n      have hbpos : 0 < Real.sqrt (1 + D2 ξ) := Real.sqrt_pos.mpr (hD2positive ξ)\n      have hden : 0 < projectionV n g ξ * Real.sqrt (1 + D2 ξ) := mul_pos hvpos hbpos\n      have hTeq : Tclip ξ = (projectionW n g ξ + D1 ξ) /\n          (projectionV n g ξ * Real.sqrt (1 + D2 ξ)) := by\n        simp only [Tclip, clippedCenteredStatistic, if_neg hvne, D1, D2]\n      have hrel : R (Tclip ξ) z ↔ R (projectionW n g ξ + D1 ξ)\n          (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ)) := by\n        rw [hTeq]\n        rw [mul_assoc]\n        change R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n          R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n          R = (fun a b : ℝ => a = b) at hR\n        rcases hR with rfl | rfl | rfl | rfl | rfl\n        · exact div_le_iff₀ hden\n        · exact div_lt_iff₀ hden\n        · exact le_div_iff₀ hden\n        · exact lt_div_iff₀ hden\n        · constructor\n          · intro heq\n            apply le_antisymm\n            · exact (div_le_iff₀ hden).mp heq.le\n            · exact (le_div_iff₀ hden).mp heq.ge\n          · intro heq\n            apply le_antisymm\n            · exact (div_le_iff₀ hden).mpr heq.le\n            · exact (le_div_iff₀ hden).mpr heq.ge\n      have hevents : ξ ∈ A0 R z ↔ ξ ∈ F0 R z := hrel\n      rcases Set.mem_symmDiff.mp hdiff with ⟨ha, hf⟩ | ⟨hf, ha⟩\n      · exact hf (hevents.mp ha)\n      · exact ha (hevents.mpr hf)\n    have hreal : |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0 := by\n      simpa only [hA0real, hZ0real] using hreal₀\n    exact ⟨hA0m, hA0Original, hF0m, hF0Original, hEηm, hEηlaw, hF0law,\n      hpoint, measure_mono hpoint, hreal⟩",
+    "hAFaeAndhAF₀Use": "Extracted unchanged; the final pointwise hpoint and original-product measure_mono bound use their separate existing pointwise proof, not a strengthening of the ambient AE implication.",
+    "hrealJoin": "Existing hA0real and hZ0real convert hreal₀ to the original-product p0 bound; unchanged.",
+    "pointwiseProofType": "∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0",
+    "originalFeeType": "p0 : ℝ = P.real Z0 by the exact frozen value; no smallness claim.",
+    "noNewModelWitnessOrData": true
+  },
+  "nativeStatus": "Native002 RC1/one observed error/seven preserved warnings/noO/noAX; earlier dsimp failures resolved at this prefix; later whole proof not certified.",
+  "scopeInvariant": "Same53 head/22 slots/common m₀/zeroLevel E_i/original coefficients/canonical code/η/original-product zero-event fee; p51 candidate/p54 repairs/Shao-Zhou2016 attribution and CDF/root OPEN, OQ3 paused.",
+  "existingGlobalProofConstantReferenceAdded": "Set.mem_setOf_eq",
+  "newLocalPropDeclarationsOrDataAssumptionCaptures": []
+}
