@@ -1,0 +1,12 @@
+DECL Shao.OQ3.pair_weighted_oscillatory_error_integral_bound
+TYPE ∀ (e : ℝ × ℝ → ℂ),
+  Continuous e →
+    ∀ (s : Set (ℝ × ℝ)) (k : ℕ),
+      MeasureTheory.IntegrableOn (fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k * ‖e z‖) s MeasureTheory.volume →
+        have weight := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k;
+        have kernel := fun x z => Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2));
+        ∀ (x : ℝ × ℝ),
+          MeasureTheory.IntegrableOn (fun z => kernel x z * ↑(weight z) * e z) s MeasureTheory.volume ∧
+            ‖∫ (z : ℝ × ℝ) in s, kernel x z * ↑(weight z) * e z‖ ≤ ∫ (z : ℝ × ℝ) in s, weight z * ‖e z‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

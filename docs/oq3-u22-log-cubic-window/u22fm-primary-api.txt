@@ -1,0 +1,37 @@
+PINNED_PRIMARY_SOURCE Analysis/SpecialFunctions/Gaussian/FourierTransform.lean SHA256 8db4ba1f529c8b8351cddd5e80861c5f93eda4af09aee2737c8b7eb4328d4248
+189: lemma _root_.integrable_cexp_quadratic' (hb : b.re < 0) (c d : ℂ) :
+190:     Integrable (fun (x : ℝ) ↦ cexp (b * x ^ 2 + c * x + d)) := by
+191:   have hb' : b ≠ 0 := by contrapose! hb; rw [hb, zero_re]
+192:   by_contra H
+193:   simpa [hb', pi_ne_zero, Complex.exp_ne_zero, integral_undef H]
+194:     using integral_cexp_quadratic hb c d
+195: 
+196: lemma _root_.integrable_cexp_quadratic (hb : 0 < b.re) (c d : ℂ) :
+197:     Integrable (fun (x : ℝ) ↦ cexp (-b * x ^ 2 + c * x + d)) := by
+198:   have : (-b).re < 0 := by simpa using hb
+199:   exact integrable_cexp_quadratic' this c d
+200: 
+201: theorem _root_.fourierIntegral_gaussian (hb : 0 < b.re) (t : ℂ) :
+202:     ∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2) =
+203:     (π / b) ^ (1 / 2 : ℂ) * cexp (-t ^ 2 / (4 * b)) := by
+204:   conv => enter [1, 2, x]; rw [← Complex.exp_add, add_comm, ← add_zero (-b * x ^ 2 + I * t * x)]
+205:   rw [integral_cexp_quadratic (show (-b).re < 0 by rwa [neg_re, neg_lt_zero]), neg_neg, zero_sub,
+206:     mul_neg, div_neg, neg_neg, mul_pow, I_sq, neg_one_mul, mul_comm]
+PINNED_PRIMARY_SOURCE Analysis/SpecialFunctions/Pow/Real.lean SHA256 f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd
+279: 
+280: namespace Complex
+281: 
+282: theorem ofReal_cpow {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : ((x ^ y : ℝ) : ℂ) = (x : ℂ) ^ (y : ℂ) := by
+283:   simp only [Real.rpow_def_of_nonneg hx, Complex.cpow_def, ofReal_eq_zero]; split_ifs <;>
+284:     simp [Complex.ofReal_log hx]
+PINNED_PRIMARY_SOURCE MeasureTheory/Integral/Prod.lean SHA256 8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05
+298: omit [SFinite ν] in
+299: @[fun_prop]
+300: theorem Integrable.mul_prod {L : Type*} [NormedRing L] {f : α → L} {g : β → L} (hf : Integrable f μ)
+301:     (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.prod ν) :=
+302:   hf.smul_prod hg
+536:   rcases H with H | H <;> simp [integral_undef h, integral_undef H]
+537: 
+538: theorem integral_prod_mul {L : Type*} [RCLike L] (f : α → L) (g : β → L) :
+539:     ∫ z, f z.1 * g z.2 ∂μ.prod ν = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
+540:   integral_prod_smul f g
