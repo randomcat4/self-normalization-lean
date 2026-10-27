@@ -1,0 +1,14 @@
+theorem uniform_pair_cgf_cumulant_bounds
+    {ι : Type*} (law : ι → Measure (Fin 2 → ℝ))
+    (hprob : ∀ i, IsProbabilityMeasure (law i))
+    (h0 : ∀ i, ∀ u v : ℝ, 0 ∈ interior (ProbabilityTheory.integrableExpSet
+      (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) (law i)))
+    (M : ℕ → ℝ)
+    (hI : ∀ k : ℕ, ∀ i, Integrable
+      (fun y : Fin 2 → ℝ => Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) (law i))
+    (hM : ∀ k : ℕ, ∀ i, (∫ y : Fin 2 → ℝ,
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k ∂law i) ≤ M k) :
+    ∀ k : ℕ, ∃ C : ℝ, 0 < C ∧ ∀ i, ∀ u v : ℝ,
+      |iteratedDeriv k (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) (law i)) 0| ≤
+        C * Real.sqrt (u ^ 2 + v ^ 2) ^ k

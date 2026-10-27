@@ -1,0 +1,23 @@
+DECL Shao.OQ3.uniform_pair_cgf_cumulant_bounds._proof_1_1
+TYPE ∀ (n j : ℕ), j < n → ¬j + 1 < n + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.uniform_pair_cgf_cumulant_bounds._proof_1_2
+TYPE ∀ (n j : ℕ), j < n → ¬j + 1 + (n - j) = n + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.uniform_pair_cgf_cumulant_bounds
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure (Fin 2 → ℝ)),
+  (∀ (i : ι), MeasureTheory.IsProbabilityMeasure (law i)) →
+    (∀ (i : ι) (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) (law i))) →
+      ∀ (M : ℕ → ℝ),
+        (∀ (k : ℕ) (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) (law i)) →
+          (∀ (k : ℕ) (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ k ∂law i ≤ M k) →
+            ∀ (k : ℕ),
+              ∃ C,
+                0 < C ∧
+                  ∀ (i : ι) (u v : ℝ),
+                    |iteratedDeriv k (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) (law i)) 0| ≤
+                      C * √(u ^ 2 + v ^ 2) ^ k
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
