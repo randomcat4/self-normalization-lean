@@ -1,0 +1,1253 @@
+{
+  "schema": "oq56-unit221-stage1-candidate-data-v1",
+  "unit": 221,
+  "status": "UNELABORATED_STAGE1_PROPOSAL_PARENT_EXACT_FREEZE_AND_QUALIFIED220_REQUIRED",
+  "module": "Shao.OQ6.OriginalCountablyGeneratedModel",
+  "futureSourcePath": "Shao/OQ6/OriginalCountablyGeneratedModel.lean",
+  "preamble": "import Shao.OQ6.KernelObservableReduction\nimport Shao.OQ6.OriginalKernelObservableTransport\nimport Shao.OQ6.OriginalClippedStatisticMeasurable\n\nset_option autoImplicit false\n\nuniverse u v w\n\nopen MeasureTheory\nopen scoped BigOperators MeasureTheory ENNReal\nopen Shao.OQ5.P51\n\nnamespace Shao.OQ6.OriginalCountablyGeneratedModel\n\nnoncomputable section\n",
+  "closing": "end\n\nend Shao.OQ6.OriginalCountablyGeneratedModel\n",
+  "globalDeclarations": [
+    {
+      "id": "theorem01",
+      "kind": "theorem",
+      "name": "actual_normalized_original_countably_generated_model",
+      "fullName": "Shao.OQ6.OriginalCountablyGeneratedModel.actual_normalized_original_countably_generated_model",
+      "head": "theorem actual_normalized_original_countably_generated_model\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :\n    let f : ℕ → Ω → ℝ := fun (_k : ℕ) (_o : Ω) => (0 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    let rowIntegrable : Ω → Prop := fun o => Integrable (h o) μ\n    let gLp : ℝ≥0∞ → Prop := fun p => MemLp g p μ\n    let projectionLaw : Measure ℝ :=\n      @Measure.map Ω ℝ mΩ (borel ℝ) g μ\n    let pairLaw : @Measure (Ω × Ω) (mΩ.prod mΩ) :=\n      @Measure.prod Ω Ω mΩ mΩ μ μ\n    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ),\n      @MeasurableSpace.CountablyGenerated Ω m₀ ∧\n      Measurable[m₀.prod m₀, borel ℝ]\n        (fun t : Ω × Ω => h t.1 t.2) ∧\n      (∀ k : ℕ, Measurable[m₀, borel ℝ] (f k)) ∧\n      let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n      letI : MeasurableSpace Ω := m₀\n      let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀\n      let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y\n      let v₀ : ℝ :=\n        ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)\n      let rho₀ : ℝ := Real.sqrt v₀\n      IsProbabilityMeasure μ₀ ∧\n      μ₀ = @Measure.map Ω Ω mΩ m₀ id μ ∧\n      g₀ = g ∧ r₀ = r ∧ v₀ = v ∧ rho₀ = rho ∧\n      (∀ o : Ω, Integrable (h o) μ₀ ↔ rowIntegrable o) ∧\n      MemLp (fun t : Ω × Ω => h t.1 t.2) 2\n        (@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀) ∧\n      (∫ t : Ω × Ω, h t.1 t.2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)) = 0 ∧\n      Measurable g₀ ∧ MemLp g₀ 2 μ₀ ∧\n      (∫ o, g₀ o ∂μ₀) = 0 ∧ (∫ o, g₀ o ^ 2 ∂μ₀) = 1 ∧\n      Measurable (fun t : Ω × Ω => r₀ t.1 t.2) ∧\n      MemLp (fun t : Ω × Ω => r₀ t.1 t.2) 2\n        (@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀) ∧\n      (∀ o y : Ω, r₀ o y = r₀ y o) ∧\n      (∀ᵐ o ∂μ₀, (∫ y, r₀ o y ∂μ₀) = 0) ∧\n      @Measure.map Ω ℝ m₀ (borel ℝ) g₀ μ₀ = projectionLaw ∧\n      (∀ p : ℝ≥0∞, MemLp g₀ p μ₀ ↔ gLp p) ∧\n      @Measure.prod Ω Ω m₀ m₀ μ₀ μ₀ =\n        @Measure.map (Ω × Ω) (Ω × Ω)\n          (mΩ.prod mΩ) (m₀.prod m₀) id pairLaw ∧\n      (∀ (J : Type v) (instJ : Fintype J),\n        let mJ : MeasurableSpace (J → Ω) :=\n          @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)\n        let mJ₀ : MeasurableSpace (J → Ω) :=\n          @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)\n        let P : @Measure (J → Ω) mJ :=\n          @Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => mΩ) (fun _ : J => μ)\n        let P₀ : @Measure (J → Ω) mJ₀ :=\n          @Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => m₀) (fun _ : J => μ₀)\n        @IsProbabilityMeasure (J → Ω) mJ₀ P₀ ∧\n        Measurable[mJ, mJ₀] (id : (J → Ω) → J → Ω) ∧\n        P₀ = @Measure.map (J → Ω) (J → Ω) mJ mJ₀ id P ∧\n        ∀ (B : Type w) (mB : MeasurableSpace B) (T : (J → Ω) → B),\n          Measurable[mJ₀, mB] T →\n          @Measure.map (J → Ω) B mJ₀ mB T P₀ =\n            @Measure.map (J → Ω) B mJ mB T P) ∧\n      (∀ (n : ℕ) (hn : 4 ≤ n)\n          (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n          (C0 : ℝ) (hC0 : 0 ≤ C0),\n        let mN : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)\n        let mN₀ : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)\n        let P : @Measure (Fin n → Ω) mN :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)\n        let P₀ : @Measure (Fin n → Ω) mN₀ :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let W : (Fin n → Ω) → ℝ := projectionW n g\n        let V : (Fin n → Ω) → ℝ := projectionV n g\n        let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n        let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n        let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n        let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n        let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n        let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n        let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n        let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n        let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n        let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n        let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n        let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n        let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n        let Tactual : (Fin n → Ω) → ℝ :=\n          fun ξ => @ite ℝ (s ξ = 0) (Classical.propDecidable (s ξ = 0))\n            0 ((W ξ + D ξ) / s ξ)\n        let cap : (Fin n → Ω) → Fin n → ℝ :=\n          fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))\n        let deletedTest : (Fin n → Ω) → Fin n → ℝ :=\n          fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)\n        Measurable[mN₀, borel ℝ] W ∧ Measurable[mN₀, borel ℝ] V ∧\n        Measurable[mN₀, borel ℝ] D ∧ Measurable[mN₀, borel ℝ] J ∧\n        Measurable[mN₀, borel ℝ] A ∧ Measurable[mN₀, borel ℝ] B1 ∧\n        Measurable[mN₀, borel ℝ] s2 ∧ Measurable[mN₀, borel ℝ] s ∧\n        Measurable[mN₀, borel ℝ] d ∧ Measurable[mN₀, borel ℝ] e ∧\n        Measurable[mN₀, borel ℝ] Tclip ∧ Measurable[mN₀, borel ℝ] Tactual ∧\n        MeasurableSet[mN₀] {ξ : Fin n → Ω | V ξ = 0} ∧\n        MeasurableSet[mN₀] {ξ : Fin n → Ω | s ξ = 0} ∧\n        (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n        (∀ ξ : Fin n → Ω, V ξ = 0 → d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P ∧\n        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tactual P₀ =\n          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tactual P ∧\n        (∀ i : Fin n,\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => cap ξ i) ∧\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Adel ξ i) ∧\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => B1del ξ i) ∧\n          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n          let mRet : MeasurableSpace ({j : Fin n // j ≠ i} → Ω) :=\n            @MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)\n          let mRet₀ : MeasurableSpace ({j : Fin n // j ≠ i} → Ω) :=\n            @MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => m₀)\n          let PRet : @Measure ({j : Fin n // j ≠ i} → Ω) mRet :=\n            @Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)\n              (fun _ : {j : Fin n // j ≠ i} => μ)\n          let PRet₀ : @Measure ({j : Fin n // j ≠ i} → Ω) mRet₀ :=\n            @Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => m₀)\n              (fun _ : {j : Fin n // j ≠ i} => μ₀)\n          ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n            Measurable[mRet₀, borel (ℝ × ℝ × ℝ)] E ∧\n            (∀ ξ : Fin n → Ω,\n              (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n                E (fun j : {j : Fin n // j ≠ i} => ξ j.val)) ∧\n            @Measure.map (Fin n → Ω) (ℝ × ℝ × ℝ) mN₀ (borel (ℝ × ℝ × ℝ))\n                (fun ξ : Fin n → Ω => (Ddel ξ i, Jdel ξ i, B1del ξ i)) P₀ =\n              @Measure.map (Fin n → Ω) (ℝ × ℝ × ℝ) mN (borel (ℝ × ℝ × ℝ))\n                (fun ξ : Fin n → Ω => (Ddel ξ i, Jdel ξ i, B1del ξ i)) P ∧\n            @Measure.map ({j : Fin n // j ≠ i} → Ω) (ℝ × ℝ × ℝ)\n                mRet₀ (borel (ℝ × ℝ × ℝ)) E PRet₀ =\n              @Measure.map ({j : Fin n // j ≠ i} → Ω) (ℝ × ℝ × ℝ)\n                mRet (borel (ℝ × ℝ × ℝ)) E PRet))\n",
+      "nonPropBinders": [
+        {
+          "name": "Ω",
+          "type": "Type u"
+        },
+        {
+          "name": "mΩ",
+          "type": "MeasurableSpace Ω",
+          "instance": true
+        },
+        {
+          "name": "μ",
+          "type": "@Measure Ω mΩ"
+        },
+        {
+          "name": "h",
+          "type": "Ω → Ω → ℝ"
+        }
+      ],
+      "propBinders": [
+        {
+          "name": "originalProbability",
+          "type": "@IsProbabilityMeasure Ω mΩ μ",
+          "instance": true
+        },
+        {
+          "name": "hh",
+          "type": "Measurable (fun t : Ω × Ω => h t.1 t.2)"
+        },
+        {
+          "name": "hh2",
+          "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "hhsymm",
+          "type": "∀ o y, h o y = h y o"
+        },
+        {
+          "name": "hcenter",
+          "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)) = 0"
+        },
+        {
+          "name": "hprojectionsecond",
+          "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1"
+        }
+      ],
+      "headerLets": [
+        {
+          "id": "original.f",
+          "name": "f",
+          "scope": "original",
+          "type": "ℕ → Ω → ℝ",
+          "value": "fun (_k : ℕ) (_o : Ω) => (0 : ℝ)",
+          "exactText": "let f : ℕ → Ω → ℝ := fun (_k : ℕ) (_o : Ω) => (0 : ℝ)",
+          "captures": [
+            "Ω"
+          ],
+          "line": 11,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.g",
+          "name": "g",
+          "scope": "original",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ",
+          "exactText": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h"
+          ],
+          "line": 12,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.r",
+          "name": "r",
+          "scope": "original",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g o - g y",
+          "exactText": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y",
+          "captures": [
+            "Ω",
+            "h",
+            "g"
+          ],
+          "line": 13,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.v",
+          "name": "v",
+          "scope": "original",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)",
+          "exactText": "let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "r"
+          ],
+          "line": 14,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.rho",
+          "name": "rho",
+          "scope": "original",
+          "type": "ℝ",
+          "value": "Real.sqrt v",
+          "exactText": "let rho : ℝ := Real.sqrt v",
+          "captures": [
+            "v"
+          ],
+          "line": 16,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.rowIntegrable",
+          "name": "rowIntegrable",
+          "scope": "original",
+          "type": "Ω → Prop",
+          "value": "fun o => Integrable (h o) μ",
+          "exactText": "let rowIntegrable : Ω → Prop := fun o => Integrable (h o) μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h"
+          ],
+          "line": 17,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.gLp",
+          "name": "gLp",
+          "scope": "original",
+          "type": "ℝ≥0∞ → Prop",
+          "value": "fun p => MemLp g p μ",
+          "exactText": "let gLp : ℝ≥0∞ → Prop := fun p => MemLp g p μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g"
+          ],
+          "line": 18,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.projectionLaw",
+          "name": "projectionLaw",
+          "scope": "original",
+          "type": "Measure ℝ",
+          "value": "@Measure.map Ω ℝ mΩ (borel ℝ) g μ",
+          "exactText": "let projectionLaw : Measure ℝ :=\n      @Measure.map Ω ℝ mΩ (borel ℝ) g μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g"
+          ],
+          "line": 19,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "original.pairLaw",
+          "name": "pairLaw",
+          "scope": "original",
+          "type": "@Measure (Ω × Ω) (mΩ.prod mΩ)",
+          "value": "@Measure.prod Ω Ω mΩ mΩ μ μ",
+          "exactText": "let pairLaw : @Measure (Ω × Ω) (mΩ.prod mΩ) :=\n      @Measure.prod Ω Ω mΩ mΩ μ μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ"
+          ],
+          "line": 21,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "reduced.μ₀",
+          "name": "μ₀",
+          "scope": "reduced",
+          "type": "@Measure Ω m₀",
+          "value": "μ.trim hm₀",
+          "exactText": "let μ₀ : @Measure Ω m₀ := μ.trim hm₀",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "m₀",
+            "μ",
+            "hm₀"
+          ],
+          "line": 28,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "reduced.g₀",
+          "name": "g₀",
+          "scope": "reduced",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ₀",
+          "exactText": "let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "h"
+          ],
+          "line": 30,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "reduced.r₀",
+          "name": "r₀",
+          "scope": "reduced",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g₀ o - g₀ y",
+          "exactText": "let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y",
+          "captures": [
+            "Ω",
+            "h",
+            "g₀"
+          ],
+          "line": 31,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "reduced.v₀",
+          "name": "v₀",
+          "scope": "reduced",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)",
+          "exactText": "let v₀ : ℝ :=\n        ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "r₀"
+          ],
+          "line": 32,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "reduced.rho₀",
+          "name": "rho₀",
+          "scope": "reduced",
+          "type": "ℝ",
+          "value": "Real.sqrt v₀",
+          "exactText": "let rho₀ : ℝ := Real.sqrt v₀",
+          "captures": [
+            "v₀"
+          ],
+          "line": 34,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "finite.mJ",
+          "name": "mJ",
+          "scope": "finite",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)",
+          "exactText": "let mJ : MeasurableSpace (J → Ω) :=\n          @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)",
+          "captures": [
+            "J",
+            "Ω",
+            "mΩ"
+          ],
+          "line": 55,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "finite.mJ₀",
+          "name": "mJ₀",
+          "scope": "finite",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)",
+          "exactText": "let mJ₀ : MeasurableSpace (J → Ω) :=\n          @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)",
+          "captures": [
+            "J",
+            "Ω",
+            "m₀"
+          ],
+          "line": 57,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "finite.P",
+          "name": "P",
+          "scope": "finite",
+          "type": "@Measure (J → Ω) mJ",
+          "value": "@Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => mΩ) (fun _ : J => μ)",
+          "exactText": "let P : @Measure (J → Ω) mJ :=\n          @Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => mΩ) (fun _ : J => μ)",
+          "captures": [
+            "J",
+            "instJ",
+            "Ω",
+            "mΩ",
+            "μ",
+            "mJ"
+          ],
+          "line": 59,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "finite.P₀",
+          "name": "P₀",
+          "scope": "finite",
+          "type": "@Measure (J → Ω) mJ₀",
+          "value": "@Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => m₀) (fun _ : J => μ₀)",
+          "exactText": "let P₀ : @Measure (J → Ω) mJ₀ :=\n          @Measure.pi J (fun _ : J => Ω) instJ\n            (fun _ : J => m₀) (fun _ : J => μ₀)",
+          "captures": [
+            "J",
+            "instJ",
+            "Ω",
+            "m₀",
+            "μ₀",
+            "mJ₀"
+          ],
+          "line": 62,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.mN",
+          "name": "mN",
+          "scope": "sample",
+          "type": "MeasurableSpace (Fin n → Ω)",
+          "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+          "exactText": "let mN : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+          "captures": [
+            "n",
+            "Ω",
+            "mΩ"
+          ],
+          "line": 75,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.mN₀",
+          "name": "mN₀",
+          "scope": "sample",
+          "type": "MeasurableSpace (Fin n → Ω)",
+          "value": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+          "exactText": "let mN₀ : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+          "captures": [
+            "n",
+            "Ω",
+            "m₀"
+          ],
+          "line": 77,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.P",
+          "name": "P",
+          "scope": "sample",
+          "type": "@Measure (Fin n → Ω) mN",
+          "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+          "exactText": "let P : @Measure (Fin n → Ω) mN :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+          "captures": [
+            "n",
+            "Ω",
+            "mΩ",
+            "μ",
+            "mN",
+            "Fintype (Fin n)"
+          ],
+          "line": 79,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.P₀",
+          "name": "P₀",
+          "scope": "sample",
+          "type": "@Measure (Fin n → Ω) mN₀",
+          "value": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+          "exactText": "let P₀ : @Measure (Fin n → Ω) mN₀ :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+          "captures": [
+            "n",
+            "Ω",
+            "m₀",
+            "μ₀",
+            "mN₀",
+            "Fintype (Fin n)"
+          ],
+          "line": 82,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.N",
+          "name": "N",
+          "scope": "sample",
+          "type": "ℝ",
+          "value": "Real.sqrt (n : ℝ)",
+          "exactText": "let N : ℝ := Real.sqrt (n : ℝ)",
+          "captures": [
+            "n"
+          ],
+          "line": 85,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.W",
+          "name": "W",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "projectionW n g",
+          "exactText": "let W : (Fin n → Ω) → ℝ := projectionW n g",
+          "captures": [
+            "n",
+            "Ω",
+            "g"
+          ],
+          "line": 86,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.V",
+          "name": "V",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "projectionV n g",
+          "exactText": "let V : (Fin n → Ω) → ℝ := projectionV n g",
+          "captures": [
+            "n",
+            "Ω",
+            "g"
+          ],
+          "line": 87,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.D",
+          "name": "D",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "residualStatisticD n r",
+          "exactText": "let D : (Fin n → Ω) → ℝ := residualStatisticD n r",
+          "captures": [
+            "n",
+            "Ω",
+            "r"
+          ],
+          "line": 88,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.J",
+          "name": "J",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "residualEnergyJ n r",
+          "exactText": "let J : (Fin n → Ω) → ℝ := residualEnergyJ n r",
+          "captures": [
+            "n",
+            "Ω",
+            "r"
+          ],
+          "line": 89,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.Ddel",
+          "name": "Ddel",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "residualStatisticDDeleted n r",
+          "exactText": "let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r",
+          "captures": [
+            "n",
+            "Ω",
+            "r"
+          ],
+          "line": 90,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.Jdel",
+          "name": "Jdel",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "residualEnergyJDeleted n r",
+          "exactText": "let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r",
+          "captures": [
+            "n",
+            "Ω",
+            "r"
+          ],
+          "line": 91,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.A",
+          "name": "A",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ => |D ξ|",
+          "exactText": "let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|",
+          "captures": [
+            "n",
+            "Ω",
+            "D"
+          ],
+          "line": 92,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.Adel",
+          "name": "Adel",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "fun ξ i => |Ddel ξ i|",
+          "exactText": "let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|",
+          "captures": [
+            "n",
+            "Ω",
+            "Ddel"
+          ],
+          "line": 93,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.B1",
+          "name": "B1",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "studentizerClipBudget n r C0 rho 1",
+          "exactText": "let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1",
+          "captures": [
+            "n",
+            "Ω",
+            "r",
+            "C0",
+            "rho"
+          ],
+          "line": 94,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.B1del",
+          "name": "B1del",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+          "exactText": "let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1",
+          "captures": [
+            "n",
+            "Ω",
+            "r",
+            "C0",
+            "rho"
+          ],
+          "line": 95,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.s2",
+          "name": "s2",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "centeredSq n g r",
+          "exactText": "let s2 : (Fin n → Ω) → ℝ := centeredSq n g r",
+          "captures": [
+            "n",
+            "Ω",
+            "g",
+            "r"
+          ],
+          "line": 96,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.s",
+          "name": "s",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ => Real.sqrt (s2 ξ)",
+          "exactText": "let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)",
+          "captures": [
+            "n",
+            "Ω",
+            "s2"
+          ],
+          "line": 97,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.d",
+          "name": "d",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "centeredDelta n g r",
+          "exactText": "let d : (Fin n → Ω) → ℝ := centeredDelta n g r",
+          "captures": [
+            "n",
+            "Ω",
+            "g",
+            "r"
+          ],
+          "line": 98,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.e",
+          "name": "e",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "clippedCenteredDelta n g r C0 rho 1",
+          "exactText": "let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1",
+          "captures": [
+            "n",
+            "Ω",
+            "g",
+            "r",
+            "C0",
+            "rho"
+          ],
+          "line": 99,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.Tclip",
+          "name": "Tclip",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "clippedCenteredStatistic n g r C0 rho 1",
+          "exactText": "let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1",
+          "captures": [
+            "n",
+            "Ω",
+            "g",
+            "r",
+            "C0",
+            "rho"
+          ],
+          "line": 100,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.Tactual",
+          "name": "Tactual",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ => @ite ℝ (s ξ = 0) (Classical.propDecidable (s ξ = 0))\n            0 ((W ξ + D ξ) / s ξ)",
+          "exactText": "let Tactual : (Fin n → Ω) → ℝ :=\n          fun ξ => @ite ℝ (s ξ = 0) (Classical.propDecidable (s ξ = 0))\n            0 ((W ξ + D ξ) / s ξ)",
+          "captures": [
+            "n",
+            "Ω",
+            "s",
+            "W",
+            "D",
+            "Classical.propDecidable (s ξ = 0)"
+          ],
+          "line": 101,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.cap",
+          "name": "cap",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))",
+          "exactText": "let cap : (Fin n → Ω) → Fin n → ℝ :=\n          fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))",
+          "captures": [
+            "n",
+            "Ω",
+            "g",
+            "N",
+            "z"
+          ],
+          "line": 104,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "sample.deletedTest",
+          "name": "deletedTest",
+          "scope": "sample",
+          "type": "(Fin n → Ω) → Fin n → ℝ",
+          "value": "fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)",
+          "exactText": "let deletedTest : (Fin n → Ω) → Fin n → ℝ :=\n          fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)",
+          "captures": [
+            "n",
+            "Ω",
+            "cap",
+            "A",
+            "Adel",
+            "z",
+            "B1",
+            "B1del"
+          ],
+          "line": 106,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "retained.mRet",
+          "name": "mRet",
+          "scope": "retained",
+          "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω)",
+          "value": "@MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)",
+          "exactText": "let mRet : MeasurableSpace ({j : Fin n // j ≠ i} → Ω) :=\n            @MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)",
+          "captures": [
+            "n",
+            "i",
+            "Ω",
+            "mΩ"
+          ],
+          "line": 129,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "retained.mRet₀",
+          "name": "mRet₀",
+          "scope": "retained",
+          "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω)",
+          "value": "@MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => m₀)",
+          "exactText": "let mRet₀ : MeasurableSpace ({j : Fin n // j ≠ i} → Ω) :=\n            @MeasurableSpace.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (fun _ : {j : Fin n // j ≠ i} => m₀)",
+          "captures": [
+            "n",
+            "i",
+            "Ω",
+            "m₀"
+          ],
+          "line": 133,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "retained.PRet",
+          "name": "PRet",
+          "scope": "retained",
+          "type": "@Measure ({j : Fin n // j ≠ i} → Ω) mRet",
+          "value": "@Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)\n              (fun _ : {j : Fin n // j ≠ i} => μ)",
+          "exactText": "let PRet : @Measure ({j : Fin n // j ≠ i} → Ω) mRet :=\n            @Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => mΩ)\n              (fun _ : {j : Fin n // j ≠ i} => μ)",
+          "captures": [
+            "n",
+            "i",
+            "Ω",
+            "mΩ",
+            "μ",
+            "mRet",
+            "Fintype {j : Fin n // j ≠ i}"
+          ],
+          "line": 137,
+          "newGlobalDefinition": false
+        },
+        {
+          "id": "retained.PRet₀",
+          "name": "PRet₀",
+          "scope": "retained",
+          "type": "@Measure ({j : Fin n // j ≠ i} → Ω) mRet₀",
+          "value": "@Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => m₀)\n              (fun _ : {j : Fin n // j ≠ i} => μ₀)",
+          "exactText": "let PRet₀ : @Measure ({j : Fin n // j ≠ i} → Ω) mRet₀ :=\n            @Measure.pi {j : Fin n // j ≠ i}\n              (fun _ : {j : Fin n // j ≠ i} => Ω)\n              (inferInstance : Fintype {j : Fin n // j ≠ i})\n              (fun _ : {j : Fin n // j ≠ i} => m₀)\n              (fun _ : {j : Fin n // j ≠ i} => μ₀)",
+          "captures": [
+            "n",
+            "i",
+            "Ω",
+            "m₀",
+            "μ₀",
+            "mRet₀",
+            "Fintype {j : Fin n // j ≠ i}"
+          ],
+          "line": 143,
+          "newGlobalDefinition": false
+        }
+      ],
+      "headerLocalInstances": [
+        {
+          "name": "reducedObservationMeasurableSpace",
+          "type": "MeasurableSpace Ω",
+          "value": "m₀",
+          "scope": "one letI after μ₀, no original law retyping"
+        }
+      ],
+      "conclusionUniversalData": [
+        {
+          "name": "J",
+          "type": "Type v",
+          "prop": false
+        },
+        {
+          "name": "instJ",
+          "type": "Fintype J",
+          "prop": false
+        },
+        {
+          "name": "B",
+          "type": "Type w",
+          "prop": false
+        },
+        {
+          "name": "mB",
+          "type": "MeasurableSpace B",
+          "prop": false
+        },
+        {
+          "name": "T",
+          "type": "(J → Ω) → B",
+          "prop": false
+        },
+        {
+          "name": "n",
+          "type": "ℕ",
+          "prop": false
+        },
+        {
+          "name": "hn",
+          "type": "4 ≤ n",
+          "prop": true
+        },
+        {
+          "name": "z",
+          "type": "ℝ",
+          "prop": false
+        },
+        {
+          "name": "hz",
+          "type": "0 ≤ z",
+          "prop": true
+        },
+        {
+          "name": "hz1",
+          "type": "z ≤ 1",
+          "prop": true
+        },
+        {
+          "name": "C0",
+          "type": "ℝ",
+          "prop": false
+        },
+        {
+          "name": "hC0",
+          "type": "0 ≤ C0",
+          "prop": true
+        },
+        {
+          "name": "i",
+          "type": "Fin n",
+          "prop": false
+        },
+        {
+          "name": "p",
+          "type": "ℝ≥0∞",
+          "prop": false
+        },
+        {
+          "name": "k",
+          "type": "ℕ",
+          "prop": false
+        },
+        {
+          "name": "o,y",
+          "type": "Ω",
+          "prop": false
+        },
+        {
+          "name": "ξ",
+          "type": "Fin n → Ω",
+          "prop": false
+        }
+      ],
+      "existentialData": [
+        {
+          "name": "m₀",
+          "type": "MeasurableSpace Ω",
+          "value": null,
+          "valueSource": "218 existential witness at exact zero family f; no global choice definition",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "h",
+            "hh",
+            "f"
+          ],
+          "forbiddenCaptures": [
+            "observation selector",
+            "Nonempty Ω",
+            "unprovided w",
+            "replacement kernel/law"
+          ]
+        },
+        {
+          "name": "hm₀",
+          "type": "m₀ ≤ mΩ",
+          "value": null,
+          "prop": true,
+          "role": "exact binder used in μ.trim hm₀, no retyping"
+        },
+        {
+          "name": "E",
+          "type": "({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ",
+          "value": null,
+          "valueSource": "reuse qualified220 signed-triple existential witness at μ₀/m₀, with exact g₀=g/r₀=r/rho₀=rho substitution",
+          "captures": [
+            "Ω",
+            "m₀",
+            "n",
+            "r",
+            "C0",
+            "rho",
+            "i"
+          ],
+          "transitiveCaptures": "original μ/h retained through r/rho closure",
+          "forbiddenCaptures": [
+            "ξ i",
+            "filler/default observation",
+            "new z-dependent formula",
+            "replacement kernel/law"
+          ],
+          "semanticConstraint": "the exact original-n pointwise factor equation in head",
+          "note": "future220 qualification is mandatory; no E constructed in stage1"
+        }
+      ],
+      "conclusionConstructedData": [
+        {
+          "name": "zeroVSet",
+          "type": "Set (Fin n → Ω)",
+          "value": "{ξ : Fin n → Ω | V ξ = 0}",
+          "captures": [
+            "n",
+            "Ω",
+            "V"
+          ]
+        },
+        {
+          "name": "zeroStudentizerSet",
+          "type": "Set (Fin n → Ω)",
+          "value": "{ξ : Fin n → Ω | s ξ = 0}",
+          "captures": [
+            "n",
+            "Ω",
+            "s"
+          ]
+        },
+        {
+          "name": "capAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => cap ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "cap",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "DdelAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => Ddel ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "Ddel",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "JdelAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => Jdel ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "Jdel",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "AdelAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => Adel ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "Adel",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "B1delAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => B1del ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "B1del",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "deletedTestAtDeletedIndex",
+          "type": "(Fin n → Ω) → ℝ",
+          "value": "fun ξ : Fin n → Ω => deletedTest ξ i",
+          "captures": [
+            "n",
+            "Ω",
+            "deletedTest",
+            "i"
+          ],
+          "binderContext": "∀ i : Fin n"
+        },
+        {
+          "name": "deletedRestriction",
+          "type": "{j : Fin n // j ≠ i} → Ω",
+          "value": "fun j : {j : Fin n // j ≠ i} => ξ j.val",
+          "captures": [
+            "n",
+            "Ω",
+            "i",
+            "ξ"
+          ]
+        },
+        {
+          "name": "literalDeletedTriple",
+          "type": "ℝ × ℝ × ℝ",
+          "value": "(Ddel ξ i, Jdel ξ i, B1del ξ i)",
+          "captures": [
+            "Ddel",
+            "Jdel",
+            "B1del",
+            "ξ",
+            "i"
+          ]
+        },
+        {
+          "name": "kernelPair",
+          "type": "Ω × Ω → ℝ",
+          "value": "fun t : Ω × Ω => h t.1 t.2",
+          "captures": [
+            "Ω",
+            "h"
+          ],
+          "occurrences": "input hh/hh2/hcenter; reduced h measurable/L2/center"
+        },
+        {
+          "name": "reducedResidualPair",
+          "type": "Ω × Ω → ℝ",
+          "value": "fun t : Ω × Ω => r₀ t.1 t.2",
+          "captures": [
+            "Ω",
+            "r₀"
+          ],
+          "occurrences": "reduced r₀ measurable/L2"
+        },
+        {
+          "name": "residualCanonicalPredicate",
+          "type": "Ω → Prop",
+          "value": "fun o : Ω => (∫ y, r₀ o y ∂μ₀) = 0",
+          "captures": [
+            "Ω",
+            "m₀",
+            "r₀",
+            "μ₀"
+          ],
+          "occurrences": "AE only"
+        },
+        {
+          "name": "identityObservation",
+          "type": "Ω → Ω",
+          "value": "id",
+          "captures": [
+            "Ω"
+          ],
+          "occurrences": "explicit original mΩ to reduced m₀ map"
+        },
+        {
+          "name": "identityPair",
+          "type": "(Ω × Ω) → Ω × Ω",
+          "value": "id",
+          "captures": [
+            "Ω"
+          ],
+          "occurrences": "explicit original prod to reduced prod map"
+        },
+        {
+          "name": "identityFiniteSample",
+          "type": "(J → Ω) → J → Ω",
+          "value": "id",
+          "captures": [
+            "J",
+            "Ω"
+          ],
+          "occurrences": "finite measurable identity and law"
+        },
+        {
+          "name": "physicalGuard",
+          "type": "Prop",
+          "value": "s ξ = 0",
+          "captures": [
+            "s",
+            "ξ"
+          ],
+          "decider": "Classical.propDecidable (s ξ = 0)"
+        },
+        {
+          "name": "retainedPredicate",
+          "type": "Fin n → Prop",
+          "value": "fun j : Fin n => j ≠ i",
+          "captures": [
+            "n",
+            "i"
+          ],
+          "occurrences": "all retained subtypes, pi families and finite instances"
+        },
+        {
+          "name": "literalDeletedTripleMap",
+          "type": "(Fin n → Ω) → ℝ × ℝ × ℝ",
+          "value": "fun ξ : Fin n → Ω => (Ddel ξ i, Jdel ξ i, B1del ξ i)",
+          "captures": [
+            "n",
+            "Ω",
+            "Ddel",
+            "Jdel",
+            "B1del",
+            "i"
+          ],
+          "occurrences": "identical lambda in original/reduced sample map; derived from pi identity, not scalar law"
+        }
+      ],
+      "implicitNonPropData": [
+        {
+          "name": "finiteSampleIndex",
+          "type": "Fintype (Fin n)",
+          "value": "inferInstance : Fintype (Fin n)",
+          "captures": [
+            "n"
+          ]
+        },
+        {
+          "name": "retainedFiniteIndex",
+          "type": "Fintype {j : Fin n // j ≠ i}",
+          "value": "inferInstance : Fintype {j : Fin n // j ≠ i}",
+          "captures": [
+            "n",
+            "i"
+          ]
+        },
+        {
+          "name": "physicalIfDecider",
+          "type": "Decidable (s ξ = 0)",
+          "value": "Classical.propDecidable (s ξ = 0)",
+          "captures": [
+            "s",
+            "ξ"
+          ]
+        },
+        {
+          "name": "realMeasurableSpace",
+          "type": "MeasurableSpace ℝ",
+          "value": "borel ℝ",
+          "captures": []
+        },
+        {
+          "name": "tripleMeasurableSpace",
+          "type": "MeasurableSpace (ℝ × ℝ × ℝ)",
+          "value": "borel (ℝ × ℝ × ℝ)",
+          "captures": [],
+          "note": "right-associated real product Borel"
+        }
+      ],
+      "headerLambdaDataPolicy": "Every header typed value is retained verbatim, including pi families and integral-notation lambdas. Repeated inline conclusion data/predicates are listed above. Full head bytes are authoritative.",
+      "proofIncluded": false,
+      "placeholderProofIncluded": false,
+      "elaborated": false,
+      "kernelChecked": false,
+      "qualified": false,
+      "plannedInternalData": [
+        {
+          "name": "baseTransportIndex",
+          "type": "Type",
+          "value": "Fin 0",
+          "captures": [],
+          "purpose": "first219 specialization obtains normalized base package without selecting an observation; all later J are separately universal"
+        },
+        {
+          "name": "baseTransportFintype",
+          "type": "Fintype (Fin 0)",
+          "value": "inferInstance : Fintype (Fin 0)",
+          "captures": []
+        },
+        {
+          "name": "finiteMapComposition",
+          "type": "(J → Ω) → B",
+          "value": "fun ξ : J → Ω => T ((id : (J → Ω) → J → Ω) ξ)",
+          "captures": [
+            "J",
+            "Ω",
+            "B",
+            "T"
+          ],
+          "purpose": "generic B law from pi pushforward/map composition; definitionally T"
+        },
+        {
+          "name": "reducedProbabilityInstance",
+          "type": "@IsProbabilityMeasure Ω m₀ μ₀",
+          "valueSource": "the exact probability conjunct of219 specialized at baseTransportIndex; Prop proof, no replacement probability law"
+        },
+        {
+          "name": "reducedCountablyGeneratedInstance",
+          "type": "@MeasurableSpace.CountablyGenerated Ω m₀",
+          "valueSource": "the exact countable-generation conjunct of218 for f=0; Prop proof, no replacement measurable structure"
+        }
+      ]
+    }
+  ],
+  "sourcePublicTheoremsDerived": 1,
+  "sourcePrivateTheoremsDerived": 0,
+  "globalDefinitionValues": [],
+  "newAliases": 0,
+  "headerTypedValuesDerived": 45,
+  "headerLocalInstanceCountDerived": 1,
+  "proofBodyAuthority": "NONE_BEFORE_PARENT_EXACT_FREEZE_AND_QUALIFIED220",
+  "proofBodyDataPolicy": "No new helper definition, selector, instance or local DATA before complete parent capture approval; reuse exact producers; no proof body in this packet.",
+  "formalDependenciesPlanned": [
+    {
+      "unit": 218,
+      "qualified": true
+    },
+    {
+      "unit": 219,
+      "qualified": true
+    },
+    {
+      "unit": 220,
+      "qualified": false,
+      "status": "PLANNED_UNQUALIFIED"
+    }
+  ],
+  "noNoveltyClaim": true,
+  "allOriginalScopeBoundariesPreserved": true
+}

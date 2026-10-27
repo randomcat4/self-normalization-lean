@@ -1,6 +1,6 @@
 # Evidence index
 
-The current proof snapshot is v123. Start with its [integration scope](integration-v123.md), [server receipt](../verification/receipt-v123.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
+The current proof snapshot is v124. Start with its [integration scope](integration-v124.md), [server receipt](../verification/receipt-v124.json), [module inventory](../verification/expected-project-modules.txt) and [public-source theorem inventory](../verification/expected-public-theorems.txt). The receipt binds exact sources, pins, integration commands and accepted evidence. Private/generated owners are covered by the actual-owner audit, not inferred from the public inventory.
 
 ## C1
 
@@ -36,7 +36,7 @@ The current proof snapshot is v123. Start with its [integration scope](integrati
 | v122 | [218 common observable sub-sigma reduction](integration-v122.md) | [Receipt](../verification/receipt-v122.json) |
 | v123 | [219 conditional original-kernel observable transport](integration-v123.md) | [Receipt](../verification/receipt-v123.json) |
 
-Each integration directory links the exact independent final reviews and source/object qualifications. Full non-theorem values, private helpers and imported-definition equations are included where actually owned. Accepted old producer objects are reused; the new aggregate and current whole-project coverage/recursive axioms are checked at integration.
+Each integration directory links the exact independent final reviews and source/object qualifications. Full non-theorem values, private helpers and imported-definition equations are included where actually owned. Accepted old producer objects are reused; the new aggregate/import/name integrity and changed/explicitly related owners are checked at integration; unchanged exact recursive-axiom evidence is reused.
 
 Warnings and failed/interrupted attempts remain evidence, with their actual return codes. A strict wrapper flag is not silently converted into a kernel result. Some old producer-side comments predate final qualification; use the exact qualified source/first-object/review/receipt combination rather than a historical pending comment. The existing narrow P35 source/data/context decision is preserved; no absent standalone reflection packet is fabricated.
 
@@ -45,3 +45,5 @@ Historical versioned scopes, reviews and receipts retain their original bytes an
 
 The v122 integration uses qualified_delta. Its new-owner AX check covers all3 actual owned declarations;16147 unchanged owned declarations reuse exact accepted evidence. The source/first-object independent review covers all43 TYPE lines and0 required non-theorem VALUE lines, including private/generated owners. Exact aggregate imports and names are checked; inventories are not new proof counts.
 The v123 shared qualified_delta batch adds3 qualified producer objects and37 actual owners, with1354 complete TYPE lines and0 required owned non-theorem VALUE lines. Unchanged16150-owner evidence is reused; only changed actual owners receive new integration AX checks. Old proof reviews/producer builds/leaf AX are not repeated. Counts include exact reused inventory and do not imply root completion.
+
+The [v124 integration](integration-v124.md) and [receipt](../verification/receipt-v124.json) accept220/221. Their complete independent source/affected-repair/all2actualTYPE2088LF/0VALUE/recursiveAX evidence and two first original objects are reused. Only2newowners receive integration AX checks;16187oldowner evidence is reused. Native220warnings6 and221warnings9, strict-wrapper false, standing134Bstderr and failed prior attempts remain exact. Frozen CRLF independent-review/failure files are preserved as sealed bytes; style diagnostics are disclosed and counted automatically, with no production-source format error.

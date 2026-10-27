@@ -1,0 +1,57 @@
+theorem actual_normalized_compact_clipped_observables
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 4 ≤ n)
+    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)
+    (C0 : ℝ) (hC0 : 0 ≤ C0) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let rho : ℝ := Real.sqrt v
+    let N : ℝ := Real.sqrt (n : ℝ)
+    let W : (Fin n → Ω) → ℝ := projectionW n g
+    let V : (Fin n → Ω) → ℝ := projectionV n g
+    let D : (Fin n → Ω) → ℝ := residualStatisticD n r
+    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r
+    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r
+    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r
+    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|
+    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|
+    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1
+    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r
+    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)
+    let d : (Fin n → Ω) → ℝ := centeredDelta n g r
+    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1
+    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ
+    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))
+    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)
+    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧
+      Measurable A ∧ Measurable B1 ∧
+      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧
+      Measurable Tclip ∧ Measurable Tactual ∧
+      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧
+      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧
+      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧
+      (∀ ξ : Fin n → Ω, V ξ = 0 →
+        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧
+      (∀ i : Fin n,
+        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧
+        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,
+          Measurable E ∧
+          ∀ ξ : Fin n → Ω,
+            (Ddel ξ i, Jdel ξ i, B1del ξ i) =
+              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))

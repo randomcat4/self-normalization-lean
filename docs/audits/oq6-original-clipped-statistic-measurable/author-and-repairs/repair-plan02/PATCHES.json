@@ -1,0 +1,149 @@
+{
+  "schema": "oq56-unit220-repair-plan02-exact-batch-proposal-v1",
+  "unit": 220,
+  "status": "PROPOSED_ONLY_PARENT_FREEZE_REQUIRED_NO_IMPLEMENTATION_AUTHORITY",
+  "base": {
+    "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/repair-01/OriginalClippedStatisticMeasurable.lean",
+    "sha256": "204a4b7d4bfe98819cd553b90ec98f6185b2b941ff019a22328fad59a1969718",
+    "bytes": 15680,
+    "LF": 317,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "diagnostic": {
+    "path": "C:/game/shao lean/drafts/oq56/unit220/lead-execution-02/author-kernel-02-affected-diagnostics.json",
+    "sha256": "c3953275e25a37e368d22857a3eeb21b0c16705420e8829bd4bb72e38e2bf9ec",
+    "bytes": 5914,
+    "LF": 54,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "patchCountDerived": 5,
+  "patches": [
+    {
+      "id": "P02-01_G_SQUARE",
+      "oldStartLine": 104,
+      "oldEndLine": 108,
+      "oldText": "  have hgsquares :\n      Measurable (fun ξ : Fin n → Ω => ∑ i : Fin n, g (ξ i) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two] using (hgcoord i).mul (hgcoord i)\n",
+      "newText": "  have hgsquares :\n      Measurable (fun ξ : Fin n → Ω => ∑ i : Fin n, g (ξ i) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two, Pi.mul_def] using (hgcoord i).mul (hgcoord i)\n",
+      "reason": "Expand bare multiplication of coordinate-score functions to the same pointwise product as pow_two.",
+      "newNamedProps": [],
+      "oldOccurrences": 1,
+      "newStartLine": 104,
+      "newEndLine": 108,
+      "oldTextSHA256": "aa341c7398b519fd796405d6a61bdf68e7fd5f1a945bc59c25ab5b268ff9fe1f",
+      "newTextSHA256": "b6e89543952b8cfdebd16ce4a549cbdab86265a16a0e6df5bdd933b90b5e5b21"
+    },
+    {
+      "id": "P02-02_ROW_SQUARE",
+      "oldStartLine": 135,
+      "oldEndLine": 140,
+      "oldText": "  have hrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n, (Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two] using (hrrow i).mul (hrrow i)\n",
+      "newText": "  have hrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n, (Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two, Pi.mul_def] using (hrrow i).mul (hrrow i)\n",
+      "reason": "Expand multiplication of row-sum functions pointwise without changing the residual or row expression.",
+      "newNamedProps": [],
+      "oldOccurrences": 1,
+      "newStartLine": 135,
+      "newEndLine": 140,
+      "oldTextSHA256": "c08734dd3b6c3eddd561ddd1dd113e8c4ceebd5041a4bd2f70c98469d947fd10",
+      "newTextSHA256": "19ccf5487d23ba138531eba263d9609360c04e81b5066599c436ceced3344f16"
+    },
+    {
+      "id": "P02-03_J_FUNCTION_EQUALITY",
+      "oldStartLine": 141,
+      "oldEndLine": 143,
+      "oldText": "  have hJ : Measurable J := by\n    simpa only [J, residualEnergyJ_eq_rowSqSum] using\n      hrowsquares.div_const (((n : ℝ) - 2) ^ 2)\n",
+      "newText": "  have hJ : Measurable J := by\n    have hJfun :\n        J = (fun ξ : Fin n → Ω =>\n          (∑ i : Fin n, (Shao.OQ6.ResidualDeletion.rowSum\n            (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2) /\n              ((n : ℝ) - 2) ^ 2) := by\n      funext ξ\n      exact residualEnergyJ_eq_rowSqSum n r ξ\n    rw [hJfun]\n    exact hrowsquares.div_const (((n : ℝ) - 2) ^ 2)\n",
+      "reason": "Lift the existing pointwise identity to a typed function equality, then rewrite the bare J function before applying the existing measurability proof.",
+      "newNamedProps": [
+        "hJfun"
+      ],
+      "oldOccurrences": 1,
+      "newStartLine": 141,
+      "newEndLine": 150,
+      "oldTextSHA256": "f03ed7199beea1d276d036a57ee2d540df7463f33cfd054aa22065c751d1f20f",
+      "newTextSHA256": "f80da36a7ac8c503979afee25d50ff2e75be01c3024b2eecadc4d1d1b3fddf8a"
+    },
+    {
+      "id": "P02-04_CENTERED_ROW_SQUARE",
+      "oldStartLine": 172,
+      "oldEndLine": 179,
+      "oldText": "  have hcenteredrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n,\n        (Shao.OQ6.FiniteRows.rowMean (sampledKernel n g r ξ) i -\n          Shao.OQ6.FiniteRows.uStatistic (sampledKernel n g r ξ)) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two] using\n      ((hrowmean i).sub hustat).mul ((hrowmean i).sub hustat)\n",
+      "newText": "  have hcenteredrowsquares : Measurable (fun ξ : Fin n → Ω =>\n      ∑ i : Fin n,\n        (Shao.OQ6.FiniteRows.rowMean (sampledKernel n g r ξ) i -\n          Shao.OQ6.FiniteRows.uStatistic (sampledKernel n g r ξ)) ^ 2) := by\n    apply Finset.measurable_sum Finset.univ\n    intro i _hi\n    simpa only [pow_two, Pi.mul_def, Pi.sub_def] using\n      ((hrowmean i).sub hustat).mul ((hrowmean i).sub hustat)\n",
+      "reason": "Expand both function subtraction and multiplication to the literal pointwise centered-row square.",
+      "newNamedProps": [],
+      "oldOccurrences": 1,
+      "newStartLine": 179,
+      "newEndLine": 186,
+      "oldTextSHA256": "da11c4e58916d850ae4d03d5aed0e2cf15f4749219a07c48d296086c4a8ec217",
+      "newTextSHA256": "909f7ccda06a0f2ab4896fa792043a173f7a9804ff589667808593f45ed26e0a"
+    },
+    {
+      "id": "P02-05_V_SQUARE",
+      "oldStartLine": 192,
+      "oldEndLine": 193,
+      "oldText": "  have hV2 : Measurable (fun ξ : Fin n → Ω => V ξ ^ 2) := by\n    simpa only [pow_two] using hV.mul hV\n",
+      "newText": "  have hV2 : Measurable (fun ξ : Fin n → Ω => V ξ ^ 2) := by\n    simpa only [pow_two, Pi.mul_def] using hV.mul hV\n",
+      "reason": "Expand V*V as a pointwise product before matching the square lambda.",
+      "newNamedProps": [],
+      "oldOccurrences": 1,
+      "newStartLine": 199,
+      "newEndLine": 200,
+      "oldTextSHA256": "aa75511f567facf55d250d42429ec064cc36a5ad455be1af9069219d2906fca6",
+      "newTextSHA256": "83cd839c3b00704644f0dfb29e9e1464fb55df8c7f117e3336666830385bab22"
+    }
+  ],
+  "inMemoryPreview": {
+    "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+    "bytes": 15983,
+    "LF": 324,
+    "CR": 0,
+    "utf8Bom": false,
+    "implementationFileWritten": false,
+    "meaning": "In-memory deterministic patch preview only; no complete-source/.lean file exists in this planning packet."
+  },
+  "inverseExact": true,
+  "frozenPreambleHeadExact": true,
+  "closingExact": true,
+  "unchangedSourcePublicHeads": 1,
+  "newGlobalHeads": 0,
+  "unchangedHeaderValues": 23,
+  "unchangedProofData": 7,
+  "oldDerivedProps": 49,
+  "newDerivedProps": 50,
+  "newLocalProps": [
+    {
+      "name": "hJfun",
+      "type": "J = (fun ξ : Fin n → Ω => (∑ i : Fin n, (Shao.OQ6.ResidualDeletion.rowSum (fun j k : Fin n => r (ξ j) (ξ k)) i) ^ 2) / ((n : ℝ) - 2) ^ 2)",
+      "value": "funext (fun ξ : Fin n → Ω => residualEnergyJ_eq_rowSqSum n r ξ)",
+      "sourceSyntax": "typed local have; funext ξ followed by exact existing pointwise theorem",
+      "sort": "Prop",
+      "directTypeCaptures": [
+        "Ω",
+        "n",
+        "J",
+        "r"
+      ],
+      "proofValueCaptures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "transitiveOriginalDataCaptures": [
+        "mΩ",
+        "μ",
+        "h",
+        "g"
+      ],
+      "newPremise": false,
+      "newWitnessOrLet": false
+    }
+  ],
+  "newLocalDataLets": [],
+  "newChosenDataOrWitnesses": [],
+  "newLocalInstances": [],
+  "unrelatedWarnings": "Leave all four existing if_pos/if_neg deprecation source uses unchanged.",
+  "qualified": false,
+  "LeanCommands": 0,
+  "sourceOrLeanFilesWritten": 0
+}

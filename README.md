@@ -41,3 +41,5 @@ Source baseline: [shao@35d4580](https://github.com/randomcat4/shao/tree/35d4580b
 - v122: one common countably generated sub-sigma algebra preserving the same original jointly measurable kernel and all countable scalar observables, including empty spaces. Law/integral/moment/CDF transport remains open.
 
 - v123: bounded changing-row positive-boundary/studentized limits and deterministic-strip energy Laplace ratios; conditional same-kernel/coarser-law integral, moment and sample-law transport. Full changing-row shrinking windows and literal CDF/root applications remain open.
+
+- v124: literal normalized clipped/studentized statistic measurability and true retained signed-triple factorization; one common countably generated model on the same original space preserving normalized quantities and the listed statistic/vector laws. CDF, scalar coding and external probability applications remain open.

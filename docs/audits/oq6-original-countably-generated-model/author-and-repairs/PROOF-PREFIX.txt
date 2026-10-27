@@ -1,0 +1,78 @@
+  intro f g r v rho rowIntegrable gLp projectionLaw pairLaw
+  have hf : ∀ k : ℕ, Measurable[mΩ, borel ℝ] (f k) := by
+    intro k
+    exact measurable_const
+  obtain ⟨m₀, hm₀, hcount₀, hh₀, hf₀⟩ :=
+    Shao.OQ6.KernelObservableReduction.exists_countably_generated_observable_subspace
+      h hh f hf
+  refine ⟨m₀, hm₀, hcount₀, hh₀, hf₀, ?_⟩
+  let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+  have hμmap : μ₀ = @Measure.map Ω Ω mΩ m₀ id μ :=
+    trim_eq_map (μ := μ) hm₀
+  have hid : Measurable[mΩ, m₀] (id : Ω → Ω) :=
+    measurable_id'' hm₀
+  have hbase :=
+    @Shao.OQ6.OriginalKernelObservableTransport.actual_normalized_kernel_observable_trim_transport
+      Ω mΩ (Fin 0) (inferInstance : Fintype (Fin 0)) μ
+      (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+      h hh hh2 hhsymm hcenter hprojectionsecond m₀ hm₀ hh₀
+  dsimp only at hbase
+  rcases hbase with
+    ⟨hprob₀, hgpoint, hrpoint, hrow, hh₂₀, hcenter₀, hgmeas, hg₂₀,
+      hgmean, hgsecond, hrmeas, hr₂₀, hrsymm, hrcanonical, hv, hrho,
+      hglaw, hglp, hpair, _, _, _⟩
+  letI : MeasurableSpace Ω := m₀
+  let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀
+  let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y
+  let v₀ : ℝ :=
+    ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)
+  let rho₀ : ℝ := Real.sqrt v₀
+  letI : IsProbabilityMeasure μ₀ := hprob₀
+  have hgeq : g₀ = g := funext hgpoint
+  have hreq : r₀ = r := funext (fun o => funext (hrpoint o))
+  refine ⟨hprob₀, hμmap, hgeq, hreq, hv, hrho, hrow, hh₂₀,
+    hcenter₀, hgmeas, hg₂₀, hgmean, hgsecond, hrmeas, hr₂₀, hrsymm,
+    hrcanonical, hglaw, hglp, hpair, ?_, ?_⟩
+  · intro J instJ mJ mJ₀ P P₀
+    have hfinite :=
+      @Shao.OQ6.OriginalKernelObservableTransport.actual_normalized_kernel_observable_trim_transport
+        Ω mΩ J instJ μ (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+        h hh hh2 hhsymm hcenter hprojectionsecond m₀ hm₀ hh₀
+    dsimp only at hfinite
+    rcases hfinite with
+      ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
+        hPprob, hPmap, _⟩
+    have hidJ : Measurable[mJ, mJ₀] (id : (J → Ω) → J → Ω) := by
+      apply (@measurable_pi_iff (J → Ω) J (fun _ : J => Ω)
+        mJ (fun _ : J => m₀) (id : (J → Ω) → J → Ω)).2
+      intro j
+      exact hid.comp
+        (@measurable_pi_apply J (fun _ : J => Ω) (fun _ : J => mΩ) j)
+    refine ⟨hPprob, hidJ, hPmap, ?_⟩
+    intro B mB T hT
+    rw [hPmap, Measure.map_map hT hidJ]
+    rfl
+  · intro n hn z hz hz1 C0 hC0
+    intro mN mN₀ P P₀ N W V D J Ddel Jdel A Adel B1 B1del s2 s d e
+      Tclip Tactual cap deletedTest
+    have hsample :=
+      @Shao.OQ6.OriginalKernelObservableTransport.actual_normalized_kernel_observable_trim_transport
+        Ω mΩ (Fin n) (inferInstance : Fintype (Fin n)) μ
+        (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+        h hh hh2 hhsymm hcenter hprojectionsecond m₀ hm₀ hh₀
+    dsimp only at hsample
+    rcases hsample with
+      ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
+        _, hPmap, _⟩
+    have hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → Fin n → Ω) := by
+      apply (@measurable_pi_iff (Fin n → Ω) (Fin n) (fun _ : Fin n => Ω)
+        mN (fun _ : Fin n => m₀) (id : (Fin n → Ω) → Fin n → Ω)).2
+      intro j
+      exact hid.comp
+        (@measurable_pi_apply (Fin n) (fun _ : Fin n => Ω)
+          (fun _ : Fin n => mΩ) j)
+    have hobservable :=
+      @Shao.OQ6.OriginalClippedStatisticMeasurable.actual_normalized_compact_clipped_observables
+        Ω m₀ μ₀ hprob₀ h hh₀ hh₂₀ hhsymm hcenter₀ hgsecond
+        n hn z hz hz1 C0 hC0
+    change

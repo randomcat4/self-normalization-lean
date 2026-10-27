@@ -1,0 +1,13 @@
+# Unit221 repair01 exact implementation candidate
+
+The explicitly current repair01 activation authorizes this exact local materialization. Embedded plan target fields materialized=false/sourceWriteAuthority are retained historical provenance; they do not revoke the current activation. No additional source or execution authority is inferred.
+
+Exactly four frozen hunks were applied, inserting seven proof lines and deleting none. The repaired source is21808B412LF with target SHA2568691f69ca9ab84649f92b20385c415a2129250cc8f64375d6296e2d59a381627. All405 old source lines survive in order. Exact preamble/161LFhead/closing,45 typed values, assumptions and witnesses are unchanged. The old source, review, plan, native failure and all sealed maps remain immutable.
+
+The inserted change statements re-present existing219 hrho/finite hPmap/full-sample hPmap/retained hPRetMap propositions with their frozen named aliases. They add no new mathematical input or non-Prop data. Two errors were observed in native01; the later sample/retained alias conversions address the same concrete matcher pattern and are not reported as additional observed failures. The two letI warnings are retained without suppression.
+
+EXACT-DIFF.patch and EXACT-DIFF.json record the exact source change. SOURCE-MAP.json uses only proof-scoped body anchors, covers every412 line once as locator intervals, maps exact405 prior lines through the insertions, and inventories all21 have declarations including bullet htriple/hretained. The actual body instance lines202/208 are recorded. Lexical fun lines exclude identifier substrings; funext is separate, and hD/hd case is preserved. Metadata-only prior author map errata are corrected in NEW maps only.
+
+The same zero-specialized220 retained E and actual-z observable packet, original-n coefficients, signed tuple, literal trim, normalized functions, all-p iff, AE canonicality, guards and full-sample cap/deletedTest remain. Source transfer and new complete native/all-owned gates are parent-exclusive after220 publication mirror and SAME independent affected SOURCE acceptance. This source has not been compiled, kernel/AX audited or independently accepted at its new hash by this author.
+
+One local metadata script parse failure was repaired and retained; it occurred before that script executed any statements and did not change the source. No Lean, server, network, upload, Git/API, publication, child, Goal or schedule call occurred. Requested gpt-6.1-sol/xhigh remains; actual model/effort/usage are unexposed/null. All p51candidate/p54repair/externalSZ and open root/CDF/fee/atom/reflection/zero-event boundaries remain. OQ3 stays user-paused.

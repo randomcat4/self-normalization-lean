@@ -1,0 +1,101 @@
+    at hobservable
+    rw [hgeq, hreq, hrho] at hobservable
+    dsimp only at hobservable
+    rcases hobservable with
+      ⟨hW, hV, hD, hJ, hA, hB1, hs2, hs, hd, he, hTclip,
+        hTphysical, hzeroV, hzeroS, hlower, hzero, hdeleted⟩
+    have hphysicalSame :
+        (fun ξ : Fin n → Ω =>
+          @ite ℝ (s ξ = 0) (Real.decidableEq (s ξ) 0)
+            0 ((W ξ + D ξ) / s ξ)) = Tactual := by
+      funext ξ
+      by_cases hszero : s ξ = 0
+      · simp only [Tactual, if_pos hszero]
+      · simp only [Tactual, if_neg hszero]
+    change Measurable[mN₀, borel ℝ]
+      (fun ξ : Fin n → Ω =>
+        @ite ℝ (s ξ = 0) (Real.decidableEq (s ξ) 0)
+          0 ((W ξ + D ξ) / s ξ)) at hTphysical
+    rw [hphysicalSame] at hTphysical
+    have hTclipLaw :
+        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =
+          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P := by
+      rw [hPmap, Measure.map_map hTclip hidN]
+      rfl
+    have hTactualLaw :
+        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tactual P₀ =
+          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tactual P := by
+      rw [hPmap, Measure.map_map hTphysical hidN]
+      rfl
+    have hTripleBorel :
+        (inferInstance : MeasurableSpace (ℝ × ℝ × ℝ)) =
+          borel (ℝ × ℝ × ℝ) := BorelSpace.measurable_eq
+    have hdeletedZero : ∀ i : Fin n,
+        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,
+          Measurable[
+            @MeasurableSpace.pi {j : Fin n // j ≠ i}
+              (fun _ : {j : Fin n // j ≠ i} => Ω)
+              (fun _ : {j : Fin n // j ≠ i} => m₀),
+            borel (ℝ × ℝ × ℝ)] E ∧
+          ∀ ξ : Fin n → Ω,
+            (Ddel ξ i, Jdel ξ i, B1del ξ i) =
+              E (fun j : {j : Fin n // j ≠ i} => ξ j.val) := by
+      intro i
+      have hzeroObservable :=
+        @Shao.OQ6.OriginalClippedStatisticMeasurable.actual_normalized_compact_clipped_observables
+          Ω m₀ μ₀ hprob₀ h hh₀ hh₂₀ hhsymm hcenter₀ hgsecond
+          n hn (0 : ℝ) (le_refl (0 : ℝ)) (by norm_num : (0 : ℝ) ≤ 1)
+          C0 hC0
+      dsimp only at hzeroObservable
+      rcases hzeroObservable with
+        ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hzeroDeleted⟩
+      rcases hzeroDeleted i with ⟨_, _, _, _, _, _, E, hE, hEeq⟩
+      refine ⟨E, ?_, ?_⟩
+      · rw [← hTripleBorel]
+        exact hE
+      · intro ξ
+        have hEeqξ := hEeq ξ
+        change
+          (residualStatisticDDeleted n r₀ ξ i,
+            residualEnergyJDeleted n r₀ ξ i,
+            studentizerClipBudgetDeleted n r₀ C0 rho₀ 1 ξ i) =
+              E (fun j : {j : Fin n // j ≠ i} => ξ j.val) at hEeqξ
+        rw [hreq, hrho] at hEeqξ
+        exact hEeqξ
+    refine ⟨hW, hV, hD, hJ, hA, hB1, hs2, hs, hd, he, hTclip,
+      hTphysical, hzeroV, hzeroS, hlower, hzero, hTclipLaw, hTactualLaw, ?_⟩
+    intro i
+    rcases hdeleted i with ⟨hcap, hDdel, hJdel, hAdel, hB1del, hdeletedTest, _⟩
+    refine ⟨hcap, hDdel, hJdel, hAdel, hB1del, hdeletedTest, ?_⟩
+    intro mRet mRet₀ PRet PRet₀
+    obtain ⟨E, hE, hEeq⟩ := hdeletedZero i
+    refine ⟨E, hE, hEeq, ?_, ?_⟩
+    · have htriple : Measurable[mN₀, borel (ℝ × ℝ × ℝ)]
+          (fun ξ : Fin n → Ω => (Ddel ξ i, Jdel ξ i, B1del ξ i)) := by
+        rw [← hTripleBorel]
+        exact hDdel.prodMk (hJdel.prodMk hB1del)
+      rw [hPmap, Measure.map_map htriple hidN]
+      rfl
+    · have hretained :=
+        @Shao.OQ6.OriginalKernelObservableTransport.actual_normalized_kernel_observable_trim_transport
+          Ω mΩ {j : Fin n // j ≠ i}
+          (inferInstance : Fintype {j : Fin n // j ≠ i}) μ
+          (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+          h hh hh2 hhsymm hcenter hprojectionsecond m₀ hm₀ hh₀
+      dsimp only at hretained
+      rcases hretained with
+        ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
+          _, hPRetMap, _⟩
+      have hidRet : Measurable[mRet, mRet₀]
+          (id : ({j : Fin n // j ≠ i} → Ω) → {j : Fin n // j ≠ i} → Ω) := by
+        apply (@measurable_pi_iff ({j : Fin n // j ≠ i} → Ω)
+          {j : Fin n // j ≠ i} (fun _ : {j : Fin n // j ≠ i} => Ω)
+          mRet (fun _ : {j : Fin n // j ≠ i} => m₀)
+          (id : ({j : Fin n // j ≠ i} → Ω) → {j : Fin n // j ≠ i} → Ω)).2
+        intro j
+        exact hid.comp
+          (@measurable_pi_apply {j : Fin n // j ≠ i}
+            (fun _ : {j : Fin n // j ≠ i} => Ω)
+            (fun _ : {j : Fin n // j ≠ i} => mΩ) j)
+      rw [hPRetMap, Measure.map_map hE hidRet]
+      rfl
