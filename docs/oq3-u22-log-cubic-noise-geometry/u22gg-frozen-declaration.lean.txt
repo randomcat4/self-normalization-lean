@@ -1,0 +1,16 @@
+theorem centered_gaussian_subgaussian_mgf
+    (v : ℝ≥0) :
+    ProbabilityTheory.HasSubgaussianMGF (fun x : ℝ => x) v (ProbabilityTheory.gaussianReal 0 v)
+
+theorem centered_gaussian_abs_tail_le
+    (v : ℝ≥0) (eps : ℝ) (heps : 0 ≤ eps) :
+    (ProbabilityTheory.gaussianReal 0 v).real {x : ℝ | eps < |x|} ≤
+      2 * Real.exp (-eps ^ 2 / (2 * (v : ℝ)))
+
+theorem pair_gaussian_noise_tail_le
+    (b : ℝ) (hb : 0 < b) (eps : ℝ) (heps : 0 ≤ eps) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    gamma.real {y : ℝ × ℝ | eps < ‖y‖} ≤
+      4 * Real.exp (-eps ^ 2 / (4 * b))

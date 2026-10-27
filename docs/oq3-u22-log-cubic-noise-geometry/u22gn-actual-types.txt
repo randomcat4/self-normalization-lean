@@ -1,0 +1,60 @@
+DECL Shao.OQ3.compact_open_domain_parabola_log_cubic_gaussian_oscillation
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      (∀ p ∈ Theta, 0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det) →
+        ∀ (level a0 rho : ℝ),
+          0 ≤ rho →
+            have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+            have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+            have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+            have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+            have A := fun p =>
+              ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+            ∃ lo hi,
+              0 < lo ∧
+                0 < hi ∧
+                  (∀ p ∈ Theta,
+                      ∀ (xi eta : ℝ),
+                        lo * (xi ^ 2 + eta ^ 2) ≤ xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ∧
+                          xi ^ 2 * D p 0 0 + 2 * xi * eta * D p 0 1 + eta ^ 2 * D p 1 1 ≤ hi * (xi ^ 2 + eta ^ 2)) ∧
+                    ∃ E,
+                      (∀ (p : ↑Theta),
+                          A ↑p * D ↑p * A ↑p = 1 ∧
+                            (∀ (w : ℝ × ℝ),
+                                (E p) w = (A (↑p) 0 0 * w.1 + A (↑p) 0 1 * w.2, A (↑p) 1 0 * w.1 + A (↑p) 1 1 * w.2)) ∧
+                              ‖↑(E p)‖ ≤ 2 * (1 / √lo) ∧ ‖↑(E p).symm‖ ≤ 4 * hi * (1 / √lo)) ∧
+                        ∃ M,
+                          0 < M ∧
+                            (∀ (p : ↑Theta), ‖↑p‖ ≤ M) ∧
+                              have U := 1 / √lo;
+                              have R0 := 2 * U;
+                              have kappa0 := 2 * M * (4 * hi * U);
+                              have G0 := R0 * (1 + 2 * (|a0| + rho) / level ^ 2);
+                              have Cstar := Real.exp (kappa0 * R0) * (8 * kappa0 * (R0 + 1) ^ 2 + 768 * (G0 + 1));
+                              0 < Cstar ∧
+                                ∀ (p : ↑Theta) (n : ℕ),
+                                  2 ≤ n →
+                                    ∀ (y : ℝ × ℝ) (aL aR qL qR : ℝ),
+                                      y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR →
+                                        aR - aL ≤ 1 / ↑n →
+                                          qR - qL ≤ 1 / ↑n →
+                                            have h := Real.log ↑n / ↑n ^ 3;
+                                            have cellA :=
+                                              Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩
+                                                {w |
+                                                  |w.1 - a0| ≤ rho ∧
+                                                    0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+                                            have stdCell := (fun w => √↑n • (E p) (w - y)) '' cellA;
+                                            have g := fun v =>
+                                              Real.exp (-√↑n * ((↑p).1 * ((E p).symm v).1 + (↑p).2 * ((E p).symm v).2));
+                                            have Φ :=
+                                              (ProbabilityTheory.gaussianReal 0 1).prod
+                                                (ProbabilityTheory.gaussianReal 0 1);
+                                            MeasureTheory.Integrable
+                                                (Shao.OQ3.openBallOscillation (stdCell.indicator g) h) Φ ∧
+                                              ∫ (z : ℝ × ℝ), Shao.OQ3.openBallOscillation (stdCell.indicator g) h z ∂Φ ≤
+                                                Cstar * Real.log ↑n / (↑n ^ 3 * √↑n)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

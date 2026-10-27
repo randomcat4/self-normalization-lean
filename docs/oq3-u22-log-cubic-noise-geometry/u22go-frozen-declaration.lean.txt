@@ -1,0 +1,33 @@
+theorem cubic_pair_gaussian_noise_tail_bound
+    (n : ℕ) (hn : 1 ≤ n) :
+    let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+    let eps : ℝ := Real.log (n : ℝ) / (n : ℝ) ^ 3
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    gamma.real {y : ℝ × ℝ | eps < ‖y‖} ≤
+      4 * Real.exp (-(Real.log (n : ℝ)) ^ 2 / 2)
+
+theorem eventually_cubic_pair_gaussian_noise_tail
+    (a : ℝ) (ha : 0 ≤ a) :
+    ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+      let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+      let eps : ℝ := Real.log (n : ℝ) / (n : ℝ) ^ 3
+      let v : ℝ≥0 := Real.toNNReal (2 * b)
+      let gamma : Measure (ℝ × ℝ) :=
+        (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+      gamma.real {y : ℝ × ℝ | eps < ‖y‖} ≤ Real.rpow (n : ℝ) (-a)
+
+theorem eventually_cubic_gaussian_smoothed_set_sandwich
+    (a : ℝ) (ha : 0 ≤ a) :
+    ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+      ∀ (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+        (s : Set (ℝ × ℝ)), MeasurableSet s →
+      let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+      let eps : ℝ := Real.log (n : ℝ) / (n : ℝ) ^ 3
+      let v : ℝ≥0 := Real.toNNReal (2 * b)
+      let gamma : Measure (ℝ × ℝ) :=
+        (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+      let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+      rho.real ((Metric.cthickening eps sᶜ)ᶜ) - Real.rpow (n : ℝ) (-a) ≤ nu.real s ∧
+        nu.real s ≤ rho.real (Metric.cthickening eps s) + Real.rpow (n : ℝ) (-a)

@@ -1,0 +1,59 @@
+warning: mathlib: repository has local changes:
+  /root/rivermind-data/shao-lean-20261021/workspaces/lead-oq3/.lake/packages/mathlib
+Shao/OQ3/GaussianSmoothedLogCubicWindowTail.lean:28:35: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  x ^ ?y
+in the target expression
+  Real.exp (-a * Real.log x) = x.rpow (-a)
+
+a c x : ℝ
+ha : 0 ≤ a
+hc : 0 < c
+hx : 0 < x
+hlogone : 1 ≤ Real.log x
+hloglarge : 4 * (a + 6 + |Real.log c|) ≤ Real.log x
+hL : 0 ≤ Real.log x
+hp : 0 ≤ (Real.log x - 4 * (a + 6 + |Real.log c|)) * Real.log x
+hq : 0 ≤ |Real.log c| * (Real.log x - 1)
+hcL : Real.log c ≤ |Real.log c|
+⊢ Real.exp (-a * Real.log x) = x.rpow (-a)
+Shao/OQ3/GaussianSmoothedLogCubicWindowTail.lean:95:2: warning: Try this: 
+  letI̵
+
+The goal is a proposition, so `let` is preferred over `letI`.
+The difference between `let` and `letI` is that `letI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+
+OBJECT_EXISTS False
+FILE .lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean SHA256 f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd
+32: `y ≠ 0`. For `x < 0`, the definition is somewhat arbitrary as it depends on the choice of a complex
+33: determination of the logarithm. With our conventions, it is equal to `exp (y log x) cos (π y)`. -/
+34: noncomputable def rpow (x y : ℝ) :=
+35:   ((x : ℂ) ^ (y : ℂ)).re
+36: 
+37: noncomputable instance : Pow ℝ ℝ := ⟨rpow⟩
+38: 
+39: @[simp]
+40: theorem rpow_eq_pow (x y : ℝ) : rpow x y = x ^ y := rfl
+41: 
+42: theorem rpow_def (x y : ℝ) : x ^ y = ((x : ℂ) ^ (y : ℂ)).re := rfl
+48:       (Complex.ofReal_mul _ _).symm, Complex.exp_ofReal_re, Complex.ofReal_eq_zero]
+49: 
+50: theorem rpow_def_of_pos {x : ℝ} (hx : 0 < x) (y : ℝ) : x ^ y = exp (log x * y) := by
+51:   rw [rpow_def_of_nonneg (le_of_lt hx), ite_eq_right (ne_of_gt hx)]
+52: 
+53: theorem exp_mul (x y : ℝ) : exp (x * y) = exp x ^ y := by rw [rpow_def_of_pos (exp_pos _), log_exp]
+54: 
+55: @[simp, norm_cast]
+56: theorem rpow_intCast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
+57:   simp only [rpow_def, ← Complex.ofReal_zpow, Complex.cpow_intCast, Complex.ofReal_intCast,
+58:     Complex.ofReal_re]
+115: @[bound]
+116: theorem rpow_pos_of_pos {x : ℝ} (hx : 0 < x) (y : ℝ) : 0 < x ^ y := by
+117:   rw [rpow_def_of_pos hx]; apply exp_pos
+118: 
+119: @[simp]
+120: theorem rpow_zero (x : ℝ) : x ^ (0 : ℝ) = 1 := by simp [rpow_def]
+121: 
+122: theorem rpow_zero_pos (x : ℝ) : 0 < x ^ (0 : ℝ) := by simp

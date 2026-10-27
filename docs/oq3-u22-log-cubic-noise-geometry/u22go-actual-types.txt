@@ -1,0 +1,42 @@
+DECL Shao.OQ3.eventually_cubic_pair_gaussian_noise_tail
+TYPE ∀ (a : ℝ),
+  0 ≤ a →
+    ∃ N,
+      1 ≤ N ∧
+        ∀ (n : ℕ),
+          N ≤ n →
+            have b := 1 / (2 * ↑n ^ 6);
+            have eps := Real.log ↑n / ↑n ^ 3;
+            have v := (2 * b).toNNReal;
+            have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+            gamma.real {y | eps < ‖y‖} ≤ (↑n).rpow (-a)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.cubic_pair_gaussian_noise_tail_bound
+TYPE ∀ (n : ℕ),
+  1 ≤ n →
+    have b := 1 / (2 * ↑n ^ 6);
+    have eps := Real.log ↑n / ↑n ^ 3;
+    have v := (2 * b).toNNReal;
+    have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+    gamma.real {y | eps < ‖y‖} ≤ 4 * Real.exp (-Real.log ↑n ^ 2 / 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.eventually_cubic_gaussian_smoothed_set_sandwich
+TYPE ∀ (a : ℝ),
+  0 ≤ a →
+    ∃ N,
+      1 ≤ N ∧
+        ∀ (n : ℕ),
+          N ≤ n →
+            ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (s : Set (ℝ × ℝ)),
+              MeasurableSet s →
+                have b := 1 / (2 * ↑n ^ 6);
+                have eps := Real.log ↑n / ↑n ^ 3;
+                have v := (2 * b).toNNReal;
+                have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+                have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+                rho.real (Metric.cthickening eps sᶜ)ᶜ - (↑n).rpow (-a) ≤ nu.real s ∧
+                  nu.real s ≤ rho.real (Metric.cthickening eps s) + (↑n).rpow (-a)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

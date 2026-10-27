@@ -1,0 +1,18 @@
+theorem pair_gaussian_damped_weighted_error_integral_bound
+    (e : (ℝ × ℝ) → ℂ) (he : Continuous e)
+    (s : Set (ℝ × ℝ)) (k : ℕ) (b : ℝ) (hb : 0 ≤ b)
+    (hInt : IntegrableOn (fun z : ℝ × ℝ =>
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k * ‖e z‖) s) :
+    let weight : (ℝ × ℝ) → ℝ := fun z =>
+      Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k
+    let damping : (ℝ × ℝ) → ℝ := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))
+    let kernel : (ℝ × ℝ) → (ℝ × ℝ) → ℂ := fun x z =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ))
+    IntegrableOn (fun z => weight z * ‖(damping z : ℂ) * e z‖) s ∧
+      (∫ z in s, weight z * ‖(damping z : ℂ) * e z‖) ≤
+        ∫ z in s, weight z * ‖e z‖ ∧
+      ∀ x : ℝ × ℝ,
+        IntegrableOn (fun z => kernel x z * (weight z : ℂ) *
+          ((damping z : ℂ) * e z)) s ∧
+          ‖∫ z in s, kernel x z * (weight z : ℂ) * ((damping z : ℂ) * e z)‖ ≤
+            ∫ z in s, weight z * ‖e z‖
