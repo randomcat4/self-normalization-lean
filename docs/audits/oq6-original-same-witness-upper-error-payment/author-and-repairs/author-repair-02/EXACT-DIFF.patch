@@ -1,0 +1,26 @@
+--- C:/game/shao lean/drafts/oq56/unit238/author-repair-01/OriginalSameWitnessUpperErrorPayment.lean
++++ C:/game/shao lean/drafts/oq56/unit238/author-repair-02/OriginalSameWitnessUpperErrorPayment.lean
+@@ -659,11 +659,13 @@
+     simpa only [hq.map_eq, Jsafe, Set.preimage_compl] using
+       (map_measureReal_apply (μ := ν) hq.measurable hSsafe.compl).symm
+   have hPSafe : P₀.real Ssafeᶜ = P.real Ssafeᶜ := by
++    change P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω)
++      mN mN₀ id P at hP₀map
+     rw [hP₀map]
+     simpa only [idSample, Set.preimage_id] using
+       (map_measureReal_apply (μ := P) hidN hSsafe.compl)
+   have hPcmono : P.real Ssafeᶜ ≤ P.real Hsourceᶜ := by
+-    apply measureReal_mono
++    refine measureReal_mono (μ := P) ?_ (measure_ne_top P Hsourceᶜ)
+     intro ζ hζ hH
+     exact hζ (hHsubset hH)
+   have hJpay : ν.real Jsafeᶜ ≤ payment := by
+@@ -732,7 +734,7 @@
+   have hEventualPay (δ : ℝ) (hδ : 0 < δ) :
+       ∀ᶠ k : ℕ in Filter.atTop, ν.real (E k) ≤ payment + δ := by
+     filter_upwards [hEventual δ hδ] with k hk
+-    exact hk.trans (add_le_add_right hJpay δ)
++    linarith only [hk, hJpay]
+   exact ⟨hV0m, hD1m, hD2m, hD1aug, hD2aug, hWV,
+     hHsourceMeas, hSsafe, hSoriginal, hJm, hHsubset, hJmargin,
+     hνSafe, hPSafe, hPcmono, hHpay, hJpay, hZeroOriginal,
