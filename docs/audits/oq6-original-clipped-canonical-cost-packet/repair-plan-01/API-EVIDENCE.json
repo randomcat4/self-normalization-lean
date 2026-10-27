@@ -1,0 +1,184 @@
+{
+  "schema": "oq56-unit224-plan01-primary-api-joins-v1",
+  "pinnedMathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "pinnedLean": "v4.36.0-rc1",
+  "absoluteMeasurability": {
+    "chosenRoute": "Measurable.norm plus simpa only [Real.norm_eq_abs]",
+    "acceptedExactUsage": {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584,
+        "LF": 298,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 173,
+      "lastLine1": 191,
+      "exactText": "  have hentry (j k : Fin n) :\n      Measurable (fun x : Fin n → Ω => r (x j) (x k)) := by\n    have hp : Measurable (fun x : Fin n → Ω => (x j, x k)) :=\n      (measurable_pi_apply j).prodMk (measurable_pi_apply k)\n    simpa only [Function.comp_def] using hr.comp hp\n  have hUpper : Measurable (fun x : Fin n → Ω =>\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x) := by\n    unfold Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper\n    apply Finset.measurable_sum\n    intro j _\n    apply Finset.measurable_sum\n    intro k _\n    by_cases hjk : j < k\n    · simpa only [hjk, ite_true] using hentry j k\n    · simp only [hjk, ite_false]\n      exact measurable_const\n  have hFullD : Measurable (fun x : Fin n → Ω => |residualStatisticD n r x|) := by\n    simpa only [Real.norm_eq_abs, residualStatisticD, denD] using (hUpper.div_const denD).norm\n  have hrowFull (j : Fin n) : Measurable (fun x : Fin n → Ω =>\n",
+      "textSHA256": "7d71f07373fddd5900a4d64dff321e1d1af1087fdcd18f373701a300bd91dc96"
+    },
+    "namespace": "Shao.OQ5.P51",
+    "requiredSourceType": "hD1m : Measurable[mN₀,borel ℝ] D1; similarly signed Ddel or signed cost difference",
+    "targetType": "Measurable[mN₀,borel ℝ] of literal absolute value; A/Adel aliases reduce definitionally",
+    "specializations": [
+      "D1",
+      "fun ζ:Fin n→Ω => Ddel ζ i",
+      "fun ζ:Fin n→Ω => A ζ−Adel ζ i",
+      "fun ζ:Fin n→Ω => B1 ζ−B1del ζ i"
+    ],
+    "importsAdded": [],
+    "noGuessedMeasurableAbs": true
+  },
+  "explicitPiIdentity": {
+    "completePrimaryWindow": {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+        "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+        "bytes": 49519,
+        "LF": 1186,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 571,
+      "lastLine1": 600,
+      "exactText": "\nvariable {X : δ → Type*} [MeasurableSpace α]\n\ninstance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\ntheorem MeasurableSpace.comap_le_comap_pi {g : (a : δ) → β → X a} (a : δ) :\n    .comap (g a) inferInstance ≤ pi.comap (fun b c ↦ g c b) := by\n  simpa only [pi, comap_iSup] using le_iSup_of_le a <| by measurability\n\ntheorem Measurable.eval {a : δ} {g : α → ∀ a, X a} (hg : Measurable g) :\n    Measurable fun x => g x a :=\n  (measurable_pi_apply a).comp hg\n\n@[fun_prop]\ntheorem Measurable.of_eval {f : α → ∀ a, X a} (hf : ∀ a, Measurable fun c => f c a) :\n    Measurable f :=\n  measurable_pi_iff.mpr hf\n\n@[deprecated (since := \"2026-08-20\")] alias measurable_pi_lambda := Measurable.of_eval\n",
+      "textSHA256": "d0d82a038acba492d32779178b33b218dac1bb4d5bf17dcde3cd2603b687094c"
+    },
+    "ambientTrail": {
+      "publicSection": "@[expose] public section",
+      "open": "Set Function MeasureTheory",
+      "types": "variable {α β γ δ δ' : Type*}; section Pi; variable {X : δ → Type*} [MeasurableSpace α]; variable [∀a,MeasurableSpace(X a)] [MeasurableSpace γ]"
+    },
+    "neededFullExplicitSignature": "@measurable_pi_iff : {α : Type*} → {δ : Type*} → {X : δ → Type*} → [MeasurableSpace α] → [∀a,MeasurableSpace(X a)] → {g : α → ∀a,X a} → (Measurable g ↔ ∀a,Measurable(fun x => g x a)); @measurable_pi_apply : {δ : Type*} → {X : δ → Type*} → [∀a,MeasurableSpace(X a)] → (a:δ) → Measurable(fun f => f a)",
+    "explicitInstantiation": "α=Fin n→Ω, δ=Fin n, X=fun _:Fin n=>Ω, sourceMeas=mN, coordinateTargetMeas=fun _:Fin n=>m₀, g=id; coordinate projection from ORIGINAL product uses mΩ",
+    "acceptedIdenticalCarrierUsage": {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/OriginalCountablyGeneratedModel.lean",
+        "sha256": "8691f69ca9ab84649f92b20385c415a2129250cc8f64375d6296e2d59a381627",
+        "bytes": 21808,
+        "LF": 412,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 249,
+      "lastLine1": 255,
+      "exactText": "    have hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → Fin n → Ω) := by\n      apply (@measurable_pi_iff (Fin n → Ω) (Fin n) (fun _ : Fin n => Ω)\n        mN (fun _ : Fin n => m₀) (id : (Fin n → Ω) → Fin n → Ω)).2\n      intro j\n      exact hid.comp\n        (@measurable_pi_apply (Fin n) (fun _ : Fin n => Ω)\n          (fun _ : Fin n => mΩ) j)\n",
+      "textSHA256": "c9876e21a296dcaff17f793b219887b6f7cfde6010490ad199beb74a259fdd46"
+    },
+    "acceptedTransportUsage": {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/OriginalKernelObservableTransport.lean",
+        "sha256": "616d2145fc8be92ac3d9aea92c28ab801e32b447ad62c4123838b45c95f1832f",
+        "bytes": 13850,
+        "LF": 319,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 281,
+      "lastLine1": 287,
+      "exactText": "  have hidJ : Measurable[mJ, mJ₀] (id : (J → Ω) → J → Ω) := by\n    apply (@measurable_pi_iff (J → Ω) J (fun _ : J => Ω)\n      mJ (fun _ : J => m₀) (id : (J → Ω) → J → Ω)).2\n    intro j\n    exact hid.comp\n      (@measurable_pi_apply J (fun _ : J => Ω) (fun _ : J => mΩ) j)\n  let mappedSigmaFinite :\n",
+      "textSHA256": "20f7d3882f79f21d3183cfad8f8c6991edab7ab048ffc45e831f891c8617abe0"
+    }
+  },
+  "explicitMeasurePreservingConstructor": {
+    "savedPrimaryPacket": {
+      "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-canonical-double-ghost-row-moments-188/author-stage1-01/primary-api-bindings.json",
+      "sha256": "77a89f32d3c7b08d7c7c2cb8879f48c275a17dfba7eaf532db46e999fdee7097",
+      "bytes": 63939,
+      "LF": 1558,
+      "CR": 0,
+      "utf8Bom": false
+    },
+    "originalSource": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/Dynamics/Ergodic/MeasurePreserving.lean",
+      "sha256": "c4623b5a97ea419bfa2698cc8643e1aa937a5e1fec3501bdb56e07159f0decde",
+      "bytes": 11787,
+      "mtime_ns": "1792382595000000000",
+      "module": "Mathlib/Dynamics/Ergodic/MeasurePreserving.lean",
+      "lines": [
+        94,
+        96
+      ]
+    },
+    "completeAmbient": {
+      "namespace": "MeasureTheory.MeasurePreserving",
+      "ambientTypes": "variable {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]\n\nnamespace MeasureTheory\n\nvariable {μa : Measure α} {μb : Measure β} {μc : Measure γ}",
+      "structure": "structure MeasurePreserving (f : α → β)\n  (μa : Measure α := by volume_tac) (μb : Measure β := by volume_tac) : Prop where\n  protected measurable : Measurable f\n  protected map_eq : map f μa = μb"
+    },
+    "proposedConstructorApplication": "  have hId : @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀ :=\n    @MeasurePreserving.mk (Fin n → Ω) (Fin n → Ω) mN mN₀\n      id P P₀ hidN hP₀map.symm\n",
+    "actualGeneratedSignatureReady": true,
+    "primarySignature": {
+      "schema": "oq56-unit224-constructor-actual-type-read-v1",
+      "utc": "2026-10-27T03:38:00.048596+00:00",
+      "receipt": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit224-01/OriginalClippedCanonicalCostPacket/api-mp-mk-01/receipt.json",
+        "sha256": "7eaa519c7e01abf339e3d7f6e8e888eac282d28f3a9d54cc5051476129ca8726",
+        "bytes": 17050699,
+        "mtime_ns": "1793072267329194366"
+      },
+      "actualExitCode": 0,
+      "allEnded": true,
+      "preserved": true,
+      "beforeAfterExact": true,
+      "objectCreated": false,
+      "no_o": true,
+      "queryOnlyNotProducerProofOrLeafAX": true,
+      "stdout": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit224-01/OriginalClippedCanonicalCostPacket/api-mp-mk-01/api-mp-mk-01.stdout",
+        "sha256": "efc7be306bfeb180c33826936d2c8761b1e0ce20089760800558a0b271d66611",
+        "bytes": 675,
+        "mtime_ns": "1793072266037197942"
+      },
+      "completeActualOutput": "OQ56_API_LEVELS [u_1, u_2]\nOQ56_API_COMPLETE_TYPE ∀ {α : Type u_1} {β : Type u_2} [inst : MeasurableSpace.{u_1} α]\n  [inst_1 : MeasurableSpace.{u_2} β] {f : α → β}\n  {μa : autoParam.{u_1 + 1} (@MeasureTheory.Measure.{u_1} α inst) MeasureTheory.MeasurePreserving._auto_1}\n  {μb : autoParam.{u_2 + 1} (@MeasureTheory.Measure.{u_2} β inst_1) MeasureTheory.MeasurePreserving._auto_3}\n  (measurable : @Measurable.{u_1, u_2} α β inst inst_1 f)\n  (map_eq :\n    @Eq.{u_2 + 1} (@MeasureTheory.Measure.{u_2} β inst_1) (@MeasureTheory.Measure.map.{u_1, u_2} α β inst inst_1 f μa)\n      μb),\n  @MeasureTheory.MeasurePreserving.{u_1, u_2} α β inst inst_1 f μa μb\n",
+      "mathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "primaryAPISource": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/Dynamics/Ergodic/MeasurePreserving.lean",
+        "sha256": "c4623b5a97ea419bfa2698cc8643e1aa937a5e1fec3501bdb56e07159f0decde",
+        "bytes": 11787,
+        "mtime_ns": "1792382595000000000"
+      },
+      "driver": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit224-01/OriginalClippedCanonicalCostPacket/api-mp-mk-input.lean",
+        "sha256": "9bf0200e6fbffa7a070c99a3770bad29d7a374e10afa0acaf52428fce76ae4fb",
+        "bytes": 438,
+        "mtime_ns": "1793072251141239169"
+      },
+      "guard": {
+        "utc": "2026-10-27T03:38:00.094172+00:00",
+        "resource": {
+          "cgroup_max": "214748364800",
+          "used": "178831704064",
+          "headroom": "35916660736",
+          "reserve_GiB": 20,
+          "CPU": [
+            52,
+            53,
+            54,
+            55
+          ],
+          "native_MiB": 8192,
+          "j": 4,
+          "external_CPU0_23_80GiB_untouched": true,
+          "RLIMIT_AS": false
+        },
+        "locks": {
+          "Root": "FREE",
+          "C12": "FREE",
+          "OQ56": "FREE"
+        },
+        "projectRSSKiB": 43660,
+        "otherProjectLean": [],
+        "ownLean": []
+      },
+      "protectedCount": 17517
+    },
+    "status": "Complete actual generated constructor TYPE read; explicit α/β/sourceSpace/targetSpace/f/μa/μb/measurable/map_eq order verified, including autoParam and universes. This is a parent API query, not a new224 proof check."
+  },
+  "fiveL1TransfersUntouched": true,
+  "sameHqUntouched": true,
+  "localMeasurableInstancesAdded": 0,
+  "LeanCalls": 0,
+  "serverCalls": 0,
+  "networkCalls": 0
+}

@@ -741,6 +741,7 @@ import Shao.OQ6.NormalizedRemainderEnvelope
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalBoundedFourPayments
 import Shao.OQ6.OriginalClippedCanonicalCoding
+import Shao.OQ6.OriginalClippedCanonicalCostPacket
 import Shao.OQ6.OriginalClippedComparisonPayments
 import Shao.OQ6.OriginalClippedCostIntegrability
 import Shao.OQ6.OriginalClippedExpectationFees
