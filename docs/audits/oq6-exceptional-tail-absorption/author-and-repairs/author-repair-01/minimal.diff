@@ -1,0 +1,41 @@
+--- author-01/OriginalExceptionalTailAbsorption.lean
++++ author-repair-01/OriginalExceptionalTailAbsorption.lean
+@@ -56,13 +56,13 @@
+   have hexp : Tendsto
+       (fun n : ℕ => Real.exp (-b * Real.rpow (n : ℝ) (1 / 3 : ℝ)))
+       atTop (𝓝 (0 : ℝ)) := by
+-    simpa only [Real.rpow_zero, one_mul] using
++    simpa only [Function.comp_def, Real.rpow_zero, one_mul] using
+       (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero (0 : ℝ) b hb).comp hthird
+   have hlinearExp : Tendsto
+       (fun n : ℕ => Real.rpow (n : ℝ) (1 / 3 : ℝ) *
+         Real.exp (-b * Real.rpow (n : ℝ) (1 / 3 : ℝ)))
+       atTop (𝓝 (0 : ℝ)) := by
+-    simpa only [Real.rpow_one] using
++    simpa only [Function.comp_def, Real.rpow_one] using
+       (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero (1 : ℝ) b hb).comp hthird
+   have hsmallLimit : Tendsto
+       (fun n : ℕ => (128 / 3 : ℝ) *
+@@ -105,12 +105,18 @@
+     Real.rpow_le_rpow_of_exponent_le hxone (by norm_num : (1 / 6 : ℝ) ≤ 1 / 3)
+   have hproduct : s * Real.rpow x (2 / 3 : ℝ) = x := by
+     dsimp only [s]
+-    rw [← Real.rpow_add hxpos]
+-    norm_num
++    calc
++      _ = Real.rpow x ((1 / 3 : ℝ) + (2 / 3 : ℝ)) :=
++        (Real.rpow_add hxpos (1 / 3 : ℝ) (2 / 3 : ℝ)).symm
++      _ = Real.rpow x (1 : ℝ) := by norm_num
++      _ = x := Real.rpow_one x
+   have hsqrt : s * u = Real.sqrt x := by
+     dsimp only [s, u]
+-    rw [← Real.rpow_add hxpos, Real.sqrt_eq_rpow]
+-    norm_num
++    calc
++      _ = Real.rpow x ((1 / 3 : ℝ) + (1 / 6 : ℝ)) :=
++        (Real.rpow_add hxpos (1 / 3 : ℝ) (1 / 6 : ℝ)).symm
++      _ = Real.rpow x (1 / 2 : ℝ) := by norm_num
++      _ = Real.sqrt x := (Real.sqrt_eq_rpow x).symm
+   have hnonempty : (1 : ℝ) ≤ cWindow * u := by
+     have h := (div_le_iff₀ hcWindow).mp hnonemptyBound
+     nlinarith only [h]
