@@ -1,0 +1,11 @@
+              let X : (Fin 2 → ℝ) → ℝ := fun y => u * y 0 + v * y 1
+              let kappa : ℕ → ℝ := fun j =>
+                iteratedDeriv j (ProbabilityTheory.cgf X (laws p)) 0
+              let a : Fin 6 → ℂ := fun j =>
+                (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+                  (kappa (j.val + 3) : ℂ) /
+                    (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+              let Pn : ℂ := Complex.exp (-((u ^ 2 + v ^ 2 : ℝ) : ℂ) / 2) *
+                ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+                  ∑ sigma : Fin q.val → Fin 6,
+                    if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a (sigma i) else 0

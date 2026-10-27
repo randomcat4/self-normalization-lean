@@ -1,0 +1,16 @@
+theorem pair_standard_gaussian_finite_hermite_integral
+    (s : Finset (ℕ × ℕ)) (a : (ℕ × ℕ) → ℝ) (x : ℝ × ℝ) :
+    Integrable (fun z : ℝ × ℝ =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+        (∑ d ∈ s, (a d : ℂ) *
+          (Complex.I * (z.1 : ℂ)) ^ d.1 * (Complex.I * (z.2 : ℂ)) ^ d.2) *
+            Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+      (∫ z : ℝ × ℝ,
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+          (∑ d ∈ s, (a d : ℂ) *
+            (Complex.I * (z.1 : ℂ)) ^ d.1 * (Complex.I * (z.2 : ℂ)) ^ d.2) *
+              Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) =
+        ((2 * Real.pi *
+          (∑ d ∈ s, a d * (gaussianHermitePolynomial d.1).eval x.1 *
+            (gaussianHermitePolynomial d.2).eval x.2) *
+              Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2) : ℝ) : ℂ)

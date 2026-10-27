@@ -1,0 +1,25 @@
+theorem pair_directional_moment_homogeneous_polynomial
+    (mu : Measure (Fin 2 → ℝ)) (k : ℕ)
+    (hM : Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) :
+    let b : ℕ → ℝ := fun j =>
+      ∫ y : Fin 2 → ℝ, y 0 ^ j * y 1 ^ (k - j) ∂mu
+    let P : MvPolynomial (Fin 2) ℝ :=
+      ∑ j ∈ Finset.range (k + 1),
+        MvPolynomial.C ((k.choose j : ℝ) * b j) *
+          MvPolynomial.X 0 ^ j * MvPolynomial.X 1 ^ (k - j)
+    P.IsHomogeneous k ∧
+      ∀ u v : ℝ, MvPolynomial.eval ![u, v] P =
+        ∫ y : Fin 2 → ℝ, (u * y 0 + v * y 1) ^ k ∂mu
+
+theorem pair_directional_cgf_cumulant_homogeneous_polynomial
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior
+      (ProbabilityTheory.integrableExpSet
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ k : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) (n : ℕ) :
+    ∃ P : MvPolynomial (Fin 2) ℝ, P.IsHomogeneous n ∧
+      ∀ u v : ℝ, MvPolynomial.eval ![u, v] P =
+        iteratedDeriv n (ProbabilityTheory.cgf
+          (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu) 0

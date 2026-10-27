@@ -1,0 +1,19 @@
+theorem real_gaussian_complex_moment_integrable
+    (b : ℝ) (hb : 0 < b) (n : ℕ) :
+    Integrable (fun t : ℝ =>
+      (t : ℂ) ^ n * Complex.exp (-(b : ℂ) * (t : ℂ) ^ 2))
+
+theorem real_gaussian_oscillatory_moment_derivative
+    (b : ℝ) (hb : 0 < b) (n : ℕ) (x : ℝ) :
+    let F : ℝ → ℂ := fun y =>
+      (Real.sqrt (Real.pi / b) : ℂ) *
+        Complex.exp (-(((2 * Real.pi * y) ^ 2 / (4 * b) : ℝ) : ℂ))
+    Integrable (fun t : ℝ =>
+      Complex.exp (-Complex.I * (x : ℂ) * (t : ℂ)) *
+        (Complex.I * (t : ℂ)) ^ n *
+          Complex.exp (-(b : ℂ) * (t : ℂ) ^ 2)) ∧
+      (∫ t : ℝ, Complex.exp (-Complex.I * (x : ℂ) * (t : ℂ)) *
+        (Complex.I * (t : ℂ)) ^ n *
+          Complex.exp (-(b : ℂ) * (t : ℂ) ^ 2)) =
+        ((-2 * (Real.pi : ℂ)) ^ n)⁻¹ *
+          iteratedDeriv n F (x / (2 * Real.pi))

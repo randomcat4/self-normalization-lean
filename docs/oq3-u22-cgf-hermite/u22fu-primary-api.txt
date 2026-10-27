@@ -1,0 +1,83 @@
+FILE .lake/packages/mathlib/Mathlib/Algebra/MvPolynomial/Eval.lean SHA256 fb0dd2f7f249f9234abcf7cba2deca0cbdcc6cbf05e07adc18714579ba3a3e72
+80: 
+81: @[simp]
+82: theorem eval₂_zero : (0 : MvPolynomial σ R).eval₂ f g = 0 :=
+83:   Finsupp.sum_zero_index
+84: 
+85: section
+86: 
+87: @[simp]
+88: theorem eval₂_add : (p + q).eval₂ f g = p.eval₂ f g + q.eval₂ f g := by
+89:   classical exact Finsupp.sum_add_index (by simp [f.map_zero]) (by simp [add_mul, f.map_add])
+94: 
+95: @[simp]
+96: theorem eval₂_C (a) : (C a).eval₂ f g = f a := by
+97:   rw [C_apply, eval₂_monomial, prod_zero_index, mul_one]
+98: 
+99: @[simp]
+100: theorem eval₂_one : (1 : MvPolynomial σ R).eval₂ f g = 1 :=
+101:   (eval₂_C _ _ _).trans f.map_one
+102: 
+103: @[simp] theorem eval₂_natCast (n : Nat) : (n : MvPolynomial σ R).eval₂ f g = n :=
+115:   simp [X_pow_eq_monomial, eval₂_monomial f g]
+116: 
+117: theorem eval₂_mul_monomial :
+118:     ∀ {s a}, (p * monomial s a).eval₂ f g = p.eval₂ f g * f a * s.prod fun n e => g n ^ e := by
+119:   classical
+120:   apply MvPolynomial.induction_on p
+121:   · intro a' s a
+122:     simp [C_mul_monomial, eval₂_monomial, f.map_mul]
+123:   · intro p q ih_p ih_q
+124:     simp [add_mul, eval₂_add, ih_p, ih_q]
+132:             f.map_one]
+133: 
+134: theorem eval₂_mul_C : (p * C a).eval₂ f g = p.eval₂ f g * f a :=
+135:   (eval₂_mul_monomial _ _).trans <| by simp
+136: 
+137: @[simp]
+138: theorem eval₂_mul : ∀ {p}, (p * q).eval₂ f g = p.eval₂ f g * q.eval₂ f g := by
+139:   apply MvPolynomial.induction_on q
+140:   · simp [eval₂_C, eval₂_mul_C]
+141:   · simp +contextual [mul_add, eval₂_add]
+142:   · simp +contextual [X, eval₂_mul_monomial, ← mul_assoc]
+143: 
+144: theorem eval₂_mul_eq_zero_of_left (hp : p.eval₂ f g = 0) : (p * q).eval₂ f g = 0 := by
+145:   simp [eval₂_mul f g, hp]
+146: 
+147: theorem eval₂_mul_eq_zero_of_right (hq : q.eval₂ f g = 0) : (p * q).eval₂ f g = 0 := by
+148:   simp [eval₂_mul f g, hq]
+149: 
+150: @[simp]
+151: theorem eval₂_pow {p : MvPolynomial σ R} : ∀ {n : ℕ}, (p ^ n).eval₂ f g = p.eval₂ f g ^ n
+152:   | 0 => by
+153:     rw [pow_zero, pow_zero]
+154:     exact eval₂_one _ _
+234:   rwa [Finsupp.mem_support_iff] at hc
+235: 
+236: @[simp] theorem eval₂_sum (s : Finset S₂) (p : S₂ → MvPolynomial σ R) :
+237:     eval₂ f g (∑ x ∈ s, p x) = ∑ x ∈ s, eval₂ f g (p x) :=
+238:   map_sum (eval₂Hom f g) _ s
+239: 
+240: @[simp] theorem eval₂_prod (s : Finset S₂) (p : S₂ → MvPolynomial σ R) :
+241:     eval₂ f g (∏ x ∈ s, p x) = ∏ x ∈ s, eval₂ f g (p x) :=
+242:   map_prod (eval₂Hom f g) _ s
+243: 
+244: theorem eval₂_assoc (q : S₂ → MvPolynomial σ R) (p : MvPolynomial S₂ R) :
+245:     eval₂ f (fun t => eval₂ f g (q t)) p = eval₂ f g (eval₂ C q p) := by
+246:   change _ = eval₂Hom f g (eval₂ C q p)
+247:   rw [eval₂_comp_left (eval₂Hom f g)]; congr with a; simp
+655: 
+656: @[simp]
+657: theorem eval₂_zero_apply (f : R →+* S₂) (p : MvPolynomial σ R) :
+658:     eval₂ f (0 : σ → S₂) p = f (constantCoeff p) :=
+659:   eval₂Hom_zero_apply _ _
+660: 
+661: @[simp]
+662: theorem eval₂_zero'_apply (f : R →+* S₂) (p : MvPolynomial σ R) :
+663:     eval₂ f (fun _ => 0 : σ → S₂) p = f (constantCoeff p) :=
+664:   eval₂_zero_apply f p
+665: 
+666: @[simp]
+667: theorem aeval_zero (p : MvPolynomial σ R) :
+668:     aeval (0 : σ → S₁) p = algebraMap _ _ (constantCoeff p) :=
+669:   eval₂Hom_zero_apply (algebraMap R S₁) p

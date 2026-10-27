@@ -1,0 +1,47 @@
+        (∀ (k : ℕ) (x : Fin n → Ω × ℝ),
+          A x + (4 * ε k * Real.sqrt (n : ℝ)) * H x = Anew k x) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          Measurable[mAug, borel ℝ] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)) ∧
+          Integrable[mAug] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)) ν ∧
+          Integrable[mAug] (fun x =>
+            |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)|) ν ∧
+          Integrable[mAug] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x)) ν ∧
+          (∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+            deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν) ≤
+              |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+          |(∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+              |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν)))) ∧
+        (∀ i : Fin n,
+          Filter.Tendsto (fun k : ℕ =>
+            ∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν)
+            Filter.atTop (nhds (0 : ℝ)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+              (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+            Filter.atTop (nhds (0 : ℝ)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν)
+            Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)
+            Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧
+        (∀ k : ℕ,
+          |(∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+              |ε k| * ∑ i : Fin n,
+                Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+        Filter.Tendsto (fun k : ℕ =>
+          (∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+          Filter.atTop (nhds (0 : ℝ)) ∧
+        Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)
+          Filter.atTop (nhds (0 : ℝ)) ∧
+        Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0) ∧

@@ -1,0 +1,33 @@
+DECL Shao.OQ3.pair_directional_cgf_cumulant_homogeneous_polynomial._proof_1_2
+TYPE ∀ (m j : ℕ), j < m → j + 1 + (m - j) = m + 1 → ¬j + 1 < m + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_cumulant_homogeneous_polynomial._proof_1_1
+TYPE ∀ (m j : ℕ), j < m → ¬j + 1 + (m - j) = m + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_cumulant_homogeneous_polynomial._proof_1_3
+TYPE ∀ (m j : ℕ), j < m → ¬j + 1 < m + 1 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_cumulant_homogeneous_polynomial
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu) →
+      ∀ (n : ℕ),
+        ∃ P,
+          P.IsHomogeneous n ∧
+            ∀ (u v : ℝ),
+              (MvPolynomial.eval ![u, v]) P = iteratedDeriv n (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) mu) 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_moment_homogeneous_polynomial
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) (k : ℕ),
+  MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu →
+    have b := fun j => ∫ (y : Fin 2 → ℝ), y 0 ^ j * y 1 ^ (k - j) ∂mu;
+    have P :=
+      ∑ j ∈ Finset.range (k + 1),
+        MvPolynomial.C (↑(k.choose j) * b j) * MvPolynomial.X 0 ^ j * MvPolynomial.X 1 ^ (k - j);
+    P.IsHomogeneous k ∧ ∀ (u v : ℝ), (MvPolynomial.eval ![u, v]) P = ∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ k ∂mu
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
