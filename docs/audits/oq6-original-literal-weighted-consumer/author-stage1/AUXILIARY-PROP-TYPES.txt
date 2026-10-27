@@ -1,0 +1,81 @@
+STAGE1 TYPE INVENTORY ONLY; no implementations.
+All symbols are the exact CANDIDATE-HEAD lets and original input binders.
+No new auxiliary Prop definition, class, axiom, hypothesis, or top-level helper is proposed.
+
+Arithmetic:
+  hn1 : 1 ≤ n
+  hNpos : 0 < N
+  hK : 0 ≤ K
+  hε : ∀ k : ℕ, 0 < ε k
+  hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ))
+  hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))
+  hKε : ∀ k : ℕ, 4 * ε k * Real.sqrt (n : ℝ) = K * ε k
+
+Fixed same226 packet, obtained after supplying the explicit valid ε 0:
+  hμ₀prob : @IsProbabilityMeasure Ω m₀ μ₀
+  hP₀prob : @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀
+  hP₀map : P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P
+  hνprob : @IsProbabilityMeasure (Fin n → Ω × ℝ) mAug ν
+  hq : @MeasurePreserving (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν P₀
+  hξ0m : ∀ i : Fin n, Measurable[mN₀, borel ℝ] (ξ0 i)
+  hξ0mean : ∀ i : Fin n, (∫ ζ, ξ0 i ζ ∂P₀) = 0
+  hξ : ∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i)
+  hξ2 : ∀ i : Fin n, MemLp[mAug] (ξ i) 2 ν
+  hξenergy : (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1
+  hD1 : Measurable[mAug, borel ℝ] (fun x => D1 (q x))
+  hD2 : Measurable[mAug, borel ℝ] (fun x => D2 (q x))
+  hA : Measurable[mAug, borel ℝ] A
+  hB : Measurable[mAug, borel ℝ] B
+  hAdelete : ∀ i : Fin n, Measurable[mAug, borel ℝ] (Adelete i)
+  hBdelete : ∀ i : Fin n, Measurable[mAug, borel ℝ] (Bdelete i)
+  hAnonneg : ∀ x : Fin n → Ω × ℝ, 0 ≤ A x
+  hBnonneg : ∀ x : Fin n → Ω × ℝ, 0 ≤ B x
+  hAdeletenonneg : ∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Adelete i x
+  hBdeletenonneg : ∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Bdelete i x
+  hD1A : ∀ x : Fin n → Ω × ℝ, |D1 (q x)| ≤ A x
+  hD2B : ∀ x : Fin n → Ω × ℝ, |D2 (q x)| ≤ B x
+  hAint : Integrable[mAug] A ν
+  hBint : Integrable[mAug] B ν
+  hAdeleteint : ∀ i : Fin n, Integrable[mAug] (Adelete i) ν
+  hBdeleteint : ∀ i : Fin n, Integrable[mAug] (Bdelete i) ν
+  hA0 : Measurable[mN₀, borel ℝ] A0
+  hB0 : Measurable[mN₀, borel ℝ] B0
+  hA0delete : ∀ i : Fin n, Measurable[mN₀, borel ℝ] (A0delete i)
+  hB0delete : ∀ i : Fin n, Measurable[mN₀, borel ℝ] (B0delete i)
+
+Missing first-power mean transport, derived with no new hypothesis:
+  hfiMapAESM : ∀ i : Fin n, AEStronglyMeasurable (ξ0 i)
+    (@Measure.map (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν)
+  hξmeanTransport : ∀ i : Fin n,
+    (∫ x, ξ i x ∂ν) = (∫ ζ, ξ0 i ζ ∂P₀)
+  hξmean : ∀ i : Fin n, (∫ x, ξ i x ∂ν) = 0
+
+Canonical-code and quantization inputs, at the same m₀:
+  hξlocalMeas : ∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (ξlocal i)
+  hc : ∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (c i)
+  hrange : ∀ (i : Fin n) (t : Ω × ℝ), (1/3:ℝ) ≤ c i t ∧ c i t ≤ (2/3:ℝ)
+  hcomap : ∀ i : Fin n, MeasurableSpace.comap (c i) (borel ℝ) = mAugLocal
+  hYlocal : ∀ (k : ℕ) (i : Fin n), Measurable[mAugLocal, borel ℝ] (Ylocal k i)
+  hY : ∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (Y k i)
+  herr : ∀ (k : ℕ) (i : Fin n) (x : Fin n → Ω × ℝ), |Y k i x - ξ i x| ≤ ε k
+
+Original-law transport, derived with no new hypothesis:
+  hidΩ : Measurable[mΩ, m₀] (id : Ω → Ω)
+  hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → (Fin n → Ω))
+  hId : @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀
+  hIntEq : ∀ (f : (Fin n → Ω) → ℝ), Measurable[mN₀, borel ℝ] f →
+    (∫ x, f (q x) ∂ν) = (∫ ζ, f ζ ∂P)
+  hIntFromν : ∀ (f : (Fin n → Ω) → ℝ), Measurable[mN₀, borel ℝ] f →
+    Integrable[mAug] (fun x => f (q x)) ν → Integrable[mN] f P
+
+Generic result projections:
+  The result types of the six complete APIs, including all inner lets, are
+  DEPENDENCY-API-STATEMENTS.txt, exactly source/hash-bound by PRIMARY-API-EVIDENCE.json.
+  No replacement Prop alias is introduced for their conjunctions. Their exact arguments
+  are INTERFACE-AND-ROUTE.md. Current ε k normalization/factorization fields come from
+  the SAME226 packet at k, not from the fixed k=0 packet or an independent witness.
+
+  The new target Props, each with complete typed quantifiers and captures, are
+  PROP-FACT-INVENTORY.json and the complete CANDIDATE-HEAD. Routine consequence
+  proof names may denote these exact clauses or measurable/algebraic subformulas;
+  they do not authorize new ordinary data, assumptions, witnesses or declarations.
