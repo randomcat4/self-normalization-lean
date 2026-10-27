@@ -1,0 +1,1402 @@
+{
+  "schema": "oq56-unit231-independent-complete-required-api-coverage-v1",
+  "completeRequiredProducerDeclarations": [
+    {
+      "id": "226",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/OriginalLiteralRemainderEnvelope.lean",
+        "sha256": "2b2c57bafe06396e99961420f6cffb3bd71c9407b95692c2e84b92a31ec89c0a",
+        "bytes": 57629,
+        "LF": 1027,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        16,
+        384
+      ],
+      "fullDeclaration": "theorem actual_original_literal_remainder_envelope\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),\n      let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n      letI : MeasurableSpace Ω := m₀\n      letI : MeasurableSpace.CountablyGenerated Ω := hcg\n      IsProbabilityMeasure μ₀ ∧\n      ∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)\n          (z : ℝ) (hz : 0 ≤ z) (K : ℝ) (hK : 0 ≤ K),\n        let mFixedLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)\n        let mFixed : MeasurableSpace (Fin n → Ω × ℝ) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mFixedLocal)\n        let νFixedLocal : Fin n → @Measure (Ω × ℝ) mFixedLocal :=\n          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀\n            ((volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1))\n        let νFixed : @Measure (Fin n → Ω × ℝ) mFixed :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mFixedLocal) νFixedLocal\n        let ξFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun (i : Fin n) (x : Fin n → Ω × ℝ) => g (x i).1 / Real.sqrt (n : ℝ)\n        let VFixed : (Fin n → Ω × ℝ) → ℝ :=\n          fun x : Fin n → Ω × ℝ => Real.sqrt (∑ j : Fin n, (ξFixed j x) ^ 2)\n        let VdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>\n            Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξFixed j x) ^ 2)\n        let BFixed : (Fin n → Ω × ℝ) → ℝ :=\n          fun x : Fin n → Ω × ℝ => studentizerClipBudget n r C0 rho 1 (fun j : Fin n => (x j).1)\n        let BdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>\n            studentizerClipBudgetDeleted n r C0 rho 1 (fun j : Fin n => (x j).1) i\n        let HFixed : (Fin n → Ω × ℝ) → ℝ :=\n          fun x : Fin n → Ω × ℝ =>\n            (1 + VFixed x) * (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + BFixed x))\n        let HdeleteFixed : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun (i : Fin n) (x : Fin n → Ω × ℝ) =>\n            (1 + VdeleteFixed i x) *\n              (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + BdeleteFixed i x))\n        let payment : Fin n → ℝ :=\n          fun i : Fin n => K *\n            ((∫ x, HFixed x ∂νFixed) + (∫ x, HdeleteFixed i x ∂νFixed))\n        let paymentTotal : ℝ := ∑ i : Fin n, payment i\n        ∀ (ε : ℝ) (hε : 0 < ε)\n            (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ))),\n          let mN : MeasurableSpace (Fin n → Ω) :=\n            @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)\n          let mN₀ : MeasurableSpace (Fin n → Ω) :=\n            @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)\n          let P : @Measure (Fin n → Ω) mN :=\n            @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n              (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)\n          let P₀ : @Measure (Fin n → Ω) mN₀ :=\n            @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n              (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)\n          let N : ℝ := Real.sqrt (n : ℝ)\n          let O : Fin n → (Fin n → Ω) → Ω := fun i ξ => ξ i\n          let gcoord : Fin n → Ω → ℝ := fun _ o => g o / N\n          let Q : (Fin n → Ω) → (Fin n → Ω) := fun ξ i => O i ξ\n          let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r\n          let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n          let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n          let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n          let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n          let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n          let κ : (Fin n → Ω) → ℝ := fun _ => 0\n          let W0 : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, gcoord i (O i ξ)\n          let V0 : (Fin n → Ω) → ℝ :=\n            fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)\n          let T0 : (Fin n → Ω) → ℝ := fun ξ =>\n            if V0 ξ = 0 then κ ξ else\n              (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))\n          let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n          let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)\n          let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=\n            @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n              (fun _ : Fin n => mAugLocal)\n          let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=\n            fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01\n          let ν : @Measure (Fin n → Ω × ℝ) mAug :=\n            @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n              (inferInstance : Fintype (Fin n))\n              (fun _ : Fin n => mAugLocal) νlocal\n          let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1\n          let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>\n            Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode\n              (MeasurableSpace.natGeneratingSequence (Ω × ℝ))\n          let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => gcoord i t.1\n          let Ylocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n            Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)\n          let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => gcoord i (x i).1\n          let Y : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => Ylocal i (x i)\n          let a : Fin n → ℝ := Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y\n          let s : ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y\n          let ηlocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n            Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)\n          let η : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n          let C : (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun x i => η i x\n          let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x\n          let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)\n          let Wη : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, η i x\n          let Vη : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)\n          let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))\n          let Dη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n            fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)\n          let Tη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n            fun z x => (Wη x + Dη z x) / (Vη x * b x)\n          let Z0 : Set (Fin n → Ω) := {ξ | projectionV n g ξ = 0}\n          let Z : Set (Fin n → Ω × ℝ) := {x | V x = 0}\n          let p0 : ℝ := P.real Z0\n          let comparisons : Set (ℝ → ℝ → Prop) :=\n            {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n              R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n              R = (fun a b : ℝ => a = b)}\n          let F0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) := fun R z =>\n            {ξ | R (projectionW n g ξ + D1 ξ)\n              (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}\n          let A0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) :=\n            fun R z => {ξ | R (Tclip ξ) z}\n          let Eη : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) :=\n            fun R z => {x | R (Tη z x) z}\n          let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n          let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D1 ξ|\n          let Adel : (Fin n → Ω) → Fin n → ℝ :=\n            fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|\n          let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n          let deletionMass : (Fin n → Ω) → Fin n → ℝ :=\n            fun (ξ : Fin n → Ω) (i : Fin n) =>\n              |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|\n          let deletionTotal : (Fin n → Ω) → ℝ :=\n            fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i\n          @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧\n          P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧\n          (∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀) ∧\n          iIndepFun O P₀ ∧\n          (∀ i : Fin n, Measurable (gcoord i) ∧\n            MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧\n            (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧\n            (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ)) ∧\n          (∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 ∧\n          Q = id ∧ W0 = projectionW n g ∧ V0 = projectionV n g ∧ T0 = Tclip ∧\n          Measurable D1 ∧ Measurable D2 ∧\n          (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ) ∧\n          Measurable[mN₀, borel ℝ] Tclip ∧ Measurable[mN, borel ℝ] Tclip ∧\n          @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n            @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P ∧\n          IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧\n          (1 / 2 : ℝ) < s ∧\n          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i)) ∧\n          iIndepFun η ν ∧\n          (∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν) ∧\n          (∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν) ∧\n          (∀ i : Fin n, (∫ x, η i x ∂ν) = 0) ∧\n          (∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1 ∧\n          (∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0) ∧\n          ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0 ∧\n          (∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x) ∧\n          Measurable[mAug, borel (Fin n → ℝ)] C ∧\n          MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug ∧\n          (∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n            ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n              ∀ x : Fin n → Ω × ℝ, H x = F (C x)) ∧\n          (∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n            ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n              (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n                d y = F (fun j => ηlocal j.val (y j))) ∧\n              Measurable[borel (Fin n → ℝ), borel ℝ]\n                (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n              ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x)) ∧\n          (∃ G2 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n            (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n            ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n              Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n              ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x)) ∧\n          (∀ i : Fin n,\n            ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =\n                  Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x)) ∧\n          (∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z)) ∧\n          MeasurableSet[mN₀] Z0 ∧ MeasurableSet[mN] Z0 ∧ MeasurableSet Z ∧\n          ν Z = P₀ Z0 ∧ P₀ Z0 = P Z0 ∧ ν.real Z = p0 ∧\n          (∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n            Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x) ∧\n          (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n            MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n            MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n            MeasurableSet (Eη R z) ∧\n            ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n            (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n            P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n            |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0) ∧\n          (∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |D2 ξ| ≤ B1 ξ) ∧\n          (∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i) ∧\n          Measurable[mN₀, borel ℝ] J ∧\n          Measurable[mN₀, borel ℝ] A ∧ Measurable[mN₀, borel ℝ] B1 ∧\n          (∀ i : Fin n,\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Adel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => B1del ξ i)) ∧\n          Integrable A P₀ ∧ Integrable B1 P₀ ∧ Integrable D2 P₀ ∧\n          (∀ i : Fin n,\n            Integrable (fun ξ : Fin n → Ω => Adel ξ i) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => B1del ξ i) P₀ ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => deletionMass ξ i) ∧\n            Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P₀) ∧\n          Measurable[mN₀, borel ℝ] deletionTotal ∧ Integrable deletionTotal P₀ ∧\n          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => A (q x)) ∧\n          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1 (q x)) ∧\n          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => D2 (q x)) ∧\n          Integrable (fun x : Fin n → Ω × ℝ => A (q x)) ν ∧\n          Integrable (fun x : Fin n → Ω × ℝ => B1 (q x)) ν ∧\n          Integrable (fun x : Fin n → Ω × ℝ => D2 (q x)) ν ∧\n          (∀ i : Fin n,\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => Adel (q x) i) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1del (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => Adel (q x) i) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => B1del (q x) i) ν ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ν) ∧\n          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionTotal (q x)) ∧\n          Integrable (fun x : Fin n → Ω × ℝ => deletionTotal (q x)) ν ∧\n          let Afull : (Fin n → Ω × ℝ) → ℝ := fun x : Fin n → Ω × ℝ => A (q x)\n          let Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (i : Fin n) (x : Fin n → Ω × ℝ) => Adel (q x) i\n          let B : (Fin n → Ω × ℝ) → ℝ := fun x : Fin n → Ω × ℝ => B1 (q x)\n          let Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (i : Fin n) (x : Fin n → Ω × ℝ) => B1del (q x) i\n          let Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (i : Fin n) (x : Fin n → Ω × ℝ) =>\n              Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)\n          let Cbudget : (Fin n → Ω × ℝ) → ℝ :=\n            fun x : Fin n → Ω × ℝ => Real.sqrt (1 + B x)\n          let CbudgetDelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (i : Fin n) (x : Fin n → Ω × ℝ) => Real.sqrt (1 + Bdelete i x)\n          let H : (Fin n → Ω × ℝ) → ℝ :=\n            fun x : Fin n → Ω × ℝ => (1 + V x) * (Real.sqrt (n : ℝ) + z * Cbudget x)\n          let Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (i : Fin n) (x : Fin n → Ω × ℝ) =>\n              (1 + Vdelete i x) * (Real.sqrt (n : ℝ) + z * CbudgetDelete i x)\n          let M : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (x : Fin n → Ω × ℝ) => K * θ * H x\n          let Mdelete : ℝ → Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ) => K * θ * Hdelete i x\n          let Aenvelope : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (x : Fin n → Ω × ℝ) => Afull x + M θ x\n          let AenvelopeDelete : ℝ → Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ) => Adelete i x + Mdelete θ i x\n          let Δ : ℝ → Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ) =>\n              (Aenvelope θ x - AenvelopeDelete θ i x) - (Afull x - Adelete i x)\n          let fee : ℝ → Fin n → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ) =>\n              |Aenvelope θ x - AenvelopeDelete θ i x| + |B x - Bdelete i x|\n          let feeTotal : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n            fun (θ : ℝ) (x : Fin n → Ω × ℝ) => ∑ i : Fin n, fee θ i x\n          (∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν) ∧\n          (∀ i : Fin n, (∫ x, (ξ i x) ^ 2 ∂ν) = 1 / (n : ℝ)) ∧\n          (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1 ∧\n          Measurable[mAug, borel ℝ] V ∧\n          (∀ i : Fin n, Measurable[mAug, borel ℝ] (Vdelete i)) ∧\n          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Vdelete i x ∧ Vdelete i x ≤ V x) ∧\n          Measurable[mAug, borel ℝ] Cbudget ∧\n          (∀ i : Fin n, Measurable[mAug, borel ℝ] (CbudgetDelete i)) ∧\n          (∀ x : Fin n → Ω × ℝ, 1 ≤ Cbudget x) ∧\n          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), 1 ≤ CbudgetDelete i x) ∧\n          Measurable[mAug, borel ℝ] H ∧ Integrable[mAug] H ν ∧\n          (∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν) ∧\n          (∀ x : Fin n → Ω × ℝ, 0 < H x) ∧\n          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 < Hdelete i x) ∧\n          (∀ θ : ℝ, Measurable[mAug, borel ℝ] (M θ) ∧\n            ∀ i : Fin n, Measurable[mAug, borel ℝ] (Mdelete θ i)) ∧\n          (∀ θ : ℝ, Integrable[mAug] (M θ) ν ∧\n            ∀ i : Fin n, Integrable[mAug] (Mdelete θ i) ν) ∧\n          (∀ θ : ℝ, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |M θ x|) ν ∧\n            ∀ i : Fin n, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Mdelete θ i x|) ν) ∧\n          (∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,\n            0 ≤ M θ x ∧ ∀ i : Fin n, 0 ≤ Mdelete θ i x) ∧\n          (∀ θ : ℝ, (∫ x, M θ x ∂ν) = K * θ * (∫ x, H x ∂ν)) ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            (∫ x, Mdelete θ i x ∂ν) = K * θ * (∫ x, Hdelete i x ∂ν)) ∧\n          (∀ θ : ℝ, (∫ x, |M θ x| ∂ν) = K * |θ| * (∫ x, H x ∂ν)) ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            (∫ x, |Mdelete θ i x| ∂ν) = K * |θ| * (∫ x, Hdelete i x ∂ν)) ∧\n          (∀ i : Fin n, payment i = K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) ∧\n          (∀ i : Fin n, 0 ≤ payment i) ∧\n          0 ≤ paymentTotal ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            (∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν) = θ * payment i) ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            (∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν) = |θ| * payment i) ∧\n          (∀ θ : ℝ,\n            (∑ i : Fin n, ((∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν))) = θ * paymentTotal) ∧\n          (∀ θ : ℝ,\n            (∑ i : Fin n, ((∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν))) = |θ| * paymentTotal) ∧\n          Filter.Tendsto (fun θ : ℝ => ∫ x, M θ x ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧\n          Filter.Tendsto (fun θ : ℝ => ∫ x, |M θ x| ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧\n          (∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, Mdelete θ i x ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧\n          (∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Mdelete θ i x| ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧\n          (∀ θ : ℝ, Measurable[mAug, borel ℝ] (Aenvelope θ) ∧ Integrable[mAug] (Aenvelope θ) ν) ∧\n          (∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (AenvelopeDelete θ i) ∧\n            Integrable[mAug] (AenvelopeDelete θ i) ν) ∧\n          (∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,\n            0 ≤ Aenvelope θ x ∧ ∀ i : Fin n, 0 ≤ AenvelopeDelete θ i x) ∧\n          (∀ θ : ℝ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (M θ x, Aenvelope θ x, B x) = Ffull (C x)) ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Mdelete θ i x, AenvelopeDelete θ i x, Bdelete i x) =\n                  Fdelete (fun j : {j : Fin n // j ≠ i} => η j.val x)) ∧\n          (∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            Δ θ i x = M θ x - Mdelete θ i x) ∧\n          (∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            |Δ θ i x| ≤ |M θ x| + |Mdelete θ i x|) ∧\n          (∀ θ : ℝ, 0 ≤ θ → ∀ (i : Fin n) (x : Fin n → Ω × ℝ),\n            |Δ θ i x| ≤ M θ x + Mdelete θ i x) ∧\n          (∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (Δ θ i) ∧\n            Integrable[mAug] (Δ θ i) ν ∧\n            Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Δ θ i x|) ν) ∧\n          (∀ (θ : ℝ) (i : Fin n), (∫ x, |Δ θ i x| ∂ν) ≤ |θ| * payment i) ∧\n          (∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Δ θ i x| ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧\n          (∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (fee θ i) ∧\n            Integrable[mAug] (fee θ i) ν) ∧\n          (∀ θ : ℝ, Measurable[mAug, borel ℝ] (feeTotal θ) ∧ Integrable[mAug] (feeTotal θ) ν) ∧\n          (∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            |fee θ i x - deletionMass (q x) i| ≤ |M θ x| + |Mdelete θ i x|) ∧\n          (∀ (θ : ℝ) (i : Fin n),\n            |(∫ x, fee θ i x ∂ν) - (∫ x, deletionMass (q x) i ∂ν)| ≤ |θ| * payment i) ∧\n          (∀ θ : ℝ,\n            |(∫ x, feeTotal θ x ∂ν) - (∫ x, deletionTotal (q x) ∂ν)| ≤ |θ| * paymentTotal) ∧\n          (∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, fee θ i x ∂ν)\n            (nhds (0 : ℝ)) (nhds (∫ x, deletionMass (q x) i ∂ν))) ∧\n          Filter.Tendsto (fun θ : ℝ => ∫ x, feeTotal θ x ∂ν)\n            (nhds (0 : ℝ)) (nhds (∫ x, deletionTotal (q x) ∂ν))",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "229",
+      "input": {
+        "path": "C:/game/shao lean/drafts/oq56/unit229/author-01/NormalizedStrictMomentBudgets.lean",
+        "sha256": "52e0f905cb5d68d3c213faa2078cc1bb885a24834dac1cd1e61a96d4437b8ad0",
+        "bytes": 4109,
+        "LF": 86,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        12,
+        45
+      ],
+      "fullDeclaration": "theorem actual_source_z_strict_truncated_moment_budgets\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξmean : ∀ i : Fin n, (∫ ω : Ω, ξ i ω ∂ν) = 0)\n    (hξenergy : (∑ i : Fin n, ∫ ω : Ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (Y : ℕ → Fin n → Ω → ℝ)\n    (hY : ∀ (k : ℕ) (i : Fin n), Measurable (Y k i))\n    (ε : ℕ → ℝ) (hε : ∀ k : ℕ, 0 < ε k)\n    (hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ)))\n    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)))\n    (herr : ∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k)\n    (z : ℝ) (hz : 1 ≤ z)\n    (cBudget : ℝ) (hcBudget : 0 < cBudget) :\n    let η : ℕ → Fin n → Ω → ℝ := fun (k : ℕ) =>\n      Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)\n    let Fz : ℝ → ℝ := fun (t : ℝ) => (z * t) ^ 2 * min |z * t| 1\n    let δ0 : Fin n → ℝ := fun (i : Fin n) => ∫ ω : Ω, Fz (ξ i ω) ∂ν\n    let δη : ℕ → Fin n → ℝ := fun (k : ℕ) (i : Fin n) =>\n      ∫ ω : Ω, Fz (η k i ω) ∂ν\n    let L0 : ℝ := ∑ i : Fin n, δ0 i\n    let Lη : ℕ → ℝ := fun (k : ℕ) => ∑ i : Fin n, δη k i\n    (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) →\n    L0 < cBudget * z ^ 2 →\n    (∀ i : Fin n, Integrable (fun (ω : Ω) => Fz (ξ i ω)) ν) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (fun (ω : Ω) => Fz (η k i ω)) ν) ∧\n    (∀ i : Fin n,\n      Filter.Tendsto (fun (k : ℕ) => δη k i) Filter.atTop (nhds (δ0 i))) ∧\n    Filter.Tendsto Lη Filter.atTop (nhds L0) ∧\n    (∃ k0 : ℕ, ∀ k : ℕ, k0 ≤ k →\n      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2)",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "230",
+      "input": {
+        "path": "C:/game/shao lean/drafts/oq56/unit230/author-01/repair-01/IIDSourceStrictMomentBudgets.lean",
+        "sha256": "4905904cb5e8f37f1731c92da9e504e614e8dc7734a5de3f124ab2bceff55c36",
+        "bytes": 10716,
+        "LF": 245,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        23,
+        67
+      ],
+      "fullDeclaration": "theorem actual_iid_source_z_strict_moment_budgets\n    {Ω : Type u} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hgp : Integrable (fun o : Ω => Real.rpow |g o| p) μ)\n    (cBudget : ℝ) (hcBudget : 0 < cBudget) :\n    let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ\n    let c : ℝ :=\n      Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)\n    0 ≤ β ∧\n      0 < c ∧\n      Real.rpow c p = min (1 / 2 : ℝ) cBudget / 2 ∧\n      Real.rpow c p < min (1 / 2 : ℝ) cBudget ∧\n      (∀ (n : ℕ) (_hn : 1 ≤ n) (z : ℝ) (_hz : 1 ≤ z),\n        let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let ξ : Fin n → (Fin n → Ω) → ℝ :=\n          fun i ω => g (ω i) / N\n        let projectionTest : (Fin n → Ω) → Fin n → ℝ :=\n          fun ω i => Shao.truncationF (z * ξ i ω)\n        let δ : Fin n → ℝ :=\n          fun i => ∫ ω : Fin n → Ω, projectionTest ω i ∂P\n        let L : ℝ := ∑ i : Fin n, δ i\n        let scalarBudget : ℝ :=\n          ∫ o : Ω, Shao.truncationF (z * (g o / N)) ∂μ\n        IsProbabilityMeasure P ∧\n          Integrable (fun o : Ω => Shao.truncationF (z * (g o / N))) μ ∧\n          (∀ i : Fin n, Integrable (fun ω : Fin n → Ω =>\n            projectionTest ω i) P) ∧\n          (∀ i : Fin n, δ i = scalarBudget) ∧\n          L = (n : ℝ) * scalarBudget ∧\n          (∀ i : Fin n, L = (n : ℝ) * δ i) ∧\n          (∀ i : Fin n, 0 ≤ δ i) ∧\n          0 ≤ L ∧\n          L ≤ β * Real.rpow z p /\n            Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n          (β = 0 → L = 0 ∧ (∀ i : Fin n, δ i = 0)) ∧\n          ((β = 0 ∨\n              (0 < β ∧ z ≤ c * Real.rpow β (-1 / p) *\n                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →\n            L ≤ Real.rpow c p ∧\n              (∀ i : Fin n, δ i < (1 / 2 : ℝ)) ∧\n              L < cBudget * z ^ 2))",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "projection",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460,
+        "LF": 525,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        186,
+        279
+      ],
+      "fullDeclaration": "theorem actual_quadratic_source_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 3 ≤ n)\n    (x : ℝ) (hx : 0 ≤ x)\n    (hwindow : x ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := x / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\n    Measurable g ∧ MemLp g 2 μ ∧ (∫ o, g o ∂μ) = 0 ∧\n      (∫ o, g o ^ 2 ∂μ) = 1 ∧\n      Measurable (fun z : Ω × Ω => r z.1 z.2) ∧\n      MemLp (fun z : Ω × Ω => r z.1 z.2) 2 (μ.prod μ) ∧\n      (∀ o y, r o y = r y o) ∧\n      (∀ᵐ o ∂μ, (∫ y, r o y ∂μ) = 0) ∧\n      0 ≤ v ∧ 1 ≤ s ∧ v ≤ s ^ 2 ∧\n      Integrable w μ ∧ (1 / 2 : ℝ) ≤ m ∧ m ≤ (3 / 2 : ℝ) ∧\n      Measurable L ∧ Integrable L μ ∧\n      (∀ o, 0 < L o ∧ L o ≤ 2 * C) ∧\n      (∫ o, L o ∂μ) = 1 ∧\n      Integrable (fun o => (L o - 1) ^ 2) μ ∧\n      (∫ o, (L o - 1) ^ 2 ∂μ) ≤ 4 * C ^ 2 * a ^ 2 ∧\n      μ.tilted φ = ρ ∧ IsProbabilityMeasure ρ ∧\n      Integrable (fun ξ => Real.exp (S ξ)) P₀ ∧\n      (∫ ξ, Real.exp (S ξ) ∂P₀) = m ^ n ∧ 0 < m ^ n ∧\n      (∀ ξ, Real.exp (S ξ) / m ^ n =\n        ∏ j : Fin n, L (ξ j)) ∧\n      Pₐ = P₀.withDensity\n        (fun ξ => ENNReal.ofReal (∏ j : Fin n, L (ξ j))) ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ρ) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) =\n        (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B +\n          6 * (n.choose 4 : ℝ) * D ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) =\n        2 * (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (2 * C ^ 2 + 8 * C ^ 3 * x ^ 2 + 4 * C ^ 4 * x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (4 * C ^ 2 + 8 * C ^ 3 * x ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 2)",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "envelope",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedRemainderEnvelope.lean",
+        "sha256": "4852a6d3a907f35b5bde7fb6aca467ba5d382799a15915e5dbad907e224b9116",
+        "bytes": 19128,
+        "LF": 389,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        178,
+        241
+      ],
+      "fullDeclaration": "theorem actual_normalized_remainder_envelope_spec\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ Y : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξmean : ∀ i : Fin n, (∫ ω, ξ i ω ∂ν) = 0)\n    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (hY : ∀ i : Fin n, Measurable (Y i))\n    (D1 D2 A B : Ω → ℝ)\n    (Adelete Bdelete : Fin n → Ω → ℝ)\n    (hD1 : Measurable D1) (hD2 : Measurable D2)\n    (hA : Measurable A) (hB : Measurable B)\n    (hAnonneg : ∀ ω : Ω, 0 ≤ A ω)\n    (hBnonneg : ∀ ω : Ω, 0 ≤ B ω)\n    (hD1A : ∀ ω : Ω, |D1 ω| ≤ A ω)\n    (hD2B : ∀ ω : Ω, |D2 ω| ≤ B ω)\n    (hAint : Integrable A ν) (hBint : Integrable B ν)\n    (ε : ℝ) (hε : 0 < ε)\n    (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ)))\n    (herr : ∀ (i : Fin n) (ω : Ω), |Y i ω - ξ i ω| ≤ ε)\n    (z : ℝ) (hz : 0 ≤ z) :\n    let η : Fin n → Ω → ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n    let W : Ω → ℝ := fun ω => ∑ i : Fin n, ξ i ω\n    let Wη : Ω → ℝ := fun ω => ∑ i : Fin n, η i ω\n    let V : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (ξ i ω) ^ 2)\n    let Vη : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (η i ω) ^ 2)\n    let b : Ω → ℝ := fun ω => Real.sqrt (1 + D2 ω)\n    let C : Ω → ℝ := fun ω => Real.sqrt (1 + B ω)\n    let H : Ω → ℝ := fun ω => (1 + V ω) * (Real.sqrt (n : ℝ) + z * C ω)\n    let ρ : ℝ := 4 * ε * Real.sqrt (n : ℝ)\n    let Dη : Ω → ℝ := fun ω => D1 ω + W ω - Wη ω + z * b ω * (Vη ω - V ω)\n    let Aε : Ω → ℝ := fun ω => A ω + ρ * H ω\n    let Bε : Ω → ℝ := B\n    let Aεdelete : Fin n → Ω → ℝ := Adelete\n    let Bεdelete : Fin n → Ω → ℝ := Bdelete\n    (∀ i : Fin n, Measurable (η i)) ∧\n    Measurable W ∧ Measurable Wη ∧ Measurable V ∧ Measurable Vη ∧\n    Measurable b ∧ Measurable C ∧ Measurable H ∧ Measurable Dη ∧\n    Measurable Aε ∧ Measurable Bε ∧\n    (∀ ω : Ω, 0 ≤ b ω ∧ b ω ≤ C ω) ∧\n    (∀ ω : Ω, 0 < H ω) ∧\n    0 < ρ ∧ ρ < 1 ∧\n    Integrable H ν ∧\n    Integrable D1 ν ∧\n    Integrable Dη ν ∧\n    Integrable Aε ν ∧\n    Integrable (fun ω => Dη ω - D1 ω) ν ∧\n    Integrable (fun ω => |Dη ω - D1 ω|) ν ∧\n    Integrable (fun ω => ρ * H ω) ν ∧\n    Integrable (fun ω => A ω + H ω) ν ∧\n    (∀ ω : Ω, |Dη ω - D1 ω| ≤ ρ * H ω) ∧\n    (∀ ω : Ω, |Dη ω| ≤ Aε ω) ∧\n    (∀ ω : Ω, 0 ≤ Aε ω) ∧\n    (∀ ω : Ω, Aε ω ≤ A ω + H ω) ∧\n    (∀ ω : Ω, 0 ≤ Bε ω ∧ |D2 ω| ≤ Bε ω) ∧\n    Bε = B ∧ Aεdelete = Adelete ∧ Bεdelete = Bdelete ∧\n    (∀ (i : Fin n) (ω : Ω),\n      |Aε ω - Aεdelete i ω| ≤ |A ω - Adelete i ω| + ρ * H ω) ∧\n    (∀ (i : Fin n) (ω : Ω),\n      |Bε ω - Bεdelete i ω| = |B ω - Bdelete i ω|) ∧\n    (∫ ω, |Dη ω - D1 ω| ∂ν) ≤ ρ * (∫ ω, H ω ∂ν) ∧\n    (∫ ω, |Aε ω - A ω| ∂ν) = ρ * (∫ ω, H ω ∂ν) ∧\n    (∫ ω, Aε ω ∂ν) = (∫ ω, A ω ∂ν) + ρ * (∫ ω, H ω ∂ν)",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "analytic",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedAnalyticCostLimits.lean",
+        "sha256": "c414aeb98cec27146d30f38e3c869f34a7b81e4a45101497a99db29a4d37b92d",
+        "bytes": 56155,
+        "LF": 860,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        173,
+        241
+      ],
+      "fullDeclaration": "theorem actual_projection_tilt_and_truncated_cost_limits\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξmean : ∀ i : Fin n, (∫ ω, ξ i ω ∂ν) = 0)\n    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (Y : ℕ → Fin n → Ω → ℝ)\n    (hY : ∀ (k : ℕ) (i : Fin n), Measurable (Y k i))\n    (ε : ℕ → ℝ) (hε : ∀ k : ℕ, 0 < ε k)\n    (hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ)))\n    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)))\n    (herr : ∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k)\n    (x : ℝ) :\n    let η : ℕ → Fin n → Ω → ℝ := fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)\n    let ℓ : Fin n → Ω → ℝ := fun i ω => x * ξ i ω - (x * ξ i ω) ^ 2 / 2\n    let ℓη : ℕ → Fin n → Ω → ℝ := fun k i ω => x * η k i ω - (x * η k i ω) ^ 2 / 2\n    let S : Ω → ℝ := fun ω => ∑ i : Fin n, ℓ i ω\n    let Sη : ℕ → Ω → ℝ := fun k ω => ∑ i : Fin n, ℓη k i ω\n    let Sminus : Fin n → Ω → ℝ := fun i ω => ∑ j ∈ Finset.univ.erase i, ℓ j ω\n    let Sηminus : ℕ → Fin n → Ω → ℝ := fun k i ω => ∑ j ∈ Finset.univ.erase i, ℓη k j ω\n    let m : Fin n → ℝ := fun i => ∫ ω, Real.exp (ℓ i ω) ∂ν\n    let mη : ℕ → Fin n → ℝ := fun k i => ∫ ω, Real.exp (ℓη k i ω) ∂ν\n    let I : ℝ := ∫ ω, Real.exp (S ω) ∂ν\n    let Iη : ℕ → ℝ := fun k => ∫ ω, Real.exp (Sη k ω) ∂ν\n    let J : Fin n → ℝ := fun i => ∫ ω, Real.exp (Sminus i ω) ∂ν\n    let Jη : ℕ → Fin n → ℝ := fun k i => ∫ ω, Real.exp (Sηminus k i ω) ∂ν\n    let δ : Fin n → ℝ := fun i => ∫ ω, (x * ξ i ω) ^ 2 * min |x * ξ i ω| 1 ∂ν\n    let δη : ℕ → Fin n → ℝ := fun k i => ∫ ω, (x * η k i ω) ^ 2 * min |x * η k i ω| 1 ∂ν\n    let L : ℝ := ∑ i : Fin n, δ i\n    let Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i\n    let q : Ω → ℝ := fun ω => Real.exp (S ω) / I\n    let qη : ℕ → Ω → ℝ := fun k ω => Real.exp (Sη k ω) / Iη k\n    let qminus : Fin n → Ω → ℝ := fun i ω => Real.exp (Sminus i ω) / I\n    let qηminus : ℕ → Fin n → Ω → ℝ := fun k i ω => Real.exp (Sηminus k i ω) / Iη k\n    let pminus : Fin n → Ω → ℝ := fun i ω => Real.exp (Sminus i ω) / J i\n    let pηminus : ℕ → Fin n → Ω → ℝ := fun k i ω => Real.exp (Sηminus k i ω) / Jη k i\n    (∀ i : Fin n, Integrable (fun ω => Real.exp (ℓ i ω)) ν ∧ 0 < m i) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (fun ω => Real.exp (ℓη k i ω)) ν ∧ 0 < mη k i) ∧\n    Integrable (fun ω => Real.exp (S ω)) ν ∧ 0 < I ∧\n    (∀ k : ℕ, Integrable (fun ω => Real.exp (Sη k ω)) ν ∧ 0 < Iη k) ∧\n    (∀ i : Fin n, Integrable (fun ω => Real.exp (Sminus i ω)) ν ∧ 0 < J i) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (fun ω => Real.exp (Sηminus k i ω)) ν ∧ 0 < Jη k i) ∧\n    (∀ ω : Ω, Real.exp (S ω) ≤ Real.exp ((n : ℝ) / 2)) ∧\n    (∀ (k : ℕ) (ω : Ω), Real.exp (Sη k ω) ≤ Real.exp ((n : ℝ) / 2)) ∧\n    (∀ (i : Fin n) (ω : Ω), Real.exp (Sminus i ω) ≤ Real.exp (((n - 1 : ℕ) : ℝ) / 2)) ∧\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω), Real.exp (Sηminus k i ω) ≤ Real.exp (((n - 1 : ℕ) : ℝ) / 2)) ∧\n    (∀ i : Fin n, Integrable (fun ω => (x * ξ i ω) ^ 2 * min |x * ξ i ω| 1) ν) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (fun ω => (x * η k i ω) ^ 2 * min |x * η k i ω| 1) ν) ∧\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |(x * η k i ω) ^ 2 * min |x * η k i ω| 1| ≤ x ^ 2 * (8 * (ξ i ω) ^ 2 + 2)) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => mη k i) Filter.atTop (nhds (m i))) ∧\n    Filter.Tendsto Iη Filter.atTop (nhds I) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => Jη k i) Filter.atTop (nhds (J i))) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => δη k i) Filter.atTop (nhds (δ i))) ∧\n    Filter.Tendsto Lη Filter.atTop (nhds L) ∧\n    Integrable q ν ∧ (∫ ω, q ω ∂ν) = 1 ∧\n    (∀ k : ℕ, Integrable (qη k) ν ∧ (∫ ω, qη k ω ∂ν) = 1) ∧\n    (∀ i : Fin n, Integrable (qminus i) ν ∧ (∫ ω, qminus i ω ∂ν) = J i / I) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (qηminus k i) ν ∧ (∫ ω, qηminus k i ω ∂ν) = Jη k i / Iη k) ∧\n    (∀ i : Fin n, Integrable (pminus i) ν ∧ (∫ ω, pminus i ω ∂ν) = 1) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (pηminus k i) ν ∧ (∫ ω, pηminus k i ω ∂ν) = 1) ∧\n    (∀ (i : Fin n) (ω : Ω), qminus i ω = (J i / I) * pminus i ω) ∧\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω), qηminus k i ω = (Jη k i / Iη k) * pηminus k i ω) ∧\n    (∀ ω : Ω, Filter.Tendsto (fun k : ℕ => qη k ω) Filter.atTop (nhds (q ω))) ∧\n    (∀ (i : Fin n) (ω : Ω), Filter.Tendsto (fun k : ℕ => qηminus k i ω) Filter.atTop (nhds (qminus i ω))) ∧\n    (∀ (i : Fin n) (ω : Ω), Filter.Tendsto (fun k : ℕ => pηminus k i ω) Filter.atTop (nhds (pminus i ω))) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => Jη k i / Iη k) Filter.atTop (nhds (J i / I)))",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "scalar-code",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ScalarObservationCoding.lean",
+        "sha256": "78ba58ee64238fdff51a026d86ab939d34ac66787f804c562c4f0984dc96057c",
+        "bytes": 14428,
+        "LF": 366,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        313,
+        335
+      ],
+      "fullDeclaration": "theorem countable_uniform_augmented_base_four_code\n    {Ω : Type*} [mΩ : MeasurableSpace Ω]\n    [MeasurableSpace.CountablyGenerated Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ] :\n    let H : ℕ → Set (Ω × ℝ) :=\n      MeasurableSpace.natGeneratingSequence (Ω × ℝ)\n    let c : (Ω × ℝ) → ℝ := baseFourIndicatorCode H\n    let lambda01 : Measure ℝ :=\n      (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n    let ν : Measure (Ω × ℝ) := μ.prod lambda01\n    IsProbabilityMeasure lambda01 ∧\n    IsProbabilityMeasure ν ∧\n    (∀ z : Ω × ℝ,\n      Summable (fun k : ℕ =>\n        (if z ∈ H k then (2 : ℝ) else 1) / (4 : ℝ) ^ (k + 1))) ∧\n    (∀ z : Ω × ℝ, (1 / 3 : ℝ) ≤ c z ∧ c z ≤ (2 / 3 : ℝ)) ∧\n    Measurable c ∧\n    (∀ k : ℕ, MeasurableSet (baseFourOneSet k)) ∧\n    (∀ k : ℕ, H k = c ⁻¹' baseFourOneSet k) ∧\n    MeasurableSpace.comap c (borel ℝ) =\n      (inferInstance : MeasurableSpace (Ω × ℝ)) ∧\n    (∀ z z' : Ω × ℝ, c z = c z' → z.2 = z'.2) ∧\n    (∀ t : ℝ, ν ({z : Ω × ℝ | c z = t}) = 0)",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    },
+    {
+      "id": "quantization",
+      "input": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+        "sha256": "c755dcb72b58931c797416f23ce4f13b383cd17b1b6ef5b2bd5b86b368290062",
+        "bytes": 6921,
+        "LF": 184,
+        "CR": 0,
+        "UTF8NoBOM": true
+      },
+      "lines": [
+        94,
+        110
+      ],
+      "fullDeclaration": "theorem quantized_observation_spec\n    {X : Type*} [mX : MeasurableSpace X]\n    (ξ c : X → ℝ) (hξ : Measurable ξ) (hc : Measurable c)\n    (hrange : ∀ x : X, (1 / 3 : ℝ) ≤ c x ∧ c x ≤ (2 / 3 : ℝ))\n    (hcomap : MeasurableSpace.comap c (borel ℝ) = mX)\n    (ε : ℝ) (hε : 0 < ε) :\n    let Y : X → ℝ := quantizedObservation ε ξ c\n    let D : ℝ → ℝ := fun y : ℝ => y / ε - (Int.floor (y / ε) : ℝ)\n    Measurable Y ∧\n    Measurable D ∧\n    (∀ x : X, |Y x - ξ x| ≤ ε) ∧\n    (∀ x : X, Int.floor (Y x / ε) = Int.floor (ξ x / ε)) ∧\n    (∀ x : X, D (Y x) = c x) ∧\n    MeasurableSpace.comap Y (borel ℝ) = mX ∧\n    (∀ (ν : Measure X),\n      (∀ t : ℝ, ν ({x : X | c x = t}) = 0) →\n      ∀ t : ℝ, ν ({x : X | Y x = t}) = 0)",
+      "semanticallyRead": true,
+      "oldProofReReview": false
+    }
+  ],
+  "actualReturnAtomMaps": [
+    {
+      "id": "226-main",
+      "path": "C:/game/shao lean/library/Shao/OQ6/OriginalLiteralRemainderEnvelope.lean",
+      "range": [
+        162,
+        264
+      ],
+      "atomsDerived": 65,
+      "patternNamesDerived": 65,
+      "tailCapture": null,
+      "fields": [
+        {
+          "index": 1,
+          "sourceText": "@IsProbabilityMeasure (Fin n → Ω) mN₀ P₀",
+          "proofName": "hP₀prob"
+        },
+        {
+          "index": 2,
+          "sourceText": "P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P",
+          "proofName": "hP₀map"
+        },
+        {
+          "index": 3,
+          "sourceText": "(∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀)",
+          "proofName": "hObs"
+        },
+        {
+          "index": 4,
+          "sourceText": "iIndepFun O P₀",
+          "proofName": "hObsIndep"
+        },
+        {
+          "index": 5,
+          "sourceText": "(∀ i : Fin n, Measurable (gcoord i) ∧\n            MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧\n            (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧\n            (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ))",
+          "proofName": "hGcoord"
+        },
+        {
+          "index": 6,
+          "sourceText": "(∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1",
+          "proofName": "hGenergy"
+        },
+        {
+          "index": 7,
+          "sourceText": "Q = id",
+          "proofName": "hQid"
+        },
+        {
+          "index": 8,
+          "sourceText": "W0 = projectionW n g",
+          "proofName": "hWorig"
+        },
+        {
+          "index": 9,
+          "sourceText": "V0 = projectionV n g",
+          "proofName": "hVorig"
+        },
+        {
+          "index": 10,
+          "sourceText": "T0 = Tclip",
+          "proofName": "hTorig"
+        },
+        {
+          "index": 11,
+          "sourceText": "Measurable D1",
+          "proofName": "hD1red"
+        },
+        {
+          "index": 12,
+          "sourceText": "Measurable D2",
+          "proofName": "hD2red"
+        },
+        {
+          "index": 13,
+          "sourceText": "(∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ)",
+          "proofName": "hHalf"
+        },
+        {
+          "index": 14,
+          "sourceText": "Measurable[mN₀, borel ℝ] Tclip",
+          "proofName": "hTred"
+        },
+        {
+          "index": 15,
+          "sourceText": "Measurable[mN, borel ℝ] Tclip",
+          "proofName": "hTambient"
+        },
+        {
+          "index": 16,
+          "sourceText": "@Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n            @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P",
+          "proofName": "hTLaw"
+        },
+        {
+          "index": 17,
+          "sourceText": "IsProbabilityMeasure ν",
+          "proofName": "hνprob"
+        },
+        {
+          "index": 18,
+          "sourceText": "MeasurePreserving q ν P₀",
+          "proofName": "hq"
+        },
+        {
+          "index": 19,
+          "sourceText": "(1 / 2 : ℝ) < s",
+          "proofName": "hScale0"
+        },
+        {
+          "index": 20,
+          "sourceText": "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i))",
+          "proofName": "hLocal0"
+        },
+        {
+          "index": 21,
+          "sourceText": "iIndepFun η ν",
+          "proofName": "hIndep0"
+        },
+        {
+          "index": 22,
+          "sourceText": "(∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν)",
+          "proofName": "hEtaL20"
+        },
+        {
+          "index": 23,
+          "sourceText": "(∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν)",
+          "proofName": "hEtaInt0"
+        },
+        {
+          "index": 24,
+          "sourceText": "(∀ i : Fin n, (∫ x, η i x ∂ν) = 0)",
+          "proofName": "hEtaMean0"
+        },
+        {
+          "index": 25,
+          "sourceText": "(∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1",
+          "proofName": "hEtaEnergy0"
+        },
+        {
+          "index": 26,
+          "sourceText": "(∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0)",
+          "proofName": "hEtaAtoms0"
+        },
+        {
+          "index": 27,
+          "sourceText": "ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0",
+          "proofName": "hEtaZero0"
+        },
+        {
+          "index": 28,
+          "sourceText": "(∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x)",
+          "proofName": "hEtaPositive0"
+        },
+        {
+          "index": 29,
+          "sourceText": "Measurable[mAug, borel (Fin n → ℝ)] C",
+          "proofName": "hCmeas0"
+        },
+        {
+          "index": 30,
+          "sourceText": "MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug",
+          "proofName": "hCcomap0"
+        },
+        {
+          "index": 31,
+          "sourceText": "(∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n            ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n              ∀ x : Fin n → Ω × ℝ, H x = F (C x))",
+          "proofName": "hAnyFull0"
+        },
+        {
+          "index": 32,
+          "sourceText": "(∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n            ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n              (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n                d y = F (fun j => ηlocal j.val (y j))) ∧\n              Measurable[borel (Fin n → ℝ), borel ℝ]\n                (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n              ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x))",
+          "proofName": "hAnyDelete0"
+        },
+        {
+          "index": 33,
+          "sourceText": "(∃ G2 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n            (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n            ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n              Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n              ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x))",
+          "proofName": "hScalar0"
+        },
+        {
+          "index": 34,
+          "sourceText": "(∀ i : Fin n,\n            ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =\n                  Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x))",
+          "proofName": "hResidualDelete0"
+        },
+        {
+          "index": 35,
+          "sourceText": "(∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z))",
+          "proofName": "hTetaMeas0"
+        },
+        {
+          "index": 36,
+          "sourceText": "MeasurableSet[mN₀] Z0",
+          "proofName": "hZeroRed"
+        },
+        {
+          "index": 37,
+          "sourceText": "MeasurableSet[mN] Z0",
+          "proofName": "hZeroAmbient"
+        },
+        {
+          "index": 38,
+          "sourceText": "MeasurableSet Z",
+          "proofName": "hZeroAug"
+        },
+        {
+          "index": 39,
+          "sourceText": "ν Z = P₀ Z0",
+          "proofName": "hZeroLawAug"
+        },
+        {
+          "index": 40,
+          "sourceText": "P₀ Z0 = P Z0",
+          "proofName": "hZeroLawAmbient"
+        },
+        {
+          "index": 41,
+          "sourceText": "ν.real Z = p0",
+          "proofName": "hZeroReal"
+        },
+        {
+          "index": 42,
+          "sourceText": "(∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n            Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x)",
+          "proofName": "hSigned0"
+        },
+        {
+          "index": 43,
+          "sourceText": "(∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n            MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n            MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n            MeasurableSet (Eη R z) ∧\n            ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n            (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n            P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n            |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)",
+          "proofName": "hComparisons0"
+        },
+        {
+          "index": 44,
+          "sourceText": "(∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |D2 ξ| ≤ B1 ξ)",
+          "proofName": "hBounds"
+        },
+        {
+          "index": 45,
+          "sourceText": "(∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i)",
+          "proofName": "hDeleteBounds"
+        },
+        {
+          "index": 46,
+          "sourceText": "Measurable[mN₀, borel ℝ] J",
+          "proofName": "hJred"
+        },
+        {
+          "index": 47,
+          "sourceText": "Measurable[mN₀, borel ℝ] A",
+          "proofName": "hAred"
+        },
+        {
+          "index": 48,
+          "sourceText": "Measurable[mN₀, borel ℝ] B1",
+          "proofName": "hBred"
+        },
+        {
+          "index": 49,
+          "sourceText": "(∀ i : Fin n,\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Adel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => B1del ξ i))",
+          "proofName": "hDeletedMeas"
+        },
+        {
+          "index": 50,
+          "sourceText": "Integrable A P₀",
+          "proofName": "hAredInt"
+        },
+        {
+          "index": 51,
+          "sourceText": "Integrable B1 P₀",
+          "proofName": "hBredInt"
+        },
+        {
+          "index": 52,
+          "sourceText": "Integrable D2 P₀",
+          "proofName": "hD2redInt"
+        },
+        {
+          "index": 53,
+          "sourceText": "(∀ i : Fin n,\n            Integrable (fun ξ : Fin n → Ω => Adel ξ i) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => B1del ξ i) P₀ ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => deletionMass ξ i) ∧\n            Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P₀)",
+          "proofName": "hDeletedInts"
+        },
+        {
+          "index": 54,
+          "sourceText": "Measurable[mN₀, borel ℝ] deletionTotal",
+          "proofName": "hTotalRed"
+        },
+        {
+          "index": 55,
+          "sourceText": "Integrable deletionTotal P₀",
+          "proofName": "hTotalRedInt"
+        },
+        {
+          "index": 56,
+          "sourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => A (q x))",
+          "proofName": "hApull"
+        },
+        {
+          "index": 57,
+          "sourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1 (q x))",
+          "proofName": "hBpull"
+        },
+        {
+          "index": 58,
+          "sourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => D2 (q x))",
+          "proofName": "hD2pull"
+        },
+        {
+          "index": 59,
+          "sourceText": "Integrable (fun x : Fin n → Ω × ℝ => A (q x)) ν",
+          "proofName": "hApullInt"
+        },
+        {
+          "index": 60,
+          "sourceText": "Integrable (fun x : Fin n → Ω × ℝ => B1 (q x)) ν",
+          "proofName": "hBpullInt"
+        },
+        {
+          "index": 61,
+          "sourceText": "Integrable (fun x : Fin n → Ω × ℝ => D2 (q x)) ν",
+          "proofName": "hD2pullInt"
+        },
+        {
+          "index": 62,
+          "sourceText": "(∀ i : Fin n,\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => Adel (q x) i) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1del (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => Adel (q x) i) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => B1del (q x) i) ν ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ν)",
+          "proofName": "hDeletedPull"
+        },
+        {
+          "index": 63,
+          "sourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionTotal (q x))",
+          "proofName": "hTotalPull"
+        },
+        {
+          "index": 64,
+          "sourceText": "Integrable (fun x : Fin n → Ω × ℝ => deletionTotal (q x)) ν",
+          "proofName": "hTotalPullInt"
+        },
+        {
+          "index": 65,
+          "sourceText": "literal_suffix",
+          "proofName": "hLiteral"
+        }
+      ]
+    },
+    {
+      "id": "226-literal",
+      "path": "C:/game/shao lean/library/Shao/OQ6/OriginalLiteralRemainderEnvelope.lean",
+      "range": [
+        299,
+        383
+      ],
+      "atomsDerived": 52,
+      "patternNamesDerived": 52,
+      "tailCapture": null,
+      "fields": [
+        {
+          "index": 1,
+          "sourceText": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν)",
+          "proofName": "hXiL2"
+        },
+        {
+          "index": 2,
+          "sourceText": "(∀ i : Fin n, (∫ x, (ξ i x) ^ 2 ∂ν) = 1 / (n : ℝ))",
+          "proofName": "hXiSecond"
+        },
+        {
+          "index": 3,
+          "sourceText": "(∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1",
+          "proofName": "hXiEnergy"
+        },
+        {
+          "index": 4,
+          "sourceText": "Measurable[mAug, borel ℝ] V",
+          "proofName": "hVmeas"
+        },
+        {
+          "index": 5,
+          "sourceText": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (Vdelete i))",
+          "proofName": "hVdeleteMeas"
+        },
+        {
+          "index": 6,
+          "sourceText": "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Vdelete i x ∧ Vdelete i x ≤ V x)",
+          "proofName": "hVdeleteBounds"
+        },
+        {
+          "index": 7,
+          "sourceText": "Measurable[mAug, borel ℝ] Cbudget",
+          "proofName": "hBudgetMeas"
+        },
+        {
+          "index": 8,
+          "sourceText": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (CbudgetDelete i))",
+          "proofName": "hBudgetDeleteMeas"
+        },
+        {
+          "index": 9,
+          "sourceText": "(∀ x : Fin n → Ω × ℝ, 1 ≤ Cbudget x)",
+          "proofName": "hBudgetLower"
+        },
+        {
+          "index": 10,
+          "sourceText": "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 1 ≤ CbudgetDelete i x)",
+          "proofName": "hBudgetDeleteLower"
+        },
+        {
+          "index": 11,
+          "sourceText": "Measurable[mAug, borel ℝ] H",
+          "proofName": "hHmeas"
+        },
+        {
+          "index": 12,
+          "sourceText": "Integrable[mAug] H ν",
+          "proofName": "hHint"
+        },
+        {
+          "index": 13,
+          "sourceText": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν)",
+          "proofName": "hHdelete"
+        },
+        {
+          "index": 14,
+          "sourceText": "(∀ x : Fin n → Ω × ℝ, 0 < H x)",
+          "proofName": "hHpositive"
+        },
+        {
+          "index": 15,
+          "sourceText": "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 < Hdelete i x)",
+          "proofName": "hHdeletePositive"
+        },
+        {
+          "index": 16,
+          "sourceText": "(∀ θ : ℝ, Measurable[mAug, borel ℝ] (M θ) ∧\n            ∀ i : Fin n, Measurable[mAug, borel ℝ] (Mdelete θ i))",
+          "proofName": "hMMeas"
+        },
+        {
+          "index": 17,
+          "sourceText": "(∀ θ : ℝ, Integrable[mAug] (M θ) ν ∧\n            ∀ i : Fin n, Integrable[mAug] (Mdelete θ i) ν)",
+          "proofName": "hMInt"
+        },
+        {
+          "index": 18,
+          "sourceText": "(∀ θ : ℝ, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |M θ x|) ν ∧\n            ∀ i : Fin n, Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Mdelete θ i x|) ν)",
+          "proofName": "hMAbsInt"
+        },
+        {
+          "index": 19,
+          "sourceText": "(∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,\n            0 ≤ M θ x ∧ ∀ i : Fin n, 0 ≤ Mdelete θ i x)",
+          "proofName": "hMNonneg"
+        },
+        {
+          "index": 20,
+          "sourceText": "(∀ θ : ℝ, (∫ x, M θ x ∂ν) = K * θ * (∫ x, H x ∂ν))",
+          "proofName": "hMIntegral"
+        },
+        {
+          "index": 21,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            (∫ x, Mdelete θ i x ∂ν) = K * θ * (∫ x, Hdelete i x ∂ν))",
+          "proofName": "hMdIntegral"
+        },
+        {
+          "index": 22,
+          "sourceText": "(∀ θ : ℝ, (∫ x, |M θ x| ∂ν) = K * |θ| * (∫ x, H x ∂ν))",
+          "proofName": "hMAbsIntegral"
+        },
+        {
+          "index": 23,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            (∫ x, |Mdelete θ i x| ∂ν) = K * |θ| * (∫ x, Hdelete i x ∂ν))",
+          "proofName": "hMdAbsIntegral"
+        },
+        {
+          "index": 24,
+          "sourceText": "(∀ i : Fin n, payment i = K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)))",
+          "proofName": "hPayment"
+        },
+        {
+          "index": 25,
+          "sourceText": "(∀ i : Fin n, 0 ≤ payment i)",
+          "proofName": "hPaymentNonneg"
+        },
+        {
+          "index": 26,
+          "sourceText": "0 ≤ paymentTotal",
+          "proofName": "hTotalPaymentNonneg"
+        },
+        {
+          "index": 27,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            (∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν) = θ * payment i)",
+          "proofName": "hMPayment"
+        },
+        {
+          "index": 28,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            (∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν) = |θ| * payment i)",
+          "proofName": "hMAbsPayment"
+        },
+        {
+          "index": 29,
+          "sourceText": "(∀ θ : ℝ,\n            (∑ i : Fin n, ((∫ x, M θ x ∂ν) + (∫ x, Mdelete θ i x ∂ν))) = θ * paymentTotal)",
+          "proofName": "hMTotalPayment"
+        },
+        {
+          "index": 30,
+          "sourceText": "(∀ θ : ℝ,\n            (∑ i : Fin n, ((∫ x, |M θ x| ∂ν) + (∫ x, |Mdelete θ i x| ∂ν))) = |θ| * paymentTotal)",
+          "proofName": "hMAbsTotalPayment"
+        },
+        {
+          "index": 31,
+          "sourceText": "Filter.Tendsto (fun θ : ℝ => ∫ x, M θ x ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ))",
+          "proofName": "hMLimit"
+        },
+        {
+          "index": 32,
+          "sourceText": "Filter.Tendsto (fun θ : ℝ => ∫ x, |M θ x| ∂ν) (nhds (0 : ℝ)) (nhds (0 : ℝ))",
+          "proofName": "hMAbsLimit"
+        },
+        {
+          "index": 33,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, Mdelete θ i x ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ)))",
+          "proofName": "hMdLimit"
+        },
+        {
+          "index": 34,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Mdelete θ i x| ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ)))",
+          "proofName": "hMdAbsLimit"
+        },
+        {
+          "index": 35,
+          "sourceText": "(∀ θ : ℝ, Measurable[mAug, borel ℝ] (Aenvelope θ) ∧ Integrable[mAug] (Aenvelope θ) ν)",
+          "proofName": "hEnvelopeMeasInt"
+        },
+        {
+          "index": 36,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (AenvelopeDelete θ i) ∧\n            Integrable[mAug] (AenvelopeDelete θ i) ν)",
+          "proofName": "hDeletedEnvelopeMeasInt"
+        },
+        {
+          "index": 37,
+          "sourceText": "(∀ θ : ℝ, 0 ≤ θ → ∀ x : Fin n → Ω × ℝ,\n            0 ≤ Aenvelope θ x ∧ ∀ i : Fin n, 0 ≤ AenvelopeDelete θ i x)",
+          "proofName": "hEnvelopeNonneg"
+        },
+        {
+          "index": 38,
+          "sourceText": "(∀ θ : ℝ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (M θ x, Aenvelope θ x, B x) = Ffull (C x))",
+          "proofName": "hFullFactor0"
+        },
+        {
+          "index": 39,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Mdelete θ i x, AenvelopeDelete θ i x, Bdelete i x) =\n                  Fdelete (fun j : {j : Fin n // j ≠ i} => η j.val x))",
+          "proofName": "hDeleteFactor0"
+        },
+        {
+          "index": 40,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            Δ θ i x = M θ x - Mdelete θ i x)",
+          "proofName": "hDeltaFormula"
+        },
+        {
+          "index": 41,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            |Δ θ i x| ≤ |M θ x| + |Mdelete θ i x|)",
+          "proofName": "hDeltaAbs"
+        },
+        {
+          "index": 42,
+          "sourceText": "(∀ θ : ℝ, 0 ≤ θ → ∀ (i : Fin n) (x : Fin n → Ω × ℝ),\n            |Δ θ i x| ≤ M θ x + Mdelete θ i x)",
+          "proofName": "hDeltaNonnegBound"
+        },
+        {
+          "index": 43,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (Δ θ i) ∧\n            Integrable[mAug] (Δ θ i) ν ∧\n            Integrable[mAug] (fun x : Fin n → Ω × ℝ => |Δ θ i x|) ν)",
+          "proofName": "hDeltaInts"
+        },
+        {
+          "index": 44,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n), (∫ x, |Δ θ i x| ∂ν) ≤ |θ| * payment i)",
+          "proofName": "hDeltaPayment"
+        },
+        {
+          "index": 45,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, |Δ θ i x| ∂ν)\n            (nhds (0 : ℝ)) (nhds (0 : ℝ)))",
+          "proofName": "hDeltaLimit"
+        },
+        {
+          "index": 46,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n), Measurable[mAug, borel ℝ] (fee θ i) ∧\n            Integrable[mAug] (fee θ i) ν)",
+          "proofName": "hFeeInts"
+        },
+        {
+          "index": 47,
+          "sourceText": "(∀ θ : ℝ, Measurable[mAug, borel ℝ] (feeTotal θ) ∧ Integrable[mAug] (feeTotal θ) ν)",
+          "proofName": "hFeeTotalInts"
+        },
+        {
+          "index": 48,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            |fee θ i x - deletionMass (q x) i| ≤ |M θ x| + |Mdelete θ i x|)",
+          "proofName": "hFeePoint"
+        },
+        {
+          "index": 49,
+          "sourceText": "(∀ (θ : ℝ) (i : Fin n),\n            |(∫ x, fee θ i x ∂ν) - (∫ x, deletionMass (q x) i ∂ν)| ≤ |θ| * payment i)",
+          "proofName": "hFeeIntegral"
+        },
+        {
+          "index": 50,
+          "sourceText": "(∀ θ : ℝ,\n            |(∫ x, feeTotal θ x ∂ν) - (∫ x, deletionTotal (q x) ∂ν)| ≤ |θ| * paymentTotal)",
+          "proofName": "hFeeTotalIntegral"
+        },
+        {
+          "index": 51,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun θ : ℝ => ∫ x, fee θ i x ∂ν)\n            (nhds (0 : ℝ)) (nhds (∫ x, deletionMass (q x) i ∂ν)))",
+          "proofName": "hFeeLimit"
+        },
+        {
+          "index": 52,
+          "sourceText": "Filter.Tendsto (fun θ : ℝ => ∫ x, feeTotal θ x ∂ν)\n            (nhds (0 : ℝ)) (nhds (∫ x, deletionTotal (q x) ∂ν))",
+          "proofName": "hFeeTotalLimit"
+        }
+      ]
+    },
+    {
+      "id": "normalized-envelope",
+      "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedRemainderEnvelope.lean",
+      "range": [
+        214,
+        241
+      ],
+      "atomsDerived": 36,
+      "patternNamesDerived": 36,
+      "tailCapture": null,
+      "fields": [
+        {
+          "index": 1,
+          "sourceText": "(∀ i : Fin n, Measurable (η i))",
+          "proofName": "hEnvEtaMeas"
+        },
+        {
+          "index": 2,
+          "sourceText": "Measurable W",
+          "proofName": "hEnvW"
+        },
+        {
+          "index": 3,
+          "sourceText": "Measurable Wη",
+          "proofName": "hEnvWEta"
+        },
+        {
+          "index": 4,
+          "sourceText": "Measurable V",
+          "proofName": "hEnvV"
+        },
+        {
+          "index": 5,
+          "sourceText": "Measurable Vη",
+          "proofName": "hEnvVEta"
+        },
+        {
+          "index": 6,
+          "sourceText": "Measurable b",
+          "proofName": "hEnvb"
+        },
+        {
+          "index": 7,
+          "sourceText": "Measurable C",
+          "proofName": "hEnvC"
+        },
+        {
+          "index": 8,
+          "sourceText": "Measurable H",
+          "proofName": "hEnvH"
+        },
+        {
+          "index": 9,
+          "sourceText": "Measurable Dη",
+          "proofName": "hEnvDEta"
+        },
+        {
+          "index": 10,
+          "sourceText": "Measurable Aε",
+          "proofName": "hEnvA"
+        },
+        {
+          "index": 11,
+          "sourceText": "Measurable Bε",
+          "proofName": "hEnvB"
+        },
+        {
+          "index": 12,
+          "sourceText": "(∀ ω : Ω, 0 ≤ b ω ∧ b ω ≤ C ω)",
+          "proofName": "hEnvbBounds"
+        },
+        {
+          "index": 13,
+          "sourceText": "(∀ ω : Ω, 0 < H ω)",
+          "proofName": "hEnvHPos"
+        },
+        {
+          "index": 14,
+          "sourceText": "0 < ρ",
+          "proofName": "hEnvRhoPos"
+        },
+        {
+          "index": 15,
+          "sourceText": "ρ < 1",
+          "proofName": "hEnvRhoSmall"
+        },
+        {
+          "index": 16,
+          "sourceText": "Integrable H ν",
+          "proofName": "hEnvHInt"
+        },
+        {
+          "index": 17,
+          "sourceText": "Integrable D1 ν",
+          "proofName": "hEnvDInt"
+        },
+        {
+          "index": 18,
+          "sourceText": "Integrable Dη ν",
+          "proofName": "hEnvDEtaInt"
+        },
+        {
+          "index": 19,
+          "sourceText": "Integrable Aε ν",
+          "proofName": "hEnvAInt"
+        },
+        {
+          "index": 20,
+          "sourceText": "Integrable (fun ω => Dη ω - D1 ω) ν",
+          "proofName": "hEnvDiffInt"
+        },
+        {
+          "index": 21,
+          "sourceText": "Integrable (fun ω => |Dη ω - D1 ω|) ν",
+          "proofName": "hEnvAbsDiffInt"
+        },
+        {
+          "index": 22,
+          "sourceText": "Integrable (fun ω => ρ * H ω) ν",
+          "proofName": "hEnvRhoHInt"
+        },
+        {
+          "index": 23,
+          "sourceText": "Integrable (fun ω => A ω + H ω) ν",
+          "proofName": "hEnvAHInt"
+        },
+        {
+          "index": 24,
+          "sourceText": "(∀ ω : Ω, |Dη ω - D1 ω| ≤ ρ * H ω)",
+          "proofName": "hEnvDiffBound"
+        },
+        {
+          "index": 25,
+          "sourceText": "(∀ ω : Ω, |Dη ω| ≤ Aε ω)",
+          "proofName": "hEnvDEtaBound"
+        },
+        {
+          "index": 26,
+          "sourceText": "(∀ ω : Ω, 0 ≤ Aε ω)",
+          "proofName": "hEnvANonneg"
+        },
+        {
+          "index": 27,
+          "sourceText": "(∀ ω : Ω, Aε ω ≤ A ω + H ω)",
+          "proofName": "hEnvADom"
+        },
+        {
+          "index": 28,
+          "sourceText": "(∀ ω : Ω, 0 ≤ Bε ω ∧ |D2 ω| ≤ Bε ω)",
+          "proofName": "hEnvBBounds"
+        },
+        {
+          "index": 29,
+          "sourceText": "Bε = B",
+          "proofName": "hEnvBEq"
+        },
+        {
+          "index": 30,
+          "sourceText": "Aεdelete = Adelete",
+          "proofName": "hEnvADelEq"
+        },
+        {
+          "index": 31,
+          "sourceText": "Bεdelete = Bdelete",
+          "proofName": "hEnvBDelEq"
+        },
+        {
+          "index": 32,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω),\n      |Aε ω - Aεdelete i ω| ≤ |A ω - Adelete i ω| + ρ * H ω)",
+          "proofName": "hEnvADelBound"
+        },
+        {
+          "index": 33,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω),\n      |Bε ω - Bεdelete i ω| = |B ω - Bdelete i ω|)",
+          "proofName": "hEnvBDelBound"
+        },
+        {
+          "index": 34,
+          "sourceText": "(∫ ω, |Dη ω - D1 ω| ∂ν) ≤ ρ * (∫ ω, H ω ∂ν)",
+          "proofName": "hEnvIntegralBound"
+        },
+        {
+          "index": 35,
+          "sourceText": "(∫ ω, |Aε ω - A ω| ∂ν) = ρ * (∫ ω, H ω ∂ν)",
+          "proofName": "hEnvAIntegralError"
+        },
+        {
+          "index": 36,
+          "sourceText": "(∫ ω, Aε ω ∂ν) = (∫ ω, A ω ∂ν) + ρ * (∫ ω, H ω ∂ν)",
+          "proofName": "hEnvAIntegral"
+        }
+      ]
+    },
+    {
+      "id": "analytic",
+      "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedAnalyticCostLimits.lean",
+      "range": [
+        211,
+        241
+      ],
+      "atomsDerived": 32,
+      "patternNamesDerived": 20,
+      "tailCapture": "hAnalyticRest",
+      "fields": [
+        {
+          "index": 1,
+          "sourceText": "(∀ i : Fin n, Integrable (fun ω => Real.exp (ℓ i ω)) ν ∧ 0 < m i)",
+          "proofName": "_"
+        },
+        {
+          "index": 2,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n), Integrable (fun ω => Real.exp (ℓη k i ω)) ν ∧ 0 < mη k i)",
+          "proofName": "_"
+        },
+        {
+          "index": 3,
+          "sourceText": "Integrable (fun ω => Real.exp (S ω)) ν",
+          "proofName": "_"
+        },
+        {
+          "index": 4,
+          "sourceText": "0 < I",
+          "proofName": "_"
+        },
+        {
+          "index": 5,
+          "sourceText": "(∀ k : ℕ, Integrable (fun ω => Real.exp (Sη k ω)) ν ∧ 0 < Iη k)",
+          "proofName": "_"
+        },
+        {
+          "index": 6,
+          "sourceText": "(∀ i : Fin n, Integrable (fun ω => Real.exp (Sminus i ω)) ν ∧ 0 < J i)",
+          "proofName": "_"
+        },
+        {
+          "index": 7,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n), Integrable (fun ω => Real.exp (Sηminus k i ω)) ν ∧ 0 < Jη k i)",
+          "proofName": "_"
+        },
+        {
+          "index": 8,
+          "sourceText": "(∀ ω : Ω, Real.exp (S ω) ≤ Real.exp ((n : ℝ) / 2))",
+          "proofName": "_"
+        },
+        {
+          "index": 9,
+          "sourceText": "(∀ (k : ℕ) (ω : Ω), Real.exp (Sη k ω) ≤ Real.exp ((n : ℝ) / 2))",
+          "proofName": "_"
+        },
+        {
+          "index": 10,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω), Real.exp (Sminus i ω) ≤ Real.exp (((n - 1 : ℕ) : ℝ) / 2))",
+          "proofName": "_"
+        },
+        {
+          "index": 11,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n) (ω : Ω), Real.exp (Sηminus k i ω) ≤ Real.exp (((n - 1 : ℕ) : ℝ) / 2))",
+          "proofName": "_"
+        },
+        {
+          "index": 12,
+          "sourceText": "(∀ i : Fin n, Integrable (fun ω => (x * ξ i ω) ^ 2 * min |x * ξ i ω| 1) ν)",
+          "proofName": "hFzXiInt"
+        },
+        {
+          "index": 13,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n), Integrable (fun ω => (x * η k i ω) ^ 2 * min |x * η k i ω| 1) ν)",
+          "proofName": "hFzEtaInt"
+        },
+        {
+          "index": 14,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |(x * η k i ω) ^ 2 * min |x * η k i ω| 1| ≤ x ^ 2 * (8 * (ξ i ω) ^ 2 + 2))",
+          "proofName": "_"
+        },
+        {
+          "index": 15,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun k : ℕ => mη k i) Filter.atTop (nhds (m i)))",
+          "proofName": "_"
+        },
+        {
+          "index": 16,
+          "sourceText": "Filter.Tendsto Iη Filter.atTop (nhds I)",
+          "proofName": "_"
+        },
+        {
+          "index": 17,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun k : ℕ => Jη k i) Filter.atTop (nhds (J i)))",
+          "proofName": "_"
+        },
+        {
+          "index": 18,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun k : ℕ => δη k i) Filter.atTop (nhds (δ i)))",
+          "proofName": "hDeltaLimitNu"
+        },
+        {
+          "index": 19,
+          "sourceText": "Filter.Tendsto Lη Filter.atTop (nhds L)",
+          "proofName": "hLLimitNu"
+        },
+        {
+          "index": 20,
+          "sourceText": "Integrable q ν",
+          "proofName": "hAnalyticRest"
+        },
+        {
+          "index": 21,
+          "sourceText": "(∫ ω, q ω ∂ν) = 1",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 22,
+          "sourceText": "(∀ k : ℕ, Integrable (qη k) ν ∧ (∫ ω, qη k ω ∂ν) = 1)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 23,
+          "sourceText": "(∀ i : Fin n, Integrable (qminus i) ν ∧ (∫ ω, qminus i ω ∂ν) = J i / I)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 24,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n), Integrable (qηminus k i) ν ∧ (∫ ω, qηminus k i ω ∂ν) = Jη k i / Iη k)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 25,
+          "sourceText": "(∀ i : Fin n, Integrable (pminus i) ν ∧ (∫ ω, pminus i ω ∂ν) = 1)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 26,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n), Integrable (pηminus k i) ν ∧ (∫ ω, pηminus k i ω ∂ν) = 1)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 27,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω), qminus i ω = (J i / I) * pminus i ω)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 28,
+          "sourceText": "(∀ (k : ℕ) (i : Fin n) (ω : Ω), qηminus k i ω = (Jη k i / Iη k) * pηminus k i ω)",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 29,
+          "sourceText": "(∀ ω : Ω, Filter.Tendsto (fun k : ℕ => qη k ω) Filter.atTop (nhds (q ω)))",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 30,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω), Filter.Tendsto (fun k : ℕ => qηminus k i ω) Filter.atTop (nhds (qminus i ω)))",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 31,
+          "sourceText": "(∀ (i : Fin n) (ω : Ω), Filter.Tendsto (fun k : ℕ => pηminus k i ω) Filter.atTop (nhds (pminus i ω)))",
+          "proofName": "(within final tail capture)"
+        },
+        {
+          "index": 32,
+          "sourceText": "(∀ i : Fin n, Filter.Tendsto (fun k : ℕ => Jη k i / Iη k) Filter.atTop (nhds (J i / I)))",
+          "proofName": "(within final tail capture)"
+        }
+      ]
+    }
+  ],
+  "currentEpsilonPatternMaps": [
+    {
+      "pattern": "hNow",
+      "atomsTotal": 65,
+      "patternNames": 65,
+      "nonIgnored": [
+        {
+          "index": 19,
+          "name": "hNowScale",
+          "actualAPISourceText": "(1 / 2 : ℝ) < s"
+        },
+        {
+          "index": 20,
+          "name": "hNowLocal",
+          "actualAPISourceText": "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i))"
+        },
+        {
+          "index": 21,
+          "name": "hNowIndep",
+          "actualAPISourceText": "iIndepFun η ν"
+        },
+        {
+          "index": 22,
+          "name": "hNowL2",
+          "actualAPISourceText": "(∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν)"
+        },
+        {
+          "index": 23,
+          "name": "hNowInt",
+          "actualAPISourceText": "(∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν)"
+        },
+        {
+          "index": 24,
+          "name": "hNowMean",
+          "actualAPISourceText": "(∀ i : Fin n, (∫ x, η i x ∂ν) = 0)"
+        },
+        {
+          "index": 25,
+          "name": "hNowEnergy",
+          "actualAPISourceText": "(∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1"
+        },
+        {
+          "index": 26,
+          "name": "hNowAtoms",
+          "actualAPISourceText": "(∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0)"
+        },
+        {
+          "index": 27,
+          "name": "hNowZero",
+          "actualAPISourceText": "ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0"
+        },
+        {
+          "index": 28,
+          "name": "hNowPositive",
+          "actualAPISourceText": "(∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x)"
+        },
+        {
+          "index": 29,
+          "name": "hNowCMeas",
+          "actualAPISourceText": "Measurable[mAug, borel (Fin n → ℝ)] C"
+        },
+        {
+          "index": 30,
+          "name": "hNowCComap",
+          "actualAPISourceText": "MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug"
+        },
+        {
+          "index": 31,
+          "name": "hNowAnyFull",
+          "actualAPISourceText": "(∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n            ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n              ∀ x : Fin n → Ω × ℝ, H x = F (C x))"
+        },
+        {
+          "index": 32,
+          "name": "hNowAnyDelete",
+          "actualAPISourceText": "(∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n            ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n              (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n                d y = F (fun j => ηlocal j.val (y j))) ∧\n              Measurable[borel (Fin n → ℝ), borel ℝ]\n                (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n              ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x))"
+        },
+        {
+          "index": 33,
+          "name": "hNowScalar",
+          "actualAPISourceText": "(∃ G2 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n            (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n            ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n              Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n              ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x))"
+        },
+        {
+          "index": 34,
+          "name": "hNowResidualDelete",
+          "actualAPISourceText": "(∀ i : Fin n,\n            ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =\n                  Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x))"
+        },
+        {
+          "index": 35,
+          "name": "hNowTMeas",
+          "actualAPISourceText": "(∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z))"
+        },
+        {
+          "index": 36,
+          "name": "hNowZeroRed",
+          "actualAPISourceText": "MeasurableSet[mN₀] Z0"
+        },
+        {
+          "index": 37,
+          "name": "hNowZeroAmbient",
+          "actualAPISourceText": "MeasurableSet[mN] Z0"
+        },
+        {
+          "index": 38,
+          "name": "hNowZeroAug",
+          "actualAPISourceText": "MeasurableSet Z"
+        },
+        {
+          "index": 39,
+          "name": "hNowZeroLawAug",
+          "actualAPISourceText": "ν Z = P₀ Z0"
+        },
+        {
+          "index": 40,
+          "name": "hNowZeroLawAmbient",
+          "actualAPISourceText": "P₀ Z0 = P Z0"
+        },
+        {
+          "index": 41,
+          "name": "hNowZeroReal",
+          "actualAPISourceText": "ν.real Z = p0"
+        },
+        {
+          "index": 42,
+          "name": "hNowSigned",
+          "actualAPISourceText": "(∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n            Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x)"
+        },
+        {
+          "index": 43,
+          "name": "hNowComparison",
+          "actualAPISourceText": "(∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n            MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n            MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n            MeasurableSet (Eη R z) ∧\n            ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n            (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n            P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n            |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)"
+        },
+        {
+          "index": 44,
+          "name": "hNowBounds",
+          "actualAPISourceText": "(∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |D2 ξ| ≤ B1 ξ)"
+        },
+        {
+          "index": 45,
+          "name": "hNowDeleteBounds",
+          "actualAPISourceText": "(∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i)"
+        },
+        {
+          "index": 46,
+          "name": "hNowJRed",
+          "actualAPISourceText": "Measurable[mN₀, borel ℝ] J"
+        },
+        {
+          "index": 47,
+          "name": "hNowARed",
+          "actualAPISourceText": "Measurable[mN₀, borel ℝ] A"
+        },
+        {
+          "index": 48,
+          "name": "hNowBRed",
+          "actualAPISourceText": "Measurable[mN₀, borel ℝ] B1"
+        },
+        {
+          "index": 49,
+          "name": "hNowDeletedMeas",
+          "actualAPISourceText": "(∀ i : Fin n,\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Adel ξ i) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => B1del ξ i))"
+        },
+        {
+          "index": 50,
+          "name": "hNowARedInt",
+          "actualAPISourceText": "Integrable A P₀"
+        },
+        {
+          "index": 51,
+          "name": "hNowBRedInt",
+          "actualAPISourceText": "Integrable B1 P₀"
+        },
+        {
+          "index": 52,
+          "name": "hNowD2RedInt",
+          "actualAPISourceText": "Integrable D2 P₀"
+        },
+        {
+          "index": 53,
+          "name": "hNowDeletedInts",
+          "actualAPISourceText": "(∀ i : Fin n,\n            Integrable (fun ξ : Fin n → Ω => Adel ξ i) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => B1del ξ i) P₀ ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) ∧\n            Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => deletionMass ξ i) ∧\n            Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P₀ ∧\n            Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P₀)"
+        },
+        {
+          "index": 54,
+          "name": "hNowTotalRed",
+          "actualAPISourceText": "Measurable[mN₀, borel ℝ] deletionTotal"
+        },
+        {
+          "index": 55,
+          "name": "hNowTotalRedInt",
+          "actualAPISourceText": "Integrable deletionTotal P₀"
+        },
+        {
+          "index": 56,
+          "name": "hNowAPull",
+          "actualAPISourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => A (q x))"
+        },
+        {
+          "index": 57,
+          "name": "hNowBPull",
+          "actualAPISourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1 (q x))"
+        },
+        {
+          "index": 58,
+          "name": "hNowD2Pull",
+          "actualAPISourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => D2 (q x))"
+        },
+        {
+          "index": 59,
+          "name": "hNowAPullInt",
+          "actualAPISourceText": "Integrable (fun x : Fin n → Ω × ℝ => A (q x)) ν"
+        },
+        {
+          "index": 60,
+          "name": "hNowBPullInt",
+          "actualAPISourceText": "Integrable (fun x : Fin n → Ω × ℝ => B1 (q x)) ν"
+        },
+        {
+          "index": 61,
+          "name": "hNowD2PullInt",
+          "actualAPISourceText": "Integrable (fun x : Fin n → Ω × ℝ => D2 (q x)) ν"
+        },
+        {
+          "index": 62,
+          "name": "hNowDeletedPull",
+          "actualAPISourceText": "(∀ i : Fin n,\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => Adel (q x) i) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1del (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => Adel (q x) i) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => B1del (q x) i) ν ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ∧\n            Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ν ∧\n            Integrable (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ν)"
+        },
+        {
+          "index": 63,
+          "name": "hNowTotalPull",
+          "actualAPISourceText": "Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionTotal (q x))"
+        },
+        {
+          "index": 64,
+          "name": "hNowTotalPullInt",
+          "actualAPISourceText": "Integrable (fun x : Fin n → Ω × ℝ => deletionTotal (q x)) ν"
+        },
+        {
+          "index": 65,
+          "name": "hNowLiteral",
+          "actualAPISourceText": "literal_suffix"
+        }
+      ]
+    },
+    {
+      "pattern": "hNowLiteral",
+      "atomsTotal": 52,
+      "patternNames": 40,
+      "nonIgnored": [
+        {
+          "index": 38,
+          "name": "hNowFullFactor",
+          "actualAPISourceText": "(∀ θ : ℝ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (M θ x, Aenvelope θ x, B x) = Ffull (C x))"
+        },
+        {
+          "index": 39,
+          "name": "hNowDeleteFactor",
+          "actualAPISourceText": "(∀ (θ : ℝ) (i : Fin n),\n            ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n              Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧\n              ∀ x : Fin n → Ω × ℝ,\n                (Mdelete θ i x, AenvelopeDelete θ i x, Bdelete i x) =\n                  Fdelete (fun j : {j : Fin n // j ≠ i} => η j.val x))"
+        },
+        {
+          "index": 40,
+          "name": "hNowRest",
+          "actualAPISourceText": "(∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),\n            Δ θ i x = M θ x - Mdelete θ i x)"
+        }
+      ]
+    }
+  ],
+  "method": "Complete actual producer declarations were read. Top-level conjunctions are balanced-delimiter split; nested conjunctions remain intact. Both fixed and current rcases positions checked independently. Old proofs/AX reused without replay.",
+  "standardAPIs": {
+    "fixedPiProd": "Actual Constructions.lean 376-426 and 572-585 with binder context; complete compound signatures read.",
+    "integralMap": "Actual Bochner Basic.lean 1065-1085 full map signatures.",
+    "integrableComp": "unit111/api-evidence-01.md 3-19: pinned commit 807d3836b165983210ee2ecf3cd28f239436949c/Lean4.36rc1 and full two signatures; unit190 api-read-packet 268-271 corroborates.",
+    "actualDefinitions": "ActualMomentNormalization 20-41; QuantizedObservationCoding 13-19; ScalarObservationCoding 18-21; TruncationBudget 24; P51 geometry/deletion/clipping definitions."
+  },
+  "noActualOwnedMachineTYPEReviewClaim": true
+}
