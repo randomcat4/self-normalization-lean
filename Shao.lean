@@ -228,6 +228,8 @@ import Shao.Checks.Boundaries
 import Shao.OQ3.ActualCGFDerivativeScaling
 import Shao.OQ3.ActualCGFNormalizedOcticPolynomial
 import Shao.OQ3.ActualCGFOcticLogPolynomial
+import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
+import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
@@ -269,6 +271,12 @@ import Shao.OQ3.CompactOpenDomainOcticExponentialError
 import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
+import Shao.OQ3.CompactOpenDomainSixOrderEdgeworthPolynomialError
+import Shao.OQ3.CompactOpenDomainSixOrderGaussianPolynomialTail
+import Shao.OQ3.CompactOpenDomainSixOrderLogCubicFarFrequency
+import Shao.OQ3.CompactOpenDomainSixOrderLogCubicOscillatoryWindow
+import Shao.OQ3.CompactOpenDomainSixOrderLogCubicWeightedWindow
+import Shao.OQ3.CompactOpenDomainSixOrderWeightedIntegral
 import Shao.OQ3.CompactOpenDomainStandardizedFarFrequency
 import Shao.OQ3.CompactOpenDomainStandardizedGaussianError
 import Shao.OQ3.CompactOpenDomainStandardizedLocalGaussian
@@ -289,14 +297,19 @@ import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CompactTiltWhitenedFamily
 import Shao.OQ3.ComplexExpAddError
 import Shao.OQ3.ComplexGaussianSixOrderPolynomialError
+import Shao.OQ3.ComplexGaussianWeightedLocalIntegral
 import Shao.OQ3.ComplexLogTaylorOcticCorrection
 import Shao.OQ3.ComplexLogTaylorPerturbation
 import Shao.OQ3.ComplexLogTaylorQuarticCorrection
 import Shao.OQ3.ComplexSixOrderFilteredPolynomial
+import Shao.OQ3.ComplexSixOrderPolynomialCoefficients
+import Shao.OQ3.ComplexSixOrderPolynomialGrowth
 import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
+import Shao.OQ3.DirectionalCGFCumulantContinuity
+import Shao.OQ3.DirectionalMomentPolynomialContinuity
 import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
 import Shao.OQ3.EuclideanGaussianWeightedTail
@@ -313,6 +326,7 @@ import Shao.OQ3.GaussianBoundaryConstant
 import Shao.OQ3.GaussianBoundaryLaplaceMixture
 import Shao.OQ3.GaussianCurveTube
 import Shao.OQ3.GaussianFiniteArcTube
+import Shao.OQ3.GaussianOscillatoryIntegral
 import Shao.OQ3.GlobalNegativeLayerBound
 import Shao.OQ3.ImaginaryExponentialTaylorRemainder
 import Shao.OQ3.ImaginaryRealExponentialQuadraticError
@@ -336,6 +350,7 @@ import Shao.OQ3.NormalTangentPowerLimit
 import Shao.OQ3.NormalTrialCost
 import Shao.OQ3.NormalizedIIDPairCharacteristic
 import Shao.OQ3.NormalizedIIDPairFrequencyDecay
+import Shao.OQ3.NormalizedIIDPairLogCubicCutoff
 import Shao.OQ3.NormalizedIIDPairMiddleFrequency
 import Shao.OQ3.NormalizedIIDPairSuperpolynomialDecay
 import Shao.OQ3.OpenBallOscillation
@@ -457,6 +472,7 @@ import Shao.OQ3.UniformPairCharacteristicGaussianError
 import Shao.OQ3.UniformPairCharacteristicLocalGaussian
 import Shao.OQ3.WeakCramerPairCompactGap
 import Shao.OQ3.WeakCramerPairNonlattice
+import Shao.OQ3.WeightedOscillatoryErrorIntegral
 import Shao.OQ4.AveragedResidual
 import Shao.OQ4.BoundaryOccupation
 import Shao.OQ4.BrownianFixedTimeNormalization
@@ -789,6 +805,7 @@ import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
+import Shao.OQ6.OriginalSameWitnessUpperErrorPayment
 import Shao.OQ6.OriginalSelfNormalizedTail
 import Shao.OQ6.OriginalSingleWitnessAnalyticStrictFrontier
 import Shao.OQ6.P54ActualGoodsetFrontier
@@ -806,6 +823,7 @@ import Shao.OQ6.ScalarObservationCoding
 import Shao.OQ6.SignedCompactCDFBounds
 import Shao.OQ6.SourceAnalyticCost
 import Shao.OQ6.StretchedExponentialSumMoments
+import Shao.OQ6.UnperturbedDeletedWeightedCostBridge
 import Shao.OQ6.UntiltedCompactCost
 import Shao.OQ6.UntiltedCompactCostFoundation
 import Shao.OQ6.WeightedAECDFBounds

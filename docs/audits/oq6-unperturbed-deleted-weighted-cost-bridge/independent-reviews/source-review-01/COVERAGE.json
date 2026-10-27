@@ -1,0 +1,1141 @@
+{
+  "schema": "oq56-unit241-independent-complete-source-review-coverage-v1",
+  "atUTC": "2026-10-27T18:39:11.5397904Z",
+  "reviewRole": "/root/oq56_unperturbed_deleted_cost241_source_review",
+  "neverAuthor": true,
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit241/author-01/UnperturbedDeletedWeightedCostBridge.lean",
+    "sha256": "a3c7a3ea81a70a5472d63db5f3baea749ebb11432baac74f54271b2420416dd3",
+    "bytes": 18582
+  },
+  "sourceLF": 365,
+  "sourceCR": 0,
+  "wholeSourceAll365LFRead": true,
+  "completeFrozenStatementRead": true,
+  "allProofBodiesIncludingNestedFactsRead": true,
+  "exactPreambleHeadPrefix": true,
+  "exactClosing": true,
+  "frozenFullDeclarationContext": "theorem actual_unperturbed_deleted_weighted_cost_bridge\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (ν : Measure Ω) (n : ℕ) (z K : ℝ) (hK : 0 ≤ K)\n    (η : ℕ → Fin n → Ω → ℝ)\n    (hη : ∀ (k : ℕ) (i : Fin n), Measurable (η k i))\n    (Anew : ℕ → Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n    (B : Ω → ℝ) (Bdelete Hdelete : Fin n → Ω → ℝ)\n    (hAnew : ∀ k : ℕ, Measurable (Anew k))\n    (hAdelete : ∀ i : Fin n, Measurable (Adelete i))\n    (hHdelete : ∀ i : Fin n,\n      Measurable (Hdelete i) ∧ Integrable (Hdelete i) ν ∧\n        ∀ ω : Ω, 0 ≤ Hdelete i ω)\n    (ε : ℕ → ℝ)\n    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))) :\n    let Mdelete : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => K * ε k * Hdelete i ω\n    let AdeleteNew : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => Adelete i ω + Mdelete k i ω\n    let ℓη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => z * η k i ω - (z * η k i ω) ^ 2 / 2\n    let Sηminus : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => ∑ j ∈ Finset.univ.erase i, ℓη k j ω\n    let capη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => min |z * η k i ω| 1\n    let deletedTestη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => capη k i ω *\n        (|Anew k ω - AdeleteNew k i ω| + z * |B ω - Bdelete i ω|)\n    let deletedTestUnperturbedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => capη k i ω *\n        (|Anew k ω - Adelete i ω| + z * |B ω - Bdelete i ω|)\n    let weightedDeletedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => deletedTestη k i ω * Real.exp (Sηminus k i ω)\n    let weightedDeletedUnperturbedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => deletedTestUnperturbedη k i ω * Real.exp (Sηminus k i ω)\n    let Edel : ℝ := Real.exp ((n : ℝ) / 2)\n    let Qdel : Fin n → Ω → ℝ := fun i ω => Edel * (K * Hdelete i ω)\n    let mHdelete : Fin n → ℝ := fun i => ∫ ω, Hdelete i ω ∂ν\n    let Cdel : Fin n → ℝ := fun i => Edel * (K * mHdelete i)\n    (∀ (k : ℕ) (i : Fin n), Integrable (weightedDeletedη k i) ν) →\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      0 ≤ capη k i ω ∧ capη k i ω ≤ 1 ∧\n      0 < Real.exp (Sηminus k i ω) ∧\n      Real.exp (Sηminus k i ω) ≤ Edel) ∧\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω =\n        capη k i ω *\n          (|Anew k ω - Adelete i ω| - |Anew k ω - AdeleteNew k i ω|) *\n            Real.exp (Sηminus k i ω)) ∧\n    (∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ≤\n        capη k i ω * |Mdelete k i ω| * Real.exp (Sηminus k i ω) ∧\n      |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ≤\n        |ε k| * Qdel i ω) ∧\n    (∀ i : Fin n, Integrable (Qdel i) ν ∧\n      (∫ ω, Qdel i ω ∂ν) = Cdel i ∧ 0 ≤ Cdel i) ∧\n    (∀ (k : ℕ) (i : Fin n),\n      Measurable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) ∧\n      Integrable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) ν ∧\n      Integrable (fun ω => |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω|) ν ∧\n      Integrable (weightedDeletedUnperturbedη k i) ν ∧\n      (∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν) ≤\n        |ε k| * Cdel i ∧\n      |(∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∫ ω, weightedDeletedη k i ω ∂ν)| ≤ |ε k| * Cdel i) ∧\n    (∀ i : Fin n,\n      Filter.Tendsto\n        (fun k : ℕ => ∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν)\n        Filter.atTop (nhds (0 : ℝ)) ∧\n      Filter.Tendsto\n        (fun k : ℕ => (∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n          (∫ ω, weightedDeletedη k i ω ∂ν))\n        Filter.atTop (nhds (0 : ℝ))) ∧\n    (∀ k : ℕ,\n      |(∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν)| ≤\n          |ε k| * ∑ i : Fin n, Cdel i) ∧\n    Filter.Tendsto\n      (fun k : ℕ => (∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν))\n      Filter.atTop (nhds (0 : ℝ)) ∧\n    (∀ (I0 sourceCost0 : ℝ) (Iη : ℕ → ℝ) (fullη : ℕ → Ω → ℝ),\n      let sourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν) / Iη k\n      let unperturbedSourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) / Iη k\n      0 < I0 →\n      Filter.Tendsto Iη Filter.atTop (nhds I0) →\n      Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) →\n      Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)\n        Filter.atTop (nhds (0 : ℝ)) ∧\n      Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0))",
+  "genericParameters": [
+    {
+      "role": "implicit generic source type",
+      "fullType": "Type u",
+      "name": "Ω"
+    },
+    {
+      "role": "only explicit candidate typeclass instance",
+      "fullType": "MeasurableSpace Ω",
+      "name": "mΩ"
+    },
+    {
+      "role": "arbitrary measure under mΩ",
+      "fullType": "Measure Ω",
+      "name": "ν"
+    },
+    {
+      "role": "fixed finite sample size; no lower-bound premise",
+      "fullType": "ℕ",
+      "name": "n"
+    },
+    {
+      "role": "fixed scalar; no sign premise",
+      "fullType": "ℝ",
+      "name": "z"
+    },
+    {
+      "role": "fixed scalar with hK : 0 ≤ K",
+      "fullType": "ℝ",
+      "name": "K"
+    },
+    {
+      "role": "given coordinate family; normalization is not a premise",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "name": "η"
+    },
+    {
+      "role": "same full remainder on both sides",
+      "fullType": "ℕ → Ω → ℝ",
+      "name": "Anew"
+    },
+    {
+      "role": "unperturbed deleted remainder",
+      "fullType": "Fin n → Ω → ℝ",
+      "name": "Adelete"
+    },
+    {
+      "role": "common arbitrary B term; no new measurable/integrable premise",
+      "fullType": "Ω → ℝ",
+      "name": "B"
+    },
+    {
+      "role": "common arbitrary deleted B term; no new measurable/integrable premise",
+      "fullType": "Fin n → Ω → ℝ",
+      "name": "Bdelete"
+    },
+    {
+      "role": "nonnegative measurable integrable envelope",
+      "fullType": "Fin n → Ω → ℝ",
+      "name": "Hdelete"
+    },
+    {
+      "role": "given sequence tending to zero; no sign or rate premise",
+      "fullType": "ℕ → ℝ",
+      "name": "ε"
+    }
+  ],
+  "allExplicitPropPremises": [
+    {
+      "fullType": "0 ≤ K",
+      "name": "hK"
+    },
+    {
+      "fullType": "∀ (k : ℕ) (i : Fin n), Measurable (η k i)",
+      "name": "hη"
+    },
+    {
+      "fullType": "∀ k : ℕ, Measurable (Anew k)",
+      "name": "hAnew"
+    },
+    {
+      "fullType": "∀ i : Fin n, Measurable (Adelete i)",
+      "name": "hAdelete"
+    },
+    {
+      "fullType": "∀ i : Fin n, Measurable (Hdelete i) ∧ Integrable (Hdelete i) ν ∧ ∀ ω : Ω, 0 ≤ Hdelete i ω",
+      "name": "hHdelete"
+    },
+    {
+      "fullType": "Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))",
+      "name": "hεlim"
+    },
+    {
+      "scope": "Arrow after all thirteen core lets; exact already exported perturbed-integrand integrability",
+      "fullType": "∀ (k : ℕ) (i : Fin n), Integrable (weightedDeletedη k i) ν",
+      "name": "post-let-integrability"
+    }
+  ],
+  "ordinaryLetCountDerived": 15,
+  "coreOrdinaryLetCountDerived": 13,
+  "optionalCostLetCountDerived": 2,
+  "ordinaryTypesRHSAndScopes": [
+    {
+      "name": "Mdelete",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => K * ε k * Hdelete i ω",
+      "exactDeclaration": "let Mdelete : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => K * ε k * Hdelete i ω",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 703,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "AdeleteNew",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => Adelete i ω + Mdelete k i ω",
+      "exactDeclaration": "let AdeleteNew : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => Adelete i ω + Mdelete k i ω",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 792,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "ℓη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => z * η k i ω - (z * η k i ω) ^ 2 / 2",
+      "exactDeclaration": "let ℓη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => z * η k i ω - (z * η k i ω) ^ 2 / 2",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 881,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "Sηminus",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => ∑ j ∈ Finset.univ.erase i, ℓη k j ω",
+      "exactDeclaration": "let Sηminus : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => ∑ j ∈ Finset.univ.erase i, ℓη k j ω",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 975,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "capη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => min |z * η k i ω| 1",
+      "exactDeclaration": "let capη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => min |z * η k i ω| 1",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1050,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "deletedTestη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => capη k i ω *\n        (|Anew k ω - AdeleteNew k i ω| + z * |B ω - Bdelete i ω|)",
+      "exactDeclaration": "let deletedTestη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => capη k i ω *\n        (|Anew k ω - AdeleteNew k i ω| + z * |B ω - Bdelete i ω|)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1192,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "deletedTestUnperturbedη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => capη k i ω *\n        (|Anew k ω - Adelete i ω| + z * |B ω - Bdelete i ω|)",
+      "exactDeclaration": "let deletedTestUnperturbedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => capη k i ω *\n        (|Anew k ω - Adelete i ω| + z * |B ω - Bdelete i ω|)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1340,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "weightedDeletedη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => deletedTestη k i ω * Real.exp (Sηminus k i ω)",
+      "exactDeclaration": "let weightedDeletedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => deletedTestη k i ω * Real.exp (Sηminus k i ω)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1453,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "weightedDeletedUnperturbedη",
+      "fullType": "ℕ → Fin n → Ω → ℝ",
+      "exactRHS": "fun k i ω => deletedTestUnperturbedη k i ω * Real.exp (Sηminus k i ω)",
+      "exactDeclaration": "let weightedDeletedUnperturbedη : ℕ → Fin n → Ω → ℝ :=\n      fun k i ω => deletedTestUnperturbedη k i ω * Real.exp (Sηminus k i ω)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1588,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "Edel",
+      "fullType": "ℝ",
+      "exactRHS": "Real.exp ((n : ℝ) / 2)",
+      "exactDeclaration": "let Edel : ℝ := Real.exp ((n : ℝ) / 2)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1631,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "Qdel",
+      "fullType": "Fin n → Ω → ℝ",
+      "exactRHS": "fun i ω => Edel * (K * Hdelete i ω)",
+      "exactDeclaration": "let Qdel : Fin n → Ω → ℝ := fun i ω => Edel * (K * Hdelete i ω)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1699,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "mHdelete",
+      "fullType": "Fin n → ℝ",
+      "exactRHS": "fun i => ∫ ω, Hdelete i ω ∂ν",
+      "exactDeclaration": "let mHdelete : Fin n → ℝ := fun i => ∫ ω, Hdelete i ω ∂ν",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1760,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "Cdel",
+      "fullType": "Fin n → ℝ",
+      "exactRHS": "fun i => Edel * (K * mHdelete i)",
+      "exactDeclaration": "let Cdel : Fin n → ℝ := fun i => Edel * (K * mHdelete i)",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 1821,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 105,
+      "actualScope": "Core theorem result-let scope, including the final cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "sourceCostη",
+      "fullType": "ℕ → ℝ",
+      "exactRHS": "fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν) / Iη k",
+      "exactDeclaration": "let sourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν) / Iη k",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 4117,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 342,
+      "actualScope": "Only final frozen universal I0/sourceCost0/Iη/fullη cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    },
+    {
+      "name": "unperturbedSourceCostη",
+      "fullType": "ℕ → ℝ",
+      "exactRHS": "fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) / Iη k",
+      "exactDeclaration": "let unperturbedSourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) / Iη k",
+      "frozenScope": {
+        "contextId": "candidateComplete",
+        "startCharacter": 4274,
+        "endCharacter": 4596,
+        "rule": "The exact remaining substring of this complete declaration context; UTF-16 character indices, end exclusive. All enclosing binders/lets remain as written in fullText."
+      },
+      "fullPropContextRef": "frozenFullDeclarationContext",
+      "actualIntroLine": 342,
+      "actualScope": "Only final frozen universal I0/sourceCost0/Iη/fullη cost clause",
+      "independentlyReviewedTypeRHSAndScope": true,
+      "sourceExactDeclarationMatched": true,
+      "noNewValueOrAlias": true
+    }
+  ],
+  "optionalRatioEntirePropContext": {
+    "fullPropContext": "(∀ (I0 sourceCost0 : ℝ) (Iη : ℕ → ℝ) (fullη : ℕ → Ω → ℝ),\n      let sourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν) / Iη k\n      let unperturbedSourceCostη : ℕ → ℝ := fun k =>\n        ((∫ ω, fullη k ω ∂ν) +\n          ∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) / Iη k\n      0 < I0 →\n      Filter.Tendsto Iη Filter.atTop (nhds I0) →\n      Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) →\n      Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)\n        Filter.atTop (nhds (0 : ℝ)) ∧\n      Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0))",
+    "ordinaryUniversalBinders": [
+      {
+        "quantifier": "∀",
+        "rhs": null,
+        "scope": "candidateOptionalRatio",
+        "name": "I0",
+        "source": "qualified234 I0",
+        "fullType": "ℝ"
+      },
+      {
+        "quantifier": "∀",
+        "rhs": null,
+        "scope": "candidateOptionalRatio",
+        "name": "sourceCost0",
+        "source": "qualified234 sourceCost0",
+        "fullType": "ℝ"
+      },
+      {
+        "quantifier": "∀",
+        "rhs": null,
+        "scope": "candidateOptionalRatio",
+        "name": "Iη",
+        "source": "qualified234 Iη",
+        "fullType": "ℕ → ℝ"
+      },
+      {
+        "quantifier": "∀",
+        "rhs": null,
+        "scope": "candidateOptionalRatio",
+        "name": "fullη",
+        "source": "fun k x => fullTestη k x * Real.exp (Sη k x)",
+        "fullType": "ℕ → Ω → ℝ"
+      }
+    ],
+    "allPremisesVisible": true,
+    "externalEnginePremise": false
+  },
+  "instanceCountDerived": 6,
+  "instances": [
+    {
+      "name": "mΩ",
+      "fullType": "MeasurableSpace Ω",
+      "rhs": null,
+      "kind": "input instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    },
+    {
+      "name": "canonicalRealMeasurableSpace",
+      "fullType": "MeasurableSpace ℝ",
+      "rhs": "(inferInstance : MeasurableSpace ℝ)",
+      "kind": "pre-existing canonical environment instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    },
+    {
+      "name": "canonicalRealTopology",
+      "fullType": "TopologicalSpace ℝ",
+      "rhs": "(inferInstance : TopologicalSpace ℝ)",
+      "kind": "pre-existing canonical environment instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    },
+    {
+      "name": "canonicalRealBorel",
+      "fullType": "BorelSpace ℝ",
+      "rhs": "(inferInstance : BorelSpace ℝ)",
+      "kind": "pre-existing canonical environment instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    },
+    {
+      "name": "finiteIndices",
+      "fullType": "Fintype (Fin n)",
+      "rhs": "(inferInstance : Fintype (Fin n))",
+      "kind": "pre-existing finite environment instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    },
+    {
+      "name": "finiteEquality",
+      "fullType": "DecidableEq (Fin n)",
+      "rhs": "(inferInstance : DecidableEq (Fin n))",
+      "kind": "pre-existing finite environment instance",
+      "scope": "candidateComplete",
+      "newOriginalAssumption": false
+    }
+  ],
+  "instanceReview": "One source measurable-space input and five pre-existing canonical real/finite environment instances. No new instance/letI or original assumption.",
+  "namedExplicitPropFactCountDerived": 35,
+  "allNamedPropFacts": [
+    {
+      "name": "hHnonneg",
+      "sourceLine": 107,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (i : Fin n) (ω : Ω), 0 ≤ Hdelete i ω",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Projection of the given Hdelete nonnegativity; no strengthened premise.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hcap",
+      "sourceLine": 109,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      0 ≤ capη k i ω ∧ capη k i ω ≤ 1",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Absolute value is nonnegative; min with 1 lies in [0,1].",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hSbound",
+      "sourceLine": 113,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      Sηminus k i ω ≤ (n : ℝ) / 2",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Each t-t^2/2<=1/2 from (t-1)^2>=0; finite erased sum cardinal<=n.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hcard",
+      "sourceLine": 116,
+      "fullExplicitTypeIndependentlyExtracted": "(Finset.univ.erase i).card ≤ n",
+      "enclosingScope": "Nested inside hSbound after k,i,omega introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "erase_subset and finite cardinal monotonicity; univ Fin n cardinal=n.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hcardR",
+      "sourceLine": 121,
+      "fullExplicitTypeIndependentlyExtracted": "((Finset.univ.erase i).card : ℝ) ≤ (n : ℝ)",
+      "enclosingScope": "Nested inside hSbound after k,i,omega introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Order-preserving cast from the established natural inequality.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hexp",
+      "sourceLine": 132,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      Real.exp (Sηminus k i ω) ≤ Edel",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Monotonicity of real exp at hSbound; Edel retains its exact RHS.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hPointwiseBounds",
+      "sourceLine": 136,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      0 ≤ capη k i ω ∧ capη k i ω ≤ 1 ∧\n      0 < Real.exp (Sηminus k i ω) ∧\n      Real.exp (Sηminus k i ω) ≤ Edel",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Assembles hcap, exp positivity and hexp in frozen order.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hCancel",
+      "sourceLine": 142,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω =\n        capη k i ω *\n          (|Anew k ω - Adelete i ω| - |Anew k ω - AdeleteNew k i ω|) *\n            Real.exp (Sηminus k i ω)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Pointwise expansion/ring cancellation of the common B/Bdelete term before measurability.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hMabs",
+      "sourceLine": 151,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |Mdelete k i ω| = |ε k| * (K * Hdelete i ω)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "abs_mul and only K>=0,Hdelete>=0; epsilon stays inside absolute value.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hReverse",
+      "sourceLine": 157,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |(|Anew k ω - Adelete i ω| - |Anew k ω - AdeleteNew k i ω|)| ≤\n        |Mdelete k i ω|",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Reverse triangle inequality; signed residual difference equals literal Mdelete.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hCompare",
+      "sourceLine": 169,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n) (ω : Ω),\n      |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ≤\n        capη k i ω * |Mdelete k i ω| * Real.exp (Sηminus k i ω) ∧\n      |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ≤\n        |ε k| * Qdel i ω",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "hRaw, cap<=1, exp<=Edel and hMabs give both exact frozen bounds.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hRaw",
+      "sourceLine": 175,
+      "fullExplicitTypeIndependentlyExtracted": "|weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ≤\n        capη k i ω * |Mdelete k i ω| * Real.exp (Sηminus k i ω)",
+      "enclosingScope": "Nested inside hCompare after k,i,omega introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Multiply reverse triangle by the nonnegative cap and positive exponential.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hQdel",
+      "sourceLine": 203,
+      "fullExplicitTypeIndependentlyExtracted": "∀ i : Fin n, Integrable (Qdel i) ν ∧\n      (∫ ω, Qdel i ω ∂ν) = Cdel i ∧ 0 ≤ Cdel i",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Two integrable scalar multiples of Hdelete, two integral_const_mul equalities, nonnegative integral.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hAdnewM",
+      "sourceLine": 212,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n), Measurable (AdeleteNew k i)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Adelete measurability plus scalar-multiple Hdelete measurability; exact AdeleteNew RHS.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hCapM",
+      "sourceLine": 215,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n), Measurable (capη k i)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Measurable z*eta, absolute value and min with constant1.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hSM",
+      "sourceLine": 222,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n), Measurable (Sηminus k i)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Finite sum of measurable linear and quadratic coordinate expressions.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hDiffM",
+      "sourceLine": 227,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      Measurable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω)",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Rewrite by hCancel; measurable cap, two measurable residual absolute values, and exponential. No B facts.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hAbsA",
+      "sourceLine": 230,
+      "fullExplicitTypeIndependentlyExtracted": "Measurable (fun ω : Ω => |Anew k ω - Adelete i ω|)",
+      "enclosingScope": "Nested inside hDiffM after k,i introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Measurable Anew-Adelete, then norm/absolute value.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hAbsAd",
+      "sourceLine": 233,
+      "fullExplicitTypeIndependentlyExtracted": "Measurable (fun ω : Ω => |Anew k ω - AdeleteNew k i ω|)",
+      "enclosingScope": "Nested inside hDiffM after k,i introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Measurable Anew-AdeleteNew via hAdnewM, then norm/absolute value.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hDiffI",
+      "sourceLine": 238,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      Integrable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) ν",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Integrable |epsilon k|*Qdel dominates the norm of the measurably canceled difference, pointwise hence a.e.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hDiffAbsI",
+      "sourceLine": 244,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      Integrable (fun ω => |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω|) ν",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Absolute value preserves integrability of hDiffI.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hUnperturbedI",
+      "sourceLine": 247,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      Integrable (weightedDeletedUnperturbedη k i) ν",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Add integrable difference to the given perturbed integrand; pointwise sub_add_cancel.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hsumI",
+      "sourceLine": 250,
+      "fullExplicitTypeIndependentlyExtracted": "Integrable\n        (fun ω => (weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) +\n          weightedDeletedη k i ω) ν",
+      "enclosingScope": "Nested inside hUnperturbedI after k,i introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Addition of hDiffI and the exact post-let hPerturbed premise.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hL1Bound",
+      "sourceLine": 255,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      (∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν) ≤\n        |ε k| * Cdel i",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Integral monotonicity of two integrable functions, scalar factorization and integral Qdel=Cdel.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hIntegralBound",
+      "sourceLine": 266,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      |(∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∫ ω, weightedDeletedη k i ω ∂ν)| ≤ |ε k| * Cdel i",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "integral_sub for the now integrable pair, hnorm, then hL1Bound.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hnorm",
+      "sourceLine": 271,
+      "fullExplicitTypeIndependentlyExtracted": "|∫ ω, weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω ∂ν| ≤\n          ∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν",
+      "enclosingScope": "Nested inside hIntegralBound after k,i introduction",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Norm-of-integral <= integral-of-norm, specialized to real absolute values.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hAnalytic",
+      "sourceLine": 278,
+      "fullExplicitTypeIndependentlyExtracted": "∀ (k : ℕ) (i : Fin n),\n      Measurable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) ∧\n      Integrable (fun ω => weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω) ν ∧\n      Integrable (fun ω => |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω|) ν ∧\n      Integrable (weightedDeletedUnperturbedη k i) ν ∧\n      (∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν) ≤\n        |ε k| * Cdel i ∧\n      |(∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∫ ω, weightedDeletedη k i ω ∂ν)| ≤ |ε k| * Cdel i",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Exact conjunction of measurable difference, three integrability statements and two quantitative bounds.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hAbsEps",
+      "sourceLine": 289,
+      "fullExplicitTypeIndependentlyExtracted": "Filter.Tendsto (fun k : ℕ => |ε k|)\n      Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Continuity of absolute value at the given epsilon limit0.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hL1Lim",
+      "sourceLine": 292,
+      "fullExplicitTypeIndependentlyExtracted": "∀ i : Fin n,\n      Filter.Tendsto\n        (fun k : ℕ => ∫ ω, |weightedDeletedUnperturbedη k i ω - weightedDeletedη k i ω| ∂ν)\n        Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Squeeze nonnegative L1 integral by |epsilon k|*fixed Cdel i ->0.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hIntegralLim",
+      "sourceLine": 303,
+      "fullExplicitTypeIndependentlyExtracted": "∀ i : Fin n,\n      Filter.Tendsto\n        (fun k : ℕ => (∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n          (∫ ω, weightedDeletedη k i ω ∂ν))\n        Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Norm characterization at0 and squeeze using hIntegralBound.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hTotalBound",
+      "sourceLine": 317,
+      "fullExplicitTypeIndependentlyExtracted": "∀ k : ℕ,\n      |(∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν)| ≤\n          |ε k| * ∑ i : Fin n, Cdel i",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Difference of finite sums=sum of differences, absolute sum inequality, individual bounds and common factor.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hTotalLim",
+      "sourceLine": 334,
+      "fullExplicitTypeIndependentlyExtracted": "Filter.Tendsto\n      (fun k : ℕ => (∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν))\n      Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Main frozen theorem proof; ordinary inputs are existing frozen binders/lets",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Finite sum of the already proved signed integral-gap limits; n fixed.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hRatioGap",
+      "sourceLine": 344,
+      "fullExplicitTypeIndependentlyExtracted": "Filter.Tendsto\n      (fun k : ℕ => ((∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n        (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν)) / Iη k)\n      Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Only the final universal ratio Prop branch after its four ordinary binders, two frozen lets and three premises",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Divide the vanishing total numerator by Ieta->I0 with nonzero limiting I0; no all-k nonzero premise.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hCostDiff",
+      "sourceLine": 349,
+      "fullExplicitTypeIndependentlyExtracted": "∀ k : ℕ,\n      unperturbedSourceCostη k - sourceCostη k =\n        ((∑ i : Fin n, ∫ ω, weightedDeletedUnperturbedη k i ω ∂ν) -\n          (∑ i : Fin n, ∫ ω, weightedDeletedη k i ω ∂ν)) / Iη k",
+      "enclosingScope": "Only the final universal ratio Prop branch after its four ordinary binders, two frozen lets and three premises",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Expand only approved two cost RHS; cancel common full integral via real ring identity valid also at zero denominator.",
+      "compiledTypeReviewed": false
+    },
+    {
+      "name": "hCostGap",
+      "sourceLine": 356,
+      "fullExplicitTypeIndependentlyExtracted": "Filter.Tendsto\n      (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)\n      Filter.atTop (nhds (0 : ℝ))",
+      "enclosingScope": "Only the final universal ratio Prop branch after its four ordinary binders, two frozen lets and three premises",
+      "isPropositionByCompleteSourceSemanticReview": true,
+      "authorMetadataExact": true,
+      "judgment": "CORRECT_AT_SOURCE_LEVEL",
+      "reason": "Rewrite hRatioGap by hCostDiff; adding given perturbed cost limit gives final unperturbed cost limit.",
+      "compiledTypeReviewed": false
+    }
+  ],
+  "allSourcePropositionsSemanticallyReviewed": true,
+  "compiledPropositionAndGeneratedOwnerClassificationPending": true,
+  "proofLocalLetCount": 0,
+  "forbiddenPrimitiveTokenCount": 0,
+  "additionalOrdinaryAliases": 0,
+  "additionalImports": 0,
+  "additionalInstances": 0,
+  "newChoicesOrExistentials": 0,
+  "primaryAPICoverage": [
+    {
+      "context": "qualified234",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/OriginalSingleWitnessAnalyticStrictFrontier.lean",
+        "sha256": "8cc15a8f79707bc6ff88896cef3125030284e309907966e9eabeb7d4b3a1ca90",
+        "bytes": 36755
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "literalWeighted",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/LiteralDeletedWeightedCosts.lean",
+        "sha256": "d0018455d672d1080c01f9a28bfcd1751f21ea04e26ff571bc1aed9f08fb3421",
+        "bytes": 39194
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "literalEnvelope",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/LiteralDeletedRemainderEnvelope.lean",
+        "sha256": "1eba3a02250a1574d8d657a4bf08ed8c1852b97ff9dc2b44735833a794edc9b1",
+        "bytes": 19108
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "normalizedUnperturbed",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedAnalyticCostLimits.lean",
+        "sha256": "c414aeb98cec27146d30f38e3c869f34a7b81e4a45101497a99db29a4d37b92d",
+        "bytes": 56155
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "externalAssembly",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedIntegrableTailAssembly.lean",
+        "sha256": "c868ca007153fdc15ff29077702cbb64e8fac5d66ebd9821171ae38454ae5916",
+        "bytes": 24094
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "externalScalarInput",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedIntegrableTailAssembly.lean",
+        "sha256": "c868ca007153fdc15ff29077702cbb64e8fac5d66ebd9821171ae38454ae5916",
+        "bytes": 24094
+      },
+      "pieceCount": 1,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "normalizationDefinitions",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+        "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237",
+        "bytes": 22137
+      },
+      "pieceCount": 4,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    },
+    {
+      "context": "quantizationDefinitions",
+      "primarySource": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+        "sha256": "c755dcb72b58931c797416f23ce4f13b383cd17b1b6ef5b2bd5b86b368290062",
+        "bytes": 6921
+      },
+      "pieceCount": 2,
+      "completeContextRead": true,
+      "allPiecesMatchPrimarySourceIgnoringWhitespaceOnly": true,
+      "unaffectedOldProofBodyReviewRepeated": false
+    }
+  ],
+  "primaryAPIContextCountDerived": 8,
+  "primaryAPIPieceCountDerived": 12,
+  "fullSourceRouteRead": true,
+  "fullOriginalP54SupplementRead": true,
+  "sourceSpecialization": [
+    {
+      "availability": "same selected qualified234 m0/hm0/hcg and literal mAug/ν definitions; no new witness",
+      "generic": "Ω,mΩ,ν",
+      "actual": "Fin n → originalΩ × ℝ, mAug, ν"
+    },
+    {
+      "availability": "complete exact RHS in qualified234 context",
+      "generic": "n,z,K,η,Anew,Adelete,B,Bdelete,Hdelete,ε",
+      "actual": "identical named qualified234 ordinary values"
+    },
+    {
+      "availability": "literal K RHS and square-root nonnegativity",
+      "generic": "hK",
+      "actual": "0 ≤ 4 * Real.sqrt (n : ℝ)"
+    },
+    {
+      "availability": "qualified234 per-k normalization clause",
+      "generic": "hη",
+      "actual": "∀ k i, Measurable[mAug,borel ℝ] (η k i)"
+    },
+    {
+      "availability": "qualified234 Anew clause",
+      "generic": "hAnew",
+      "actual": "∀ k, Measurable[mAug,borel ℝ] (Anew k)"
+    },
+    {
+      "availability": "derive on same witness using k=0: Adelete i = AdeleteNew 0 i - fun x => (K*ε 0)*Hdelete i x; both subtracted functions measurable by exported facts",
+      "generic": "hAdelete",
+      "actual": "∀ i, Measurable[mAug,borel ℝ] (Adelete i)"
+    },
+    {
+      "availability": "measurable/integrable are exported; nonnegative from literal sqrt definition and existing z>=0",
+      "generic": "hHdelete",
+      "actual": "∀ i, Measurable[mAug,borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν ∧ ∀ x, 0 ≤ Hdelete i x"
+    },
+    {
+      "availability": "direct qualified234 clause",
+      "generic": "hεlim",
+      "actual": "Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))"
+    },
+    {
+      "availability": "direct qualified234 analytic clause; no new callback",
+      "generic": "post-let-integrability",
+      "actual": "∀ k i, Integrable[mAug] (fun x => deletedTestη k i x * Real.exp (Sηminus k i x)) ν"
+    },
+    {
+      "availability": "all three are explicit accepted clauses with same common full integral; no external source engine",
+      "generic": "optional 0<I0, Iη-limit, sourceCostη-limit",
+      "actual": "qualified234 I0/Iη/sourceCostη/sourceCost0 outputs"
+    }
+  ],
+  "same234WitnessAvailabilityReviewed": true,
+  "same234PremiseDetails": [
+    "Use exactly selected m0/hm0/hcg,mAug,nu,eta,Anew,Adelete,B/Bdelete,Hdelete,K,epsilon; no independent witness equality.",
+    "K>=0 from4*sqrt n; Hdelete>=0 from literal square roots and actual z>=0.",
+    "Adelete measurable from AdeleteNew0-(K*epsilon0)*Hdelete on same selected model; no observation or Nonempty assumption.",
+    "eta/Anew/Hdelete measurable, Hdelete integrable, epsilon limit and perturbed weighted-integrand integrability are explicit234 outputs.",
+    "Final ratio positive I0, Ieta-limit and perturbed sourceCost limit are explicit234 outputs with common full integral.",
+    "Aepsilon=Anew at K=4sqrt n requires ordinary ring equality; not asserted definitionally."
+  ],
+  "qualified234EvidenceReused": {
+    "evidence": {
+      "path": "C:/game/shao lean/drafts/oq56/unit234/qualified-evidence.json",
+      "sha256": "2836acf294dd01a01a9638402abda5858e8e5cfb204955851701096ee6799c6a",
+      "bytes": 14224
+    },
+    "source": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalSingleWitnessAnalyticStrictFrontier.lean",
+      "sha256": "8cc15a8f79707bc6ff88896cef3125030284e309907966e9eabeb7d4b3a1ca90",
+      "bytes": 36755,
+      "mtime_ns": "1793110340155821367"
+    },
+    "firstOriginalObject": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalSingleWitnessAnalyticStrictFrontier.olean",
+      "sha256": "1f5ef7beee5f8253e92ca90d3ba6c3c37104032c745c25d7d1ab9a2bbe75a3ac",
+      "bytes": 6327008,
+      "mtime_ns": "1793110359455767952"
+    },
+    "qualified": true,
+    "nativeActualRC": 0,
+    "auditActualRC": 0,
+    "actualOwnedCount": 2,
+    "allTYPElines": 4622,
+    "allVALUElines": 0,
+    "allTransitiveAxioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "oldProofReviewedAgain": false,
+    "oldChecksReplayed": false
+  },
+  "boundaryCoverage": [
+    {
+      "case": "arbitrary measurable space/measure, including infinite measure",
+      "result": "Covered: use supplied integrable Hdelete and perturbed cost; scalar multiples only, no constant integrability inference."
+    },
+    {
+      "case": "n=0 and empty Omega",
+      "result": "Covered: Fin0 clauses vacuous, sums zero, no selected Fin0/observation; common full integral cancels."
+    },
+    {
+      "case": "arbitrary real z and epsilon signs",
+      "result": "Covered: real quadratic bound, absolute cap and |epsilon|; B term cancels even if weighted integrands signed."
+    },
+    {
+      "case": "K=0 and Hdelete=0, including individual zeros",
+      "result": "Covered: zero perturbation yields zero difference, no division by K/Hdelete."
+    },
+    {
+      "case": "no B/Bdelete measurable or integrable premise",
+      "result": "Covered: cancellation precedes measurability; difference integrability plus perturbed integrability gives unperturbed."
+    },
+    {
+      "case": "pointwise and L1 bounds/limits",
+      "result": "Both exact pointwise bounds, L1 and signed integral-gap bounds/limits covered. Separate fixed-point convergence follows by squeeze but is not an extra exported clause."
+    },
+    {
+      "case": "fixed finite n sum",
+      "result": "Covered: finite triangle/sum laws; no uniform-in-n limit claimed."
+    },
+    {
+      "case": "Ieta k may be zero at finite indices",
+      "result": "Covered: total real division cancellation for all k; limit division uses only positive limiting I0."
+    },
+    {
+      "case": "arbitrary common full integrand in universal ratio branch",
+      "result": "Covered: only identical real Bochner-integral values cancel. Actual234 intended full integrability already exported."
+    }
+  ],
+  "sourceGapPreciselyClosed": "Conditional same-model pointwise/L1/finite normalized-cost bridge from AdeleteNew to unperturbed Adelete with all other literal objects retained.",
+  "notClaimed": [
+    "new original-model combined consumer",
+    "unperturbed deleted observability/factorization",
+    "external ScalarShaoZhouFiniteCostTailInput",
+    "original H-complement quantitative estimate",
+    "physical-statistic/clipping transfer",
+    "source CDF/atoms/zero-denominator/root closure",
+    "full OQ56",
+    "uniform-in-n or continuous-epsilon result",
+    "novelty"
+  ],
+  "blockingSourceGaps": [],
+  "verdict": "SOURCE_CORRECT_PENDING_KERNEL",
+  "qualified": false,
+  "kernelPending": true,
+  "actualTYPEVALUETransitiveAXPending": true,
+  "finalIndependentQualifiedJoinPending": true,
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualBackend": null,
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "inputTokens": null,
+    "cachedInputTokens": null,
+    "outputTokens": null,
+    "reasoningSubsetTokens": null
+  }
+}

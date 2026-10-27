@@ -1,0 +1,47 @@
+  classical
+  intro W
+  refine ⟨?_, ?_⟩
+  · intro d
+    simp [W]
+  · intro q d
+    let e : (Fin (q + 1) → Fin 6) ≃ Fin 6 × (Fin q → Fin 6) :=
+      { toFun := fun sigma => (sigma 0, fun i => sigma i.succ)
+        invFun := fun p => Fin.cons p.1 p.2
+        left_inv := by
+          intro sigma
+          funext i
+          refine Fin.cases ?_ (fun j => ?_) i <;> rfl
+        right_inv := by
+          intro p
+          rcases p with ⟨j, sigma⟩
+          rfl }
+    have hsplit : W (q + 1) d =
+        ∑ j : Fin 6, ∑ sigma : Fin q → Fin 6,
+          if j.val + 1 + (∑ i, ((sigma i).val + 1)) ≤ d then
+            a j * ∏ i, a (sigma i) else 0 := by
+      dsimp only [W]
+      calc
+        _ = ∑ p : Fin 6 × (Fin q → Fin 6),
+            if p.1.val + 1 + (∑ i, ((p.2 i).val + 1)) ≤ d then
+              a p.1 * ∏ i, a (p.2 i) else 0 := by
+          apply Fintype.sum_equiv e
+          intro sigma
+          simp only [e, Fin.sum_univ_succ, Fin.prod_univ_succ]
+        _ = _ := Fintype.sum_prod_type _
+    rw [hsplit]
+    apply Finset.sum_congr rfl
+    intro j hj
+    by_cases h : j.val + 1 ≤ d
+    · rw [if_pos h]
+      dsimp only [W]
+      rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro sigma hsigma
+      have he : j.val + 1 + (∑ i, ((sigma i).val + 1)) ≤ d ↔
+          (∑ i, ((sigma i).val + 1)) ≤ d - (j.val + 1) := by omega
+      simp only [he, mul_ite, mul_zero]
+    · rw [if_neg h]
+      apply Finset.sum_eq_zero
+      intro sigma hsigma
+      have he : ¬j.val + 1 + (∑ i, ((sigma i).val + 1)) ≤ d := by omega
+      simp only [if_neg he]

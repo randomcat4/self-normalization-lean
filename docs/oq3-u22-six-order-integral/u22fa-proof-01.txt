@@ -1,0 +1,33 @@
+  intro X kappa
+  let m : ℕ → (ℝ × ℝ) → ℝ := fun j z =>
+    ∫ y : Fin 2 → ℝ, X z y ^ j ∂mu
+  have hm0 (z : ℝ × ℝ) : m 0 z = 1 := by simp [m]
+  have hmcont (j : ℕ) : Continuous (m j) :=
+    (pair_directional_moment_binomial_continuous mu j (hM j)).2.2
+  intro k
+  induction k using Nat.strong_induction_on with
+  | h k ih =>
+    cases k with
+    | zero =>
+      have hz : kappa 0 = (fun _ : ℝ × ℝ => (0 : ℝ)) := by
+        funext z
+        simp [kappa]
+      rw [hz]
+      exact continuous_const
+    | succ n =>
+      have heq : kappa (n + 1) = fun z => m (n + 1) z -
+          ∑ j ∈ Finset.range n, (n.choose j : ℝ) * kappa (j + 1) z * m (n - j) z := by
+        funext z
+        have hrec : m (n + 1) z =
+            ∑ j ∈ Finset.range (n + 1),
+              (n.choose j : ℝ) * kappa (j + 1) z * m (n - j) z :=
+          actual_moment_cgf_derivative_recursion mu (X z) (h0 z.1 z.2) n
+        rw [Finset.sum_range_succ] at hrec
+        simp only [Nat.choose_self, Nat.sub_self, Nat.cast_one, one_mul, hm0, mul_one] at hrec
+        linarith only [hrec]
+      rw [heq]
+      apply (hmcont (n + 1)).sub
+      apply continuous_finset_sum
+      intro j hj
+      exact (continuous_const.mul
+        (ih (j + 1) (Nat.succ_lt_succ (Finset.mem_range.mp hj)))).mul (hmcont (n - j))

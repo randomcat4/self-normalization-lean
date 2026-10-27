@@ -1,0 +1,22 @@
+# v134: Integrate same-witness actual payment and original-window sixth-order CF v134
+
+OQ6 unit238 fixes the original kernel/projection/p-moment model and positive cg before ONE m0/trim/coded observation/actual normalization witness. It retains all original analytic statements for n>=4,C0>=0,z>=0 and the guarded strict budgets/common eventual coding cutoff from234. Under explicit bounded-polylog envelope parameters and the original z window it constructs the actual original Hsource and reduced Ssafe, transports the SAME augmented Jsafe=q inverse Ssafe measure from nu through P0 to original P, and quantitatively pays their actual complements by3exp(-q)+exp(-cg*n)+4exp(-z*sqrt(n)/2). The actual E2/zero event and limsup of actual perturbed upper-error events are bounded by this payer on that SAME witness. The proof does not replace actual events by abstract unused H, assume global measurability of w or new standard-Borel/atomfree hypotheses. Envelope/window conditions remain explicit. No235236 physical clip assembly, external Shao-Zhou/cSZ or continuous-epsilon/Fatou application is claimed. Unit241 is a conditional FIXED-n bridge: perturbed deleted weighted integrability and integrable nonnegative Hdelete give a genuine L1 difference <=abs(epsilon)*Cdel, vanishing cost difference, and shared normalized cost limit when Ieta tends positive I0. It proves no finite-k equality, unperturbed deleted factorization or automatic original-model consumer. OQ3 EW234 instantiates the actual variance/cumulant/smallness hypotheses in the SAME canonical E/law/IID rho and yields full filtered sixth-order characteristic polynomial error C*(r^9+r^56)/(n^3*sqrt(n))*exp(-r^2/8). EX235/EY236 identify all six traditional coefficient rows; EZ237/FA238 derive genuine directional-moment/cumulant/Pn continuity. FB239/FC240 establish actual all-natural-weight local frequency-integral error of order n^(-7/2); FD241/FE242/FF243 provide global Gaussian polynomial envelopes and faster-than-any-power polynomial tails. FG244-FI246 close the original n^3 log n cutoff gap under0<=beta<2/5 using an explicit d>3 positive weak-Cramer budget, exact same E transport and the earlier middle estimate at arbitrary endpoints. FK248/FL249 give genuine complex negative-phase oscillatory weighted integrability and a Ck/(n^3*sqrt(n)) bound uniform in x and the compact tilt parameter, with n^3-scaled errors tending0 on this FINITE original window. FM250 computes exact1D/2D Gaussian oscillatory integrals with sqrt(pi/b),pi/b normalization. No density/full-R2 characteristic-function integrability/inversion/Hermite identification/smoothing/exterior/B-D root is proved. Existing external attribution, accepted counterexample and disclosed historical legacy own-first-object archive limitations remain; no fictional provenance repair. Root reads all new public interfaces and exact line differences while reusing previously fully read identical canonical packet prefixes; qualified final independent complete proof/type/value/AX evidence is reused. Eighteen exact new sources,45 actual theorem records,0 non-theorem values and18 first successful objects form the changed scope. Only new aggregate and changed-owner AX are checked; all962 prior source modules/objects and old evidence stay exact.
+The single aggregate integration gate PASS gives 980 modules,
+4160 public source theorems,
+8171 namespace theorem constants including generated,
+and 16413 actual owned constants. The batch adds
+18 new module, updates 0 existing module, and adds
+26 public theorems. All 962
+unchanged prior source modules and 1739 unaffected prior project
+artifacts remain exact. All 16368 prior actual owned
+names remain present; all 45 new names are covered by different
+fresh complete reviews. The 18 original successful producer
+objects are reused; only the new aggregate is compiled. There is no producer
+or prior per-module owner-audit replay. The exact aggregate import check passes. Transitive axioms of the changed/affected
+owners pass with propext, Classical.choice and Quot.sound only; unchanged exact
+accepted evidence is reused, with inventories counted separately from new checks.
+Metadata LF copies preserve original hashes and JSON meaning. Counts do not
+imply original root closure.
+The qualified sources, original review seals, failures and first successful objects remain exact.
+Documentation formatting changes, if any, are recorded separately with original/new hashes;
+no producer is recompiled and no old per-module audit is repeated for metadata.

@@ -1,0 +1,84 @@
+DECL Shao.OQ3.normalized_iid_pair_weak_cramer_real_cutoff_bound
+TYPE ∀ (law : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure law] (n : ℕ),
+  1 ≤ n →
+    ∀ (beta c R d : ℝ),
+      0 ≤ beta →
+        0 < 1 + beta / 2 - d * beta →
+          0 < c →
+            0 ≤ R →
+              (∀ (u v : ℝ),
+                  R < √(u ^ 2 + v ^ 2) →
+                    ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                      1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                ∀ (xi eta : ℝ),
+                  √↑n * R < √(xi ^ 2 + eta ^ 2) →
+                    √(xi ^ 2 + eta ^ 2) ≤ (↑n).rpow d →
+                      have Q := MeasureTheory.Measure.pi fun x => law;
+                      have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                      have rho := MeasureTheory.Measure.map S Q;
+                      0 < 1 + beta / 2 - d * beta ∧
+                        ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ ≤
+                          Real.exp (-c * (↑n).rpow (1 + beta / 2 - d * beta))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.normalized_iid_pair_uniform_real_cutoff_far_frequency_decay
+TYPE ∀ (beta c R d p epsilon : ℝ),
+  0 ≤ beta →
+    0 < 1 + beta / 2 - d * beta →
+      0 < c →
+        0 ≤ R →
+          0 < epsilon →
+            ∃ N,
+              1 ≤ N ∧
+                ∀ (n : ℕ),
+                  N ≤ n →
+                    ∀ (law : MeasureTheory.Measure (ℝ × ℝ)),
+                      MeasureTheory.IsProbabilityMeasure law →
+                        (∀ (u v : ℝ),
+                            R < √(u ^ 2 + v ^ 2) →
+                              ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                                1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                          ∀ (xi eta : ℝ),
+                            √↑n * R < √(xi ^ 2 + eta ^ 2) →
+                              √(xi ^ 2 + eta ^ 2) ≤ (↑n).rpow d →
+                                have Q := MeasureTheory.Measure.pi fun x => law;
+                                have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                                have rho := MeasureTheory.Measure.map S Q;
+                                (↑n).rpow p * ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ <
+                                  epsilon
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.normalized_iid_pair_uniform_log_cubic_far_frequency_decay
+TYPE ∀ (beta c R p epsilon : ℝ),
+  0 ≤ beta →
+    beta < 2 / 5 →
+      0 < c →
+        0 ≤ R →
+          0 < epsilon →
+            ∃ N,
+              1 ≤ N ∧
+                ∀ (n : ℕ),
+                  N ≤ n →
+                    ∀ (law : MeasureTheory.Measure (ℝ × ℝ)),
+                      MeasureTheory.IsProbabilityMeasure law →
+                        (∀ (u v : ℝ),
+                            R < √(u ^ 2 + v ^ 2) →
+                              ‖∫ (w : ℝ × ℝ), Complex.exp (↑(u * w.1 + v * w.2) * Complex.I) ∂law‖ ≤
+                                1 - c * (√(u ^ 2 + v ^ 2)).rpow (-beta)) →
+                          ∀ (xi eta : ℝ),
+                            √↑n * R < √(xi ^ 2 + eta ^ 2) →
+                              √(xi ^ 2 + eta ^ 2) ≤ ↑n ^ 3 * Real.log ↑n →
+                                have Q := MeasureTheory.Measure.pi fun x => law;
+                                have S := fun z => (√↑n)⁻¹ • ∑ i, z i;
+                                have rho := MeasureTheory.Measure.map S Q;
+                                (↑n).rpow p * ‖∫ (w : ℝ × ℝ), Complex.exp (↑(xi * w.1 + eta * w.2) * Complex.I) ∂rho‖ <
+                                  epsilon
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.exists_weak_cramer_real_cutoff_above_cubic_log
+TYPE ∀ (beta : ℝ),
+  0 ≤ beta →
+    beta < 2 / 5 →
+      ∃ d, 3 < d ∧ 0 < 1 + beta / 2 - d * beta ∧ ∃ N, 1 ≤ N ∧ ∀ (n : ℕ), N ≤ n → ↑n ^ 3 * Real.log ↑n ≤ (↑n).rpow d
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

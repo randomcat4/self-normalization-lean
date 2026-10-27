@@ -1,0 +1,13 @@
+  classical
+  intro a P B1 B2 B3 B4 B5 B6
+  let W : ℕ → ℕ → ℂ := fun q d =>
+    ∑ sigma : Fin q → Fin 6,
+      if (∑ i, ((sigma i).val + 1)) ≤ d then ∏ i, a (sigma i) else 0
+  have hzero : ∀ d, W 0 d = 1 := (complex_six_letter_cutoff_word_recurrence a).1
+  have hstep : ∀ q d, W (q + 1) d =
+      ∑ j : Fin 6, if j.val + 1 ≤ d then
+        a j * W q (d - (j.val + 1)) else 0 :=
+    (complex_six_letter_cutoff_word_recurrence a).2
+  change (∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) * W q.val 6) = _
+  norm_num [Fin.sum_univ_succ, hstep, hzero, a, B1, B2, B3, B4, B5, B6]
+  <;> ring

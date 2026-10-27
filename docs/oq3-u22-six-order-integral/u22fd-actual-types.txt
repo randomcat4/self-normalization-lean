@@ -1,0 +1,35 @@
+DECL Shao.OQ3.complex_finite_weighted_polynomial_growth_bound
+TYPE ∀ {ι : Type u_1} {τ : Type u_2} [inst : Fintype ι] [inst_1 : Fintype τ] (A : ι → ℝ),
+  (∀ (j : ι), 0 ≤ A j) →
+    ∀ (w : ι → ℕ) (c : τ → ℂ) (p : τ → ι → ℕ) (d : ℕ),
+      (∀ (i : τ), ∑ j, w j * p i j ≤ d) →
+        ∃ K,
+          0 < K ∧
+            ∀ (r : ℝ),
+              0 ≤ r →
+                ∀ (a : ι → ℂ), (∀ (j : ι), ‖a j‖ ≤ A j * r ^ w j) → ‖∑ i, c i * ∏ j, a j ^ p i j‖ ≤ K * (1 + r ^ d)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_order_filtered_polynomial_growth_bound
+TYPE ∀ (A : Fin 6 → ℝ),
+  (∀ (j : Fin 6), 0 ≤ A j) →
+    have P := fun a => ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, a (sigma i) else 0;
+    ∃ K,
+      0 < K ∧
+        ∀ (t r : ℝ),
+          0 ≤ t →
+            t ≤ 1 →
+              0 ≤ r →
+                ∀ (a : Fin 6 → ℂ), (∀ (j : Fin 6), ‖a j‖ ≤ A j * t ^ (↑j + 1) * r ^ (↑j + 3)) → ‖P a‖ ≤ K * (1 + r ^ 18)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_order_filtered_polynomial_growth_bound._proof_1_2
+TYPE ∀ (i : (q : Fin 7) × { sigma // ∑ i, (↑(sigma i) + 1) ≤ 6 }),
+  ∑ i_1, (↑(↑i.snd i_1) + 1) ≤ 6 → ¬∑ l, (↑(↑i.snd l) + 1) + 2 * ↑i.fst ≤ 18 → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_six_order_filtered_polynomial_growth_bound._proof_1_1
+TYPE ∀ (i : (q : Fin 7) × { sigma // ∑ i, (↑(sigma i) + 1) ≤ 6 }) (l : Fin ↑i.fst),
+  ¬↑(↑i.snd l) + 3 = ↑(↑i.snd l) + 1 + 2 → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

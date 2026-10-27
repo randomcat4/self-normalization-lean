@@ -1,0 +1,23 @@
+DECL Shao.OQ3.continuous_actual_cgf_six_order_edgeworth_polynomial
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu) →
+      ∀ (n : ℕ),
+        have X := fun z y => z.1 * y 0 + z.2 * y 1;
+        have kappa := fun k z => iteratedDeriv k (ProbabilityTheory.cgf (X z) mu) 0;
+        have a := fun z j => Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa (↑j + 3) z) / ↑√↑n ^ (↑j + 1);
+        have Pn := fun z =>
+          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) *
+            ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, a z (sigma i) else 0;
+        Continuous Pn
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.continuous_directional_actual_cgf_cumulants
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu) →
+      have X := fun z y => z.1 * y 0 + z.2 * y 1;
+      have kappa := fun k z => iteratedDeriv k (ProbabilityTheory.cgf (X z) mu) 0;
+      ∀ (k : ℕ), Continuous (kappa k)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,55 @@
+theorem uniform_actual_cgf_six_order_gaussian_polynomial_bound
+    {ι : Type*} (law : ι → Measure (Fin 2 → ℝ))
+    (B : Fin 6 → ℝ) (hB : ∀ j, 0 ≤ B j)
+    (hbound : ∀ j : Fin 6, ∀ i : ι, ∀ u v : ℝ,
+      |iteratedDeriv (j.val + 3) (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) (law i)) 0| ≤
+          B j * Real.sqrt (u ^ 2 + v ^ 2) ^ (j.val + 3)) :
+    let X : ι → (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+      fun i z y => z.1 * y 0 + z.2 * y 1
+    let kappa : ι → ℕ → (ℝ × ℝ) → ℝ :=
+      fun i j z => iteratedDeriv j (ProbabilityTheory.cgf (X i z) (law i)) 0
+    let a : ι → ℕ → (ℝ × ℝ) → Fin 6 → ℂ := fun i n z j =>
+      (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa i (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+    let Pn : ι → ℕ → (ℝ × ℝ) → ℂ := fun i n z =>
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2) *
+        ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+          ∑ sigma : Fin q.val → Fin 6,
+            if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a i n z (sigma l) else 0
+    ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, 1 ≤ n → ∀ i : ι, ∀ u v : ℝ,
+      ‖Pn i n (u, v)‖ ≤ C * (1 + Real.sqrt (u ^ 2 + v ^ 2) ^ 18) *
+        Real.exp (-(u ^ 2 + v ^ 2) / 2)
+
+theorem uniform_actual_cgf_six_order_gaussian_polynomial_tail
+    {ι : Type*} (law : ι → Measure (Fin 2 → ℝ))
+    (hprob : ∀ i : ι, IsProbabilityMeasure (law i))
+    (h0 : ∀ i : ι, ∀ u v : ℝ, 0 ∈ interior (ProbabilityTheory.integrableExpSet
+      (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) (law i)))
+    (hM : ∀ i : ι, ∀ k : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) (law i))
+    (B : Fin 6 → ℝ) (hB : ∀ j, 0 ≤ B j)
+    (hbound : ∀ j : Fin 6, ∀ i : ι, ∀ u v : ℝ,
+      |iteratedDeriv (j.val + 3) (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) (law i)) 0| ≤
+          B j * Real.sqrt (u ^ 2 + v ^ 2) ^ (j.val + 3)) :
+    let X : ι → (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+      fun i z y => z.1 * y 0 + z.2 * y 1
+    let kappa : ι → ℕ → (ℝ × ℝ) → ℝ :=
+      fun i j z => iteratedDeriv j (ProbabilityTheory.cgf (X i z) (law i)) 0
+    let a : ι → ℕ → (ℝ × ℝ) → Fin 6 → ℂ := fun i n z j =>
+      (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa i (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+    let Pn : ι → ℕ → (ℝ × ℝ) → ℂ := fun i n z =>
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2) *
+        ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+          ∑ sigma : Fin q.val → Fin 6,
+            if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a i n z (sigma l) else 0
+    ∀ delta : ℝ, 0 < delta → ∀ k : ℕ, ∀ q epsilon : ℝ, 0 < epsilon →
+      ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n → ∀ i : ι,
+        let tail : Set (ℝ × ℝ) := {z |
+          delta * Real.sqrt (n : ℝ) ≤ Real.sqrt (z.1 ^ 2 + z.2 ^ 2)}
+        let f : (ℝ × ℝ) → ℝ := fun z =>
+          Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k * ‖Pn i n z‖
+        IntegrableOn f tail ∧ 0 ≤ (∫ z in tail, f z) ∧
+          Real.rpow (n : ℝ) q * (∫ z in tail, f z) < epsilon
