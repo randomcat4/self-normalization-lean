@@ -1,0 +1,14 @@
+DECL Shao.OQ3.centered_actual_cgf_normalized_octic_polynomial
+TYPE ∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (mu : MeasureTheory.Measure Ω) [MeasureTheory.IsProbabilityMeasure mu]
+  (X : Ω → ℝ),
+  0 ∈ interior (ProbabilityTheory.integrableExpSet X mu) →
+    ∫ (w : Ω), X w ∂mu = 0 →
+      ∀ (n : ℕ),
+        1 ≤ n →
+          have kappa := fun j => iteratedDeriv j (ProbabilityTheory.cgf X mu) 0;
+          have Qn8 := ∑ j ∈ Finset.range 9, Complex.I ^ j / ↑j.factorial * ↑(kappa j) * ↑n / ↑√↑n ^ j;
+          Qn8 =
+            -↑(∫ (w : Ω), X w ^ 2 ∂mu) / 2 +
+              ∑ j ∈ Finset.range 6, Complex.I ^ (j + 3) / ↑(j + 3).factorial * ↑(kappa (j + 3)) / ↑√↑n ^ (j + 1)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,11 @@
+theorem complex_exp_taylor_six_weighted_tail_bound
+    (A : Fin 6 → ℝ) (hA : ∀ j, 0 ≤ A j) :
+    let P : (Fin 6 → ℂ) → ℂ := fun a =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a (sigma i) else 0
+    ∃ K : ℝ, 0 < K ∧ ∀ t r : ℝ, 0 ≤ t → t ≤ 1 → 0 ≤ r →
+      ∀ a : Fin 6 → ℂ,
+        (∀ j, ‖a j‖ ≤ A j * t ^ (j.val + 1) * r ^ (j.val + 3)) →
+        ‖(∑ q : Fin 7, (∑ j, a j) ^ q.val / (q.val.factorial : ℂ)) - P a‖ ≤
+          K * t ^ 7 * (r ^ 9 + r ^ 48)

@@ -1,0 +1,23 @@
+DECL Shao.OQ3.complex_exp_taylor_six_weighted_tail_bound._proof_1_2
+TYPE ∀ (q : Fin 7) (sigma : Fin ↑q → Fin 6), ¬∑ l, (↑(sigma l) + 1) ≤ 6 → ¬7 ≤ ∑ l, (↑(sigma l) + 1) → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_exp_taylor_six_weighted_tail_bound._proof_1_1
+TYPE ∀ (q : Fin 7) (sigma : Fin ↑q → Fin 6), ∑ l, (↑(sigma l) + 1) ≤ 6 → 7 ≤ ∑ l, (↑(sigma l) + 1) → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.complex_exp_taylor_six_weighted_tail_bound
+TYPE ∀ (A : Fin 6 → ℝ),
+  (∀ (j : Fin 6), 0 ≤ A j) →
+    have P := fun a => ∑ q, 1 / ↑(↑q).factorial * ∑ sigma, if ∑ i, (↑(sigma i) + 1) ≤ 6 then ∏ i, a (sigma i) else 0;
+    ∃ K,
+      0 < K ∧
+        ∀ (t r : ℝ),
+          0 ≤ t →
+            t ≤ 1 →
+              0 ≤ r →
+                ∀ (a : Fin 6 → ℂ),
+                  (∀ (j : Fin 6), ‖a j‖ ≤ A j * t ^ (↑j + 1) * r ^ (↑j + 3)) →
+                    ‖∑ q, (∑ j, a j) ^ ↑q / ↑(↑q).factorial - P a‖ ≤ K * t ^ 7 * (r ^ 9 + r ^ 48)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

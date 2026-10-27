@@ -226,6 +226,7 @@ import Shao.C2.UniformGaussianTailPolynomial
 import Shao.C2.UnitSecondEnergyLowerTailPayment
 import Shao.Checks.Boundaries
 import Shao.OQ3.ActualCGFDerivativeScaling
+import Shao.OQ3.ActualCGFNormalizedOcticPolynomial
 import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
@@ -262,7 +263,9 @@ import Shao.OQ3.CompactOpenDomainEdgeworthPolynomialError
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainLogMomentApproximation
 import Shao.OQ3.CompactOpenDomainNormalizedIIDLogExponent
+import Shao.OQ3.CompactOpenDomainNormalizedOcticCGFLogExponent
 import Shao.OQ3.CompactOpenDomainOcticCGFLogRemainder
+import Shao.OQ3.CompactOpenDomainOcticExponentialError
 import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
@@ -285,9 +288,12 @@ import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CompactTiltWhitenedFamily
 import Shao.OQ3.ComplexExpAddError
+import Shao.OQ3.ComplexGaussianSixOrderPolynomialError
 import Shao.OQ3.ComplexLogTaylorOcticCorrection
 import Shao.OQ3.ComplexLogTaylorPerturbation
 import Shao.OQ3.ComplexLogTaylorQuarticCorrection
+import Shao.OQ3.ComplexSixOrderFilteredPolynomial
+import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
@@ -301,6 +307,7 @@ import Shao.OQ3.FiniteNormalSpan
 import Shao.OQ3.FinitePrefixLaw
 import Shao.OQ3.FiniteStageMeasure
 import Shao.OQ3.FiniteStageRate
+import Shao.OQ3.FiniteWordMonomialEncoding
 import Shao.OQ3.FundamentalFourierAsymptotic
 import Shao.OQ3.GaussianBoundaryConstant
 import Shao.OQ3.GaussianBoundaryLaplaceMixture
@@ -779,6 +786,7 @@ import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
+import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSelfNormalizedTail

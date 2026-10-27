@@ -1,0 +1,224 @@
+FILE .lake/packages/mathlib/Mathlib/Probability/Moments/Basic.lean SHA256 73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa
+
+TOP CONTEXT
+
+/-
+Copyright (c) 2022 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
+module
+
+public import Mathlib.Probability.IdentDistrib
+
+import Mathlib.Probability.Independence.Integration
+
+/-!
+# Moments and moment-generating function
+
+## Main definitions
+
+* `ProbabilityTheory.moment X p μ`: `p`th moment of a real random variable `X` with respect to
+  measure `μ`, `μ[X^p]`
+* `ProbabilityTheory.centralMoment X p μ`:`p`th central moment of `X` with respect to measure `μ`,
+  `μ[(X - μ[X])^p]`
+* `ProbabilityTheory.mgf X μ t`: moment-generating function of `X` with respect to measure `μ`,
+  `μ[exp(t*X)]`
+* `ProbabilityTheory.cgf X μ t`: cumulant-generating function, logarithm of the moment-generating
+  function
+
+## Main results
+
+* `ProbabilityTheory.IndepFun.mgf_add`: if two real random variables `X` and `Y` are independent
+  and their moment-generating functions are defined at `t`, then
+  `mgf (X + Y) μ t = mgf X μ t * mgf Y μ t`
+* `ProbabilityTheory.IndepFun.cgf_add`: if two real random variables `X` and `Y` are independent
+  and their cumulant-generating functions are defined at `t`, then
+  `cgf (X + Y) μ t = cgf X μ t + cgf Y μ t`
+* `ProbabilityTheory.measure_ge_le_exp_cgf` and `ProbabilityTheory.measure_le_le_exp_cgf`:
+  Chernoff bound on the upper (resp. lower) tail of a random variable. For `t` nonnegative such that
+  the cumulant-generating function exists, `ℙ(ε ≤ X) ≤ exp(- t*ε + cgf X ℙ t)`. See also
+  `ProbabilityTheory.measure_ge_le_exp_mul_mgf` and
+  `ProbabilityTheory.measure_le_le_exp_mul_mgf` for versions of these results using `mgf` instead
+  of `cgf`.
+-/
+
+@[expose] public section
+
+
+open MeasureTheory Filter Finset Real
+
+noncomputable section
+
+open scoped MeasureTheory ProbabilityTheory ENNReal NNReal
+
+namespace ProbabilityTheory
+
+variable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}
+
+/-- Moment of a real random variable, `μ[X ^ p]`. -/
+def moment (X : Ω → ℝ) (p : ℕ) (μ : Measure Ω) : ℝ :=
+  μ[X ^ p]
+
+lemma moment_def (X : Ω → ℝ) (p : ℕ) (μ : Measure Ω) :
+    moment X p μ = μ[X ^ p] := rfl
+
+ACTIVE CONTEXT LINES BEFORE mgf_zero
+
+namespace ProbabilityTheory
+variable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}
+section MomentGeneratingFunction
+variable {t : ℝ}
+
+COMPLETE DECLARATION mgf_zero
+
+theorem mgf_zero [IsProbabilityMeasure μ] : mgf X μ 0 = 1 := by
+  simp [mgf_zero']
+
+
+ACTIVE CONTEXT LINES BEFORE cgf_zero
+
+namespace ProbabilityTheory
+variable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}
+section MomentGeneratingFunction
+variable {t : ℝ}
+
+COMPLETE DECLARATION cgf_zero
+
+theorem cgf_zero [IsZeroOrProbabilityMeasure μ] : cgf X μ 0 = 0 := by
+  rcases eq_zero_or_isProbabilityMeasure μ with rfl | h <;> simp [cgf_zero']
+
+
+FILE .lake/packages/mathlib/Mathlib/Probability/Moments/MGFAnalytic.lean SHA256 4cd9ee9d7724459443aef04ad083267bc1e11da13a98b28b6cf59bee9dbb94c2
+
+TOP CONTEXT
+
+/-
+Copyright (c) 2025 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne
+-/
+module
+
+public import Mathlib.Probability.Moments.ComplexMGF
+
+import Mathlib.Analysis.Calculus.Taylor
+import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+
+/-!
+# The moment-generating function is analytic
+
+The moment-generating function `mgf X μ` of a random variable `X` with respect to a measure `μ`
+is analytic on the interior of `integrableExpSet X μ`, the interval on which it is defined.
+
+## Main results
+
+* `analyticOn_mgf`: the moment-generating function is analytic on the interior of the interval
+  on which it is defined.
+* `iteratedDeriv_mgf`: the n-th derivative of the mgf at `t` is `μ[X ^ n * exp (t * X)]`.
+
+* `analyticOn_cgf`: the cumulant-generating function is analytic on the interior of the interval
+  `integrableExpSet X μ`.
+
+-/
+
+public section
+
+
+open MeasureTheory Filter Real
+
+open scoped MeasureTheory ProbabilityTheory ENNReal NNReal Topology Nat
+
+namespace ProbabilityTheory
+
+variable {Ω : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω} {t u v : ℝ}
+
+/-- For `t : ℝ` with `t ∈ interior (integrableExpSet X μ)`, the derivative of the function
+`x ↦ μ[X ^ n * exp (x * X)]` at `t` is `μ[X ^ (n + 1) * exp (t * X)]`. -/
+lemma hasDerivAt_integral_pow_mul_exp_real (ht : t ∈ interior (integrableExpSet X μ)) (n : ℕ) :
+    HasDerivAt (fun t ↦ μ[fun ω ↦ X ω ^ n * exp (t * X ω)])
+      μ[fun ω ↦ X ω ^ (n + 1) * exp (t * X ω)] t := by
+  have h_re_of_mem n t (ht' : t ∈ interior (integrableExpSet X μ)) :
+      (∫ ω, X ω ^ n * Complex.exp (t * X ω) ∂μ).re = ∫ ω, X ω ^ n * exp (t * X ω) ∂μ := by
+    rw [← RCLike.re_eq_complex_re, ← integral_re]
+    · norm_cast
+    · refine integrable_pow_mul_cexp_of_re_mem_interior_integrableExpSet ?_ n
+      simpa using ht'
+  have h_re n : ∀ᶠ t' : ℝ in 𝓝 t, (∫ ω, X ω ^ n * Complex.exp (t' * X ω) ∂μ).re
+      = ∫ ω, X ω ^ n * exp (t' * X ω) ∂μ := by
+    filter_upwards [isOpen_interior.eventually_mem ht] with t ht' using h_re_of_mem n t ht'
+  rw [← EventuallyEq.hasDerivAt_iff (h_re _), ← h_re_of_mem _ t ht]
+  exact (hasDerivAt_integral_pow_mul_exp (by simp [ht]) n).real_of_complex
+
+section DerivMGF
+
+/-- For `t ∈ interior (integrableExpSet X μ)`, the derivative of `mgf X μ` at `t` is
+
+ACTIVE CONTEXT LINES BEFORE deriv_cgf_zero
+
+namespace ProbabilityTheory
+variable {Ω : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω} {t u v : ℝ}
+section DerivMGF
+end DerivMGF
+section AnalyticMGF
+end AnalyticMGF
+section AnalyticCGF
+end AnalyticCGF
+section DerivCGF
+
+COMPLETE DECLARATION deriv_cgf_zero
+
+lemma deriv_cgf_zero (h : 0 ∈ interior (integrableExpSet X μ)) :
+    deriv (cgf X μ) 0 = μ[X] / μ.real Set.univ := by simp [deriv_cgf h]
+
+
+ACTIVE CONTEXT LINES BEFORE iteratedDeriv_two_cgf
+
+namespace ProbabilityTheory
+variable {Ω : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω} {t u v : ℝ}
+section DerivMGF
+end DerivMGF
+section AnalyticMGF
+end AnalyticMGF
+section AnalyticCGF
+end AnalyticCGF
+section DerivCGF
+
+COMPLETE DECLARATION iteratedDeriv_two_cgf
+
+lemma iteratedDeriv_two_cgf (h : v ∈ interior (integrableExpSet X μ)) :
+    iteratedDeriv 2 (cgf X μ) v
+      = μ[fun ω ↦ (X ω) ^ 2 * exp (v * X ω)] / mgf X μ v - deriv (cgf X μ) v ^ 2 := by
+  rw [iteratedDeriv_succ, iteratedDeriv_one]
+  by_cases hμ : μ = 0
+  · simp [hμ]
+  have h_mem : ∀ᶠ y in 𝓝 v, y ∈ interior (integrableExpSet X μ) :=
+    isOpen_interior.eventually_mem h
+  have h_d_cgf : deriv (cgf X μ) =ᶠ[𝓝 v] fun u ↦ μ[fun ω ↦ X ω * exp (u * X ω)] / mgf X μ u := by
+    filter_upwards [h_mem] with u hu using deriv_cgf hu
+  have h_d_mgf : deriv (mgf X μ) =ᶠ[𝓝 v] fun u ↦ μ[fun ω ↦ X ω * exp (u * X ω)] := by
+    filter_upwards [h_mem] with u hu using deriv_mgf hu
+  rw [h_d_cgf.deriv_eq]
+  calc deriv (fun u ↦ (∫ ω, X ω * exp (u * X ω) ∂μ) / mgf X μ u) v
+  _ = (deriv (fun u ↦ ∫ ω, X ω * exp (u * X ω) ∂μ) v * mgf X μ v -
+      (∫ ω, X ω * exp (v * X ω) ∂μ) * deriv (mgf X μ) v) / mgf X μ v ^ 2 := by
+    rw [deriv_fun_div]
+    · rw [h_d_mgf.symm.differentiableAt_iff, ← iteratedDeriv_one]
+      exact differentiableAt_iteratedDeriv_mgf h 1
+    · exact differentiableAt_mgf h
+    · exact (mgf_pos' hμ (interior_subset (s := integrableExpSet X μ) h)).ne'
+  _ = (deriv (fun u ↦ ∫ ω, X ω * exp (u * X ω) ∂μ) v * mgf X μ v -
+      (∫ ω, X ω * exp (v * X ω) ∂μ) * ∫ ω, X ω * exp (v * X ω) ∂μ) / mgf X μ v ^ 2 := by
+    rw [deriv_mgf h]
+  _ = deriv (fun u ↦ ∫ ω, X ω * exp (u * X ω) ∂μ) v / mgf X μ v - deriv (cgf X μ) v ^ 2 := by
+    rw [sub_div]
+    congr 1
+    · rw [pow_two, div_mul_eq_div_div, mul_div_assoc, div_self, mul_one]
+      exact (mgf_pos' hμ (interior_subset (s := integrableExpSet X μ) h)).ne'
+    · rw [deriv_cgf h]
+      ring
+  _ = (∫ ω, (X ω) ^ 2 * exp (v * X ω) ∂μ) / mgf X μ v - deriv (cgf X μ) v ^ 2 := by
+    congr
+    convert (hasDerivAt_integral_pow_mul_exp_real h 1).deriv using 1
+    simp
+

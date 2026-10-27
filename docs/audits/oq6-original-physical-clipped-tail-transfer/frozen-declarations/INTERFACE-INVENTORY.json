@@ -1,0 +1,893 @@
+{
+  "schema": "oq56-unit239-lead-frozen-physical-clipped-transfer-interface-v1",
+  "atUTC": "2026-10-27T16:32:48.481309+00:00",
+  "status": "FROZEN_BEFORE_PROOF",
+  "owner": "/root/oq56_physical_clipped_tail239_stage1_author",
+  "proposedModule": "Shao.OQ6.OriginalPhysicalClippedTailTransfer",
+  "candidate": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-physical-clipped-tail-transfer-planned/author-stage1-01/CANDIDATE-DECLARATION.lean",
+    "sha256": "27f65eeb35c3371ab2ebeb68413c4fcfd4713cbf5c1b813ac1e5eeb954f9d13b",
+    "bytes": 5140
+  },
+  "prospectiveHeads": [
+    {
+      "name": "physical_clipped_globally_measurable",
+      "head": "theorem physical_clipped_globally_measurable\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (n : ℕ) (g : Ω → ℝ) (r : Ω → Ω → ℝ)\n    (hg : Measurable g) (hr : Measurable (Function.uncurry r))\n    (C0 rho y : ℝ) :\n    let physical : (Fin n → Ω) → ℝ := fun x : Fin n → Ω =>\n      if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n        (projectionW n g x + residualStatisticD n r x) /\n          Real.sqrt (centeredSq n g r x)\n    let clipped : (Fin n → Ω) → ℝ :=\n      clippedCenteredStatistic n g r C0 rho y\n    let Eclip : Set (Fin n → Ω) := {x : Fin n → Ω | clipped x ≠ physical x}\n    Measurable physical ∧ Measurable clipped ∧ MeasurableSet Eclip",
+      "kind": "new pure finite-geometry helper; no probabilistic assumptions"
+    },
+    {
+      "name": "fixed_original_physical_clipped_closed_threshold_transfer",
+      "head": "theorem fixed_original_physical_clipped_closed_threshold_transfer\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ)\n        (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) (hM : 0 ≤ M),\n        let cCommon : ℝ :=\n          min (remainderWindowScale (tailScale M) t0)\n            (min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)))\n        0 < cCommon ∧\n          ∀ᶠ n : ℕ in atTop,\n            4 ≤ n ∧\n              (1 : ℝ) ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ) ∧\n              ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n                (hr : Measurable (Function.uncurry r))\n                (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n                (hcR : ∀ᵐ o : Ω ∂μ, (∫ o' : Ω, r o o' ∂μ) = 0)\n                (hcL : ∀ᵐ o' : Ω ∂μ, (∫ o : Ω, r o o' ∂μ) = 0)\n                (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n                (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n                (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n                (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n                (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n                  |r p.1 p.2| ≤ w p.1 * w p.2)\n                (hsym : ∀ o o' : Ω, r o o' = r o' o)\n                (rho : ℝ) (hrho : 0 ≤ rho)\n                (hStudentizerWindow : 1 + rho ≤ Real.sqrt (n : ℝ))\n                (z : ℝ) (hz : (1 : ℝ) ≤ z)\n                (hzWindow : z ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n                let q : ℝ := boundedPolylogMomentOrder t0 n\n                let physical : (Fin n → Ω) → ℝ := fun x : Fin n → Ω =>\n                  if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n                    (projectionW n g x + residualStatisticD n r x) /\n                      Real.sqrt (centeredSq n g r x)\n                let clipped : (Fin n → Ω) → ℝ :=\n                  clippedCenteredStatistic n g r 512 rho 1\n                let Eclip : Set (Fin n → Ω) := {x : Fin n → Ω | clipped x ≠ physical x}\n                Measurable physical ∧ Measurable clipped ∧ MeasurableSet Eclip ∧\n                  (sampleLaw n μ).real Eclip ≤\n                    (6 : ℝ) * Real.exp (-q) +\n                      (2 : ℝ) * Real.exp (-cg * (n : ℝ)) +\n                      (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) ∧\n                  (sampleLaw n μ).real Eclip ≤\n                    Real.exp (-(t0 / (2 : ℝ)) *\n                      Real.rpow (n : ℝ) (1 / 3 : ℝ)) * Shao.standardNormalTail z ∧\n                  (∀ t : ℝ,\n                    |(sampleLaw n μ).real {x : Fin n → Ω | t ≤ physical x} -\n                        (sampleLaw n μ).real {x : Fin n → Ω | t ≤ clipped x}| ≤\n                      (sampleLaw n μ).real Eclip ∧\n                    |(sampleLaw n μ).real {x : Fin n → Ω | physical x ≤ t} -\n                        (sampleLaw n μ).real {x : Fin n → Ω | clipped x ≤ t}| ≤\n                      (sampleLaw n μ).real Eclip)",
+      "kind": "small original-assumption physical/retained probability transfer"
+    }
+  ],
+  "quantifierOrder": {
+    "main": "Ω,mΩ,μ,IsProbabilityMeasure μ,g,hg,hg2,hgmean,hgsecond; ∃cg>0 before C/a/t0/M; cCommon before eventually n; cutoff before all r/w/hr/hr1/hcR/hcL/hW/hWR/hSq/hSqBound/hEnv/hsym/rho/hrho/hStudentizerWindow/z/hz/hzWindow; final ∀t:ℝ unrestricted",
+    "cutoffIndependentOf": [
+      "r",
+      "w",
+      "rho",
+      "z",
+      "t"
+    ],
+    "cgIndependentOf": [
+      "C",
+      "a",
+      "t0",
+      "M",
+      "n",
+      "r",
+      "w",
+      "rho",
+      "z",
+      "t"
+    ],
+    "cCommonIndependentOf": [
+      "μ",
+      "g",
+      "r",
+      "w",
+      "rho",
+      "n",
+      "z",
+      "t"
+    ],
+    "helper": "arbitrary n,C0,rho,y; hg/hr only; no n≥4, positivity, integrability, symmetry or canonical premise needed for measurability"
+  },
+  "resultOrdinaryData": [
+    {
+      "name": "cCommon",
+      "type": "ℝ",
+      "rhs": "min (remainderWindowScale (tailScale M) t0) (min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)))",
+      "scope": "after C a t0 M, before eventual n and all r w rho z t",
+      "origin": "exact qualified237 public ordinary RHS"
+    },
+    {
+      "name": "q",
+      "type": "ℝ",
+      "rhs": "boundedPolylogMomentOrder t0 n",
+      "scope": "main result"
+    },
+    {
+      "name": "physical",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => if Real.sqrt (centeredSq n g r x) = 0 then 0 else (projectionW n g x + residualStatisticD n r x) / Real.sqrt (centeredSq n g r x)",
+      "scope": "both prospective heads; same exact physical zero branch as237"
+    },
+    {
+      "name": "clipped",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "clippedCenteredStatistic n g r 512 rho 1",
+      "helperRHS": "clippedCenteredStatistic n g r C0 rho y",
+      "scope": "main result; helper generalizes constants only for pure measurability"
+    },
+    {
+      "name": "Eclip",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | clipped x ≠ physical x}",
+      "scope": "both prospective heads; literal actual disagreement"
+    }
+  ],
+  "plannedProofLocalOrdinaryData": [
+    {
+      "name": "Pn",
+      "type": "Measure (Fin n → Ω)",
+      "rhs": "sampleLaw n μ",
+      "scope": "main proof-local; no pushforward/new law"
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "rhs": "tailScale M",
+      "scope": "main proof-local237 matching"
+    },
+    {
+      "name": "Gz",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "projectionGood n g z",
+      "scope": "main proof-local237 matching"
+    },
+    {
+      "name": "C2",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x| ≤ K * (n : ℝ) * q ∧ ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r x‖ ^ (2 : ℕ) ≤ K * (n : ℝ) ^ (2 : ℕ) * q}",
+      "scope": "main proof-local237 matching"
+    },
+    {
+      "name": "H",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "Gz ∩ C2",
+      "scope": "main proof-local237 matching; MeasurableSet H is237 conclusion"
+    },
+    {
+      "name": "J",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "H \\ Eclip",
+      "scope": "main proof-local237 matching; not a new public invariant"
+    },
+    {
+      "name": "Aupper",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | t ≤ physical x}",
+      "scope": "fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Bupper",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | t ≤ clipped x}",
+      "scope": "fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Alower",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | physical x ≤ t}",
+      "scope": "fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Blower",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | clipped x ≤ t}",
+      "scope": "fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "gcoord",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i : Fin n) (x : Fin n → Ω) => g (x i)",
+      "scope": "helper proof-local finite geometry"
+    },
+    {
+      "name": "rcoord",
+      "type": "Fin n → Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i j : Fin n) (x : Fin n → Ω) => r (x i) (x j)",
+      "scope": "helper proof-local finite geometry"
+    },
+    {
+      "name": "W",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "projectionW n g",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "V",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "projectionV n g",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "residualStatisticD n r",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "Jenergy",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "residualEnergyJ n r",
+      "scope": "helper proof-local; distinct from set J"
+    },
+    {
+      "name": "s2",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "centeredSq n g r",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "s",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => Real.sqrt (s2 x)",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "d",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "centeredDelta n g r",
+      "scope": "helper proof-local; exact V=0 branch retained"
+    },
+    {
+      "name": "B",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "studentizerClipBudget n r C0 rho y",
+      "scope": "helper proof-local"
+    },
+    {
+      "name": "e",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "clippedCenteredDelta n g r C0 rho y",
+      "scope": "helper proof-local"
+    }
+  ],
+  "ordinaryDataAreProspectiveOnly": true,
+  "newInstances": [],
+  "newStructures": [],
+  "newDefinitions": [],
+  "callbacks": [],
+  "modelWitnesses": [],
+  "hiddenPremises": [],
+  "instancesAndContexts": {
+    "candidateLiteralPreamble": "/- PROSPECTIVE HEADS ONLY. Stage1 source/API/interface proposal.\n   No proof body, declaration freeze, Lean command or qualification is supplied.\n   These two exact heads are separated by comments and intentionally lack bodies.\n   Only the lane lead may adopt/freeze a declaration for implementation. -/\n\nimport Shao.OQ6.ActualGoodsetPhysicalUnion\nimport Mathlib.MeasureTheory.Measure.Typeclasses.Finite\nimport Mathlib.MeasureTheory.Function.SpecialFunctions.Basic\nimport Mathlib.MeasureTheory.Constructions.BorelSpace.Order\nimport Mathlib.MeasureTheory.Constructions.BorelSpace.Metric\nimport Mathlib.MeasureTheory.Group.Arithmetic\n\nset_option autoImplicit false\nuniverse u\nopen Filter MeasureTheory\nopen scoped BigOperators Classical ENNReal symmDiff\nopen Shao.OQ5.P51\nopen Shao.OQ6.BoundedProductEnvelopeTails (tailScale)\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (sampleLaw)\n\nnamespace Shao.OQ6.OriginalPhysicalClippedTailTransfer\nnoncomputable section\n\n",
+    "standardInstances": [
+      "MeasurableSpace (Fin n → Ω) = coordinate product measurable space",
+      "MeasurableSpace (Ω × Ω) = product measurable space",
+      "ℝ Borel measurable space / MeasurableEq / measurable arithmetic / order topology / second countability",
+      "Fintype (Fin n), decidable finite index comparisons/erase",
+      "Classical.propDecidable for literal zero branches",
+      "IsProbabilityMeasure Pn from Measure.pi; IsFiniteMeasure Pn by standard probability instance"
+    ],
+    "proofLocalExplicitInstance": "letI instPn : IsProbabilityMeasure Pn := inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ)))",
+    "absence": [
+      "no StandardBorelSpace Ω",
+      "no TopologicalSpace Ω",
+      "no Inhabited Ω",
+      "no Measurable w",
+      "no atom-free law",
+      "no new source-CDF witness"
+    ]
+  },
+  "producerInterfaces": {
+    "237": {
+      "status": "QUALIFIED EXACT existing public interface reused only; no accepted proof review/check replay",
+      "fullPublicHeadWithContext": "import Shao.OQ6.P54ActualGoodsetFrontier\nimport Shao.OQ6.OriginalRetainedClipComparisonPayment\nimport Shao.OQ6.OriginalExceptionalTailAbsorption\nimport Mathlib.MeasureTheory.Measure.Real\n\nset_option autoImplicit false\nuniverse u\nopen Filter MeasureTheory\nopen scoped BigOperators Classical ENNReal\nopen Shao.OQ5.P51\nopen Shao.OQ6.BoundedProductEnvelopeTails (tailScale)\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (sampleLaw originalRows)\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ6.ActualGoodsetPhysicalUnion\nnoncomputable section\n\ntheorem fixed_original_goodset_physical_exceptional_union\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ)\n        (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) (hM : 0 ≤ M),\n        let cCommon : ℝ :=\n          min (remainderWindowScale (tailScale M) t0)\n            (min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)))\n        0 < cCommon ∧\n          ∀ᶠ n : ℕ in atTop,\n            4 ≤ n ∧\n              (1 : ℝ) ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ) ∧\n              ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n                (hr : Measurable (Function.uncurry r))\n                (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n                (hcR : ∀ᵐ o : Ω ∂μ, (∫ o' : Ω, r o o' ∂μ) = 0)\n                (hcL : ∀ᵐ o' : Ω ∂μ, (∫ o : Ω, r o o' ∂μ) = 0)\n                (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n                (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n                (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n                (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n                (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n                  |r p.1 p.2| ≤ w p.1 * w p.2)\n                (hsym : ∀ o o' : Ω, r o o' = r o' o)\n                (rho : ℝ) (hrho : 0 ≤ rho)\n                (hStudentizerWindow : 1 + rho ≤ Real.sqrt (n : ℝ))\n                (z : ℝ) (hz : (1 : ℝ) ≤ z)\n                (hzWindow : z ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n                let q : ℝ := boundedPolylogMomentOrder t0 n\n                let K : ℝ := tailScale M\n                let Gz : Set (Fin n → Ω) := projectionGood n g z\n                let C2 : Set (Fin n → Ω) :=\n                  {x : Fin n → Ω |\n                    |originalUpper n r x| ≤ K * (n : ℝ) * q ∧\n                    ‖originalRows n r x‖ ^ (2 : ℕ) ≤\n                      K * (n : ℝ) ^ (2 : ℕ) * q}\n                let H : Set (Fin n → Ω) := Gz ∩ C2\n                let e1 : (Fin n → Ω) → ℝ :=\n                  fun x : Fin n → Ω => clippedCenteredDelta n g r 512 rho 1 x\n                let physical : (Fin n → Ω) → ℝ := fun x : Fin n → Ω =>\n                  if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n                    (projectionW n g x + residualStatisticD n r x) /\n                      Real.sqrt (centeredSq n g r x)\n                let clipped : (Fin n → Ω) → ℝ :=\n                  clippedCenteredStatistic n g r 512 rho 1\n                let Eclip : Set (Fin n → Ω) := {x : Fin n → Ω | clipped x ≠ physical x}\n                let J : Set (Fin n → Ω) := H \\ Eclip\n                MeasurableSet H ∧\n                  (∀ x : Fin n → Ω, x ∈ H →\n                    0 < projectionV n g x ∧\n                    (1 / 2 : ℝ) ≤ projectionEnergy n g x ∧\n                    z * |residualStatisticD n r x| ≤ projectionV n g x / 8 ∧\n                    z * |residualStatisticD n r x| < projectionV n g x / 4 ∧\n                    z ^ (2 : ℕ) * |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                    |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                    -(1 / 8 : ℝ) < centeredDelta n g r x ∧\n                    |e1 x| ≤ |centeredDelta n g r x| ∧\n                    z ^ (2 : ℕ) * |e1 x| ≤ (1 / 32 : ℝ) ∧\n                    z ^ (2 : ℕ) * |e1 x| < (1 / 8 : ℝ) ∧\n                    |e1 x| ≤ (1 / 32 : ℝ) ∧\n                    0 < projectionV n g x * Real.sqrt (1 + e1 x) ∧\n                    0 < Real.sqrt (centeredSq n g r x) ∧\n                    Real.sqrt (centeredSq n g r x) =\n                      projectionV n g x * Real.sqrt (1 + centeredDelta n g r x)) ∧\n                  (∀ x : Fin n → Ω, x ∈ J → clipped x = physical x) ∧\n                  (({x : Fin n → Ω | projectionV n g x = 0} ∪\n                      {x : Fin n → Ω | Real.sqrt (centeredSq n g r x) = 0}) ⊆ Jᶜ) ∧\n                  (Eclip ⊆ (projectionGood n g 1)ᶜ ∪ lowerStudentizerBad n g r 1) ∧\n                  Jᶜ = Hᶜ ∪ Eclip ∧\n                  (sampleLaw n μ).real Jᶜ ≤\n                    (6 : ℝ) * Real.exp (-q) +\n                      (2 : ℝ) * Real.exp (-cg * (n : ℝ)) +\n                      (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) ∧\n                  (sampleLaw n μ).real Jᶜ ≤\n                    Real.exp (-(t0 / (2 : ℝ)) *\n                      Real.rpow (n : ℝ) (1 / 3 : ℝ)) * Shao.standardNormalTail z",
+      "qualificationBinding": {
+        "path": "C:/game/shao lean/drafts/oq56/unit237/qualified-evidence.json",
+        "sha256": "dfad25cda831c481aa5a35389832dee26fd199703b77d98e529d3385a9b223ac",
+        "bytes": 9505
+      },
+      "sourceBinding": {
+        "path": "C:/game/shao lean/drafts/oq56/unit237/author-01/ActualGoodsetPhysicalUnion.lean",
+        "sha256": "820ccf9502dc14e42037f1cf24327271b96b75ce573e319af125df0e5f62b146",
+        "bytes": 12895
+      },
+      "actualQualifiedTypeReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit237/owner-evidence-01/actual-owned-types.txt",
+        "sha256": "31b6f0bf71b988fbe2b4fbd9e1b9c2c0793d6d6ac5d31e7be87a248267d1245c",
+        "bytes": 48297
+      },
+      "nativeRC": 0,
+      "sameFirstOriginalObjectAuditRC": 0,
+      "allTYPElines": 591,
+      "newProofConsumed": false
+    },
+    "220": {
+      "status": "qualified existing implementation consulted for finite-geometry API usage only; public normalized h-model head is NOT an input for arbitrary original g/r",
+      "fullPublicHeadWithContext": "import Shao.OQ6.ActualQuadraticTiltMoments\nimport Shao.OQ5.P51.ClippedDeletionEnvelope\n\nset_option autoImplicit false\n\nuniverse u\n\nopen MeasureTheory\nopen scoped BigOperators MeasureTheory ENNReal\nopen Shao.OQ5.P51\n\nnamespace Shao.OQ6.OriginalClippedStatisticMeasurable\n\nnoncomputable section\n\ntheorem actual_normalized_compact_clipped_observables\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)\n    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧\n      Measurable A ∧ Measurable B1 ∧\n      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧\n      Measurable Tclip ∧ Measurable Tactual ∧\n      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧\n      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧\n      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n      (∀ ξ : Fin n → Ω, V ξ = 0 →\n        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))",
+      "use": "shows exact finite sums/rows/jackknife/arithmetic measurability route; new helper starts from genuine hg/hr and does not invoke220 with extra h-model assumptions"
+    },
+    "235": {
+      "status": "qualified literal comparison source/background only; not separately reopened and not needed as additional existential cg input",
+      "publicHeadWithContext": "import Shao.OQ5.P51.LiteralClippedComparison\nimport Shao.OQ6.OriginalGoodEventBridge\nimport Mathlib.MeasureTheory.Measure.Real\n\nset_option autoImplicit false\nuniverse u\nopen Filter MeasureTheory\nopen scoped BigOperators Classical ENNReal\nopen Shao.OQ5.P51\nopen Shao.OQ6.BoundedProductEnvelopeTails (tailScale)\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (sampleLaw)\nnamespace Shao.OQ6.OriginalRetainedClipComparisonPayment\nnoncomputable section\n\ntheorem fixed_original_retained_clip_comparison_payment\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ) (hC : 0 ≤ C) (ha : 0 ≤ a)\n        (ht0 : 0 < t0) (hM : 0 ≤ M),\n        ∀ᶠ n : ℕ in atTop,\n          4 ≤ n ∧\n          ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n            (hr : Measurable (Function.uncurry r))\n            (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n            (hcR : ∀ᵐ o : Ω ∂μ, (∫ y : Ω, r o y ∂μ) = 0)\n            (hcL : ∀ᵐ y : Ω ∂μ, (∫ o : Ω, r o y ∂μ) = 0)\n            (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n            (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n            (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n            (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n            (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n              |r p.1 p.2| ≤ w p.1 * w p.2)\n            (hsym : ∀ o y : Ω, r o y = r y o)\n            (rho : ℝ) (hrho : 0 ≤ rho)\n            (hStudentizerWindow : 1 + rho ≤ Real.sqrt (n : ℝ))\n            (hSmallWindow : (1 : ℝ) ≤ remainderWindowScale (tailScale M) t0 *\n              Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n            let q : ℝ := boundedPolylogMomentOrder t0 n\n            let physical : (Fin n → Ω) → ℝ := fun x =>\n              if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n                (projectionW n g x + residualStatisticD n r x) /\n                  Real.sqrt (centeredSq n g r x)\n            let clipped : (Fin n → Ω) → ℝ :=\n              clippedCenteredStatistic n g r 512 rho 1\n            let Eclip : Set (Fin n → Ω) := {x | clipped x ≠ physical x}\n            Eclip ⊆ (projectionGood n g 1)ᶜ ∪ lowerStudentizerBad n g r 1 ∧\n              (sampleLaw n μ).real Eclip ≤\n                (3 : ℝ) * Real.exp (-q) + Real.exp (-cg * (n : ℝ)) +\n                  (4 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ))"
+    }
+  },
+  "importedActualDefinitionInventory": [
+    {
+      "name": "Shao.OQ5.P51.boundedPolylogHeight",
+      "fullParametersAndResultType": "(C a : ℝ) (n : ℕ) : ℝ",
+      "rhs": "C * Real.rpow (Real.log (n : ℝ)) a",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedPolylogWindow.lean:29",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.boundedPolylogMomentOrder",
+      "fullParametersAndResultType": "(t0 : ℝ) (n : ℕ) : ℝ",
+      "rhs": "t0 * Real.rpow (n : ℝ) (1 / 3 : ℝ)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedPolylogWindow.lean:32",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.BoundedProductEnvelopeTails.envelopeTailScale",
+      "fullParametersAndResultType": "(M : ℝ) : ℝ",
+      "rhs": "4 * M + 8",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/BoundedProductEnvelopeTails.lean:42",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.BoundedProductEnvelopeTails.squareTailScale",
+      "fullParametersAndResultType": "(M : ℝ) : ℝ",
+      "rhs": "Real.exp 1 * (M + 1)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/BoundedProductEnvelopeTails.lean:47",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.BoundedProductEnvelopeTails.scalarTailScale",
+      "fullParametersAndResultType": "(M : ℝ) : ℝ",
+      "rhs": "8 * Real.exp 1 * envelopeTailScale M",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/BoundedProductEnvelopeTails.lean:52",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.BoundedProductEnvelopeTails.rowTailScale",
+      "fullParametersAndResultType": "(M : ℝ) : ℝ",
+      "rhs": "8 * (Real.exp 1) ^ 2 * (envelopeTailScale M) ^ 2",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/BoundedProductEnvelopeTails.lean:57",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.BoundedProductEnvelopeTails.tailScale",
+      "fullParametersAndResultType": "(M : ℝ) : ℝ",
+      "rhs": "max (squareTailScale M) (max (scalarTailScale M) (rowTailScale M))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/BoundedProductEnvelopeTails.lean:62",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.CanonicalDoubleGhostRowMoments.sampleLaw",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type*} [mΩ : MeasurableSpace Ω] (ν : Measure Ω) : Measure (Fin n → Ω)",
+      "rhs": "Measure.pi (fun _ : Fin n => ν)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostRowMoments.lean:19",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type*} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : EuclideanSpace ℝ (Fin n)",
+      "rhs": "WithLp.toLp (2 : ℝ≥0∞) (V := Fin n → ℝ) (fun i : Fin n => ∑ j : Fin n, if i = j then 0 else r (x i) (x j))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostRowMoments.lean:23",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type*} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "∑ i : Fin n, ∑ j : Fin n, if i < j then r (x i) (x j) else 0",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostScalarMoments.lean:31",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.sampledKernel",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : Fin n → Fin n → ℝ",
+      "rhs": "fun (i j : Fin n) => g (x i) + g (x j) + r (x i) (x j)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:30",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.projectionEnergy",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "(∑ i : Fin n, (g (x i)) ^ (2 : ℕ)) / (n : ℝ)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:37",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.projectionV",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "Real.sqrt (projectionEnergy n g x)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:44",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.projectionW",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "(∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:51",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.residualStatisticD",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "originalUpper n r x / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:58",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.residualU",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : Fin n → ℝ",
+      "rhs": "fun i : Fin n => originalRows n r x i / ((n : ℝ) - 2)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:65",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.residualEnergyJ",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "∑ i : Fin n, (residualU n r x i) ^ (2 : ℕ)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:72",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P35.unorderedPairSum",
+      "fullParametersAndResultType": "{n : ℕ} (H : Fin n → Fin n → ℝ) : ℝ",
+      "rhs": "∑ i : Fin n, ∑ j : Fin n, if i < j then H i j else 0",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P35/RowIdentity.lean:33",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.FiniteRows.uStatistic",
+      "fullParametersAndResultType": "{n : ℕ} (H : Fin n → Fin n → ℝ) : ℝ",
+      "rhs": "(n.choose 2 : ℝ)⁻¹ * Shao.OQ5.P35.unorderedPairSum H",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean:24",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.FiniteRows.rowMean",
+      "fullParametersAndResultType": "{n : ℕ} (H : Fin n → Fin n → ℝ) (i : Fin n) : ℝ",
+      "rhs": "((n : ℝ) - 1)⁻¹ * ∑ j ∈ Finset.univ.erase i, H i j",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean:28",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ6.FiniteRows.jackknifeSq",
+      "fullParametersAndResultType": "{n : ℕ} (H : Fin n → Fin n → ℝ) : ℝ",
+      "rhs": "(4 * ((n : ℝ) - 1) / ((n : ℝ) - 2) ^ 2) * ∑ i : Fin n, (rowMean H i - uStatistic H) ^ 2",
+      "provenance": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean:32",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.centeredSq",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "Shao.OQ6.FiniteRows.jackknifeSq (sampledKernel n g r x) / 4",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:79",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.centeredDelta",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "@ite ℝ (projectionV n g x = 0) (Classical.propDecidable (projectionV n g x = 0)) (0 : ℝ) (centeredSq n g r x / (projectionV n g x) ^ (2 : ℕ) - 1)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:86",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.projectionGood",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (y : ℝ) : Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | (1 / 2 : ℝ) ≤ projectionEnergy n g x ∧ |projectionW n g x| ≤ Real.sqrt y * Real.sqrt (Real.sqrt (n : ℝ)) * (4 + projectionV n g x)}",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:95",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.studentizerGeometryScale",
+      "fullParametersAndResultType": "(K : ℝ) : ℝ",
+      "rhs": "(200 : ℝ) * (1 + K + Real.sqrt K)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean:103",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.remainderWindowScale",
+      "fullParametersAndResultType": "(K t0 : ℝ) : ℝ",
+      "rhs": "min (1 : ℝ) (min (1 / ((32 : ℝ) * (K + 1) * (t0 + 1))) (1 / Real.sqrt ((32 : ℝ) * (studentizerGeometryScale K + 1) * (1 + Real.sqrt t0 + t0))))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedRemainderPayments.lean:19",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.lowerStudentizerBad",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (y : ℝ) : Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | centeredDelta n g r x < -(1 / 2 : ℝ) ∧ x ∈ projectionGood n g y}",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedRemainderPayments.lean:26",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.studentizerClip",
+      "fullParametersAndResultType": "(B d : ℝ) : ℝ",
+      "rhs": "max (-(min B (1 / 2 : ℝ))) (min d B)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean:12",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.studentizerClipBudget",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) + residualEnergyJ n r x / ((1 + rho) * y * Real.sqrt (n : ℝ)))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean:15",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.clippedCenteredDelta",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "if projectionV n g x = 0 then 0 else studentizerClip (studentizerClipBudget n r C0 rho y x) (centeredDelta n g r x)",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean:20",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.OQ5.P51.clippedCenteredStatistic",
+      "fullParametersAndResultType": "(n : ℕ) {Ω : Type u} (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ",
+      "rhs": "if projectionV n g x = 0 then 0 else (projectionW n g x + residualStatisticD n r x) / (projectionV n g x * Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))",
+      "provenance": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean:27",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    },
+    {
+      "name": "Shao.standardNormalTail",
+      "fullParametersAndResultType": "(x : ℝ) : ℝ",
+      "rhs": "((ProbabilityTheory.gaussianReal 0 1) (Set.Ioi x)).toReal",
+      "provenance": "C:/game/shao lean/library/Shao/Probability/GaussianTail.lean:17",
+      "readScope": "definition only; existing proof/review/check not replayed"
+    }
+  ],
+  "typedBoundaryAPIs": [
+    {
+      "name": "measurable_pi_apply",
+      "fullRealizedType": "{Ω : Type u} [MeasurableSpace Ω] {n : ℕ} (i : Fin n) : Measurable (fun x : Fin n → Ω => x i)",
+      "primary": "unit234 literal Constructions.lean.md, Pi context lines570-601; Ω remains arbitrary measurable"
+    },
+    {
+      "name": "Measurable.prodMk",
+      "fullRealizedType": "{A B C : Type*} [MeasurableSpace A] [MeasurableSpace B] [MeasurableSpace C] {f : A → B} {g : A → C} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => (f a, g a))",
+      "primary": "PRIMARY-API-CONTEXT.json Constructions.lean395-420 with chronological structural contexts"
+    },
+    {
+      "name": "Measurable (literal foundational definition)",
+      "fullTypeAndRHS": "def Measurable {α β : Type*} [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop := ∀ ⦃t : Set β⦄, MeasurableSet t → MeasurableSet (f ⁻¹' t)",
+      "primary": "unit218 pinned source query11 exact Defs.lean source ranges; α β γ δ variable context and defining predicate included in PRIMARY-API-CONTEXT.json",
+      "use": "Coordinate evaluation and r pair map are composed at the defining preimage-predicate level. .comp is only optional convenience; the adopted route has no missing API premise."
+    },
+    {
+      "name": "Finset.measurable_sum",
+      "fullRealizedType": "{A I : Type*} [MeasurableSpace A] {f : I → A → ℝ} (s : Finset I) (hf : ∀ i ∈ s, Measurable (f i)) : Measurable (fun a : A => ∑ i ∈ s, f i a)",
+      "primary": "generated by @[to_additive (attr := fun_prop)] on Finset.measurable_prod; Arithmetic.lean context CommMonoid799-801 and source827-835 in existing220 context02. Real uses AddCommMonoid and MeasurableAdd₂; no Countable/measure assumption."
+    },
+    {
+      "name": "Measurable.div",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (f / g)",
+      "primary": "Arithmetic.lean Div context and full literal head with [MeasurableDiv₂ G]. No nonzero denominator premise; real division totalized."
+    },
+    {
+      "name": "Measurable.div_const",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f : A → ℝ} (hf : Measurable f) (c : ℝ) : Measurable (fun a : A => f a / c)",
+      "primary": "Arithmetic.lean full context [MeasurableDiv G]. No c≠0 premise."
+    },
+    {
+      "name": "Measurable.add/sub/mul/neg",
+      "fullRealizedTypes": [
+        "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => f a + g a)",
+        "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => f a - g a)",
+        "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => f a * g a)",
+        "{A : Type*} [MeasurableSpace A] {f : A → ℝ} (hf : Measurable f) : Measurable (fun a : A => -f a)"
+      ],
+      "primary": "Arithmetic.lean source contexts; additive names generated by to_additive where marked. Squares may use mul with pow_two/Pi.mul_def rather than extra power API."
+    },
+    {
+      "name": "Measurable.sqrt",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f : A → ℝ} (hf : Measurable f) : Measurable (fun a : A => Real.sqrt (f a))",
+      "primary": "SpecialFunctions.Basic.lean RealComposition125-151; no f≥0 premise."
+    },
+    {
+      "name": "Measurable.min/max",
+      "fullRealizedTypes": [
+        "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => min (f a) (g a))",
+        "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => max (f a) (g a))"
+      ],
+      "primary": "BorelSpace.Order.lean LinearOrder context [SecondCountableTopology α] [OrderClosedTopology α], actual α=ℝ Borel. No topology on Ω."
+    },
+    {
+      "name": "Measurable.ite",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} {p : A → Prop} [DecidablePred p] (hp : MeasurableSet {a : A | p a}) (hf : Measurable f) (hg : Measurable g) : Measurable (fun a : A => if p a then f a else g a)",
+      "primary": "MeasurableSpace.Basic.lean exact full context and head in220context01; Classical DecidablePred only."
+    },
+    {
+      "name": "measurableSet_eq_fun",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : MeasurableSet {a : A | f a = g a}",
+      "primary": "Constructions.lean [MeasurableEq β], actual β=ℝ. Complement gives literal Eclip."
+    },
+    {
+      "name": "measurableSet_lt",
+      "fullRealizedType": "{A : Type*} [MeasurableSpace A] {f g : A → ℝ} (hf : Measurable f) (hg : Measurable g) : MeasurableSet {a : A | f a < g a}",
+      "primary": "BorelSpace.Order.lean full prefix through245 in180sourcepacket; closed halfline is exact complement of reverse strict halfline. No use of atoms or continuity."
+    },
+    {
+      "name": "abs_measureReal_sub_le_measureReal_symmDiff",
+      "fullType": "theorem MeasureTheory.abs_measureReal_sub_le_measureReal_symmDiff {α : Type*} [MeasurableSpace α] {μ : Measure α} {s t : Set α} [IsFiniteMeasure μ] (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) : |μ.real s - μ.real t| ≤ μ.real (s ∆ t)",
+      "primary": "Finite.lean literalContextMarkers and source202-235 retained; open scoped symmDiff; event MeasurableSet gives NullMeasurableSet."
+    },
+    {
+      "name": "measureReal_mono",
+      "fullType": "theorem MeasureTheory.measureReal_mono {α : Type*} [MeasurableSpace α] {μ : Measure α} {s₁ s₂ : Set α} (h : s₁ ⊆ s₂) (h₂ : μ s₂ ≠ ∞ := by finiteness) : μ.real s₁ ≤ μ.real s₂",
+      "primary": "authoritative direct exact-public-heads-and-context.json; explicit/default h₂ retained and discharged by actual Pn finite measure. No MeasurableSet premise."
+    },
+    {
+      "name": "Measure.pi.instIsProbabilityMeasure",
+      "fullRealizedType": "{Ω : Type u} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ] (n : ℕ) : IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ))",
+      "primary": "Constructions.Pi.lean exact Fintype ι / measurable coordinate spaces / μ:∀i,Measure(αi) contexts in235 reference and finite-product packet."
+    }
+  ],
+  "primaryAPIContext": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-physical-clipped-tail-transfer-planned/author-stage1-01/PRIMARY-API-CONTEXT.json",
+    "sha256": "c75da25f131f4515719c80553f57ffa063f81d7857244c3a423c0dbb346046fa",
+    "bytes": 119879
+  },
+  "newProofLocalPropositionHeads": [
+    "∀ t : ℝ, ({x : Fin n → Ω | t ≤ physical x} ∆ {x : Fin n → Ω | t ≤ clipped x}) ⊆ Eclip",
+    "∀ t : ℝ, ({x : Fin n → Ω | physical x ≤ t} ∆ {x : Fin n → Ω | clipped x ≤ t}) ⊆ Eclip",
+    "Eclip ⊆ (H \\ Eclip)ᶜ",
+    "MeasurableSet H → MeasurableSet Eclip → MeasurableSet (H \\ Eclip)",
+    "Measurable physical → Measurable clipped → ∀ t : ℝ, MeasurableSet {x : Fin n → Ω | t ≤ physical x} ∧ MeasurableSet {x : Fin n → Ω | t ≤ clipped x} ∧ MeasurableSet {x : Fin n → Ω | physical x ≤ t} ∧ MeasurableSet {x : Fin n → Ω | clipped x ≤ t}"
+  ],
+  "minimalRoute": {
+    "globalMeasurability": "g/r coordinate maps, finite upper/residual row sums and finite centered-jackknife sums; totalized real arithmetic/sqrt/min/max/zero branches. No stochastic hypothesis used by helper.",
+    "literalEclip": "complement of equality set of two globally measurable real-valued functions",
+    "literalJ": "if kept locally,237 supplies MeasurableSet H and helper supplies Eclip, so J=H\\Eclip is measurable. No new premise or public J package required.",
+    "thresholdUniformity": "pointwise equality outside Eclip implies both event symmetric differences are subsets of Eclip for every t; no threshold continuity argument.",
+    "payment": "standard finite-realmeasure symmetric-difference bound, monotonicity to Eclip, monotonicity Eclip⊆Jᶜ, and two qualified237 bounds. Neither union fee≤Gaussian nor unit236 is separately assumed."
+  },
+  "preciseGaps": {
+    "mathematicalMissingInterface": [],
+    "requiredNewImplementation": [
+      "pure global-measurability helper under hg/hr",
+      "direct event symmetric-difference inclusion and realmeasure composition in the main theorem"
+    ],
+    "ordinaryAPIProvenanceQualification": [
+      "No Lean/type elaboration is authorized at Stage1. The new heads and real-specialized usage signatures remain prospective.",
+      "A raw selected source slice ended immediately before convenience Measurable.comp. The literal Measurable preimage-predicate definition and its contexts are now captured instead, which suffice for the adopted composition route. No missing mathematical interface or new assumption."
+    ],
+    "outsideThisUnit": [
+      "clipped statistic external source-CDF estimate",
+      "full signed coding/Shao-Zhou limiting application",
+      "full general S15/DC or original OQ56/root theorem closure"
+    ]
+  },
+  "excludedInputs": [
+    "unit238 unqualified proof/input",
+    "new Measurable w premise",
+    "standard-Borel premise",
+    "atom-free premise",
+    "cSZ/source-CDF premise",
+    "mixed fourth moment",
+    "p-moment convergence rate",
+    "new model/statistic/measure witness",
+    "any callback supplying desired transfer/payment"
+  ],
+  "execution": {
+    "Lean": 0,
+    "server": 0,
+    "network": 0,
+    "upload": 0,
+    "GitAPI": 0,
+    "children": 0,
+    "sharedWrites": 0,
+    "proofImplementation": 0,
+    "freeze": 0,
+    "oldAcceptedReplay": 0
+  },
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "inputTokens": null,
+    "cachedInputTokens": null,
+    "outputTokens": null,
+    "reasoningSubsetTokens": null
+  },
+  "helperMeasurabilityCheckpoints": [
+    "∀ i : Fin n, Measurable (fun x : Fin n → Ω => g (x i))",
+    "∀ i j : Fin n, Measurable (fun x : Fin n → Ω => r (x i) (x j))",
+    "Measurable (projectionW n g)",
+    "Measurable (projectionEnergy n g)",
+    "Measurable (projectionV n g)",
+    "Measurable (Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r)",
+    "Measurable (residualStatisticD n r)",
+    "∀ i : Fin n, Measurable (fun x : Fin n → Ω => Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r x i)",
+    "Measurable (residualEnergyJ n r)",
+    "∀ i j : Fin n, Measurable (fun x : Fin n → Ω => sampledKernel n g r x i j)",
+    "∀ i : Fin n, Measurable (fun x : Fin n → Ω => Shao.OQ6.FiniteRows.rowMean (sampledKernel n g r x) i)",
+    "Measurable (fun x : Fin n → Ω => Shao.OQ6.FiniteRows.uStatistic (sampledKernel n g r x))",
+    "Measurable (centeredSq n g r)",
+    "Measurable (fun x : Fin n → Ω => Real.sqrt (centeredSq n g r x))",
+    "Measurable (centeredDelta n g r)",
+    "Measurable (studentizerClipBudget n r C0 rho y)",
+    "Measurable (clippedCenteredDelta n g r C0 rho y)",
+    "Measurable physical",
+    "Measurable clipped",
+    "MeasurableSet Eclip"
+  ],
+  "sealedStage1Inventory": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-physical-clipped-tail-transfer-planned/author-stage1-01/INTERFACE-INVENTORY.json",
+    "sha256": "dea72c71d96863524e8d47aa08dc5cf123c8ccac7dbc07a56c711eb1cf3701ef",
+    "bytes": 51328
+  },
+  "approvedProofLocalOrdinaryData": [
+    {
+      "name": "physical",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => if Real.sqrt (centeredSq n g r x) = 0 then 0 else (projectionW n g x + residualStatisticD n r x) / Real.sqrt (centeredSq n g r x)",
+      "scope": "Optional exact result-let mirror in helper only after definingbinders"
+    },
+    {
+      "name": "clipped",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "clippedCenteredStatistic n g r C0 rho y",
+      "helperRHS": "clippedCenteredStatistic n g r C0 rho y",
+      "scope": "Optional exact result-let mirror in helper only after definingbinders"
+    },
+    {
+      "name": "Eclip",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | clipped x ≠ physical x}",
+      "scope": "Optional exact result-let mirror in helper only after definingbinders"
+    },
+    {
+      "name": "cCommon",
+      "type": "ℝ",
+      "rhs": "min (remainderWindowScale (tailScale M) t0) (min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)))",
+      "scope": "Optional exact result-let mirror in main only after definingbinders",
+      "origin": "exact qualified237 public ordinary RHS"
+    },
+    {
+      "name": "q",
+      "type": "ℝ",
+      "rhs": "boundedPolylogMomentOrder t0 n",
+      "scope": "Optional exact result-let mirror in main only after definingbinders"
+    },
+    {
+      "name": "physical",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => if Real.sqrt (centeredSq n g r x) = 0 then 0 else (projectionW n g x + residualStatisticD n r x) / Real.sqrt (centeredSq n g r x)",
+      "scope": "Optional exact result-let mirror in main only after definingbinders"
+    },
+    {
+      "name": "clipped",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "clippedCenteredStatistic n g r 512 rho 1",
+      "helperRHS": "clippedCenteredStatistic n g r C0 rho y",
+      "scope": "Optional exact result-let mirror in main only after definingbinders"
+    },
+    {
+      "name": "Eclip",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | clipped x ≠ physical x}",
+      "scope": "Optional exact result-let mirror in main only after definingbinders"
+    },
+    {
+      "name": "Pn",
+      "type": "Measure (Fin n → Ω)",
+      "rhs": "sampleLaw n μ",
+      "scope": "Optional exact proof-local data; main proof-local; no pushforward/new law"
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "rhs": "tailScale M",
+      "scope": "Optional exact proof-local data; main proof-local237 matching"
+    },
+    {
+      "name": "Gz",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "projectionGood n g z",
+      "scope": "Optional exact proof-local data; main proof-local237 matching"
+    },
+    {
+      "name": "C2",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x| ≤ K * (n : ℝ) * q ∧ ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r x‖ ^ (2 : ℕ) ≤ K * (n : ℝ) ^ (2 : ℕ) * q}",
+      "scope": "Optional exact proof-local data; main proof-local237 matching"
+    },
+    {
+      "name": "H",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "Gz ∩ C2",
+      "scope": "Optional exact proof-local data; main proof-local237 matching; MeasurableSet H is237 conclusion"
+    },
+    {
+      "name": "J",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "H \\ Eclip",
+      "scope": "Optional exact proof-local data; main proof-local237 matching; not a new public invariant"
+    },
+    {
+      "name": "Aupper",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | t ≤ physical x}",
+      "scope": "Optional exact proof-local data; fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Bupper",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | t ≤ clipped x}",
+      "scope": "Optional exact proof-local data; fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Alower",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | physical x ≤ t}",
+      "scope": "Optional exact proof-local data; fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "Blower",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | clipped x ≤ t}",
+      "scope": "Optional exact proof-local data; fixed arbitrary t inside final forall"
+    },
+    {
+      "name": "gcoord",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i : Fin n) (x : Fin n → Ω) => g (x i)",
+      "scope": "Optional exact proof-local data; helper proof-local finite geometry"
+    },
+    {
+      "name": "rcoord",
+      "type": "Fin n → Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i j : Fin n) (x : Fin n → Ω) => r (x i) (x j)",
+      "scope": "Optional exact proof-local data; helper proof-local finite geometry"
+    },
+    {
+      "name": "W",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "projectionW n g",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "V",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "projectionV n g",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "residualStatisticD n r",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "Jenergy",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "residualEnergyJ n r",
+      "scope": "Optional exact proof-local data; helper proof-local; distinct from set J"
+    },
+    {
+      "name": "s2",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "centeredSq n g r",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "s",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => Real.sqrt (s2 x)",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "d",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "centeredDelta n g r",
+      "scope": "Optional exact proof-local data; helper proof-local; exact V=0 branch retained"
+    },
+    {
+      "name": "B",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "studentizerClipBudget n r C0 rho y",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "e",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "clippedCenteredDelta n g r C0 rho y",
+      "scope": "Optional exact proof-local data; helper proof-local"
+    },
+    {
+      "name": "e1",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => clippedCenteredDelta n g r 512 rho 1 x",
+      "scope": "Optional exact237 result-let mirror inmain after n/r/rho/z"
+    },
+    {
+      "name": "cg",
+      "type": "ℝ",
+      "rhs": "Classical.choose (Shao.OQ6.ActualGoodsetPhysicalUnion.fixed_original_goodset_physical_exceptional_union μ g hg hg2 hgmean hgsecond)",
+      "scope": "Main only, exact237 originalμ/g theorem beforeC/a/t0/M andalllaterbinders",
+      "proofArgumentType": "    ∃ cg : ℝ, 0 < cg ∧\n      ∀ (C a t0 M : ℝ)\n        (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) (hM : 0 ≤ M),\n        let cCommon : ℝ :=\n          min (remainderWindowScale (tailScale M) t0)\n            (min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)))\n        0 < cCommon ∧\n          ∀ᶠ n : ℕ in atTop,\n            4 ≤ n ∧\n              (1 : ℝ) ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ) ∧\n              ∀ (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n                (hr : Measurable (Function.uncurry r))\n                (hr1 : Integrable (Function.uncurry r) (μ.prod μ))\n                (hcR : ∀ᵐ o : Ω ∂μ, (∫ o' : Ω, r o o' ∂μ) = 0)\n                (hcL : ∀ᵐ o' : Ω ∂μ, (∫ o : Ω, r o o' ∂μ) = 0)\n                (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n                (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)\n                (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)\n                (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)\n                (hEnv : ∀ᵐ p : Ω × Ω ∂μ.prod μ,\n                  |r p.1 p.2| ≤ w p.1 * w p.2)\n                (hsym : ∀ o o' : Ω, r o o' = r o' o)\n                (rho : ℝ) (hrho : 0 ≤ rho)\n                (hStudentizerWindow : 1 + rho ≤ Real.sqrt (n : ℝ))\n                (z : ℝ) (hz : (1 : ℝ) ≤ z)\n                (hzWindow : z ≤ cCommon * Real.rpow (n : ℝ) (1 / 6 : ℝ)),\n                let q : ℝ := boundedPolylogMomentOrder t0 n\n                let K : ℝ := tailScale M\n                let Gz : Set (Fin n → Ω) := projectionGood n g z\n                let C2 : Set (Fin n → Ω) :=\n                  {x : Fin n → Ω |\n                    |originalUpper n r x| ≤ K * (n : ℝ) * q ∧\n                    ‖originalRows n r x‖ ^ (2 : ℕ) ≤\n                      K * (n : ℝ) ^ (2 : ℕ) * q}\n                let H : Set (Fin n → Ω) := Gz ∩ C2\n                let e1 : (Fin n → Ω) → ℝ :=\n                  fun x : Fin n → Ω => clippedCenteredDelta n g r 512 rho 1 x\n                let physical : (Fin n → Ω) → ℝ := fun x : Fin n → Ω =>\n                  if Real.sqrt (centeredSq n g r x) = 0 then 0 else\n                    (projectionW n g x + residualStatisticD n r x) /\n                      Real.sqrt (centeredSq n g r x)\n                let clipped : (Fin n → Ω) → ℝ :=\n                  clippedCenteredStatistic n g r 512 rho 1\n                let Eclip : Set (Fin n → Ω) := {x : Fin n → Ω | clipped x ≠ physical x}\n                let J : Set (Fin n → Ω) := H \\ Eclip\n                MeasurableSet H ∧\n                  (∀ x : Fin n → Ω, x ∈ H →\n                    0 < projectionV n g x ∧\n                    (1 / 2 : ℝ) ≤ projectionEnergy n g x ∧\n                    z * |residualStatisticD n r x| ≤ projectionV n g x / 8 ∧\n                    z * |residualStatisticD n r x| < projectionV n g x / 4 ∧\n                    z ^ (2 : ℕ) * |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                    |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧\n                    -(1 / 8 : ℝ) < centeredDelta n g r x ∧\n                    |e1 x| ≤ |centeredDelta n g r x| ∧\n                    z ^ (2 : ℕ) * |e1 x| ≤ (1 / 32 : ℝ) ∧\n                    z ^ (2 : ℕ) * |e1 x| < (1 / 8 : ℝ) ∧\n                    |e1 x| ≤ (1 / 32 : ℝ) ∧\n                    0 < projectionV n g x * Real.sqrt (1 + e1 x) ∧\n                    0 < Real.sqrt (centeredSq n g r x) ∧\n                    Real.sqrt (centeredSq n g r x) =\n                      projectionV n g x * Real.sqrt (1 + centeredDelta n g r x)) ∧\n                  (∀ x : Fin n → Ω, x ∈ J → clipped x = physical x) ∧\n                  (({x : Fin n → Ω | projectionV n g x = 0} ∪\n                      {x : Fin n → Ω | Real.sqrt (centeredSq n g r x) = 0}) ⊆ Jᶜ) ∧\n                  (Eclip ⊆ (projectionGood n g 1)ᶜ ∪ lowerStudentizerBad n g r 1) ∧\n                  Jᶜ = Hᶜ ∪ Eclip ∧\n                  (sampleLaw n μ).real Jᶜ ≤\n                    (6 : ℝ) * Real.exp (-q) +\n                      (2 : ℝ) * Real.exp (-cg * (n : ℝ)) +\n                      (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) ∧\n                  (sampleLaw n μ).real Jᶜ ≤\n                    Real.exp (-(t0 / (2 : ℝ)) *\n                      Real.rpow (n : ℝ) (1 / 3 : ℝ)) * Shao.standardNormalTail z",
+      "proofArgumentContext": "theorem fixed_original_goodset_physical_exceptional_union\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (hgmean : (∫ o : Ω, g o ∂μ) = 0)\n    (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1) :\n"
+    }
+  ],
+  "witnessSelectionConvention": "Exactapproved cgchoose andchoose_spec ofsame237 theorem;31entriesoptional onlystatedscopes. AllotherfactsProp. No newordinaryhelper/callback/assumption beforeleadfreezes concreteproposal.",
+  "leadAdoption": {
+    "completeTwoHeadsSourceRouteMathInventoryRead": true,
+    "all32ActualDefinitionFullTypesRHSRead": true,
+    "all15BoundaryAPIsFullRealizedTypesContextsRead": true,
+    "primaryArithmeticSumDivSqrtMinMaxIteEqRealFiniteContextsRead": true,
+    "complete237PublicHeadExactQualificationReused": true,
+    "original237BinderPrefixTokenExact": true,
+    "selectedPrimaryReadingNotWhole119879BPacketRead": true,
+    "noAssumptionOrMathematicalHeadChanges": true,
+    "addedOnlyOptionalExactResultMirrorsE1CgSelection": true,
+    "LeanCalls": 0
+  }
+}
