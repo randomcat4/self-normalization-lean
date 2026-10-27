@@ -1,0 +1,53 @@
+# Unit233 fixed-original-law actual goodset frontier: author report
+
+State: COMPLETE_PROOF_CANDIDATE_KERNEL_UNCHECKED. This is the same authorized Stage1 author implementing the parent's exact prior freeze. It is not an independent review or an acceptance certificate. The runtime ACK was written before proof-source writes. All writes are confined to `drafts/oq56/unit233/author-01/`; Stage1, the parent intake and all frozen bytes remain unchanged.
+
+The implementation is `P54ActualGoodsetFrontier.lean`, intended module `Shao.OQ6.P54ActualGoodsetFrontier`, with the single public source declaration `Shao.OQ6.P54.fixed_original_boundedPolylog_goodset_frontier`. The exact frozen preamble and head are followed by ` := by`, a complete tactic proof, and the exact frozen closing. No premise, quantifier, ordinary result let, coefficient or conclusion was edited. The source has 275 LF lines and no added top-level helper declaration. The actual module-owned/generated declaration inventory is pending the designated server audit and is not estimated here.
+
+## Exact result and source scope
+
+The original probability law μ and the actual projection g are fixed, with g measurable, in L2(μ), mean zero and second moment one. The proof chooses cg once from the qualified original-good-event API, before the universal concentration constants C/a/t0/M. The eventual sample-size statement then permits any actual canonical symmetric residual r and envelope w satisfying the exact frozen original-product integrability, a.e. canonicality, a.e. bounded-polylog height, integrable square, square-integral and product-envelope hypotheses. The law μ and projection g do not vary with n. C0/rho need only be nonnegative clip-budget parameters for the contraction used here; the proof introduces no identification with a full model's residual moment.
+
+For q = t0 n^(1/3) and K = tailScale M, the exact ordinary event is H = G ∩ C2, where G is the existing `projectionGood n g z` and C2 is the conjunction of the actual originalUpper and originalRows-norm-squared threshold events. H has no squareSum(w) test. The retained clipped delta is the literal `clippedCenteredDelta n g r C0 rho 1`; its last parameter remains 1 while z is the tail target.
+
+This realizes p54 F4/F5 for the bounded-polylog branch p51 S16–S17. It does not use the false p51 S6 polynomial p-moment variation sentence, and does not extend to DC S18. The original probability API's Shao–Zhou self-normalized input retains its existing published attribution. No old probability or concentration producer is reproved.
+
+## Complete proof account
+
+Lines 78–87 select cg through `original_good_event_complement_bound μ g hg hg2 hgmean hgsecond`. The resulting positive cg and all-n/all-z original-G complement bound are available before any concentration constant is introduced. The proof intersects the qualified eventual bounded-polylog joint-failure statement with n ≥ 4. This supplies the eventual threshold uniformly in the later r/w choices and target z. It then introduces exactly the frozen r/w assumptions and C0/rho/z window hypotheses. The qualified eventual theorem already handles its deterministic moment-order and height-window prerequisites; they are not new caller assumptions.
+
+Lines 88–103 reproduce the six frozen result lets q/K/G/C2/H/e1. The ordinary local Pn is the original `sampleLaw n μ`, and the local probability instance is inferred for its literal finite Pi law. From n ≥ 4 the proof derives n > 0. The positive K is the qualified `bounded_scales_pos M hM` conclusion. No new threshold, probability measure or event selector is chosen.
+
+Lines 105–187 prove genuine H measurability. The approved local functions gi and rij are exactly the sampled g and r values; their measurability follows from hg and hr composed with coordinate evaluations and paired coordinate evaluations. For each row, its diagonal decision is on fixed Fin indices, so the off-diagonal row sum is a finite sum of measurable scalar functions. Squaring and summing these row sums gives measurable rowEnergy. The literal `EuclideanSpace.real_norm_sq_eq` rewrites the actual originalRows norm squared to the same rowEnergy; the remaining equality is definitional from originalRows/WithLp.toLp and the approved rowSum RHS. This step never replaces the original event by an a.e. representative.
+
+The original upper sum is measurable by two finite sums with fixed-index i < j decisions. The original projection energy and W are finite measurable sums divided by constants, and V is their continuous real square root. Thus both literal G inequalities are measurable, as are the two C2 inequalities. Their intersection gives `MeasurableSet H`. No step uses `Measurable w`, a completion of μ, a standard Borel assumption on Ω, a fourth/mixed moment or a caller goodset callback.
+
+Lines 189–206 apply the qualified `bounded_remainder_small_window` to each actual x ∈ H. Its exact hypotheses are the frozen pointwise symmetry, n ≥ 4, nonnegative K, positive t0, legal z and the two literal C2 bounds plus literal G membership. It returns V > 0, z|D|/V ≤ 1/8, z²|d| ≤ 1/32 and |d| ≤ 1/32. The absolute-d bound and −|d| ≤ d give d ≥ −1/2, so `centered_studentizer_factorization` proves positive true sqrt(centeredSq) and its exact V sqrt(1+d) factorization. This equality contains actual d, not the retained clipped delta.
+
+Lines 208–232 establish the original-law payer. The only added event abbreviation B is exactly the approved `boundedProductFailure n r w M q`. If x fails C2 but did not lie in B, the qualified not-membership equivalence would give both C2 bounds, a contradiction. Thus C2ᶜ ⊆ B even though C2 does not test squareSum(w). The literal H definition then gives Hᶜ ⊆ Gᶜ ∪ B. The qualified eventual failure bound is instantiated at this same original μ, r and w, yielding Pn.real B ≤ 3 exp(−q). The earlier cg bound is transferred from normalizedGoodEvent to G by the exact qualified bridge. Finite original-product-law real-measure monotonicity and union subadditivity give Pn.real Hᶜ ≤ Pn.real Gᶜ + Pn.real B. No measurability assumption on B or w is inserted by these finite-measure inequalities, and the target H has its separate genuine measurable-set proof.
+
+Lines 233–259 assemble all 14 frozen pointwise conjuncts. Positive V converts z|D|/V ≤ 1/8 to z|D| ≤ V/8, and V > 0 supplies the strict V/4 margin. The original G energy condition is retained verbatim. The d bounds remain 1/32, hence imply the strict lower margin d > −1/8. `clippedCenteredDelta_bounds` is instantiated only at the retained clip label 1, with hC0/hrho and 0 ≤ 1. Its absolute contraction gives |e1| ≤ |d|; multiplication by nonnegative z² and the existing d bounds gives both e1 bounds ≤ 1/32 and the strict scaled bound < 1/8. Its last conclusion gives positive V sqrt(1+e1). The positive true sqrt(centeredSq) and its actual-d factorization come from the earlier actual-factor proof. No budget domination or e1 = d premise is used.
+
+Lines 260–264 handle the exact zero-event union pointwise. A zero V or zero true sqrt(centeredSq) contradicts the corresponding positive conclusion for any x ∈ H, so the union lies in Hᶜ. This does not discard zero sets by an almost-everywhere assertion and requires no atomlessness or tail-probability continuity.
+
+Lines 265–272 add the two qualified payments and reassociate terms by ring algebra, producing the frozen literal bound
+
+`(sampleLaw n μ).real Hᶜ ≤ 3 exp(−q) + exp(−cg n) + 4 exp(−z sqrt(n)/2)`.
+
+It is the actual H-complement payment on the original law; B is a payer in an inclusion argument and is not substituted for the requested bad event. All 14 conjuncts, the actual zero union and this payment are present in the exact frozen theorem head.
+
+## Ordinary-data and interface audit
+
+The six result lets are q/K/G/C2/H/e1 with the frozen types and RHS. Ten of the 18 approved proof-local ordinary entries are introduced: Pn, gi, rij, rowSum, rowEnergy, F, E, W, V and B. The eight unused entries are Rheight, D, d, J, B1, s, ZV and Zs. No additional ordinary local data or helper declaration is introduced, so no inventory amendment is required. Routine proof-local facts, including hRowsMeas and the equality hEq used to transport measurability, are Prop-valued and remain within the unchanged interface. The local instSample has exactly the already inventoried probability type and inference RHS. The cg witness and quantified sample/index variables are the already frozen witness and binder data.
+
+COMPATIBILITY.json binds the exact frozen byte spans, maps every actual ordinary let to its approved entry and reports the unchanged public head. The source proof does not add a caller target-goodness, target-payment or target-measurability callback. No additional assumption is disguised as a helper.
+
+All total divisions/square roots keep the original definitions. The theorem is eventual with n ≥ 4; positive V is established before the only ratio-to-product conversion. The original centeredDelta definition continues to handle V = 0 explicitly, and those samples lie in the paid complement. The proof never equates the retained correction to d or the physical statistic to a clipped statistic.
+
+## Evidence and remaining gates
+
+The local checks performed here are exact-byte, UTF-8/LF, declared-head assembly, source-input binding, ordinary-let inventory and lexical prohibited-token checks. No Lean process, server operation, network operation, upload, Git/API action or child was started. This author has not performed an independent review. Kernel elaboration, generated owner inventory, same-original-object complete TYPE/VALUE and recursive axiom audit, and fresh independent complete source-to-statement/proof review remain for the parent's authorized later gates. The standard axiom whitelist remains propext, Classical.choice and Quot.sound; no actual axiom certificate is claimed before that gate.
+
+Original/trim/augmented same-witness transfer, a uniform cg for varying conditional laws μn/gn, clip-budget domination for e1 = d, fullmodel/m0/canonical-eta binding, the epsilon upper-coding passage, source Shao–Zhou analytic costs, CDF/relative-tail consumers and OQ6/root closure remain outside this theorem. The exact accepted producer evidence is reused rather than replayed. This implementation supplies a substantive source-bound proof candidate for the frozen fixed-law frontier only.
+
+The requested model/effort remain gpt-6.1-sol/xhigh. Unexposed actual model/effort and all four usage fields remain null. The final RELEASE is the author's last write and records zero heavy/inflight/pendingExternal/pendingWrites/children plus the sealed manifest hash.

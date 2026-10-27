@@ -1,0 +1,608 @@
+{
+  "schema": "oq56-unit234-native02-limit-target-repair-compatibility-v1",
+  "atUTC": "2026-10-27T13:57:49.095450+00:00",
+  "status": "AUTHOR_REPAIR_ONLY_NOT_REVIEWED_NOT_KERNEL_CHECKED",
+  "oldSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit234/author-repair-01/OriginalSingleWitnessAnalyticStrictFrontier.lean",
+    "sha256": "62069177484ab575f8090ac6e3950990add45afc428b8e45e35548258c397b77",
+    "bytes": 35522
+  },
+  "repairedSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit234/author-repair-02/OriginalSingleWitnessAnalyticStrictFrontier.lean",
+    "sha256": "8cc15a8f79707bc6ff88896cef3125030284e309907966e9eabeb7d4b3a1ca90",
+    "bytes": 36755,
+    "readScope": "complete"
+  },
+  "exactDiff": {
+    "onlyInsertion": true,
+    "addedCommands": 8,
+    "addedBytes": 1233,
+    "deletedBytes": 0,
+    "otherByteChanges": 0,
+    "completeInsertedText": "  change Filter.Tendsto Iη Filter.atTop (nhds I0) at hIlim\n  change Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)\n              Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)) at hFullLim\n  change (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)\n              Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P))) at hDelLim\n  change Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)\n              Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)) at hFullRatio\n  change (∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n              Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) at hDelRatio\n  change (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)\n              Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P))) at hCompactLim\n  change Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) at hSourceLim\n  change Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0) at hCostLim\n",
+    "unifiedDiff": "--- author-repair-01/OriginalSingleWitnessAnalyticStrictFrontier.lean\n+++ author-repair-02/OriginalSingleWitnessAnalyticStrictFrontier.lean\n@@ -467,6 +467,19 @@\n     (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2) at hkStrict\n   refine ⟨hLc, hδHalf, hLStrict, hδηI, hδlim, hLlim, ?_⟩\n   intro τ hτ\n+  change Filter.Tendsto Iη Filter.atTop (nhds I0) at hIlim\n+  change Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)\n+              Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)) at hFullLim\n+  change (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)\n+              Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P))) at hDelLim\n+  change Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)\n+              Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)) at hFullRatio\n+  change (∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n+              Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) at hDelRatio\n+  change (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)\n+              Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P))) at hCompactLim\n+  change Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) at hSourceLim\n+  change Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0) at hCostLim\n   have hStrictEvent : ∀ᶠ k : ℕ in Filter.atTop,\n       (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2 :=\n     Filter.eventually_atTop.2 ⟨kStrict, hkStrict⟩\n"
+  },
+  "cause": "The old retained proof types had expanded original expressions as nhds centers, while sub_const used local frozen aliases. simp only[sub_self,abs_zero] does not unfold/fold these aliases, leaving a non-syntactic limit-minus-alias expression. Explicit exact frozen Prop-target changes make the centers syntactically identical before subtraction/abs.",
+  "allEightActualErrorTypesRead": true,
+  "affectedPropTargets": [
+    {
+      "native02ErrorLine": 493,
+      "retained228ClauseIndex": 39,
+      "existingProofName": "hIlim",
+      "completeExplicitPropTarget": "Filter.Tendsto Iη Filter.atTop (nhds I0)",
+      "reconstructionDefinitions": [
+        {
+          "name": "I0",
+          "completeDeclaration": "let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P"
+        },
+        {
+          "name": "S0",
+          "completeDeclaration": "let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 500,
+      "retained228ClauseIndex": 40,
+      "existingProofName": "hFullLim",
+      "completeExplicitPropTarget": "Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)\n          Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P))",
+      "reconstructionDefinitions": [
+        {
+          "name": "fullTest0",
+          "completeDeclaration": "let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "S0",
+          "completeDeclaration": "let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 510,
+      "retained228ClauseIndex": 41,
+      "existingProofName": "hDelLim",
+      "completeExplicitPropTarget": "(∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)\n          Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)))",
+      "reconstructionDefinitions": [
+        {
+          "name": "deletedTest0",
+          "completeDeclaration": "let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\nmin |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "A0delete",
+          "completeDeclaration": "let A0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => |residualStatisticDDeleted n r ζ i|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "B0delete",
+          "completeDeclaration": "let B0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "S0minus",
+          "completeDeclaration": "let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 517,
+      "retained228ClauseIndex": 42,
+      "existingProofName": "hFullRatio",
+      "completeExplicitPropTarget": "Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)\n          Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0))",
+      "reconstructionDefinitions": [
+        {
+          "name": "fullTest0",
+          "completeDeclaration": "let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "I0",
+          "completeDeclaration": "let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P"
+        },
+        {
+          "name": "S0",
+          "completeDeclaration": "let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 527,
+      "retained228ClauseIndex": 43,
+      "existingProofName": "hDelRatio",
+      "completeExplicitPropTarget": "(∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n          Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)))",
+      "reconstructionDefinitions": [
+        {
+          "name": "deletedTest0",
+          "completeDeclaration": "let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\nmin |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "A0delete",
+          "completeDeclaration": "let A0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => |residualStatisticDDeleted n r ζ i|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "B0delete",
+          "completeDeclaration": "let B0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "I0",
+          "completeDeclaration": "let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P"
+        },
+        {
+          "name": "S0",
+          "completeDeclaration": "let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ"
+        },
+        {
+          "name": "S0minus",
+          "completeDeclaration": "let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 537,
+      "retained228ClauseIndex": 44,
+      "existingProofName": "hCompactLim",
+      "completeExplicitPropTarget": "(∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)\n          Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P)))",
+      "reconstructionDefinitions": [
+        {
+          "name": "compactDeletedTest0",
+          "completeDeclaration": "let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\nmin |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "A0delete",
+          "completeDeclaration": "let A0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => |residualStatisticDDeleted n r ζ i|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "B0delete",
+          "completeDeclaration": "let B0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 541,
+      "retained228ClauseIndex": 45,
+      "existingProofName": "hSourceLim",
+      "completeExplicitPropTarget": "Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0)",
+      "reconstructionDefinitions": [
+        {
+          "name": "sourceCost0",
+          "completeDeclaration": "let sourceCost0 : ℝ :=\n((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +\n∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0"
+        },
+        {
+          "name": "fullTest0",
+          "completeDeclaration": "let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ"
+        },
+        {
+          "name": "deletedTest0",
+          "completeDeclaration": "let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\nmin |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "A0delete",
+          "completeDeclaration": "let A0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => |residualStatisticDDeleted n r ζ i|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "B0delete",
+          "completeDeclaration": "let B0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "I0",
+          "completeDeclaration": "let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P"
+        },
+        {
+          "name": "S0",
+          "completeDeclaration": "let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ"
+        },
+        {
+          "name": "S0minus",
+          "completeDeclaration": "let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ"
+        },
+        {
+          "name": "ℓ0",
+          "completeDeclaration": "let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    },
+    {
+      "native02ErrorLine": 545,
+      "retained228ClauseIndex": 46,
+      "existingProofName": "hCostLim",
+      "completeExplicitPropTarget": "Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0)",
+      "reconstructionDefinitions": [
+        {
+          "name": "compactCost0",
+          "completeDeclaration": "let compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +\n∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P"
+        },
+        {
+          "name": "Lcompact0",
+          "completeDeclaration": "let Lcompact0 : ℝ := ∑ i : Fin n,\n∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P"
+        },
+        {
+          "name": "compactDeletedTest0",
+          "completeDeclaration": "let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\nmin |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)"
+        },
+        {
+          "name": "A0",
+          "completeDeclaration": "let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|"
+        },
+        {
+          "name": "A0delete",
+          "completeDeclaration": "let A0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => |residualStatisticDDeleted n r ζ i|"
+        },
+        {
+          "name": "D1",
+          "completeDeclaration": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+        },
+        {
+          "name": "B0",
+          "completeDeclaration": "let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1"
+        },
+        {
+          "name": "B0delete",
+          "completeDeclaration": "let B0delete : Fin n → (Fin n → Ω) → ℝ :=\nfun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i"
+        },
+        {
+          "name": "r",
+          "completeDeclaration": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+        },
+        {
+          "name": "rho",
+          "completeDeclaration": "let rho : ℝ := Real.sqrt v"
+        },
+        {
+          "name": "v",
+          "completeDeclaration": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)"
+        },
+        {
+          "name": "ξ0",
+          "completeDeclaration": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+        },
+        {
+          "name": "N",
+          "completeDeclaration": "let N : ℝ := Real.sqrt (n : ℝ)"
+        },
+        {
+          "name": "g",
+          "completeDeclaration": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+        },
+        {
+          "name": "P",
+          "completeDeclaration": "let P : @Measure (Fin n → Ω) mN :=\n@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n(fun _ : Fin n => mΩ) (fun _ : Fin n => μ)"
+        }
+      ],
+      "definitionCorrespondence": "Exact frozen lets unfold to the expanded original-measure expression printed in this error; no measure-law equality or new numerical identity is assumed. The change command requires definitional equality of the existing proof type."
+    }
+  ],
+  "definitionalVerification": {
+    "authorComparison": "All expanded centers in the complete diagnostics were matched to the full frozen ordinary RHS listed in affectedPropTargets; the same source P and clipping1 occur on both sides.",
+    "proofMechanism": "Eight change commands on existing derived Tendsto facts; no proof of an arbitrary alias equality is assumed.",
+    "LeanExecutedByAuthor": false,
+    "kernelDefinitionalCheckPending": true
+  },
+  "frozenPreambleHeadClosingExact": true,
+  "all87OrdinaryHeadTypesRHSUnchanged": true,
+  "all46LiteralAnalyticClausesUnchanged": true,
+  "sole228WitnessAndActualNormalizationUnchanged": true,
+  "originalSourceStrict230AndGeneric229Unchanged": true,
+  "sourceCostCompactCostI0AndPUnchanged": true,
+  "genuineThreeLawIntegrabilityUnchanged": true,
+  "ordinaryAliasesAndCutoffsUnchanged": true,
+  "newOrdinaryHelpers": 0,
+  "newAssumptions": 0,
+  "newCallbacks": 0,
+  "warningOnlyLetIUntouched": true,
+  "oldSourceAll6PriorPayloadsAndNative001002EvidencePreserved": true,
+  "prior11RepairInputBindingsReverified": true,
+  "newInputBindings": 11,
+  "native02": {
+    "exitCode": 1,
+    "seconds": 16.82541251182556,
+    "sourceErrors": 8,
+    "sourceWarnings": 6,
+    "object": null,
+    "allOwnedGroupEnded": true,
+    "preservationEqual": true,
+    "success": false
+  },
+  "format": {
+    "utf8NoBOM": true,
+    "CRbytes": 0,
+    "LF": 594
+  },
+  "independent234ReviewReads": 0,
+  "newLean": 0,
+  "server": 0,
+  "network": 0,
+  "upload": 0,
+  "GitAPI": 0,
+  "children": 0,
+  "qualified": false,
+  "kernelPending": true,
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "inputTokens": null,
+    "cachedInputTokens": null,
+    "outputTokens": null,
+    "reasoningSubsetTokens": null
+  }
+}

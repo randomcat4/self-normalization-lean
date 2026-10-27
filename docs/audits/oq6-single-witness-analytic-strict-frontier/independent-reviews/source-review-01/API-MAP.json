@@ -1,0 +1,1550 @@
+{
+  "schema": "oq56-unit234-independent-exact-qualified-api-map-v1",
+  "atUTC": "2026-10-27T13:28:19.920678+00:00",
+  "status": "COMPLETE_INDEPENDENT_SOURCE_API_REVIEW",
+  "projectQualifiedAPIs": [
+    {
+      "unit": 228,
+      "qualifiedName": "Shao.OQ6.OriginalLiteralWeightedConsumer.actual_original_literal_weighted_consumer",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit228/author-01/repair-02/OriginalLiteralWeightedConsumer.lean",
+        "sha256": "929ef5e4e39f72b43e2c034996ffb6e2bf776a979614fb0046cef77f0ce36c89",
+        "bytes": 41601
+      },
+      "completePreamble": "-- STAGE1 CANDIDATE ONLY. Not frozen, implemented, elaborated, or kernel checked.\n-- Proposed target: Shao/OQ6/OriginalLiteralWeightedConsumer.lean\nimport Shao.OQ6.OriginalLiteralRemainderEnvelope\nimport Shao.OQ6.LiteralDeletedWeightedCosts\nimport Shao.OQ6.NormalizedRemainderEnvelope\n\nset_option autoImplicit false\nuniverse u\nopen MeasureTheory ProbabilityTheory\nopen scoped BigOperators Classical Topology MeasureTheory\nopen Shao.OQ5.P51\n\nnamespace Shao.OQ6.OriginalLiteralWeightedConsumer\nnoncomputable section\n\n",
+      "completeHead": "theorem actual_original_literal_weighted_consumer\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),\n      let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n      letI : MeasurableSpace Ω := m₀\n      letI : MeasurableSpace.CountablyGenerated Ω := hcg\n      IsProbabilityMeasure μ₀ ∧\n      ∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)\n          (z : ℝ) (hz : 0 ≤ z),\n        let mN : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)\n        let mN₀ : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)\n        let P : @Measure (Fin n → Ω) mN :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)\n        let P₀ : @Measure (Fin n → Ω) mN₀ :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let K : ℝ := 4 * Real.sqrt (n : ℝ)\n        let ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))\n        let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N\n        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r\n        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n        let T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n        let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|\n        let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n        let A0delete : Fin n → (Fin n → Ω) → ℝ :=\n          fun i ζ => |residualStatisticDDeleted n r ζ i|\n        let B0delete : Fin n → (Fin n → Ω) → ℝ :=\n          fun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i\n        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)\n        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mAugLocal)\n        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=\n          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01\n        let ν : @Measure (Fin n → Ω × ℝ) mAug :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal\n        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1\n        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>\n          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode\n            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))\n        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N\n        let Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>\n          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)\n        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)\n        let Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)\n        let a : ℕ → Fin n → ℝ := fun k =>\n          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)\n        let s : ℕ → ℝ := fun k =>\n          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)\n        let ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>\n          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)\n        let η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>\n          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)\n        let C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x\n        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x\n        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)\n        let Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x\n        let Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)\n        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))\n        let Qε : ℕ → (Fin n → Ω × ℝ) → ℝ :=\n          fun k x => W x - Wη k x + z * b x * (Vη k x - V x)\n        let Dη : ℕ → (Fin n → Ω × ℝ) → ℝ :=\n          fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)\n        let Tη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)\n        let A : (Fin n → Ω × ℝ) → ℝ := fun x => A0 (q x)\n        let B : (Fin n → Ω × ℝ) → ℝ := fun x => B0 (q x)\n        let Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => A0delete i (q x)\n        let Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => B0delete i (q x)\n        let Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)\n        let H : (Fin n → Ω × ℝ) → ℝ :=\n          fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))\n        let Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))\n        let M : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => K * ε k * H x\n        let Mdelete : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => K * ε k * Hdelete i x\n        let Anew : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => A x + M k x\n        let AdeleteNew : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Adelete i x + Mdelete k i x\n        let Δ : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)\n        let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2\n        let ℓη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2\n        let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ\n        let Sη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, ℓη k i x\n        let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ\n        let Sηminus : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x\n        let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P\n        let Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν\n        let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ\n        let fullTestη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => z * Anew k x + z ^ 2 * B x\n        let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n          min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)\n        let deletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>\n          min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)\n        let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n          min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)\n        let compactDeletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>\n          min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)\n        let Lcompact0 : ℝ := ∑ i : Fin n,\n          ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P\n        let Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n,\n          ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν\n        let sourceCost0 : ℝ :=\n          ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +\n            ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0\n        let sourceCostη : ℕ → ℝ := fun k =>\n          ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +\n            ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k\n        let compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +\n          ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P\n        let compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ x, Anew k x ∂ν) +\n          z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν\n        @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧\n        P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧\n        IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧\n        (∀ k : ℕ, 0 < ε k ∧ ε k < 1 / (4 * Real.sqrt (n : ℝ))) ∧\n        Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)) ∧\n        (∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν ∧\n          (∫ x, ξ i x ∂ν) = 0) ∧\n        (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1 ∧\n        (∀ (k : ℕ) (i : Fin n), Measurable[mAugLocal, borel ℝ] (Ylocal k i) ∧\n          Measurable[mAug, borel ℝ] (Y k i) ∧ ∀ x : Fin n → Ω × ℝ, |Y k i x - ξ i x| ≤ ε k) ∧\n        (∀ ζ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ζ ∧ |D2 ζ| ≤ B0 ζ) ∧\n        (∀ ζ : Fin n → Ω, projectionV n g ζ = 0 → T0 ζ = 0) ∧\n        (∀ (k : ℕ) (x : Fin n → Ω × ℝ), Vη k x = 0 → Tη k x = 0) ∧\n        (∀ k : ℕ, (1 / 2 : ℝ) < s k ∧\n          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η k i x = ηlocal k i (x i)) ∧\n          iIndepFun (η k) ν ∧\n          (∀ i : Fin n, Measurable[mAug, borel ℝ] (η k i) ∧ MemLp (η k i) 2 ν ∧\n            (∫ x, η k i x ∂ν) = 0) ∧\n          (∑ i : Fin n, ∫ x, (η k i x) ^ 2 ∂ν) = 1 ∧\n          ν {x : Fin n → Ω × ℝ | Vη k x = 0} = 0 ∧\n          (∀ᵐ x ∂ν, 0 < Vη k x ∧ 0 < b x ∧ 0 < Vη k x * b x)) ∧\n        (∀ (k : ℕ) (x : Fin n → Ω × ℝ),\n          Dη k x = D1 (q x) + Qε k x ∧\n          Wη k x + Dη k x - z * Vη k x * b x = W x + D1 (q x) - z * V x * b x ∧\n          |Qε k x| ≤ M k x ∧ |Dη k x| ≤ Anew k x) ∧\n        Measurable[mAug, borel ℝ] H ∧ Integrable[mAug] H ν ∧\n        (∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν) ∧\n        (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧ Integrable[mAug] (Qε k) ν ∧\n          Integrable[mAug] (fun x => |Qε k x|) ν ∧\n          (∫ x, |Qε k x| ∂ν) ≤ K * ε k * (∫ x, H x ∂ν)) ∧\n        Filter.Tendsto (fun k => ∫ x, |Qε k x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧\n        (∀ k : ℕ, Measurable[mAug, borel ℝ] (Anew k) ∧ Integrable[mAug] (Anew k) ν ∧\n          ∀ x : Fin n → Ω × ℝ, 0 ≤ Anew k x) ∧\n        (∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (AdeleteNew k i) ∧\n          Integrable[mAug] (AdeleteNew k i) ν ∧ ∀ x : Fin n → Ω × ℝ, 0 ≤ AdeleteNew k i x) ∧\n        (∀ k : ℕ, Integrable[mAug] (fun x => |Anew k x - A x|) ν ∧\n          (∫ x, |Anew k x - A x| ∂ν) = ε k * (K * (∫ x, H x ∂ν))) ∧\n        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |AdeleteNew k i x - Adelete i x|) ν ∧\n          (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) = ε k * (K * (∫ x, Hdelete i x ∂ν))) ∧\n        Filter.Tendsto (fun k => ∫ x, |Anew k x - A x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧\n        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, |AdeleteNew k i x - Adelete i x| ∂ν)\n          Filter.atTop (nhds (0 : ℝ))) ∧\n        (∀ (k : ℕ) (i : Fin n) (x : Fin n → Ω × ℝ),\n          Δ k i x = M k x - Mdelete k i x ∧ |Δ k i x| ≤ M k x + Mdelete k i x) ∧\n        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |Δ k i x|) ν ∧\n          (∫ x, |Δ k i x| ∂ν) ≤ ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)))) ∧\n        (∀ k : ℕ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,\n          Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧\n          ∀ x : Fin n → Ω × ℝ, (M k x, Anew k x, B x) = Ffull (C k x)) ∧\n        (∀ (k : ℕ) (i : Fin n), ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n          Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧\n          ∀ x : Fin n → Ω × ℝ,\n            (Mdelete k i x, AdeleteNew k i x, Bdelete i x) =\n              Fdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧\n        (∀ k : ℕ, ∃ G1 G2 : (Fin n → ℝ) → ℝ,\n          Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n          ∀ x : Fin n → Ω × ℝ, Dη k x = G1 (C k x) ∧ D2 (q x) = G2 (C k x)) ∧\n        Integrable[mN] (fun ζ => fullTest0 ζ * Real.exp (S0 ζ)) P ∧\n        (∀ k : ℕ, Integrable[mAug] (fun x => fullTestη k x * Real.exp (Sη k x)) ν) ∧\n        (∀ i : Fin n, Integrable[mN] (fun ζ => deletedTest0 i ζ * Real.exp (S0minus i ζ)) P) ∧\n        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => deletedTestη k i x * Real.exp (Sηminus k i x)) ν) ∧\n        (∀ i : Fin n, Integrable[mN] (compactDeletedTest0 i) P) ∧\n        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (compactDeletedTestη k i) ν) ∧\n        0 < I0 ∧ (∀ k : ℕ, 0 < Iη k) ∧\n        Filter.Tendsto Iη Filter.atTop (nhds I0) ∧\n        Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)\n          Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)) ∧\n        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)\n          Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P))) ∧\n        Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)\n          Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)) ∧\n        (∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n          Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧\n        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)\n          Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P))) ∧\n        Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) ∧\n        Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0)",
+      "fullHeadAndContextRead": true,
+      "application": "sole m₀ before all n/C0/z, same canonical law/family and literal46 analytic outputs; source306-348",
+      "qualifiedEvidence": {
+        "path": "C:/game/shao lean/drafts/oq56/unit228/qualified-evidence.json",
+        "sha256": "a3d863a03e441dd8b56ad74f5bbd450dc29da58732c1fc16fa8c6c4c40ec4a13",
+        "bytes": 23363
+      },
+      "qualifiedEvidenceFields": {
+        "qualified": true,
+        "kernelChecked": true,
+        "kernelPending": false,
+        "allRecursiveAxiomsWhitelisted": true,
+        "allOwnerCountsDerived": {
+          "all": 2,
+          "theorems": 2,
+          "nonTheorems": 0,
+          "TYPElines": 2218,
+          "VALUElines": 0
+        },
+        "source": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalLiteralWeightedConsumer.lean",
+          "sha256": "929ef5e4e39f72b43e2c034996ffb6e2bf776a979614fb0046cef77f0ce36c89",
+          "bytes": 41601,
+          "mtime_ns": "1793101985458944406"
+        },
+        "firstOriginalObject": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalLiteralWeightedConsumer.olean",
+          "sha256": "aeea32b45ce2d1bc4badb1db9d3f770632964bd62f0df0a4effce858f40e2237",
+          "bytes": 21877392,
+          "mtime_ns": "1793102125482556867"
+        }
+      },
+      "acceptedProofReReviewed": false,
+      "acceptedNativeOrAXReplayed": false
+    },
+    {
+      "unit": 229,
+      "qualifiedName": "Shao.OQ6.NormalizedStrictMomentBudgets.actual_source_z_strict_truncated_moment_budgets",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit229/author-01/NormalizedStrictMomentBudgets.lean",
+        "sha256": "52e0f905cb5d68d3c213faa2078cc1bb885a24834dac1cd1e61a96d4437b8ad0",
+        "bytes": 4109
+      },
+      "completePreamble": "import Shao.OQ6.NormalizedAnalyticCostLimits\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.NormalizedStrictMomentBudgets\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical Topology\n\n",
+      "completeHead": "theorem actual_source_z_strict_truncated_moment_budgets\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξmean : ∀ i : Fin n, (∫ ω : Ω, ξ i ω ∂ν) = 0)\n    (hξenergy : (∑ i : Fin n, ∫ ω : Ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (Y : ℕ → Fin n → Ω → ℝ)\n    (hY : ∀ (k : ℕ) (i : Fin n), Measurable (Y k i))\n    (ε : ℕ → ℝ) (hε : ∀ k : ℕ, 0 < ε k)\n    (hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ)))\n    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)))\n    (herr : ∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k)\n    (z : ℝ) (hz : 1 ≤ z)\n    (cBudget : ℝ) (hcBudget : 0 < cBudget) :\n    let η : ℕ → Fin n → Ω → ℝ := fun (k : ℕ) =>\n      Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)\n    let Fz : ℝ → ℝ := fun (t : ℝ) => (z * t) ^ 2 * min |z * t| 1\n    let δ0 : Fin n → ℝ := fun (i : Fin n) => ∫ ω : Ω, Fz (ξ i ω) ∂ν\n    let δη : ℕ → Fin n → ℝ := fun (k : ℕ) (i : Fin n) =>\n      ∫ ω : Ω, Fz (η k i ω) ∂ν\n    let L0 : ℝ := ∑ i : Fin n, δ0 i\n    let Lη : ℕ → ℝ := fun (k : ℕ) => ∑ i : Fin n, δη k i\n    (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) →\n    L0 < cBudget * z ^ 2 →\n    (∀ i : Fin n, Integrable (fun (ω : Ω) => Fz (ξ i ω)) ν) ∧\n    (∀ (k : ℕ) (i : Fin n), Integrable (fun (ω : Ω) => Fz (η k i ω)) ν) ∧\n    (∀ i : Fin n,\n      Filter.Tendsto (fun (k : ℕ) => δη k i) Filter.atTop (nhds (δ0 i))) ∧\n    Filter.Tendsto Lη Filter.atTop (nhds L0) ∧\n    (∃ k0 : ℕ, ∀ k : ℕ, k0 ≤ k →\n      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2)",
+      "fullHeadAndContextRead": true,
+      "application": "exact mAug/ν/n/ξ/Y/ε/z/cBudget and transported δν/Lν strict margins; source449-469",
+      "qualifiedEvidence": {
+        "path": "C:/game/shao lean/drafts/oq56/unit229/qualified-evidence.json",
+        "sha256": "0ca43d93ce97d3ccf43d1693dbd5498deb4c9bbca4ddea36c79a1c465c771b25",
+        "bytes": 11313
+      },
+      "qualifiedEvidenceFields": {
+        "qualified": true,
+        "kernelChecked": true,
+        "kernelPending": false,
+        "allRecursiveAxiomsWhitelisted": true,
+        "allOwnerCountsDerived": {
+          "all": 1,
+          "theorems": 1,
+          "nonTheorems": 0,
+          "TYPElines": 201,
+          "VALUElines": 0
+        },
+        "source": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/NormalizedStrictMomentBudgets.lean",
+          "sha256": "52e0f905cb5d68d3c213faa2078cc1bb885a24834dac1cd1e61a96d4437b8ad0",
+          "bytes": 4109,
+          "mtime_ns": "1793093962597149037"
+        },
+        "firstOriginalObject": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/NormalizedStrictMomentBudgets.olean",
+          "sha256": "7b2107b2e6084db702169b9d9cdd9d771fa5848d395b271a9177db6b083f195d",
+          "bytes": 753736,
+          "mtime_ns": "1793094038672938485"
+        }
+      },
+      "acceptedProofReReviewed": false,
+      "acceptedNativeOrAXReplayed": false
+    },
+    {
+      "unit": 230,
+      "qualifiedName": "Shao.OQ6.IIDSourceStrictMomentBudgets.actual_iid_source_z_strict_moment_budgets",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit230/author-01/repair-01/IIDSourceStrictMomentBudgets.lean",
+        "sha256": "4905904cb5e8f37f1731c92da9e504e614e8dc7734a5de3f124ab2bceff55c36",
+        "bytes": 10716
+      },
+      "completePreamble": "import Shao.OQ6.ActualPhysicalCompactCDF\nimport Shao.Probability.TruncationIntegrals\nimport Mathlib.MeasureTheory.Constructions.Pi\nimport Mathlib.MeasureTheory.Integral.Bochner.Basic\nimport Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Ring\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nuniverse u\n\nnamespace Shao.OQ6.IIDSourceStrictMomentBudgets\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical\n\n",
+      "completeHead": "theorem actual_iid_source_z_strict_moment_budgets\n    {Ω : Type u} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)\n    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)\n    (hgp : Integrable (fun o : Ω => Real.rpow |g o| p) μ)\n    (cBudget : ℝ) (hcBudget : 0 < cBudget) :\n    let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ\n    let c : ℝ :=\n      Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)\n    0 ≤ β ∧\n      0 < c ∧\n      Real.rpow c p = min (1 / 2 : ℝ) cBudget / 2 ∧\n      Real.rpow c p < min (1 / 2 : ℝ) cBudget ∧\n      (∀ (n : ℕ) (_hn : 1 ≤ n) (z : ℝ) (_hz : 1 ≤ z),\n        let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let ξ : Fin n → (Fin n → Ω) → ℝ :=\n          fun i ω => g (ω i) / N\n        let projectionTest : (Fin n → Ω) → Fin n → ℝ :=\n          fun ω i => Shao.truncationF (z * ξ i ω)\n        let δ : Fin n → ℝ :=\n          fun i => ∫ ω : Fin n → Ω, projectionTest ω i ∂P\n        let L : ℝ := ∑ i : Fin n, δ i\n        let scalarBudget : ℝ :=\n          ∫ o : Ω, Shao.truncationF (z * (g o / N)) ∂μ\n        IsProbabilityMeasure P ∧\n          Integrable (fun o : Ω => Shao.truncationF (z * (g o / N))) μ ∧\n          (∀ i : Fin n, Integrable (fun ω : Fin n → Ω =>\n            projectionTest ω i) P) ∧\n          (∀ i : Fin n, δ i = scalarBudget) ∧\n          L = (n : ℝ) * scalarBudget ∧\n          (∀ i : Fin n, L = (n : ℝ) * δ i) ∧\n          (∀ i : Fin n, 0 ≤ δ i) ∧\n          0 ≤ L ∧\n          L ≤ β * Real.rpow z p /\n            Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n          (β = 0 → L = 0 ∧ (∀ i : Fin n, δ i = 0)) ∧\n          ((β = 0 ∨\n              (0 < β ∧ z ≤ c * Real.rpow β (-1 / p) *\n                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →\n            L ≤ Real.rpow c p ∧\n              (∀ i : Fin n, δ i < (1 / 2 : ℝ)) ∧\n              L < cBudget * z ^ 2))",
+      "fullHeadAndContextRead": true,
+      "application": "original mΩ/μ/g/p/hgp/cBudget; explicit cWindow then originalP source-z iid packet; source300-305,351-364,438-448",
+      "qualifiedEvidence": {
+        "path": "C:/game/shao lean/drafts/oq56/unit230/qualified-evidence.json",
+        "sha256": "74840e8f64033422ac72611b9e951fecd9a91a19adc226cf59e6b2f70869f251",
+        "bytes": 11321
+      },
+      "qualifiedEvidenceFields": {
+        "qualified": true,
+        "kernelChecked": true,
+        "kernelPending": false,
+        "allRecursiveAxiomsWhitelisted": true,
+        "allOwnerCountsDerived": {
+          "all": 8,
+          "theorems": 8,
+          "nonTheorems": 0,
+          "TYPElines": 391,
+          "VALUElines": 0
+        },
+        "source": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/IIDSourceStrictMomentBudgets.lean",
+          "sha256": "4905904cb5e8f37f1731c92da9e504e614e8dc7734a5de3f124ab2bceff55c36",
+          "bytes": 10716,
+          "mtime_ns": "1793096506862107353"
+        },
+        "firstOriginalObject": {
+          "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/IIDSourceStrictMomentBudgets.olean",
+          "sha256": "3cd5bce4f6aa2cd5f2da1da968e8b863dffa1417665055159060b0f0839a2fbe",
+          "bytes": 341960,
+          "mtime_ns": "1793096748289439162"
+        }
+      },
+      "acceptedProofReReviewed": false,
+      "acceptedNativeOrAXReplayed": false
+    }
+  ],
+  "projectOrdinaryDefinitionCount": 32,
+  "projectOrdinaryDefinitions": [
+    {
+      "path": "C:/game/shao lean/library/Shao/Basic/TruncationBudget.lean",
+      "name": "truncationF",
+      "completeDeclaration": "def truncationF (z : ℝ) : ℝ := z ^ 2 * min |z| 1",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/Basic/TruncationBudget.lean",
+        "sha256": "70cf7e33d458b847ea94cfa5bd8dce59a9dc3cb0ef632140a0f55fca8ded71bd",
+        "bytes": 8119
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Mathlib.Analysis.SpecialFunctions.Pow.Real\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Positivity\nimport Mathlib.Tactic.Ring\n\n/-!\n# The scalar integrand of the truncated-moment budget\n\nThe source budget is `Rₙ(t) = n E[F((1+t)ξ)]`, with\n`F(z) = z² min(|z|,1)`. This module proves its pointwise real-analysis inputs.\nThe marked inequalities are the kernels for the tail first and second moments\nand the truncated third moment. They preserve the cutoff conventions: the\nretained region is closed, and the deleted region is its strict complement.\n\nNo integration or measure-level continuity, strict increase, or limit of `Rₙ`\nis asserted here. Those require a separate probability interface.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao\n\n/-- The actual scalar integrand in the source's truncated-moment budget. -/\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ScalarObservationCoding.lean",
+      "name": "baseFourIndicatorCode",
+      "completeDeclaration": "noncomputable def baseFourIndicatorCode\n    {X : Type*} (A : ℕ → Set X) (x : X) : ℝ :=\n  ∑' k : ℕ,\n    (if x ∈ A k then (2 : ℝ) else 1) / (4 : ℝ) ^ (k + 1)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ScalarObservationCoding.lean",
+        "sha256": "78ba58ee64238fdff51a026d86ab939d34ac66787f804c562c4f0984dc96057c",
+        "bytes": 14428
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Mathlib.MeasureTheory.MeasurableSpace.CountablyGenerated\nimport Mathlib.MeasureTheory.Constructions.BorelSpace.Basic\nimport Mathlib.MeasureTheory.Measure.Lebesgue.Basic\nimport Mathlib.MeasureTheory.Measure.Prod\nimport Mathlib.MeasureTheory.Function.Floor\nimport Mathlib.Topology.Algebra.InfiniteSum.Real\nimport Mathlib.Analysis.SpecificLimits.Basic\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ScalarObservationCoding\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+      "name": "quantizedObservation",
+      "completeDeclaration": "noncomputable def quantizedObservation\n    {X : Type*} (ε : ℝ) (ξ c : X → ℝ) (x : X) : ℝ :=\n  ε * ((Int.floor (ξ x / ε) : ℝ) + c x)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+        "sha256": "c755dcb72b58931c797416f23ce4f13b383cd17b1b6ef5b2bd5b86b368290062",
+        "bytes": 6921
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.ScalarObservationCoding\nimport Mathlib.MeasureTheory.Function.Floor\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.QuantizedObservationCoding\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped Classical\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+      "name": "deterministicAffineObservation",
+      "completeDeclaration": "def deterministicAffineObservation\n    {X : Type*} (a s : ℝ) (Y : X → ℝ) (x : X) : ℝ :=\n  (Y x - a) / s",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/QuantizedObservationCoding.lean",
+        "sha256": "c755dcb72b58931c797416f23ce4f13b383cd17b1b6ef5b2bd5b86b368290062",
+        "bytes": 6921
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.ScalarObservationCoding\nimport Mathlib.MeasureTheory.Function.Floor\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.QuantizedObservationCoding\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped Classical\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+      "name": "actualCoordinateMean",
+      "completeDeclaration": "noncomputable def actualCoordinateMean\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ) (i : Fin n) : ℝ :=\n  ∫ ω, Y i ω ∂ν",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+        "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237",
+        "bytes": 22137
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.QuantizedObservationCoding\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Integral.Bochner.Basic\nimport Mathlib.Analysis.Real.Sqrt\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Ring\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ActualMomentNormalization\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+      "name": "actualCenteredFamily",
+      "completeDeclaration": "noncomputable def actualCenteredFamily\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ)\n    (i : Fin n) (ω : Ω) : ℝ :=\n  Y i ω - actualCoordinateMean ν Y i",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+        "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237",
+        "bytes": 22137
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.QuantizedObservationCoding\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Integral.Bochner.Basic\nimport Mathlib.Analysis.Real.Sqrt\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Ring\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ActualMomentNormalization\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+      "name": "actualNormalizationScale",
+      "completeDeclaration": "noncomputable def actualNormalizationScale\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ) : ℝ :=\n  Real.sqrt (∑ i : Fin n, ∫ ω, (actualCenteredFamily ν Y i ω) ^ 2 ∂ν)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+        "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237",
+        "bytes": 22137
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.QuantizedObservationCoding\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Integral.Bochner.Basic\nimport Mathlib.Analysis.Real.Sqrt\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Ring\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ActualMomentNormalization\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+      "name": "actualNormalizedFamily",
+      "completeDeclaration": "noncomputable def actualNormalizedFamily\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ)\n    (i : Fin n) (ω : Ω) : ℝ :=\n  Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation\n    (actualCoordinateMean ν Y i) (actualNormalizationScale ν Y) (Y i) ω",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean",
+        "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237",
+        "bytes": 22137
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.QuantizedObservationCoding\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Integral.Bochner.Basic\nimport Mathlib.Analysis.Real.Sqrt\nimport Mathlib.Tactic.NormNum\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Ring\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Positivity\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ActualMomentNormalization\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "sampledKernel",
+      "completeDeclaration": "def sampledKernel\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : Fin n → Fin n → ℝ :=\n  fun (i j : Fin n) => g (x i) + g (x j) + r (x i) (x j)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "projectionEnergy",
+      "completeDeclaration": "def projectionEnergy\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  (∑ i : Fin n, (g (x i)) ^ (2 : ℕ)) / (n : ℝ)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "projectionV",
+      "completeDeclaration": "def projectionV\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  Real.sqrt (projectionEnergy n g x)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "projectionW",
+      "completeDeclaration": "def projectionW\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  (∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "residualStatisticD",
+      "completeDeclaration": "def residualStatisticD\n    (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  originalUpper n r x / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "residualU",
+      "completeDeclaration": "def residualU\n    (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) : Fin n → ℝ :=\n  fun i : Fin n => originalRows n r x i / ((n : ℝ) - 2)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "residualEnergyJ",
+      "completeDeclaration": "def residualEnergyJ\n    (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  ∑ i : Fin n, (residualU n r x i) ^ (2 : ℕ)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "centeredSq",
+      "completeDeclaration": "def centeredSq\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  Shao.OQ6.FiniteRows.jackknifeSq (sampledKernel n g r x) / 4",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+      "name": "centeredDelta",
+      "completeDeclaration": "def centeredDelta\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  @ite ℝ (projectionV n g x = 0)\n    (Classical.propDecidable (projectionV n g x = 0))\n    (0 : ℝ) (centeredSq n g r x / (projectionV n g x) ^ (2 : ℕ) - 1)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean",
+        "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc",
+        "bytes": 33066
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "/- Exact frozen unit196 finite studentizer geometry.\nAuthor implementation candidate; not machine checked. -/\n\nimport Shao.OQ6.FiniteRows\n\nimport Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nimport Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nimport Mathlib.Analysis.Real.Sqrt\n\nimport Mathlib.Analysis.InnerProductSpace.PiL2\n\nset_option autoImplicit false\n\nuniverse u\n\nopen scoped BigOperators\n\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)\n\nopen Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)\n\nnamespace Shao.OQ5.P51\n\nnoncomputable section\n\n-- D01\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+      "name": "studentizerClip",
+      "completeDeclaration": "def studentizerClip (B d : ℝ) : ℝ :=\n  max (-(min B (1 / 2 : ℝ))) (min d B)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.BoundedRemainderPayments\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped Classical\n\nnamespace Shao.OQ5.P51\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+      "name": "studentizerClipBudget",
+      "completeDeclaration": "def studentizerClipBudget (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ :=\n  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +\n    residualEnergyJ n r x / ((1 + rho) * y * Real.sqrt (n : ℝ)))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.BoundedRemainderPayments\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped Classical\n\nnamespace Shao.OQ5.P51\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+      "name": "clippedCenteredDelta",
+      "completeDeclaration": "def clippedCenteredDelta (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) : ℝ :=\n  if projectionV n g x = 0 then 0 else\n    studentizerClip (studentizerClipBudget n r C0 rho y x)\n      (centeredDelta n g r x)",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.BoundedRemainderPayments\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped Classical\n\nnamespace Shao.OQ5.P51\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+      "name": "clippedCenteredStatistic",
+      "completeDeclaration": "def clippedCenteredStatistic (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) : ℝ :=\n  if projectionV n g x = 0 then 0 else\n    (projectionW n g x + residualStatisticD n r x) /\n      (projectionV n g x *\n        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.BoundedRemainderPayments\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped Classical\n\nnamespace Shao.OQ5.P51\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+      "name": "residualStatisticDDeleted",
+      "completeDeclaration": "def residualStatisticDDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  Shao.OQ5.P35.unorderedPairSum\n      (Shao.OQ6.ResidualDeletion.eraseIncident\n        (fun j k : Fin n => r (x j) (x k)) i) /\n    (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.ClippedStudentizer\nimport Shao.OQ6.ResidualDeletionMeasurable\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped BigOperators Classical\n\nnamespace Shao.OQ5.P51\n\n/- Original p51 S13: original-length deleted nonnegative envelopes.\n   Author source candidate; server kernel and independent final review pending. -/\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+      "name": "residualEnergyJDeleted",
+      "completeDeclaration": "def residualEnergyJDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  (∑ j : Fin n,\n    (Shao.OQ6.ResidualDeletion.rowSum\n      (Shao.OQ6.ResidualDeletion.eraseIncident\n        (fun k l : Fin n => r (x k) (x l)) i) j) ^ 2) /\n    ((n : ℝ) - 2) ^ 2",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.ClippedStudentizer\nimport Shao.OQ6.ResidualDeletionMeasurable\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped BigOperators Classical\n\nnamespace Shao.OQ5.P51\n\n/- Original p51 S13: original-length deleted nonnegative envelopes.\n   Author source candidate; server kernel and independent final review pending. -/\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+      "name": "studentizerClipBudgetDeleted",
+      "completeDeclaration": "def studentizerClipBudgetDeleted (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (i : Fin n) : ℝ :=\n  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +\n    residualEnergyJDeleted n r x i /\n      ((1 + rho) * y * Real.sqrt (n : ℝ)))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P51.ClippedStudentizer\nimport Shao.OQ6.ResidualDeletionMeasurable\n\nset_option autoImplicit false\n\nuniverse u\n\nnoncomputable section\nopen scoped BigOperators Classical\n\nnamespace Shao.OQ5.P51\n\n/- Original p51 S13: original-length deleted nonnegative envelopes.\n   Author source candidate; server kernel and independent final review pending. -/\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ5/P35/RowIdentity.lean",
+      "name": "unorderedPairSum",
+      "completeDeclaration": "def unorderedPairSum (H : Fin n → Fin n → ℝ) : ℝ :=\n  ∑ i : Fin n, ∑ j : Fin n, if i < j then H i j else 0",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P35/RowIdentity.lean",
+        "sha256": "73bb0809bc6d323b31775327e468677d6320b38f8fe87363936860164f17f975",
+        "bytes": 9971
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Mathlib.Algebra.BigOperators.Ring.Finset\nimport Mathlib.Algebra.BigOperators.Group.Finset.Sigma\nimport Mathlib.Data.Fintype.Card\nimport Mathlib.Data.Nat.Choose.Basic\nimport Mathlib.Basic.Real.Basic\nimport Mathlib.Tactic.FieldSimp\nimport Mathlib.Tactic.Ring\n\n/-!\n# The actual degree-two jackknife row identity for p35\n\nThis file is finite deterministic algebra. The U-statistic is defined from the\nunordered pair sum and is connected to row averages by a separate double-counting\nproof. No probability statement or rare-category cancellation is included.\n\nSource: current/oq56/inputs02/p35.md, lines 28–46, formula (3).\nThe real-valued pair count is proved equal to the cast of Nat.choose n 2.\n-/\n\nnamespace Shao.OQ5.P35\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n/-- The symmetric kernel matrix used in the p35 counterexample. -/\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+      "name": "eraseIncident",
+      "completeDeclaration": "def eraseIncident (r : Fin n → Fin n → ℝ) (i : Fin n) :\n    Fin n → Fin n → ℝ :=\n  fun j k => if j = i ∨ k = i then 0 else r j k",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+        "sha256": "7ffedae803b94e0acf0cc7e6b972d2b99ee468742e7f8b12ea2eff99abfbe75b",
+        "bytes": 5652
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P35.RowIdentity\n\n/-!\n# Original-length incident-edge residual deletion\n\nFinite deterministic identities from original p39, lines 129–151, with the\nfixed original-length deletion convention of p38, line 68. The diagonal is\nexcluded from every row sum. No statistical normalization or tilted estimate\nis asserted here.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ResidualDeletion\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+      "name": "rowSum",
+      "completeDeclaration": "def rowSum (r : Fin n → Fin n → ℝ) (j : Fin n) : ℝ :=\n  ∑ k ∈ Finset.univ.erase j, r j k",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+        "sha256": "7ffedae803b94e0acf0cc7e6b972d2b99ee468742e7f8b12ea2eff99abfbe75b",
+        "bytes": 5652
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P35.RowIdentity\n\n/-!\n# Original-length incident-edge residual deletion\n\nFinite deterministic identities from original p39, lines 129–151, with the\nfixed original-length deletion convention of p38, line 68. The diagonal is\nexcluded from every row sum. No statistical normalization or tilted estimate\nis asserted here.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.ResidualDeletion\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+      "name": "uStatistic",
+      "completeDeclaration": "def uStatistic (H : Fin n → Fin n → ℝ) : ℝ :=\n  (n.choose 2 : ℝ)⁻¹ * Shao.OQ5.P35.unorderedPairSum H",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+        "sha256": "bb4dc865f5ab96ce57814f0721fbd31a2885d6fce7a9facd150941c4c2f91930",
+        "bytes": 3837
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P35.RowIdentity\nimport Mathlib.Algebra.Order.BigOperators.Ring.Finset\n\n/-!\n# Arbitrary symmetric finite rows\n\nFinite deterministic algebra from original p39, lines 59–72. The U-statistic\ncounts each unordered off-diagonal pair once. The centered jackknife and the\nuncentered row square retain their original coefficients. Square roots,\nevent conversion and probability are separate later units.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.FiniteRows\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n/-- Average every unordered off-diagonal pair exactly once. -/\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+      "name": "rowMean",
+      "completeDeclaration": "def rowMean (H : Fin n → Fin n → ℝ) (i : Fin n) : ℝ :=\n  ((n : ℝ) - 1)⁻¹ * ∑ j ∈ Finset.univ.erase i, H i j",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+        "sha256": "bb4dc865f5ab96ce57814f0721fbd31a2885d6fce7a9facd150941c4c2f91930",
+        "bytes": 3837
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P35.RowIdentity\nimport Mathlib.Algebra.Order.BigOperators.Ring.Finset\n\n/-!\n# Arbitrary symmetric finite rows\n\nFinite deterministic algebra from original p39, lines 59–72. The U-statistic\ncounts each unordered off-diagonal pair once. The centered jackknife and the\nuncentered row square retain their original coefficients. Square roots,\nevent conversion and probability are separate later units.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.FiniteRows\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n/-- Average every unordered off-diagonal pair exactly once. -/\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+      "name": "jackknifeSq",
+      "completeDeclaration": "def jackknifeSq (H : Fin n → Fin n → ℝ) : ℝ :=\n  (4 * ((n : ℝ) - 1) / ((n : ℝ) - 2) ^ 2) *\n    ∑ i : Fin n, (rowMean H i - uStatistic H) ^ 2",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/FiniteRows.lean",
+        "sha256": "bb4dc865f5ab96ce57814f0721fbd31a2885d6fce7a9facd150941c4c2f91930",
+        "bytes": 3837
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ5.P35.RowIdentity\nimport Mathlib.Algebra.Order.BigOperators.Ring.Finset\n\n/-!\n# Arbitrary symmetric finite rows\n\nFinite deterministic algebra from original p39, lines 59–72. The U-statistic\ncounts each unordered off-diagonal pair once. The centered jackknife and the\nuncentered row square retain their original coefficients. Square roots,\nevent conversion and probability are separate later units.\n-/\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.FiniteRows\n\nnoncomputable section\n\nopen scoped BigOperators\n\nvariable {n : ℕ}\n\n/-- Average every unordered off-diagonal pair exactly once. -/\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostRowMoments.lean",
+      "name": "originalRows",
+      "completeDeclaration": "def originalRows (n : ℕ) {Ω : Type*} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : EuclideanSpace ℝ (Fin n) := WithLp.toLp (2 : ℝ≥0∞) (V := Fin n → ℝ) (fun i : Fin n => ∑ j : Fin n, if i = j then 0 else r (x i) (x j))",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostRowMoments.lean",
+        "sha256": "0b7f38c8840ffefb15fc9185c8f54c2c6907da96cc49bd5e7ee3c5ed512250fc",
+        "bytes": 38651
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.DoubleGhostSignInvariance\nimport Mathlib.MeasureTheory.Integral.Prod\nimport Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap\nimport Mathlib.Analysis.Convex.Integral\nimport Mathlib.Analysis.Convex.SpecificFunctions.Pow\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.CanonicalDoubleGhostRowMoments\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators ENNReal\nopen Shao.OQ6.FiniteHilbertSignMoments\nopen Shao.OQ6.FiniteMatrixSignEnergy\nopen Shao.OQ6.DoubleGhostSignInvariance\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    },
+    {
+      "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostScalarMoments.lean",
+      "name": "originalUpper",
+      "completeDeclaration": "def originalUpper (n : ℕ) {Ω : Type*} (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=\n  ∑ i : Fin n, ∑ j : Fin n, if i < j then r (x i) (x j) else 0",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/CanonicalDoubleGhostScalarMoments.lean",
+        "sha256": "17790c480efcab2d11cb5d00ccd215a6853e289fb078b5b041ae3bba972ab68c",
+        "bytes": 32159
+      },
+      "actualFullRHSRead": true,
+      "actualSourceNormalizedMatch": true,
+      "contextPreamble": "import Shao.OQ6.CanonicalDoubleGhostRowMoments\nimport Shao.OQ6.FiniteQuadraticSignChaos\nimport Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap\nimport Mathlib.Analysis.Convex.Integral\nimport Mathlib.Analysis.Convex.SpecificFunctions.Pow\n\nset_option autoImplicit false\n\nnamespace Shao.OQ6.CanonicalDoubleGhostScalarMoments\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators ENNReal\nopen Shao.OQ6.FiniteHilbertSignMoments\nopen Shao.OQ6.FiniteMatrixSignEnergy\nopen Shao.OQ6.DoubleGhostSignInvariance\nopen Shao.OQ6.FiniteQuadraticSignChaos\nopen Shao.OQ6.CanonicalDoubleGhostRowMoments\n\n",
+      "implicitContext": "{n : ℕ} where declared by source namespace for finite-row/deletion helpers; explicit n/Ω/universe and standard canonical instances otherwise"
+    }
+  ],
+  "standardReferenceBinding": {
+    "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/server-source-binding.json",
+    "sha256": "30fe679bc411ca3d6ddb14ab360cc0081e74309006d90d0bdf6c707d4712565a",
+    "bytes": 28066
+  },
+  "standardReferences": [
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Order/Filter/Finite.lean",
+        "sha256": "b26d5f2f5e115eb5733aef6a27f4607628921704d5e17c9935c2861733c44017",
+        "bytes": 17713,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__Order__Filter__Finite.lean.md",
+        "sha256": "0f81b474c5331121b951fdc8ab765c4af94fc3f1ab2ef7f6325c6b43dc1a1633",
+        "bytes": 2372
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.Data.Set.Finite.Lattice\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.Order.CompleteLattice.Finset\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.Order.Filter.Basic\n"
+        },
+        {
+          "start": 18,
+          "end": 18,
+          "text": "public section\n"
+        },
+        {
+          "start": 20,
+          "end": 20,
+          "text": "open Function Set Order\n"
+        },
+        {
+          "start": 21,
+          "end": 21,
+          "text": "open scoped symmDiff\n"
+        },
+        {
+          "start": 25,
+          "end": 25,
+          "text": "namespace Filter\n"
+        },
+        {
+          "start": 27,
+          "end": 27,
+          "text": "variable {α : Type u} {f : Filter α} {s : Set α}\n"
+        },
+        {
+          "start": 51,
+          "end": 51,
+          "text": "end Filter\n"
+        },
+        {
+          "start": 54,
+          "end": 54,
+          "text": "namespace Filter\n"
+        },
+        {
+          "start": 56,
+          "end": 56,
+          "text": "variable {α : Type u} {β : Type v} {ι : Sort x}\n"
+        },
+        {
+          "start": 58,
+          "end": 58,
+          "text": "section Lattice\n"
+        },
+        {
+          "start": 60,
+          "end": 60,
+          "text": "variable {f g : Filter α} {s t : Set α}\n"
+        },
+        {
+          "start": 242,
+          "end": 242,
+          "text": "end Lattice\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "eventually_all",
+          "start": 244,
+          "end": 269,
+          "text": "/-! ### Eventually and Frequently -/\n\n@[simp]\ntheorem eventually_all {ι : Sort*} [Finite ι] {l} {p : ι → α → Prop} :\n    (∀ᶠ x in l, ∀ i, p i x) ↔ ∀ i, ∀ᶠ x in l, p i x := by\n  simpa only [Filter.Eventually, ofPred_forall] using iInter_mem\n\n@[simp]\ntheorem eventually_all_finite {ι} {I : Set ι} (hI : I.Finite) {l} {p : ι → α → Prop} :\n    (∀ᶠ x in l, ∀ i ∈ I, p i x) ↔ ∀ i ∈ I, ∀ᶠ x in l, p i x := by\n  simpa only [Filter.Eventually, ofPred_forall] using biInter_mem hI\n\nprotected alias _root_.Set.Finite.eventually_all := eventually_all_finite\n\n@[simp] theorem eventually_all_finset {ι} (I : Finset ι) {l} {p : ι → α → Prop} :\n    (∀ᶠ x in l, ∀ i ∈ I, p i x) ↔ ∀ i ∈ I, ∀ᶠ x in l, p i x :=\n  I.finite_toSet.eventually_all\n\nprotected alias _root_.Finset.eventually_all := eventually_all_finset\n\n@[simp]\ntheorem frequently_exists {ι : Sort*} [Finite ι] {l} {p : ι → α → Prop} :\n    (∃ᶠ x in l, ∃ i, p i x) ↔ ∃ i, ∃ᶠ x in l, p i x := by\n  rw [← not_iff_not]\n  simp\n\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Order/Filter/AtTopBot/Basic.lean",
+        "sha256": "7b467c049ee486339022e2d65a13ee22c37df2625fabeb2c92c0190c7c8aeb1c",
+        "bytes": 18146,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__Order__Filter__AtTopBot__Basic.lean.md",
+        "sha256": "785c1fe7620ab5d27817de14f7248f0ed40f5be88040fba928c5f5395e22a928",
+        "bytes": 2343
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.Order.Filter.AtTopBot.Tendsto\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.Order.Filter.Bases.Basic\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.Order.Nat\n"
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "text": "import Mathlib.Tactic.Subsingleton\n"
+        },
+        {
+          "start": 20,
+          "end": 20,
+          "text": "public section\n"
+        },
+        {
+          "start": 24,
+          "end": 24,
+          "text": "variable {ι ι' α β : Type*}\n"
+        },
+        {
+          "start": 26,
+          "end": 26,
+          "text": "open Set\n"
+        },
+        {
+          "start": 28,
+          "end": 28,
+          "text": "namespace Filter\n"
+        },
+        {
+          "start": 30,
+          "end": 30,
+          "text": "section IsDirected\n"
+        },
+        {
+          "start": 31,
+          "end": 31,
+          "text": "variable [Preorder α] [IsDirectedOrder α] {p : α → Prop}\n"
+        },
+        {
+          "start": 64,
+          "end": 64,
+          "text": "variable [Nonempty α]\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "eventually_atTop",
+          "start": 77,
+          "end": 102,
+          "text": "  atTop_basis.mem_iff.trans <| exists_congr fun _ => iff_of_eq (true_and _)\n\n@[to_dual (attr := simp)]\nlemma eventually_atTop : (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ b, a ≤ b → p b := mem_atTop_sets\n\n@[to_dual]\ntheorem frequently_atTop : (∃ᶠ x in atTop, p x) ↔ ∀ a, ∃ b, a ≤ b ∧ p b :=\n  atTop_basis.frequently_iff.trans <| by simp\n\n@[to_dual]\nalias ⟨Eventually.exists_forall_of_atTop, _⟩ := eventually_atTop\n\n-- `to_dual` cannot translate `forall_ge_iff`\nlemma exists_eventually_atTop {r : α → β → Prop} :\n    (∃ b, ∀ᶠ a in atTop, r a b) ↔ ∀ᶠ a₀ in atTop, ∃ b, ∀ a, a₀ ≤ a → r a b := by\n  simp_rw [eventually_atTop, ← exists_comm (α := α)]\n  exact exists_congr fun a ↦ .symm <| forall_ge_iff <| Monotone.exists fun _ _ _ hb H n hn ↦\n    H n (hb.trans hn)\n\n@[to_dual existing]\nlemma exists_eventually_atBot {α : Type*} [Preorder α] [IsCodirectedOrder α] [Nonempty α]\n    {r : α → β → Prop} : (∃ b, ∀ᶠ a in atBot, r a b) ↔ ∀ᶠ a₀ in atBot, ∃ b, ∀ a ≤ a₀, r a b :=\n  exists_eventually_atTop (α := αᵒᵈ)\n\n@[to_dual]\ntheorem map_atTop_eq {f : α → β} : atTop.map f = ⨅ a, 𝓟 (f '' { a' | a ≤ a' }) :=\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+        "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+        "bytes": 49519,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__MeasureTheory__MeasurableSpace__Constructions.lean.md",
+        "sha256": "16416d4aaa2a9b351b51f928f72660755d02b161da7ad1832b82f9d3088136f5",
+        "bytes": 4820
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.Data.Finset.Update\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.Data.Prod.TProd\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.Data.Set.UnionLift\n"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "public import Mathlib.GroupTheory.Coset.Defs\n"
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "text": "public import Mathlib.MeasureTheory.MeasurableSpace.Basic\n"
+        },
+        {
+          "start": 13,
+          "end": 13,
+          "text": "public import Mathlib.MeasureTheory.MeasurableSpace.Instances\n"
+        },
+        {
+          "start": 14,
+          "end": 14,
+          "text": "public import Mathlib.Order.Disjointed\n"
+        },
+        {
+          "start": 27,
+          "end": 27,
+          "text": "open Set Function MeasureTheory\n"
+        },
+        {
+          "start": 31,
+          "end": 31,
+          "text": "variable {α β γ δ δ' : Type*} {ι : Sort uι} {s : Set α}\n"
+        },
+        {
+          "start": 60,
+          "end": 60,
+          "text": "section ULift\n"
+        },
+        {
+          "start": 61,
+          "end": 61,
+          "text": "variable [MeasurableSpace α]\n"
+        },
+        {
+          "start": 74,
+          "end": 74,
+          "text": "end ULift\n"
+        },
+        {
+          "start": 76,
+          "end": 76,
+          "text": "section Nat\n"
+        },
+        {
+          "start": 78,
+          "end": 78,
+          "text": "variable {mα : MeasurableSpace α}\n"
+        },
+        {
+          "start": 123,
+          "end": 123,
+          "text": "end Nat\n"
+        },
+        {
+          "start": 125,
+          "end": 125,
+          "text": "section Quotient\n"
+        },
+        {
+          "start": 127,
+          "end": 127,
+          "text": "variable [MeasurableSpace α] [MeasurableSpace β]\n"
+        },
+        {
+          "start": 180,
+          "end": 180,
+          "text": "end Quotient\n"
+        },
+        {
+          "start": 182,
+          "end": 182,
+          "text": "section Subtype\n"
+        },
+        {
+          "start": 188,
+          "end": 188,
+          "text": "section\n"
+        },
+        {
+          "start": 190,
+          "end": 190,
+          "text": "variable [MeasurableSpace α]\n"
+        },
+        {
+          "start": 201,
+          "end": 201,
+          "text": "end\n"
+        },
+        {
+          "start": 203,
+          "end": 203,
+          "text": "variable {m : MeasurableSpace α} {mβ : MeasurableSpace β}\n"
+        },
+        {
+          "start": 290,
+          "end": 290,
+          "text": "end Subtype\n"
+        },
+        {
+          "start": 292,
+          "end": 292,
+          "text": "section Atoms\n"
+        },
+        {
+          "start": 294,
+          "end": 294,
+          "text": "variable [MeasurableSpace β]\n"
+        },
+        {
+          "start": 365,
+          "end": 365,
+          "text": "end Atoms\n"
+        },
+        {
+          "start": 367,
+          "end": 367,
+          "text": "section Prod\n"
+        },
+        {
+          "start": 387,
+          "end": 387,
+          "text": "variable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}\n"
+        },
+        {
+          "start": 568,
+          "end": 568,
+          "text": "end Prod\n"
+        },
+        {
+          "start": 570,
+          "end": 570,
+          "text": "section Pi\n"
+        },
+        {
+          "start": 572,
+          "end": 572,
+          "text": "variable {X : δ → Type*} [MeasurableSpace α]\n"
+        },
+        {
+          "start": 577,
+          "end": 577,
+          "text": "variable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "measurable_pi_iff",
+          "start": 576,
+          "end": 601,
+          "text": "\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\ntheorem MeasurableSpace.comap_le_comap_pi {g : (a : δ) → β → X a} (a : δ) :\n    .comap (g a) inferInstance ≤ pi.comap (fun b c ↦ g c b) := by\n  simpa only [pi, comap_iSup] using le_iSup_of_le a <| by measurability\n\ntheorem Measurable.eval {a : δ} {g : α → ∀ a, X a} (hg : Measurable g) :\n    Measurable fun x => g x a :=\n  (measurable_pi_apply a).comp hg\n\n@[fun_prop]\ntheorem Measurable.of_eval {f : α → ∀ a, X a} (hf : ∀ a, Measurable fun c => f c a) :\n    Measurable f :=\n  measurable_pi_iff.mpr hf\n\n@[deprecated (since := \"2026-08-20\")] alias measurable_pi_lambda := Measurable.of_eval\n\n"
+        },
+        {
+          "name": "measurable_pi_apply",
+          "start": 581,
+          "end": 606,
+          "text": "    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\ntheorem MeasurableSpace.comap_le_comap_pi {g : (a : δ) → β → X a} (a : δ) :\n    .comap (g a) inferInstance ≤ pi.comap (fun b c ↦ g c b) := by\n  simpa only [pi, comap_iSup] using le_iSup_of_le a <| by measurability\n\ntheorem Measurable.eval {a : δ} {g : α → ∀ a, X a} (hg : Measurable g) :\n    Measurable fun x => g x a :=\n  (measurable_pi_apply a).comp hg\n\n@[fun_prop]\ntheorem Measurable.of_eval {f : α → ∀ a, X a} (hf : ∀ a, Measurable fun c => f c a) :\n    Measurable f :=\n  measurable_pi_iff.mpr hf\n\n@[deprecated (since := \"2026-08-20\")] alias measurable_pi_lambda := Measurable.of_eval\n\nlemma MeasurableSpace.comap_process_pi (X : (a : δ) → β → X a) :\n    MeasurableSpace.comap (fun b a ↦ X a b) inferInstance =\n      ⨆ a, MeasurableSpace.comap (X a) inferInstance := by\n  simp_rw [MeasurableSpace.pi, MeasurableSpace.comap_iSup, MeasurableSpace.comap_comp]\n  rfl\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Basic.lean",
+        "sha256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935",
+        "bytes": 15859,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__MeasureTheory__MeasurableSpace__Basic.lean.md",
+        "sha256": "8dddbb72b00d8fceabb37a8905547c2c8567479a17d520d8d94e4000e53901c8",
+        "bytes": 2733
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.Algebra.Notation.Indicator\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.Data.Int.Cast.Pi\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.Data.Nat.Cast.Basic\n"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "public import Mathlib.MeasureTheory.MeasurableSpace.Defs\n"
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "text": "public import Mathlib.Order.SupClosed\n"
+        },
+        {
+          "start": 48,
+          "end": 48,
+          "text": "open Set\n"
+        },
+        {
+          "start": 50,
+          "end": 50,
+          "text": "open scoped MeasureTheory\n"
+        },
+        {
+          "start": 54,
+          "end": 54,
+          "text": "variable {α β γ : Type*} {ι : Sort uι} {s : Set α}\n"
+        },
+        {
+          "start": 56,
+          "end": 56,
+          "text": "namespace MeasurableSpace\n"
+        },
+        {
+          "start": 58,
+          "end": 58,
+          "text": "section Functors\n"
+        },
+        {
+          "start": 60,
+          "end": 60,
+          "text": "variable {m m₁ m₂ : MeasurableSpace α} {m' : MeasurableSpace β} {f : α → β} {g : β → α}\n"
+        },
+        {
+          "start": 162,
+          "end": 162,
+          "text": "end Functors\n"
+        },
+        {
+          "start": 177,
+          "end": 177,
+          "text": "end MeasurableSpace\n"
+        },
+        {
+          "start": 179,
+          "end": 179,
+          "text": "section MeasurableFunctions\n"
+        },
+        {
+          "start": 181,
+          "end": 181,
+          "text": "open MeasurableSpace\n"
+        },
+        {
+          "start": 249,
+          "end": 249,
+          "text": "variable {f g : α → β}\n"
+        },
+        {
+          "start": 251,
+          "end": 251,
+          "text": "section TypeclassMeasurableSpace\n"
+        },
+        {
+          "start": 253,
+          "end": 253,
+          "text": "variable [MeasurableSpace α] [MeasurableSpace β]\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "measurable_id''",
+          "start": 230,
+          "end": 255,
+          "text": "    Measurable[mα ⊔ mα'] f :=\n  h.mono le_sup_right le_rfl\n\ntheorem measurable_id'' {m mα : MeasurableSpace α} (hm : m ≤ mα) : @Measurable α α mα m id :=\n  measurable_id.mono le_rfl hm\n\ntheorem measurable_from_top [MeasurableSpace β] {f : α → β} : Measurable[⊤] f := fun _ _ => trivial\n\ntheorem measurable_generateFrom [MeasurableSpace α] {s : Set (Set β)} {f : α → β}\n    (h : ∀ t ∈ s, MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generateFrom s) f :=\n  Measurable.of_le_map <| generateFrom_le h\n\ntheorem measurableSet_generateFrom_of_mem_supClosure {s : Set (Set α)} {t : Set α}\n    (ht : t ∈ supClosure s) : MeasurableSet[generateFrom s] t := by\n  rcases ht with ⟨P, hP, PC, rfl⟩\n  rw [Finset.sup'_eq_sup, Finset.sup_id_set_eq_sUnion]\n  exact MeasurableSet.sUnion (Finset.countable_toSet P)\n    (fun s hs ↦ measurableSet_generateFrom (PC hs))\n\nvariable {f g : α → β}\n\nsection TypeclassMeasurableSpace\n\nvariable [MeasurableSpace α] [MeasurableSpace β]\n\n@[nontriviality]\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L2Space.lean",
+        "sha256": "c5737e32b9b1e2a6a0d04b411244ed90d0fcf25aab0449b51865d39182eb4593",
+        "bytes": 13817,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__MeasureTheory__Function__L2Space.lean.md",
+        "sha256": "e70eed26bc900132ce782c8c82c34514de2bfee49a70ee8cf6e6a39dedf0e0f1",
+        "bytes": 2769
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.Analysis.InnerProductSpace.GramMatrix\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Inner\n"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap\n"
+        },
+        {
+          "start": 28,
+          "end": 28,
+          "text": "public section\n"
+        },
+        {
+          "start": 32,
+          "end": 32,
+          "text": "open TopologicalSpace MeasureTheory MeasureTheory.Lp Filter\n"
+        },
+        {
+          "start": 34,
+          "end": 34,
+          "text": "open scoped NNReal ENNReal MeasureTheory InnerProductSpace\n"
+        },
+        {
+          "start": 36,
+          "end": 36,
+          "text": "namespace MeasureTheory\n"
+        },
+        {
+          "start": 38,
+          "end": 38,
+          "text": "section\n"
+        },
+        {
+          "start": 40,
+          "end": 40,
+          "text": "variable {α F : Type*} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]\n"
+        },
+        {
+          "start": 57,
+          "end": 57,
+          "text": "end\n"
+        },
+        {
+          "start": 59,
+          "end": 59,
+          "text": "section InnerProductSpace\n"
+        },
+        {
+          "start": 61,
+          "end": 61,
+          "text": "variable {α : Type*} {m : MeasurableSpace α} {p : ℝ≥0∞} {μ : Measure α}\n"
+        },
+        {
+          "start": 62,
+          "end": 62,
+          "text": "variable {E 𝕜 : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "memLp_two_iff_integrable_sq",
+          "start": 49,
+          "end": 74,
+          "text": "  · simp\n  · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.ofNat_ne_top]\n\ntheorem memLp_two_iff_integrable_sq {f : α → ℝ} (hf : AEStronglyMeasurable f μ) :\n    MemLp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ := by\n  convert! memLp_two_iff_integrable_sq_norm hf using 3\n  simp\n\nend\n\nsection InnerProductSpace\n\nvariable {α : Type*} {m : MeasurableSpace α} {p : ℝ≥0∞} {μ : Measure α}\nvariable {E 𝕜 : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]\n\nlocal notation \"⟪\" x \", \" y \"⟫\" => inner 𝕜 x y\n\ntheorem MemLp.const_inner (c : E) {f : α → E} (hf : MemLp f p μ) : MemLp (fun a => ⟪c, f a⟫) p μ :=\n  hf.of_le_mul (AEStronglyMeasurable.inner aestronglyMeasurable_const hf.aestronglyMeasurable)\n    (Eventually.of_forall fun _ => norm_inner_le_norm _ _)\n\ntheorem MemLp.inner_const {f : α → E} (hf : MemLp f p μ) (c : E) : MemLp (fun a => ⟪f a, c⟫) p μ :=\n  hf.of_le_mul (c := ‖c‖)\n    (AEStronglyMeasurable.inner hf.aestronglyMeasurable aestronglyMeasurable_const)\n    (Eventually.of_forall fun x => by rw [mul_comm]; exact norm_inner_le_norm _ _)\n\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "mtime_ns": "1792382595000000000"
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__MeasureTheory__Function__L1Space__Integrable.lean.md",
+        "sha256": "f17812f37958dd4db14074823ed384e5b1efab4288190736a7a098ec20c4ebd3",
+        "bytes": 4479
+      },
+      "completeContextsAndRangesRead": true,
+      "exactMDCodeBlocksRoundtripToBinding": true,
+      "contexts": [
+        {
+          "start": 8,
+          "end": 8,
+          "text": "public import Mathlib.MeasureTheory.Function.L1Space.HasFiniteIntegral\n"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "public import Mathlib.MeasureTheory.Function.LpOrder\n"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "public import Mathlib.MeasureTheory.Function.StronglyMeasurable.Lemmas\n"
+        },
+        {
+          "start": 43,
+          "end": 43,
+          "text": "open ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n"
+        },
+        {
+          "start": 45,
+          "end": 45,
+          "text": "open scoped Topology\n"
+        },
+        {
+          "start": 47,
+          "end": 47,
+          "text": "variable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\n"
+        },
+        {
+          "start": 48,
+          "end": 49,
+          "text": "variable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n"
+        },
+        {
+          "start": 51,
+          "end": 51,
+          "text": "namespace MeasureTheory\n"
+        },
+        {
+          "start": 309,
+          "end": 309,
+          "text": "section\n"
+        },
+        {
+          "start": 311,
+          "end": 311,
+          "text": "variable {ε : Type*} [TopologicalSpace ε] [ESeminormedAddMonoid ε]\n"
+        },
+        {
+          "start": 349,
+          "end": 349,
+          "text": "end\n"
+        },
+        {
+          "start": 351,
+          "end": 351,
+          "text": "section\n"
+        },
+        {
+          "start": 353,
+          "end": 353,
+          "text": "variable {α' : Type*} [MeasurableSpace α']\n"
+        },
+        {
+          "start": 369,
+          "end": 369,
+          "text": "end\n"
+        },
+        {
+          "start": 403,
+          "end": 403,
+          "text": "section ESeminormedAddMonoid\n"
+        },
+        {
+          "start": 405,
+          "end": 405,
+          "text": "variable {ε' : Type*} [TopologicalSpace ε'] [ESeminormedAddMonoid ε']\n"
+        },
+        {
+          "start": 407,
+          "end": 407,
+          "text": "variable (α ε') in\n"
+        }
+      ],
+      "ranges": [
+        {
+          "name": "MeasurePreserving.integrable_comp",
+          "start": 378,
+          "end": 403,
+          "text": "  simp_rw [← memLp_one_iff_integrable]\n  exact f.memLp_map_measure_iff\n\ntheorem MeasurePreserving.integrable_comp {ν : Measure δ} {g : δ → ε} {f : α → δ}\n    (hf : MeasurePreserving f μ ν) (hg : AEStronglyMeasurable g ν) :\n    Integrable (g ∘ f) μ ↔ Integrable g ν := by\n  rw [← hf.map_eq] at hg ⊢\n  exact (integrable_map_measure hg hf.measurable.aemeasurable).symm\n\ntheorem MeasurePreserving.integrable_comp_of_integrable {ν : Measure δ} {g : δ → ε} {f : α → δ}\n    (hf : MeasurePreserving f μ ν) (hg : Integrable g ν) :\n    Integrable (g ∘ f) μ :=\n  hf.integrable_comp hg.aestronglyMeasurable |>.mpr hg\n\ntheorem MeasurePreserving.integrable_comp_emb {f : α → δ} {ν} (h₁ : MeasurePreserving f μ ν)\n    (h₂ : MeasurableEmbedding f) {g : δ → ε} : Integrable (g ∘ f) μ ↔ Integrable g ν :=\n  h₁.map_eq ▸ Iff.symm h₂.integrable_map_iff\n\ntheorem lintegral_edist_lt_top {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :\n    (∫⁻ a, edist (f a) (g a) ∂μ) < ∞ :=\n  lt_of_le_of_lt (lintegral_edist_triangle hf.aestronglyMeasurable aestronglyMeasurable_zero)\n    (ENNReal.add_lt_top.2 <| by\n      simp_rw [Pi.zero_apply, ← hasFiniteIntegral_iff_edist]\n      exact ⟨hf.hasFiniteIntegral, hg.hasFiniteIntegral⟩)\n\nsection ESeminormedAddMonoid\n"
+        },
+        {
+          "name": "MeasurePreserving.integrable_comp_of_integrable",
+          "start": 384,
+          "end": 409,
+          "text": "  rw [← hf.map_eq] at hg ⊢\n  exact (integrable_map_measure hg hf.measurable.aemeasurable).symm\n\ntheorem MeasurePreserving.integrable_comp_of_integrable {ν : Measure δ} {g : δ → ε} {f : α → δ}\n    (hf : MeasurePreserving f μ ν) (hg : Integrable g ν) :\n    Integrable (g ∘ f) μ :=\n  hf.integrable_comp hg.aestronglyMeasurable |>.mpr hg\n\ntheorem MeasurePreserving.integrable_comp_emb {f : α → δ} {ν} (h₁ : MeasurePreserving f μ ν)\n    (h₂ : MeasurableEmbedding f) {g : δ → ε} : Integrable (g ∘ f) μ ↔ Integrable g ν :=\n  h₁.map_eq ▸ Iff.symm h₂.integrable_map_iff\n\ntheorem lintegral_edist_lt_top {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :\n    (∫⁻ a, edist (f a) (g a) ∂μ) < ∞ :=\n  lt_of_le_of_lt (lintegral_edist_triangle hf.aestronglyMeasurable aestronglyMeasurable_zero)\n    (ENNReal.add_lt_top.2 <| by\n      simp_rw [Pi.zero_apply, ← hasFiniteIntegral_iff_edist]\n      exact ⟨hf.hasFiniteIntegral, hg.hasFiniteIntegral⟩)\n\nsection ESeminormedAddMonoid\n\nvariable {ε' : Type*} [TopologicalSpace ε'] [ESeminormedAddMonoid ε']\n\nvariable (α ε') in\n@[to_fun (attr := fun_prop, simp) integrable_fun_zero]\ntheorem integrable_zero (μ : Measure α) : Integrable (0 : α → ε') μ := by\n"
+        }
+      ]
+    }
+  ],
+  "additionalExistingPinnedReferences": [
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "ranges": [
+        {
+          "start": 204,
+          "end": 209,
+          "text": "theorem integral_undef {f : α → G} (h : ¬Integrable f μ) : ∫ a, f a ∂μ = 0 := by\n  simp only [integral_eq_setToFun]\n  exact setToFun_undef (dominatedFinMeasAdditive_weightedSMul μ) h\n\ntheorem Integrable.of_integral_ne_zero {f : α → G} (h : ∫ a, f a ∂μ ≠ 0) : Integrable f μ :=\n  Not.imp_symm integral_undef h\n"
+        },
+        {
+          "start": 1065,
+          "end": 1078,
+          "text": "theorem integral_map_of_stronglyMeasurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ)\n    {f : β → G} (hfm : StronglyMeasurable f) : ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ := by\n  by_cases hfi : Integrable f (Measure.map φ μ); swap\n  · rw [integral_undef hfi, integral_undef]\n    exact fun hfφ => hfi ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).2 hfφ)\n  simp only [integral_eq_setToFun]\n  apply setToFun_of_le_map_of_stronglyMeasurable _ _\n    ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).1 hfi) hfm hφ le_rfl\n  intro s x hs\n  simp [weightedSMul_apply, map_measureReal_apply, hs, hφ]\n\ntheorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasurable φ μ) {f : β → G}\n    (hfm : AEStronglyMeasurable f (Measure.map φ μ)) :\n    ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ :=\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 139,
+          "end": 154,
+          "text": "namespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n"
+        },
+        {
+          "start": 183,
+          "end": 184,
+          "text": "variable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+        }
+      ],
+      "completeNeededHeadContextRead": true
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/Integral/Prod.lean",
+        "sha256": "8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05",
+        "bytes": 32338
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "ranges": [
+        {
+          "start": 65,
+          "end": 76,
+          "text": "theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SFinite ν] ⦃f : α → β → E⦄\n    (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by\n  simp only [integral_eq_setToFun]\n  apply StronglyMeasurable.setToFun_prod_right _ (fun s hs ↦ ?_) hf\n  refine (Measurable.ennreal_toReal ?_).stronglyMeasurable.smul_const _\n  exact measurable_measure_prodMk_left hs\n\n/-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)\n  Fubini's theorem is measurable. -/\ntheorem MeasureTheory.StronglyMeasurable.integral_prod_right' [SFinite ν] ⦃f : α × β → E⦄\n    (hf : StronglyMeasurable f) : StronglyMeasurable fun x => ∫ y, f (x, y) ∂ν := by\n  rw [← uncurry_curry f] at hf; exact hf.integral_prod_right\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 38,
+          "end": 49,
+          "text": "open scoped Topology ENNReal MeasureTheory\n\nopen Set Function Real ENNReal\n\nopen MeasureTheory MeasurableSpace MeasureTheory.Measure\n\nopen TopologicalSpace\n\nopen Filter hiding prod_eq map\n\nvariable {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} {ν : Measure β}\nvariable [NormedAddCommGroup E]\n"
+        },
+        {
+          "start": 58,
+          "end": 60,
+          "text": "section\n\nvariable [NormedSpace ℝ E]\n"
+        }
+      ],
+      "completeNeededHeadContextRead": true
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+        "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+        "bytes": 49519
+      },
+      "mathlibHEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "ranges": [
+        {
+          "start": 409,
+          "end": 411,
+          "text": "theorem Measurable.prodMk {β γ} {_ : MeasurableSpace β} {_ : MeasurableSpace γ} {f : α → β}\n    {g : α → γ} (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a) :=\n  Measurable.prod hf hg\n"
+        },
+        {
+          "start": 574,
+          "end": 585,
+          "text": "instance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n"
+        }
+      ],
+      "contexts": [
+        {
+          "start": 27,
+          "end": 31,
+          "text": "open Set Function MeasureTheory\n\nuniverse uι\n\nvariable {α β γ δ δ' : Type*} {ι : Sort uι} {s : Set α}\n"
+        },
+        {
+          "start": 387,
+          "end": 387,
+          "text": "variable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}\n"
+        },
+        {
+          "start": 570,
+          "end": 577,
+          "text": "section Pi\n\nvariable {X : δ → Type*} [MeasurableSpace α]\n\ninstance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n"
+        }
+      ],
+      "completeNeededHeadContextRead": true
+    }
+  ],
+  "applicationBindings": {
+    "228": [
+      "μ",
+      "h",
+      "hh",
+      "hh2",
+      "hhsymm",
+      "hcenter",
+      "hprojectionsecond"
+    ],
+    "230": [
+      "μ",
+      "g",
+      "hgOriginal",
+      "hg2Original",
+      "p",
+      "hp2",
+      "hp3",
+      "hgp",
+      "cBudget",
+      "hcBudget"
+    ],
+    "229": {
+      "Ω": "Fin n → Ω × ℝ",
+      "measurableSpace": "mAug",
+      "measure": "ν",
+      "probability": "hνprob",
+      "n": "n",
+      "hn": "hn1",
+      "ξ": "ξ",
+      "measurableξ": "(hξPacket i).1",
+      "L2ξ": "(hξPacket i).2.1",
+      "centeredξ": "(hξPacket i).2.2",
+      "energyξ": "hξenergy",
+      "Y": "Y",
+      "measurableY": "(hYpacket k i).2.1",
+      "ε": "ε",
+      "positiveε": "(hε k).1",
+      "smallε": "(hε k).2",
+      "εlimit": "hεlim",
+      "approximation": "(hYpacket k i).2.2",
+      "z": "z",
+      "sourceGuard": "hz1",
+      "cBudget": "cBudget",
+      "positiveBudget": "hcBudget",
+      "sourceMargins": [
+        "hδνHalf",
+        "hLνStrict"
+      ],
+      "η": "definitionally actualNormalizedFamily ν (Y k)"
+    }
+  },
+  "transportDirections": {
+    "integrable_comp": "Integrable (g ∘ f) μ ↔ Integrable g ν; .1 sends original-P composition to reduced P₀ function",
+    "integrable_comp_of_integrable": "target integrable under P₀ -> composition integrable under ν",
+    "originalIntegral": "∫ sourceTest ∂map id P = ∫ sourceTest∘id ∂P; replace map with P₀",
+    "augmentedIntegral": "∫ sourceTest ∂map q ν = ∫ sourceTest∘q ∂ν; replace map with P₀ then reverse"
+  },
+  "remainingStandardHeads": [],
+  "acceptedOldProofOrChecksReplayed": false,
+  "qualified": false,
+  "kernelPending": true,
+  "generatedStandardProducerBinding": {
+    "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/generated-api-producer-source-binding.json",
+    "sha256": "a9006915c48f129c5e4ee8332c33e516e1302ac1502a989d9ebbea69a7fe7486",
+    "bytes": 16036
+  },
+  "generatedStandardProducerReferences": [
+    {
+      "relativePath": "Mathlib/Topology/Algebra/Group/ContinuousDiv.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean",
+        "sha256": "e40edddbb0cd75107a6399782efe7c292f0d262247066c2ab338dcad9230918c",
+        "bytes": 5690,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 48,
+          "text": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro, Patrick Massot\n-/\nmodule\n\npublic import Mathlib.Topology.Algebra.Group.Neighborhood\n\n/-!\n# Continuous division in topological groups\n\nContinuity, homeomorphism, and neighborhood results for division and subtraction.\n-/\n\n@[expose] public section\n\nopen Set Filter Topology\n\nvariable {G α : Type*}\n\nsection ContinuousDiv\n\nvariable [TopologicalSpace G] [Div G] [ContinuousDiv G]\n\n@[to_additive sub_const]\ntheorem Filter.Tendsto.div_const' {c : G} {f : α → G} {l : Filter α} (h : Tendsto f l (𝓝 c))\n    (b : G) : Tendsto (f · / b) l (𝓝 (c / b)) :=\n  h.div' tendsto_const_nhds\n\nlemma Filter.tendsto_div_const_iff {G : Type*}\n    [GroupWithZero G] [TopologicalSpace G] [ContinuousDiv G]\n    {b : G} (hb : b ≠ 0) {c : G} {f : α → G} {l : Filter α} :\n    Tendsto (f · / b) l (𝓝 (c / b)) ↔ Tendsto f l (𝓝 c) := by\n  refine ⟨fun h ↦ ?_, fun h ↦ Filter.Tendsto.div_const' h b⟩\n  convert! h.div_const' b⁻¹ with k <;> rw [← div_mul_eq_div_div_swap, inv_mul_cancel₀ hb, div_one]\n\n@[to_additive tendsto_sub_const_iff]\nlemma Filter.tendsto_div_const_iff' {G : Type*}\n    [TopologicalSpace G] [Group G] [ContinuousDiv G]\n    (b : G) {c : G} {f : α → G} {l : Filter α} :\n    Tendsto (f · / b) l (𝓝 (c / b)) ↔ Tendsto f l (𝓝 c) := by\n  refine ⟨fun h ↦ ?_, fun h ↦ Filter.Tendsto.div_const' h b⟩\n  convert! h.div_const' b⁻¹ with k <;> rw [← div_mul_eq_div_div_swap, inv_mul_cancel, div_one]\n\n@[to_additive const_sub]\ntheorem Filter.Tendsto.const_div' (b : G) {c : G} {f : α → G} {l : Filter α}\n    (h : Tendsto f l (𝓝 c)) : Tendsto (b / f ·) l (𝓝 (b / c)) :=\n"
+        }
+      ],
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__Topology__Algebra__Group__ContinuousDiv.lean.md",
+        "sha256": "5bf88509687ae4541c7c03e8f6ce8ef56543d2db835db080959473d61f901456",
+        "bytes": 2282
+      },
+      "fullPinnedProducerPrefixRead": true,
+      "exactMDCodeBlockRoundtripToBinding": true
+    },
+    {
+      "relativePath": "Mathlib/Topology/Algebra/Order/Group.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Topology/Algebra/Order/Group.lean",
+        "sha256": "89d8872ab941b5690b6530710748a851eb398313f2eb18f477e2f3833f5c9cbb",
+        "bytes": 5833,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 74,
+          "text": "/-\nCopyright (c) 2020 Yury Kudryashov. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Yury Kudryashov\n-/\nmodule\n\npublic import Mathlib.Topology.Algebra.Group.Defs\npublic import Mathlib.Topology.Order.LeftRightNhds\n\nimport Mathlib.Algebra.Order.Group.Basic\n\n/-!\n# Topology on a linear ordered commutative group\n\nIn this file we prove that a linear ordered commutative group with order topology\nis a topological group.\nWe also prove continuity of `abs : G → G` and provide convenience lemmas like `ContinuousAt.abs`.\n-/\n\npublic section\n\n\nopen Set Filter Function\n\nopen scoped Topology\n\nvariable {G : Type*} [TopologicalSpace G] [CommGroup G] [LinearOrder G] [IsOrderedMonoid G]\n  [OrderTopology G]\n\n-- see Note [lower instance priority]\n@[to_additive]\ninstance (priority := 100) LinearOrderedCommGroup.toIsTopologicalGroup :\n    IsTopologicalGroup G where\n  continuous_mul := by\n    simp only [continuous_iff_continuousAt, Prod.forall, ContinuousAt,\n      LinearOrderedCommGroup.tendsto_nhds]\n    intro a b ε hε\n    rcases dense_or_discrete 1 ε with ⟨δ, hδ₁, hδε⟩ | ⟨-, hε_min⟩\n    · filter_upwards [(eventually_mabs_div_lt _ hδ₁).prod_nhds\n        (eventually_mabs_div_lt _ (one_lt_div'.mpr hδε))]\n      rintro ⟨c, d⟩ ⟨hc, hd⟩\n      calc\n        |c * d / (a * b)|ₘ = |(c / a) * (d / b)|ₘ := by rw [div_mul_div_comm]\n        _ ≤ |c / a|ₘ * |d / b|ₘ := mabs_mul_le ..\n        _ < δ * (ε / δ) := mul_lt_mul_of_lt_of_lt hc hd\n        _ = ε := mul_div_cancel ..\n    · have (x : G) : ∀ᶠ y in 𝓝 x, y = x :=\n        (eventually_mabs_div_lt _ hε).mono fun y hy ↦ mabs_div_le_one.mp <| hε_min _ hy\n      filter_upwards [(this _).prod_nhds (this _)]\n      simp [hε]\n  continuous_inv := continuous_iff_continuousAt.2 fun a ↦\n    LinearOrderedCommGroup.tendsto_nhds.2 fun ε ε0 ↦\n      (eventually_mabs_div_lt a ε0).mono fun x hx ↦ by rwa [inv_div_inv, mabs_div_comm]\n\n@[to_additive (attr := continuity)]\ntheorem continuous_mabs : Continuous (mabs : G → G) :=\n  continuous_id.max continuous_inv\n\nsection Tendsto\n\nvariable {α : Type*} {l : Filter α} {f : α → G}\n\n@[to_additive]\nprotected theorem Filter.Tendsto.mabs {a : G} (h : Tendsto f l (𝓝 a)) :\n    Tendsto (fun x => |f x|ₘ) l (𝓝 |a|ₘ) :=\n  (continuous_mabs.tendsto _).comp h\n\n@[to_additive (attr := simp)]\ntheorem comap_mabs_nhds_one : comap mabs (𝓝 (1 : G)) = 𝓝 1 := by\n  simp [nhds_eq_iInf_mabs_div]\n\n@[to_additive]\ntheorem tendsto_one_iff_mabs_tendsto_one (f : α → G) :\n"
+        }
+      ],
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__Topology__Algebra__Order__Group.lean.md",
+        "sha256": "ee00afdaa80d7953c18d52a9966a18048ff1b7b4c2274ae3021ead002741bb4b",
+        "bytes": 3047
+      },
+      "fullPinnedProducerPrefixRead": true,
+      "exactMDCodeBlockRoundtripToBinding": true
+    },
+    {
+      "relativePath": "Mathlib/Topology/Order/OrderClosed.lean",
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Topology/Order/OrderClosed.lean",
+        "sha256": "011a07d8a57515c2a6bf066bf4ef24ff22eeffcc4d6115afd9ff22f5d45ded9e",
+        "bytes": 31585,
+        "mtime_ns": "1792382595000000000"
+      },
+      "ranges": [
+        {
+          "start": 1,
+          "end": 245,
+          "text": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov\n-/\nmodule\n\npublic import Mathlib.Topology.Order.LeftRight\npublic import Mathlib.Topology.Separation.Hausdorff\n\n/-!\n# Order-closed topologies\n\nIn this file we introduce 3 typeclass mixins that relate topology and order structures:\n\n- `ClosedIicTopology` says that all the intervals $(-∞, a]$ (formally, `Set.Iic a`)\n  are closed sets;\n- `ClosedIciTopology` says that all the intervals $[a, +∞)$ (formally, `Set.Ici a`)\n  are closed sets;\n- `OrderClosedTopology` says that the set of points `(x, y)` such that `x ≤ y`\n  is closed in the product topology.\n\nThe last predicate implies the first two.\n\nWe prove many basic properties of such topologies.\n\n## Main statements\n\nThis file contains the proofs of the following facts.\nFor exact requirements\n(`OrderClosedTopology` vs `ClosedIciTopology` vs `ClosedIicTopology`,\n`Preorder` vs `PartialOrder` vs `LinearOrder`, etc.)\nsee their statements.\n\n### Open / closed sets\n\n* `isOpen_lt` : if `f` and `g` are continuous functions, then `{x | f x < g x}` is open;\n* `isOpen_Iio`, `isOpen_Ioi`, `isOpen_Ioo` : open intervals are open;\n* `isClosed_le` : if `f` and `g` are continuous functions, then `{x | f x ≤ g x}` is closed;\n* `isClosed_Iic`, `isClosed_Ici`, `isClosed_Icc` : closed intervals are closed;\n* `frontier_le_subset_eq`, `frontier_lt_subset_eq` : frontiers of both `{x | f x ≤ g x}`\n  and `{x | f x < g x}` are included by `{x | f x = g x}`;\n\n### Convergence and inequalities\n\n* `le_of_tendsto_of_tendsto` : if `f` converges to `a`, `g` converges to `b`, and eventually\n  `f x ≤ g x`, then `a ≤ b`\n* `le_of_tendsto`, `ge_of_tendsto` : if `f` converges to `a` and eventually `f x ≤ b`\n  (resp., `b ≤ f x`), then `a ≤ b` (resp., `b ≤ a`); we also provide primed versions\n  that assume the inequalities to hold for all `x`.\n* `monotone_of_frequently_monotone_of_tendsto`, `antitone_of_frequently_antitone_of_tendsto` : the\n  pointwise limit of frequently monotone or antitone functions is monotone or antitone.\n\n### Min, max, `sSup` and `sInf`\n\n* `Continuous.min`, `Continuous.max`: pointwise `min`/`max` of two continuous functions is\n  continuous.\n* `Tendsto.min`, `Tendsto.max` : if `f` tends to `a` and `g` tends to `b`, then their pointwise\n  `min`/`max` tend to `min a b` and `max a b`, respectively.\n-/\n\npublic section\n\nopen Set Filter TopologicalSpace\nopen OrderDual (toDual)\nopen scoped Topology\n\nuniverse u v w\nvariable {α : Type u} {β : Type v} {γ : Type w}\n\n/-- If `α` is a topological space and a preorder, `ClosedIicTopology α` means that `Iic a` is\nclosed for all `a : α`. -/\nclass ClosedIicTopology (α : Type*) [TopologicalSpace α] [Preorder α] : Prop where\n  /-- For any `a`, the set `(-∞, a]` is closed. -/\n  isClosed_Iic (a : α) : IsClosed (Iic a)\n\n/-- If `α` is a topological space and a preorder, `ClosedIciTopology α` means that `Ici a` is\nclosed for all `a : α`. -/\n@[to_dual existing]\nclass ClosedIciTopology (α : Type*) [TopologicalSpace α] [Preorder α] : Prop where\n  /-- For any `a`, the set `[a, +∞)` is closed. -/\n  isClosed_Ici (a : α) : IsClosed (Ici a)\n\n/-- A topology on a set which is both a topological space and a preorder is _order-closed_ if the\nset of points `(x, y)` with `x ≤ y` is closed in the product space. We introduce this as a mixin.\nThis property is satisfied for the order topology on a linear order, but it can be satisfied more\ngenerally, and suffices to derive many interesting properties relating order and topology. -/\nclass OrderClosedTopology (α : Type*) [TopologicalSpace α] [Preorder α] : Prop where\n  /-- The set `{ (x, y) | x ≤ y }` is a closed set. -/\n  protected isClosed_le' : IsClosed { p : α × α | p.1 ≤ p.2 }\n\ninstance [TopologicalSpace α] [h : FirstCountableTopology α] : FirstCountableTopology αᵒᵈ := h\ninstance [TopologicalSpace α] [h : SecondCountableTopology α] : SecondCountableTopology αᵒᵈ := h\ninstance [TopologicalSpace α] [h : SeparableSpace α] : SeparableSpace αᵒᵈ := h\n\ntheorem Dense.orderDual [TopologicalSpace α] {s : Set α} (hs : Dense s) :\n    Dense (OrderDual.ofDual ⁻¹' s) :=\n  hs\n\nsection General\nvariable [TopologicalSpace α] [Preorder α] {s : Set α}\n\n@[to_dual]\nprotected lemma BddAbove.of_closure : BddAbove (closure s) → BddAbove s :=\n  BddAbove.mono subset_closure\n\nend General\n\nsection ClosedIicTopology\n\nsection Preorder\n\nvariable [TopologicalSpace α] [Preorder α] [ClosedIicTopology α] {f : β → α} {a b : α} {s : Set α}\n\n@[to_dual (attr := closedness .)]\ntheorem isClosed_Iic : IsClosed (Iic a) :=\n  ClosedIicTopology.isClosed_Iic a\n\n@[to_dual]\ninstance : ClosedIciTopology αᵒᵈ where\n  isClosed_Ici _ := isClosed_Iic (α := α)\n\n@[to_dual (attr := simp, closedness =)]\ntheorem closure_Iic (a : α) : closure (Iic a) = Iic a :=\n  isClosed_Iic.closure_eq\n\n@[to_dual ge_of_tendsto_of_frequently]\ntheorem le_of_tendsto_of_frequently {x : Filter β} (lim : Tendsto f x (𝓝 a))\n    (h : ∃ᶠ c in x, f c ≤ b) : a ≤ b :=\n  isClosed_Iic.mem_of_frequently_of_tendsto h lim\n\n@[to_dual ge_of_tendsto]\ntheorem le_of_tendsto {x : Filter β} [hx : NeBot x] (lim : Tendsto f x (𝓝 a))\n    (h : ∀ᶠ c in x, f c ≤ b) : a ≤ b :=\n  isClosed_Iic.mem_of_tendsto lim h\n\n@[to_dual ge_of_tendsto']\ntheorem le_of_tendsto' {x : Filter β} [hx : NeBot x] (lim : Tendsto f x (𝓝 a))\n    (h : ∀ c, f c ≤ b) : a ≤ b :=\n  le_of_tendsto lim (Eventually.of_forall h)\n\n@[to_dual (attr := simp)]\nlemma upperBounds_closure (s : Set α) : upperBounds (closure s : Set α) = upperBounds s :=\n  ext fun a ↦ by simp_rw [mem_upperBounds_iff_subset_Iic, isClosed_Iic.closure_subset_iff]\n\n@[to_dual (attr := simp)]\nlemma bddAbove_closure : BddAbove (closure s) ↔ BddAbove s := by\n  simp_rw [BddAbove, upperBounds_closure]\n\n@[to_dual]\nprotected alias ⟨_, BddAbove.closure⟩ := bddAbove_closure\n\n@[to_dual (attr := simp) disjoint_nhds_atTop_iff]\ntheorem disjoint_nhds_atBot_iff : Disjoint (𝓝 a) atBot ↔ ¬IsBot a := by\n  constructor\n  · intro hd hbot\n    rw [hbot.atBot_eq, disjoint_principal_right] at hd\n    exact mem_of_mem_nhds hd le_rfl\n  · simp only [IsBot, not_forall]\n    rintro ⟨b, hb⟩\n    refine disjoint_of_disjoint_of_mem disjoint_compl_left ?_ (Iic_mem_atBot b)\n    exact isClosed_Iic.isOpen_compl.mem_nhds hb\n\n@[to_dual]\ntheorem IsLUB.range_of_tendsto {F : Filter β} [F.NeBot] (hle : ∀ i, f i ≤ a)\n    (hlim : Tendsto f F (𝓝 a)) : IsLUB (range f) a :=\n  ⟨forall_mem_range.mpr hle, fun _c hc ↦ le_of_tendsto' hlim fun i ↦ hc <| mem_range_self i⟩\n\nend Preorder\n\nsection NoBotOrder\n\nvariable [Preorder α] [NoBotOrder α] [TopologicalSpace α] [ClosedIicTopology α] {a : α}\n  {l : Filter β} [NeBot l] {f : β → α}\n\n@[to_dual disjoint_nhds_atTop]\ntheorem disjoint_nhds_atBot (a : α) : Disjoint (𝓝 a) atBot := by simp\n\n@[to_dual (attr := simp) nhds_inf_atTop]\ntheorem nhds_inf_atBot (a : α) : 𝓝 a ⊓ atBot = ⊥ := (disjoint_nhds_atBot a).eq_bot\n\n@[to_dual]\ntheorem not_tendsto_nhds_of_tendsto_atBot (hf : Tendsto f l atBot) (a : α) : ¬Tendsto f l (𝓝 a) :=\n  hf.not_tendsto (disjoint_nhds_atBot a).symm\n\n@[to_dual]\ntheorem not_tendsto_atBot_of_tendsto_nhds (hf : Tendsto f l (𝓝 a)) : ¬Tendsto f l atBot :=\n  hf.not_tendsto (disjoint_nhds_atBot a)\n\nend NoBotOrder\n\ntheorem iSup_eq_of_forall_le_of_tendsto {ι : Type*} {F : Filter ι} [Filter.NeBot F]\n    [ConditionallyCompleteLattice α] [TopologicalSpace α] [ClosedIicTopology α]\n    {a : α} {f : ι → α} (hle : ∀ i, f i ≤ a) (hlim : Filter.Tendsto f F (𝓝 a)) :\n    ⨆ i, f i = a :=\n  have := F.nonempty_of_neBot\n  (IsLUB.range_of_tendsto hle hlim).ciSup_eq\n\ntheorem iUnion_Iic_eq_Iio_of_lt_of_tendsto {ι : Type*} {F : Filter ι} [F.NeBot]\n    [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [ClosedIicTopology α]\n    {a : α} {f : ι → α} (hlt : ∀ i, f i < a) (hlim : Tendsto f F (𝓝 a)) :\n    ⋃ i : ι, Iic (f i) = Iio a := by\n  have obs : a ∉ range f := by\n    rw [mem_range]\n    rintro ⟨i, rfl⟩\n    exact (hlt i).false\n  rw [← biUnion_range, (IsLUB.range_of_tendsto (le_of_lt <| hlt ·) hlim).biUnion_Iic_eq_Iio obs]\n\nsection LinearOrder\n\nvariable [TopologicalSpace α] [LinearOrder α] [ClosedIicTopology α] [TopologicalSpace β]\n  {a b c : α} {f : α → β}\n\n@[to_dual]\ntheorem isOpen_Ioi : IsOpen (Ioi a) := by\n  rw [← compl_Iic]\n  exact isClosed_Iic.isOpen_compl\n\n@[to_dual (attr := simp)]\ntheorem interior_Ioi : interior (Ioi a) = Ioi a :=\n  isOpen_Ioi.interior_eq\n\n@[to_dual]\ntheorem Ioi_mem_nhds (h : a < b) : Ioi a ∈ 𝓝 b := IsOpen.mem_nhds isOpen_Ioi h\n\n@[to_dual eventually_lt_nhds]\ntheorem eventually_gt_nhds (hab : b < a) : ∀ᶠ x in 𝓝 a, b < x := Ioi_mem_nhds hab\n\n@[to_dual]\ntheorem Ici_mem_nhds (h : a < b) : Ici a ∈ 𝓝 b :=\n  mem_of_superset (Ioi_mem_nhds h) Ioi_subset_Ici_self\n\n@[to_dual eventually_le_nhds]\ntheorem eventually_ge_nhds (hab : b < a) : ∀ᶠ x in 𝓝 a, b ≤ x := Ici_mem_nhds hab\n\n@[to_dual eventually_lt_const]\ntheorem Filter.Tendsto.eventually_const_lt {l : Filter γ} {f : γ → α} {u v : α} (hv : u < v)\n    (h : Filter.Tendsto f l (𝓝 v)) : ∀ᶠ a in l, u < f a :=\n  h.eventually <| eventually_gt_nhds hv\n\n@[to_dual eventually_le_const]\ntheorem Filter.Tendsto.eventually_const_le {l : Filter γ} {f : γ → α} {u v : α} (hv : u < v)\n    (h : Tendsto f l (𝓝 v)) : ∀ᶠ a in l, u ≤ f a :=\n  h.eventually <| eventually_ge_nhds hv\n\n"
+        }
+      ],
+      "localReference": {
+        "path": "C:/game/shao lean/drafts/oq56/unit234/lead-api-reference-01/Mathlib__Topology__Order__OrderClosed.lean.md",
+        "sha256": "e0122e2edc3d47f1c9597260f6b74f3703b4661827b06037dc305b05d4e45757",
+        "bytes": 10070
+      },
+      "fullPinnedProducerPrefixRead": true,
+      "exactMDCodeBlockRoundtripToBinding": true
+    }
+  ],
+  "generatedConcreteRealInstantiations": {
+    "Filter.Tendsto.sub_const": "{α : Type*} {c : ℝ} {f : α → ℝ} {l : Filter α} (h : Filter.Tendsto f l (nhds c)) (b : ℝ) : Filter.Tendsto (fun x => f x - b) l (nhds (c - b))",
+    "Filter.Tendsto.abs": "{α : Type*} {l : Filter α} {f : α → ℝ} {a : ℝ} (h : Filter.Tendsto f l (nhds a)) : Filter.Tendsto (fun x => |f x|) l (nhds |a|)",
+    "eventually_lt_nhds": "{a b : ℝ} (hab : a < b) : ∀ᶠ x in nhds a, x < b"
+  },
+  "generatedHeadMethod": "exact pinned producer prefix plus explicit to_additive/to_dual mapping; no new #print/native performed; final actual owned TYPE join still required",
+  "allNeededQualifiedHeadsDefinitionsAndStandardReferencesRead": true,
+  "criticalGaps": []
+}
