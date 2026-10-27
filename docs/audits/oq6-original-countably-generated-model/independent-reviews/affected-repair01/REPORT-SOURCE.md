@@ -1,0 +1,48 @@
+STATUS: CORRECT
+STAGE: SAME INDEPENDENT AFFECTED REPAIR01 SOURCE REVIEW ONLY
+
+The repaired source is accepted for a new complete native check: sourceAcceptedForNative=true. kernelChecked=false and qualified=false. No new-source native or axiom result is claimed. The same independent NEVER-AUTHOR reviewer retains its final machine-review role.
+
+Exact scope and evidence
+
+Source is author-01/repair-01/OriginalCountablyGeneratedModel.lean, SHA2568691f69ca9ab84649f92b20385c415a2129250cc8f64375d6296e2d59a381627,21808 bytes/412LF/zeroCR/BOM. Parent repair freeze aa71386d9b85c72ddb44ace217d4201930e1292190401a9684c2ca193bf64a8a and activation e6cd32d579a4c2c43217080dc6871a41eccaa4f88308e225d21f7ac5c93df46e authorize exactly four existing-Prop conversions. The repaired bytes exactly equal an in-memory application of the four frozen hunks to old source10516aad6d437ff24e979f425831d9c3cafdc7362fd2d077719d8e0ef2c52a99. Four insert hunks add seven lines, remove none, and retain all405 prior lines byte-exact and in order.
+
+All14 author manifest payloads match. The13 current INPUTS records and the exact prior25 INPUTS records give36 distinct leaf references, or37 reference files when the old INPUTS container itself is included; all hashes/lengths match. This distinction is derived rather than copied. Parent intake ef8b8933911801f097900ea408f3bb941ad16c6ae21baf7bb527d46858f24b92 matches. Author release984b266a2acfe9ba2cba4ea3dd28164336717c86afd6571a6034be7a47f63d57 records writer/heavy/inflight/pending/uncertain/queued/child zero.
+
+The prior complete405 SOURCE report, verdict and coverage remain sealed. I reuse that exact complete review, its original p40/p41/p51/p54 reading and qualified218/219/220 publicTYPE/evidence coverage. I did not repeat an automatic whole-old-proof review, producer review, old leaf check or API query. This review reads the complete frozen repair plan/hunks/data inventory, full native01 diagnostics, exact new hunks and affected downstream joins, plus byte/locator/capture continuity checks. The new coverage file binds both old coverage and the exact old-to-new line mapping.
+
+Native01 failure remains failure
+
+Old-source native01 naturally ended actualRC1 with two errors, two warnings, object=null, allOwnedEnded=true, preservationEqual=true, timedOut=false. Receipt SHA256ac07a179cd5886237f592268f47cc290d118e2ba8179f7a1f6696c5ca0cfa114 and diagnostic packet1500cb93a88003aeab15ed6904617d4602b90e836cdced50750462cfbf9dc43f are immutable. No AX was attempted. The full two warning texts and both complete error/context texts were read.
+
+The actual errors are old231: rewrite cannot find the expanded reduced finite pi-measure pattern in a target containing named P0; old302: after g/r rewrites, expanded hrho cannot match the rho0 alias remaining in the observable packet. The unchanged warnings at202/208 prefer ordinary let over letI in Prop goals; they remain unsuppressed. The full-sample and retained-map normalizations are explicitly related later instances of the same concrete alias pattern, not claims of a third/fourth observed error.
+
+Four conversions and every affected join
+
+1. New211 changes existing hrho to rho0=rho. Under the frozen definitions, rho0 unfolds to sqrt of the reduced residual-square integral with m0, literal mu0=mu.trim hm0, g0 and r0; rho unfolds to the original sqrt integral with mOmega/mu/g/r. These are exactly the two sides of qualified219's existing hrho. This is definitional conversion of a Prop, not replacement of its proof by a new assumption. The same existing proof remains available for base-result assembly at212-214, actual-z observable rewriting at306 and the zero-specialized E factor rewriting at367. The inserted presentation is deliberately before both later uses. No value, rho positivity premise, v/g/r identity or existential witness changes.
+
+The actual-z packet256-310 still receives the same n,z,C0 and reduced h/mu inputs; its existing g0=g,r0=r,rho0=rho rewrite now has named patterns at the affected use. The zero packet348-368 still specializes qualified220 at explicit real0 with the same n/C0/reduced model. Its existing factor equation362-368 contains r0/rho0 explicitly and is rewritten using hreq and the same normalized hrho. It does not introduce actual-z capture into E, modify the original-n factors or replace the signed triple.
+
+2. New224 changes the generic finite hPmap to P0=@Measure.map (J→Omega) (J→Omega) mJ mJ0 id P. The frozen mJ/mJ0 are precisely the original/reduced pi measurable spaces and P/P0 are the corresponding pi measures at the explicit given instJ. Their unfolding gives exactly the219 hypothesis. J, instJ, mu, mu0, hm0 and both source/target spaces are unchanged. The type remains Prop and gains no premise or datum.
+
+At231 the exact identity is returned as before. At232-234 arbitrary B/mB/T and its reduced measurability proof are introduced; the same measurable identity hidJ and map_map hT hidJ justify the generic-target law. The change only presents the lhs as the P0 actually occurring in the target. Composition with id is still definitionally T. Empty J remains allowed. This is not a promotion of219's real scalar law and does not add any target regularity assumption.
+
+3. New247-248 changes the full Fin n hPmap to P0=@Measure.map (Fin n→Omega) (Fin n→Omega) mN mN0 id P. Explicit frozen mN/mN0/P/P0 unfold to the same original/reduced finite product identity from219, using the same canonical Fin n Fintype. It does not change sample size, laws, the reduced instance, or index data.
+
+Its three affected joins remain separate and valid: Tclip law324-328 uses hTclip/hidN; physical Tactual law329-333 uses hTphysical/hidN; full signed Ddel/Jdel/B1del triple law377-382 uses the same right-associated triple, hDdel.prodMk(hJdel.prodMk hB1del), Borel conversion, htriple/hidN. Each uses the normalized same hPmap followed by the existing measurable map composition and rfl. Real/Classical physical-decider identification311-323, physical s=0 versus clipped V=0 distinction, lower bound and clipped zero clauses are unchanged. No zero-set equality or discrepancy payment is inferred.
+
+4. New393-395 changes hPRetMap to PRet0=@Measure.map (Ret→Omega) (Ret→Omega) mRet mRet0 id PRet, where Ret is exactly {j:Fin n // j≠i}. The existing frozen mRet/mRet0/PRet/PRet0 and canonical finite subtype instance unfold to the219 retained identity. Source space is original mRet and target is reduced mRet0, with original mu and literal mu0, not the reverse direction.
+
+The retained join383-408 still obtains that identity from219 at the same retained subtype. hidRet396-406 is the unchanged original-to-reduced coordinate proof; E remains the qualified zero-specialized witness obtained at375. map_map hE hidRet at407 gives exactly the retained-product E law and rfl removes composition with id. The pointwise factor equation, full-sample vector law and retained-product E law remain separate outputs. No deleted-coordinate access, filler point, replacement law or assertion of independence is introduced.
+
+Data, statement and metadata continuity
+
+Exact preamble, complete161LF head and closing are unchanged. All45 typed header data records agree with the prior independent records in type/value/exact text/captures/sourceLine; one head measurable-space instance remains. Every original assumption, quantified parameter, inline data family, rowIntegrable/gLp original capture, existential m0/hm0/E, zero-z witness specialization, explicit original/reduced measure space, original-n coefficient and full-sample cap/deletedTest remains byte-exact. All28 ordinary body let texts and both letI texts are unchanged. The four inserted statements contain no new binders, helpers, instances, lambdas, predicates, Prop-valued DATA families, observation selectors, non-Prop values or assumptions.
+
+Counts remain one source public theorem, no new global definitions/helpers,21 local have bindings,93 actual fun occurrences and four funext occurrences; case-sensitive hD and hd remain distinct. New SOURCE-MAP sections cover every412 line once, without using the old erroneous anchors. Its45 header records and all21 actual have names/lines match an independent derivation, including htriple377 and hretained383. Actual body-instance locators are202/208. Old author maps and old independent files were not edited. The metadata-only script parse failure is preserved; it describes failure before execution and no source effect. It supplies no mathematical or kernel evidence.
+
+Verdict boundary
+
+No critical gap was found in the four definitional conversions or affected joins. The composed SOURCE review consists of exact prior complete405 coverage plus these seven lines and all stated joins; it is not a claim that the new412 source has elaborated. The exact complete native check and, on success, same-first-original-object ALL-owner fullTYPE/required non-theorem VALUE/recursiveAX evidence remain required. No actual new owner count is guessed. Whitelist remains propext/Classical.choice/Quot.sound. This SAME independent never-author context can review that evidence later.
+
+p51candidate status, p54 moment-rate/strict-margin/compact-source repairs and external Shao-Zhou2016 attribution remain. S11/S27/CDF/generalS15/DC/fees/deletion limits/atoms/reflection/zero-event payments/fullOQ56/root closure remain OPEN; OQ3 remains PAUSED_BY_USER. No Lean/server/network/Git/API/upload/publication/children/Goal/schedule action or source edit occurred. Requested gpt-6.1-sol/xhigh and actual-model/effort/usage null telemetry are retained. Ownership is only final-review-01/affected-repair01; all prior and other-owner bytes remain preserved.
