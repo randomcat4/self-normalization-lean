@@ -1,0 +1,21 @@
+theorem actual_moment_cgf_derivative_recursion
+    {Ω : Type*} [MeasurableSpace Ω] (mu : Measure Ω) [IsProbabilityMeasure mu]
+    (X : Ω → ℝ)
+    (h0 : 0 ∈ interior (ProbabilityTheory.integrableExpSet X mu)) (n : ℕ) :
+    (∫ w, (X w) ^ (n + 1) ∂mu) =
+      ∑ j ∈ Finset.range (n + 1), (n.choose j : ℝ) *
+        iteratedDeriv (j + 1) (ProbabilityTheory.cgf X mu) 0 *
+          (∫ w, (X w) ^ (n - j) ∂mu)
+
+theorem centered_cgf_fifth_to_eighth_derivatives
+    {Ω : Type*} [MeasurableSpace Ω] (mu : Measure Ω) [IsProbabilityMeasure mu]
+    (X : Ω → ℝ)
+    (h0 : 0 ∈ interior (ProbabilityTheory.integrableExpSet X mu))
+    (hmean : (∫ w, X w ∂mu) = 0) :
+    let m : ℕ → ℝ := fun k => ∫ w, (X w) ^ k ∂mu
+    let kappa : ℕ → ℝ := fun k => iteratedDeriv k (ProbabilityTheory.cgf X mu) 0
+    kappa 5 = m 5 - 10 * m 3 * m 2 ∧
+      kappa 6 = m 6 - 15 * m 4 * m 2 - 10 * (m 3) ^ 2 + 30 * (m 2) ^ 3 ∧
+      kappa 7 = m 7 - 21 * m 5 * m 2 - 35 * m 4 * m 3 + 210 * m 3 * (m 2) ^ 2 ∧
+      kappa 8 = m 8 - 28 * m 6 * m 2 - 56 * m 5 * m 3 - 35 * (m 4) ^ 2 +
+        420 * m 4 * (m 2) ^ 2 + 560 * (m 3) ^ 2 * m 2 - 630 * (m 2) ^ 4
