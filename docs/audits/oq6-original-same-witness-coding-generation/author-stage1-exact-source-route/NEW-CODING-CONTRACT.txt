@@ -1,0 +1,39 @@
+        (∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (ξlocal i)) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          Measurable[mAugLocal, borel ℝ] (ηlocal k i) ∧
+          MeasurableSpace.comap (ηlocal k i) (borel ℝ) = mAugLocal) ∧
+        (∀ k : ℕ,
+          Measurable[mAug, borel (Fin n → ℝ)] (C k) ∧
+          MeasurableSpace.comap (C k) (borel (Fin n → ℝ)) = mAug ∧
+          ∀ (f : (Fin n → Ω × ℝ) → ℝ), Measurable[mAug, borel ℝ] f →
+            ∃ F : (Fin n → ℝ) → ℝ,
+              Measurable[borel (Fin n → ℝ), borel ℝ] F ∧
+              ∀ x : Fin n → Ω × ℝ, f x = F (C k x)) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          let J : Type := {j : Fin n // j ≠ i}
+          let mDel : MeasurableSpace (J → Ω × ℝ) :=
+            @MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)
+          let Cdel : (J → Ω × ℝ) → (J → ℝ) :=
+            fun y j => ηlocal k j.val (y j)
+          let pX : (Fin n → Ω × ℝ) → (J → Ω × ℝ) := fun x j => x j.val
+          let pR : (Fin n → ℝ) → (J → ℝ) := fun t j => t j.val
+          Measurable[mAug, mDel] pX ∧
+          Measurable[borel (Fin n → ℝ), borel (J → ℝ)] pR ∧
+          Measurable[mDel, borel (J → ℝ)] Cdel ∧
+          MeasurableSpace.comap Cdel (borel (J → ℝ)) = mDel ∧
+          (∀ x : Fin n → Ω × ℝ, pR (C k x) = Cdel (pX x)) ∧
+          MeasurableSpace.comap (fun x : Fin n → Ω × ℝ => pR (C k x))
+              (borel (J → ℝ)) = MeasurableSpace.comap pX mDel ∧
+          ∀ (d : (J → Ω × ℝ) → ℝ), Measurable[mDel, borel ℝ] d →
+            ∃ F : (J → ℝ) → ℝ,
+              Measurable[borel (J → ℝ), borel ℝ] F ∧
+              (∀ y : J → Ω × ℝ, d y = F (Cdel y)) ∧
+              Measurable[borel (Fin n → ℝ), borel ℝ] (fun t => F (pR t)) ∧
+              ∀ x : Fin n → Ω × ℝ, d (pX x) = F (pR (C k x))) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          ∃ FAdelete FBdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FAdelete ∧
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FBdelete ∧
+            ∀ x : Fin n → Ω × ℝ,
+              Adelete i x = FAdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x) ∧
+              Bdelete i x = FBdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧
