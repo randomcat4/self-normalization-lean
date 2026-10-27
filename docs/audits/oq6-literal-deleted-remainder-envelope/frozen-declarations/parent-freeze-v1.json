@@ -1,0 +1,804 @@
+{
+  "schema": "oq56-unit225-substantive-exact-declaration-and-data-freeze-v1",
+  "atUTC": "2026-10-27T02:09:58.628313+00:00",
+  "unit": 225,
+  "module": "Shao.OQ6.LiteralDeletedRemainderEnvelope",
+  "publicName": "literal_deleted_remainder_envelope_spec",
+  "parentLaneLead": "01a17665-2e41-7ed1-9911-57f16fe889fa",
+  "preamble": "import Shao.OQ6.NormalizedRemainderEnvelope\n\nset_option autoImplicit false\n\nuniverse u\n\nnamespace Shao.OQ6.LiteralDeletedRemainderEnvelope\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped BigOperators Classical Topology\n\n",
+  "head": "theorem literal_deleted_remainder_envelope_spec\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (ν : Measure Ω) [hν : IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (B : Ω → ℝ) (Bdelete : Fin n → Ω → ℝ)\n    (hB : Measurable B)\n    (hBdelete : ∀ i : Fin n, Measurable (Bdelete i))\n    (hBnonneg : ∀ ω : Ω, 0 ≤ B ω)\n    (hBdeletenonneg : ∀ (i : Fin n) (ω : Ω), 0 ≤ Bdelete i ω)\n    (hBint : Integrable B ν)\n    (hBdeleteint : ∀ i : Fin n, Integrable (Bdelete i) ν)\n    (z : ℝ) (hz : 0 ≤ z) :\n    let V : Ω → ℝ :=\n      fun ω : Ω => Real.sqrt (∑ j : Fin n, (ξ j ω) ^ 2)\n    let Vdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) =>\n        Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j ω) ^ 2)\n    let C : Ω → ℝ := fun ω : Ω => Real.sqrt (1 + B ω)\n    let Cdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) => Real.sqrt (1 + Bdelete i ω)\n    let H : Ω → ℝ :=\n      fun ω : Ω => (1 + V ω) * (Real.sqrt (n : ℝ) + z * C ω)\n    let Hdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) =>\n        (1 + Vdelete i ω) * (Real.sqrt (n : ℝ) + z * Cdelete i ω)\n    let ρ : ℝ → ℝ := fun ε : ℝ => 4 * ε * Real.sqrt (n : ℝ)\n    let M : ℝ → Ω → ℝ :=\n      fun (ε : ℝ) (ω : Ω) => ρ ε * H ω\n    let Mdelete : ℝ → Fin n → Ω → ℝ :=\n      fun (ε : ℝ) (i : Fin n) (ω : Ω) => ρ ε * Hdelete i ω\n    let κ : Fin n → ℝ :=\n      fun i : Fin n => 4 * Real.sqrt (n : ℝ) *\n        ((∫ ω, H ω ∂ν) + (∫ ω, Hdelete i ω ∂ν))\n    let Δ : (Ω → ℝ) → (Fin n → Ω → ℝ) → ℝ → Fin n → Ω → ℝ :=\n      fun (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n) (ω : Ω) =>\n          (A ω + M ε ω) - (Adelete i ω + Mdelete ε i ω) -\n            (A ω - Adelete i ω)\n    Measurable V ∧\n    (∀ i : Fin n, Measurable (Vdelete i)) ∧\n    (∀ (i : Fin n) (ω : Ω), 0 ≤ Vdelete i ω ∧ Vdelete i ω ≤ V ω) ∧\n    Measurable C ∧\n    (∀ i : Fin n, Measurable (Cdelete i)) ∧\n    (∀ ω : Ω, 1 ≤ C ω) ∧\n    (∀ (i : Fin n) (ω : Ω), 1 ≤ Cdelete i ω) ∧\n    Measurable H ∧ Integrable H ν ∧\n    (∀ i : Fin n, Measurable (Hdelete i) ∧ Integrable (Hdelete i) ν) ∧\n    (∀ ω : Ω, 0 < H ω) ∧\n    (∀ (i : Fin n) (ω : Ω), 0 < Hdelete i ω) ∧\n    (∀ ε : ℝ, Measurable (M ε) ∧\n      ∀ i : Fin n, Measurable (Mdelete ε i)) ∧\n    (∀ ε : ℝ, Integrable (M ε) ν ∧\n      ∀ i : Fin n, Integrable (Mdelete ε i) ν) ∧\n    (∀ ε : ℝ, Integrable (fun ω : Ω => |M ε ω|) ν ∧\n      ∀ i : Fin n, Integrable (fun ω : Ω => |Mdelete ε i ω|) ν) ∧\n    (∀ ε : ℝ, 0 ≤ ε → ∀ ω : Ω,\n      0 ≤ M ε ω ∧ ∀ i : Fin n, 0 ≤ Mdelete ε i ω) ∧\n    (∀ ε : ℝ, (∫ ω, M ε ω ∂ν) = ρ ε * (∫ ω, H ω ∂ν)) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ω, Mdelete ε i ω ∂ν) = ρ ε * (∫ ω, Hdelete i ω ∂ν)) ∧\n    (∀ ε : ℝ,\n      (∫ ω, |M ε ω| ∂ν) = |ρ ε| * (∫ ω, H ω ∂ν)) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ω, |Mdelete ε i ω| ∂ν) = |ρ ε| * (∫ ω, Hdelete i ω ∂ν)) ∧\n    (∀ i : Fin n, 0 ≤ κ i) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ω, M ε ω ∂ν) + (∫ ω, Mdelete ε i ω ∂ν) = ε * κ i) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ω, |M ε ω| ∂ν) + (∫ ω, |Mdelete ε i ω| ∂ν) = |ε| * κ i) ∧\n    Filter.Tendsto (fun ε : ℝ => ∫ ω, M ε ω ∂ν)\n      (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧\n    Filter.Tendsto (fun ε : ℝ => ∫ ω, |M ε ω| ∂ν)\n      (nhds (0 : ℝ)) (nhds (0 : ℝ)) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ω, Mdelete ε i ω ∂ν)\n      (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ω, |Mdelete ε i ω| ∂ν)\n      (nhds (0 : ℝ)) (nhds (0 : ℝ))) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n) (ω : Ω),\n      Δ A Adelete ε i ω = M ε ω - Mdelete ε i ω) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n) (ω : Ω),\n      |Δ A Adelete ε i ω| ≤ |M ε ω| + |Mdelete ε i ω|) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ), 0 ≤ ε → ∀ (i : Fin n) (ω : Ω),\n      |Δ A Adelete ε i ω| ≤ M ε ω + Mdelete ε i ω) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n),\n      Measurable (Δ A Adelete ε i) ∧\n      Integrable (Δ A Adelete ε i) ν ∧\n      Integrable (fun ω : Ω => |Δ A Adelete ε i ω|) ν) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n),\n      (∫ ω, |Δ A Adelete ε i ω| ∂ν) ≤ |ε| * κ i) ∧\n    (∀ (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ) (i : Fin n),\n      Filter.Tendsto (fun ε : ℝ => ∫ ω, |Δ A Adelete ε i ω| ∂ν)\n        (nhds (0 : ℝ)) (nhds (0 : ℝ)))\n",
+  "closing": "end\n\nend Shao.OQ6.LiteralDeletedRemainderEnvelope\n",
+  "preambleRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/PREAMBLE.txt",
+    "sha256": "60c3dd4b12fe0e945fbe806e048effb7a4102b1b76e36619429c2d78b947e112",
+    "bytes": 227
+  },
+  "headRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+    "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+    "bytes": 5265
+  },
+  "closingRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CLOSING.txt",
+    "sha256": "9bbeaffa7b57a6dd126f352758958541869697d61c75c80548d23b8e65696dfa",
+    "bytes": 50
+  },
+  "stage1Intake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/parent-stage1-intake.json",
+    "sha256": "eec9302a18f5e82bc4899ea964ab1e121ba559ef8c98a7ab13a9d49f2adcfe1a",
+    "bytes": 2521
+  },
+  "stage1BaseManifest": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/MANIFEST.json",
+    "sha256": "ae2474fd40fbf10ac8fe9e89d7a2c5622c57aa258df4249ed029d4dc910a5447",
+    "bytes": 5183
+  },
+  "captureAddendumManifest": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/capture-exact-addendum01/MANIFEST.json",
+    "sha256": "53c15a3715f136a714d6f29addae84681eb8b414391cd3ce22688d123b3bb524",
+    "bytes": 2553
+  },
+  "captureMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/capture-exact-addendum01/CORRECTED-COMPLETE-CAPTURE-MAP.json",
+    "sha256": "5777c8a075f59f7ac8576675ab354447175a7dd77b2424fb15cb21b26a5f00da",
+    "bytes": 26041
+  },
+  "ordinaryTypedHeadValues": [
+    {
+      "name": "V",
+      "exactTypedDefinition": "    let V : Ω → ℝ :=\n      fun ω : Ω => Real.sqrt (∑ j : Fin n, (ξ j ω) ^ 2)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 16,
+        "lastLine1": 17,
+        "definitionSHA256": "f5543531d267d68ecb499216e1b3d3ef74bf7684ecb5faa0460cb7487b2a7e93"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ"
+      ],
+      "directRHSPriorLetComputationalCaptures": [],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "Finite full sum enumerates Fin n through its canonical Fintype; ξ is evaluated at bound j and ω.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "Vdelete",
+      "exactTypedDefinition": "    let Vdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) =>\n        Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j ω) ^ 2)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 18,
+        "lastLine1": 20,
+        "definitionSHA256": "c52323752760d24a8818f3c958618ca303cac85a102a401d1b4bc52c8c73d7e7"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ"
+      ],
+      "directRHSPriorLetComputationalCaptures": [],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "Finite erased sum enumerates the original Fin n and uses its canonical DecidableEq; i, j and ω are bound.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "C",
+      "exactTypedDefinition": "    let C : Ω → ℝ := fun ω : Ω => Real.sqrt (1 + B ω)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 21,
+        "lastLine1": 21,
+        "definitionSHA256": "40f1862a814fe3f363c390eedc455ef7c3b0bddfee52f9a9eb7f4904d4f24491"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "B"
+      ],
+      "directRHSPriorLetComputationalCaptures": [],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "B"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "Only B is evaluated; sqrt/add need canonical real structures, not mΩ.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "Cdelete",
+      "exactTypedDefinition": "    let Cdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) => Real.sqrt (1 + Bdelete i ω)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 22,
+        "lastLine1": 23,
+        "definitionSHA256": "46f54fe04142b16ee7fcabf5a6300e15cf9510cc2347fba9a99199d97a235546"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "Bdelete"
+      ],
+      "directRHSPriorLetComputationalCaptures": [],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "n occurs in Fin n binder/domain types. No finite sum/enumeration or coefficient uses n in this RHS.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "H",
+      "exactTypedDefinition": "    let H : Ω → ℝ :=\n      fun ω : Ω => (1 + V ω) * (Real.sqrt (n : ℝ) + z * C ω)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 24,
+        "lastLine1": 25,
+        "definitionSHA256": "38281fc4681e3982cd9a138642ebb20530705235f4c39c7ea8dbabb1d804bee9"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z"
+      ],
+      "directRHSPriorLetComputationalCaptures": [
+        "V",
+        "C"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z",
+        "ξ",
+        "B"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "sqrt(n) and z are scalar data; V and C are prior transparent lets.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "Hdelete",
+      "exactTypedDefinition": "    let Hdelete : Fin n → Ω → ℝ :=\n      fun (i : Fin n) (ω : Ω) =>\n        (1 + Vdelete i ω) * (Real.sqrt (n : ℝ) + z * Cdelete i ω)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 26,
+        "lastLine1": 28,
+        "definitionSHA256": "1d6e5d8fbf28cf9d13344728e6acdbb76d4d33e02df80035b800785978e747ac"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z"
+      ],
+      "directRHSPriorLetComputationalCaptures": [
+        "Vdelete",
+        "Cdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z",
+        "ξ",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "sqrt(n) uses the original n as scalar data; i:Fin n is bound and Vdelete/Cdelete are prior lets.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "ρ",
+      "exactTypedDefinition": "    let ρ : ℝ → ℝ := fun ε : ℝ => 4 * ε * Real.sqrt (n : ℝ)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 29,
+        "lastLine1": 29,
+        "definitionSHA256": "c5ed92e4f26550aa13a8ce3daf300641681d94638b85d8e327eb076368435e2a"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n"
+      ],
+      "directRHSPriorLetComputationalCaptures": [],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n"
+      ],
+      "freeTypeParameterDependencies": [],
+      "universeParameterDependencies": [],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "RHS is fun (ε:ℝ) => 4*ε*sqrt(n). It has no Ω/u/mΩ/ν/hν dependency.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "M",
+      "exactTypedDefinition": "    let M : ℝ → Ω → ℝ :=\n      fun (ε : ℝ) (ω : Ω) => ρ ε * H ω",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 30,
+        "lastLine1": 31,
+        "definitionSHA256": "016fc7018eafce78d38eada3e518167ac69e5bec916868c0b62e3475ada5cb0d"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [],
+      "directRHSPriorLetComputationalCaptures": [
+        "ρ",
+        "H"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z",
+        "ξ",
+        "B"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "Only ρ and H are evaluated. ε and ω are bound.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "Mdelete",
+      "exactTypedDefinition": "    let Mdelete : ℝ → Fin n → Ω → ℝ :=\n      fun (ε : ℝ) (i : Fin n) (ω : Ω) => ρ ε * Hdelete i ω",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 32,
+        "lastLine1": 33,
+        "definitionSHA256": "bc57d56dfae08deea6f7dfc0fe090a5173fcf1f4d9044c6578f56aedfcb041d6"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [],
+      "directRHSPriorLetComputationalCaptures": [
+        "ρ",
+        "Hdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z",
+        "ξ",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "n is in Fin n types, while computational n-dependence is through ρ and Hdelete.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "κ",
+      "exactTypedDefinition": "    let κ : Fin n → ℝ :=\n      fun i : Fin n => 4 * Real.sqrt (n : ℝ) *\n        ((∫ ω, H ω ∂ν) + (∫ ω, Hdelete i ω ∂ν))",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 34,
+        "lastLine1": 36,
+        "definitionSHA256": "83c8f86cf49cc9eb69dac06ebb142dcffe5c153661c47e0b09a1533f35535331"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ν"
+      ],
+      "directRHSPriorLetComputationalCaptures": [
+        "H",
+        "Hdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ν",
+        "z",
+        "ξ",
+        "B",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [
+        "mΩ"
+      ],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "Bochner integral has an implicit MeasurableSpace Ω parameter. It does not require an IsProbabilityMeasure argument, so hν is not an RHS instance capture.",
+      "elaboratedInThisStage": false
+    },
+    {
+      "name": "Δ",
+      "exactTypedDefinition": "    let Δ : (Ω → ℝ) → (Fin n → Ω → ℝ) → ℝ → Fin n → Ω → ℝ :=\n      fun (A : Ω → ℝ) (Adelete : Fin n → Ω → ℝ)\n        (ε : ℝ) (i : Fin n) (ω : Ω) =>\n          (A ω + M ε ω) - (Adelete i ω + Mdelete ε i ω) -\n            (A ω - Adelete i ω)",
+      "sourceLocator": {
+        "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/CANDIDATE-HEAD.txt",
+        "sha256": "8549fbe98119b99cdf1e98bf0e29afb5df2a181e85bc9412ff589e3faf8c1245",
+        "firstLine1": 37,
+        "lastLine1": 41,
+        "definitionSHA256": "b164bf48b8f8b1ec93fd9f9cdef5f4522cb4831aaa279bd2293161371e080a20"
+      },
+      "directRHSOrdinaryComputationalDataCaptures": [],
+      "directRHSPriorLetComputationalCaptures": [
+        "M",
+        "Mdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z",
+        "ξ",
+        "B",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": [],
+      "availableProofContextHypothesesNotRHSInputs": [
+        "hν",
+        "hn",
+        "hξ",
+        "hξ2",
+        "hξenergy",
+        "hB",
+        "hBdelete",
+        "hBnonneg",
+        "hBdeletenonneg",
+        "hBint",
+        "hBdeleteint",
+        "hz"
+      ],
+      "canonicalInstanceNote": "Fin n Fintype/DecidableEq only for the finite sums/erase, and canonical real arithmetic/topology/normed/measurable structures. These are global canonical constants indexed by the displayed types, not additional free local hypotheses.",
+      "classificationRationale": "A/Adelete/ε/i/ω are locally bound. Only M/Mdelete are free term data. The fixed measure ν does not occur in either envelope function.",
+      "elaboratedInThisStage": false
+    }
+  ],
+  "plannedProofData": [
+    {
+      "name": "Hdom",
+      "type": "Fin n → Ω → ℝ",
+      "equation": "fun (i : Fin n) (ω : Ω) => (1 + V ω) * (Real.sqrt (n : ℝ) + z * Cdelete i ω)",
+      "directRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "z"
+      ],
+      "directRHSPriorLetComputationalCaptures": [
+        "V",
+        "Cdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ",
+        "z",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": []
+    },
+    {
+      "name": "E",
+      "type": "Fin n → Ω → ℝ",
+      "equation": "fun (i : Fin n) (ω : Ω) => H ω - Hdelete i ω",
+      "directRHSOrdinaryComputationalDataCaptures": [],
+      "directRHSPriorLetComputationalCaptures": [
+        "H",
+        "Hdelete"
+      ],
+      "transitiveRHSOrdinaryComputationalDataCaptures": [
+        "n",
+        "ξ",
+        "z",
+        "B",
+        "Bdelete"
+      ],
+      "freeTypeParameterDependencies": [
+        "Ω"
+      ],
+      "universeParameterDependencies": [
+        "u"
+      ],
+      "ordinaryDataOccurringInRHSOrDeclaredTypes": [
+        "n"
+      ],
+      "implicitNoncanonicalInstanceDataDependencies": [],
+      "directOrTransitiveProofHypothesesUsedInRHS": []
+    }
+  ],
+  "implicitAndInstanceCaptures": {
+    "universe": [
+      "u"
+    ],
+    "implicitParameters": [
+      {
+        "name": "Ω",
+        "type": "Type u"
+      }
+    ],
+    "instanceParameters": [
+      {
+        "name": "mΩ",
+        "type": "MeasurableSpace Ω"
+      },
+      {
+        "name": "hν",
+        "type": "IsProbabilityMeasure ν",
+        "captures": [
+          "Ω",
+          "mΩ",
+          "ν"
+        ]
+      }
+    ],
+    "ordinaryInputSequence": [
+      "ν",
+      "n",
+      "hn",
+      "ξ",
+      "hξ",
+      "hξ2",
+      "hξenergy",
+      "B",
+      "Bdelete",
+      "hB",
+      "hBdelete",
+      "hBnonneg",
+      "hBdeletenonneg",
+      "hBint",
+      "hBdeleteint",
+      "z",
+      "hz"
+    ],
+    "completeOrdinaryTypes": "Exactly the binder prefix of CANDIDATE-HEAD.txt, under its bound universe/implicit/instance parameters.",
+    "resultUniversalData": [
+      {
+        "name": "A",
+        "type": "Ω → ℝ",
+        "assumptions": []
+      },
+      {
+        "name": "Adelete",
+        "type": "Fin n → Ω → ℝ",
+        "assumptions": []
+      }
+    ],
+    "lambdaBinderTypes": {
+      "ω": "Ω",
+      "i": "Fin n",
+      "j": "Fin n",
+      "ε": "ℝ",
+      "z": "ℝ",
+      "A": "Ω → ℝ",
+      "Adelete": "Fin n → Ω → ℝ"
+    },
+    "notationBinderTypes": {
+      "fullSumCoordinate": "Fin n",
+      "erasedSumCoordinate": "Fin n, with membership in Finset.univ.erase i",
+      "integralSample": "Ω",
+      "allIntegralMeasures": "ν fixed before ε"
+    },
+    "existentialWitnesses": [],
+    "newLocalInstances": [],
+    "automaticCanonicalSupport": [
+      "Fin n: Fintype, DecidableEq",
+      "ℝ: canonical measurable/Borel/topological/normed-field structures",
+      "MemLp exponent numeral2: ENNReal",
+      "square exponent numeral2: ℕ",
+      "all real-valued envelopes and scalar numerals: ℝ"
+    ],
+    "coefficientDependence": {
+      "κ_i": [
+        "ν",
+        "ξ",
+        "B",
+        "Bdelete_i",
+        "n",
+        "z"
+      ],
+      "independentOf": [
+        "ε",
+        "A",
+        "Adelete"
+      ],
+      "modelIndependentK_nzClaim": false,
+      "prefactor": "4 * Real.sqrt (n : ℝ), retaining original n in full and deleted formulas"
+    }
+  },
+  "primaryAPISourcePacket": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/parent-primary-api-source-packet01.json",
+    "sha256": "aa9df5faec212d628c94d2a8380fa5ea7af834277e242f1418724308e675bc53",
+    "bytes": 36016
+  },
+  "bearingHeads": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/BEARING-PUBLIC-HEADS.json",
+    "sha256": "652f7fa18ced8e42307562f566386ab25e3a2319fe0ce70c90ffc1ff099b2f1d",
+    "bytes": 8180
+  },
+  "bearingDefinitions": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/BEARING-DEFINITIONS.json",
+    "sha256": "80d59ede7537f0a35463b75ebfa8ddfa61fe4e33886df3ebb0bba4b2b8375864",
+    "bytes": 3864
+  },
+  "sourceInterfaceMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/SOURCE-INTERFACE-MAP.json",
+    "sha256": "17470847de38a94a507f6fa7bd2966b46ffa77330f4bae71a6512f577e207cf0",
+    "bytes": 6278
+  },
+  "sourceScope": {
+    "path": "C:/game/shao lean/drafts/oq56/unit225/author-stage1-01/ORIGINAL-SOURCE-SCOPE.md",
+    "sha256": "b2b22dde9a19ef793e0ad7046135769a7b27c1f0557ed94d71014d229dc8c2d5",
+    "bytes": 2710
+  },
+  "globalDeclarations": 1,
+  "publicTheorems": 1,
+  "newGlobalDefinitions": 0,
+  "newHelpers": 0,
+  "typedHeadValues": 11,
+  "plannedOrdinaryProofData": 2,
+  "noNewMathematicalPremises": true,
+  "headMustStayByteExact": true,
+  "fullAndDeletedOriginalNCoefficientsRetained": true,
+  "sameLawAndDataFixedBeforeEpsilon": true,
+  "noDeletedEnergyEquality1Application": true,
+  "noModelIndependentK_nzClaim": true,
+  "genericPremisesAreInterfaceInputsNotOriginalInstantiation": true,
+  "originalInstantiationRequires224": true,
+  "implementationScope": "C:/game/shao lean/drafts/oq56/unit225/author-01",
+  "sameStage1AuthorRole": "/root/oq56_literal_deleted_envelope225_stage1_author",
+  "proofDataPolicy": "Only11frozenhead values+2proposedHdom/E proofordinary values or exactinline equivalents withtypedcapturemap. GenuineProp facts/forallproofcallbacks maybeintroducedwithfulltypedlocalcaptureinventory; no extraordinarydata/instance/selector/witness/helper/premise without parentexplicitdeltafreeze. Do noteditacceptedproducer.",
+  "requiredEvidence": [
+    "complete author source+head/data/capture/Prop/lambda inventory and locators",
+    "fresh never-author independent completeSOURCE thenfinalexactactualTYPE/requiredVALUE/transitiveAX review; sourceboundreuse unchanged proofs",
+    "serveronly pinnednative-M8192-j4 underOQ56lock; sameFIRSTOallowner auditifsuccess",
+    "exactchangedsource/FIRSTO/receipt/config/protectionbindings, allscopeopenlimits"
+  ],
+  "openScopes": [
+    "Qepsilon_bound",
+    "actualoriginalmodel_SAME224_instantiation",
+    "weighted_limits",
+    "external_SZ",
+    "CDF/fullOQ56_root"
+  ],
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "kernelChecked": false,
+  "qualified": false
+}
