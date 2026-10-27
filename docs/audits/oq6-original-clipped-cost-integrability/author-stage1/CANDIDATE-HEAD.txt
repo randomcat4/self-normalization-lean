@@ -1,0 +1,54 @@
+theorem actual_original_clipped_cost_integrability
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y : Ω, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 4 ≤ n)
+    (C0 : ℝ) (hC0 : 0 ≤ C0) :
+    let g : Ω → ℝ := fun o : Ω => ∫ y : Ω, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y : Ω => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let rho : ℝ := Real.sqrt v
+    let N : ℝ := Real.sqrt (n : ℝ)
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _i : Fin n => μ)
+    let D : (Fin n → Ω) → ℝ := residualStatisticD n r
+    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r
+    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r
+    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r
+    let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D ξ|
+    let Adel : (Fin n → Ω) → Fin n → ℝ :=
+      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|
+    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+    let B1del : (Fin n → Ω) → Fin n → ℝ :=
+      studentizerClipBudgetDeleted n r C0 rho 1
+    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+    let deletionMass : (Fin n → Ω) → Fin n → ℝ :=
+      fun (ξ : Fin n → Ω) (i : Fin n) =>
+        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|
+    let deletionTotal : (Fin n → Ω) → ℝ :=
+      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i
+    MemLp D 2 P ∧
+      (∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P) ∧
+      Integrable J P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P) ∧
+      Integrable A P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P) ∧
+      Integrable B1 P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P) ∧
+      Integrable e P ∧
+      Measurable D ∧ Measurable A ∧ Measurable B1 ∧ Measurable e ∧
+      (∀ i : Fin n,
+        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => B1del ξ i)) ∧
+      (∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ) ∧
+      (∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i) ∧
+      (∀ i : Fin n,
+        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧
+        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧
+        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P) ∧
+      Integrable deletionTotal P
