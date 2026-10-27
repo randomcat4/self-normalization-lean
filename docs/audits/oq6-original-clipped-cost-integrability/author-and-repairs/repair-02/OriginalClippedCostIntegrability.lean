@@ -1,0 +1,232 @@
+import Shao.OQ6.OriginalClippedStatisticMeasurable
+import Shao.OQ6.UntiltedCompactCost
+
+set_option autoImplicit false
+
+universe u
+
+open MeasureTheory
+open scoped BigOperators Classical
+open Shao.OQ5.P51
+
+namespace Shao.OQ6.OriginalClippedCostIntegrability
+
+noncomputable section
+
+theorem actual_original_clipped_cost_integrability
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y : Ω, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 4 ≤ n)
+    (C0 : ℝ) (hC0 : 0 ≤ C0) :
+    let g : Ω → ℝ := fun o : Ω => ∫ y : Ω, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y : Ω => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let rho : ℝ := Real.sqrt v
+    let N : ℝ := Real.sqrt (n : ℝ)
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _i : Fin n => μ)
+    let D : (Fin n → Ω) → ℝ := residualStatisticD n r
+    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r
+    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r
+    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r
+    let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D ξ|
+    let Adel : (Fin n → Ω) → Fin n → ℝ :=
+      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|
+    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+    let B1del : (Fin n → Ω) → Fin n → ℝ :=
+      studentizerClipBudgetDeleted n r C0 rho 1
+    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+    let deletionMass : (Fin n → Ω) → Fin n → ℝ :=
+      fun (ξ : Fin n → Ω) (i : Fin n) =>
+        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|
+    let deletionTotal : (Fin n → Ω) → ℝ :=
+      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i
+    MemLp D 2 P ∧
+      (∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P) ∧
+      Integrable J P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P) ∧
+      Integrable A P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P) ∧
+      Integrable B1 P ∧
+      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P) ∧
+      Integrable e P ∧
+      Measurable D ∧ Measurable A ∧ Measurable B1 ∧ Measurable e ∧
+      (∀ i : Fin n,
+        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧
+        Measurable (fun ξ : Fin n → Ω => B1del ξ i)) ∧
+      (∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ) ∧
+      (∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i) ∧
+      (∀ i : Fin n,
+        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧
+        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧
+        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P) ∧
+      Integrable deletionTotal P
+:= by
+  intro g r v rho N P D J Ddel Jdel A Adel B1 B1del e deletionMass deletionTotal
+  let F : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω =>
+    Shao.OQ5.P35.unorderedPairSum (fun i j : Fin n => r (ξ i) (ξ j))
+  let psi : (Fin n → Ω) → Fin n → ℝ :=
+    fun (ξ : Fin n → Ω) (i : Fin n) =>
+      Shao.OQ6.ResidualDeletion.rowSum
+        (fun j k : Fin n => r (ξ j) (ξ k)) i
+  let LambdaSq : (Fin n → Ω) → ℝ :=
+    fun ξ : Fin n → Ω => ∑ j : Fin n, (psi ξ j) ^ 2
+  let LambdaDelSq : (Fin n → Ω) → Fin n → ℝ :=
+    fun (ξ : Fin n → Ω) (i : Fin n) => ∑ j : Fin n,
+      (Shao.OQ6.ResidualDeletion.rowSum
+        (Shao.OQ6.ResidualDeletion.eraseIncident
+          (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2
+  let sigma : ℝ := 1 + rho
+  let base : ℝ := sigma / N
+  let K : ℝ := sigma * ((n : ℝ) ^ 2 * N)
+  let BcoarseDel : (Fin n → Ω) → Fin n → ℝ :=
+    fun (ξ : Fin n → Ω) (i : Fin n) => base + LambdaDelSq ξ i / K
+  letI : IsProbabilityMeasure P :=
+    inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _i : Fin n => μ)))
+  have hn3 : 3 ≤ n := Nat.le_trans (by norm_num) hn
+  have hn4R : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hnR : (0 : ℝ) < (n : ℝ) := by linarith only [hn4R]
+  have hrho : 0 ≤ rho := Real.sqrt_nonneg v
+  have hNpos : 0 < N := Real.sqrt_pos.2 hnR
+  have hsigmapos : 0 < sigma := by
+    dsimp only [sigma]
+    linarith only [hrho]
+  have hKpos : 0 < K := by
+    dsimp only [K]
+    exact mul_pos hsigmapos (mul_pos (pow_pos hnR 2) hNpos)
+  have hwindow0 : (0 : ℝ) ≤ Real.sqrt (n : ℝ) /
+      (2 * Real.exp (1 / 2 : ℝ)) :=
+    div_nonneg (Real.sqrt_nonneg (n : ℝ))
+      (mul_nonneg (by norm_num) (le_of_lt (Real.exp_pos (1 / 2 : ℝ))))
+  have hmodel :=
+    Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments
+      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3 0 (le_refl 0) hwindow0
+  rcases hmodel with
+    ⟨_, _, _, _, _, _, hrsymm, _, _, _, _, _, _, _, _, _, _,
+      _, _, _, _, _, _, _, _, _, _, _, _, hFtilt2, _, hpsiTilt2,
+      hLambdaTiltI, _⟩
+  have hF2 : MemLp F 2 P := by
+    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),
+      sub_zero, Finset.sum_const_zero, MeasureTheory.tilted_const] using hFtilt2
+  have hpsi2 (i : Fin n) : MemLp (fun ξ : Fin n → Ω => psi ξ i) 2 P := by
+    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),
+      sub_zero, Finset.sum_const_zero, MeasureTheory.tilted_const] using hpsiTilt2 i
+  have hLambdaI : Integrable LambdaSq P := by
+    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),
+      sub_zero, Finset.sum_const_zero, MeasureTheory.tilted_const] using hLambdaTiltI
+  have hobs :=
+    Shao.OQ6.OriginalClippedStatisticMeasurable.actual_normalized_compact_clipped_observables
+      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn
+      0 (le_refl 0) (by norm_num) C0 hC0
+  rcases hobs with
+    ⟨_, _, hDm, _, hAm, hB1m, _, _, _, hem, _, _, _, _, _, _, hdelm⟩
+  have hD2 : MemLp D 2 P := by
+    change MemLp (fun ξ : Fin n → Ω =>
+      F ξ / (N * ((n : ℝ) - 1))) 2 P
+    simpa only [div_eq_mul_inv] using
+      hF2.mul_const (N * ((n : ℝ) - 1))⁻¹
+  have hDdel2 (i : Fin n) :
+      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P := by
+    have hDeletedAE :
+        (fun ξ : Fin n → Ω =>
+          (F ξ - psi ξ i) * (N * ((n : ℝ) - 1))⁻¹) =ᵐ[P]
+        (fun ξ : Fin n → Ω => Ddel ξ i) := by
+      exact ae_of_all P (fun ξ : Fin n → Ω => by
+        change (F ξ - psi ξ i) * (N * ((n : ℝ) - 1))⁻¹ =
+          Shao.OQ5.P35.unorderedPairSum
+            (Shao.OQ6.ResidualDeletion.eraseIncident
+              (fun j k : Fin n => r (ξ j) (ξ k)) i) /
+            (N * ((n : ℝ) - 1))
+        rw [← div_eq_mul_inv]
+        congr 1
+        have hIncident :=
+          Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident
+            (fun j k : Fin n => r (ξ j) (ξ k))
+            (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i
+        change F ξ - Shao.OQ5.P35.unorderedPairSum
+          (Shao.OQ6.ResidualDeletion.eraseIncident
+            (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i at hIncident
+        linarith only [hIncident])
+    exact (memLp_congr_ae hDeletedAE).mp
+      ((hF2.sub (hpsi2 i)).mul_const (N * ((n : ℝ) - 1))⁻¹)
+  have hJI : Integrable J P := by
+    apply (hLambdaI.div_const (((n : ℝ) - 2) ^ 2)).congr
+    exact ae_of_all P (fun ξ : Fin n → Ω => by
+      change (∑ j : Fin n,
+        (Shao.OQ6.ResidualDeletion.rowSum
+          (fun k l : Fin n => r (ξ k) (ξ l)) j) ^ 2) /
+          ((n : ℝ) - 2) ^ 2 = residualEnergyJ n r ξ
+      exact (residualEnergyJ_eq_rowSqSum n r ξ).symm)
+  have hcoarse :=
+    Shao.OQ6.UntiltedCompactCost.actual_quadratic_compact_source_cost
+      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3
+      0 (le_refl 0) 1 (by norm_num)
+  have hcoarseDelI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => BcoarseDel ξ i) P := by
+    simpa only [BcoarseDel, base, K, sigma, N, P, LambdaDelSq, one_mul] using
+      hcoarse.2.2.2.2.2.2.2.1 i
+  have hLambdaDelI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => LambdaDelSq ξ i) P := by
+    apply (((hcoarseDelI i).sub (integrable_const base)).const_mul K).congr
+    exact ae_of_all P (fun ξ : Fin n → Ω => by
+      change K * (BcoarseDel ξ i - base) = LambdaDelSq ξ i
+      dsimp only [BcoarseDel]
+      field_simp [ne_of_gt hKpos] <;> ring)
+  have hJdelI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P := by
+    simpa only [Jdel, residualEnergyJDeleted, LambdaDelSq] using
+      (hLambdaDelI i).div_const (((n : ℝ) - 2) ^ 2)
+  have hAI : Integrable A P := by
+    exact (hD2.integrable (by norm_num)).abs
+  have hAdelI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => Adel ξ i) P := by
+    exact ((hDdel2 i).integrable (by norm_num)).abs
+  have hB1I : Integrable B1 P := by
+    change Integrable (fun ξ : Fin n → Ω =>
+      C0 * (((1 + rho) * 1) / N + J ξ / ((1 + rho) * 1 * N))) P
+    exact ((integrable_const (((1 + rho) * 1) / N)).add
+      (hJI.div_const ((1 + rho) * 1 * N))).const_mul C0
+  have hB1delI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => B1del ξ i) P := by
+    change Integrable (fun ξ : Fin n → Ω =>
+      C0 * (((1 + rho) * 1) / N + Jdel ξ i / ((1 + rho) * 1 * N))) P
+    exact ((integrable_const (((1 + rho) * 1) / N)).add
+      ((hJdelI i).div_const ((1 + rho) * 1 * N))).const_mul C0
+  have hFullBounds (ξ : Fin n → Ω) :
+      0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ := by
+    exact ⟨abs_nonneg _,
+      studentizerClipBudget_nonneg n r C0 rho 1 ξ hC0 hrho (by norm_num),
+      (clippedCenteredDelta_bounds n g r C0 rho 1 ξ
+        hC0 hrho (by norm_num)).2.1⟩
+  have hDeletedBounds (i : Fin n) (ξ : Fin n → Ω) :
+      0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i := by
+    exact (clippedDeletion_envelopes_nonneg n r C0 rho 1 ξ i
+      hC0 hrho (by norm_num)).2.2
+  have heI : Integrable e P := by
+    apply hB1I.mono' hem.aestronglyMeasurable
+    exact ae_of_all P (fun ξ : Fin n → Ω => by
+      simpa only [Real.norm_eq_abs] using (hFullBounds ξ).2.2)
+  have hDiffI (i : Fin n) :
+      Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧
+      Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧
+      Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P := by
+    exact ⟨(hAI.sub (hAdelI i)).abs, (hB1I.sub (hB1delI i)).abs,
+      ((hAI.sub (hAdelI i)).abs).add ((hB1I.sub (hB1delI i)).abs)⟩
+  have hTotalI : Integrable deletionTotal P := by
+    exact integrable_finsetSum Finset.univ
+      (fun (i : Fin n) (_hi : i ∈ (Finset.univ : Finset (Fin n))) =>
+        (hDiffI i).2.2)
+  exact ⟨hD2, hDdel2, hJI, hJdelI, hAI, hAdelI, hB1I, hB1delI,
+    heI, hDm, hAm, hB1m, hem,
+    (fun i : Fin n => ⟨(hdelm i).2.2.2.1, (hdelm i).2.2.2.2.1⟩),
+    hFullBounds, hDeletedBounds, hDiffI, hTotalI⟩
+
+end
+
+end Shao.OQ6.OriginalClippedCostIntegrability

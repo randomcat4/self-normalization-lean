@@ -1,0 +1,716 @@
+{
+  "schema": "oq56-unit223-exact-original-clipped-cost-integrability-freeze-v1",
+  "atUTC": "2026-10-26T23:55:36.700099+00:00",
+  "unit": 223,
+  "module": "Shao.OQ6.OriginalClippedCostIntegrability",
+  "publicName": "actual_original_clipped_cost_integrability",
+  "sourcePath": "Shao/OQ6/OriginalClippedCostIntegrability.lean",
+  "preamble": "import Shao.OQ6.OriginalClippedStatisticMeasurable\nimport Shao.OQ6.UntiltedCompactCost\n\nset_option autoImplicit false\n\nuniverse u\n\nopen MeasureTheory\nopen scoped BigOperators Classical\nopen Shao.OQ5.P51\n\nnamespace Shao.OQ6.OriginalClippedCostIntegrability\n\nnoncomputable section\n",
+  "head": "theorem actual_original_clipped_cost_integrability\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y : Ω, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o : Ω => ∫ y : Ω, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y : Ω => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let P : Measure (Fin n → Ω) := Measure.pi (fun _i : Fin n => μ)\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ :=\n      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ :=\n      studentizerClipBudgetDeleted n r C0 rho 1\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let deletionMass : (Fin n → Ω) → Fin n → ℝ :=\n      fun (ξ : Fin n → Ω) (i : Fin n) =>\n        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|\n    let deletionTotal : (Fin n → Ω) → ℝ :=\n      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i\n    MemLp D 2 P ∧\n      (∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P) ∧\n      Integrable J P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P) ∧\n      Integrable A P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P) ∧\n      Integrable B1 P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P) ∧\n      Integrable e P ∧\n      Measurable D ∧ Measurable A ∧ Measurable B1 ∧ Measurable e ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i)) ∧\n      (∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ) ∧\n      (∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i) ∧\n      (∀ i : Fin n,\n        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P) ∧\n      Integrable deletionTotal P\n",
+  "closing": "end\n\nend Shao.OQ6.OriginalClippedCostIntegrability\n",
+  "preambleRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/PREAMBLE.txt",
+    "sha256": "72ca9c3841584b33d517c54fd98c55b6da45d1d615d0331c17e587af3180d7f8",
+    "bytes": 279
+  },
+  "headRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/CANDIDATE-HEAD.txt",
+    "sha256": "dbd56c5dcf9c62882999512a19f832191fb407e073979a8558a99f54b1855f79",
+    "bytes": 2948
+  },
+  "closingRef": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/CLOSING.txt",
+    "sha256": "f831cb6affb6a78fe5ae0096e370458fa57b934679c1658cb452f92357cbbf27",
+    "bytes": 51
+  },
+  "stage1Manifest": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/MANIFEST.json",
+    "sha256": "dc17b2b5f4362006864310b9a73eefe0948eb54fe0489d3f2015e77f38966337",
+    "bytes": 5367
+  },
+  "stage1Release0": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/RELEASE0.json",
+    "sha256": "a96c0d703bdcb7069c1c04c23a6250816d84fe055b034a6dab1483deb945dfba",
+    "bytes": 1527
+  },
+  "parentIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/parent-stage1-intake.json",
+    "sha256": "66ba3ab41e89e5577b0f06c9ec46acc6abb4260778f72a36d9a5e18ff24043e9",
+    "bytes": 2621
+  },
+  "declarationsData": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "0339fe11a584eddfd29fd9048adef5ab1d2b92208d07e604fcec4fc68d0df8ea",
+    "bytes": 30343
+  },
+  "captureLedger": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/DATA-CAPTURE-LEDGER.md",
+    "sha256": "616efe4c2058f31f19bc4a6caf631b320e9db6f77f560165186ce253f2e3707a",
+    "bytes": 4083
+  },
+  "bearingFullHeads": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/BEARING-PUBLIC-HEADS.json",
+    "sha256": "96e5aac3a8994f8e0b140c1c4f7711c413861cc783fb548c3c4d58f0c5a12ca6",
+    "bytes": 22484
+  },
+  "bearingLetData": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/BEARING-LET-DATA.json",
+    "sha256": "2117df30a4b6d7f006b88462aa4787254732ab48f8926bb7defb0e1f02064453",
+    "bytes": 40501
+  },
+  "sourceInterfaceMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/SOURCE-INTERFACE-MAP.json",
+    "sha256": "05910ec220548c974509e2ee95ac30ddd7c4fd5085b3bd5152015a60dd351513",
+    "bytes": 9017
+  },
+  "globalDeclarations": 1,
+  "publicTheorems": 1,
+  "newGlobalDefinitions": 0,
+  "newHelpers": 0,
+  "typedHeadValues": [
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o : Ω => ∫ y : Ω, h o y ∂μ",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "sourceLines": [
+        13,
+        13
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y : Ω => h o y - g o - g y",
+      "captures": [
+        "Ω",
+        "h",
+        "g"
+      ],
+      "sourceLines": [
+        14,
+        14
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "v",
+      "type": "ℝ",
+      "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "r"
+      ],
+      "sourceLines": [
+        15,
+        15
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "rho",
+      "type": "ℝ",
+      "value": "Real.sqrt v",
+      "captures": [
+        "v"
+      ],
+      "sourceLines": [
+        16,
+        16
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "N",
+      "type": "ℝ",
+      "value": "Real.sqrt (n : ℝ)",
+      "captures": [
+        "n"
+      ],
+      "sourceLines": [
+        17,
+        17
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "P",
+      "type": "Measure (Fin n → Ω)",
+      "value": "Measure.pi (fun _i : Fin n => μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "μ"
+      ],
+      "sourceLines": [
+        18,
+        18
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualStatisticD n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        19,
+        19
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "J",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualEnergyJ n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        20,
+        20
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Ddel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualStatisticDDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        21,
+        21
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Jdel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualEnergyJDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        22,
+        22
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "A",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => |D ξ|",
+      "captures": [
+        "Ω",
+        "n",
+        "D"
+      ],
+      "sourceLines": [
+        23,
+        23
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Adel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|",
+      "captures": [
+        "Ω",
+        "n",
+        "Ddel"
+      ],
+      "sourceLines": [
+        24,
+        25
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "B1",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "studentizerClipBudget n r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        26,
+        26
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "B1del",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        27,
+        28
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "e",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredDelta n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        29,
+        29
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "deletionMass",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) =>\n        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|",
+      "captures": [
+        "Ω",
+        "n",
+        "A",
+        "Adel",
+        "B1",
+        "B1del"
+      ],
+      "sourceLines": [
+        30,
+        32
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "deletionTotal",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i",
+      "captures": [
+        "Ω",
+        "n",
+        "deletionMass"
+      ],
+      "sourceLines": [
+        33,
+        34
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    }
+  ],
+  "plannedProofData": [
+    {
+      "name": "F",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => Shao.OQ5.P35.unorderedPairSum (fun i j : Fin n => r (ξ i) (ξ j))",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "psi",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => Shao.OQ6.ResidualDeletion.rowSum (fun j k : Fin n => r (ξ j) (ξ k)) i",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "LambdaSq",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => ∑ j : Fin n, (psi ξ j) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "psi"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "LambdaDelSq",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => ∑ j : Fin n, (Shao.OQ6.ResidualDeletion.rowSum (Shao.OQ6.ResidualDeletion.eraseIncident (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "sigma",
+      "type": "ℝ",
+      "value": "1 + rho",
+      "captures": [
+        "rho"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "base",
+      "type": "ℝ",
+      "value": "sigma / N",
+      "captures": [
+        "sigma",
+        "N"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "value": "sigma * ((n : ℝ) ^ 2 * N)",
+      "captures": [
+        "sigma",
+        "n",
+        "N"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "name": "BcoarseDel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => base + LambdaDelSq ξ i / K",
+      "captures": [
+        "Ω",
+        "n",
+        "base",
+        "LambdaDelSq",
+        "K"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    }
+  ],
+  "instances": [
+    {
+      "name": "ambientSpace",
+      "type": "MeasurableSpace Ω",
+      "value": "mΩ",
+      "kind": "given_data",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "realBorel",
+      "type": "MeasurableSpace ℝ",
+      "value": "borel ℝ",
+      "kind": "existing_canonical_data",
+      "captures": []
+    },
+    {
+      "name": "pairSpace",
+      "type": "MeasurableSpace (Ω × Ω)",
+      "value": "mΩ.prod mΩ",
+      "kind": "induced_data",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "sampleSpace",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _i : Fin n => Ω) (fun _i : Fin n => mΩ)",
+      "kind": "induced_data",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n"
+      ]
+    },
+    {
+      "name": "finFintype",
+      "type": "Fintype (Fin n)",
+      "value": "inferInstance : Fintype (Fin n)",
+      "kind": "existing_synthesized_data_unelaborated",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "finDecidableEq",
+      "type": "DecidableEq (Fin n)",
+      "value": "inferInstance : DecidableEq (Fin n)",
+      "kind": "existing_synthesized_data_unelaborated",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "muProbability",
+      "type": "IsProbabilityMeasure μ",
+      "value": "given instance binder",
+      "kind": "Prop_instance",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ"
+      ]
+    },
+    {
+      "name": "sampleProbability",
+      "type": "IsProbabilityMeasure P",
+      "value": "inferInstance : IsProbabilityMeasure P",
+      "kind": "derived_Prop_instance_unelaborated",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "μ",
+        "P"
+      ]
+    }
+  ],
+  "predicateAndImplicitDataExactReference": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-stage1-01/candidate-declarations-data.json",
+    "sha256": "0339fe11a584eddfd29fd9048adef5ab1d2b92208d07e604fcec4fc68d0df8ea",
+    "bytes": 30343
+  },
+  "noLocalSpaceSwitchOrExistentialSelector": true,
+  "qualified220": {
+    "parentQ": {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/qualified-evidence.json",
+      "sha256": "5365a2fadae33b5074a98427ec99caa81f6b4ecf82371a70bf119b3e21e988a0",
+      "bytes": 8942
+    },
+    "independentQ": {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/final-review-01/final-machine-source324-03/qualified-evidence.json",
+      "sha256": "134d484fcd0efbb1f2e50da534c1d70bcd409e78b7b4c5cc1e2b3df0e4474b10",
+      "bytes": 10002
+    },
+    "source": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/Shao/OQ6/OriginalClippedStatisticMeasurable.lean",
+      "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+      "bytes": 15983,
+      "mtime_ns": "1793054580586145279"
+    },
+    "firstO": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/build/lib/lean/Shao/OQ6/OriginalClippedStatisticMeasurable.olean",
+      "sha256": "dbeb5d9d50fa291ba7ba7da570a738e0bdc66620df2a52a87da19a0279d46c31",
+      "bytes": 324688,
+      "mtime_ns": "1793054599042094199"
+    },
+    "metadata": {
+      "path": "C:/game/shao lean/drafts/oq56/unit220/lead-execution-03/owner-evidence-01/actual-owned-metadata.json",
+      "sha256": "23438359180e7faa294551212f1171869a83589f09144751fc40d3713907d810",
+      "bytes": 25566
+    },
+    "publication": {
+      "path": "C:/game/shao lean/drafts/oq56/publication-v146/published-receipt.json",
+      "sha256": "da86d65d0e0e0d317dfc9492924ed1b588e6999cb857587ef62ea581b9c37012",
+      "bytes": 3195
+    },
+    "RootAcceptanceNotAssumed": true
+  },
+  "acceptedLibrarySnapshot": {
+    "path": "C:/game/shao lean/library/SNAPSHOT.json",
+    "sha256": "6661897ea05f2ab907314b303e525ab395a4648261b1506297b4f19e7f90e572",
+    "bytes": 1891
+  },
+  "acceptedRootSnapshotAtIntake": {
+    "version": "v122",
+    "main": "1f391716ab54f8a54ad8e955474254a754261a2b",
+    "integrationPR": 453,
+    "observedUTC": "2026-10-26T22:48:19.997056+00:00",
+    "unit218": "ACCEPTED_V122_NATIVE452_VIA453",
+    "countsNotCompletion": true
+  },
+  "oldPublicLibraryProofsAndChecksReusedExactly": true,
+  "originalModelInputsAndAssumptions": [
+    {
+      "name": "Ω",
+      "type": "Type u",
+      "kind": "type",
+      "captures": []
+    },
+    {
+      "name": "mΩ",
+      "type": "MeasurableSpace Ω",
+      "kind": "data_instance",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "name": "μ",
+      "type": "Measure Ω",
+      "kind": "ordinary_nonProp",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "instProbabilityMu",
+      "type": "IsProbabilityMeasure μ",
+      "kind": "Prop_instance",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ"
+      ]
+    },
+    {
+      "name": "h",
+      "type": "Ω → Ω → ℝ",
+      "kind": "ordinary_nonProp",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "name": "hh",
+      "type": "Measurable (fun t : Ω × Ω => h t.1 t.2)",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "h"
+      ]
+    },
+    {
+      "name": "hh2",
+      "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ)",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "hhsymm",
+      "type": "∀ o y : Ω, h o y = h y o",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "h"
+      ]
+    },
+    {
+      "name": "hcenter",
+      "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "hprojectionsecond",
+      "type": "(∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "n",
+      "type": "ℕ",
+      "kind": "ordinary_nonProp",
+      "captures": []
+    },
+    {
+      "name": "hn",
+      "type": "4 ≤ n",
+      "kind": "proof",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "C0",
+      "type": "ℝ",
+      "kind": "ordinary_nonProp",
+      "captures": []
+    },
+    {
+      "name": "hC0",
+      "type": "0 ≤ C0",
+      "kind": "proof",
+      "captures": [
+        "C0"
+      ]
+    }
+  ],
+  "oldBvsCurrentB1CoefficientDistinctionPreserved": true,
+  "nAtLeast4OriginalNFactorsRetained": true,
+  "noExtraMomentOrIntegrabilityPremise": true,
+  "implementationScope": "drafts/oq56/unit223/author-01/**",
+  "sameAuthorRole": "/root/oq56_clippedintegrability223_stage1_author",
+  "proofDataPolicy": "Only17head values,8planned localvalues, canonical listed instances and exact imported producer lets/inline data with approved substitutions; report additional nonProp values/helpers/instances/choices/captures before implementation. Derived local Prop proofs allowed without new assumptions.",
+  "requiredEvidence": "Separate complete independent SOURCE/proof/sourcefidelity review, server-onlynewcomplete native, samefirstOallactualTYPE/VALUE/recursiveAX, sameindependent finalqualified review. No oldproducer/leafreplay.",
+  "scope": "Original finite integrability and exact currentclipbudget only; no deletedMε/analyticlimit/CDF/S11/generalS15/DC/rootcompletion; p51candidate/p54repairs/externalSZ retained; OQ3userpaused",
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "kernelChecked": false,
+  "qualified": false
+}

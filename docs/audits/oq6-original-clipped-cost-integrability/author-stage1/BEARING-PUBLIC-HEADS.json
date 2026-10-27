@@ -1,0 +1,164 @@
+{
+  "schema": "oq56-unit223-bearing-heads-v1",
+  "status": "EXACT_TEXT_ONLY_NOT_NEW_ELABORATION",
+  "heads": [
+    {
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/repair-02/OriginalClippedStatisticMeasurable.lean",
+        "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+        "bytes": 15983,
+        "LF": 324,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "actual_normalized_compact_clipped_observables",
+      "startLine": 16,
+      "endHeadLine": 72,
+      "head": "theorem actual_normalized_compact_clipped_observables\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)\n    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧\n      Measurable A ∧ Measurable B1 ∧\n      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧\n      Measurable Tclip ∧ Measurable Tactual ∧\n      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧\n      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧\n      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n      (∀ ξ : Fin n → Ω, V ξ = 0 →\n        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))\n",
+      "headSHA256": "c608466ccb3e7f092c4e78f0bc46ea53324c059edc725eba228c35e7e1209838",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "qualified220_measurability",
+      "plannedSubstitution": {}
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460,
+        "LF": 525,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "actual_quadratic_source_moments",
+      "startLine": 186,
+      "endHeadLine": 279,
+      "head": "theorem actual_quadratic_source_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 3 ≤ n)\n    (x : ℝ) (hx : 0 ≤ x)\n    (hwindow : x ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := x / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\n    Measurable g ∧ MemLp g 2 μ ∧ (∫ o, g o ∂μ) = 0 ∧\n      (∫ o, g o ^ 2 ∂μ) = 1 ∧\n      Measurable (fun z : Ω × Ω => r z.1 z.2) ∧\n      MemLp (fun z : Ω × Ω => r z.1 z.2) 2 (μ.prod μ) ∧\n      (∀ o y, r o y = r y o) ∧\n      (∀ᵐ o ∂μ, (∫ y, r o y ∂μ) = 0) ∧\n      0 ≤ v ∧ 1 ≤ s ∧ v ≤ s ^ 2 ∧\n      Integrable w μ ∧ (1 / 2 : ℝ) ≤ m ∧ m ≤ (3 / 2 : ℝ) ∧\n      Measurable L ∧ Integrable L μ ∧\n      (∀ o, 0 < L o ∧ L o ≤ 2 * C) ∧\n      (∫ o, L o ∂μ) = 1 ∧\n      Integrable (fun o => (L o - 1) ^ 2) μ ∧\n      (∫ o, (L o - 1) ^ 2 ∂μ) ≤ 4 * C ^ 2 * a ^ 2 ∧\n      μ.tilted φ = ρ ∧ IsProbabilityMeasure ρ ∧\n      Integrable (fun ξ => Real.exp (S ξ)) P₀ ∧\n      (∫ ξ, Real.exp (S ξ) ∂P₀) = m ^ n ∧ 0 < m ^ n ∧\n      (∀ ξ, Real.exp (S ξ) / m ^ n =\n        ∏ j : Fin n, L (ξ j)) ∧\n      Pₐ = P₀.withDensity\n        (fun ξ => ENNReal.ofReal (∏ j : Fin n, L (ξ j))) ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ρ) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) =\n        (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B +\n          6 * (n.choose 4 : ℝ) * D ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) =\n        2 * (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (2 * C ^ 2 + 8 * C ^ 3 * x ^ 2 + 4 * C ^ 4 * x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (4 * C ^ 2 + 8 * C ^ 3 * x ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 2)\n",
+      "headSHA256": "0aad0f6529f7abbb3342c2524a2d5db9fc3a2c903bbe2902bc26b713bed35c8f",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "moment_at_x0",
+      "plannedSubstitution": {
+        "x": "0",
+        "n": "same n",
+        "mu/h": "same original mu/h"
+      }
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/UntiltedCompactCost.lean",
+        "sha256": "a7ab6509e2008e568c8707d4d07b517bd94797218347589193e65f7242dca111",
+        "bytes": 21450,
+        "LF": 388,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "actual_quadratic_compact_source_cost",
+      "startLine": 28,
+      "endHeadLine": 103,
+      "head": "theorem actual_quadratic_compact_source_cost\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 3 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z)\n    (C₀ : ℝ) (hC₀ : 0 ≤ C₀) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.truncationF ((1 + z) * (g (ξ i) / Real.sqrt (n : ℝ)))\n    let Lcompact : ℝ :=\n      ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min (|g (ξ i)| / Real.sqrt (n : ℝ)) (1 / (1 + z))\n    let e : (Fin n → Ω) → Fin n → Fin n → ℝ :=\n      fun ξ j k => r (ξ j) (ξ k)\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (e ξ)\n    let Fdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ j =>\n      Shao.OQ6.ResidualDeletion.rowSum (e ξ) j\n    let ψdel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, ψ ξ j ^ 2\n    let Λdelsq : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j : Fin n, ψdel ξ i j ^ 2\n    let D₁ : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let D₁del : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Fdel ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D₁ ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |D₁del ξ i|\n    let B : (Fin n → Ω) → ℝ := fun ξ =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λsq ξ / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let Bdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λdelsq ξ i / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + z * |B ξ - Bdel ξ i|)\n    let residualCost : ℝ :=\n      (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\n    let sourceCost : ℝ := Lcompact + residualCost\n    (∀ i : Fin n, Integrable (fun ξ => projectionTest ξ i) P₀) ∧\n      Lcompact = (n : ℝ) *\n        (∫ o, Shao.truncationF\n          ((1 + z) * (g o / Real.sqrt (n : ℝ))) ∂μ) ∧\n      0 ≤ Lcompact ∧ Lcompact ≤ (1 + z) ^ 2 ∧\n      Integrable A P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Adel ξ i) P₀) ∧\n      Integrable B P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Bdel ξ i) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |A ξ - Adel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |B ξ - Bdel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) ∧\n      residualCost ≤\n        16 * (1 + C₀) * (1 + z) * s / Real.sqrt (n : ℝ) ∧\n      sourceCost ≤ Lcompact +\n        16 * (1 + C₀) * (1 + z) * s / Real.sqrt (n : ℝ)\n",
+      "headSHA256": "e8b58777b0b9aadd6e3fa5c7338493cd6d00b073ebfa287e5e926c7639c577da",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "old_compact_cost",
+      "plannedSubstitution": {
+        "z": "0",
+        "C₀": "1",
+        "n": "same n",
+        "mu/h": "same original mu/h"
+      }
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786,
+        "LF": 264,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "clippedCenteredDelta_bounds",
+      "startLine": 109,
+      "endHeadLine": 118,
+      "head": "theorem clippedCenteredDelta_bounds (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)\n    (x : Fin n → Ω) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    (1 / 2 : ℝ) ≤ 1 + clippedCenteredDelta n g r C0 rho y x ∧\n    |clippedCenteredDelta n g r C0 rho y x| ≤\n      studentizerClipBudget n r C0 rho y x ∧\n    |clippedCenteredDelta n g r C0 rho y x| ≤ |centeredDelta n g r x| ∧\n    (0 < projectionV n g x →\n      0 < projectionV n g x *\n        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))\n",
+      "headSHA256": "c1ef85ee4116624f4d9f07fc70fa71906ddc218667beb3bd938e1242cec29084",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "scalar_clip_bound",
+      "plannedSubstitution": {
+        "y": "1",
+        "rho": "same Real.sqrt v"
+      }
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584,
+        "LF": 298,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "residualEnergyJ_eq_rowSqSum",
+      "startLine": 38,
+      "endHeadLine": 44,
+      "head": "theorem residualEnergyJ_eq_rowSqSum\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ) (x : Fin n → Ω) :\n    residualEnergyJ n r x =\n      (∑ j : Fin n,\n        (Shao.OQ6.ResidualDeletion.rowSum\n          (fun k l : Fin n => r (x k) (x l)) j) ^ 2) /\n        ((n : ℝ) - 2) ^ 2\n",
+      "headSHA256": "6676a8978c16ad890d108eb3351b22c698213fbc994ce23642aca4ba9080e81d",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "exact_J_normalization",
+      "plannedSubstitution": {}
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584,
+        "LF": 298,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "clippedDeletion_envelopes_nonneg",
+      "startLine": 50,
+      "endHeadLine": 57,
+      "head": "theorem clippedDeletion_envelopes_nonneg\n    (n : ℕ) {Ω : Type u} (r : Ω → Ω → ℝ)\n    (C0 rho y : ℝ) (x : Fin n → Ω) (i : Fin n)\n    (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :\n    0 ≤ |residualStatisticD n r x| ∧\n    0 ≤ studentizerClipBudget n r C0 rho y x ∧\n    0 ≤ |residualStatisticDDeleted n r x i| ∧\n    0 ≤ studentizerClipBudgetDeleted n r C0 rho y x i\n",
+      "headSHA256": "1f63a1fa2b7926562ea0dda077931a5dd67e6b7c6a341d3113af6512ec4b910c",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "deleted_nonnegativity",
+      "plannedSubstitution": {
+        "y": "1"
+      }
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+        "sha256": "7ffedae803b94e0acf0cc7e6b972d2b99ee468742e7f8b12ea2eff99abfbe75b",
+        "bytes": 5652,
+        "LF": 163,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "unorderedPairSum_sub_eraseIncident",
+      "startLine": 76,
+      "endHeadLine": 81,
+      "head": "theorem unorderedPairSum_sub_eraseIncident\n    (r : Fin n → Fin n → ℝ)\n    (hr : ∀ j k, r j k = r k j) (i : Fin n) :\n    Shao.OQ5.P35.unorderedPairSum r -\n        Shao.OQ5.P35.unorderedPairSum (eraseIncident r i) =\n      rowSum r i\n",
+      "headSHA256": "d950131e504771beb0a469c10e101ebef8626dd67371d8a66302b6a8d9038534",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "signed_deleted_L2_algebra",
+      "plannedSubstitution": {}
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedRemainderEnvelope.lean",
+        "sha256": "4852a6d3a907f35b5bde7fb6aca467ba5d382799a15915e5dbad907e224b9116",
+        "bytes": 19128,
+        "LF": 389,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "declaration": "actual_normalized_remainder_envelope_spec",
+      "startLine": 178,
+      "endHeadLine": 241,
+      "head": "theorem actual_normalized_remainder_envelope_spec\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (n : ℕ) (hn : 1 ≤ n) (ξ Y : Fin n → Ω → ℝ)\n    (hξ : ∀ i : Fin n, Measurable (ξ i))\n    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)\n    (hξmean : ∀ i : Fin n, (∫ ω, ξ i ω ∂ν) = 0)\n    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)\n    (hY : ∀ i : Fin n, Measurable (Y i))\n    (D1 D2 A B : Ω → ℝ)\n    (Adelete Bdelete : Fin n → Ω → ℝ)\n    (hD1 : Measurable D1) (hD2 : Measurable D2)\n    (hA : Measurable A) (hB : Measurable B)\n    (hAnonneg : ∀ ω : Ω, 0 ≤ A ω)\n    (hBnonneg : ∀ ω : Ω, 0 ≤ B ω)\n    (hD1A : ∀ ω : Ω, |D1 ω| ≤ A ω)\n    (hD2B : ∀ ω : Ω, |D2 ω| ≤ B ω)\n    (hAint : Integrable A ν) (hBint : Integrable B ν)\n    (ε : ℝ) (hε : 0 < ε)\n    (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ)))\n    (herr : ∀ (i : Fin n) (ω : Ω), |Y i ω - ξ i ω| ≤ ε)\n    (z : ℝ) (hz : 0 ≤ z) :\n    let η : Fin n → Ω → ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n    let W : Ω → ℝ := fun ω => ∑ i : Fin n, ξ i ω\n    let Wη : Ω → ℝ := fun ω => ∑ i : Fin n, η i ω\n    let V : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (ξ i ω) ^ 2)\n    let Vη : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (η i ω) ^ 2)\n    let b : Ω → ℝ := fun ω => Real.sqrt (1 + D2 ω)\n    let C : Ω → ℝ := fun ω => Real.sqrt (1 + B ω)\n    let H : Ω → ℝ := fun ω => (1 + V ω) * (Real.sqrt (n : ℝ) + z * C ω)\n    let ρ : ℝ := 4 * ε * Real.sqrt (n : ℝ)\n    let Dη : Ω → ℝ := fun ω => D1 ω + W ω - Wη ω + z * b ω * (Vη ω - V ω)\n    let Aε : Ω → ℝ := fun ω => A ω + ρ * H ω\n    let Bε : Ω → ℝ := B\n    let Aεdelete : Fin n → Ω → ℝ := Adelete\n    let Bεdelete : Fin n → Ω → ℝ := Bdelete\n    (∀ i : Fin n, Measurable (η i)) ∧\n    Measurable W ∧ Measurable Wη ∧ Measurable V ∧ Measurable Vη ∧\n    Measurable b ∧ Measurable C ∧ Measurable H ∧ Measurable Dη ∧\n    Measurable Aε ∧ Measurable Bε ∧\n    (∀ ω : Ω, 0 ≤ b ω ∧ b ω ≤ C ω) ∧\n    (∀ ω : Ω, 0 < H ω) ∧\n    0 < ρ ∧ ρ < 1 ∧\n    Integrable H ν ∧\n    Integrable D1 ν ∧\n    Integrable Dη ν ∧\n    Integrable Aε ν ∧\n    Integrable (fun ω => Dη ω - D1 ω) ν ∧\n    Integrable (fun ω => |Dη ω - D1 ω|) ν ∧\n    Integrable (fun ω => ρ * H ω) ν ∧\n    Integrable (fun ω => A ω + H ω) ν ∧\n    (∀ ω : Ω, |Dη ω - D1 ω| ≤ ρ * H ω) ∧\n    (∀ ω : Ω, |Dη ω| ≤ Aε ω) ∧\n    (∀ ω : Ω, 0 ≤ Aε ω) ∧\n    (∀ ω : Ω, Aε ω ≤ A ω + H ω) ∧\n    (∀ ω : Ω, 0 ≤ Bε ω ∧ |D2 ω| ≤ Bε ω) ∧\n    Bε = B ∧ Aεdelete = Adelete ∧ Bεdelete = Bdelete ∧\n    (∀ (i : Fin n) (ω : Ω),\n      |Aε ω - Aεdelete i ω| ≤ |A ω - Adelete i ω| + ρ * H ω) ∧\n    (∀ (i : Fin n) (ω : Ω),\n      |Bε ω - Bεdelete i ω| = |B ω - Bdelete i ω|) ∧\n    (∫ ω, |Dη ω - D1 ω| ∂ν) ≤ ρ * (∫ ω, H ω ∂ν) ∧\n    (∫ ω, |Aε ω - A ω| ∂ν) = ρ * (∫ ω, H ω ∂ν) ∧\n    (∫ ω, Aε ω ∂ν) = (∫ ω, A ω ∂ν) + ρ * (∫ ω, H ω ∂ν)\n",
+      "headSHA256": "eee1f6a416bdbdde5cee001b04e767a6bf9c9f062bb18959b6e34be173faa85e",
+      "readScope": "complete public head, required definitions/import context; no old-proof review",
+      "role": "future_consumer_not_instantiated_here",
+      "plannedSubstitution": {}
+    }
+  ]
+}

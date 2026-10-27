@@ -1,0 +1,3516 @@
+{
+  "schema": "oq56-unit223-independent-complete-source-coverage-v1",
+  "atUTC": "2026-10-27T00:15:14.540487+00:00",
+  "verdict": "CORRECT_SOURCE",
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-01/OriginalClippedCostIntegrability.lean",
+    "sha256": "88b7164a43fe06a7e41fe83b593bd4a5a5b517af897bfe7d27cf98648e46ad3d",
+    "bytes": 10989,
+    "LF": 226,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "exactFreeze": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-clipped-cost-integrability-223/parent-freeze-v1.json",
+    "sha256": "65d2d09bc771b5395c2124427c22c1787340e737ac3a3987f8c750a9bb05c7b2",
+    "bytes": 23069,
+    "LF": 716,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "readMethod": "Complete 226LF source proof and statement read; complete eight bearing public heads exact-source-bound; accepted old producer proofs reused. Repeated full producer let-prefixes reviewed once with exact references; this is source text, not actual kernel TYPE coverage.",
+  "globalSourceDeclarations": [
+    {
+      "name": "Shao.OQ6.OriginalClippedCostIntegrability.actual_original_clipped_cost_integrability",
+      "kind": "theorem",
+      "lines": [
+        16,
+        222
+      ],
+      "fullFrozenHead": "theorem actual_original_clipped_cost_integrability\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y : Ω, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o : Ω => ∫ y : Ω, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y : Ω => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let P : Measure (Fin n → Ω) := Measure.pi (fun _i : Fin n => μ)\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ :=\n      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ :=\n      studentizerClipBudgetDeleted n r C0 rho 1\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let deletionMass : (Fin n → Ω) → Fin n → ℝ :=\n      fun (ξ : Fin n → Ω) (i : Fin n) =>\n        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|\n    let deletionTotal : (Fin n → Ω) → ℝ :=\n      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i\n    MemLp D 2 P ∧\n      (∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P) ∧\n      Integrable J P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P) ∧\n      Integrable A P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P) ∧\n      Integrable B1 P ∧\n      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P) ∧\n      Integrable e P ∧\n      Measurable D ∧ Measurable A ∧ Measurable B1 ∧ Measurable e ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i)) ∧\n      (∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ) ∧\n      (∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i) ∧\n      (∀ i : Fin n,\n        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P) ∧\n      Integrable deletionTotal P\n"
+    }
+  ],
+  "sourceGlobalTheorems": 1,
+  "newGlobalDefinitions": 0,
+  "newGlobalHelpers": 0,
+  "actualOwnedCompilerDeclarationCount": null,
+  "binders": [
+    {
+      "name": "Ω",
+      "type": "Type u",
+      "kind": "type",
+      "captures": []
+    },
+    {
+      "name": "mΩ",
+      "type": "MeasurableSpace Ω",
+      "kind": "data_instance",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "name": "μ",
+      "type": "Measure Ω",
+      "kind": "ordinary_nonProp",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "instProbabilityMu",
+      "type": "IsProbabilityMeasure μ",
+      "kind": "Prop_instance",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ"
+      ]
+    },
+    {
+      "name": "h",
+      "type": "Ω → Ω → ℝ",
+      "kind": "ordinary_nonProp",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "name": "hh",
+      "type": "Measurable (fun t : Ω × Ω => h t.1 t.2)",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "h"
+      ]
+    },
+    {
+      "name": "hh2",
+      "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ)",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "hhsymm",
+      "type": "∀ o y : Ω, h o y = h y o",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "h"
+      ]
+    },
+    {
+      "name": "hcenter",
+      "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "hprojectionsecond",
+      "type": "(∫ o : Ω, (∫ y : Ω, h o y ∂μ) ^ 2 ∂μ) = 1",
+      "kind": "proof",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ]
+    },
+    {
+      "name": "n",
+      "type": "ℕ",
+      "kind": "ordinary_nonProp",
+      "captures": []
+    },
+    {
+      "name": "hn",
+      "type": "4 ≤ n",
+      "kind": "proof",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "C0",
+      "type": "ℝ",
+      "kind": "ordinary_nonProp",
+      "captures": []
+    },
+    {
+      "name": "hC0",
+      "type": "0 ≤ C0",
+      "kind": "proof",
+      "captures": [
+        "C0"
+      ]
+    }
+  ],
+  "ordinaryHeadValues": [
+    {
+      "name": "g",
+      "type": "Ω → ℝ",
+      "value": "fun o : Ω => ∫ y : Ω, h o y ∂μ",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "sourceLines": [
+        13,
+        13
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "r",
+      "type": "Ω → Ω → ℝ",
+      "value": "fun o y : Ω => h o y - g o - g y",
+      "captures": [
+        "Ω",
+        "h",
+        "g"
+      ],
+      "sourceLines": [
+        14,
+        14
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "v",
+      "type": "ℝ",
+      "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "r"
+      ],
+      "sourceLines": [
+        15,
+        15
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "rho",
+      "type": "ℝ",
+      "value": "Real.sqrt v",
+      "captures": [
+        "v"
+      ],
+      "sourceLines": [
+        16,
+        16
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "N",
+      "type": "ℝ",
+      "value": "Real.sqrt (n : ℝ)",
+      "captures": [
+        "n"
+      ],
+      "sourceLines": [
+        17,
+        17
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "P",
+      "type": "Measure (Fin n → Ω)",
+      "value": "Measure.pi (fun _i : Fin n => μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "μ"
+      ],
+      "sourceLines": [
+        18,
+        18
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualStatisticD n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        19,
+        19
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "J",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "residualEnergyJ n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        20,
+        20
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Ddel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualStatisticDDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        21,
+        21
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Jdel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "residualEnergyJDeleted n r",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceLines": [
+        22,
+        22
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "A",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => |D ξ|",
+      "captures": [
+        "Ω",
+        "n",
+        "D"
+      ],
+      "sourceLines": [
+        23,
+        23
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "Adel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|",
+      "captures": [
+        "Ω",
+        "n",
+        "Ddel"
+      ],
+      "sourceLines": [
+        24,
+        25
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "B1",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "studentizerClipBudget n r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        26,
+        26
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "B1del",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        27,
+        28
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "e",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "clippedCenteredDelta n g r C0 rho 1",
+      "captures": [
+        "Ω",
+        "n",
+        "g",
+        "r",
+        "C0",
+        "rho"
+      ],
+      "sourceLines": [
+        29,
+        29
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "deletionMass",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) =>\n        |A ξ - Adel ξ i| + |B1 ξ - B1del ξ i|",
+      "captures": [
+        "Ω",
+        "n",
+        "A",
+        "Adel",
+        "B1",
+        "B1del"
+      ],
+      "sourceLines": [
+        30,
+        32
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    },
+    {
+      "name": "deletionTotal",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i",
+      "captures": [
+        "Ω",
+        "n",
+        "deletionMass"
+      ],
+      "sourceLines": [
+        33,
+        34
+      ],
+      "dataKind": "ordinary_nonProp",
+      "measurableContext": "same original mOmega; product and sample instances are literal induced structures"
+    }
+  ],
+  "ordinaryProofValues": [
+    {
+      "name": "F",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω =>\n    Shao.OQ5.P35.unorderedPairSum (fun i j : Fin n => r (ξ i) (ξ j))",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceStartLine": 72,
+      "sourceEndLine": 73,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "psi",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k : Fin n => r (ξ j) (ξ k)) i",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceStartLine": 74,
+      "sourceEndLine": 77,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "LambdaSq",
+      "type": "(Fin n → Ω) → ℝ",
+      "value": "fun ξ : Fin n → Ω => ∑ j : Fin n, (psi ξ j) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "psi"
+      ],
+      "sourceStartLine": 78,
+      "sourceEndLine": 79,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "LambdaDelSq",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => ∑ j : Fin n,\n      (Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident\n          (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2",
+      "captures": [
+        "Ω",
+        "n",
+        "r"
+      ],
+      "sourceStartLine": 80,
+      "sourceEndLine": 84,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "sigma",
+      "type": "ℝ",
+      "value": "1 + rho",
+      "captures": [
+        "rho"
+      ],
+      "sourceStartLine": 85,
+      "sourceEndLine": 85,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "base",
+      "type": "ℝ",
+      "value": "sigma / N",
+      "captures": [
+        "sigma",
+        "N"
+      ],
+      "sourceStartLine": 86,
+      "sourceEndLine": 86,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "value": "sigma * ((n : ℝ) ^ 2 * N)",
+      "captures": [
+        "sigma",
+        "n",
+        "N"
+      ],
+      "sourceStartLine": 87,
+      "sourceEndLine": 87,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    },
+    {
+      "name": "BcoarseDel",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "value": "fun (ξ : Fin n → Ω) (i : Fin n) => base + LambdaDelSq ξ i / K",
+      "captures": [
+        "Ω",
+        "n",
+        "base",
+        "LambdaDelSq",
+        "K"
+      ],
+      "sourceStartLine": 88,
+      "sourceEndLine": 89,
+      "freezeExactModuloWhitespace": true,
+      "kind": "ordinary_nonProp"
+    }
+  ],
+  "ordinaryHeadValuesCount": 17,
+  "ordinaryProofValuesCount": 8,
+  "instances": [
+    {
+      "name": "ambientSpace",
+      "type": "MeasurableSpace Ω",
+      "value": "mΩ",
+      "kind": "given_data",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "realBorel",
+      "type": "MeasurableSpace ℝ",
+      "value": "borel ℝ",
+      "kind": "existing_canonical_data",
+      "captures": []
+    },
+    {
+      "name": "pairSpace",
+      "type": "MeasurableSpace (Ω × Ω)",
+      "value": "mΩ.prod mΩ",
+      "kind": "induced_data",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ]
+    },
+    {
+      "name": "sampleSpace",
+      "type": "MeasurableSpace (Fin n → Ω)",
+      "value": "@MeasurableSpace.pi (Fin n) (fun _i : Fin n => Ω) (fun _i : Fin n => mΩ)",
+      "kind": "induced_data",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n"
+      ]
+    },
+    {
+      "name": "finFintype",
+      "type": "Fintype (Fin n)",
+      "value": "inferInstance : Fintype (Fin n)",
+      "kind": "existing_synthesized_data_unelaborated",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "finDecidableEq",
+      "type": "DecidableEq (Fin n)",
+      "value": "inferInstance : DecidableEq (Fin n)",
+      "kind": "existing_synthesized_data_unelaborated",
+      "captures": [
+        "n"
+      ]
+    },
+    {
+      "name": "muProbability",
+      "type": "IsProbabilityMeasure μ",
+      "value": "given instance binder",
+      "kind": "Prop_instance",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ"
+      ]
+    },
+    {
+      "name": "sampleProbability",
+      "type": "IsProbabilityMeasure P",
+      "value": "inferInstance : IsProbabilityMeasure P",
+      "kind": "derived_Prop_instance_unelaborated",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "μ",
+        "P"
+      ]
+    }
+  ],
+  "explicitLocalInstances": [
+    {
+      "type": "IsProbabilityMeasure P",
+      "value": "inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _i : Fin n => μ)))",
+      "kind": "frozen_derived_Prop_instance",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "μ",
+        "P"
+      ],
+      "sourceLine": 90
+    }
+  ],
+  "PropFacts": [
+    {
+      "name": "hn3",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 92,
+      "sourceEndLine": 92,
+      "scopeIndent": 2,
+      "sourceHeader": "have hn3 : 3 ≤ n",
+      "fullType": "3 ≤ n",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hn3 : 3 ≤ n := Nat.le_trans (by norm_num) hn\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "hn",
+        "n"
+      ]
+    },
+    {
+      "name": "hn4R",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 93,
+      "sourceEndLine": 93,
+      "scopeIndent": 2,
+      "sourceHeader": "have hn4R : (4 : ℝ) ≤ (n : ℝ)",
+      "fullType": "(4 : ℝ) ≤ (n : ℝ)",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hn4R : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "hn",
+        "n"
+      ]
+    },
+    {
+      "name": "hnR",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 94,
+      "sourceEndLine": 94,
+      "scopeIndent": 2,
+      "sourceHeader": "have hnR : (0 : ℝ) < (n : ℝ)",
+      "fullType": "(0 : ℝ) < (n : ℝ)",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hnR : (0 : ℝ) < (n : ℝ) := by linarith only [hn4R]\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "hn4R",
+        "n"
+      ]
+    },
+    {
+      "name": "hrho",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 95,
+      "sourceEndLine": 95,
+      "scopeIndent": 2,
+      "sourceHeader": "have hrho : 0 ≤ rho",
+      "fullType": "0 ≤ rho",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hrho : 0 ≤ rho := Real.sqrt_nonneg v\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "rho",
+        "v"
+      ]
+    },
+    {
+      "name": "hNpos",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 96,
+      "sourceEndLine": 96,
+      "scopeIndent": 2,
+      "sourceHeader": "have hNpos : 0 < N",
+      "fullType": "0 < N",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hNpos : 0 < N := Real.sqrt_pos.2 hnR\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "N",
+        "hnR"
+      ]
+    },
+    {
+      "name": "hsigmapos",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 97,
+      "sourceEndLine": 99,
+      "scopeIndent": 2,
+      "sourceHeader": "have hsigmapos : 0 < sigma",
+      "fullType": "0 < sigma",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hsigmapos : 0 < sigma := by\n    dsimp only [sigma]\n    linarith only [hrho]\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "hrho",
+        "sigma"
+      ]
+    },
+    {
+      "name": "hKpos",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 100,
+      "sourceEndLine": 102,
+      "scopeIndent": 2,
+      "sourceHeader": "have hKpos : 0 < K",
+      "fullType": "0 < K",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hKpos : 0 < K := by\n    dsimp only [K]\n    exact mul_pos hsigmapos (mul_pos (pow_pos hnR 2) hNpos)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "K",
+        "hNpos",
+        "hnR",
+        "hsigmapos"
+      ]
+    },
+    {
+      "name": "hwindow0",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 103,
+      "sourceEndLine": 106,
+      "scopeIndent": 2,
+      "sourceHeader": "have hwindow0 : (0 : ℝ) ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))",
+      "fullType": "(0 : ℝ) ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hwindow0 : (0 : ℝ) ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ)) :=\n    div_nonneg (Real.sqrt_nonneg (n : ℝ))\n      (mul_nonneg (by norm_num) (le_of_lt (Real.exp_pos (1 / 2 : ℝ))))\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "n"
+      ]
+    },
+    {
+      "name": "hmodel",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 107,
+      "sourceEndLine": 109,
+      "scopeIndent": 2,
+      "sourceHeader": "have hmodel",
+      "fullType": "    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := (0 : ℝ) / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\nMeasurable g ∧ MemLp g 2 μ ∧ (∫ o, g o ∂μ) = 0 ∧\n      (∫ o, g o ^ 2 ∂μ) = 1 ∧\n      Measurable (fun z : Ω × Ω => r z.1 z.2) ∧\n      MemLp (fun z : Ω × Ω => r z.1 z.2) 2 (μ.prod μ) ∧\n      (∀ o y, r o y = r y o) ∧\n      (∀ᵐ o ∂μ, (∫ y, r o y ∂μ) = 0) ∧\n      0 ≤ v ∧ 1 ≤ s ∧ v ≤ s ^ 2 ∧\n      Integrable w μ ∧ (1 / 2 : ℝ) ≤ m ∧ m ≤ (3 / 2 : ℝ) ∧\n      Measurable L ∧ Integrable L μ ∧\n      (∀ o, 0 < L o ∧ L o ≤ 2 * C) ∧\n      (∫ o, L o ∂μ) = 1 ∧\n      Integrable (fun o => (L o - 1) ^ 2) μ ∧\n      (∫ o, (L o - 1) ^ 2 ∂μ) ≤ 4 * C ^ 2 * a ^ 2 ∧\n      μ.tilted φ = ρ ∧ IsProbabilityMeasure ρ ∧\n      Integrable (fun ξ => Real.exp (S ξ)) P₀ ∧\n      (∫ ξ, Real.exp (S ξ) ∂P₀) = m ^ n ∧ 0 < m ^ n ∧\n      (∀ ξ, Real.exp (S ξ) / m ^ n =\n        ∏ j : Fin n, L (ξ j)) ∧\n      Pₐ = P₀.withDensity\n        (fun ξ => ENNReal.ofReal (∏ j : Fin n, L (ξ j))) ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ρ) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) =\n        (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B +\n          6 * (n.choose 4 : ℝ) * D ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) =\n        2 * (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (2 * C ^ 2 + 8 * C ^ 3 * (0 : ℝ) ^ 2 + 4 * C ^ 4 * (0 : ℝ) ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (4 * C ^ 2 + 8 * C ^ 3 * (0 : ℝ) ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + (0 : ℝ) ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + (0 : ℝ) ^ 2)",
+      "typePresentation": "full instantiated public producer lets/target",
+      "sourceBlock": "  have hmodel :=\n    Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments\n      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3 0 (le_refl 0) hwindow0\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "h",
+        "hcenter",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hn3",
+        "hprojectionsecond",
+        "hwindow0",
+        "n",
+        "μ"
+      ]
+    },
+    {
+      "name": "hF2",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 114,
+      "sourceEndLine": 116,
+      "scopeIndent": 2,
+      "sourceHeader": "have hF2 : MemLp F 2 P",
+      "fullType": "MemLp F 2 P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hF2 : MemLp F 2 P := by\n    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),\n      sub_zero, Finset.sum_const_zero, tilted_zero] using hFtilt2\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "F",
+        "P",
+        "hFtilt2"
+      ]
+    },
+    {
+      "name": "hpsi2",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 117,
+      "sourceEndLine": 119,
+      "scopeIndent": 2,
+      "sourceHeader": "have hpsi2 (i : Fin n) : MemLp (fun ξ : Fin n → Ω => psi ξ i) 2 P",
+      "fullType": "∀ (i : Fin n), MemLp (fun ξ : Fin n → Ω => psi ξ i) 2 P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hpsi2 (i : Fin n) : MemLp (fun ξ : Fin n → Ω => psi ξ i) 2 P := by\n    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),\n      sub_zero, Finset.sum_const_zero, tilted_zero] using hpsiTilt2 i\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "P",
+        "hpsiTilt2",
+        "n",
+        "psi",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hLambdaI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 120,
+      "sourceEndLine": 122,
+      "scopeIndent": 2,
+      "sourceHeader": "have hLambdaI : Integrable LambdaSq P",
+      "fullType": "Integrable LambdaSq P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hLambdaI : Integrable LambdaSq P := by\n    simpa only [zero_div, zero_mul, zero_pow (by norm_num : (2 : ℕ) ≠ 0),\n      sub_zero, Finset.sum_const_zero, tilted_zero] using hLambdaTiltI\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "LambdaSq",
+        "P",
+        "hLambdaTiltI"
+      ]
+    },
+    {
+      "name": "hobs",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 123,
+      "sourceEndLine": 126,
+      "scopeIndent": 2,
+      "sourceHeader": "have hobs",
+      "fullType": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\nMeasurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧\n      Measurable A ∧ Measurable B1 ∧\n      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧\n      Measurable Tclip ∧ Measurable Tactual ∧\n      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧\n      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧\n      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n      (∀ ξ : Fin n → Ω, V ξ = 0 →\n        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))",
+      "typePresentation": "full instantiated public producer lets/target",
+      "sourceBlock": "  have hobs :=\n    Shao.OQ6.OriginalClippedStatisticMeasurable.actual_normalized_compact_clipped_observables\n      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn\n      0 (le_refl 0) (by norm_num) C0 hC0\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "C0",
+        "h",
+        "hC0",
+        "hcenter",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hn",
+        "hprojectionsecond",
+        "n",
+        "μ"
+      ]
+    },
+    {
+      "name": "hD2",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 129,
+      "sourceEndLine": 133,
+      "scopeIndent": 2,
+      "sourceHeader": "have hD2 : MemLp D 2 P",
+      "fullType": "MemLp D 2 P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hD2 : MemLp D 2 P := by\n    simpa only [D, residualStatisticD, F,\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper,\n      Shao.OQ5.P35.unorderedPairSum] using\n      hF2.div_const (N * ((n : ℝ) - 1))\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "D",
+        "F",
+        "N",
+        "P",
+        "hF2",
+        "n"
+      ]
+    },
+    {
+      "name": "hDdel2",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 134,
+      "sourceEndLine": 151,
+      "scopeIndent": 2,
+      "sourceHeader": "have hDdel2 (i : Fin n) :\n      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P",
+      "fullType": "∀ (i : Fin n), MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hDdel2 (i : Fin n) :\n      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P := by\n    apply ((hF2.sub (hpsi2 i)).div_const (N * ((n : ℝ) - 1))).congr\n    exact ae_of_all P (fun ξ : Fin n → Ω => by\n      change (F ξ - psi ξ i) / (N * ((n : ℝ) - 1)) =\n        Shao.OQ5.P35.unorderedPairSum\n          (Shao.OQ6.ResidualDeletion.eraseIncident\n            (fun j k : Fin n => r (ξ j) (ξ k)) i) /\n          (N * ((n : ℝ) - 1))\n      congr 1\n      have hIncident :=\n        Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident\n          (fun j k : Fin n => r (ξ j) (ξ k))\n          (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i\n      change F ξ - Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident\n          (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i at hIncident\n      linarith only [hIncident])\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "Ddel",
+        "F",
+        "N",
+        "P",
+        "hF2",
+        "hpsi2",
+        "hrsymm",
+        "n",
+        "psi",
+        "r",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hIncident",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 144,
+      "sourceEndLine": 147,
+      "scopeIndent": 6,
+      "sourceHeader": "have hIncident",
+      "fullType": "F ξ - Shao.OQ5.P35.unorderedPairSum (Shao.OQ6.ResidualDeletion.eraseIncident (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i",
+      "typePresentation": "convertible public incident identity at the exact sample matrix",
+      "sourceBlock": "      have hIncident :=\n        Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident\n          (fun j k : Fin n => r (ξ j) (ξ k))\n          (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i\n",
+      "outerScopedBinders": [
+        "i : Fin n",
+        "ξ : Fin n → Ω"
+      ],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "hrsymm",
+        "n",
+        "r"
+      ]
+    },
+    {
+      "name": "hJI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 152,
+      "sourceEndLine": 159,
+      "scopeIndent": 2,
+      "sourceHeader": "have hJI : Integrable J P",
+      "fullType": "Integrable J P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hJI : Integrable J P := by\n    apply (hLambdaI.div_const (((n : ℝ) - 2) ^ 2)).congr\n    exact ae_of_all P (fun ξ : Fin n → Ω => by\n      change (∑ j : Fin n,\n        (Shao.OQ6.ResidualDeletion.rowSum\n          (fun k l : Fin n => r (ξ k) (ξ l)) j) ^ 2) /\n          ((n : ℝ) - 2) ^ 2 = residualEnergyJ n r ξ\n      exact (residualEnergyJ_eq_rowSqSum n r ξ).symm)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "J",
+        "P",
+        "hLambdaI",
+        "n",
+        "r",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hcoarse",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 160,
+      "sourceEndLine": 163,
+      "scopeIndent": 2,
+      "sourceHeader": "have hcoarse",
+      "fullType": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.truncationF ((1 + (0 : ℝ)) * (g (ξ i) / Real.sqrt (n : ℝ)))\n    let Lcompact : ℝ :=\n      ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min (|g (ξ i)| / Real.sqrt (n : ℝ)) (1 / (1 + (0 : ℝ)))\n    let e : (Fin n → Ω) → Fin n → Fin n → ℝ :=\n      fun ξ j k => r (ξ j) (ξ k)\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (e ξ)\n    let Fdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ j =>\n      Shao.OQ6.ResidualDeletion.rowSum (e ξ) j\n    let ψdel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, ψ ξ j ^ 2\n    let Λdelsq : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j : Fin n, ψdel ξ i j ^ 2\n    let D₁ : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let D₁del : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Fdel ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D₁ ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |D₁del ξ i|\n    let B : (Fin n → Ω) → ℝ := fun ξ =>\n      (1 : ℝ) * (s / Real.sqrt (n : ℝ) +\n        Λsq ξ / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let Bdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      (1 : ℝ) * (s / Real.sqrt (n : ℝ) +\n        Λdelsq ξ i / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B ξ - Bdel ξ i|)\n    let residualCost : ℝ :=\n      (∫ ξ, A ξ ∂P₀) + (0 : ℝ) * (∫ ξ, B ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\n    let sourceCost : ℝ := Lcompact + residualCost\n(∀ i : Fin n, Integrable (fun ξ => projectionTest ξ i) P₀) ∧\n      Lcompact = (n : ℝ) *\n        (∫ o, Shao.truncationF\n          ((1 + (0 : ℝ)) * (g o / Real.sqrt (n : ℝ))) ∂μ) ∧\n      0 ≤ Lcompact ∧ Lcompact ≤ (1 + (0 : ℝ)) ^ 2 ∧\n      Integrable A P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Adel ξ i) P₀) ∧\n      Integrable B P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Bdel ξ i) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |A ξ - Adel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |B ξ - Bdel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) ∧\n      residualCost ≤\n        16 * (1 + (1 : ℝ)) * (1 + (0 : ℝ)) * s / Real.sqrt (n : ℝ) ∧\n      sourceCost ≤ Lcompact +\n        16 * (1 + (1 : ℝ)) * (1 + (0 : ℝ)) * s / Real.sqrt (n : ℝ)",
+      "typePresentation": "full instantiated public producer lets/target",
+      "sourceBlock": "  have hcoarse :=\n    Shao.OQ6.UntiltedCompactCost.actual_quadratic_compact_source_cost\n      μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3\n      0 (le_refl 0) 1 (by norm_num)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "h",
+        "hcenter",
+        "hh",
+        "hh2",
+        "hhsymm",
+        "hn3",
+        "hprojectionsecond",
+        "n",
+        "μ"
+      ]
+    },
+    {
+      "name": "hcoarseDelI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 164,
+      "sourceEndLine": 167,
+      "scopeIndent": 2,
+      "sourceHeader": "have hcoarseDelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => BcoarseDel ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => BcoarseDel ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hcoarseDelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => BcoarseDel ξ i) P := by\n    simpa only [BcoarseDel, base, K, sigma, N, P, LambdaDelSq, one_mul] using\n      hcoarse.2.2.2.2.2.2.2.1 i\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "BcoarseDel",
+        "K",
+        "LambdaDelSq",
+        "N",
+        "P",
+        "base",
+        "hcoarse",
+        "n",
+        "sigma",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hLambdaDelI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 168,
+      "sourceEndLine": 174,
+      "scopeIndent": 2,
+      "sourceHeader": "have hLambdaDelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => LambdaDelSq ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => LambdaDelSq ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hLambdaDelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => LambdaDelSq ξ i) P := by\n    apply (((hcoarseDelI i).sub (integrable_const base)).const_mul K).congr\n    exact ae_of_all P (fun ξ : Fin n → Ω => by\n      change K * (BcoarseDel ξ i - base) = LambdaDelSq ξ i\n      dsimp only [BcoarseDel]\n      field_simp [ne_of_gt hKpos] <;> ring)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "BcoarseDel",
+        "K",
+        "LambdaDelSq",
+        "P",
+        "base",
+        "hKpos",
+        "hcoarseDelI",
+        "n",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hJdelI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 175,
+      "sourceEndLine": 178,
+      "scopeIndent": 2,
+      "sourceHeader": "have hJdelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hJdelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P := by\n    simpa only [Jdel, residualEnergyJDeleted, LambdaDelSq] using\n      (hLambdaDelI i).div_const (((n : ℝ) - 2) ^ 2)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "Jdel",
+        "LambdaDelSq",
+        "P",
+        "hLambdaDelI",
+        "n",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hAI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 179,
+      "sourceEndLine": 180,
+      "scopeIndent": 2,
+      "sourceHeader": "have hAI : Integrable A P",
+      "fullType": "Integrable A P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hAI : Integrable A P := by\n    exact (hD2.integrable (by norm_num)).abs\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "A",
+        "P",
+        "hD2"
+      ]
+    },
+    {
+      "name": "hAdelI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 181,
+      "sourceEndLine": 183,
+      "scopeIndent": 2,
+      "sourceHeader": "have hAdelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => Adel ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => Adel ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hAdelI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => Adel ξ i) P := by\n    exact ((hDdel2 i).integrable (by norm_num)).abs\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "Adel",
+        "P",
+        "hDdel2",
+        "n",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hB1I",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 184,
+      "sourceEndLine": 188,
+      "scopeIndent": 2,
+      "sourceHeader": "have hB1I : Integrable B1 P",
+      "fullType": "Integrable B1 P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hB1I : Integrable B1 P := by\n    change Integrable (fun ξ : Fin n → Ω =>\n      C0 * (((1 + rho) * 1) / N + J ξ / ((1 + rho) * 1 * N))) P\n    exact ((integrable_const (((1 + rho) * 1) / N)).add\n      (hJI.div_const ((1 + rho) * 1 * N))).const_mul C0\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "B1",
+        "C0",
+        "J",
+        "N",
+        "P",
+        "hJI",
+        "n",
+        "rho",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hB1delI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 189,
+      "sourceEndLine": 194,
+      "scopeIndent": 2,
+      "sourceHeader": "have hB1delI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => B1del ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => B1del ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hB1delI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => B1del ξ i) P := by\n    change Integrable (fun ξ : Fin n → Ω =>\n      C0 * (((1 + rho) * 1) / N + Jdel ξ i / ((1 + rho) * 1 * N))) P\n    exact ((integrable_const (((1 + rho) * 1) / N)).add\n      ((hJdelI i).div_const ((1 + rho) * 1 * N))).const_mul C0\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "B1del",
+        "C0",
+        "Jdel",
+        "N",
+        "P",
+        "hJdelI",
+        "n",
+        "rho",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hFullBounds",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 195,
+      "sourceEndLine": 200,
+      "scopeIndent": 2,
+      "sourceHeader": "have hFullBounds (ξ : Fin n → Ω) :\n      0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ",
+      "fullType": "∀ (ξ : Fin n → Ω), 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hFullBounds (ξ : Fin n → Ω) :\n      0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ := by\n    exact ⟨abs_nonneg _,\n      studentizerClipBudget_nonneg n r C0 rho 1 ξ hC0 hrho (by norm_num),\n      (clippedCenteredDelta_bounds n g r C0 rho 1 ξ\n        hC0 hrho (by norm_num)).2.1⟩\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "A",
+        "B1",
+        "C0",
+        "e",
+        "g",
+        "hC0",
+        "hrho",
+        "n",
+        "r",
+        "rho",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hDeletedBounds",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 201,
+      "sourceEndLine": 204,
+      "scopeIndent": 2,
+      "sourceHeader": "have hDeletedBounds (i : Fin n) (ξ : Fin n → Ω) :\n      0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i",
+      "fullType": "∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hDeletedBounds (i : Fin n) (ξ : Fin n → Ω) :\n      0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i := by\n    exact (clippedDeletion_envelopes_nonneg n r C0 rho 1 ξ i\n      hC0 hrho (by norm_num)).2.2\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "Adel",
+        "B1del",
+        "C0",
+        "hC0",
+        "hrho",
+        "n",
+        "r",
+        "rho",
+        "Ω"
+      ]
+    },
+    {
+      "name": "heI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 205,
+      "sourceEndLine": 208,
+      "scopeIndent": 2,
+      "sourceHeader": "have heI : Integrable e P",
+      "fullType": "Integrable e P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have heI : Integrable e P := by\n    apply hB1I.mono' hem.aestronglyMeasurable\n    exact ae_of_all P (fun ξ : Fin n → Ω => by\n      simpa only [Real.norm_eq_abs] using (hFullBounds ξ).2.2)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "P",
+        "e",
+        "hB1I",
+        "hFullBounds",
+        "hem",
+        "n",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hDiffI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 209,
+      "sourceEndLine": 214,
+      "scopeIndent": 2,
+      "sourceHeader": "have hDiffI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P",
+      "fullType": "∀ (i : Fin n), Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hDiffI (i : Fin n) :\n      Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n      Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P := by\n    exact ⟨(hAI.sub (hAdelI i)).abs, (hB1I.sub (hB1delI i)).abs,\n      ((hAI.sub (hAdelI i)).abs).add ((hB1I.sub (hB1delI i)).abs)⟩\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "A",
+        "Adel",
+        "B1",
+        "B1del",
+        "P",
+        "deletionMass",
+        "hAI",
+        "hAdelI",
+        "hB1I",
+        "hB1delI",
+        "n",
+        "Ω"
+      ]
+    },
+    {
+      "name": "hTotalI",
+      "kind": "derived_Prop_fact",
+      "sourceStartLine": 215,
+      "sourceEndLine": 218,
+      "scopeIndent": 2,
+      "sourceHeader": "have hTotalI : Integrable deletionTotal P",
+      "fullType": "Integrable deletionTotal P",
+      "typePresentation": "explicit complete source type",
+      "sourceBlock": "  have hTotalI : Integrable deletionTotal P := by\n    exact integrable_finsetSum Finset.univ\n      (fun (i : Fin n) (_hi : i ∈ (Finset.univ : Finset (Fin n))) =>\n        (hDiffI i).2.2)\n",
+      "outerScopedBinders": [],
+      "kernelElaborated": false,
+      "lexicallyReferencedCaseSensitiveContext": [
+        "P",
+        "deletionTotal",
+        "hDiffI",
+        "n"
+      ]
+    }
+  ],
+  "destructuredPropFacts": [
+    {
+      "name": "hrsymm",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hmodel",
+      "producerRole": "moment_at_x0",
+      "oneBasedTopLevelConjunct": 7,
+      "fullTypeWithProducerLets": "    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := (0 : ℝ) / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\n(∀ o y, r o y = r y o)",
+      "locatorLine": 110,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hFtilt2",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hmodel",
+      "producerRole": "moment_at_x0",
+      "oneBasedTopLevelConjunct": 30,
+      "fullTypeWithProducerLets": "    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := (0 : ℝ) / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\nMemLp F 2 Pₐ",
+      "locatorLine": 110,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hpsiTilt2",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hmodel",
+      "producerRole": "moment_at_x0",
+      "oneBasedTopLevelConjunct": 32,
+      "fullTypeWithProducerLets": "    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := (0 : ℝ) / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\n(∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ)",
+      "locatorLine": 110,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hLambdaTiltI",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hmodel",
+      "producerRole": "moment_at_x0",
+      "oneBasedTopLevelConjunct": 33,
+      "fullTypeWithProducerLets": "    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := (0 : ℝ) / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\nIntegrable Λsq Pₐ",
+      "locatorLine": 110,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hDm",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hobs",
+      "producerRole": "qualified220_measurability",
+      "oneBasedTopLevelConjunct": 3,
+      "fullTypeWithProducerLets": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\nMeasurable D",
+      "locatorLine": 127,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hAm",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hobs",
+      "producerRole": "qualified220_measurability",
+      "oneBasedTopLevelConjunct": 5,
+      "fullTypeWithProducerLets": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\nMeasurable A",
+      "locatorLine": 127,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hB1m",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hobs",
+      "producerRole": "qualified220_measurability",
+      "oneBasedTopLevelConjunct": 6,
+      "fullTypeWithProducerLets": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\nMeasurable B1",
+      "locatorLine": 127,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hem",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hobs",
+      "producerRole": "qualified220_measurability",
+      "oneBasedTopLevelConjunct": 10,
+      "fullTypeWithProducerLets": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\nMeasurable e",
+      "locatorLine": 127,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    },
+    {
+      "name": "hdelm",
+      "kind": "Prop_projection_only_no_nonProp_witness_selected",
+      "producerLocal": "hobs",
+      "producerRole": "qualified220_measurability",
+      "oneBasedTopLevelConjunct": 17,
+      "fullTypeWithProducerLets": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + (0 : ℝ)))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + (0 : ℝ) * |B1 ξ - B1del ξ i|)\n(∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))",
+      "locatorLine": 127,
+      "caseSensitive": true,
+      "kernelElaborated": false
+    }
+  ],
+  "PropFactsCount": 30,
+  "retainedPropProjectionsCount": 9,
+  "implicitIntegrands": [
+    {
+      "occurrence": "hcenter",
+      "type": "Ω × Ω → ℝ",
+      "value": "fun t : Ω × Ω => h t.1 t.2",
+      "captures": [
+        "Ω",
+        "h"
+      ],
+      "measure": "μ.prod μ"
+    },
+    {
+      "occurrence": "hprojectionsecond.outer",
+      "type": "Ω → ℝ",
+      "value": "fun o : Ω => (∫ y : Ω, h o y ∂μ) ^ 2",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "h"
+      ],
+      "measure": "μ"
+    },
+    {
+      "occurrence": "hprojectionsecond.inner",
+      "type": "Ω → ℝ",
+      "value": "fun y : Ω => h o y",
+      "captures": [
+        "Ω",
+        "h",
+        "o : Ω"
+      ],
+      "measure": "μ"
+    },
+    {
+      "occurrence": "g.inner",
+      "type": "Ω → ℝ",
+      "value": "fun y : Ω => h o y",
+      "captures": [
+        "Ω",
+        "h",
+        "o : Ω"
+      ],
+      "measure": "μ"
+    },
+    {
+      "occurrence": "v",
+      "type": "Ω × Ω → ℝ",
+      "value": "fun t : Ω × Ω => r t.1 t.2 ^ 2",
+      "captures": [
+        "Ω",
+        "r"
+      ],
+      "measure": "μ.prod μ"
+    }
+  ],
+  "predicateFamilies": [
+    {
+      "name": "jointMeasurability",
+      "type": "(Ω → Ω → ℝ) → Prop",
+      "value": "fun k : Ω → Ω → ℝ => Measurable (fun t : Ω × Ω => k t.1 t.2)",
+      "captures": [
+        "Ω",
+        "mΩ"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "jointL2",
+      "type": "(Ω → Ω → ℝ) → Prop",
+      "value": "fun k : Ω → Ω → ℝ => MemLp (fun t : Ω × Ω => k t.1 t.2) 2 (μ.prod μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "sampleL2",
+      "type": "((Fin n → Ω) → ℝ) → Prop",
+      "value": "fun f : (Fin n → Ω) → ℝ => MemLp f 2 P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "sampleL1",
+      "type": "((Fin n → Ω) → ℝ) → Prop",
+      "value": "fun f : (Fin n → Ω) → ℝ => Integrable f P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "sampleMeasurable",
+      "type": "((Fin n → Ω) → ℝ) → Prop",
+      "value": "fun f : (Fin n → Ω) → ℝ => Measurable f",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedL2",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P",
+        "Ddel"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedL1J",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P",
+        "Jdel"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedL1A",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => Integrable (fun ξ : Fin n → Ω => Adel ξ i) P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P",
+        "Adel"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedL1B",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => Integrable (fun ξ : Fin n → Ω => B1del ξ i) P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P",
+        "B1del"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedMeasurable",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧ Measurable (fun ξ : Fin n → Ω => B1del ξ i)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "Adel",
+        "B1del"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "pointwiseBounds",
+      "type": "(Fin n → Ω) → Prop",
+      "value": "fun ξ : Fin n → Ω => 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ",
+      "captures": [
+        "Ω",
+        "n",
+        "A",
+        "B1",
+        "e"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedNonnegativity",
+      "type": "Fin n → (Fin n → Ω) → Prop",
+      "value": "fun (i : Fin n) (ξ : Fin n → Ω) => 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i",
+      "captures": [
+        "Ω",
+        "n",
+        "Adel",
+        "B1del"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    },
+    {
+      "name": "deletedDifferenceL1",
+      "type": "Fin n → Prop",
+      "value": "fun i : Fin n => Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧ Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧ Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "n",
+        "P",
+        "A",
+        "Adel",
+        "B1",
+        "B1del",
+        "deletionMass"
+      ],
+      "kind": "Prop_valued_function_explicitly_inventoried_not_a_new_let"
+    }
+  ],
+  "headImplicitFinsetSummand": {
+    "type": "Fin n → ℝ",
+    "value": "fun i : Fin n => deletionMass ξ i",
+    "captures": [
+      "Ω",
+      "n",
+      "deletionMass",
+      "ξ : Fin n → Ω"
+    ]
+  },
+  "actualFinalFiniteSumFamily": {
+    "type": "(i : Fin n) → i ∈ (Finset.univ : Finset (Fin n)) → Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P",
+    "value": "fun (i : Fin n) (_hi : i ∈ (Finset.univ : Finset (Fin n))) => (hDiffI i).2.2",
+    "captures": [
+      "Ω",
+      "mΩ",
+      "n",
+      "P",
+      "deletionMass",
+      "hDiffI"
+    ],
+    "kind": "Prop_proof_family_not_new_ordinary_value"
+  },
+  "actualAffineCongruenceFamily": {
+    "type": "(ξ : Fin n → Ω) → K * (BcoarseDel ξ i - base) = LambdaDelSq ξ i",
+    "captures": [
+      "Ω",
+      "n",
+      "K",
+      "BcoarseDel",
+      "base",
+      "LambdaDelSq",
+      "i : Fin n",
+      "hKpos"
+    ],
+    "kind": "Prop_proof_family_inside_derivedProp_fact"
+  },
+  "proofScopedTypedBinders": {
+    "i/j/k/l/_i": "Fin n",
+    "ξ": "Fin n → Ω",
+    "_hi": "i ∈ (Finset.univ : Finset (Fin n))",
+    "o/y": "Ω",
+    "t": "Ω × Ω"
+  },
+  "lambdaLocators": [
+    {
+      "sourceLine": 20,
+      "column1": 23,
+      "literalLine": "    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 21,
+      "column1": 19,
+      "literalLine": "    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 28,
+      "column1": 22,
+      "literalLine": "    let g : Ω → ℝ := fun o : Ω => ∫ y : Ω, h o y ∂μ",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 29,
+      "column1": 26,
+      "literalLine": "    let r : Ω → Ω → ℝ := fun o y : Ω => h o y - g o - g y",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 33,
+      "column1": 48,
+      "literalLine": "    let P : Measure (Fin n → Ω) := Measure.pi (fun _i : Fin n => μ)",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 38,
+      "column1": 32,
+      "literalLine": "    let A : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω => |D ξ|",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 40,
+      "column1": 7,
+      "literalLine": "      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 46,
+      "column1": 7,
+      "literalLine": "      fun (ξ : Fin n → Ω) (i : Fin n) =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 49,
+      "column1": 7,
+      "literalLine": "      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 51,
+      "column1": 28,
+      "literalLine": "      (∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 53,
+      "column1": 33,
+      "literalLine": "      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 55,
+      "column1": 33,
+      "literalLine": "      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 57,
+      "column1": 33,
+      "literalLine": "      (∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 61,
+      "column1": 21,
+      "literalLine": "        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 62,
+      "column1": 21,
+      "literalLine": "        Measurable (fun ξ : Fin n → Ω => B1del ξ i)) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 66,
+      "column1": 21,
+      "literalLine": "        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 67,
+      "column1": 21,
+      "literalLine": "        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 68,
+      "column1": 21,
+      "literalLine": "        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P) ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 72,
+      "column1": 30,
+      "literalLine": "  let F : (Fin n → Ω) → ℝ := fun ξ : Fin n → Ω =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 73,
+      "column1": 36,
+      "literalLine": "    Shao.OQ5.P35.unorderedPairSum (fun i j : Fin n => r (ξ i) (ξ j))",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 75,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 77,
+      "column1": 10,
+      "literalLine": "        (fun j k : Fin n => r (ξ j) (ξ k)) i",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 79,
+      "column1": 5,
+      "literalLine": "    fun ξ : Fin n → Ω => ∑ j : Fin n, (psi ξ j) ^ 2",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 81,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) => ∑ j : Fin n,",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 84,
+      "column1": 12,
+      "literalLine": "          (fun k l : Fin n => r (ξ k) (ξ l)) i) j) ^ 2",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 89,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) => base + LambdaDelSq ξ i / K",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 91,
+      "column1": 56,
+      "literalLine": "    inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _i : Fin n => μ)))",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 117,
+      "column1": 35,
+      "literalLine": "  have hpsi2 (i : Fin n) : MemLp (fun ξ : Fin n → Ω => psi ξ i) 2 P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 135,
+      "column1": 14,
+      "literalLine": "      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 137,
+      "column1": 24,
+      "literalLine": "    exact ae_of_all P (fun ξ : Fin n → Ω => by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 141,
+      "column1": 14,
+      "literalLine": "            (fun j k : Fin n => r (ξ j) (ξ k)) i) /",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 146,
+      "column1": 12,
+      "literalLine": "          (fun j k : Fin n => r (ξ j) (ξ k))",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 147,
+      "column1": 12,
+      "literalLine": "          (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 150,
+      "column1": 12,
+      "literalLine": "          (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i at hIncident",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 154,
+      "column1": 24,
+      "literalLine": "    exact ae_of_all P (fun ξ : Fin n → Ω => by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 157,
+      "column1": 12,
+      "literalLine": "          (fun k l : Fin n => r (ξ k) (ξ l)) j) ^ 2) /",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 165,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => BcoarseDel ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 169,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => LambdaDelSq ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 171,
+      "column1": 24,
+      "literalLine": "    exact ae_of_all P (fun ξ : Fin n → Ω => by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 176,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 182,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => Adel ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 185,
+      "column1": 24,
+      "literalLine": "    change Integrable (fun ξ : Fin n → Ω =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 190,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => B1del ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 191,
+      "column1": 24,
+      "literalLine": "    change Integrable (fun ξ : Fin n → Ω =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 207,
+      "column1": 24,
+      "literalLine": "    exact ae_of_all P (fun ξ : Fin n → Ω => by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 210,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 211,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 212,
+      "column1": 19,
+      "literalLine": "      Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P := by",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 217,
+      "column1": 8,
+      "literalLine": "      (fun (i : Fin n) (_hi : i ∈ (Finset.univ : Finset (Fin n))) =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 221,
+      "column1": 6,
+      "literalLine": "    (fun i : Fin n => ⟨(hdelm i).2.2.2.1, (hdelm i).2.2.2.2.1⟩),",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    }
+  ],
+  "lambdaCount": 50,
+  "standaloneFunLocators": [
+    {
+      "sourceLine": 40,
+      "column1": 7,
+      "literalLine": "      fun (ξ : Fin n → Ω) (i : Fin n) => |Ddel ξ i|",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 46,
+      "column1": 7,
+      "literalLine": "      fun (ξ : Fin n → Ω) (i : Fin n) =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 49,
+      "column1": 7,
+      "literalLine": "      fun ξ : Fin n → Ω => ∑ i : Fin n, deletionMass ξ i",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 75,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) =>",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 79,
+      "column1": 5,
+      "literalLine": "    fun ξ : Fin n → Ω => ∑ j : Fin n, (psi ξ j) ^ 2",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 81,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) => ∑ j : Fin n,",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    },
+    {
+      "sourceLine": 89,
+      "column1": 5,
+      "literalLine": "    fun (ξ : Fin n → Ω) (i : Fin n) => base + LambdaDelSq ξ i / K",
+      "typedBinderContext": "All scalar/index/sample binders are typed literally; contextual dependent summands and Prop-proof lambdas retain their exact enclosing full source type."
+    }
+  ],
+  "introLocators": [
+    {
+      "sourceLine": 71,
+      "literalLine": "  intro g r v rho N P D J Ddel Jdel A Adel B1 B1del e deletionMass deletionTotal",
+      "kind": "head-let introductions"
+    }
+  ],
+  "funextLocators": [],
+  "bulletHaveLocators": [],
+  "allOuterConclusions": [
+    {
+      "oneBasedOuterConjunct": 1,
+      "fullSourceType": "MemLp D 2 P",
+      "proofPath": "hD2",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 2,
+      "fullSourceType": "(∀ i : Fin n, MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P)",
+      "proofPath": "hDdel2",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 3,
+      "fullSourceType": "Integrable J P",
+      "proofPath": "hJI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 4,
+      "fullSourceType": "(∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Jdel ξ i) P)",
+      "proofPath": "hJdelI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 5,
+      "fullSourceType": "Integrable A P",
+      "proofPath": "hAI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 6,
+      "fullSourceType": "(∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => Adel ξ i) P)",
+      "proofPath": "hAdelI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 7,
+      "fullSourceType": "Integrable B1 P",
+      "proofPath": "hB1I",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 8,
+      "fullSourceType": "(∀ i : Fin n, Integrable (fun ξ : Fin n → Ω => B1del ξ i) P)",
+      "proofPath": "hB1delI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 9,
+      "fullSourceType": "Integrable e P",
+      "proofPath": "heI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 10,
+      "fullSourceType": "Measurable D",
+      "proofPath": "hDm",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 11,
+      "fullSourceType": "Measurable A",
+      "proofPath": "hAm",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 12,
+      "fullSourceType": "Measurable B1",
+      "proofPath": "hB1m",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 13,
+      "fullSourceType": "Measurable e",
+      "proofPath": "hem",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 14,
+      "fullSourceType": "(∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i))",
+      "proofPath": "hdelm component4+5",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 15,
+      "fullSourceType": "(∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |e ξ| ≤ B1 ξ)",
+      "proofPath": "hFullBounds",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 16,
+      "fullSourceType": "(∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i)",
+      "proofPath": "hDeletedBounds",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 17,
+      "fullSourceType": "(∀ i : Fin n,\n        Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P ∧\n        Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P)",
+      "proofPath": "hDiffI",
+      "independentlyReviewed": true
+    },
+    {
+      "oneBasedOuterConjunct": 18,
+      "fullSourceType": "Integrable deletionTotal P",
+      "proofPath": "hTotalI",
+      "independentlyReviewed": true
+    }
+  ],
+  "importedProducerLetData": {
+    "schema": "oq56-unit223-imported-let-data-v1",
+    "status": "EXACT_PRODUCER_PUBLIC_TEXT_CAPTURE_MAP_NOT_NEW_TYPECHECK",
+    "producers": [
+      {
+        "role": "qualified220_measurability",
+        "declaration": "actual_normalized_compact_clipped_observables",
+        "source": {
+          "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/repair-02/OriginalClippedStatisticMeasurable.lean",
+          "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+          "bytes": 15983,
+          "LF": 324,
+          "CR": 0,
+          "utf8Bom": false
+        },
+        "sourceHeadSHA256": "c608466ccb3e7f092c4e78f0bc46ea53324c059edc725eba228c35e7e1209838",
+        "plannedSubstitution": {},
+        "lets": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "h"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              14,
+              14
+            ]
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "captures": [
+              "Ω",
+              "h",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              15,
+              15
+            ]
+          },
+          {
+            "name": "v",
+            "type": "ℝ",
+            "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              16,
+              16
+            ]
+          },
+          {
+            "name": "rho",
+            "type": "ℝ",
+            "value": "Real.sqrt v",
+            "captures": [
+              "v"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              17,
+              17
+            ]
+          },
+          {
+            "name": "N",
+            "type": "ℝ",
+            "value": "Real.sqrt (n : ℝ)",
+            "captures": [
+              "n"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              18,
+              18
+            ]
+          },
+          {
+            "name": "W",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "projectionW n g",
+            "captures": [
+              "Ω",
+              "n",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              19,
+              19
+            ]
+          },
+          {
+            "name": "V",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "projectionV n g",
+            "captures": [
+              "Ω",
+              "n",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              20,
+              20
+            ]
+          },
+          {
+            "name": "D",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "residualStatisticD n r",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              21,
+              21
+            ]
+          },
+          {
+            "name": "J",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "residualEnergyJ n r",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              22,
+              22
+            ]
+          },
+          {
+            "name": "Ddel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "residualStatisticDDeleted n r",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              23,
+              23
+            ]
+          },
+          {
+            "name": "Jdel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "residualEnergyJDeleted n r",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              24,
+              24
+            ]
+          },
+          {
+            "name": "A",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ => |D ξ|",
+            "captures": [
+              "Ω",
+              "n",
+              "D"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              25,
+              25
+            ]
+          },
+          {
+            "name": "Adel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i => |Ddel ξ i|",
+            "captures": [
+              "Ω",
+              "n",
+              "Ddel"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              26,
+              26
+            ]
+          },
+          {
+            "name": "B1",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "studentizerClipBudget n r C0 rho 1",
+            "captures": [
+              "Ω",
+              "n",
+              "r",
+              "C0",
+              "rho"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              27,
+              27
+            ]
+          },
+          {
+            "name": "B1del",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "studentizerClipBudgetDeleted n r C0 rho 1",
+            "captures": [
+              "Ω",
+              "n",
+              "r",
+              "C0",
+              "rho"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              28,
+              28
+            ]
+          },
+          {
+            "name": "s2",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "centeredSq n g r",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              29,
+              29
+            ]
+          },
+          {
+            "name": "s",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ => Real.sqrt (s2 ξ)",
+            "captures": [
+              "Ω",
+              "n",
+              "s2"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              30,
+              30
+            ]
+          },
+          {
+            "name": "d",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "centeredDelta n g r",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              31,
+              31
+            ]
+          },
+          {
+            "name": "e",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "clippedCenteredDelta n g r C0 rho 1",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "r",
+              "C0",
+              "rho"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              32,
+              32
+            ]
+          },
+          {
+            "name": "Tclip",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "clippedCenteredStatistic n g r C0 rho 1",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "r",
+              "C0",
+              "rho"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              33,
+              33
+            ]
+          },
+          {
+            "name": "Tactual",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ",
+            "captures": [
+              "Ω",
+              "n",
+              "s",
+              "W",
+              "D"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              34,
+              34
+            ]
+          },
+          {
+            "name": "cap",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "N",
+              "z"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              35,
+              35
+            ]
+          },
+          {
+            "name": "deletedTest",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)",
+            "captures": [
+              "Ω",
+              "n",
+              "cap",
+              "A",
+              "Adel",
+              "z",
+              "B1",
+              "B1del"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              36,
+              36
+            ]
+          }
+        ],
+        "ambientInstanceInterpretation": "Unnamed producer measurable instance is the same original mOmega at the proposed application; no CG/trim switch.",
+        "exactLambdaAndIntegralContext": "theorem actual_normalized_compact_clipped_observables\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 4 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z) (hz1 : z ≤ 1)\n    (C0 : ℝ) (hC0 : 0 ≤ C0) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let W : (Fin n → Ω) → ℝ := projectionW n g\n    let V : (Fin n → Ω) → ℝ := projectionV n g\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |Ddel ξ i|\n    let B1 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1\n    let B1del : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r C0 rho 1\n    let s2 : (Fin n → Ω) → ℝ := centeredSq n g r\n    let s : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (s2 ξ)\n    let d : (Fin n → Ω) → ℝ := centeredDelta n g r\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1\n    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1\n    let Tactual : (Fin n → Ω) → ℝ := fun ξ => if s ξ = 0 then 0 else (W ξ + D ξ) / s ξ\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / N) (1 / (1 + z))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i => cap ξ i * (|A ξ - Adel ξ i| + z * |B1 ξ - B1del ξ i|)\n    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧\n      Measurable A ∧ Measurable B1 ∧\n      Measurable s2 ∧ Measurable s ∧ Measurable d ∧ Measurable e ∧\n      Measurable Tclip ∧ Measurable Tactual ∧\n      MeasurableSet {ξ : Fin n → Ω | V ξ = 0} ∧\n      MeasurableSet {ξ : Fin n → Ω | s ξ = 0} ∧\n      (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + e ξ) ∧\n      (∀ ξ : Fin n → Ω, V ξ = 0 →\n        d ξ = 0 ∧ e ξ = 0 ∧ Tclip ξ = 0) ∧\n      (∀ i : Fin n,\n        Measurable (fun ξ : Fin n → Ω => cap ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Ddel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Jdel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => Adel ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => B1del ξ i) ∧\n        Measurable (fun ξ : Fin n → Ω => deletedTest ξ i) ∧\n        ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,\n          Measurable E ∧\n          ∀ ξ : Fin n → Ω,\n            (Ddel ξ i, Jdel ξ i, B1del ξ i) =\n              E (fun j : {j : Fin n // j ≠ i} => ξ j.val))\n"
+      },
+      {
+        "role": "moment_at_x0",
+        "declaration": "actual_quadratic_source_moments",
+        "source": {
+          "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+          "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+          "bytes": 23460,
+          "LF": 525,
+          "CR": 0,
+          "utf8Bom": false
+        },
+        "sourceHeadSHA256": "0aad0f6529f7abbb3342c2524a2d5db9fc3a2c903bbe2902bc26b713bed35c8f",
+        "plannedSubstitution": {
+          "x": "0",
+          "n": "same n",
+          "mu/h": "same original mu/h"
+        },
+        "lets": [
+          {
+            "name": "C",
+            "type": "ℝ",
+            "value": "Real.exp (1 / 2 : ℝ)",
+            "captures": [],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              15,
+              15
+            ]
+          },
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "h"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              16,
+              16
+            ]
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "captures": [
+              "Ω",
+              "h",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              17,
+              17
+            ]
+          },
+          {
+            "name": "v",
+            "type": "ℝ",
+            "value": "∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              18,
+              18
+            ]
+          },
+          {
+            "name": "s",
+            "type": "ℝ",
+            "value": "1 + Real.sqrt v",
+            "captures": [
+              "v"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              19,
+              19
+            ]
+          },
+          {
+            "name": "a",
+            "type": "ℝ",
+            "value": "x / Real.sqrt (n : ℝ)",
+            "captures": [
+              "x",
+              "n"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              20,
+              20
+            ]
+          },
+          {
+            "name": "φ",
+            "type": "Ω → ℝ",
+            "value": "fun o => a * g o - (a * g o) ^ 2 / 2",
+            "captures": [
+              "Ω",
+              "a",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              21,
+              21
+            ]
+          },
+          {
+            "name": "w",
+            "type": "Ω → ℝ",
+            "value": "fun o => Real.exp (φ o)",
+            "captures": [
+              "Ω",
+              "φ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              22,
+              22
+            ]
+          },
+          {
+            "name": "m",
+            "type": "ℝ",
+            "value": "∫ o, w o ∂μ",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "w"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              23,
+              23
+            ]
+          },
+          {
+            "name": "L",
+            "type": "Ω → ℝ",
+            "value": "fun o => w o / m",
+            "captures": [
+              "Ω",
+              "w",
+              "m"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              24,
+              24
+            ]
+          },
+          {
+            "name": "ρ",
+            "type": "Measure Ω",
+            "value": "μ.withDensity (fun o => ENNReal.ofReal (L o))",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "L"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              25,
+              26
+            ]
+          },
+          {
+            "name": "P₀",
+            "type": "Measure (Fin n → Ω)",
+            "value": "Measure.pi (fun _ : Fin n => μ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "n",
+              "μ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              27,
+              28
+            ]
+          },
+          {
+            "name": "S",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      ∑ j : Fin n, φ (ξ j)",
+            "captures": [
+              "Ω",
+              "n",
+              "φ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              29,
+              30
+            ]
+          },
+          {
+            "name": "Pₐ",
+            "type": "Measure (Fin n → Ω)",
+            "value": "P₀.tilted S",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "n",
+              "P₀",
+              "S"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              31,
+              31
+            ]
+          },
+          {
+            "name": "F",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              32,
+              33
+            ]
+          },
+          {
+            "name": "ψ",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              34,
+              36
+            ]
+          },
+          {
+            "name": "Λsq",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2",
+            "captures": [
+              "Ω",
+              "n",
+              "ψ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              37,
+              38
+            ]
+          },
+          {
+            "name": "A",
+            "type": "ℝ",
+            "value": "∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "r",
+              "ρ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              39,
+              40
+            ]
+          },
+          {
+            "name": "B",
+            "type": "ℝ",
+            "value": "∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "r",
+              "ρ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              41,
+              43
+            ]
+          },
+          {
+            "name": "D",
+            "type": "ℝ",
+            "value": "∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "r",
+              "ρ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              44,
+              47
+            ]
+          }
+        ],
+        "ambientInstanceInterpretation": "Unnamed producer measurable instance is the same original mOmega at the proposed application; no CG/trim switch.",
+        "exactLambdaAndIntegralContext": "theorem actual_quadratic_source_moments\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 3 ≤ n)\n    (x : ℝ) (hx : 0 ≤ x)\n    (hwindow : x ≤ Real.sqrt (n : ℝ) /\n      (2 * Real.exp (1 / 2 : ℝ))) :\n    let C : ℝ := Real.exp (1 / 2 : ℝ)\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let a : ℝ := x / Real.sqrt (n : ℝ)\n    let φ : Ω → ℝ := fun o => a * g o - (a * g o) ^ 2 / 2\n    let w : Ω → ℝ := fun o => Real.exp (φ o)\n    let m : ℝ := ∫ o, w o ∂μ\n    let L : Ω → ℝ := fun o => w o / m\n    let ρ : Measure Ω :=\n      μ.withDensity (fun o => ENNReal.ofReal (L o))\n    let P₀ : Measure (Fin n → Ω) :=\n      Measure.pi (fun _ : Fin n => μ)\n    let S : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, φ (ξ j)\n    let Pₐ : Measure (Fin n → Ω) := P₀.tilted S\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ξ i) (ξ j))\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (fun j k => r (ξ j) (ξ k)) i\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ i : Fin n, ψ ξ i ^ 2\n    let A : ℝ :=\n      ∫ z : Ω × Ω, r z.1 z.2 ^ 2 ∂(ρ.prod ρ)\n    let B : ℝ :=\n      ∫ t : Ω × (Ω × Ω), r t.1 t.2.1 * r t.1 t.2.2\n        ∂(ρ.prod (ρ.prod ρ))\n    let D : ℝ :=\n      ∫ d : (Ω × Ω) × (Ω × Ω),\n        r d.1.1 d.1.2 * r d.2.1 d.2.2\n        ∂((ρ.prod ρ).prod (ρ.prod ρ))\n    Measurable g ∧ MemLp g 2 μ ∧ (∫ o, g o ∂μ) = 0 ∧\n      (∫ o, g o ^ 2 ∂μ) = 1 ∧\n      Measurable (fun z : Ω × Ω => r z.1 z.2) ∧\n      MemLp (fun z : Ω × Ω => r z.1 z.2) 2 (μ.prod μ) ∧\n      (∀ o y, r o y = r y o) ∧\n      (∀ᵐ o ∂μ, (∫ y, r o y ∂μ) = 0) ∧\n      0 ≤ v ∧ 1 ≤ s ∧ v ≤ s ^ 2 ∧\n      Integrable w μ ∧ (1 / 2 : ℝ) ≤ m ∧ m ≤ (3 / 2 : ℝ) ∧\n      Measurable L ∧ Integrable L μ ∧\n      (∀ o, 0 < L o ∧ L o ≤ 2 * C) ∧\n      (∫ o, L o ∂μ) = 1 ∧\n      Integrable (fun o => (L o - 1) ^ 2) μ ∧\n      (∫ o, (L o - 1) ^ 2 ∂μ) ≤ 4 * C ^ 2 * a ^ 2 ∧\n      μ.tilted φ = ρ ∧ IsProbabilityMeasure ρ ∧\n      Integrable (fun ξ => Real.exp (S ξ)) P₀ ∧\n      (∫ ξ, Real.exp (S ξ) ∂P₀) = m ^ n ∧ 0 < m ^ n ∧\n      (∀ ξ, Real.exp (S ξ) / m ^ n =\n        ∏ j : Fin n, L (ξ j)) ∧\n      Pₐ = P₀.withDensity\n        (fun ξ => ENNReal.ofReal (∏ j : Fin n, L (ξ j))) ∧\n      Pₐ = Measure.pi (fun _ : Fin n => ρ) ∧\n      IsProbabilityMeasure Pₐ ∧\n      MemLp F 2 Pₐ ∧ Integrable (fun ξ => F ξ ^ 2) Pₐ ∧\n      (∀ i : Fin n, MemLp (fun ξ => ψ ξ i) 2 Pₐ) ∧\n      Integrable Λsq Pₐ ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) =\n        (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B +\n          6 * (n.choose 4 : ℝ) * D ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) =\n        2 * (n.choose 2 : ℝ) * A +\n          6 * (n.choose 3 : ℝ) * B ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 *\n        (4 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2 +\n          96 * C ^ 4 * (n.choose 4 : ℝ) * a ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 *\n        (8 * C ^ 2 * (n.choose 2 : ℝ) +\n          48 * C ^ 3 * (n.choose 3 : ℝ) * a ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (2 * C ^ 2 + 8 * C ^ 3 * x ^ 2 + 4 * C ^ 4 * x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤ s ^ 2 * (n : ℝ) ^ 2 *\n        (4 * C ^ 2 + 8 * C ^ 3 * x ^ 2) ∧\n      (∫ ξ, F ξ ^ 2 ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 4) ∧\n      (∫ ξ, Λsq ξ ∂Pₐ) ≤\n        14 * C ^ 4 * s ^ 2 * (n : ℝ) ^ 2 * (1 + x ^ 2)\n"
+      },
+      {
+        "role": "old_compact_cost",
+        "declaration": "actual_quadratic_compact_source_cost",
+        "source": {
+          "path": "C:/game/shao lean/library/Shao/OQ6/UntiltedCompactCost.lean",
+          "sha256": "a7ab6509e2008e568c8707d4d07b517bd94797218347589193e65f7242dca111",
+          "bytes": 21450,
+          "LF": 388,
+          "CR": 0,
+          "utf8Bom": false
+        },
+        "sourceHeadSHA256": "e8b58777b0b9aadd6e3fa5c7338493cd6d00b073ebfa287e5e926c7639c577da",
+        "plannedSubstitution": {
+          "z": "0",
+          "C₀": "1",
+          "n": "same n",
+          "mu/h": "same original mu/h"
+        },
+        "lets": [
+          {
+            "name": "g",
+            "type": "Ω → ℝ",
+            "value": "fun o => ∫ y, h o y ∂μ",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "h"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              14,
+              14
+            ]
+          },
+          {
+            "name": "r",
+            "type": "Ω → Ω → ℝ",
+            "value": "fun o y => h o y - g o - g y",
+            "captures": [
+              "Ω",
+              "h",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              15,
+              15
+            ]
+          },
+          {
+            "name": "v",
+            "type": "ℝ",
+            "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "μ",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              16,
+              16
+            ]
+          },
+          {
+            "name": "s",
+            "type": "ℝ",
+            "value": "1 + Real.sqrt v",
+            "captures": [
+              "v"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              17,
+              17
+            ]
+          },
+          {
+            "name": "P₀",
+            "type": "Measure (Fin n → Ω)",
+            "value": "Measure.pi (fun _ : Fin n => μ)",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "n",
+              "μ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              18,
+              18
+            ]
+          },
+          {
+            "name": "projectionTest",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      Shao.truncationF ((1 + z) * (g (ξ i) / Real.sqrt (n : ℝ)))",
+            "captures": [
+              "Ω",
+              "n",
+              "z",
+              "g"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              19,
+              20
+            ]
+          },
+          {
+            "name": "Lcompact",
+            "type": "ℝ",
+            "value": "∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "n",
+              "P₀",
+              "projectionTest"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              21,
+              22
+            ]
+          },
+          {
+            "name": "cap",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      min (|g (ξ i)| / Real.sqrt (n : ℝ)) (1 / (1 + z))",
+            "captures": [
+              "Ω",
+              "n",
+              "g",
+              "z"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              23,
+              24
+            ]
+          },
+          {
+            "name": "e",
+            "type": "(Fin n → Ω) → Fin n → Fin n → ℝ",
+            "value": "fun ξ j k => r (ξ j) (ξ k)",
+            "captures": [
+              "Ω",
+              "n",
+              "r"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              25,
+              26
+            ]
+          },
+          {
+            "name": "F",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (e ξ)",
+            "captures": [
+              "Ω",
+              "n",
+              "e"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              27,
+              28
+            ]
+          },
+          {
+            "name": "Fdel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)",
+            "captures": [
+              "Ω",
+              "n",
+              "e"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              29,
+              31
+            ]
+          },
+          {
+            "name": "ψ",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ j =>\n      Shao.OQ6.ResidualDeletion.rowSum (e ξ) j",
+            "captures": [
+              "Ω",
+              "n",
+              "e"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              32,
+              33
+            ]
+          },
+          {
+            "name": "ψdel",
+            "type": "(Fin n → Ω) → Fin n → Fin n → ℝ",
+            "value": "fun ξ i j =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j",
+            "captures": [
+              "Ω",
+              "n",
+              "e"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              34,
+              36
+            ]
+          },
+          {
+            "name": "Λsq",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      ∑ j : Fin n, ψ ξ j ^ 2",
+            "captures": [
+              "Ω",
+              "n",
+              "ψ"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              37,
+              38
+            ]
+          },
+          {
+            "name": "Λdelsq",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      ∑ j : Fin n, ψdel ξ i j ^ 2",
+            "captures": [
+              "Ω",
+              "n",
+              "ψdel"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              39,
+              40
+            ]
+          },
+          {
+            "name": "D₁",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+            "captures": [
+              "Ω",
+              "n",
+              "F"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              41,
+              42
+            ]
+          },
+          {
+            "name": "D₁del",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      Fdel ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))",
+            "captures": [
+              "Ω",
+              "n",
+              "Fdel"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              43,
+              44
+            ]
+          },
+          {
+            "name": "A",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ => |D₁ ξ|",
+            "captures": [
+              "Ω",
+              "n",
+              "D₁"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              45,
+              45
+            ]
+          },
+          {
+            "name": "Adel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i => |D₁del ξ i|",
+            "captures": [
+              "Ω",
+              "n",
+              "D₁del"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              46,
+              46
+            ]
+          },
+          {
+            "name": "B",
+            "type": "(Fin n → Ω) → ℝ",
+            "value": "fun ξ =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λsq ξ / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))",
+            "captures": [
+              "Ω",
+              "n",
+              "C₀",
+              "s",
+              "Λsq"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              47,
+              49
+            ]
+          },
+          {
+            "name": "Bdel",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λdelsq ξ i / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))",
+            "captures": [
+              "Ω",
+              "n",
+              "C₀",
+              "s",
+              "Λdelsq"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              50,
+              52
+            ]
+          },
+          {
+            "name": "deletedTest",
+            "type": "(Fin n → Ω) → Fin n → ℝ",
+            "value": "fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + z * |B ξ - Bdel ξ i|)",
+            "captures": [
+              "Ω",
+              "n",
+              "cap",
+              "A",
+              "Adel",
+              "z",
+              "B",
+              "Bdel"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              53,
+              54
+            ]
+          },
+          {
+            "name": "residualCost",
+            "type": "ℝ",
+            "value": "(∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀",
+            "captures": [
+              "Ω",
+              "mΩ",
+              "n",
+              "A",
+              "z",
+              "B",
+              "P₀",
+              "deletedTest"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              55,
+              57
+            ]
+          },
+          {
+            "name": "sourceCost",
+            "type": "ℝ",
+            "value": "Lcompact + residualCost",
+            "captures": [
+              "Lcompact",
+              "residualCost"
+            ],
+            "status": "IMPORTED_PRODUCER_DATA_NOT_A_NEW_LOCAL",
+            "sourceHeadLines": [
+              58,
+              58
+            ]
+          }
+        ],
+        "ambientInstanceInterpretation": "Unnamed producer measurable instance is the same original mOmega at the proposed application; no CG/trim switch.",
+        "exactLambdaAndIntegralContext": "theorem actual_quadratic_compact_source_cost\n    {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (n : ℕ) (hn : 3 ≤ n)\n    (z : ℝ) (hz : 0 ≤ z)\n    (C₀ : ℝ) (hC₀ : 0 ≤ C₀) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let s : ℝ := 1 + Real.sqrt v\n    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.truncationF ((1 + z) * (g (ξ i) / Real.sqrt (n : ℝ)))\n    let Lcompact : ℝ :=\n      ∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀\n    let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      min (|g (ξ i)| / Real.sqrt (n : ℝ)) (1 / (1 + z))\n    let e : (Fin n → Ω) → Fin n → Fin n → ℝ :=\n      fun ξ j k => r (ξ j) (ξ k)\n    let F : (Fin n → Ω) → ℝ := fun ξ =>\n      Shao.OQ5.P35.unorderedPairSum (e ξ)\n    let Fdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)\n    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ j =>\n      Shao.OQ6.ResidualDeletion.rowSum (e ξ) j\n    let ψdel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>\n      Shao.OQ6.ResidualDeletion.rowSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j\n    let Λsq : (Fin n → Ω) → ℝ := fun ξ =>\n      ∑ j : Fin n, ψ ξ j ^ 2\n    let Λdelsq : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      ∑ j : Fin n, ψdel ξ i j ^ 2\n    let D₁ : (Fin n → Ω) → ℝ := fun ξ =>\n      F ξ / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let D₁del : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      Fdel ξ i / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))\n    let A : (Fin n → Ω) → ℝ := fun ξ => |D₁ ξ|\n    let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |D₁del ξ i|\n    let B : (Fin n → Ω) → ℝ := fun ξ =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λsq ξ / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let Bdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      C₀ * (s / Real.sqrt (n : ℝ) +\n        Λdelsq ξ i / (s * ((n : ℝ) ^ 2 * Real.sqrt (n : ℝ))))\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>\n      cap ξ i * (|A ξ - Adel ξ i| + z * |B ξ - Bdel ξ i|)\n    let residualCost : ℝ :=\n      (∫ ξ, A ξ ∂P₀) + z * (∫ ξ, B ξ ∂P₀) +\n        ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀\n    let sourceCost : ℝ := Lcompact + residualCost\n    (∀ i : Fin n, Integrable (fun ξ => projectionTest ξ i) P₀) ∧\n      Lcompact = (n : ℝ) *\n        (∫ o, Shao.truncationF\n          ((1 + z) * (g o / Real.sqrt (n : ℝ))) ∂μ) ∧\n      0 ≤ Lcompact ∧ Lcompact ≤ (1 + z) ^ 2 ∧\n      Integrable A P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Adel ξ i) P₀) ∧\n      Integrable B P₀ ∧\n      (∀ i : Fin n, Integrable (fun ξ => Bdel ξ i) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |A ξ - Adel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable\n        (fun ξ => cap ξ i * |B ξ - Bdel ξ i|) P₀) ∧\n      (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) ∧\n      residualCost ≤\n        16 * (1 + C₀) * (1 + z) * s / Real.sqrt (n : ℝ) ∧\n      sourceCost ≤ Lcompact +\n        16 * (1 + C₀) * (1 + z) * s / Real.sqrt (n : ℝ)\n"
+      }
+    ]
+  },
+  "bearingInterfaces": [
+    {
+      "role": "qualified220_measurability",
+      "declaration": "actual_normalized_compact_clipped_observables",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit220/author-01/repair-02/OriginalClippedStatisticMeasurable.lean",
+        "sha256": "052fb7eb6bb1d17218bf47c6c4f5b6715561da68b022bdacf6835fee5d667103",
+        "bytes": 15983,
+        "LF": 324,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 16,
+      "endHeadLine": 72,
+      "headSHA256": "c608466ccb3e7f092c4e78f0bc46ea53324c059edc725eba228c35e7e1209838",
+      "plannedSubstitution": {}
+    },
+    {
+      "role": "moment_at_x0",
+      "declaration": "actual_quadratic_source_moments",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ActualQuadraticTiltMoments.lean",
+        "sha256": "f4772e78008aad28d89f99a6c52e63ba15329fab40c1b66fb41dc2ed3b249d10",
+        "bytes": 23460,
+        "LF": 525,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 186,
+      "endHeadLine": 279,
+      "headSHA256": "0aad0f6529f7abbb3342c2524a2d5db9fc3a2c903bbe2902bc26b713bed35c8f",
+      "plannedSubstitution": {
+        "x": "0",
+        "n": "same n",
+        "mu/h": "same original mu/h"
+      }
+    },
+    {
+      "role": "old_compact_cost",
+      "declaration": "actual_quadratic_compact_source_cost",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/UntiltedCompactCost.lean",
+        "sha256": "a7ab6509e2008e568c8707d4d07b517bd94797218347589193e65f7242dca111",
+        "bytes": 21450,
+        "LF": 388,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 28,
+      "endHeadLine": 103,
+      "headSHA256": "e8b58777b0b9aadd6e3fa5c7338493cd6d00b073ebfa287e5e926c7639c577da",
+      "plannedSubstitution": {
+        "z": "0",
+        "C₀": "1",
+        "n": "same n",
+        "mu/h": "same original mu/h"
+      }
+    },
+    {
+      "role": "scalar_clip_bound",
+      "declaration": "clippedCenteredDelta_bounds",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean",
+        "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b",
+        "bytes": 11786,
+        "LF": 264,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 109,
+      "endHeadLine": 118,
+      "headSHA256": "c1ef85ee4116624f4d9f07fc70fa71906ddc218667beb3bd938e1242cec29084",
+      "plannedSubstitution": {
+        "y": "1",
+        "rho": "same Real.sqrt v"
+      }
+    },
+    {
+      "role": "exact_J_normalization",
+      "declaration": "residualEnergyJ_eq_rowSqSum",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584,
+        "LF": 298,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 38,
+      "endHeadLine": 44,
+      "headSHA256": "6676a8978c16ad890d108eb3351b22c698213fbc994ce23642aca4ba9080e81d",
+      "plannedSubstitution": {}
+    },
+    {
+      "role": "deleted_nonnegativity",
+      "declaration": "clippedDeletion_envelopes_nonneg",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedDeletionEnvelope.lean",
+        "sha256": "2a74d49a472f6015212a18db330ce7e81f31bae2885019219d10cf10ef35b5a0",
+        "bytes": 13584,
+        "LF": 298,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 50,
+      "endHeadLine": 57,
+      "headSHA256": "1f63a1fa2b7926562ea0dda077931a5dd67e6b7c6a341d3113af6512ec4b910c",
+      "plannedSubstitution": {
+        "y": "1"
+      }
+    },
+    {
+      "role": "signed_deleted_L2_algebra",
+      "declaration": "unorderedPairSum_sub_eraseIncident",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/ResidualDeletion.lean",
+        "sha256": "7ffedae803b94e0acf0cc7e6b972d2b99ee468742e7f8b12ea2eff99abfbe75b",
+        "bytes": 5652,
+        "LF": 163,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 76,
+      "endHeadLine": 81,
+      "headSHA256": "d950131e504771beb0a469c10e101ebef8626dd67371d8a66302b6a8d9038534",
+      "plannedSubstitution": {}
+    },
+    {
+      "role": "future_consumer_not_instantiated_here",
+      "declaration": "actual_normalized_remainder_envelope_spec",
+      "source": {
+        "path": "C:/game/shao lean/library/Shao/OQ6/NormalizedRemainderEnvelope.lean",
+        "sha256": "4852a6d3a907f35b5bde7fb6aca467ba5d382799a15915e5dbad907e224b9116",
+        "bytes": 19128,
+        "LF": 389,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "startLine": 178,
+      "endHeadLine": 241,
+      "headSHA256": "eee1f6a416bdbdde5cee001b04e767a6bf9c9f062bb18959b6e34be173faa85e",
+      "plannedSubstitution": {}
+    }
+  ],
+  "consumerAdapterLambdas": [
+    {
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "value": "fun (i : Fin n) (ξ : Fin n → Ω) => Adel ξ i",
+      "captures": [
+        "Ω",
+        "n",
+        "Adel"
+      ]
+    },
+    {
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "value": "fun (i : Fin n) (ξ : Fin n → Ω) => B1del ξ i",
+      "captures": [
+        "Ω",
+        "n",
+        "B1del"
+      ]
+    }
+  ],
+  "completeSourceLineCoverage": [
+    {
+      "lines": [
+        1,
+        14
+      ],
+      "role": "imports/namespace/options"
+    },
+    {
+      "lines": [
+        15,
+        69
+      ],
+      "role": "blank separator/full frozen declaration/all implicit context"
+    },
+    {
+      "lines": [
+        70,
+        91
+      ],
+      "role": "proof binder introductions/all eight data values/derived Prop instance"
+    },
+    {
+      "lines": [
+        92,
+        222
+      ],
+      "role": "all local propositions and complete proof/final output tuple"
+    },
+    {
+      "lines": [
+        223,
+        226
+      ],
+      "role": "closing"
+    }
+  ],
+  "forbiddenExtraPremisesAbsent": true,
+  "newLocalMeasurableSpaceInstances": [],
+  "nonPropExistentialWitnessesOrSelectors": [],
+  "extraNonPropValues": [],
+  "boundaryChecks": [
+    "arbitrary original measurable Omega and original pi law",
+    "rho=0: sigma=1,K>0; no division by rho",
+    "C0=0: target budgets zero, independent auxiliary C0=1 remains valid",
+    "n=4 and original n/(n-1)/(n-2) factors",
+    "zero projection-energy convention preserved",
+    "no diagonal L2 assertion",
+    "all original samples/all original deletion indices",
+    "signed e may be negative; only envelopes are nonnegative"
+  ],
+  "originalSourceReadScope": {
+    "p51": "complete355LF",
+    "p54": "complete86LF",
+    "p40": "model/normalization/attribution context lines1-98",
+    "p41": "model/scope/normalization context lines1-80"
+  },
+  "sourceFidelityReport": "REPORT.md",
+  "openScopes": [
+    "independent deleted M_epsilon^(i)",
+    "weighted-Y/coding/pullback interfaces",
+    "S25 analytic limits",
+    "S27/CDF",
+    "fullS11/generalS15/DC/OQ56/root"
+  ],
+  "criticalGaps": [],
+  "kernelChecked": false,
+  "qualified": false,
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "input": null,
+    "cachedInput": null,
+    "output": null,
+    "reasoningSubset": null
+  },
+  "next": "Parent new-source native then same-first-original-object allactual TYPE/requiredVALUE/transitiveAX; same reviewer final actual evidence review; preserve affected failures without old accepted replay.",
+  "headBindingExtraction": "Actual source ranges with ONLY exact final proof delimiter := by removed where shared by statement line; no statement-byte normalization. All eight full heads match expected SHA256.",
+  "actualApplications": [
+    {
+      "producer": "actual_quadratic_source_moments",
+      "arguments": "same original mu/h/hh/hh2/hhsymm/hcenter/hprojectionsecond/n; hn3 derived; x=0; hx=le_refl0; zero-window proved",
+      "projections": {
+        "hrsymm": 7,
+        "hFtilt2": 30,
+        "hpsiTilt2": 32,
+        "hLambdaTiltI": 33
+      }
+    },
+    {
+      "producer": "actual_normalized_compact_clipped_observables",
+      "arguments": "same original mu/h/model/n/hn/C0/hC0; z=0,hz=le_refl0,hz1=by norm_num",
+      "projections": {
+        "hDm": 3,
+        "hAm": 5,
+        "hB1m": 6,
+        "hem": 10,
+        "hdelm": 17
+      },
+      "deletedProjections": {
+        "Adel": "right^3.left",
+        "B1del": "right^4.left"
+      },
+      "existentialWitnessSelected": false
+    },
+    {
+      "producer": "actual_quadratic_compact_source_cost",
+      "arguments": "same original mu/h/model/n; hn3 derived; z=0,hz=le_refl0; C0_aux=1,hC0_aux=by norm_num",
+      "projection": "right^7.left",
+      "conjunct": 8,
+      "currentTargetC0Unchanged": true
+    }
+  ],
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "localInputChecksPassing": 60,
+  "mutableIndexOnlyMismatchDoesNotInvalidateActualSources": true
+}
