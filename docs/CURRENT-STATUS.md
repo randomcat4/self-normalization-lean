@@ -1,6 +1,6 @@
 # Current mathematical status
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v124. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v125. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
 
 ## C1 and C2
 
@@ -14,7 +14,13 @@ OQ3 remains separately paused by the human. The fixed jointly nonlattice saddle-
 
 ## OQ4
 
-The assigned original fixed-law weak-window concentration and universal sharp sixth-root criterion were accepted at v79. The human has resumed autonomous source-bound extensions under the current resource phase; those extensions are not included in v79 acceptance. At v123 two bounded additions are accepted: the common-third-moment changing-row energy weak law and positive-limit deterministic/studentized boundary results against the actual Brownian CDF, and eventual deterministic-strip positivity plus the energy Laplace ratio for arbitrary bounded varying real s. The latter uses h->infinity, n/h^2->infinity and n/h^3->0; no fourth moment or fixed-law substitution is added. Zero-energy/empty paths and early zero/negative parameters retain their literal meanings. The full shrinking row window and uniform-radius/random-denominator assembly remain open. This limited original acceptance does not certify all historical subclauses or unrelated OQ4 extensions.
+The assigned original fixed-law weak-window and universal sharp sixth-root criterion remain accepted at v79. The explicitly authorized common-third-moment changing-row extension is now accepted at v125, with A/B at v123 and C/D/E at v125. Each actual row law has mean zero, second moment one, integrable absolute third moment bounded by one common real M. No fixed row law, law convergence, cross-row coupling, density, fourth moment, monotone sample sizes or monotone lower endpoints are assumed.
+
+C gives simultaneous actual-radius energy/cosh controls and original h_j² concentration on one tail. D pays signed center shifts, the entire growing middle collection and entire FAR with the original normalizer difference and dyadic fees, then proves the actual random-denominator/closed-strip probability ratio tends to one under h->infinity, n/h²->infinity, n/h³->0.
+
+E proves the actual small-boundary probability ratio and uniform relative error on the CLOSED interval [a_j,1], including x=a_j and x=1, when n_j->infinity, eventually a_j>0, a_j->0 and a_j*n_j^(1/6)->infinity. The numerator is the actual weak all-prefix strip at x*sqrt(actual sample energy); the denominator is the actual supplied Brownian CDF on its independent universe. The true absolute-error image is proved nonempty/bounded on a valid tail and its real sSup tends to zero. Empty samples, zero energy and early negative/zero parameters keep their literal meanings. See [RowWindowProduct](../Shao/OQ4/RowWindowProduct.lean).
+
+This closes this precise current changing-row extension. It does not certify every historical OQ4 source subclause or any other lane/root scope. The owner reports a natural completed boundary with zero writers/heavy/inflight and remains available for a concrete affected integration repair; this is not a renewed user pause and creates no new mathematical assignment.
 
 ## OQ56
 
@@ -34,6 +40,7 @@ OQ56 remains open. The following are accepted components, rather than a full-roo
 | v122 | 218 common countably generated observable sub-sigma reduction | Same arbitrary space, pointwise joint kernel and all countable scalar observables, including empty spaces; law/integral/moment/CDF transport remains open |
 | v123 | 219 conditional same-kernel/coarser-law transport; paired OQ4 changing-row positive-boundary and energy Laplace results | Same normalized h/mu and explicit reduced measurability; row common third moment, exact positive-boundary or deterministic-wall scales only; remaining full windows/CDF/root applications open |
 | v124 | 220 literal normalized clipped/studentized observables; 221 common countably generated original model and sample/statistic/vector laws | Same original space/kernel/law and n coefficients, common m0 before finite parameters, physical s=0 distinct from V=0; scalar coding/CDF/external application still open |
+| v125 | 223 original finite base-law clipped-cost integrability; OQ4 C/D/E full explicit common-M changing-row closed-window extension | 223 retains exact n/(n-2)^2/rho0, unweighted L2/L1 only; OQ4 both closed endpoints/actual probability/sSup, no broader historical scope credit |
 
 The v117 deletion quantities omit the deleted coordinate and do not carry a good-event indicator. They retain the original n, n-1 and n-2 normalizations. Their exact signed identities, reverse-triangle bound, measurable retained-coordinate factorization and full definition values are reviewed.
 

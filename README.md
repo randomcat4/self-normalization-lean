@@ -11,7 +11,7 @@ The accepted mathematical snapshot, exact inventory and remaining work are recor
 | C1 | Original signed half-line theorem on the full nonnegative original I_n, both signs, accepted at immutable v85. [Scope and receipt](docs/EVIDENCE.md#c1) |
 | C2 / assigned C12 | All five original labels g:double, g:absolute, m:B, m:A and m:C accepted by v112. Assigned C1/C2 work is complete; broader common extensions remain separate. [Evidence](docs/EVIDENCE.md#c2) |
 | OQ3 | Paused by the human. The accepted fixed jointly nonlattice counterexample remains in Lean; paused B/D directions are not declared complete. [Counterexample](Shao/OQ3/SourceCounterexampleRoot.lean) |
-| OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. The human has resumed autonomous source-bound extensions; this does not accept every historical OQ4 extension. [Boundary](docs/CURRENT-STATUS.md#oq4) |
+| OQ4 | The assigned original fixed-law weak-window result and universal sharp sixth-root criterion are accepted. The common-third-moment changing-row extension is also accepted at v125: actual random-denominator comparison and uniform closed [a_j,1] window, including both endpoints and the true error-set supremum. This does not certify every historical OQ4 subclause. [Boundary](docs/CURRENT-STATUS.md#oq4) |
 | OQ5/OQ6 | Original S10/S12 comparison, S13 deletion support and full-tilt rho moments have accepted components. The rho-sensitive capped partial-law deletion producer and original-window four S14 expectation fees are accepted; compact fees, general S15 and full S11/OQ56 remain open. [Current frontier](docs/CURRENT-STATUS.md#oq56) |
 
 ## Selected accepted OQ56 components
@@ -43,3 +43,5 @@ Source baseline: [shao@35d4580](https://github.com/randomcat4/shao/tree/35d4580b
 - v123: bounded changing-row positive-boundary/studentized limits and deterministic-strip energy Laplace ratios; conditional same-kernel/coarser-law integral, moment and sample-law transport. Full changing-row shrinking windows and literal CDF/root applications remain open.
 
 - v124: literal normalized clipped/studentized statistic measurability and true retained signed-triple factorization; one common countably generated model on the same original space preserving normalized quantities and the listed statistic/vector laws. CDF, scalar coding and external probability applications remain open.
+
+- v125: common-third-moment changing-row uniform energy controls, center/middle/FAR and actual random-denominator asymptotics, and the complete explicit closed-window extension with a_j->0 and a_j*n_j^(1/6)->infinity. Also original finite base-law clipped-cost/deletion integrability. OQ56 probability/CDF/root applications remain open.
