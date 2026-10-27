@@ -1,0 +1,43 @@
+DECL Shao.OQ3.homogeneous_odd_hermite_sum_zero
+TYPE ∀ (P : MvPolynomial (Fin 2) ℝ) (k : ℕ),
+  P.IsHomogeneous (2 * k + 1) →
+    ∑ d ∈ P.support,
+        P.coeff d * Polynomial.eval 0 (Shao.OQ3.gaussianHermitePolynomial (d 0)) *
+          Polynomial.eval 0 (Shao.OQ3.gaussianHermitePolynomial (d 1)) =
+      0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_directional_cgf_odd_hermite_sum_zero
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (j : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ j) mu) →
+      ∀ (k : ℕ),
+        ∃ P,
+          P.IsHomogeneous (2 * k + 1) ∧
+            (∀ (u v : ℝ),
+                (MvPolynomial.eval ![u, v]) P =
+                  iteratedDeriv (2 * k + 1) (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) mu) 0) ∧
+              ∑ d ∈ P.support,
+                  P.coeff d * Polynomial.eval 0 (Shao.OQ3.gaussianHermitePolynomial (d 0)) *
+                    Polynomial.eval 0 (Shao.OQ3.gaussianHermitePolynomial (d 1)) =
+                0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussian_hermite_polynomial_odd_zero
+TYPE ∀ (k : ℕ), Polynomial.eval 0 (Shao.OQ3.gaussianHermitePolynomial (2 * k + 1)) = 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.homogeneous_odd_hermite_sum_zero._proof_1_1
+TYPE ∀ (k : ℕ) (d : Fin 2 →₀ ℕ), d 0 + d 1 = 2 * k + 1 → d 0 % 2 = 1 → ¬d 0 = 2 * (d 0 / 2) + 1 → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussian_hermite_polynomial_parity
+TYPE ∀ (n : ℕ) (x : ℝ),
+  Polynomial.eval (-x) (Shao.OQ3.gaussianHermitePolynomial n) =
+    (-1) ^ n * Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial n)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.homogeneous_odd_hermite_sum_zero._proof_1_2
+TYPE ∀ (k : ℕ) (d : Fin 2 →₀ ℕ), d 0 + d 1 = 2 * k + 1 → ¬d 0 % 2 = 1 → ¬d 1 = 2 * (d 1 / 2) + 1 → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

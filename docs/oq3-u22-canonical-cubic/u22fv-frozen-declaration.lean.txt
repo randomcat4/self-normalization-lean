@@ -1,0 +1,27 @@
+theorem gaussian_hermite_polynomial_parity (n : ℕ) (x : ℝ) :
+    (gaussianHermitePolynomial n).eval (-x) =
+      (-1 : ℝ) ^ n * (gaussianHermitePolynomial n).eval x
+
+theorem gaussian_hermite_polynomial_odd_zero (k : ℕ) :
+    (gaussianHermitePolynomial (2 * k + 1)).eval 0 = 0
+
+theorem homogeneous_odd_hermite_sum_zero
+    (P : MvPolynomial (Fin 2) ℝ) (k : ℕ) (hP : P.IsHomogeneous (2 * k + 1)) :
+    (∑ d ∈ P.support, P.coeff d *
+      (gaussianHermitePolynomial (d 0)).eval 0 *
+        (gaussianHermitePolynomial (d 1)).eval 0) = 0
+
+theorem actual_directional_cgf_odd_hermite_sum_zero
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior
+      (ProbabilityTheory.integrableExpSet
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ j : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ j) mu) (k : ℕ) :
+    ∃ P : MvPolynomial (Fin 2) ℝ, P.IsHomogeneous (2 * k + 1) ∧
+      (∀ u v : ℝ, MvPolynomial.eval ![u, v] P =
+        iteratedDeriv (2 * k + 1) (ProbabilityTheory.cgf
+          (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu) 0) ∧
+      (∑ d ∈ P.support, P.coeff d *
+        (gaussianHermitePolynomial (d 0)).eval 0 *
+          (gaussianHermitePolynomial (d 1)).eval 0) = 0

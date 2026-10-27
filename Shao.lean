@@ -226,10 +226,13 @@ import Shao.C2.UniformGaussianTailPolynomial
 import Shao.C2.UnitSecondEnergyLowerTailPayment
 import Shao.Checks.Boundaries
 import Shao.OQ3.ActualCGFDerivativeScaling
+import Shao.OQ3.ActualCGFFirstWeightGaussianZero
 import Shao.OQ3.ActualCGFNormalizedOcticPolynomial
 import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
 import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
+import Shao.OQ3.ActualCubicHermiteCorrection
+import Shao.OQ3.ActualMixedThirdMomentHermiteBound
 import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
@@ -272,6 +275,7 @@ import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
 import Shao.OQ3.CompactOpenDomainSixOrderEdgeworthPolynomialError
+import Shao.OQ3.CompactOpenDomainSixOrderGaussianHermiteIntegral
 import Shao.OQ3.CompactOpenDomainSixOrderGaussianPolynomialTail
 import Shao.OQ3.CompactOpenDomainSixOrderLogCubicFarFrequency
 import Shao.OQ3.CompactOpenDomainSixOrderLogCubicOscillatoryWindow
@@ -308,6 +312,7 @@ import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
+import Shao.OQ3.CubicHermiteLocalBound
 import Shao.OQ3.DirectionalCGFComplexHomogeneousPolynomial
 import Shao.OQ3.DirectionalCGFCumulantContinuity
 import Shao.OQ3.DirectionalCGFCumulantHomogeneousPolynomial
@@ -331,6 +336,7 @@ import Shao.OQ3.GaussianFiniteArcTube
 import Shao.OQ3.GaussianFiniteHermiteIntegral
 import Shao.OQ3.GaussianFourierMomentDerivative
 import Shao.OQ3.GaussianHermiteIntegral
+import Shao.OQ3.GaussianHermiteOddCorrection
 import Shao.OQ3.GaussianHermitePolynomialRecursor
 import Shao.OQ3.GaussianHermiteScaledDerivative
 import Shao.OQ3.GaussianMvPolynomialHermiteIntegral

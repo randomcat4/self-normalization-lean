@@ -1,0 +1,21 @@
+DECL Shao.OQ3.gaussian_hermite_first_four_local_bounds
+TYPE ∀ (x : ℝ),
+  |x| ≤ 1 →
+    |Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial 0)| ≤ 1 ∧
+      |Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial 1)| ≤ |x| ∧
+        |Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial 2)| ≤ 2 ∧
+          |Polynomial.eval x (Shao.OQ3.gaussianHermitePolynomial 3)| ≤ 4 * |x|
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.cubic_hermite_coefficient_sum_local_bound
+TYPE ∀ (b : Fin 4 → ℝ) (B : ℝ),
+  0 ≤ B →
+    (∀ (j : Fin 4), |b j| ≤ B) →
+      have P1 := fun x =>
+        1 / 6 *
+          ∑ j,
+            ↑(Nat.choose 3 ↑j) * b j * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial ↑j) *
+              Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (3 - ↑j));
+      P1 (0, 0) = 0 ∧ ∀ (x : ℝ × ℝ), √(x.1 ^ 2 + x.2 ^ 2) ≤ 1 → |P1 x| ≤ 16 / 3 * B * √(x.1 ^ 2 + x.2 ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

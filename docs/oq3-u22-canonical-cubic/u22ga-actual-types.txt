@@ -1,0 +1,146 @@
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_3
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 4] [NeZero 4], (4 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_5
+TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero M₀] {a : M₀} [IsReduced M₀] (n : ℕ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (beta c R : ℝ),
+        0 ≤ beta →
+          0 < c →
+            0 ≤ R →
+              (∀ p ∈ Theta, 0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det) →
+                (∀ p ∈ Theta,
+                    ∀ (xi eta : ℝ),
+                      R < √(xi ^ 2 + eta ^ 2) →
+                        ‖Shao.OQ3.jointCharacteristic (mu.tilted fun x => p.1 * x + p.2 * x ^ 2) xi eta‖ ≤
+                          1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                  have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                  have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+                  have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+                  have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+                  have A := fun p =>
+                    ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                      ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+                  have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+                  have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+                  have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+                  have Phi := fun p xi eta =>
+                    ∫ (y : Fin 2 → ℝ), Complex.exp (↑(xi * y 0 + eta * y 1) * Complex.I) ∂laws p;
+                  have b := fun p j => ∫ (y : Fin 2 → ℝ), y 0 ^ ↑j * y 1 ^ (3 - ↑j) ∂laws ↑p;
+                  have P1 := fun p x =>
+                    1 / 6 *
+                      ∑ j,
+                        ↑(Nat.choose 3 ↑j) * b p j * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial ↑j) *
+                          Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (3 - ↑j));
+                  ∃ C,
+                    0 < C ∧
+                      ∀ (p : ↑Theta),
+                        P1 p (0, 0) = 0 ∧
+                          (∀ (x : ℝ × ℝ), √(x.1 ^ 2 + x.2 ^ 2) ≤ 1 → |P1 p x| ≤ C * √(x.1 ^ 2 + x.2 ^ 2)) ∧
+                            ∀ (n : ℕ),
+                              1 ≤ n →
+                                have kappa := fun z j =>
+                                  iteratedDeriv j (ProbabilityTheory.cgf (fun y => z.1 * y 0 + z.2 * y 1) (laws ↑p)) 0;
+                                have a := fun z j =>
+                                  Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa z (↑j + 3)) / ↑√↑n ^ (↑j + 1);
+                                have S1 := fun z =>
+                                  ∑ q,
+                                    1 / ↑(↑q).factorial *
+                                      ∑ sigma, if ∑ i, (↑(sigma i) + 1) = 1 then ∏ i, a z (sigma i) else 0;
+                                ∀ (x : ℝ × ℝ),
+                                  MeasureTheory.Integrable
+                                      (fun z =>
+                                        Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * S1 z *
+                                          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+                                      MeasureTheory.volume ∧
+                                    ∫ (z : ℝ × ℝ),
+                                        Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * S1 z *
+                                          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+                                      ↑(2 * Real.pi * P1 p x * Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2) / √↑n)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_third_moment_gaussian_hermite_integral
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)),
+  MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) mu →
+    have M := fun z => ∫ (y : Fin 2 → ℝ), (z.1 * y 0 + z.2 * y 1) ^ 3 ∂mu;
+    have b := fun j => ∫ (y : Fin 2 → ℝ), y 0 ^ ↑j * y 1 ^ (3 - ↑j) ∂mu;
+    have P1 := fun x =>
+      1 / 6 *
+        ∑ j,
+          ↑(Nat.choose 3 ↑j) * b j * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial ↑j) *
+            Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (3 - ↑j));
+    ∀ (x : ℝ × ℝ),
+      MeasureTheory.Integrable
+          (fun z =>
+            Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * (Complex.I ^ 3 / 6) * ↑(M z) *
+              Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+          MeasureTheory.volume ∧
+        ∫ (z : ℝ × ℝ),
+            Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * (Complex.I ^ 3 / 6) * ↑(M z) *
+              Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+          ↑(2 * Real.pi * P1 x * Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_3
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 4] [NeZero 4], (4 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_1
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 2] [NeZero 2], (2 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_2
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 3] [NeZero 3], (3 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_2
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 3] [NeZero 3], (3 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_4
+TYPE ∀ {M₀ : Type u_1} [inst : Mul M₀] [inst_1 : Zero M₀] [NoZeroDivisors M₀] {a b : M₀},
+  a ≠ 0 → b ≠ 0 → (a * b = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_6
+TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero G₀] {a : G₀} (n : ℤ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_4
+TYPE ∀ {M₀ : Type u_1} [inst : Mul M₀] [inst_1 : Zero M₀] [NoZeroDivisors M₀] {a b : M₀},
+  a ≠ 0 → b ≠ 0 → (a * b = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_1
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 2] [NeZero 2], (2 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_7
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ), (↑n + 1 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound
+TYPE ∀ {iota : Type u_1} (P : iota → ℝ × ℝ → ℝ) (C K : ℝ),
+  0 ≤ C →
+    (∀ (p : iota) (x : ℝ × ℝ), √(x.1 ^ 2 + x.2 ^ 2) ≤ 1 → |P p x| ≤ C * √(x.1 ^ 2 + x.2 ^ 2)) →
+      ∀ (n : ℕ), 1 ≤ n → K ≤ √↑n → ∀ (p : iota) (x : ℝ × ℝ), √(x.1 ^ 2 + x.2 ^ 2) ≤ K / √↑n → |P p x| / √↑n ≤ C * K / ↑n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.sqrt_sample_scaled_local_correction_bound._simp_1_6
+TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero G₀] {a : G₀} (n : ℤ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_7
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ), (↑n + 1 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.compact_open_domain_first_hermite_correction_uniform._simp_1_5
+TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero M₀] {a : M₀} [IsReduced M₀] (n : ℕ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext]
+KIND theorem
