@@ -1,0 +1,7 @@
+Materialized exactly the parent-frozen repair02 target0458 as OriginalClippedCanonicalCoding.lean. The complete source is byte-identical to the accepted 500-line TXT. The only change relative to failed502 is deletion of old219 dsimp only at hfiniteN and old228 dsimp only at hstatistics0. The first is an observed native001 no-progress error; the second is an explicitly source-derived inference, not a machine-observed second error.
+
+The theorem preamble, head and closing, all53 head values,22 planned proof-data slots,18 used slots,14 ordinary lets,4 used producer witnesses,6 instance statements,69 have,39 standalone fun and5 funext are unchanged. hmodel/hcanonical normalization and every G1 Borel/product conversion remain exact. Full source-derived affected types/captures/joins remain bound to the accepted plan02. No new API, Prop, data, helper, instance, lambda, witness, premise, selector or capture was introduced.
+
+This is local exact materialization and deterministic validation only. No222 object or actual TYPE exists. Native001 RC1/one error/three warnings/noO/noAX remains preserved, and later blocks are not certified. Next: SAME independent affected SOURCE review of this exact source, then parent-controlled new native/AX gates if accepted.
+
+All original source scope, p51 candidate status, p54 repairs and Shao-Zhou2016 attribution remain. No physical s=0 identification, small fee, analytic envelope, deletion limit, external SZ applicability, full CDF, or OQ56/root completion is claimed. OQ3 remains PAUSED_BY_USER.
