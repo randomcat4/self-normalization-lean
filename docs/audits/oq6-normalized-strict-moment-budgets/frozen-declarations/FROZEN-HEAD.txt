@@ -1,0 +1,33 @@
+theorem actual_source_z_strict_truncated_moment_budgets
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) [IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)
+    (hξ : ∀ i : Fin n, Measurable (ξ i))
+    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)
+    (hξmean : ∀ i : Fin n, (∫ ω : Ω, ξ i ω ∂ν) = 0)
+    (hξenergy : (∑ i : Fin n, ∫ ω : Ω, (ξ i ω) ^ 2 ∂ν) = 1)
+    (Y : ℕ → Fin n → Ω → ℝ)
+    (hY : ∀ (k : ℕ) (i : Fin n), Measurable (Y k i))
+    (ε : ℕ → ℝ) (hε : ∀ k : ℕ, 0 < ε k)
+    (hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ)))
+    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)))
+    (herr : ∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k)
+    (z : ℝ) (hz : 1 ≤ z)
+    (cBudget : ℝ) (hcBudget : 0 < cBudget) :
+    let η : ℕ → Fin n → Ω → ℝ := fun (k : ℕ) =>
+      Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+    let Fz : ℝ → ℝ := fun (t : ℝ) => (z * t) ^ 2 * min |z * t| 1
+    let δ0 : Fin n → ℝ := fun (i : Fin n) => ∫ ω : Ω, Fz (ξ i ω) ∂ν
+    let δη : ℕ → Fin n → ℝ := fun (k : ℕ) (i : Fin n) =>
+      ∫ ω : Ω, Fz (η k i ω) ∂ν
+    let L0 : ℝ := ∑ i : Fin n, δ0 i
+    let Lη : ℕ → ℝ := fun (k : ℕ) => ∑ i : Fin n, δη k i
+    (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) →
+    L0 < cBudget * z ^ 2 →
+    (∀ i : Fin n, Integrable (fun (ω : Ω) => Fz (ξ i ω)) ν) ∧
+    (∀ (k : ℕ) (i : Fin n), Integrable (fun (ω : Ω) => Fz (η k i ω)) ν) ∧
+    (∀ i : Fin n,
+      Filter.Tendsto (fun (k : ℕ) => δη k i) Filter.atTop (nhds (δ0 i))) ∧
+    Filter.Tendsto Lη Filter.atTop (nhds L0) ∧
+    (∃ k0 : ℕ, ∀ k : ℕ, k0 ≤ k →
+      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2)
