@@ -1,0 +1,78 @@
+{
+  "schema": "oq56-unit233-affected-api-map-reuse-v1",
+  "atUTC": "2026-10-27T13:45:09.260174+00:00",
+  "currentSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/author-repair-01/P54ActualGoodsetFrontier.lean",
+    "sha256": "8281cbb3a10297297d6e92fce7c258ad2d0c0ccd7406aae63aefd3194beccbab",
+    "bytes": 14141,
+    "role": "newSource",
+    "coverage": "complete affected or exact retained provenance content"
+  },
+  "unchangedCompleteAPIMap": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/source-review-01/API-MAP.json",
+    "sha256": "f6f5bbe3071a9ce39dd880aab57678ff49be4beb4fa88b719b11da0b91715351",
+    "bytes": 102334,
+    "role": "sealed original independent complete-review payload",
+    "coverage": "exact independent evidence retained; unchanged scope reused"
+  },
+  "newProjectAPIs": [],
+  "newImports": [],
+  "affectedRule": "Same inherited Measurable composition of original uncurry-r and existing coordinate pair; explicit domain/type supplied",
+  "additionalActualStandardSource": {
+    "source": {
+      "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+      "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+      "bytes": 49519,
+      "role": "additional affected standard API source observation",
+      "coverage": "complete preamble1-31, product context367-413, Pi context569-586; old proof bodies not rereviewed"
+    },
+    "pinQueryBinding": {
+      "path": "C:/game/shao lean/coordination/pinned-api-20261026/endstrip-divconst-ofeval-query-response.json",
+      "sha256": "4aede9e78d9e6420bbfbb1b71a8e35ea10c7d92239fd9cb91860ce1b34c27f83",
+      "bytes": 1790,
+      "role": "previous exact pinned source-query provenance",
+      "coverage": "selected row for Constructions.lean and pin, no server action"
+    },
+    "mathlibCommit": "807d3836b165983210ee2ecf3cd28f239436949c",
+    "excerpts": [
+      {
+        "sourceLines": [
+          1,
+          31
+        ],
+        "completeText": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl, Mario Carneiro\n-/\nmodule\n\npublic import Mathlib.Data.Finset.Update\npublic import Mathlib.Data.Prod.TProd\npublic import Mathlib.Data.Set.UnionLift\npublic import Mathlib.GroupTheory.Coset.Defs\npublic import Mathlib.MeasureTheory.MeasurableSpace.Basic\npublic import Mathlib.MeasureTheory.MeasurableSpace.Instances\npublic import Mathlib.Order.Disjointed\n\n/-!\n# Constructions for measurable spaces and functions\n\nThis file provides several ways to construct new measurable spaces and functions from old ones:\n`Quotient`, `Subtype`, `Prod`, `Pi`, etc.\n-/\n\n@[expose] public section\n\nassert_not_exists Filter\n\nopen Set Function MeasureTheory\n\nuniverse uι\n\nvariable {α β γ δ δ' : Type*} {ι : Sort uι} {s : Set α}\n"
+      },
+      {
+        "sourceLines": [
+          367,
+          413
+        ],
+        "completeText": "section Prod\n\n/-- A `MeasurableSpace` structure on the product of two measurable spaces. -/\n@[instance_reducible]\ndef MeasurableSpace.prod {α β} (m₁ : MeasurableSpace α) (m₂ : MeasurableSpace β) :\n    MeasurableSpace (α × β) :=\n  m₁.comap Prod.fst ⊔ m₂.comap Prod.snd\n\ninstance Prod.instMeasurableSpace {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] :\n    MeasurableSpace (α × β) :=\n  m₁.prod m₂\n\ntheorem measurable_fst {_ : MeasurableSpace α} {_ : MeasurableSpace β} :\n    Measurable (Prod.fst : α × β → α) :=\n  Measurable.of_comap_le le_sup_left\n\ntheorem measurable_snd {_ : MeasurableSpace α} {_ : MeasurableSpace β} :\n    Measurable (Prod.snd : α × β → β) :=\n  Measurable.of_comap_le le_sup_right\n\nvariable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}\n\n@[fun_prop]\ntheorem Measurable.fst {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).1 :=\n  measurable_fst.comp hf\n\n@[fun_prop]\ntheorem Measurable.snd {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).2 :=\n  measurable_snd.comp hf\n\ntheorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a).1)\n    (hf₂ : Measurable fun a => (f a).2) : Measurable f :=\n  Measurable.of_le_map <|\n    sup_le\n      (by\n        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]\n        exact hf₁)\n      (by\n        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]\n        exact hf₂)\n\n@[fun_prop]\ntheorem Measurable.prodMk {β γ} {_ : MeasurableSpace β} {_ : MeasurableSpace γ} {f : α → β}\n    {g : α → γ} (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a) :=\n  Measurable.prod hf hg\n\n@[fun_prop]\n"
+      },
+      {
+        "sourceLines": [
+          569,
+          586
+        ],
+        "completeText": "\nsection Pi\n\nvariable {X : δ → Type*} [MeasurableSpace α]\n\ninstance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\n"
+      }
+    ],
+    "heads": {
+      "Measurable.prodMk": "theorem Measurable.prodMk {β γ} {_ : MeasurableSpace β} {_ : MeasurableSpace γ} {f : α → β} {g : α → γ} (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a)",
+      "measurable_pi_apply": "theorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a"
+    },
+    "sourceSHAAndBytesMatchExactPinnedQuery": true
+  },
+  "MeasurableComp": "Same inherited standard composition rule and original hr premise; no new project theorem/assumption. Full affected definitional uncurry/composition connection independently checked.",
+  "kernelInvocationCheckPending": true,
+  "requestedModel": "gpt-6.1-sol",
+  "requestedEffort": "xhigh",
+  "actualModel": null,
+  "actualEffort": null,
+  "usage": {
+    "inputTokens": null,
+    "cachedInputTokens": null,
+    "outputTokens": null,
+    "reasoningSubsetTokens": null
+  }
+}

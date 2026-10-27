@@ -1,0 +1,166 @@
+{
+  "schema": "oq56-unit233-exact-fixed-original-goodset-frontier-freeze-v1",
+  "atUTC": "2026-10-27T12:47:38.899003+00:00",
+  "status": "FROZEN_BEFORE_IMPLEMENTATION",
+  "module": "Shao.OQ6.P54ActualGoodsetFrontier",
+  "publicTheorem": "Shao.OQ6.P54.fixed_original_boundedPolylog_goodset_frontier",
+  "targetPath": "Shao/OQ6/P54ActualGoodsetFrontier.lean",
+  "preamble": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/freeze-01/FROZEN-PREAMBLE.txt",
+    "sha256": "fa4c20f2ade437bc4c7e96b4599f91f065eedad6b22f3fb39af029947e012c6b",
+    "bytes": 453
+  },
+  "head": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/freeze-01/FROZEN-HEAD.txt",
+    "sha256": "3b7c6de856a590d5587e71f2acc2df5ae23aa949a0821d85fcbb2eb85c46f3c0",
+    "bytes": 3411
+  },
+  "closing": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/freeze-01/FROZEN-CLOSING.txt",
+    "sha256": "dec7abdc1707abad7f491fc1401887042c5ba348106c0e5f327cb63d04b3ddcf",
+    "bytes": 19
+  },
+  "typedInventory": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/freeze-01/INTERFACE-INVENTORY.json",
+    "sha256": "415c1a5c842d368b83be581df050d23cca55408f460559d6bd2054efcbbd91a1",
+    "bytes": 24972
+  },
+  "parentIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit233/parent-stage1-freeze-intake.json",
+    "sha256": "26073b0ca3b456faafe22fb09a3942684f9f2a5354e34dec876f41aebe4b5410",
+    "bytes": 7020
+  },
+  "countsDerived": {
+    "ordinaryParameters": 15,
+    "callerPropPremises": 22,
+    "instances": 14,
+    "existentialWitnesses": 1,
+    "resultOrdinaryLets": 6,
+    "plannedProofLocalOrdinaryData": 18,
+    "plannedProofLocalProps": 30,
+    "pointwiseConclusions": 14,
+    "newHelperDeclarations": 0
+  },
+  "proofLocalOrdinaryData": [
+    {
+      "name": "Pn",
+      "type": "Measure (Fin n → Ω)",
+      "rhs": "sampleLaw n μ",
+      "scope": "after n",
+      "expandedRhs": "Measure.pi (fun _ : Fin n => μ)"
+    },
+    {
+      "name": "Rheight",
+      "type": "ℝ",
+      "rhs": "boundedPolylogHeight C a n",
+      "scope": "after n; only qualified concentration prerequisite",
+      "expandedRhs": "C * Real.rpow (Real.log (n : ℝ)) a"
+    },
+    {
+      "name": "gi",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i : Fin n) (x : Fin n → Ω) => g (x i)",
+      "scope": "finite measurability construction"
+    },
+    {
+      "name": "rij",
+      "type": "Fin n → Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i j : Fin n) (x : Fin n → Ω) => r (x i) (x j)",
+      "scope": "finite measurability construction"
+    },
+    {
+      "name": "rowSum",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun (i : Fin n) (x : Fin n → Ω) => ∑ j : Fin n, if i = j then 0 else r (x i) (x j)",
+      "scope": "finite measurability construction; actual off-diagonal rows"
+    },
+    {
+      "name": "rowEnergy",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => ∑ i : Fin n, (rowSum i x) ^ (2 : ℕ)",
+      "scope": "finite measurability construction; equals literal originalRows norm squared"
+    },
+    {
+      "name": "F",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => originalUpper n r x",
+      "scope": "actual upper statistic",
+      "expandedRhs": "fun x : Fin n → Ω => ∑ i : Fin n, ∑ j : Fin n, if i < j then r (x i) (x j) else 0"
+    },
+    {
+      "name": "E",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => projectionEnergy n g x",
+      "scope": "actual projection energy",
+      "expandedRhs": "fun x : Fin n → Ω => (∑ i : Fin n, (g (x i)) ^ (2 : ℕ)) / (n : ℝ)"
+    },
+    {
+      "name": "W",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => projectionW n g x",
+      "scope": "actual projection W",
+      "expandedRhs": "fun x : Fin n → Ω => (∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ)"
+    },
+    {
+      "name": "V",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => projectionV n g x",
+      "scope": "actual total projection scale",
+      "expandedRhs": "fun x : Fin n → Ω => Real.sqrt (projectionEnergy n g x)"
+    },
+    {
+      "name": "D",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => residualStatisticD n r x",
+      "scope": "actual remainder",
+      "expandedRhs": "fun x : Fin n → Ω => originalUpper n r x / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))"
+    },
+    {
+      "name": "d",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => if projectionV n g x = 0 then 0 else centeredSq n g r x / (projectionV n g x) ^ (2 : ℕ) - 1",
+      "scope": "actual total centeredDelta"
+    },
+    {
+      "name": "J",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => ∑ i : Fin n, (originalRows n r x i / ((n : ℝ) - 2)) ^ (2 : ℕ)",
+      "scope": "actual residualEnergyJ used by existing clip budget"
+    },
+    {
+      "name": "B1",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => C0 * (((1 + rho) * 1) / Real.sqrt (n : ℝ) + residualEnergyJ n r x / ((1 + rho) * 1 * Real.sqrt (n : ℝ)))",
+      "scope": "existing retained clip budget; never assumed to dominate |d|"
+    },
+    {
+      "name": "s",
+      "type": "(Fin n → Ω) → ℝ",
+      "rhs": "fun x : Fin n → Ω => Real.sqrt (centeredSq n g r x)",
+      "scope": "actual true centered studentizer"
+    },
+    {
+      "name": "B",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "boundedProductFailure n r w M q",
+      "expandedRhs": "({x : Fin n → Ω | K * (n : ℝ) < Shao.OQ6.BoundedProductEnvelopeTails.squareSum n w x} ∪ {x : Fin n → Ω | K * (n : ℝ) * q < |originalUpper n r x|}) ∪ {x : Fin n → Ω | K * (n : ℝ) ^ (2 : ℕ) * q < ‖originalRows n r x‖ ^ (2 : ℕ)}",
+      "scope": "qualified probability payer only; B not substituted for Hᶜ"
+    },
+    {
+      "name": "ZV",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | projectionV n g x = 0}",
+      "scope": "zero-event subset conclusion"
+    },
+    {
+      "name": "Zs",
+      "type": "Set (Fin n → Ω)",
+      "rhs": "{x : Fin n → Ω | Real.sqrt (centeredSq n g r x) = 0}",
+      "scope": "true studentizer zero-event subset conclusion"
+    }
+  ],
+  "noAssumptionChanges": true,
+  "targetGoodnessPaymentMeasurabilityCallbacks": 0,
+  "assembly": "Exact preamble+head+ := by and proof+closing. One public declaration; no new helper/top-level ordinary data without lead substantive freeze. Prop proof-local helper facts permitted within this unchanged interface.",
+  "qualification": "PENDING_IMPLEMENTATION_FRESH_INDEPENDENT_FULL_SOURCE_REVIEW_SERVER_NATIVE_SAME_FIRST_O_ALL_ACTUAL_MODULE_INDEX_TYPE_VALUE_RECURSIVE_AXIOM_AUDIT"
+}
