@@ -1,0 +1,159 @@
+{
+  "schema": "oq56-unit224-stage1-pinned-api-heads-v1",
+  "pinnedMathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "pinnedLean": "v4.36.0-rc1",
+  "rows": [
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+        "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+        "bytes": 49519,
+        "LF": 1186,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 371,
+      "lastLine1": 412,
+      "fullSourceWindow": "def MeasurableSpace.prod {α β} (m₁ : MeasurableSpace α) (m₂ : MeasurableSpace β) :\n    MeasurableSpace (α × β) :=\n  m₁.comap Prod.fst ⊔ m₂.comap Prod.snd\n\ninstance Prod.instMeasurableSpace {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] :\n    MeasurableSpace (α × β) :=\n  m₁.prod m₂\n\ntheorem measurable_fst {_ : MeasurableSpace α} {_ : MeasurableSpace β} :\n    Measurable (Prod.fst : α × β → α) :=\n  Measurable.of_comap_le le_sup_left\n\ntheorem measurable_snd {_ : MeasurableSpace α} {_ : MeasurableSpace β} :\n    Measurable (Prod.snd : α × β → β) :=\n  Measurable.of_comap_le le_sup_right\n\nvariable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}\n\n@[fun_prop]\ntheorem Measurable.fst {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).1 :=\n  measurable_fst.comp hf\n\n@[fun_prop]\ntheorem Measurable.snd {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).2 :=\n  measurable_snd.comp hf\n\ntheorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a).1)\n    (hf₂ : Measurable fun a => (f a).2) : Measurable f :=\n  Measurable.of_le_map <|\n    sup_le\n      (by\n        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]\n        exact hf₁)\n      (by\n        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]\n        exact hf₂)\n\n@[fun_prop]\ntheorem Measurable.prodMk {β γ} {_ : MeasurableSpace β} {_ : MeasurableSpace γ} {f : α → β}\n    {g : α → γ} (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a) :=\n  Measurable.prod hf hg\n\n",
+      "windowSHA256": "0f0f211f103172057672e4755be89f426bd1eb7c71eb9d9aefe9d33687d45687",
+      "note": "prod structures, measurable_fst/snd, Measurable.fst/snd/prodMk"
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean",
+        "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb",
+        "bytes": 49519,
+        "LF": 1186,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 571,
+      "lastLine1": 600,
+      "fullSourceWindow": "\nvariable {X : δ → Type*} [MeasurableSpace α]\n\ninstance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (X a)] : MeasurableSpace (∀ a, X a) :=\n  ⨆ a, (m a).comap fun b => b a\n\nvariable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]\n\ntheorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by\n  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,\n    MeasurableSpace.comap_comp, Function.comp_def, iSup_le_iff]\n\n@[fun_prop]\ntheorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a :=\n  measurable_pi_iff.1 measurable_id a\n\ntheorem MeasurableSpace.comap_le_comap_pi {g : (a : δ) → β → X a} (a : δ) :\n    .comap (g a) inferInstance ≤ pi.comap (fun b c ↦ g c b) := by\n  simpa only [pi, comap_iSup] using le_iSup_of_le a <| by measurability\n\ntheorem Measurable.eval {a : δ} {g : α → ∀ a, X a} (hg : Measurable g) :\n    Measurable fun x => g x a :=\n  (measurable_pi_apply a).comp hg\n\n@[fun_prop]\ntheorem Measurable.of_eval {f : α → ∀ a, X a} (hf : ∀ a, Measurable fun c => f c a) :\n    Measurable f :=\n  measurable_pi_iff.mpr hf\n\n@[deprecated (since := \"2026-08-20\")] alias measurable_pi_lambda := Measurable.of_eval\n",
+      "windowSHA256": "d0d82a038acba492d32779178b33b218dac1bb4d5bf17dcde3cd2603b687094c",
+      "note": "pi structure, measurable_pi_iff, measurable_pi_apply, Measurable.eval/of_eval"
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/coordination/pinned-api-20261026/Mathlib/MeasureTheory/Constructions/BorelSpace/Basic.lean",
+        "sha256": "5eede22bbb9d69e270ae3123180ab7cfecaf77f6c40aceedd39799b46a3fdb6f",
+        "bytes": 34545,
+        "LF": 751,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "firstLine1": 105,
+      "lastLine1": 116,
+      "fullSourceWindow": "/-- A space with `MeasurableSpace` and `TopologicalSpace` structures such that\nall open sets are measurable. -/\nclass OpensMeasurableSpace (α : Type*) [TopologicalSpace α] [h : MeasurableSpace α] : Prop where\n  /-- Borel-measurable sets are measurable. -/\n  borel_le : borel α ≤ h\n\n/-- A space with `MeasurableSpace` and `TopologicalSpace` structures such that\nthe `σ`-algebra of measurable sets is exactly the `σ`-algebra generated by open sets. -/\n@[wikidata Q91578938]\nclass BorelSpace (α : Type*) [TopologicalSpace α] [MeasurableSpace α] : Prop where\n  /-- The measurable sets are exactly the Borel-measurable sets. -/\n  measurable_eq : ‹MeasurableSpace α› = borel α\n",
+      "windowSHA256": "26e647b09f02e2c3cc498b01f5f1b9263d0241090388461651963778e7d895a4",
+      "note": "complete BorelSpace class field; instantiated to retained real tuple and real triple"
+    },
+    {
+      "packet": {
+        "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-canonical-consumer-frontier-01/parent-api-01/map-probability-integrability-ae-pinned-api-01.json",
+        "sha256": "e9411f724f8fbf57f74a07e8e2384d8dd2a2de2e1253b882ad856d55a1073f11",
+        "bytes": 21850,
+        "LF": 192,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "pinnedMathlib": "807d3836b165983210ee2ecf3cd28f239436949c",
+      "originalModule": "Mathlib.MeasureTheory.Function.L1Space.Integrable",
+      "originalFileSHA256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+      "completeAmbient": [
+        {
+          "line": 41,
+          "text": "noncomputable section"
+        },
+        {
+          "line": 43,
+          "text": "open ENNReal Filter MeasureTheory NNReal Set TopologicalSpace"
+        },
+        {
+          "line": 45,
+          "text": "open scoped Topology"
+        },
+        {
+          "line": 47,
+          "text": "variable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]"
+        },
+        {
+          "line": 48,
+          "text": "variable [NormedAddCommGroup β] [NormedAddCommGroup γ]"
+        },
+        {
+          "line": 51,
+          "text": "namespace MeasureTheory"
+        },
+        {
+          "line": 309,
+          "text": "section"
+        },
+        {
+          "line": 311,
+          "text": "variable {ε : Type*} [TopologicalSpace ε] [ESeminormedAddMonoid ε]"
+        },
+        {
+          "line": 351,
+          "text": "section"
+        },
+        {
+          "line": 353,
+          "text": "variable {α' : Type*} [MeasurableSpace α']"
+        }
+      ],
+      "completeSourceWindow": {
+        "first": 318,
+        "last": 398,
+        "source": "\n@[fun_prop]\ntheorem Integrable.smul_measure_nnreal {f : α → ε} (h : Integrable f μ) {c : ℝ≥0} :\n    Integrable f (c • μ) := by\n  apply h.smul_measure\n  simp\n\ntheorem integrable_smul_measure {f : α → ε} {c : ℝ≥0∞} (h₁ : c ≠ 0) (h₂ : c ≠ ∞) :\n    Integrable f (c • μ) ↔ Integrable f μ :=\n  ⟨fun h => by\n    simpa only [smul_smul, ENNReal.inv_mul_cancel h₁ h₂, one_smul] using\n      h.smul_measure (ENNReal.inv_ne_top.2 h₁),\n    fun h => h.smul_measure h₂⟩\n\ntheorem integrable_inv_smul_measure {f : α → ε} {c : ℝ≥0∞} (h₁ : c ≠ 0) (h₂ : c ≠ ∞) :\n    Integrable f (c⁻¹ • μ) ↔ Integrable f μ :=\n  integrable_smul_measure (by simpa using h₂) (by simpa using h₁)\n\ntheorem Integrable.to_average {f : α → ε} (h : Integrable f μ) : Integrable f ((μ univ)⁻¹ • μ) := by\n  rcases eq_or_ne μ 0 with (rfl | hne)\n  · rwa [smul_zero]\n  · apply h.smul_measure\n    simpa\n\ntheorem integrable_average [IsFiniteMeasure μ] {f : α → ε} :\n    Integrable f ((μ univ)⁻¹ • μ) ↔ Integrable f μ := by\n  classical\n  exact (eq_or_ne μ 0).by_cases (fun h => by simp [h]) fun h =>\n    integrable_smul_measure (ENNReal.inv_ne_zero.2 <| by finiteness)\n      (ENNReal.inv_ne_top.2 <| mt Measure.measure_univ_eq_zero.1 h)\n\nend\n\nsection\n\nvariable {α' : Type*} [MeasurableSpace α']\n\ntheorem integrable_map_measure {f : α → α'} {g : α' → ε}\n    (hg : AEStronglyMeasurable g (Measure.map f μ)) (hf : AEMeasurable f μ) :\n    Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by\n  simp_rw [← memLp_one_iff_integrable]\n  exact memLp_map_measure_iff hg hf\n\ntheorem Integrable.comp_aemeasurable {f : α → α'} {g : α' → ε}\n    (hg : Integrable g (Measure.map f μ)) (hf : AEMeasurable f μ) : Integrable (g ∘ f) μ :=\n  (integrable_map_measure hg.aestronglyMeasurable hf).mp hg\n\ntheorem Integrable.comp_measurable {f : α → α'} {g : α' → ε} (hg : Integrable g (Measure.map f μ))\n    (hf : Measurable f) : Integrable (g ∘ f) μ :=\n  hg.comp_aemeasurable hf.aemeasurable\n\nend\n\ntheorem _root_.MeasurableEmbedding.integrable_map_iff {f : α → δ} (hf : MeasurableEmbedding f)\n    {g : δ → ε} : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by\n  simp_rw [← memLp_one_iff_integrable]\n  exact hf.memLp_map_measure_iff\n\ntheorem integrable_map_equiv (f : α ≃ᵐ δ) (g : δ → ε) :\n    Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by\n  simp_rw [← memLp_one_iff_integrable]\n  exact f.memLp_map_measure_iff\n\ntheorem MeasurePreserving.integrable_comp {ν : Measure δ} {g : δ → ε} {f : α → δ}\n    (hf : MeasurePreserving f μ ν) (hg : AEStronglyMeasurable g ν) :\n    Integrable (g ∘ f) μ ↔ Integrable g ν := by\n  rw [← hf.map_eq] at hg ⊢\n  exact (integrable_map_measure hg hf.measurable.aemeasurable).symm\n\ntheorem MeasurePreserving.integrable_comp_of_integrable {ν : Measure δ} {g : δ → ε} {f : α → δ}\n    (hf : MeasurePreserving f μ ν) (hg : Integrable g ν) :\n    Integrable (g ∘ f) μ :=\n  hf.integrable_comp hg.aestronglyMeasurable |>.mpr hg\n\ntheorem MeasurePreserving.integrable_comp_emb {f : α → δ} {ν} (h₁ : MeasurePreserving f μ ν)\n    (h₂ : MeasurableEmbedding f) {g : δ → ε} : Integrable (g ∘ f) μ ↔ Integrable g ν :=\n  h₁.map_eq ▸ Iff.symm h₂.integrable_map_iff\n\ntheorem lintegral_edist_lt_top {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :\n    (∫⁻ a, edist (f a) (g a) ∂μ) < ∞ :=\n  lt_of_le_of_lt (lintegral_edist_triangle hf.aestronglyMeasurable aestronglyMeasurable_zero)\n"
+      },
+      "note": "integrable_map_measure plus MeasurePreserving.integrable_comp/of_integrable; ε specialized to ℝ."
+    },
+    {
+      "packet": {
+        "path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json",
+        "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568",
+        "bytes": 445371,
+        "LF": 1613,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "owner": "MeasureTheory/MeasurableSpace/Basic",
+      "completeSourceWindow": {
+        "from": 233,
+        "to": 236,
+        "text": "233: theorem measurable_id'' {m mα : MeasurableSpace α} (hm : m ≤ mα) : @Measurable α α mα m id :=\n234:   measurable_id.mono le_rfl hm\n235: \n236: theorem measurable_from_top [MeasurableSpace β] {f : α → β} : Measurable[⊤] f := fun _ _ => trivial"
+      },
+      "completeAmbient": "{α : Type*}; {m mα : MeasurableSpace α}; hm : m ≤ mα; identity measurable from mα to m.",
+      "note": "Exact saved public source head; no new server check. Actual identity application also appears in accepted OriginalKernelObservableTransport lines105–106."
+    },
+    {
+      "packet": {
+        "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-canonical-double-ghost-row-moments-188/author-stage1-01/primary-api-bindings.json",
+        "sha256": "77a89f32d3c7b08d7c7c2cb8879f48c275a17dfba7eaf532db46e999fdee7097",
+        "bytes": 63939,
+        "LF": 1558,
+        "CR": 0,
+        "utf8Bom": false
+      },
+      "originalSource": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/Dynamics/Ergodic/MeasurePreserving.lean",
+        "sha256": "c4623b5a97ea419bfa2698cc8643e1aa937a5e1fec3501bdb56e07159f0decde",
+        "bytes": 11787,
+        "mtime_ns": "1792382595000000000",
+        "module": "Mathlib/Dynamics/Ergodic/MeasurePreserving.lean",
+        "lines": [
+          94,
+          96
+        ]
+      },
+      "completeStructure": "structure MeasurePreserving (f : α → β)\n  (μa : Measure α := by volume_tac) (μb : Measure β := by volume_tac) : Prop where\n  protected measurable : Measurable f\n  protected map_eq : map f μa = μb",
+      "completeAmbient": "variable {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]\n\nnamespace MeasureTheory\n\nvariable {μa : Measure α} {μb : Measure β} {μc : Measure γ}",
+      "note": "MeasurePreserving constructor has measurable and map_eq only. Retained source window, not a new theorem claim."
+    }
+  ],
+  "LeanCalls": 0,
+  "serverCalls": 0,
+  "elaborated": false,
+  "note": "Only bearing interface/source windows reused. No API source download or unchanged producer proof review."
+}

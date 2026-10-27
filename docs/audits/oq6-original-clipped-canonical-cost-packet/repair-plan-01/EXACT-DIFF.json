@@ -1,0 +1,101 @@
+{
+  "schema": "oq56-unit224-plan01-exact-diff-v1",
+  "oldSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit224/author-01/OriginalClippedCanonicalCostPacket.lean",
+    "sha256": "d26a25153636b62e0a022949142856df921c140b79900999b3dc35f1f0291455",
+    "bytes": 26142,
+    "LF": 459,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "target": {
+    "path": "C:/game/shao lean/drafts/oq56/unit224/repair-plan-01/PROPOSED-FULL-SOURCE.txt",
+    "sha256": "984e0c16d0b9e53f6b5aef70a2d0f4af14e43a197aecc88def66ebf260f58b60",
+    "bytes": 26675,
+    "LF": 468,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "edits": [
+    {
+      "id": "E1-full-A-norm",
+      "old": "  have hAm : Measurable[mN₀, borel ℝ] A := hD1m.abs\n",
+      "new": "  have hAm : Measurable[mN₀, borel ℝ] A := by\n    simpa only [Real.norm_eq_abs] using hD1m.norm\n",
+      "facts": [
+        "hAm"
+      ],
+      "reason": "Replace the nonexistent Measurable.abs join by the accepted real norm route.",
+      "oldFirstLine1": 369,
+      "oldLF": 1,
+      "oldTextSHA256": "7b0919c61b68d91eb00357b81635808b5c997232b3414f367a6694932bb2b4c5",
+      "newTextSHA256": "b48c59c1573d3c8db7a52fdff9ad80f1f25297f89ab1b4d572f626205af9cc35",
+      "targetFirstLine1": 369,
+      "newLF": 2
+    },
+    {
+      "id": "E2-deleted-A-norm",
+      "old": "  have hAdelm (i : Fin n) :\n      Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => Adel ζ i) :=\n    (hDeletedMeasurable i).1.abs\n",
+      "new": "  have hAdelm (i : Fin n) :\n      Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => Adel ζ i) := by\n    simpa only [Real.norm_eq_abs] using (hDeletedMeasurable i).1.norm\n",
+      "facts": [
+        "hAdelm"
+      ],
+      "reason": "Same norm route for the literal deleted D absolute value; no alternative version.",
+      "oldFirstLine1": 370,
+      "oldLF": 3,
+      "oldTextSHA256": "83465decb61018b7ea0cb7cf4085f2e09f339c526b0f70de025d09d68cfd5925",
+      "newTextSHA256": "d9868a98b5bf526b931b4442544fb5fcc98cc8a9e99eb243538778f208e58e00",
+      "targetFirstLine1": 371,
+      "newLF": 3
+    },
+    {
+      "id": "E3-explicit-identity-pi",
+      "old": "  have hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → (Fin n → Ω)) := by\n    apply Measurable.of_eval\n    intro i\n    exact hidΩ.comp\n      (show Measurable[mN, mΩ] (fun ζ : Fin n → Ω => ζ i) from measurable_pi_apply i)\n",
+      "new": "  have hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → (Fin n → Ω)) := by\n    apply (@measurable_pi_iff (Fin n → Ω) (Fin n) (fun _ : Fin n => Ω)\n      mN (fun _ : Fin n => m₀) (id : (Fin n → Ω) → (Fin n → Ω))).2\n    intro i\n    exact hidΩ.comp\n      (@measurable_pi_apply (Fin n) (fun _ : Fin n => Ω)\n        (fun _ : Fin n => mΩ) i)\n",
+      "facts": [
+        "hidN"
+      ],
+      "reason": "Bind original domain mN and reduced coordinate structure m₀ explicitly, exactly as the accepted221 same-carrier identity proof.",
+      "oldFirstLine1": 382,
+      "oldLF": 5,
+      "oldTextSHA256": "9aeec26d4090272366f7210a8fb58a62b265eff65201da6b3ead8145b8957b1a",
+      "newTextSHA256": "b63a0d7d8f9d68106b666963a8bae9c6225ffc40e73226b84d47054f9ed0cc3a",
+      "targetFirstLine1": 383,
+      "newLF": 7
+    },
+    {
+      "id": "E4-explicit-identity-MP-constructor",
+      "old": "  have hId : @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀ :=\n    ⟨hidN, hP₀map.symm⟩\n",
+      "new": "  have hId : @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀ :=\n    @MeasurePreserving.mk (Fin n → Ω) (Fin n → Ω) mN mN₀\n      id P P₀ hidN hP₀map.symm\n",
+      "facts": [
+        "hId"
+      ],
+      "reason": "Eliminate same-carrier instance re-synthesis by supplying both constructor measurable-space parameters explicitly; map orientation unchanged.",
+      "oldFirstLine1": 387,
+      "oldLF": 2,
+      "oldTextSHA256": "2ff01e7949600cf2d1f88889e0dd23f0b7c2483b6b514652d2ce4ac28741ef01",
+      "newTextSHA256": "279fa5c1536d5b5aa6c28c91dd053de108c5e7677436b8d2be76e3e1fc13a831",
+      "targetFirstLine1": 390,
+      "newLF": 3
+    },
+    {
+      "id": "E5-deletion-difference-norm-props",
+      "old": "    exact ⟨(hAm.sub (hAdelm i)).abs, (hB1m.sub (hB1delm i)).abs,\n      ((hAm.sub (hAdelm i)).abs).add ((hB1m.sub (hB1delm i)).abs),\n      (hAI.sub (hAdelI i)).abs, (hB1I.sub (hB1delI i)).abs,\n      ((hAI.sub (hAdelI i)).abs).add ((hB1I.sub (hB1delI i)).abs)⟩\n",
+      "new": "    have hADm : Measurable[mN₀, borel ℝ]\n        (fun ζ : Fin n → Ω => |A ζ - Adel ζ i|) := by\n      simpa only [Real.norm_eq_abs] using (hAm.sub (hAdelm i)).norm\n    have hBDm : Measurable[mN₀, borel ℝ]\n        (fun ζ : Fin n → Ω => |B1 ζ - B1del ζ i|) := by\n      simpa only [Real.norm_eq_abs] using (hB1m.sub (hB1delm i)).norm\n    exact ⟨hADm, hBDm, hADm.add hBDm,\n      (hAI.sub (hAdelI i)).abs, (hB1I.sub (hB1delI i)).abs,\n      ((hAI.sub (hAdelI i)).abs).add ((hB1I.sub (hB1delI i)).abs)⟩\n",
+      "facts": [
+        "hDiff",
+        "hADm (inside hDiff)",
+        "hBDm (inside hDiff)"
+      ],
+      "reason": "Four repeated invalid measurable abs expressions are replaced by two explicitly typed Prop proofs; legitimate Integrable.abs applications remain byteexact.",
+      "oldFirstLine1": 411,
+      "oldLF": 4,
+      "oldTextSHA256": "f3a89fab3e12857934d6c814697f4ddf96051c309bde5a33bbeea05d3cc9135c",
+      "newTextSHA256": "c05a22aee34e2f7818612bd2c34673996dc7868e79c8852f8689e71533a37729",
+      "targetFirstLine1": 415,
+      "newLF": 9
+    }
+  ],
+  "noOtherSourceChanges": true,
+  "noPreambleHeadClosingChanges": true,
+  "noWarningCleanup": true
+}
