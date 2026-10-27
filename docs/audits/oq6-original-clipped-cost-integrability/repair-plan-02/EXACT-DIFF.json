@@ -1,0 +1,46 @@
+{
+  "schema": "oq56-unit223-proof-repair-plan02-diff-v1",
+  "baseline": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/author-01/repair-01/OriginalClippedCostIntegrability.lean",
+    "sha256": "541197e477686ed8656ef9a5c66cb652224013946dfbf932e6f93d277a697464",
+    "bytes": 11095,
+    "LF": 227,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "target": {
+    "path": "C:/game/shao lean/drafts/oq56/unit223/repair-plan-02/PROPOSED-FULL-SOURCE.txt",
+    "sha256": "5755aedbaa2b45c346796f1ed78307a102b00ed16908367730809ee23aed0863",
+    "bytes": 11287,
+    "LF": 232,
+    "CR": 0,
+    "utf8Bom": false
+  },
+  "status": "PLAN_ONLY_NOT_IMPLEMENTED",
+  "replacements": [
+    {
+      "name": "hD2",
+      "old": "  have hD2 : MemLp D 2 P := by\n    simpa only [D, residualStatisticD, F,\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper,\n      Shao.OQ5.P35.unorderedPairSum, div_eq_mul_inv] using\n      hF2.mul_const (N * ((n : ℝ) - 1))⁻¹\n",
+      "new": "  have hD2 : MemLp D 2 P := by\n    change MemLp (fun ξ : Fin n → Ω =>\n      F ξ / (N * ((n : ℝ) - 1))) 2 P\n    simpa only [div_eq_mul_inv] using\n      hF2.mul_const (N * ((n : ℝ) - 1))⁻¹\n",
+      "observedErrorLine": 130
+    },
+    {
+      "name": "hDdel2",
+      "old": "  have hDdel2 (i : Fin n) :\n      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P := by\n    apply ((hF2.sub (hpsi2 i)).mul_const (N * ((n : ℝ) - 1))⁻¹).congr\n    exact ae_of_all P (fun ξ : Fin n → Ω => by\n      change (F ξ - psi ξ i) * (N * ((n : ℝ) - 1))⁻¹ =\n        Shao.OQ5.P35.unorderedPairSum\n          (Shao.OQ6.ResidualDeletion.eraseIncident\n            (fun j k : Fin n => r (ξ j) (ξ k)) i) /\n          (N * ((n : ℝ) - 1))\n      rw [← div_eq_mul_inv]\n      congr 1\n      have hIncident :=\n        Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident\n          (fun j k : Fin n => r (ξ j) (ξ k))\n          (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i\n      change F ξ - Shao.OQ5.P35.unorderedPairSum\n        (Shao.OQ6.ResidualDeletion.eraseIncident\n          (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i at hIncident\n      linarith only [hIncident])\n",
+      "new": "  have hDdel2 (i : Fin n) :\n      MemLp (fun ξ : Fin n → Ω => Ddel ξ i) 2 P := by\n    have hDeletedAE :\n        (fun ξ : Fin n → Ω =>\n          (F ξ - psi ξ i) * (N * ((n : ℝ) - 1))⁻¹) =ᵐ[P]\n        (fun ξ : Fin n → Ω => Ddel ξ i) := by\n      exact ae_of_all P (fun ξ : Fin n → Ω => by\n        change (F ξ - psi ξ i) * (N * ((n : ℝ) - 1))⁻¹ =\n          Shao.OQ5.P35.unorderedPairSum\n            (Shao.OQ6.ResidualDeletion.eraseIncident\n              (fun j k : Fin n => r (ξ j) (ξ k)) i) /\n            (N * ((n : ℝ) - 1))\n        rw [← div_eq_mul_inv]\n        congr 1\n        have hIncident :=\n          Shao.OQ6.ResidualDeletion.unorderedPairSum_sub_eraseIncident\n            (fun j k : Fin n => r (ξ j) (ξ k))\n            (fun j k : Fin n => hrsymm (ξ j) (ξ k)) i\n        change F ξ - Shao.OQ5.P35.unorderedPairSum\n          (Shao.OQ6.ResidualDeletion.eraseIncident\n            (fun j k : Fin n => r (ξ j) (ξ k)) i) = psi ξ i at hIncident\n        linarith only [hIncident])\n    exact (memLp_congr_ae hDeletedAE).mp\n      ((hF2.sub (hpsi2 i)).mul_const (N * ((n : ℝ) - 1))⁻¹)\n",
+      "observedErrorLines": [
+        136,
+        137
+      ]
+    }
+  ],
+  "prefixBeforeH_D2Unchanged": true,
+  "fullHJISuffixUnchanged": true,
+  "newOrdinaryData": 0,
+  "addedDerivedProps": [
+    "hDeletedAE"
+  ],
+  "addedTypedInlineLambdas": 3,
+  "sourceWasNotEdited": true,
+  "newNativeCalls": 0
+}

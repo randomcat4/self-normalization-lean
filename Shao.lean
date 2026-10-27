@@ -528,6 +528,9 @@ import Shao.OQ4.RowBlockGaussianLimit
 import Shao.OQ4.RowEnergyLaplace
 import Shao.OQ4.RowPolygonalFDD
 import Shao.OQ4.RowPositiveBoundaryStudentized
+import Shao.OQ4.RowRandomDenominatorAsymptotic
+import Shao.OQ4.RowUniformConditionalEnergy
+import Shao.OQ4.RowWindowProduct
 import Shao.OQ4.SparseCriticalDenominator
 import Shao.OQ4.SparseOriginalIIDTransport
 import Shao.OQ4.SparseOriginalStrictCritical
@@ -737,6 +740,7 @@ import Shao.OQ6.NormalizedRemainderEnvelope
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalBoundedFourPayments
 import Shao.OQ6.OriginalClippedComparisonPayments
+import Shao.OQ6.OriginalClippedCostIntegrability
 import Shao.OQ6.OriginalClippedExpectationFees
 import Shao.OQ6.OriginalClippedStatisticMeasurable
 import Shao.OQ6.OriginalCompactExpectationFees

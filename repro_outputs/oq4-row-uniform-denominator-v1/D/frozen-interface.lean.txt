@@ -1,0 +1,171 @@
+import Shao.OQ4.RandomDenominatorAsymptotic
+import Shao.OQ4.RowUniformConditionalEnergy
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+
+namespace Shao.OQ4.RowRandomDenominatorAsymptotic
+
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open RandomDenominatorFarTail (randomDenominatorEvent farMainTerm)
+open RandomDenominatorAsymptotic
+  (centerHeight middleIndices middleHeight middleLayer middleEvent middleSumConstant)
+open UniformConditionalEnergy (energyCoshExcessIntegral)
+open scoped BigOperators Topology
+
+-- PRIVATE 1. Original third-moment premise pays finite FAR's square integrability.
+private theorem lower_moments_integrable
+    (ν : Measure ℝ) [IsProbabilityMeasure ν]
+    (h3 : Integrable (fun x : ℝ => |x| ^ 3) ν) :
+    Integrable (fun x : ℝ => x) ν ∧
+      Integrable (fun x : ℝ => x ^ 2) ν
+
+-- PRIVATE 2. All finite signs and center/middle thresholds are derived on a tail.
+private theorem eventual_finite_conditions
+    (n : ℕ → ℕ) (h : ℕ → ℝ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ᶠ j in atTop, 0 < n j ∧ 0 < h j ∧
+      2 * ε ≤ (n j : ℝ) / h j ^ 2
+
+-- PRIVATE 3. Actual row strip over the exact existing literal main term.
+private theorem closedStrip_relative_main_tendsto
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)) / farMainTerm (n j) (h j))
+      atTop (𝓝 (1 : ℝ))
+
+-- PRIVATE 4. Signed exponent difference, with only eventual admissibility.
+private theorem centerHeight_tail_geometry
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (d : ℝ) :
+    (∀ᶠ j in atTop, h j / 2 ≤ centerHeight (n j) (h j) d ∧
+      centerHeight (n j) (h j) d ≤ 2 * h j) ∧
+    Tendsto (fun j =>
+      (n j : ℝ) / centerHeight (n j) (h j) d ^ 2 -
+        (n j : ℝ) / h j ^ 2) atTop (𝓝 (-d))
+
+-- PUBLIC 1. Every fixed signed center perturbation under actual changing laws.
+theorem varying_row_center_probability_ratio_tendsto
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (d : ℝ) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (centerHeight (n j) (h j) d)) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (Real.exp (lambda * d)))
+
+-- PRIVATE 5. Actual lower-center strict energy deviation, at original h_j² scale.
+private theorem center_deviation_relative_tendsto_zero
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (ε : ℝ) (hε : 0 < ε) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          ((@Shao.closedStrip (n j) (centerHeight (n j) (h j) (-ε))) ∩
+            {a : Shao.Path (n j) |
+              ε * h j ^ 2 < |Shao.energy a - (n j : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC 2. Whole literal middle event and its growing finite layer collection.
+theorem varying_row_middle_relative_tendsto_zero
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ)))
+    (ε : ℝ) (hε : 0 < ε) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (middleEvent (n j) (h j) ε) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (0 : ℝ))
+
+-- PRIVATE 6. Pure scalar exponential payment for the new varying-row FAR limit.
+private theorem time_mul_exp_neg_tendsto
+    (t : ℕ → ℝ) (δ : ℝ) (hδ : 0 < δ)
+    (ht : Tendsto t atTop atTop) :
+    Tendsto (fun j => t j * Real.exp (-δ * t j)) atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC 3. Entire actual FAR event, including Q=2n; s>4λ chosen body-locally.
+theorem varying_row_far_relative_closedStrip_tendsto_zero
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (randomDenominatorEvent (n j) (h j) ∩
+            {a : Shao.Path (n j) | 2 * (n j : ℝ) ≤ Shao.energy a}) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC 4. Actual changing-row weak random denominator over actual closedStrip.
+theorem varying_row_randomDenominator_relative_closedStrip_tendsto
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ) (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3) atTop (𝓝 (0 : ℝ))) :
+    Tendsto (fun j =>
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (randomDenominatorEvent (n j) (h j)) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (h j)))
+      atTop (𝓝 (1 : ℝ))
+
+end Shao.OQ4.RowRandomDenominatorAsymptotic
+end
