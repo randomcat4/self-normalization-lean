@@ -1,0 +1,41 @@
+DECL Shao.OQ3.uniform_pair_moment_edgeworth_exponential_error
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure (Fin 2 → ℝ)) (M3 M4 : ℝ),
+  (∀ (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 3) (law i)) →
+    (∀ (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ 3 ∂law i ≤ M3) →
+      (∀ (i : ι), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ 4) (law i)) →
+        (∀ (i : ι), ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ 4 ∂law i ≤ M4) →
+          have m3 := fun i u v => ∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ 3 ∂law i;
+          have m4 := fun i u v => ∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ 4 ∂law i;
+          have Qn := fun i n u v =>
+            -↑(u ^ 2 + v ^ 2) / 2 - Complex.I * ↑(m3 i u v) / (6 * ↑√↑n) +
+              ↑(m4 i u v - 3 * (u ^ 2 + v ^ 2) ^ 2) / (24 * ↑n);
+          have Pn := fun i n u v =>
+            Complex.exp (-↑(u ^ 2 + v ^ 2) / 2) *
+              (1 - Complex.I * ↑(m3 i u v) / (6 * ↑√↑n) +
+                ↑((m4 i u v - 3 * (u ^ 2 + v ^ 2) ^ 2) / 24 - m3 i u v ^ 2 / 72) / ↑n);
+          ∃ C delta,
+            0 < C ∧
+              0 < delta ∧
+                delta ≤ 1 ∧
+                  ∀ (n : ℕ),
+                    1 ≤ n →
+                      ∀ (i : ι) (u v : ℝ),
+                        √(u ^ 2 + v ^ 2) ≤ delta * √↑n →
+                          ‖Complex.exp (Qn i n u v) - Pn i n u v‖ ≤
+                            C * (√(u ^ 2 + v ^ 2) ^ 7 + √(u ^ 2 + v ^ 2) ^ 8 + √(u ^ 2 + v ^ 2) ^ 9) / (↑n * √↑n) *
+                              Real.exp (-(u ^ 2 + v ^ 2) / 8)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_projection_signed_moment_bound
+TYPE ∀ (law : MeasureTheory.Measure (Fin 2 → ℝ)) (m : ℕ),
+  MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ m) law →
+    ∀ (u v : ℝ),
+      MeasureTheory.Integrable (fun y => (u * y 0 + v * y 1) ^ m) law ∧
+        |∫ (y : Fin 2 → ℝ), (u * y 0 + v * y 1) ^ m ∂law| ≤
+          √(u ^ 2 + v ^ 2) ^ m * ∫ (y : Fin 2 → ℝ), √(y 0 ^ 2 + y 1 ^ 2) ^ m ∂law
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.uniform_pair_moment_edgeworth_exponential_error._simp_1_1
+TYPE ∀ {M : Type u_2} [inst : Monoid M] (a : M) (m n : ℕ), (a ^ m) ^ n = a ^ (m * n)
+AXIOMS []
+KIND theorem

@@ -1,0 +1,25 @@
+DECL Shao.OQ3.centered_cgf_fifth_to_eighth_derivatives
+TYPE ∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (mu : MeasureTheory.Measure Ω) [MeasureTheory.IsProbabilityMeasure mu]
+  (X : Ω → ℝ),
+  0 ∈ interior (ProbabilityTheory.integrableExpSet X mu) →
+    ∫ (w : Ω), X w ∂mu = 0 →
+      have m := fun k => ∫ (w : Ω), X w ^ k ∂mu;
+      have kappa := fun k => iteratedDeriv k (ProbabilityTheory.cgf X mu) 0;
+      kappa 5 = m 5 - 10 * m 3 * m 2 ∧
+        kappa 6 = m 6 - 15 * m 4 * m 2 - 10 * m 3 ^ 2 + 30 * m 2 ^ 3 ∧
+          kappa 7 = m 7 - 21 * m 5 * m 2 - 35 * m 4 * m 3 + 210 * m 3 * m 2 ^ 2 ∧
+            kappa 8 =
+              m 8 - 28 * m 6 * m 2 - 56 * m 5 * m 3 - 35 * m 4 ^ 2 + 420 * m 4 * m 2 ^ 2 + 560 * m 3 ^ 2 * m 2 -
+                630 * m 2 ^ 4
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_moment_cgf_derivative_recursion
+TYPE ∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (mu : MeasureTheory.Measure Ω) [MeasureTheory.IsProbabilityMeasure mu]
+  (X : Ω → ℝ),
+  0 ∈ interior (ProbabilityTheory.integrableExpSet X mu) →
+    ∀ (n : ℕ),
+      ∫ (w : Ω), X w ^ (n + 1) ∂mu =
+        ∑ j ∈ Finset.range (n + 1),
+          ↑(n.choose j) * iteratedDeriv (j + 1) (ProbabilityTheory.cgf X mu) 0 * ∫ (w : Ω), X w ^ (n - j) ∂mu
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
