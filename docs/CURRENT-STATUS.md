@@ -1,6 +1,6 @@
 # Current mathematical status
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v123. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v124. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
 
 ## C1 and C2
 
@@ -33,6 +33,7 @@ OQ56 remains open. The following are accepted components, rather than a full-roo
 | v121 | 217 actual projection p-moment rate and combined compact analytic cost | Explicit2<p<=3 and true projection p-integrability; original n/law/continuouscap and all21 outputs; probability/CDF application remains open |
 | v122 | 218 common countably generated observable sub-sigma reduction | Same arbitrary space, pointwise joint kernel and all countable scalar observables, including empty spaces; law/integral/moment/CDF transport remains open |
 | v123 | 219 conditional same-kernel/coarser-law transport; paired OQ4 changing-row positive-boundary and energy Laplace results | Same normalized h/mu and explicit reduced measurability; row common third moment, exact positive-boundary or deterministic-wall scales only; remaining full windows/CDF/root applications open |
+| v124 | 220 literal normalized clipped/studentized observables; 221 common countably generated original model and sample/statistic/vector laws | Same original space/kernel/law and n coefficients, common m0 before finite parameters, physical s=0 distinct from V=0; scalar coding/CDF/external application still open |
 
 The v117 deletion quantities omit the deleted coordinate and do not carry a good-event indicator. They retain the original n, n-1 and n-2 normalizations. Their exact signed identities, reverse-triangle bound, measurable retained-coordinate factorization and full definition values are reviewed.
 
@@ -43,3 +44,5 @@ Unit214 now supplies the public rho-sensitive capped partial-law deletion interf
 ## Acceptance meaning
 
 Every accepted exact source has a qualified independent complete statement/proof/actual-type review, required full non-theorem-value coverage and server kernel/recursive-axiom evidence. Root reuses those exact seals and verifies range, interfaces, interactions and one appropriate integration gate. Failures, warning records, first original objects and author history remain preserved. Auxiliary declaration counts are never completion percentages. No novelty or firstness certification is implied.
+
+Unit220 proves the actual observables measurable and factors only the retained signed (Ddel,Jdel,B1del) triple; cap/deletedTest are full-sample functions. Unit221 combines218/219/220 into one common countably generated reduced model on the same original Omega, preserving literal normalized quantities and finite/empty/deleted product, statistic and signed-vector laws. Its explicit observable family f is zero. It does not identify a standard Borel model or establish scalar coding, external CDF applicability, atom/reflection or zero-event probability payments.
