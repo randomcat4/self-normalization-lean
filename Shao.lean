@@ -225,6 +225,8 @@ import Shao.C2.TwoSided
 import Shao.C2.UniformGaussianTailPolynomial
 import Shao.C2.UnitSecondEnergyLowerTailPayment
 import Shao.Checks.Boundaries
+import Shao.OQ3.ActualCGFDerivativeScaling
+import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
@@ -255,10 +257,12 @@ import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCharacteristicMoments
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
+import Shao.OQ3.CompactOpenDomainEdgeworthCGFIdentification
 import Shao.OQ3.CompactOpenDomainEdgeworthPolynomialError
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
 import Shao.OQ3.CompactOpenDomainLogMomentApproximation
 import Shao.OQ3.CompactOpenDomainNormalizedIIDLogExponent
+import Shao.OQ3.CompactOpenDomainOcticCGFLogRemainder
 import Shao.OQ3.CompactOpenDomainPairProbability
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
@@ -267,6 +271,7 @@ import Shao.OQ3.CompactOpenDomainStandardizedGaussianError
 import Shao.OQ3.CompactOpenDomainStandardizedLocalGaussian
 import Shao.OQ3.CompactOpenDomainStandardizedMiddleFrequency
 import Shao.OQ3.CompactOpenDomainTiltedFrequencyGap
+import Shao.OQ3.CompactOpenDomainUniformCGFCumulantBounds
 import Shao.OQ3.CompactOpenDomainWeightedFarFrequency
 import Shao.OQ3.CompactOpenDomainWeightedGaussianWindow
 import Shao.OQ3.CompactOpenDomainWeightedLocalError
@@ -280,8 +285,10 @@ import Shao.OQ3.CompactTiltLayerMassBound
 import Shao.OQ3.CompactTiltWeakCramer
 import Shao.OQ3.CompactTiltWhitenedFamily
 import Shao.OQ3.ComplexExpAddError
+import Shao.OQ3.ComplexLogTaylorOcticCorrection
 import Shao.OQ3.ComplexLogTaylorPerturbation
 import Shao.OQ3.ComplexLogTaylorQuarticCorrection
+import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.EnergyBernoulliMGF
@@ -438,6 +445,7 @@ import Shao.OQ3.StandardizedPairQuarticLogRemainder
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
 import Shao.OQ3.TiltedMeasureDomination
+import Shao.OQ3.UniformPairCGFCumulantBounds
 import Shao.OQ3.UniformPairCharacteristicGaussianError
 import Shao.OQ3.UniformPairCharacteristicLocalGaussian
 import Shao.OQ3.WeakCramerPairCompactGap
@@ -694,6 +702,7 @@ import Shao.OQ5.P53.SparseSignedAmplitude
 import Shao.OQ5.P53.SparseSignedLabelLaw
 import Shao.OQ5.P53.SparseSignedShift
 import Shao.OQ5.P53.SparseSourceWindows
+import Shao.OQ6.ActualGoodsetPhysicalUnion
 import Shao.OQ6.ActualMomentNormalization
 import Shao.OQ6.ActualPhysicalCompactCDF
 import Shao.OQ6.ActualPhysicalCompactRelative
@@ -760,6 +769,7 @@ import Shao.OQ6.OriginalCodedStrictMomentFrontier
 import Shao.OQ6.OriginalCompactExpectationFees
 import Shao.OQ6.OriginalCompactPMomentCost
 import Shao.OQ6.OriginalCountablyGeneratedModel
+import Shao.OQ6.OriginalExceptionalTailAbsorption
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
 import Shao.OQ6.OriginalGoodEventBridge
