@@ -1,0 +1,52 @@
+  intro X kappa a Pn
+  obtain ⟨C, hC, hP⟩ := complex_six_order_filtered_polynomial_growth_bound B hB
+  refine ⟨C, hC, ?_⟩
+  intro n hn i u v
+  let sn : ℝ := Real.sqrt (n : ℝ)
+  let tau : ℝ := 1 / sn
+  let r : ℝ := Real.sqrt (u ^ 2 + v ^ 2)
+  let P0 : (Fin 6 → ℂ) → ℂ := fun b =>
+    ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+      ∑ sigma : Fin q.val → Fin 6,
+        if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, b (sigma l) else 0
+  have hnR1 : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hsn : 0 < sn := Real.sqrt_pos.mpr (by linarith)
+  have hsn1 : 1 ≤ sn := by simpa only [Real.sqrt_one] using Real.sqrt_le_sqrt hnR1
+  have ht0 : 0 ≤ tau := one_div_nonneg.mpr hsn.le
+  have ht1 : tau ≤ 1 := (div_le_one hsn).mpr hsn1
+  have hr : 0 ≤ r := Real.sqrt_nonneg _
+  have hcoeff (j : Fin 6) :
+      ‖(Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa i (j.val + 3) (u, v) : ℂ)‖ ≤ B j * r ^ (j.val + 3) := by
+    have hfac : (1 : ℝ) ≤ ((j.val + 3).factorial : ℝ) := by
+      exact_mod_cast Nat.succ_le_of_lt (Nat.factorial_pos (j.val + 3))
+    calc
+      _ = |kappa i (j.val + 3) (u, v)| / ((j.val + 3).factorial : ℝ) := by
+        norm_num [norm_mul, norm_div, norm_pow] <;> ring
+      _ ≤ |kappa i (j.val + 3) (u, v)| := div_le_self (abs_nonneg _) hfac
+      _ ≤ _ := hbound j i u v
+  have ha (j : Fin 6) :
+      ‖a i n (u, v) j‖ ≤ B j * tau ^ (j.val + 1) * r ^ (j.val + 3) := by
+    calc
+      _ = ‖(Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+          (kappa i (j.val + 3) (u, v) : ℂ)‖ / sn ^ (j.val + 1) := by
+        dsimp only [a]
+        rw [norm_div, norm_pow, Complex.norm_real, Real.norm_of_nonneg (Real.sqrt_nonneg _)]
+      _ ≤ (B j * r ^ (j.val + 3)) / sn ^ (j.val + 1) :=
+        div_le_div_of_nonneg_right (hcoeff j) (pow_nonneg hsn.le _)
+      _ = _ := by dsimp only [tau]; rw [_root_.one_div_pow]; ring
+  have hp : ‖P0 (a i n (u, v))‖ ≤ C * (1 + r ^ 18) :=
+    hP tau r ht0 ht1 hr (a i n (u, v)) ha
+  have hg : ‖Complex.exp (-((u ^ 2 + v ^ 2 : ℝ) : ℂ) / 2)‖ =
+      Real.exp (-(u ^ 2 + v ^ 2) / 2) := by
+    rw [Complex.norm_exp]
+    congr 1
+    norm_num [Complex.div_re] <;> ring
+  calc
+    ‖Pn i n (u, v)‖ = Real.exp (-(u ^ 2 + v ^ 2) / 2) * ‖P0 (a i n (u, v))‖ := by
+      change ‖Complex.exp (-((u ^ 2 + v ^ 2 : ℝ) : ℂ) / 2) * P0 (a i n (u, v))‖ = _
+      rw [norm_mul, hg]
+    _ ≤ Real.exp (-(u ^ 2 + v ^ 2) / 2) * (C * (1 + r ^ 18)) :=
+      mul_le_mul_of_nonneg_left hp (Real.exp_pos _).le
+    _ = C * (1 + Real.sqrt (u ^ 2 + v ^ 2) ^ 18) *
+        Real.exp (-(u ^ 2 + v ^ 2) / 2) := by ring

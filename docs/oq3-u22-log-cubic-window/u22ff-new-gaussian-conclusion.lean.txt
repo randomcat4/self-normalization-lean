@@ -1,0 +1,24 @@
+      let X : Theta → (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ :=
+        fun p z y => z.1 * y 0 + z.2 * y 1
+      let kappa : Theta → ℕ → (ℝ × ℝ) → ℝ :=
+        fun p j z => iteratedDeriv j (ProbabilityTheory.cgf (X p z) (laws p)) 0
+      let a : Theta → ℕ → (ℝ × ℝ) → Fin 6 → ℂ := fun p n z j =>
+        (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+          (kappa p (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+      let Pn : Theta → ℕ → (ℝ × ℝ) → ℂ := fun p n z =>
+        Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2) *
+          ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+            ∑ sigma : Fin q.val → Fin 6,
+              if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a p n z (sigma l) else 0
+      ∃ C : ℝ, 0 < C ∧
+        (∀ n : ℕ, 1 ≤ n → ∀ p : Theta, ∀ u v : ℝ,
+          ‖Pn p n (u, v)‖ ≤ C * (1 + Real.sqrt (u ^ 2 + v ^ 2) ^ 18) *
+            Real.exp (-(u ^ 2 + v ^ 2) / 2)) ∧
+        ∀ delta : ℝ, 0 < delta → ∀ k : ℕ, ∀ q epsilon : ℝ, 0 < epsilon →
+          ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n → ∀ p : Theta,
+            let tail : Set (ℝ × ℝ) := {z |
+              delta * Real.sqrt (n : ℝ) ≤ Real.sqrt (z.1 ^ 2 + z.2 ^ 2)}
+            let f : (ℝ × ℝ) → ℝ := fun z =>
+              Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ^ k * ‖Pn p n z‖
+            IntegrableOn f tail ∧ 0 ≤ (∫ z in tail, f z) ∧
+              Real.rpow (n : ℝ) q * (∫ z in tail, f z) < epsilon

@@ -1,0 +1,13 @@
+Pinned mathlib 807d3836b165983210ee2ecf3cd28f239436949c
+Source SHA256 f736afe5ee0e392168895c13ce258c142fdc5d3b45ecb5d3dd12af9299a8ee42
+355: theorem isLittleO_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x => x ^ r :=
+356:   calc
+357:     log =O[atTop] fun x => r * log x := isBigO_self_const_mul hr.ne' _ _
+358:     _ =ᶠ[atTop] fun x => log (x ^ r) :=
+359:       ((eventually_gt_atTop 0).mono fun _ hx => (log_rpow hx _).symm)
+360:     _ =o[atTop] fun x => x ^ r := isLittleO_log_id_atTop.comp_tendsto (tendsto_rpow_atTop hr)
+361: 
+362: theorem isLittleO_log_rpow_rpow_atTop {s : ℝ} (r : ℝ) (hs : 0 < s) :
+394: theorem tendsto_log_div_rpow_nhdsGT_zero {r : ℝ} (hr : r < 0) :
+395:     Tendsto (fun x => log x / x ^ r) (𝓝[>] 0) (𝓝 0) :=
+396:   (isLittleO_log_rpow_nhdsGT_zero hr).tendsto_div_nhds_zero
