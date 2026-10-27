@@ -1,0 +1,35 @@
+Planned ordinary proof data only. This is declaration-freeze input, not implementation.
+
+let δ : ℝ → ℝ := fun θ : ℝ => (K / (4 * Real.sqrt (n : ℝ))) * θ
+
+let Uret : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ :=
+  fun (i : Fin n) (y : {j : Fin n // j ≠ i} → Ω × ℝ) =>
+    ∑ j : {j : Fin n // j ≠ i}, (gcoord j.val (y j).1) ^ 2
+
+Inside a fixed θ full-factor scope only, the inherited full scalar factorization
+produces witnesses FM, FA, FB : (Fin n → ℝ) → ℝ, respectively for M θ,
+Aenvelope θ, and B. Each has explicit Borel-to-Borel measurability and a
+pointwise equality for every x : Fin n → Ω × ℝ.
+
+let Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ :=
+  fun t : Fin n → ℝ => (FM t, FA t, FB t)
+
+Inside a fixed θ and i deleted-factor scope only, the inherited deleted triple
+produces Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ.
+The inherited retained scalar contract applied to Uret i produces
+FU : ({j : Fin n // j ≠ i} → ℝ) → ℝ.
+Both have their exact inherited explicit Borel-to-Borel measurability and
+pointwise equalities; the full types appear in WITNESS-AND-CALLBACK-INVENTORY.json.
+
+let Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ :=
+  fun t : {j : Fin n // j ≠ i} → ℝ =>
+    (K * θ * ((1 + Real.sqrt (FU t)) *
+      (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + (Fdel t).2.2))),
+     |(Fdel t).1| + K * θ * ((1 + Real.sqrt (FU t)) *
+      (Real.sqrt (n : ℝ) + z * Real.sqrt (1 + (Fdel t).2.2))),
+     (Fdel t).2.2)
+
+No function-valued have, global chosen Fdel/FU family, arbitrary Omega element,
+section/filler, or second measurable-space witness is planned. Classical choice
+is confined to the exact inherited scalar existential eliminations. There is
+one new public theorem and no planned new top-level data or private helper.

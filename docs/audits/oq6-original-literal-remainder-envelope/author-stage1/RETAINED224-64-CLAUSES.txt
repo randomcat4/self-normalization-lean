@@ -1,0 +1,244 @@
+CLAUSE 1: hP₀prob
+@IsProbabilityMeasure (Fin n → Ω) mN₀ P₀
+
+CLAUSE 2: hP₀map
+P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P
+
+CLAUSE 3: hO
+(∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀)
+
+CLAUSE 4: hOindep
+iIndepFun O P₀
+
+CLAUSE 5: hgcoord
+(∀ i : Fin n, Measurable (gcoord i) ∧
+          MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧
+          (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧
+          (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ))
+
+CLAUSE 6: hgenergy
+(∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1
+
+CLAUSE 7: hQid
+Q = id
+
+CLAUSE 8: hW0eq
+W0 = projectionW n g
+
+CLAUSE 9: hV0eq
+V0 = projectionV n g
+
+CLAUSE 10: hT0eq
+T0 = Tclip
+
+CLAUSE 11: hD1m
+Measurable D1
+
+CLAUSE 12: hD2m
+Measurable D2
+
+CLAUSE 13: hhalf
+(∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ)
+
+CLAUSE 14: hTclipm
+Measurable[mN₀, borel ℝ] Tclip
+
+CLAUSE 15: hTclipOriginal
+Measurable[mN, borel ℝ] Tclip
+
+CLAUSE 16: hTcliplaw
+@Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =
+          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P
+
+CLAUSE 17: hνprob
+IsProbabilityMeasure ν
+
+CLAUSE 18: hqpres
+MeasurePreserving q ν P₀
+
+CLAUSE 19: hs
+(1 / 2 : ℝ) < s
+
+CLAUSE 20: hηeval
+(∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i))
+
+CLAUSE 21: hηindep
+iIndepFun η ν
+
+CLAUSE 22: hηL2
+(∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν)
+
+CLAUSE 23: hηInts
+(∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν)
+
+CLAUSE 24: hηmean
+(∀ i : Fin n, (∫ x, η i x ∂ν) = 0)
+
+CLAUSE 25: hηenergy
+(∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1
+
+CLAUSE 26: hηnull
+(∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0)
+
+CLAUSE 27: hVηnull
+ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0
+
+CLAUSE 28: hpositiveDenominator
+(∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x)
+
+CLAUSE 29: hCmeas
+Measurable[mAug, borel (Fin n → ℝ)] C
+
+CLAUSE 30: hCcomap
+MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug
+
+CLAUSE 31: hfactor
+(∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →
+          ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧
+            ∀ x : Fin n → Ω × ℝ, H x = F (C x))
+
+CLAUSE 32: hretained
+(∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →
+          ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧
+            (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,
+              d y = F (fun j => ηlocal j.val (y j))) ∧
+            Measurable[borel (Fin n → ℝ), borel ℝ]
+              (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧
+            ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x))
+
+CLAUSE 33: hscalar
+(∃ G2 : (Fin n → ℝ) → ℝ,
+          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧
+          (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧
+          ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,
+            Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧
+            ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x))
+
+CLAUSE 34: hdeletedFactor
+(∀ i : Fin n,
+          ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧
+            ∀ x : Fin n → Ω × ℝ,
+              (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =
+                Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x))
+
+CLAUSE 35: hTηmeas
+(∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z))
+
+CLAUSE 36: hZ0m
+MeasurableSet[mN₀] Z0
+
+CLAUSE 37: hZ0Original
+MeasurableSet[mN] Z0
+
+CLAUSE 38: hZmeas
+MeasurableSet Z
+
+CLAUSE 39: hZcodedlaw
+ν Z = P₀ Z0
+
+CLAUSE 40: hZ0law
+P₀ Z0 = P Z0
+
+CLAUSE 41: hZcodedreal
+ν.real Z = p0
+
+CLAUSE 42: hsigned
+(∀ (z : ℝ) (x : Fin n → Ω × ℝ),
+          Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x)
+
+CLAUSE 43: hcomparison
+(∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+          MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧
+          MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧
+          MeasurableSet (Eη R z) ∧
+          ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧
+          (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧
+          P (A0 R z ∆ F0 R z) ≤ P Z0 ∧
+          |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)
+
+CLAUSE 44: hFullBounds
+(∀ ξ : Fin n → Ω, 0 ≤ A ξ ∧ 0 ≤ B1 ξ ∧ |D2 ξ| ≤ B1 ξ)
+
+CLAUSE 45: hDeletedBounds
+(∀ (i : Fin n) (ξ : Fin n → Ω), 0 ≤ Adel ξ i ∧ 0 ≤ B1del ξ i)
+
+CLAUSE 46: hJm
+Measurable[mN₀, borel ℝ] J
+
+CLAUSE 47: hAm
+Measurable[mN₀, borel ℝ] A
+
+CLAUSE 48: hB1m
+Measurable[mN₀, borel ℝ] B1
+
+CLAUSE 49: hDeletedMeasurableAndAbs
+(∀ i : Fin n,
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Ddel ξ i) ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Jdel ξ i) ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => Adel ξ i) ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => B1del ξ i))
+
+CLAUSE 50: hAI
+Integrable A P₀
+
+CLAUSE 51: hB1I
+Integrable B1 P₀
+
+CLAUSE 52: heI
+Integrable D2 P₀
+
+CLAUSE 53: hDeletedCostsAndDifferences
+(∀ i : Fin n,
+          Integrable (fun ξ : Fin n → Ω => Adel ξ i) P₀ ∧
+          Integrable (fun ξ : Fin n → Ω => B1del ξ i) P₀ ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) ∧
+          Measurable[mN₀, borel ℝ] (fun ξ : Fin n → Ω => deletionMass ξ i) ∧
+          Integrable (fun ξ : Fin n → Ω => |A ξ - Adel ξ i|) P₀ ∧
+          Integrable (fun ξ : Fin n → Ω => |B1 ξ - B1del ξ i|) P₀ ∧
+          Integrable (fun ξ : Fin n → Ω => deletionMass ξ i) P₀)
+
+CLAUSE 54: hTotalm
+Measurable[mN₀, borel ℝ] deletionTotal
+
+CLAUSE 55: hTotalI
+Integrable deletionTotal P₀
+
+CLAUSE 56: hAugAm
+Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => A (q x))
+
+CLAUSE 57: hAugB1m
+Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1 (q x))
+
+CLAUSE 58: hAugD2m
+Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => D2 (q x))
+
+CLAUSE 59: hAugAI
+Integrable (fun x : Fin n → Ω × ℝ => A (q x)) ν
+
+CLAUSE 60: hAugB1I
+Integrable (fun x : Fin n → Ω × ℝ => B1 (q x)) ν
+
+CLAUSE 61: hAugD2I
+Integrable (fun x : Fin n → Ω × ℝ => D2 (q x)) ν
+
+CLAUSE 62: hAugDeletedCostsAndDifferences
+(∀ i : Fin n,
+          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => Adel (q x) i) ∧
+          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => B1del (q x) i) ∧
+          Integrable (fun x : Fin n → Ω × ℝ => Adel (q x) i) ν ∧
+          Integrable (fun x : Fin n → Ω × ℝ => B1del (q x) i) ν ∧
+          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ∧
+          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ∧
+          Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ∧
+          Integrable (fun x : Fin n → Ω × ℝ => |A (q x) - Adel (q x) i|) ν ∧
+          Integrable (fun x : Fin n → Ω × ℝ => |B1 (q x) - B1del (q x) i|) ν ∧
+          Integrable (fun x : Fin n → Ω × ℝ => deletionMass (q x) i) ν)
+
+CLAUSE 63: hAugTotalm
+Measurable[mAug, borel ℝ] (fun x : Fin n → Ω × ℝ => deletionTotal (q x))
+
+CLAUSE 64: hAugTotalI
+Integrable (fun x : Fin n → Ω × ℝ => deletionTotal (q x)) ν

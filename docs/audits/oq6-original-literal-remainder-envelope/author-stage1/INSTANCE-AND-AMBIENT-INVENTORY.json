@@ -1,0 +1,286 @@
+{
+  "schema": "oq56-unit226-stage1-instance-ambient-inventory-v1",
+  "outerBinders": [
+    {
+      "name": "Ω",
+      "type": "Type u",
+      "kind": "carrier"
+    },
+    {
+      "name": "mΩ",
+      "type": "MeasurableSpace Ω",
+      "kind": "original data instance"
+    },
+    {
+      "name": "μ",
+      "type": "@Measure Ω mΩ",
+      "kind": "original measure datum"
+    },
+    {
+      "name": "original probability",
+      "type": "@IsProbabilityMeasure Ω mΩ μ",
+      "kind": "given Prop instance"
+    },
+    {
+      "name": "h",
+      "type": "Ω → Ω → ℝ",
+      "kind": "original kernel datum"
+    },
+    {
+      "name": "hh",
+      "type": "Measurable (fun t : Ω × Ω => h t.1 t.2)",
+      "space": "mΩ.prod mΩ → borel ℝ",
+      "kind": "given Prop"
+    },
+    {
+      "name": "hh2",
+      "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ)",
+      "space": "mΩ.prod mΩ",
+      "kind": "given Prop"
+    },
+    {
+      "name": "hhsymm",
+      "type": "∀ o y : Ω, h o y = h y o",
+      "kind": "given Prop"
+    },
+    {
+      "name": "hcenter",
+      "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0",
+      "space": "original mΩ.prod mΩ",
+      "kind": "given Prop"
+    },
+    {
+      "name": "hprojectionsecond",
+      "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+      "space": "original mΩ/μ",
+      "kind": "given Prop"
+    },
+    {
+      "name": "n",
+      "type": "ℕ",
+      "kind": "post-single-witness universal datum"
+    },
+    {
+      "name": "hn",
+      "type": "4 ≤ n",
+      "kind": "Prop"
+    },
+    {
+      "name": "C0",
+      "type": "ℝ",
+      "kind": "datum"
+    },
+    {
+      "name": "hC0",
+      "type": "0 ≤ C0",
+      "kind": "Prop"
+    },
+    {
+      "name": "z",
+      "type": "ℝ",
+      "kind": "fixed pre-coding-epsilon datum"
+    },
+    {
+      "name": "hz",
+      "type": "0 ≤ z",
+      "kind": "Prop"
+    },
+    {
+      "name": "K",
+      "type": "ℝ",
+      "kind": "fixed pre-coding-epsilon datum"
+    },
+    {
+      "name": "hK",
+      "type": "0 ≤ K",
+      "kind": "Prop"
+    },
+    {
+      "name": "ε",
+      "type": "ℝ",
+      "kind": "coding datum after all13 fixed data"
+    },
+    {
+      "name": "hε",
+      "type": "0 < ε",
+      "kind": "Prop"
+    },
+    {
+      "name": "hεsmall",
+      "type": "ε < 1 / (4 * Real.sqrt (n : ℝ))",
+      "kind": "Prop"
+    }
+  ],
+  "retainedLocalInstances": [
+    {
+      "type": "MeasurableSpace Ω",
+      "rhs": "m₀",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "scope": "after μ₀, exactly as224"
+    },
+    {
+      "type": "MeasurableSpace.CountablyGenerated Ω",
+      "rhs": "hcg",
+      "captures": [
+        "Ω",
+        "m₀",
+        "hcg"
+      ],
+      "scope": "same canonical coding, exactly as224"
+    }
+  ],
+  "newPlannedLocalInstances": [
+    {
+      "type": "Fintype {j : Fin n // j = i}",
+      "rhs": "Subtype.fintype (fun j : Fin n => j = i)",
+      "captures": [
+        "n",
+        "i",
+        "Fin n Fintype",
+        "classical predicate decision"
+      ],
+      "scope": "hSingleSubtypeSum/hSubtypeSum only"
+    },
+    {
+      "type": "Unique {j : Fin n // j = i}",
+      "rhs": "{ default := ⟨i, rfl⟩, uniq := fun j => Subtype.ext j.property }",
+      "captures": [
+        "n",
+        "i"
+      ],
+      "scope": "singleton-index sum only; this is an index, never an Omega filler"
+    }
+  ],
+  "implicitStandardInstances": [
+    {
+      "type": "Fintype (Fin n)",
+      "rhs": "Fin.fintype n",
+      "captures": [
+        "n"
+      ],
+      "scope": "all original and new finite products/sums"
+    },
+    {
+      "type": "DecidableEq (Fin n)",
+      "rhs": "instDecidableEqFin n",
+      "captures": [
+        "n"
+      ],
+      "scope": "erase and index equality"
+    },
+    {
+      "type": "Fintype {j : Fin n // j ≠ i}",
+      "rhs": "Subtype.fintype (fun j : Fin n => j ≠ i)",
+      "captures": [
+        "n",
+        "i",
+        "classical predicate decision"
+      ],
+      "scope": "Uret finite sum and retained products"
+    },
+    {
+      "type": "MeasurableSpace (Ω × ℝ)",
+      "rhs": "m₀.prod (borel ℝ)",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "scope": "mAugLocal/mFixedLocal, canonical reduced augmented product"
+    },
+    {
+      "type": "MeasurableSpace (Fin n → Ω × ℝ)",
+      "rhs": "pi (fun _ : Fin n => mAugLocal)",
+      "captures": [
+        "Ω",
+        "n",
+        "m₀"
+      ],
+      "scope": "literal mAug, definitionally mFixed"
+    },
+    {
+      "type": "MeasurableSpace ({j : Fin n // j ≠ i} → Ω × ℝ)",
+      "rhs": "pi (fun _ : {j : Fin n // j ≠ i} => mAugLocal)",
+      "captures": [
+        "Ω",
+        "n",
+        "i",
+        "m₀"
+      ],
+      "scope": "Uret measurable obligation"
+    },
+    {
+      "type": "IsProbabilityMeasure ν",
+      "rhs": "hνprob passed explicitly to @generic225",
+      "captures": [
+        "Ω",
+        "n",
+        "mAug",
+        "ν",
+        "hνprob"
+      ],
+      "scope": "no new assumption or need to define payment"
+    },
+    {
+      "type": "BorelSpace (Fin n → ℝ)",
+      "rhs": "canonical finite real product BorelSpace",
+      "captures": [
+        "n"
+      ],
+      "scope": "Ffull"
+    },
+    {
+      "type": "BorelSpace ({j : Fin n // j ≠ i} → ℝ)",
+      "rhs": "canonical finite real product BorelSpace",
+      "captures": [
+        "n",
+        "i"
+      ],
+      "scope": "FU,Fdel,Fdelete"
+    },
+    {
+      "type": "BorelSpace (ℝ × ℝ × ℝ)",
+      "rhs": "canonical real right-associated product BorelSpace",
+      "captures": [],
+      "scope": "factor triples"
+    },
+    {
+      "type": "real topological/normed/field/measurable/measure structures",
+      "rhs": "canonical existing Mathlib instances",
+      "captures": [],
+      "scope": "all real arithmetic, abs/sqrt/Bochner integrals"
+    },
+    {
+      "type": "CountablyGenerated (Ω × ℝ)",
+      "rhs": "inherited product of hcg with canonical countably-generated real Borel",
+      "captures": [
+        "Ω",
+        "m₀",
+        "hcg"
+      ],
+      "scope": "ONLY existing c/natGeneratingSequence; no new StandardBorel Ω"
+    },
+    {
+      "type": "Decidable (V0 ξ = 0)",
+      "rhs": "Real.decidableEq (V0 ξ) 0",
+      "captures": [
+        "V0",
+        "ξ"
+      ],
+      "scope": "exact inherited T0 guard, unchanged"
+    }
+  ],
+  "forbiddenNewPremises": [
+    "Nonempty Ω",
+    "StandardBorel Ω",
+    "higher moments",
+    "target moment/L1 assumption",
+    "joint countably-generated original kernel upgrade",
+    "new coupling/law",
+    "Qepsilon coefficient domination",
+    "K*ε ≤ 1"
+  ],
+  "proofBeforeCodingEpsilon": false
+}

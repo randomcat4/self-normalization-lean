@@ -1,0 +1,13 @@
+# Original-model literal full and deleted remainder envelope
+
+Exact qualified unit226 supplies one common original-model witness m₀ before n/C₀/z/K/coding ε. It retains the same original coordinates, pushforward q/law, original-n erased energies, and full/deleted factorization at every sample point. Fixed law, energy and payment data are selected before the current valid coding ε; all retained and new target clauses stay inside that packet.
+
+The new 52-clause suffix gives positive genuinely integrable full/deleted energies, literal A+KθH and erased Aᵢ+KθHᵢ envelopes for every real θ, and finite unweighted L1 deletion payments that tend to zero. It transports square integrals through the same q using target almost-everywhere strong measurability and integral_map. It introduces no measurable embedding, StandardBorel/nonempty premise on Ω, or second original witness.
+
+Source: 2b2c57bafe06396e99961420f6cffb3bd71c9407b95692c2e84b92a31ec89c0a, 57629 bytes / 1027 LF. Native004 produced FIRST O 72fe3995161eb6f25b8d3e7582a9fc0edc4293406a563cae5c9634ca75090319. The same-original-object audit discovers all nine module owners: nine theorems, 7855 TYPE lines, zero required VALUE lines. Recursive axiom occurrences are propext9/Classical.choice2/Quot.sound3 only.
+
+One independent never-author reviewer reused the original complete SOURCE review and three affected reviews, checked all 116 frozen outputs, all nine actual statements using fully read literal skeletons, all 52 unique dictionary entries, and each use/binding scope. Exact dictionary roundtrips reconstruct every raw TYPE byte. No repeated literal reading of all 7855 raw lines is claimed. Complete native/audit evidence, original warning messages, normalized actual TYPEs and lossless review dictionary are included.
+
+Native004 and audit001 actual exit codes are both zero. Seventeen native warnings, strict wrapper false, standing stderr, FIRSTEMPTY null, no_o audit object_after null, and the predominantly reference-SHA plus bytes/ns historical bindings remain explicit. The old audit descriptive string incorrectly naming native003 is preserved and recorded; structured evidence establishes native004 as first success. All prior failures and the preupload resource block remain archived. No accepted producer or leaf AX check was replayed.
+
+This result has no Qε, weighted-cost, strict budget, external SZ/CDF, atom/zero-event or whole-root closure claim. Primary p51 remains a repair candidate, with p54 repairs and named external attribution preserved. OQ56 and broader root groups remain open; OQ3 stays paused by the user.

@@ -1,0 +1,125 @@
+All entries below are proposed local Prop-valued facts, not implementation.
+The outer scope is the complete current candidate, after extracting the SAME224
+m₀ and current valid coding-ε packet. The exact64 inherited facts and every
+new root conclusion are separately recorded in PROP-FACT-INVENTORY.json.
+
+hLiteralNu : νFixed = ν
+hLiteralXi : ξFixed = ξ
+hLiteralV : VFixed = V
+hLiteralVdelete : VdeleteFixed = Vdelete
+hLiteralB : BFixed = B
+hLiteralBdelete : BdeleteFixed = Bdelete
+hLiteralH : HFixed = H
+hLiteralHdelete : HdeleteFixed = Hdelete
+hPaymentTypeJoin : ∀ i : Fin n,
+  payment i = K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))
+hPaymentTotalTypeJoin : paymentTotal = ∑ i : Fin n, payment i
+
+hn1 : 1 ≤ n
+hn4R : (4 : ℝ) ≤ (n : ℝ)
+hNpos : 0 < N
+hFourNpos : 0 < 4 * Real.sqrt (n : ℝ)
+hFourNne : 4 * Real.sqrt (n : ℝ) ≠ 0
+hGiMeas : ∀ i : Fin n,
+  Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => gcoord i (O i ζ))
+hGiSquareMeas : ∀ i : Fin n,
+  Measurable[mN₀, borel ℝ] (fun ζ : Fin n → Ω => (gcoord i (O i ζ)) ^ 2)
+hGiSquareMapAESM : ∀ i : Fin n,
+  AEStronglyMeasurable (fun ζ : Fin n → Ω => (gcoord i (O i ζ)) ^ 2)
+    (@Measure.map (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν)
+hOriginalXiMeas : ∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i)
+hOriginalXiL2 : ∀ i : Fin n, MemLp (ξ i) 2 ν
+hOriginalXiSecondTransport : ∀ i : Fin n,
+  (∫ x, (ξ i x) ^ 2 ∂ν) =
+    (∫ ζ : Fin n → Ω, (gcoord i (O i ζ)) ^ 2 ∂P₀)
+hOriginalXiSecond : ∀ i : Fin n, (∫ x, (ξ i x) ^ 2 ∂ν) = 1 / (n : ℝ)
+hOriginalXiEnergy : (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1
+hBNonnegative : ∀ x : Fin n → Ω × ℝ, 0 ≤ B x
+hBdeleteNonnegative : ∀ (i : Fin n) (x : Fin n → Ω × ℝ), 0 ≤ Bdelete i x
+
+hDeltaScale : ∀ θ : ℝ, 4 * δ θ * Real.sqrt (n : ℝ) = K * θ
+hDeltaAbs : ∀ θ : ℝ, |δ θ| = (K / (4 * Real.sqrt (n : ℝ))) * |θ|
+hDeltaScaleAbs : ∀ θ : ℝ, |4 * δ θ * Real.sqrt (n : ℝ)| = K * |θ|
+hDeltaNonnegative : ∀ θ : ℝ, 0 ≤ θ → 0 ≤ δ θ
+hDeltaLimit : Filter.Tendsto δ (nhds (0 : ℝ)) (nhds (0 : ℝ))
+hScaledGenericPayment : ∀ (θ : ℝ) (i : Fin n),
+  δ θ * (4 * Real.sqrt (n : ℝ) * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) =
+    θ * payment i
+hScaledGenericAbsPayment : ∀ (θ : ℝ) (i : Fin n),
+  |δ θ| * (4 * Real.sqrt (n : ℝ) * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) =
+    |θ| * payment i
+hLinearFiniteSum : ∀ θ : ℝ,
+  (∑ i : Fin n, θ * payment i) = θ * paymentTotal
+hAbsoluteLinearFiniteSum : ∀ θ : ℝ,
+  (∑ i : Fin n, |θ| * payment i) = |θ| * paymentTotal
+
+hTripleBorel : (inferInstance : MeasurableSpace (ℝ × ℝ × ℝ)) = borel (ℝ × ℝ × ℝ)
+hFullCodeBorel : (inferInstance : MeasurableSpace (Fin n → ℝ)) = borel (Fin n → ℝ)
+hRetainedCodeBorel : ∀ i : Fin n,
+  (inferInstance : MeasurableSpace ({j : Fin n // j ≠ i} → ℝ)) =
+    borel ({j : Fin n // j ≠ i} → ℝ)
+hUretMeas : ∀ i : Fin n,
+  Measurable[
+    @MeasurableSpace.pi {j : Fin n // j ≠ i}
+      (fun _ : {j : Fin n // j ≠ i} => Ω × ℝ)
+      (fun _ : {j : Fin n // j ≠ i} => mAugLocal), borel ℝ] (Uret i)
+hSubtypeSum : ∀ (i : Fin n) (f : Fin n → ℝ),
+  (∑ j : {j : Fin n // j ≠ i}, f j.val) = ∑ j ∈ Finset.univ.erase i, f j
+hSingleSubtypeSum : ∀ (i : Fin n) (f : Fin n → ℝ),
+  (∑ j : {j : Fin n // j = i}, f j.val) = f i
+hUretPoint : ∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+  Uret i (fun j : {j : Fin n // j ≠ i} => x j.val) =
+    ∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2
+hVretPoint : ∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+  Real.sqrt (Uret i (fun j : {j : Fin n // j ≠ i} => x j.val)) = Vdelete i x
+
+Within fixed θ full-factor witness scope only:
+hFMMeas : Measurable[borel (Fin n → ℝ), borel ℝ] FM
+hFAPoint : ∀ x : Fin n → Ω × ℝ, Aenvelope θ x = FA (C x)
+hFAMeas : Measurable[borel (Fin n → ℝ), borel ℝ] FA
+hFMPoint : ∀ x : Fin n → Ω × ℝ, M θ x = FM (C x)
+hFBMeas : Measurable[borel (Fin n → ℝ), borel ℝ] FB
+hFBPoint : ∀ x : Fin n → Ω × ℝ, B x = FB (C x)
+hFfullMeas : Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull
+hFfullPoint : ∀ x : Fin n → Ω × ℝ,
+  (M θ x, Aenvelope θ x, B x) = Ffull (C x)
+
+Within fixed θ and i deleted-factor witness scope only:
+hFdelMeas : Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel
+hFdelPoint : ∀ x : Fin n → Ω × ℝ,
+  (Ddel (q x) i, Jdel (q x) i, B1del (q x) i) =
+    Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x)
+hFUMeas : Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FU
+hFULocalPoint : ∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,
+  Uret i y = FU (fun j : {j : Fin n // j ≠ i} => ηlocal j.val (y j))
+hFUFullRestrictionMeas : Measurable[borel (Fin n → ℝ), borel ℝ]
+  (fun t : Fin n → ℝ => FU (fun j : {j : Fin n // j ≠ i} => t j.val))
+hFUPoint : ∀ x : Fin n → Ω × ℝ,
+  Uret i (fun j : {j : Fin n // j ≠ i} => x j.val) =
+    FU (fun j : {j : Fin n // j ≠ i} => η j.val x)
+hFdeleteMeas :
+  Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete
+hFdeletePoint : ∀ x : Fin n → Ω × ℝ,
+  (Mdelete θ i x, AenvelopeDelete θ i x, Bdelete i x) =
+    Fdelete (fun j : {j : Fin n // j ≠ i} => η j.val x)
+
+hFeePointwiseNorm : ∀ (θ : ℝ) (i : Fin n) (x : Fin n → Ω × ℝ),
+  |fee θ i x - deletionMass (q x) i| ≤ |Δ θ i x|
+hFeeDifferenceL1 : ∀ (θ : ℝ) (i : Fin n),
+  Integrable[mAug] (fun x : Fin n → Ω × ℝ => fee θ i x - deletionMass (q x) i) ν
+hFeeDifferenceIntegral : ∀ (θ : ℝ) (i : Fin n),
+  (∫ x, fee θ i x - deletionMass (q x) i ∂ν) =
+    (∫ x, fee θ i x ∂ν) - (∫ x, deletionMass (q x) i ∂ν)
+hFeeTotalIntegral : ∀ θ : ℝ,
+  (∫ x, feeTotal θ x ∂ν) = ∑ i : Fin n, ∫ x, fee θ i x ∂ν
+hOriginalTotalIntegral :
+  (∫ x, deletionTotal (q x) ∂ν) = ∑ i : Fin n, ∫ x, deletionMass (q x) i ∂ν
+hPaymentLimit : ∀ i : Fin n,
+  Filter.Tendsto (fun θ : ℝ => |θ| * payment i) (nhds (0 : ℝ)) (nhds (0 : ℝ))
+hPaymentTotalLimit :
+  Filter.Tendsto (fun θ : ℝ => |θ| * paymentTotal) (nhds (0 : ℝ)) (nhds (0 : ℝ))
+
+The generic225 packet is a Prop, with its complete source/public actual TYPE
+bound in INPUTS/API-SPECIALIZATIONS. Its ambient substitutions are explicit in
+PRIMARY-API-EVIDENCE.json. Extracted225 facts are exactly the33 producer clauses,
+specialized at δ θ for scalar fields; no extra function-valued have is planned.
