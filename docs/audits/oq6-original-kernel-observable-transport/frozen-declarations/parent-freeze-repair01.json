@@ -1,0 +1,697 @@
+{
+  "schema": "oq56-unit219-parent-exact-repair-freeze-v1",
+  "atUTC": "2026-10-26T21:32:52.171456+00:00",
+  "unit": 219,
+  "status": "FROZEN_EXACT_CHANGED_HEAD_VALUES_AND12PROOF_HUNKS_BEFORE_REPAIR_IMPLEMENTATION",
+  "priorFreeze": {
+    "path": "C:/game/shao lean/drafts/oq56/next-source/oq6-original-kernel-observable-transport-219/parent-freeze-v1.json",
+    "sha256": "91b7bf79ae358ea4f6ec529e23d8c243ac61f81cb82b47ab675292f246d6f2a7",
+    "bytes": 17929
+  },
+  "baseSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-01/OriginalKernelObservableTransport.lean",
+    "sha256": "2552c6826f608e3bb3b6427530feab30405dac4d8929983066e9783b8a644c35",
+    "bytes": 13050
+  },
+  "repairProposalIntake": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/parent-repair-plan01-intake.json",
+    "sha256": "2cd044887b46dabd075a560108167158a71b168a8fc2ade16537ea74766fc490",
+    "bytes": 8068
+  },
+  "exactPatches": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-01/repair-plan01/EXACT-PATCHES.json",
+    "sha256": "408f31e06c43ca697962e79a6c39c3dd78523b9726d164cf16f0659cbbe4118d",
+    "bytes": 9856
+  },
+  "revisedDeclarationData": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-01/repair-plan01/REVISED-DECLARATION-DATA.json",
+    "sha256": "ed4bb8306e3bf1be93b5f66809f9194f97dfd55bc2caf083d1f40774f3d3b7bc",
+    "bytes": 28957
+  },
+  "revisedCompleteHead": {
+    "path": "C:/game/shao lean/drafts/oq56/unit219/author-01/repair-plan01/REVISED-FROZEN-HEAD.txt",
+    "sha256": "ba5389f303f918cbb46b15295e09d6c5203fd56e193abf2761a7c67b61777b0f",
+    "bytes": 3189
+  },
+  "preamble": "import Mathlib.MeasureTheory.Measure.Trim\nimport Mathlib.MeasureTheory.Function.LpSeminorm.Trim\nimport Mathlib.MeasureTheory.Integral.Prod\nimport Mathlib.MeasureTheory.Constructions.Pi\nimport Mathlib.MeasureTheory.Function.L2Space\nimport Mathlib.MeasureTheory.Constructions.BorelSpace.Real\n\nset_option autoImplicit false\n\nuniverse u v\n\nnamespace Shao.OQ6.OriginalKernelObservableTransport\n\nnoncomputable section\n\nopen MeasureTheory\nopen scoped MeasureTheory ENNReal\n",
+  "globalDeclarations": [
+    {
+      "name": "actual_normalized_kernel_observable_trim_transport",
+      "kind": "public theorem",
+      "head": "theorem actual_normalized_kernel_observable_trim_transport\n    {Ω : Type u} [mΩ : MeasurableSpace Ω]\n    {J : Type v} [Fintype J]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))\n    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond :\n      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n    (hh₀ : Measurable[m₀.prod m₀, borel ℝ]\n      (fun t : Ω × Ω => h t.1 t.2)) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    let rowIntegrable : Ω → Prop := fun o => Integrable (h o) μ\n    let gLp : ℝ≥0∞ → Prop := fun p => MemLp g p μ\n    let projectionLaw : Measure ℝ :=\n      @Measure.map Ω ℝ mΩ (borel ℝ) g μ\n    let pairLaw : @Measure (Ω × Ω) (mΩ.prod mΩ) :=\n      @Measure.prod Ω Ω mΩ mΩ μ μ\n    let mJ : MeasurableSpace (J → Ω) :=\n      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)\n    let mJ₀ : MeasurableSpace (J → Ω) :=\n      @MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)\n    let P : @Measure (J → Ω) mJ :=\n      @Measure.pi J (fun _ : J => Ω) (inferInstance : Fintype J)\n        (fun _ : J => mΩ) (fun _ : J => μ)\n    let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n    letI : MeasurableSpace Ω := m₀\n    let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀\n    let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y\n    let v₀ : ℝ := ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)\n    let rho₀ : ℝ := Real.sqrt v₀\n    let P₀ : @Measure (J → Ω) mJ₀ := Measure.pi (fun _ : J => μ₀)\n    IsProbabilityMeasure μ₀ ∧\n      (∀ o : Ω, g₀ o = g o) ∧\n      (∀ o y : Ω, r₀ o y = r o y) ∧\n      (∀ o : Ω, Integrable (h o) μ₀ ↔ rowIntegrable o) ∧\n      MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ₀.prod μ₀) ∧\n      (∫ t : Ω × Ω, h t.1 t.2 ∂(μ₀.prod μ₀)) = 0 ∧\n      Measurable g₀ ∧ MemLp g₀ 2 μ₀ ∧\n      (∫ o, g₀ o ∂μ₀) = 0 ∧\n      (∫ o, g₀ o ^ 2 ∂μ₀) = 1 ∧\n      Measurable (fun t : Ω × Ω => r₀ t.1 t.2) ∧\n      MemLp (fun t : Ω × Ω => r₀ t.1 t.2) 2 (μ₀.prod μ₀) ∧\n      (∀ o y : Ω, r₀ o y = r₀ y o) ∧\n      (∀ᵐ o ∂μ₀, (∫ y, r₀ o y ∂μ₀) = 0) ∧\n      v₀ = v ∧ rho₀ = rho ∧\n      μ₀.map g₀ = projectionLaw ∧\n      (∀ p : ℝ≥0∞, MemLp g₀ p μ₀ ↔ gLp p) ∧\n      μ₀.prod μ₀ =\n        @Measure.map (Ω × Ω) (Ω × Ω)\n          (mΩ.prod mΩ) (m₀.prod m₀) id pairLaw ∧\n      IsProbabilityMeasure P₀ ∧\n      P₀ = @Measure.map (J → Ω) (J → Ω) mJ mJ₀ id P ∧\n      (∀ T : (J → Ω) → ℝ,\n        Measurable[mJ₀, borel ℝ] T →\n          P₀.map T = @Measure.map (J → Ω) ℝ mJ (borel ℝ) T P)\n",
+      "headSHA256": "ba5389f303f918cbb46b15295e09d6c5203fd56e193abf2761a7c67b61777b0f",
+      "headBytes": 3189,
+      "headLF": 63,
+      "typedInputs": [
+        {
+          "name": "Ω",
+          "type": "Type u",
+          "role": "caller type"
+        },
+        {
+          "name": "mΩ",
+          "type": "MeasurableSpace Ω",
+          "role": "supplied original non-Prop instance"
+        },
+        {
+          "name": "J",
+          "type": "Type v",
+          "role": "caller finite-index type"
+        },
+        {
+          "name": "suppliedFintypeJ",
+          "type": "Fintype J",
+          "role": "supplied unnamed non-Prop instance; the explicit typed inferInstance in P selects this same caller data"
+        },
+        {
+          "name": "μ",
+          "type": "@Measure Ω mΩ",
+          "role": "same original law"
+        },
+        {
+          "name": "originalProbability",
+          "type": "@IsProbabilityMeasure Ω mΩ μ",
+          "role": "unchanged supplied Prop instance"
+        },
+        {
+          "name": "h",
+          "type": "Ω → Ω → ℝ",
+          "role": "same original kernel"
+        },
+        {
+          "name": "hh",
+          "type": "Measurable[mΩ.prod mΩ, borel ℝ] (fun t : Ω × Ω => h t.1 t.2)",
+          "role": "unchanged original joint-measurability premise"
+        },
+        {
+          "name": "hh2",
+          "type": "MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (@Measure.prod Ω Ω mΩ mΩ μ μ)",
+          "role": "unchanged original joint-L2 premise; explicit product here describes the same binder contract, without editing the binder text"
+        },
+        {
+          "name": "hhsymm",
+          "type": "∀ o y, h o y = h y o",
+          "role": "unchanged pointwise symmetry premise"
+        },
+        {
+          "name": "hcenter",
+          "type": "(∫ t : Ω × Ω, h t.1 t.2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)) = 0",
+          "role": "unchanged original joint-centering premise; explicit product here describes the same binder contract"
+        },
+        {
+          "name": "hprojectionsecond",
+          "type": "(∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1",
+          "role": "unchanged literal original projection normalization"
+        },
+        {
+          "name": "m₀",
+          "type": "MeasurableSpace Ω",
+          "role": "same structural reduced-space data"
+        },
+        {
+          "name": "hm₀",
+          "type": "m₀ ≤ mΩ",
+          "role": "same structural coarsening input"
+        },
+        {
+          "name": "hh₀",
+          "type": "Measurable[m₀.prod m₀, borel ℝ] (fun t : Ω × Ω => h t.1 t.2)",
+          "role": "same reduced joint-measurability input"
+        }
+      ],
+      "typedHeaderValues": [
+        {
+          "name": "g",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h",
+            "canonicalRealStructures"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 33,
+          "prospectiveHeaderLine": 33,
+          "originalProofLine": 80,
+          "prospectiveProofLine": 85,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "r",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g o - g y",
+          "captures": [
+            "Ω",
+            "h",
+            "g"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 34,
+          "prospectiveHeaderLine": 34,
+          "originalProofLine": 81,
+          "prospectiveProofLine": 86,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "v",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "r",
+            "canonicalOriginalProduct"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 35,
+          "prospectiveHeaderLine": 35,
+          "originalProofLine": 82,
+          "prospectiveProofLine": 87,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": true,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "rho",
+          "type": "ℝ",
+          "value": "Real.sqrt v",
+          "captures": [
+            "v"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 36,
+          "prospectiveHeaderLine": 37,
+          "originalProofLine": 83,
+          "prospectiveProofLine": 89,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "rowIntegrable",
+          "type": "Ω → Prop",
+          "value": "fun o => Integrable (h o) μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "h",
+            "canonicalRealNorm"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 37,
+          "prospectiveHeaderLine": 38,
+          "originalProofLine": 84,
+          "prospectiveProofLine": 90,
+          "functionReturningPropData": true,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "gLp",
+          "type": "ℝ≥0∞ → Prop",
+          "value": "fun p => MemLp g p μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g",
+            "canonicalRealStructures"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 38,
+          "prospectiveHeaderLine": 39,
+          "originalProofLine": 85,
+          "prospectiveProofLine": 91,
+          "functionReturningPropData": true,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "projectionLaw",
+          "type": "Measure ℝ",
+          "value": "@Measure.map Ω ℝ mΩ (borel ℝ) g μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "g",
+            "canonicalRealBorel"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 39,
+          "prospectiveHeaderLine": 40,
+          "originalProofLine": 86,
+          "prospectiveProofLine": 92,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": true,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "pairLaw",
+          "type": "@Measure (Ω × Ω) (mΩ.prod mΩ)",
+          "value": "@Measure.prod Ω Ω mΩ mΩ μ μ",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 40,
+          "prospectiveHeaderLine": 42,
+          "originalProofLine": 87,
+          "prospectiveProofLine": 94,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": true,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "mJ",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => mΩ)",
+          "captures": [
+            "J",
+            "Ω",
+            "mΩ"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 41,
+          "prospectiveHeaderLine": 44,
+          "originalProofLine": 88,
+          "prospectiveProofLine": 96,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "mJ₀",
+          "type": "MeasurableSpace (J → Ω)",
+          "value": "@MeasurableSpace.pi J (fun _ : J => Ω) (fun _ : J => m₀)",
+          "captures": [
+            "J",
+            "Ω",
+            "m₀"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 43,
+          "prospectiveHeaderLine": 46,
+          "originalProofLine": 90,
+          "prospectiveProofLine": 98,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "P",
+          "type": "@Measure (J → Ω) mJ",
+          "value": "@Measure.pi J (fun _ : J => Ω) (inferInstance : Fintype J) (fun _ : J => mΩ) (fun _ : J => μ)",
+          "captures": [
+            "J",
+            "FintypeJ",
+            "Ω",
+            "mΩ",
+            "μ",
+            "mJ"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 45,
+          "prospectiveHeaderLine": 48,
+          "originalProofLine": 92,
+          "prospectiveProofLine": 100,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": true,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "μ₀",
+          "type": "@Measure Ω m₀",
+          "value": "μ.trim hm₀",
+          "captures": [
+            "Ω",
+            "mΩ",
+            "μ",
+            "m₀",
+            "hm₀"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 46,
+          "prospectiveHeaderLine": 51,
+          "originalProofLine": 93,
+          "prospectiveProofLine": 103,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "localReducedInstance",
+          "type": "MeasurableSpace Ω",
+          "value": "m₀",
+          "captures": [
+            "Ω",
+            "m₀"
+          ],
+          "headerBinding": "letI",
+          "proofBinding": "let",
+          "originalHeaderLine": 47,
+          "prospectiveHeaderLine": 52,
+          "originalProofLine": 104,
+          "prospectiveProofLine": 114,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "g₀",
+          "type": "Ω → ℝ",
+          "value": "fun o => ∫ y, h o y ∂μ₀",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "h",
+            "canonicalRealStructures"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 48,
+          "prospectiveHeaderLine": 53,
+          "originalProofLine": 106,
+          "prospectiveProofLine": 116,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "r₀",
+          "type": "Ω → Ω → ℝ",
+          "value": "fun o y => h o y - g₀ o - g₀ y",
+          "captures": [
+            "Ω",
+            "h",
+            "g₀"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 49,
+          "prospectiveHeaderLine": 54,
+          "originalProofLine": 107,
+          "prospectiveProofLine": 117,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "v₀",
+          "type": "ℝ",
+          "value": "∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)",
+          "captures": [
+            "Ω",
+            "m₀",
+            "μ₀",
+            "r₀",
+            "canonicalReducedProduct"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 50,
+          "prospectiveHeaderLine": 55,
+          "originalProofLine": 108,
+          "prospectiveProofLine": 118,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "rho₀",
+          "type": "ℝ",
+          "value": "Real.sqrt v₀",
+          "captures": [
+            "v₀"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 51,
+          "prospectiveHeaderLine": 56,
+          "originalProofLine": 109,
+          "prospectiveProofLine": 119,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        },
+        {
+          "name": "P₀",
+          "type": "@Measure (J → Ω) mJ₀",
+          "value": "Measure.pi (fun _ : J => μ₀)",
+          "captures": [
+            "J",
+            "FintypeJ",
+            "Ω",
+            "m₀",
+            "μ₀",
+            "mJ₀"
+          ],
+          "headerBinding": "let",
+          "proofBinding": "let",
+          "originalHeaderLine": 52,
+          "prospectiveHeaderLine": 57,
+          "originalProofLine": 110,
+          "prospectiveProofLine": 120,
+          "functionReturningPropData": false,
+          "isNewAssumption": false,
+          "valueExpressionChanged": false,
+          "semanticValue": "same intended original/reduced transparent construction"
+        }
+      ]
+    }
+  ],
+  "sourceClosing": "end\n\nend Shao.OQ6.OriginalKernelObservableTransport\n",
+  "typedHeaderValuesDerived": 18,
+  "newGlobalDeclarations": 0,
+  "newMathematicalPremises": 0,
+  "unchanged22Conclusions": true,
+  "localChangedInstancesAndValues": [
+    {
+      "name": "proofLocalReducedInstance",
+      "type": "MeasurableSpace Ω",
+      "oldValue": "m₀",
+      "newValue": "m₀",
+      "oldBinding": "letI",
+      "newBinding": "let",
+      "captures": [
+        "Ω",
+        "m₀"
+      ],
+      "originalLine": 104,
+      "prospectiveLine": 114,
+      "sort": "Type",
+      "headerBindingUnchanged": true
+    },
+    {
+      "name": "hPair explicit SFinite proof",
+      "type": "@SFinite Ω mΩ μ",
+      "value": "(inferInstance : @SFinite Ω mΩ μ)",
+      "captures": [
+        "Ω",
+        "mΩ",
+        "μ",
+        "supplied originalProbability"
+      ],
+      "sort": "Prop",
+      "newPremise": false,
+      "originalLine": 170,
+      "prospectiveLine": 180
+    },
+    {
+      "name": "hsub",
+      "type": "Integrable (fun y : Ω => h o y - g₀ o) μ₀",
+      "value": "ho.sub hconst",
+      "captures": [
+        "bound o : Ω",
+        "ho : Integrable (h o) μ₀",
+        "hconst : Integrable (fun _ : Ω => g₀ o) μ₀",
+        "Ω",
+        "m₀",
+        "μ₀",
+        "h",
+        "g₀",
+        "canonical real normed structures"
+      ],
+      "sort": "Prop",
+      "scope": "Only inside the existing Fubini-good-row binder in hrCanonical; discharged within AE proof",
+      "newPremise": false,
+      "prospectiveLine": 243
+    },
+    {
+      "name": "typed outer subtraction function",
+      "type": "Ω → ℝ",
+      "value": "fun y : Ω => h o y - g₀ o",
+      "captures": [
+        "bound o : Ω",
+        "h",
+        "g₀"
+      ],
+      "sort": "Type",
+      "newDataChosen": false,
+      "meaning": "Same function formerly represented by (h o) - (fun _ : Ω => g₀ o), made explicit for equality matching"
+    },
+    {
+      "name": "suppliedFintypeJ explicit argument in P",
+      "type": "Fintype J",
+      "value": "(inferInstance : Fintype J)",
+      "captures": [
+        "same unnamed caller [Fintype J]"
+      ],
+      "sort": "Type",
+      "newDataChosen": false,
+      "fullProofFragment": "H04/B04"
+    },
+    {
+      "name": "hPair first identity",
+      "type": "Ω → Ω",
+      "value": "(id : Ω → Ω)",
+      "captures": [
+        "Ω"
+      ],
+      "sort": "Type",
+      "sourceSpace": "mΩ",
+      "targetSpace": "m₀",
+      "newDataChosen": false,
+      "fullProofFragment": "B06"
+    },
+    {
+      "name": "hPair second identity",
+      "type": "Ω → Ω",
+      "value": "(id : Ω → Ω)",
+      "captures": [
+        "Ω"
+      ],
+      "sort": "Type",
+      "sourceSpace": "mΩ",
+      "targetSpace": "m₀",
+      "newDataChosen": false,
+      "fullProofFragment": "B06"
+    },
+    {
+      "name": "hidJ source measurable structure",
+      "type": "MeasurableSpace (J → Ω)",
+      "value": "mJ",
+      "captures": [
+        "J",
+        "Ω",
+        "mΩ",
+        "mJ"
+      ],
+      "sort": "Type",
+      "newDataChosen": false,
+      "fullProofFragment": "B08"
+    },
+    {
+      "name": "hidJ target coordinate measurable structures",
+      "type": "(j : J) → MeasurableSpace Ω",
+      "value": "fun _ : J => m₀",
+      "captures": [
+        "J",
+        "Ω",
+        "m₀"
+      ],
+      "sort": "Type",
+      "newDataChosen": false,
+      "fullProofFragment": "B08"
+    },
+    {
+      "name": "hidJ tuple identity",
+      "type": "(J → Ω) → J → Ω",
+      "value": "(id : (J → Ω) → J → Ω)",
+      "captures": [
+        "J",
+        "Ω"
+      ],
+      "sort": "Type",
+      "newDataChosen": false,
+      "fullProofFragment": "B08"
+    }
+  ],
+  "retainedLocalClassProofBindings": [
+    {
+      "name": "reducedProbability",
+      "type": "IsProbabilityMeasure μ₀",
+      "value": "hμ₀prob",
+      "binding": "ordinary let",
+      "captures": [
+        "hμ₀prob",
+        "Ω",
+        "m₀",
+        "μ₀"
+      ],
+      "newPremise": false
+    },
+    {
+      "name": "mappedSigmaFinite",
+      "type": "∀ _ : J, SigmaFinite (@Measure.map Ω Ω mΩ m₀ id μ)",
+      "value": "fun _ => by rw [← hμmap]; infer_instance",
+      "binding": "ordinary let",
+      "captures": [
+        "J",
+        "Ω",
+        "mΩ",
+        "m₀",
+        "μ",
+        "hμmap",
+        "reducedProbability"
+      ],
+      "functionReturningPropData": true,
+      "newPremise": false
+    }
+  ],
+  "sourceTarget": {
+    "sha256": "616d2145fc8be92ac3d9aea92c28ab801e32b447ad62c4123838b45c95f1832f",
+    "bytes": 13850,
+    "LF": 319,
+    "proofLines": [
+      82,
+      315
+    ]
+  },
+  "sourceFormat": "UTF8noBOM/LF/noCR/singleFinalLF",
+  "authority": "Same author may apply exactly these12hunks into new repair-01 source; no other text changes. No Lean/server/network/publication.",
+  "semanticDecision": "Explicit original mOmega product/map/pi captures, explicit source/target spaces in map_prod_map and measurable_pi_iff, same reduced local space with ordinary proof let, typed derived hsub and integral_sub calc. Same original h/mu/normalization/finite empty J/no highermoment. No stronger assumptions or conclusion.",
+  "independentReview": "Reuse exact full299 originalSOURCE coverage; independently review all affected changes/interactions and final machine evidence. New exactsource native then sameFIRSTO allowned TYPE/nonthm VALUE/transitiveAX if successful.",
+  "kernelChecked": false,
+  "qualified": false
+}

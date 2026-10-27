@@ -39,3 +39,5 @@ Versioned scope/review/receipt files are immutable historical evidence. Their ol
 Source baseline: [shao@35d4580](https://github.com/randomcat4/shao/tree/35d4580b61e22e7145f47730045a09874ef93259). The separate unified-124 research objective is not a prerequisite for the accepted original scopes.
 
 - v122: one common countably generated sub-sigma algebra preserving the same original jointly measurable kernel and all countable scalar observables, including empty spaces. Law/integral/moment/CDF transport remains open.
+
+- v123: bounded changing-row positive-boundary/studentized limits and deterministic-strip energy Laplace ratios; conditional same-kernel/coarser-law integral, moment and sample-law transport. Full changing-row shrinking windows and literal CDF/root applications remain open.
