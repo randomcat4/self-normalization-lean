@@ -1,0 +1,175 @@
+{
+  "schema": "oq56-unit230-lead-full-ordinary-interface-inventory-v1",
+  "atUTC": "2026-10-27T09:46:25.736458+00:00",
+  "explicitParameters": [
+    "μ",
+    "g",
+    "hg",
+    "hg2",
+    "p",
+    "hp2",
+    "hp3",
+    "hgp",
+    "cBudget",
+    "hcBudget"
+  ],
+  "implicitBinders": [
+    "Ω : Type u",
+    "MeasurableSpace Ω",
+    "IsProbabilityMeasure μ"
+  ],
+  "innerUniversalBinders": [
+    "n : ℕ",
+    "_hn : 1 ≤ n",
+    "z : ℝ",
+    "_hz : 1 ≤ z"
+  ],
+  "ordinaryTypedLets": [
+    {
+      "name": "β",
+      "type": "ℝ",
+      "rhs": "∫ o : Ω, Real.rpow |g o| p ∂μ",
+      "scope": "before n,z",
+      "valueCaptures": [
+        "μ",
+        "g",
+        "p"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "MeasurableSpace Ω"
+      ]
+    },
+    {
+      "name": "c",
+      "type": "ℝ",
+      "rhs": "Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)",
+      "scope": "before n,z",
+      "valueCaptures": [
+        "p",
+        "cBudget"
+      ],
+      "typeCaptures": []
+    },
+    {
+      "name": "P",
+      "type": "Measure (Fin n → Ω)",
+      "rhs": "Measure.pi (fun _ : Fin n => μ)",
+      "scope": "inside ∀n,_hn,z,_hz",
+      "valueCaptures": [
+        "μ"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "n"
+      ]
+    },
+    {
+      "name": "N",
+      "type": "ℝ",
+      "rhs": "Real.sqrt (n : ℝ)",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "n"
+      ],
+      "typeCaptures": []
+    },
+    {
+      "name": "ξ",
+      "type": "Fin n → (Fin n → Ω) → ℝ",
+      "rhs": "fun i ω => g (ω i) / N",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "g",
+        "N"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "n"
+      ]
+    },
+    {
+      "name": "projectionTest",
+      "type": "(Fin n → Ω) → Fin n → ℝ",
+      "rhs": "fun ω i => Shao.truncationF (z * ξ i ω)",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "z",
+        "ξ"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "n"
+      ]
+    },
+    {
+      "name": "δ",
+      "type": "Fin n → ℝ",
+      "rhs": "fun i => ∫ ω : Fin n → Ω, projectionTest ω i ∂P",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "projectionTest",
+        "P"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "n"
+      ]
+    },
+    {
+      "name": "L",
+      "type": "ℝ",
+      "rhs": "∑ i : Fin n, δ i",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "δ"
+      ],
+      "typeCaptures": [
+        "n"
+      ]
+    },
+    {
+      "name": "scalarBudget",
+      "type": "ℝ",
+      "rhs": "∫ o : Ω, Shao.truncationF (z * (g o / N)) ∂μ",
+      "scope": "inside n,z",
+      "valueCaptures": [
+        "μ",
+        "g",
+        "z",
+        "N"
+      ],
+      "typeCaptures": [
+        "Ω",
+        "MeasurableSpace Ω"
+      ]
+    }
+  ],
+  "topLevelConclusions": 5,
+  "innerPacketConclusions": 11,
+  "strictWindowOutputs": 3,
+  "explicitWitness": "None; c deterministic typed RHS before universal n,z",
+  "noExternalCallbacksOrAuxiliaryPropPremises": true,
+  "canonicalInstances": "Finite Fin n/Pi product/real Borel and ordinary algebra; IsProbabilityMeasure P is an explicit output",
+  "allowedProofLocalOrdinaryHelper": {
+    "name": "f",
+    "type": "Ω → ℝ",
+    "rhs": "fun o : Ω => Shao.truncationF (z * (g o / N))",
+    "scope": "inside the current n,z/P/N packet only",
+    "valueCaptures": [
+      "g",
+      "z",
+      "N"
+    ],
+    "typeCaptures": [
+      "Ω"
+    ],
+    "purpose": "Already fully printed typed marginal callback in Stage1 route; permitted as proof-local let only, no new global declaration"
+  },
+  "otherProofLocalValueLets": "Only exact repeats of nine frozen ordinary values; m,d,a,b in route remain prose abbreviations unless separately frozen. Proof-local propositions/derivation facts must have honest full Lean types.",
+  "zeroBranch": "β=0→L=0∧∀iδi=0; window implication β=0 OR positiveβ exact printed S19 window",
+  "strictness": "c^p=min(1/2,cBudget)/2 strictly below min, uniform constant depends p/cBudget only",
+  "sourcezNotCompact1plusz": true
+}
