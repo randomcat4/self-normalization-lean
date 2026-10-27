@@ -1,0 +1,143 @@
+import Shao.OQ4.UniformConditionalEnergy
+import Shao.OQ4.RowEnergyLaplace
+
+set_option autoImplicit false
+set_option maxHeartbeats 2000000
+noncomputable section
+
+namespace Shao.OQ4.RowUniformConditionalEnergy
+
+open MeasureTheory Filter Set
+open RademacherScalarBounds (lambda)
+open UniformConditionalEnergy (energyCoshExcessIntegral)
+open scoped Topology
+
+-- PRIVATE 1: purely scalar; admissibility is required only eventually.
+private theorem selected_radius_scales
+    (h : ℕ → ℝ) (n : ℕ → ℕ) (b : ℕ → ℝ)
+    (C : ℝ) (hC : 1 ≤ C)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3)
+      atTop (𝓝 (0 : ℝ)))
+    (hb : ∀ᶠ j in atTop, h j / 2 ≤ b j ∧ b j ≤ C * h j) :
+    Tendsto b atTop atTop ∧
+      Tendsto (fun j => (n j : ℝ) / b j ^ 2) atTop atTop ∧
+      Tendsto (fun j => (n j : ℝ) / b j ^ 3) atTop (𝓝 (0 : ℝ))
+
+-- PRIVATE 2: selected actual radii; row law/moment hypotheses are explicit.
+-- Its bounded parameters are internally patched, never additional public inputs.
+-- The finite integrability and integral identity are derived body-locally.
+private theorem selected_radius_energy_ratio_tendsto
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3)
+      atTop (𝓝 (0 : ℝ)))
+    (b : ℕ → ℝ) (C : ℝ) (hC : 1 ≤ C)
+    (hb : ∀ᶠ j in atTop, h j / 2 ≤ b j ∧ b j ≤ C * h j)
+    (s : ℝ) (hs : 0 < s) :
+    Tendsto (fun j =>
+      energyCoshExcessIntegral (νSeq j) (n j) (b j) (h j) s /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) (b j)))
+      atTop (𝓝 (0 : ℝ))
+
+-- PUBLIC 1: one tail, all actual radii in [h_j/2, C*h_j], literal G and J.
+theorem varying_row_uniform_closedStrip_energy_controls
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3)
+      atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C) (s : ℝ) (hs : 0 < s)
+    (δ : ℝ) (hδ : 0 < δ) :
+    ∀ᶠ j in atTop, ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+      0 < (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+        (@Shao.closedStrip (n j) b) ∧
+      |(Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) /
+            ((4 / Real.pi) * Real.exp (-lambda * (n j : ℝ) / b ^ 2)) - 1| < δ ∧
+      0 ≤ energyCoshExcessIntegral (νSeq j) (n j) b (h j) s /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) ∧
+      energyCoshExcessIntegral (νSeq j) (n j) b (h j) s /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) < δ
+
+-- PUBLIC 2: simultaneous boundary-ratio bound; includes both strict positivities.
+theorem varying_row_uniform_closedStrip_boundary_ratio_bound
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3)
+      atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C) :
+    ∀ᶠ j in atTop,
+      0 < (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+        (@Shao.closedStrip (n j) (h j)) ∧
+      ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+        0 < (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) ∧
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+            (@Shao.closedStrip (n j) b) /
+          (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+            (@Shao.closedStrip (n j) (h j)) ≤
+          4 * Real.exp
+            (lambda * ((n j : ℝ) / h j ^ 2 - (n j : ℝ) / b ^ 2))
+
+-- PUBLIC 3: actual joint-energy concentration at the original h_j² scale.
+theorem varying_row_uniform_energy_concentration
+    (νSeq : ℕ → Measure ℝ)
+    (hprob : ∀ j, IsProbabilityMeasure (νSeq j))
+    (h3 : ∀ j, Integrable (fun x : ℝ => |x| ^ 3) (νSeq j))
+    (hmean : ∀ j, (∫ x : ℝ, x ∂(νSeq j)) = 0)
+    (hsecond : ∀ j, (∫ x : ℝ, x ^ 2 ∂(νSeq j)) = 1)
+    (M : ℝ)
+    (hM : ∀ j, (∫ x : ℝ, |x| ^ 3 ∂(νSeq j)) ≤ M)
+    (h : ℕ → ℝ) (n : ℕ → ℕ)
+    (hinfty : Tendsto h atTop atTop)
+    (hlong : Tendsto (fun j => (n j : ℝ) / h j ^ 2) atTop atTop)
+    (hshort : Tendsto (fun j => (n j : ℝ) / h j ^ 3)
+      atTop (𝓝 (0 : ℝ)))
+    (C : ℝ) (hC : 1 ≤ C)
+    (ε : ℝ) (hε : 0 < ε) (δ : ℝ) (hδ : 0 < δ) :
+    ∀ᶠ j in atTop, ∀ b : ℝ, h j / 2 ≤ b → b ≤ C * h j →
+      0 < (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+        (@Shao.closedStrip (n j) b) ∧
+      0 ≤ (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          ((@Shao.closedStrip (n j) b) ∩
+            {a : Shao.Path (n j) |
+              ε * h j ^ 2 < |Shao.energy a - (n j : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) ∧
+      (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          ((@Shao.closedStrip (n j) b) ∩
+            {a : Shao.Path (n j) |
+              ε * h j ^ 2 < |Shao.energy a - (n j : ℝ)|}) /
+        (Measure.pi (fun _ : Fin (n j) => νSeq j)).real
+          (@Shao.closedStrip (n j) b) < δ
+
+end Shao.OQ4.RowUniformConditionalEnergy
+end
