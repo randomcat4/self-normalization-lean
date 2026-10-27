@@ -1,0 +1,16 @@
+FILE /root/rivermind-data/shao-lean-20261021/workspaces/lead-oq3/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+968: end NormedAddCommGroup
+969: 
+970: theorem norm_integral_le_integral_norm (f : α → G) : ‖∫ a, f a ∂μ‖ ≤ ∫ a, ‖f a‖ ∂μ := by
+971:   have le_ae : ∀ᵐ a ∂μ, 0 ≤ ‖f a‖ := Eventually.of_forall fun a => norm_nonneg _
+972:   by_cases h : AEStronglyMeasurable f μ
+973:   · calc
+974:       ‖∫ a, f a ∂μ‖ ≤ ENNReal.toReal (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) :=
+975:         norm_integral_le_lintegral_norm _
+976:       _ = ∫ a, ‖f a‖ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae h.norm).symm
+977:   · rw [integral_non_aestronglyMeasurable h, norm_zero]
+978:     exact integral_nonneg_of_ae le_ae
+979: 
+980: lemma abs_integral_le_integral_abs {f : α → ℝ} : |∫ a, f a ∂μ| ≤ ∫ a, |f a| ∂μ :=
+981:   norm_integral_le_integral_norm f
+982: 

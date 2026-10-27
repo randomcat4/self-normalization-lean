@@ -1,0 +1,43 @@
+theorem six_order_word_weight_one (a : Fin 6 → ℂ) :
+    (∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+      ∑ sigma : Fin q.val → Fin 6,
+        if (∑ i, ((sigma i).val + 1)) = 1 then ∏ i, a (sigma i) else 0) = a 0
+
+theorem actual_cgf_cubic_gaussian_integral_zero
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior
+      (ProbabilityTheory.integrableExpSet
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ j : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ j) mu) (c : ℂ) :
+    Integrable (fun z : ℝ × ℝ => c * Complex.I ^ 3 *
+      ((iteratedDeriv 3 (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => z.1 * y 0 + z.2 * y 1) mu) 0 : ℝ) : ℂ) *
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+    (∫ z : ℝ × ℝ, c * Complex.I ^ 3 *
+      ((iteratedDeriv 3 (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => z.1 * y 0 + z.2 * y 1) mu) 0 : ℝ) : ℂ) *
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) = 0
+
+theorem actual_cgf_six_order_weight_one_gaussian_integral_zero
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior
+      (ProbabilityTheory.integrableExpSet
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ j : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ j) mu) (n : ℕ) :
+    let kappa : (ℝ × ℝ) → ℕ → ℝ := fun z j =>
+      iteratedDeriv j (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => z.1 * y 0 + z.2 * y 1) mu) 0
+    let a : (ℝ × ℝ) → Fin 6 → ℂ := fun z j =>
+      (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa z (j.val + 3) : ℂ) /
+          (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+    let S1 : (ℝ × ℝ) → ℂ := fun z =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if (∑ i, ((sigma i).val + 1)) = 1 then ∏ i, a z (sigma i) else 0
+    Integrable (fun z : ℝ × ℝ => S1 z *
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+    (∫ z : ℝ × ℝ, S1 z *
+      Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) = 0

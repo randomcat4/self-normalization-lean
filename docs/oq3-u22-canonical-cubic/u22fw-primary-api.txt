@@ -1,0 +1,41 @@
+FILE Mathlib/Algebra/BigOperators/Group/Finset/Defs.lean SHA256 14b2f485c336d67733ad3f3dd105699009d9c24a50c786e4f266e3db445c945d
+535: 
+536: See `Fintype.sum_equiv` for the version where `s` and `t` are `univ`. -/]
+537: lemma prod_equiv (e : ι ≃ κ) (hst : ∀ i, i ∈ s ↔ e i ∈ t) (hfg : ∀ i ∈ s, f i = g (e i)) :
+538:     ∏ i ∈ s, f i = ∏ i ∈ t, g i := by refine prod_nbij' e e.symm ?_ ?_ ?_ ?_ hfg <;> simp [hst]
+539: 
+540: /-- Specialization of `Finset.prod_bij` that automatically fills in most arguments.
+541: 
+542: See `Fintype.prod_bijective` for the version where `s` and `t` are `univ`. -/
+543: @[to_additive /-- Specialization of `Finset.sum_bij` that automatically fills in most arguments.
+544: 
+545: See `Fintype.sum_bijective` for the version where `s` and `t` are `univ`. -/]
+546: lemma prod_bijective (e : ι → κ) (he : e.Bijective) (hst : ∀ i, i ∈ s ↔ e i ∈ t)
+547:     (hfg : ∀ i ∈ s, f i = g (e i)) :
+733: 
+734: See `Equiv.sum_comp` for a version without `h`. -/]
+735: lemma prod_equiv (e : ι ≃ κ) (f : ι → M) (g : κ → M) (h : ∀ x, f x = g (e x)) :
+736:     ∏ x, f x = ∏ x, g x := prod_bijective _ e.bijective _ _ h
+737: 
+738: @[to_additive]
+739: lemma _root_.Function.Bijective.prod_comp {e : ι → κ} (he : e.Bijective) (g : κ → M) :
+740:     ∏ i, g (e i) = ∏ i, g i := prod_bijective _ he _ _ fun _ ↦ rfl
+741: 
+742: @[to_additive]
+743: lemma _root_.Equiv.prod_comp (e : ι ≃ κ) (g : κ → M) : ∏ i, g (e i) = ∏ i, g i :=
+744:   prod_equiv e _ _ fun _ ↦ rfl
+745: 
+FILE Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+286:   · simp [integral, hG]
+287: 
+288: theorem integral_const_mul {L : Type*} [RCLike L] (r : L) (f : α → L) :
+289:     ∫ a, r * f a ∂μ = r * ∫ a, f a ∂μ :=
+290:   integral_smul r f
+291: 
+292: theorem integral_mul_const {L : Type*} [RCLike L] (r : L) (f : α → L) :
+293:     ∫ a, f a * r ∂μ = (∫ a, f a ∂μ) * r := by simp only [mul_comm, integral_const_mul r f]
+294: 
+295: theorem integral_div {L : Type*} [RCLike L] (r : L) (f : α → L) :
+296:     ∫ a, f a / r ∂μ = (∫ a, f a ∂μ) / r := by
+297:   simpa only [← div_eq_mul_inv] using integral_mul_const r⁻¹ f
+298: 

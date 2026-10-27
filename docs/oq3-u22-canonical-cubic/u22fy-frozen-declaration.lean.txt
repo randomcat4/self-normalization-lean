@@ -1,0 +1,16 @@
+theorem gaussian_hermite_first_four_local_bounds
+    (x : ℝ) (hx : |x| ≤ 1) :
+    |(gaussianHermitePolynomial 0).eval x| ≤ 1 ∧
+      |(gaussianHermitePolynomial 1).eval x| ≤ |x| ∧
+      |(gaussianHermitePolynomial 2).eval x| ≤ 2 ∧
+      |(gaussianHermitePolynomial 3).eval x| ≤ 4 * |x|
+
+theorem cubic_hermite_coefficient_sum_local_bound
+    (b : Fin 4 → ℝ) (B : ℝ) (hB : 0 ≤ B) (hb : ∀ j : Fin 4, |b j| ≤ B) :
+    let P1 : (ℝ × ℝ) → ℝ := fun x => (1 / 6 : ℝ) *
+      ∑ j : Fin 4, (Nat.choose 3 j.val : ℝ) * b j *
+        (gaussianHermitePolynomial j.val).eval x.1 *
+          (gaussianHermitePolynomial (3 - j.val)).eval x.2
+    P1 (0, 0) = 0 ∧ ∀ x : ℝ × ℝ,
+      Real.sqrt (x.1 ^ 2 + x.2 ^ 2) ≤ 1 →
+        |P1 x| ≤ (16 / 3 : ℝ) * B * Real.sqrt (x.1 ^ 2 + x.2 ^ 2)
