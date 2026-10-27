@@ -1,0 +1,91 @@
+theorem literal_deleted_weighted_cost_limits
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (ν : Measure Ω) [hν : IsProbabilityMeasure ν]
+    (n : ℕ) (hn : 1 ≤ n) (ξ : Fin n → Ω → ℝ)
+    (hξ : ∀ i : Fin n, Measurable (ξ i))
+    (hξ2 : ∀ i : Fin n, MemLp (ξ i) 2 ν)
+    (hξmean : ∀ i : Fin n, (∫ ω, ξ i ω ∂ν) = 0)
+    (hξenergy : (∑ i : Fin n, ∫ ω, (ξ i ω) ^ 2 ∂ν) = 1)
+    (Y : ℕ → Fin n → Ω → ℝ)
+    (hY : ∀ (k : ℕ) (i : Fin n), Measurable (Y k i))
+    (ε : ℕ → ℝ) (hε : ∀ k : ℕ, 0 < ε k)
+    (hεsmall : ∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ)))
+    (hεlim : Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)))
+    (herr : ∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k)
+    (A B : Ω → ℝ) (Adelete Bdelete : Fin n → Ω → ℝ)
+    (hA : Measurable A) (hB : Measurable B)
+    (hAdelete : ∀ i : Fin n, Measurable (Adelete i))
+    (hBdelete : ∀ i : Fin n, Measurable (Bdelete i))
+    (hAnonneg : ∀ ω : Ω, 0 ≤ A ω)
+    (hBnonneg : ∀ ω : Ω, 0 ≤ B ω)
+    (hAdeletenonneg : ∀ (i : Fin n) (ω : Ω), 0 ≤ Adelete i ω)
+    (hBdeletenonneg : ∀ (i : Fin n) (ω : Ω), 0 ≤ Bdelete i ω)
+    (hAint : Integrable A ν) (hBint : Integrable B ν)
+    (hAdeleteint : ∀ i : Fin n, Integrable (Adelete i) ν)
+    (hBdeleteint : ∀ i : Fin n, Integrable (Bdelete i) ν)
+    (x : ℝ) (hx : 0 ≤ x) (K : ℝ) (hK : 0 ≤ K) :
+    let η : ℕ → Fin n → Ω → ℝ := fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+    let V : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (ξ i ω) ^ 2)
+    let Vdelete : Fin n → Ω → ℝ := fun i ω => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j ω) ^ 2)
+    let H : Ω → ℝ := fun ω => (1 + V ω) * (Real.sqrt (n : ℝ) + x * Real.sqrt (1 + B ω))
+    let Hdelete : Fin n → Ω → ℝ := fun i ω => (1 + Vdelete i ω) * (Real.sqrt (n : ℝ) + x * Real.sqrt (1 + Bdelete i ω))
+    let Anew : ℕ → Ω → ℝ := fun k ω => A ω + K * ε k * H ω
+    let AdeleteNew : ℕ → Fin n → Ω → ℝ := fun k i ω => Adelete i ω + K * ε k * Hdelete i ω
+    let ℓ : Fin n → Ω → ℝ := fun i ω => x * ξ i ω - (x * ξ i ω) ^ 2 / 2
+    let ℓη : ℕ → Fin n → Ω → ℝ := fun k i ω => x * η k i ω - (x * η k i ω) ^ 2 / 2
+    let S : Ω → ℝ := fun ω => ∑ i : Fin n, ℓ i ω
+    let Sη : ℕ → Ω → ℝ := fun k ω => ∑ i : Fin n, ℓη k i ω
+    let Sminus : Fin n → Ω → ℝ := fun i ω => ∑ j ∈ Finset.univ.erase i, ℓ j ω
+    let Sηminus : ℕ → Fin n → Ω → ℝ := fun k i ω => ∑ j ∈ Finset.univ.erase i, ℓη k j ω
+    let I : ℝ := ∫ ω, Real.exp (S ω) ∂ν
+    let Iη : ℕ → ℝ := fun k => ∫ ω, Real.exp (Sη k ω) ∂ν
+    let cap : Fin n → Ω → ℝ := fun i ω => min |x * ξ i ω| 1
+    let capη : ℕ → Fin n → Ω → ℝ := fun k i ω => min |x * η k i ω| 1
+    let compactCap : Fin n → Ω → ℝ := fun i ω => min |ξ i ω| (1 + x)⁻¹
+    let compactCapη : ℕ → Fin n → Ω → ℝ := fun k i ω => min |η k i ω| (1 + x)⁻¹
+    let fullTest : Ω → ℝ := fun ω => x * A ω + x ^ 2 * B ω
+    let fullTestη : ℕ → Ω → ℝ := fun k ω => x * Anew k ω + x ^ 2 * B ω
+    let deletedTest : Fin n → Ω → ℝ := fun i ω => cap i ω * (|A ω - Adelete i ω| + x * |B ω - Bdelete i ω|)
+    let deletedTestη : ℕ → Fin n → Ω → ℝ := fun k i ω => capη k i ω * (|Anew k ω - AdeleteNew k i ω| + x * |B ω - Bdelete i ω|)
+    let compactDeletedTest : Fin n → Ω → ℝ := fun i ω => compactCap i ω * (|A ω - Adelete i ω| + x * |B ω - Bdelete i ω|)
+    let compactDeletedTestη : ℕ → Fin n → Ω → ℝ := fun k i ω => compactCapη k i ω * (|Anew k ω - AdeleteNew k i ω| + x * |B ω - Bdelete i ω|)
+    let δcompact : Fin n → ℝ := fun i => ∫ ω, ((1 + x) * ξ i ω) ^ 2 * min |(1 + x) * ξ i ω| 1 ∂ν
+    let δcompactη : ℕ → Fin n → ℝ := fun k i => ∫ ω, ((1 + x) * η k i ω) ^ 2 * min |(1 + x) * η k i ω| 1 ∂ν
+    let Lcompact : ℝ := ∑ i : Fin n, δcompact i
+    let Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n, δcompactη k i
+    let sourceCost : ℝ := ((∫ ω, fullTest ω * Real.exp (S ω) ∂ν) + ∑ i : Fin n, ∫ ω, deletedTest i ω * Real.exp (Sminus i ω) ∂ν) / I
+    let sourceCostη : ℕ → ℝ := fun k => ((∫ ω, fullTestη k ω * Real.exp (Sη k ω) ∂ν) + ∑ i : Fin n, ∫ ω, deletedTestη k i ω * Real.exp (Sηminus k i ω) ∂ν) / Iη k
+    let compactCost : ℝ := Lcompact + (∫ ω, A ω ∂ν) + x * (∫ ω, B ω ∂ν) + ∑ i : Fin n, ∫ ω, compactDeletedTest i ω ∂ν
+    let compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ ω, Anew k ω ∂ν) + x * (∫ ω, B ω ∂ν) + ∑ i : Fin n, ∫ ω, compactDeletedTestη k i ω ∂ν
+    Measurable H ∧ Integrable H ν ∧
+    (∀ i : Fin n, Measurable (Hdelete i) ∧ Integrable (Hdelete i) ν) ∧
+    (∀ ω : Ω, 0 ≤ H ω) ∧
+    (∀ (i : Fin n) (ω : Ω), 0 ≤ Hdelete i ω) ∧
+    (∀ k : ℕ, Measurable (Anew k) ∧ Integrable (Anew k) ν ∧ ∀ ω : Ω, 0 ≤ Anew k ω) ∧
+    (∀ (k : ℕ) (i : Fin n), Measurable (AdeleteNew k i) ∧ Integrable (AdeleteNew k i) ν ∧ ∀ ω : Ω, 0 ≤ AdeleteNew k i ω) ∧
+    (∀ k : ℕ, Integrable (fun ω => |Anew k ω - A ω|) ν ∧
+      (∫ ω, |Anew k ω - A ω| ∂ν) = |ε k| * (K * (∫ ω, H ω ∂ν))) ∧
+    (∀ (k : ℕ) (i : Fin n), Integrable (fun ω => |AdeleteNew k i ω - Adelete i ω|) ν ∧
+      (∫ ω, |AdeleteNew k i ω - Adelete i ω| ∂ν) = |ε k| * (K * (∫ ω, Hdelete i ω ∂ν))) ∧
+    Filter.Tendsto (fun k : ℕ => ∫ ω, |Anew k ω - A ω| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => ∫ ω, |AdeleteNew k i ω - Adelete i ω| ∂ν) Filter.atTop (nhds (0 : ℝ))) ∧
+    Integrable (fun ω => fullTest ω * Real.exp (S ω)) ν ∧
+    (∀ k : ℕ, Integrable (fun ω => fullTestη k ω * Real.exp (Sη k ω)) ν) ∧
+    (∀ i : Fin n, Integrable (fun ω => deletedTest i ω * Real.exp (Sminus i ω)) ν) ∧
+    (∀ (k : ℕ) (i : Fin n), Integrable (fun ω => deletedTestη k i ω * Real.exp (Sηminus k i ω)) ν) ∧
+    (∀ i : Fin n, Integrable (compactDeletedTest i) ν) ∧
+    (∀ (k : ℕ) (i : Fin n), Integrable (compactDeletedTestη k i) ν) ∧
+    0 < I ∧ (∀ k : ℕ, 0 < Iη k) ∧
+    Filter.Tendsto Iη Filter.atTop (nhds I) ∧
+    Filter.Tendsto (fun k : ℕ => ∫ ω, fullTestη k ω * Real.exp (Sη k ω) ∂ν)
+      Filter.atTop (nhds (∫ ω, fullTest ω * Real.exp (S ω) ∂ν)) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => ∫ ω, deletedTestη k i ω * Real.exp (Sηminus k i ω) ∂ν)
+      Filter.atTop (nhds (∫ ω, deletedTest i ω * Real.exp (Sminus i ω) ∂ν))) ∧
+    Filter.Tendsto (fun k : ℕ => (∫ ω, fullTestη k ω * Real.exp (Sη k ω) ∂ν) / Iη k)
+      Filter.atTop (nhds ((∫ ω, fullTest ω * Real.exp (S ω) ∂ν) / I)) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => (∫ ω, deletedTestη k i ω * Real.exp (Sηminus k i ω) ∂ν) / Iη k)
+      Filter.atTop (nhds ((∫ ω, deletedTest i ω * Real.exp (Sminus i ω) ∂ν) / I))) ∧
+    (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => ∫ ω, compactDeletedTestη k i ω ∂ν)
+      Filter.atTop (nhds (∫ ω, compactDeletedTest i ω ∂ν))) ∧
+    Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost) ∧
+    Filter.Tendsto compactCostη Filter.atTop (nhds compactCost)
