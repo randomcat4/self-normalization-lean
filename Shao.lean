@@ -308,7 +308,9 @@ import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
+import Shao.OQ3.DirectionalCGFComplexHomogeneousPolynomial
 import Shao.OQ3.DirectionalCGFCumulantContinuity
+import Shao.OQ3.DirectionalCGFCumulantHomogeneousPolynomial
 import Shao.OQ3.DirectionalMomentPolynomialContinuity
 import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
@@ -326,7 +328,14 @@ import Shao.OQ3.GaussianBoundaryConstant
 import Shao.OQ3.GaussianBoundaryLaplaceMixture
 import Shao.OQ3.GaussianCurveTube
 import Shao.OQ3.GaussianFiniteArcTube
+import Shao.OQ3.GaussianFiniteHermiteIntegral
+import Shao.OQ3.GaussianFourierMomentDerivative
+import Shao.OQ3.GaussianHermiteIntegral
+import Shao.OQ3.GaussianHermitePolynomialRecursor
+import Shao.OQ3.GaussianHermiteScaledDerivative
+import Shao.OQ3.GaussianMvPolynomialHermiteIntegral
 import Shao.OQ3.GaussianOscillatoryIntegral
+import Shao.OQ3.GaussianSixOrderActualCGFHermiteIntegral
 import Shao.OQ3.GlobalNegativeLayerBound
 import Shao.OQ3.ImaginaryExponentialTaylorRemainder
 import Shao.OQ3.ImaginaryRealExponentialQuadraticError
@@ -806,6 +815,7 @@ import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
+import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment
 import Shao.OQ6.OriginalSelfNormalizedTail
 import Shao.OQ6.OriginalSingleWitnessAnalyticStrictFrontier
