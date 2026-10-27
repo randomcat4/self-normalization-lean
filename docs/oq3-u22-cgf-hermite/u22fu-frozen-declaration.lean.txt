@@ -1,0 +1,33 @@
+theorem pair_directional_cgf_six_order_gaussian_hermite_integral
+    (mu : Measure (Fin 2 → ℝ)) [IsProbabilityMeasure mu]
+    (h0 : ∀ u v : ℝ, 0 ∈ interior
+      (ProbabilityTheory.integrableExpSet
+        (fun y : Fin 2 → ℝ => u * y 0 + v * y 1) mu))
+    (hM : ∀ k : ℕ, Integrable (fun y : Fin 2 → ℝ =>
+      Real.sqrt (y 0 ^ 2 + y 1 ^ 2) ^ k) mu) (n : ℕ) (hn : 1 ≤ n) :
+    let kappa : (ℝ × ℝ) → ℕ → ℝ := fun z j =>
+      iteratedDeriv j (ProbabilityTheory.cgf
+        (fun y : Fin 2 → ℝ => z.1 * y 0 + z.2 * y 1) mu) 0
+    let a : (ℝ × ℝ) → Fin 6 → ℂ := fun z j =>
+      (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+        (kappa z (j.val + 3) : ℂ) /
+          (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+    let S : (ℝ × ℝ) → ℂ := fun z =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if (∑ i, ((sigma i).val + 1)) ≤ 6 then ∏ i, a z (sigma i) else 0
+    ∃ P : MvPolynomial (Fin 2) ℝ,
+      (∀ z : ℝ × ℝ, MvPolynomial.eval₂ Complex.ofRealHom
+        ![Complex.I * (z.1 : ℂ), Complex.I * (z.2 : ℂ)] P = S z) ∧
+      ∀ x : ℝ × ℝ,
+        Integrable (fun z : ℝ × ℝ =>
+          Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+            S z * Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+          (∫ z : ℝ × ℝ,
+            Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+              S z * Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) =
+            ((2 * Real.pi *
+              (∑ d ∈ P.support, P.coeff d *
+                (gaussianHermitePolynomial (d 0)).eval x.1 *
+                  (gaussianHermitePolynomial (d 1)).eval x.2) *
+                    Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2) : ℝ) : ℂ)

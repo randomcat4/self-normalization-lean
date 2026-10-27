@@ -1,0 +1,54 @@
+FILE .lake/packages/mathlib/Mathlib/Analysis/Calculus/IteratedDeriv/Defs.lean SHA256 95e6b06e0b5094f2404bef7f871317a22065cf3f4eea2775011be4fff7bdd491
+294: theorem ContDiff.differentiable_iteratedDeriv {n : ℕ∞ω} (m : ℕ) (h : ContDiff 𝕜 n f)
+295:     (hmn : m < n) : Differentiable 𝕜 (iteratedDeriv m f) :=
+296:   (contDiff_iff_iteratedDeriv.1 (h.of_le (ENat.add_one_natCast_le_withTop_of_lt hmn))).2 m
+297:     (mod_cast (lt_add_one m))
+298: 
+299: @[fun_prop]
+300: theorem ContDiff.differentiable_iteratedDeriv' (m : ℕ) (h : ContDiff 𝕜 (m + 1) f) :
+301:     Differentiable 𝕜 (iteratedDeriv m f) :=
+302:   h.differentiable_iteratedDeriv m (Nat.cast_lt.mpr m.lt_succ_self)
+303: 
+304: /-- The `n+1`-th iterated derivative can be obtained by differentiating the `n`-th
+305: iterated derivative. -/
+306: theorem iteratedDeriv_succ : iteratedDeriv (n + 1) f = deriv (iteratedDeriv n f) := by
+307:   rw [← iteratedDerivWithin_univ, ← iteratedDerivWithin_univ, ← derivWithin_univ]
+FILE .lake/packages/mathlib/Mathlib/Analysis/Calculus/IteratedDeriv/Lemmas.lean SHA256 c7104925a2be874d83ce24a5bb02452ff2d6269e768754635f8188fd461989dc
+371: /-- A variant of `iteratedDeriv_const_mul` without differentiability assumption when
+372: the multiplication is in a division ring. -/
+373: @[simp]
+374: theorem iteratedDeriv_const_mul_field {n : ℕ} (c : 𝕜') (f : 𝕜 → 𝕜') :
+375:     iteratedDeriv n (c * f ·) x = c * iteratedDeriv n f x := by
+376:   simpa only [iteratedDerivWithin_univ] using
+377:     iteratedDerivWithin_const_mul_field (s := .univ) c f
+378: 
+379: /-- A variant of `iteratedDeriv_mul_const` without differentiability assumption when
+380: the multiplication is in a division ring. -/
+381: @[simp]
+382: theorem iteratedDeriv_mul_const_field {n : ℕ} (f : 𝕜 → 𝕜') (c : 𝕜') :
+383:     iteratedDeriv n (f · * c) x = iteratedDeriv n f x * c := by
+384:   simpa only [iteratedDerivWithin_univ] using
+385:     iteratedDerivWithin_mul_const_field (s := .univ) f c
+386: 
+387: @[simp]
+388: theorem iteratedDeriv_div_const {n : ℕ} (f : 𝕜 → 𝕜') (c : 𝕜') :
+389:     iteratedDeriv n (f · / c) x = iteratedDeriv n f x / c := by
+390:   simp [div_eq_mul_inv]
+391: 
+392: theorem iteratedDeriv_comp_const_smul {n : ℕ} {f : 𝕜 → F} (h : ContDiff 𝕜 n f) (c : 𝕜) :
+393:     iteratedDeriv n (fun x => f (c * x)) = fun x => c ^ n • iteratedDeriv n f (c * x) := by
+394:   funext x
+395:   simpa only [iteratedDerivWithin_univ] using
+396:     iteratedDerivWithin_comp_const_smul (Set.mem_univ x) uniqueDiffOn_univ (contDiffOn_univ.mpr h)
+397:       c (Set.mapsTo_univ _ _)
+398: 
+399: theorem iteratedDeriv_comp_const_mul {n : ℕ} {f : 𝕜 → 𝕜} (h : ContDiff 𝕜 n f) (c : 𝕜) :
+400:     iteratedDeriv n (fun x => f (c * x)) = fun x => c ^ n * iteratedDeriv n f (c * x) := by
+401:   simpa only [smul_eq_mul] using iteratedDeriv_comp_const_smul h c
+FILE .lake/packages/mathlib/Mathlib/Analysis/Complex/RealDeriv.lean SHA256 01728182a2668a08c78d03c10aa9487d893247a9be09920bd179eb9921385baa
+101: /-- If a function `f : ℝ → ℝ` is differentiable at a (real) point `x`, then it is also
+102: differentiable as a function `ℝ → ℂ`. -/
+103: theorem HasDerivAt.ofReal_comp {f : ℝ → ℝ} {u : ℝ} (hf : HasDerivAt f u z) :
+104:     HasDerivAt (fun y : ℝ => ↑(f y) : ℝ → ℂ) u z := by
+105:   simpa only [ofRealCLM_apply, ofReal_one, real_smul, mul_one] using!
+106:     ofRealCLM.hasDerivAt.scomp z hf

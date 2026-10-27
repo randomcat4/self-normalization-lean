@@ -1,0 +1,19 @@
+DECL Shao.OQ3.pair_standard_gaussian_finite_hermite_integral
+TYPE ∀ (s : Finset (ℕ × ℕ)) (a : ℕ × ℕ → ℝ) (x : ℝ × ℝ),
+  MeasureTheory.Integrable
+      (fun z =>
+        (Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+            ∑ d ∈ s, ↑(a d) * (Complex.I * ↑z.1) ^ d.1 * (Complex.I * ↑z.2) ^ d.2) *
+          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2))
+      MeasureTheory.volume ∧
+    ∫ (z : ℝ × ℝ),
+        (Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+            ∑ d ∈ s, ↑(a d) * (Complex.I * ↑z.1) ^ d.1 * (Complex.I * ↑z.2) ^ d.2) *
+          Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) =
+      ↑((2 * Real.pi *
+            ∑ d ∈ s,
+              a d * Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial d.1) *
+                Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial d.2)) *
+          Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

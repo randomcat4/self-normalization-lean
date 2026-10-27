@@ -1,0 +1,22 @@
+theorem real_standard_gaussian_hermite_integral (n : ℕ) (x : ℝ) :
+    Integrable (fun t : ℝ =>
+      Complex.exp (-Complex.I * (x : ℂ) * (t : ℂ)) *
+        (Complex.I * (t : ℂ)) ^ n * Complex.exp (-(t : ℂ) ^ 2 / 2)) ∧
+      (∫ t : ℝ, Complex.exp (-Complex.I * (x : ℂ) * (t : ℂ)) *
+        (Complex.I * (t : ℂ)) ^ n * Complex.exp (-(t : ℂ) ^ 2 / 2)) =
+        ((Real.sqrt (2 * Real.pi) * (gaussianHermitePolynomial n).eval x *
+          Real.exp (-x ^ 2 / 2) : ℝ) : ℂ)
+
+theorem pair_standard_gaussian_hermite_integral (m n : ℕ) (x : ℝ × ℝ) :
+    Integrable (fun z : ℝ × ℝ =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+        (Complex.I * (z.1 : ℂ)) ^ m * (Complex.I * (z.2 : ℂ)) ^ n *
+          Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) ∧
+      (∫ z : ℝ × ℝ,
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+          (Complex.I * (z.1 : ℂ)) ^ m * (Complex.I * (z.2 : ℂ)) ^ n *
+            Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)) =
+        ((2 * Real.pi *
+          (gaussianHermitePolynomial m).eval x.1 *
+          (gaussianHermitePolynomial n).eval x.2 *
+            Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2) : ℝ) : ℂ)

@@ -1,0 +1,23 @@
+DECL Shao.OQ3.pair_homogeneous_polynomial_eval_imaginary
+TYPE ∀ (P : MvPolynomial (Fin 2) ℝ) (n : ℕ),
+  P.IsHomogeneous n →
+    ∀ (u v : ℝ),
+      MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑u, Complex.I * ↑v] P =
+        Complex.I ^ n * ↑((MvPolynomial.eval ![u, v]) P)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_directional_cgf_complex_homogeneous_polynomial
+TYPE ∀ (mu : MeasureTheory.Measure (Fin 2 → ℝ)) [MeasureTheory.IsProbabilityMeasure mu],
+  (∀ (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) mu)) →
+    (∀ (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) mu) →
+      ∀ (n : ℕ),
+        ∃ P,
+          P.IsHomogeneous n ∧
+            (∀ (u v : ℝ),
+                (MvPolynomial.eval ![u, v]) P =
+                  iteratedDeriv n (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) mu) 0) ∧
+              ∀ (u v : ℝ),
+                MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑u, Complex.I * ↑v] P =
+                  Complex.I ^ n * ↑(iteratedDeriv n (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) mu) 0)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

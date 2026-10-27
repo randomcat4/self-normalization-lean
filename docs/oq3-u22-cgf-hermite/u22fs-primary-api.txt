@@ -1,0 +1,56 @@
+FILE .lake/packages/mathlib/Mathlib/Algebra/MvPolynomial/Eval.lean SHA256 fb0dd2f7f249f9234abcf7cba2deca0cbdcc6cbf05e07adc18714579ba3a3e72
+72: theorem eval₂_eq (g : R →+* S₁) (X : σ → S₁) (f : MvPolynomial σ R) :
+73:     f.eval₂ g X = ∑ d ∈ f.support, g (f.coeff d) * ∏ i ∈ d.support, X i ^ d i :=
+74:   rfl
+75: 
+76: theorem eval₂_eq' [Fintype σ] (g : R →+* S₁) (X : σ → S₁) (f : MvPolynomial σ R) :
+77:     f.eval₂ g X = ∑ d ∈ f.support, g (f.coeff d) * ∏ i, X i ^ d i := by
+78:   simp only [eval₂_eq, ← Finsupp.prod_pow]
+79:   rfl
+FILE .lake/packages/mathlib/Mathlib/Algebra/MvPolynomial/Eval.lean SHA256 fb0dd2f7f249f9234abcf7cba2deca0cbdcc6cbf05e07adc18714579ba3a3e72
+258: 
+259: theorem eval_eq (X : σ → R) (f : MvPolynomial σ R) :
+260:     eval X f = ∑ d ∈ f.support, f.coeff d * ∏ i ∈ d.support, X i ^ d i :=
+261:   rfl
+262: 
+263: theorem eval_eq' [Fintype σ] (X : σ → R) (f : MvPolynomial σ R) :
+264:     eval X f = ∑ d ∈ f.support, f.coeff d * ∏ i, X i ^ d i :=
+265:   eval₂_eq' (RingHom.id R) X f
+FILE .lake/packages/mathlib/Mathlib/RingTheory/MvPolynomial/Homogeneous.lean SHA256 b39c0dfe5de107efdb5ec74c13e248777ba5d8d0acf9d37e363d9b2159a6148f
+44: /-- A multivariate polynomial `φ` is homogeneous of degree `n`
+45: if all monomials occurring in `φ` have degree `n`. -/
+46: def IsHomogeneous [CommSemiring R] (φ : MvPolynomial σ R) (n : ℕ) :=
+47:   IsWeightedHomogeneous 1 φ n
+FILE .lake/packages/mathlib/Mathlib/RingTheory/MvPolynomial/WeightedHomogeneous.lean SHA256 8b4377fe0e85e65f68fa96c15a0563578421c6e9c5d7eed279a43c1c729d47bc
+120: /-- A multivariate polynomial `φ` is weighted homogeneous of weighted degree `m` if all monomials
+121:   occurring in `φ` have weighted degree `m`. -/
+122: def IsWeightedHomogeneous (w : σ → M) (φ : MvPolynomial σ R) (m : M) : Prop :=
+123:   ∀ ⦃d⦄, φ.coeff d ≠ 0 → weight w d = m
+FILE .lake/packages/mathlib/Mathlib/Data/Finsupp/Weight.lean SHA256 179ec685ae5218d0297d9bf434c2d2e84c04f2b8791ec1671d4b6a920c42368b
+82: noncomputable def weight : (σ →₀ R) →+ M :=
+83:   (Finsupp.linearCombination R w).toAddMonoidHom
+84: 
+85: theorem weight_apply (f : σ →₀ R) :
+86:     weight w f = Finsupp.sum f (fun i c => c • w i) := rfl
+87: 
+88: theorem weight_single_index [DecidableEq σ] (s : σ) (c : M) (f : σ →₀ R) :
+89:     weight (Pi.single s c) f = f s • c :=
+90:   linearCombination_single_index σ M R c s f
+91: 
+92: theorem weight_single_one_apply [DecidableEq σ] (s : σ) (f : σ →₀ R) :
+93:     weight (Pi.single s 1) f = f s := by
+94:   rw [weight_single_index, smul_eq_mul, mul_one]
+FILE .lake/packages/mathlib/Mathlib/Algebra/BigOperators/Finsupp/Basic.lean SHA256 7e6abc93ab9f40fe5b4a24fec377b4f6c96a79a45b2527c66055814f8589e64d
+59:   Finset.prod_subset hs <| by simp_all
+60: 
+61: @[to_additive]
+62: theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) :
+63:     f.prod g = ∏ i, g i (f i) :=
+64:   f.prod_of_support_subset (subset_univ _) g fun x _ => h x
+65: 
+66: @[to_additive (attr := simp)]
+67: theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 = 1) :
+68:     (single a b).prod h = h a b :=
+69:   calc
+70:     (single a b).prod h = ∏ x ∈ {a}, h x (single a b x) :=
+71:       prod_of_support_subset _ support_single_subset h fun _ hx =>

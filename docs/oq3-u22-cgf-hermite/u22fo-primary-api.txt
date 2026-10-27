@@ -1,0 +1,28 @@
+FILE .lake/packages/mathlib/Mathlib/Analysis/Fourier/FourierTransform.lean SHA256 c0ec17d6fe299ef298af1391769dd809268e894055fa2470abc932f11ddc775b
+488: theorem fourier_real_eq_integral_exp_smul (f : ℝ → E) (w : ℝ) :
+489:     𝓕 f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.I) • f v := by
+490:   simp_rw [fourier_real_eq, Circle.smul_def, Real.fourierChar_apply, mul_neg, neg_mul,
+491:     mul_assoc]
+FILE .lake/packages/mathlib/Mathlib/Analysis/Fourier/FourierTransformDeriv.lean SHA256 07ccb71970442cd050c87eb29f5655cff9b020d08fa436142009ff5230ccd81f
+805: theorem iteratedDeriv_fourier {f : ℝ → E} {N : ℕ∞} {n : ℕ}
+806:     (hf : ∀ (n : ℕ), n ≤ N → Integrable (fun x ↦ x ^ n • f x)) (hn : n ≤ N) :
+807:     iteratedDeriv n (𝓕 f) = 𝓕 (fun x : ℝ ↦ (-2 * π * I * x) ^ n • f x) := by
+FILE .lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Gaussian/GaussianIntegral.lean SHA256 4378f161cf5d482be77941cc9aea0195d2e83fe54eeb51b2ab33db1a318ccb9c
+89:   exact integrableOn_rpow_mul_exp_neg_rpow hs hp
+90: 
+91: theorem integrableOn_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
+92:     IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (Ioi 0) := by
+93:   simp_rw [← rpow_two]
+94:   exact integrableOn_rpow_mul_exp_neg_mul_rpow hs two_pos hb
+95: 
+96: theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
+97:     Integrable fun x : ℝ => x ^ s * exp (-b * x ^ 2) := by
+98:   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ), integrableOn_union,
+99:     integrableOn_Ici_iff_integrableOn_Ioi]
+100:   refine ⟨?_, integrableOn_rpow_mul_exp_neg_mul_sq hb hs⟩
+101:   rw [← (Measure.measurePreserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
+102:       (Homeomorph.neg ℝ).measurableEmbedding]
+103:   simp only [Function.comp_def, neg_sq, neg_preimage, neg_Iio, neg_zero]
+104:   apply Integrable.mono' (integrableOn_rpow_mul_exp_neg_mul_sq hb hs)
+105:   · apply Measurable.aestronglyMeasurable
+106:     exact (measurable_id'.neg.pow measurable_const).mul

@@ -1,0 +1,32 @@
+PINNED_PRIMARY_SOURCE .lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Polynomial.lean SHA256 5131dceeeab71a2f61f2b570ebab47e6131e55cbf9a070724226aacf2b35e845
+59:                       using! (hasStrictDerivAt_pow n x).const_mul a
+60: 
+61: protected theorem hasStrictDerivAt_aeval (x : 𝕜) :
+62:     HasStrictDerivAt (fun x => aeval x q) (aeval x (derivative q)) x := by
+63:   simpa only [aeval_def, eval₂_eq_eval_map, derivative_map] using
+64:     (q.map (algebraMap R 𝕜)).hasStrictDerivAt x
+65: 
+66: /-- The derivative (in the analysis sense) of a polynomial `p` is given by `p.derivative`. -/
+67: protected theorem hasDerivAt (x : 𝕜) : HasDerivAt (fun x => p.eval x) (p.derivative.eval x) x :=
+68:   (p.hasStrictDerivAt x).hasDerivAt
+PINNED_PRIMARY_SOURCE .lake/packages/mathlib/Mathlib/Analysis/Calculus/IteratedDeriv/Defs.lean SHA256 95e6b06e0b5094f2404bef7f871317a22065cf3f4eea2775011be4fff7bdd491
+253: 
+254: @[simp]
+255: theorem iteratedDeriv_zero : iteratedDeriv 0 f = f := by ext x; simp [iteratedDeriv]
+256: 
+257: @[simp]
+258: theorem iteratedDeriv_one : iteratedDeriv 1 f = deriv f := by ext x; simp [iteratedDeriv]
+304: /-- The `n+1`-th iterated derivative can be obtained by differentiating the `n`-th
+305: iterated derivative. -/
+306: theorem iteratedDeriv_succ : iteratedDeriv (n + 1) f = deriv (iteratedDeriv n f) := by
+307:   rw [← iteratedDerivWithin_univ, ← iteratedDerivWithin_univ, ← derivWithin_univ]
+308:   exact iteratedDerivWithin_succ
+PINNED_PRIMARY_SOURCE /root/rivermind-data/shao-lean-20261021/toolchains/elan/toolchains/leanprover--lean4---v4.36.0-rc1/src/lean/Lean/Declaration.lean SHA256 3c0a5641cdd36fede77a3a2fd07a151968b78a8cf235fd0e9fe70e82603fff3d
+104: inductive DefinitionSafety where
+105:   | «unsafe» | safe | «partial»
+106:   deriving Inhabited, BEq, Repr
+107: 
+108: structure DefinitionVal extends ConstantVal where
+109:   value  : Expr
+110:   hints  : ReducibilityHints
+111:   safety : DefinitionSafety
