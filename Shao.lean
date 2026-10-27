@@ -728,6 +728,7 @@ import Shao.OQ6.FiniteRows
 import Shao.OQ6.FiniteSignExponential
 import Shao.OQ6.FiniteTiltedMoments
 import Shao.OQ6.FiniteUniformCodingAssembly
+import Shao.OQ6.IIDSourceStrictMomentBudgets
 import Shao.OQ6.KernelObservableReduction
 import Shao.OQ6.LiteralDeletedRemainderEnvelope
 import Shao.OQ6.LiteralDeletedWeightedCosts
@@ -739,6 +740,7 @@ import Shao.OQ6.NormalizedIntegrableCDFAssembly
 import Shao.OQ6.NormalizedIntegrableTailAssembly
 import Shao.OQ6.NormalizedRawNumeratorBuffer
 import Shao.OQ6.NormalizedRemainderEnvelope
+import Shao.OQ6.NormalizedStrictMomentBudgets
 import Shao.OQ6.ObservationProductTilt
 import Shao.OQ6.OriginalBoundedFourPayments
 import Shao.OQ6.OriginalClippedCanonicalCoding
