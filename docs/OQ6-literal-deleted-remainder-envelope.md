@@ -1,0 +1,9 @@
+# Literal full and deleted remainder envelope payments
+
+The exact generic fixed-law envelope theorem is qualified at source SHA256 `1eba3a02250a1574d8d657a4bf08ed8c1852b97ff9dc2b44735833a794edc9b1` (19108 bytes, 390 LF). It proves genuine L1, signed and absolute linear integral payments, exact arbitrary-A residual cancellation, residual bounds, and zero limits for the full and deleted envelopes. Deleted sums retain the original n in every coefficient; their energy is not assumed to equal one. The payment constants depend on the fixed law and model.
+
+The complete independent SOURCE review, nine lexical corrections and bounded repair review are reused exactly. The same independent reviewer read every one of the 653 actual TYPE lines. The actual module-index inventory contains one public theorem and no non-theorem VALUE. Native002 and the same first-original-object audit have actual Lean exit0; the transitive axiom set is exactly propext, Classical.choice and Quot.sound. Native002 has zero source errors and warnings and empty stdout. Both strict-wrapper false values and the standing 134-byte stderr are retained. Failed native001 remains recorded as RC1/two errors/no object.
+
+The qualified source, independent report, full TYPE, recursive axiom receipt and exact source/object bindings are in the audit bundle. Objects, full logs, caches and large raw receipts remain on the server.
+
+This theorem does not establish that 4sqrt(n) controls Qepsilon. The actual original-model application requires separately qualified SAME-witness unit224. Weighted limits, source budgets, general S15, full S11, external Shao-Zhou application, CDF, atoms, zero-denominator handling and the OQ56 root remain open. The p51 repair-candidate status, p54 repairs and external-result attribution are retained. OQ3 remains separately paused by the user.
