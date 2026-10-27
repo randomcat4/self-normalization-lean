@@ -1,0 +1,44 @@
+theorem actual_iid_source_z_strict_moment_budgets
+    {Ω : Type u} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (hgp : Integrable (fun o : Ω => Real.rpow |g o| p) μ)
+    (cBudget : ℝ) (hcBudget : 0 < cBudget) :
+    let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+    let c : ℝ :=
+      Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)
+    0 ≤ β ∧
+      0 < c ∧
+      Real.rpow c p = min (1 / 2 : ℝ) cBudget / 2 ∧
+      Real.rpow c p < min (1 / 2 : ℝ) cBudget ∧
+      (∀ (n : ℕ) (_hn : 1 ≤ n) (z : ℝ) (_hz : 1 ≤ z),
+        let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+        let N : ℝ := Real.sqrt (n : ℝ)
+        let ξ : Fin n → (Fin n → Ω) → ℝ :=
+          fun i ω => g (ω i) / N
+        let projectionTest : (Fin n → Ω) → Fin n → ℝ :=
+          fun ω i => Shao.truncationF (z * ξ i ω)
+        let δ : Fin n → ℝ :=
+          fun i => ∫ ω : Fin n → Ω, projectionTest ω i ∂P
+        let L : ℝ := ∑ i : Fin n, δ i
+        let scalarBudget : ℝ :=
+          ∫ o : Ω, Shao.truncationF (z * (g o / N)) ∂μ
+        IsProbabilityMeasure P ∧
+          Integrable (fun o : Ω => Shao.truncationF (z * (g o / N))) μ ∧
+          (∀ i : Fin n, Integrable (fun ω : Fin n → Ω =>
+            projectionTest ω i) P) ∧
+          (∀ i : Fin n, δ i = scalarBudget) ∧
+          L = (n : ℝ) * scalarBudget ∧
+          (∀ i : Fin n, L = (n : ℝ) * δ i) ∧
+          (∀ i : Fin n, 0 ≤ δ i) ∧
+          0 ≤ L ∧
+          L ≤ β * Real.rpow z p /
+            Real.rpow (n : ℝ) ((p - 2) / 2) ∧
+          (β = 0 → L = 0 ∧ (∀ i : Fin n, δ i = 0)) ∧
+          ((β = 0 ∨
+              (0 < β ∧ z ≤ c * Real.rpow β (-1 / p) *
+                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →
+            L ≤ Real.rpow c p ∧
+              (∀ i : Fin n, δ i < (1 / 2 : ℝ)) ∧
+              L < cBudget * z ^ 2))

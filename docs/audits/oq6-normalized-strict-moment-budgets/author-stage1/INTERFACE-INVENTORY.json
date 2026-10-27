@@ -1,0 +1,353 @@
+{
+  "schema": "oq56-unit229-stage1-complete-interface-inventory-v1",
+  "status": "CANDIDATE_ONLY_NOT_FROZEN_NOT_IMPLEMENTED",
+  "tentativeModule": "Shao.OQ6.NormalizedStrictMomentBudgets",
+  "publicTheorems": [
+    "actual_source_z_strict_truncated_moment_budgets"
+  ],
+  "publicDefinitions": [],
+  "implicitCarrier": {
+    "type": "Type*",
+    "name": "Ω"
+  },
+  "suppliedInstances": [
+    {
+      "type": "MeasurableSpace Ω",
+      "captures": [
+        "Ω"
+      ]
+    },
+    {
+      "type": "IsProbabilityMeasure ν",
+      "captures": [
+        "Ω",
+        "MeasurableSpace Ω",
+        "ν"
+      ]
+    }
+  ],
+  "explicitParameters": [
+    {
+      "type": "Measure Ω",
+      "name": "ν"
+    },
+    {
+      "type": "ℕ",
+      "name": "n"
+    },
+    {
+      "type": "1 ≤ n",
+      "name": "hn"
+    },
+    {
+      "type": "Fin n → Ω → ℝ",
+      "name": "ξ"
+    },
+    {
+      "type": "∀ i : Fin n, Measurable (ξ i)",
+      "name": "hξ"
+    },
+    {
+      "type": "∀ i : Fin n, MemLp (ξ i) 2 ν",
+      "name": "hξ2"
+    },
+    {
+      "type": "∀ i : Fin n, (∫ ω : Ω, ξ i ω ∂ν) = 0",
+      "name": "hξmean"
+    },
+    {
+      "type": "(∑ i : Fin n, ∫ ω : Ω, (ξ i ω) ^ 2 ∂ν) = 1",
+      "name": "hξenergy"
+    },
+    {
+      "type": "ℕ → Fin n → Ω → ℝ",
+      "name": "Y"
+    },
+    {
+      "type": "∀ (k : ℕ) (i : Fin n), Measurable (Y k i)",
+      "name": "hY"
+    },
+    {
+      "type": "ℕ → ℝ",
+      "name": "ε"
+    },
+    {
+      "type": "∀ k : ℕ, 0 < ε k",
+      "name": "hε"
+    },
+    {
+      "type": "∀ k : ℕ, ε k < 1 / (4 * Real.sqrt (n : ℝ))",
+      "name": "hεsmall"
+    },
+    {
+      "type": "Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))",
+      "name": "hεlim"
+    },
+    {
+      "type": "∀ (k : ℕ) (i : Fin n) (ω : Ω), |Y k i ω - ξ i ω| ≤ ε k",
+      "name": "herr"
+    },
+    {
+      "type": "ℝ",
+      "name": "z"
+    },
+    {
+      "type": "1 ≤ z",
+      "name": "hz"
+    },
+    {
+      "type": "ℝ",
+      "name": "cBudget"
+    },
+    {
+      "type": "0 < cBudget",
+      "name": "hcBudget"
+    }
+  ],
+  "deterministicLets": [
+    {
+      "name": "η",
+      "directValueCaptures": [
+        "ν",
+        "Y"
+      ],
+      "type": "ℕ → Fin n → Ω → ℝ",
+      "rhs": "fun (k : ℕ) => Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)",
+      "typeCaptures": [
+        "Ω",
+        "n",
+        "MeasurableSpace Ω"
+      ]
+    },
+    {
+      "name": "Fz",
+      "directValueCaptures": [
+        "z"
+      ],
+      "type": "ℝ → ℝ",
+      "rhs": "fun (t : ℝ) => (z * t) ^ 2 * min |z * t| 1",
+      "typeCaptures": []
+    },
+    {
+      "name": "δ0",
+      "directValueCaptures": [
+        "ν",
+        "Fz",
+        "ξ"
+      ],
+      "type": "Fin n → ℝ",
+      "rhs": "fun (i : Fin n) => ∫ ω : Ω, Fz (ξ i ω) ∂ν",
+      "typeCaptures": [
+        "Ω",
+        "n",
+        "MeasurableSpace Ω"
+      ]
+    },
+    {
+      "name": "δη",
+      "directValueCaptures": [
+        "ν",
+        "Fz",
+        "η"
+      ],
+      "type": "ℕ → Fin n → ℝ",
+      "rhs": "fun (k : ℕ) (i : Fin n) => ∫ ω : Ω, Fz (η k i ω) ∂ν",
+      "typeCaptures": [
+        "Ω",
+        "n",
+        "MeasurableSpace Ω"
+      ]
+    },
+    {
+      "name": "L0",
+      "directValueCaptures": [
+        "δ0"
+      ],
+      "type": "ℝ",
+      "rhs": "∑ i : Fin n, δ0 i",
+      "typeCaptures": [
+        "n"
+      ]
+    },
+    {
+      "name": "Lη",
+      "directValueCaptures": [
+        "δη"
+      ],
+      "type": "ℕ → ℝ",
+      "rhs": "fun (k : ℕ) => ∑ i : Fin n, δη k i",
+      "typeCaptures": [
+        "n"
+      ]
+    }
+  ],
+  "conditionalHypothesesAfterAllLets": [
+    {
+      "routeName": "hδ0",
+      "type": "∀ i : Fin n, δ0 i < (1 / 2 : ℝ)"
+    },
+    {
+      "routeName": "hL0",
+      "type": "L0 < cBudget * z ^ 2"
+    }
+  ],
+  "conclusionComponents": [
+    "∀ i : Fin n, Integrable (fun (ω : Ω) => Fz (ξ i ω)) ν",
+    "∀ (k : ℕ) (i : Fin n), Integrable (fun (ω : Ω) => Fz (η k i ω)) ν",
+    "∀ i : Fin n, Filter.Tendsto (fun (k : ℕ) => δη k i) Filter.atTop (nhds (δ0 i))",
+    "Filter.Tendsto Lη Filter.atTop (nhds L0)",
+    "∃ k0 : ℕ, ∀ k : ℕ, k0 ≤ k → (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2"
+  ],
+  "plannedLocalFacts": [
+    {
+      "name": "hδ0int",
+      "source": "producer flattened component12",
+      "type": "∀ i : Fin n, Integrable (fun (ω : Ω) => Fz (ξ i ω)) ν"
+    },
+    {
+      "name": "hδηint",
+      "source": "producer flattened component13",
+      "type": "∀ (k : ℕ) (i : Fin n), Integrable (fun (ω : Ω) => Fz (η k i ω)) ν"
+    },
+    {
+      "name": "hδlim",
+      "source": "producer flattened component18",
+      "type": "∀ i : Fin n, Filter.Tendsto (fun (k : ℕ) => δη k i) Filter.atTop (nhds (δ0 i))"
+    },
+    {
+      "name": "hLlim",
+      "source": "producer flattened component19",
+      "type": "Filter.Tendsto Lη Filter.atTop (nhds L0)"
+    },
+    {
+      "name": "hδevent",
+      "source": "strict upper neighborhood and hδ0",
+      "type": "∀ i : Fin n, ∀ᶠ k : ℕ in Filter.atTop, δη k i < (1 / 2 : ℝ)"
+    },
+    {
+      "name": "hAllevent",
+      "source": "Fin n finiteness",
+      "type": "∀ᶠ k : ℕ in Filter.atTop, ∀ i : Fin n, δη k i < (1 / 2 : ℝ)"
+    },
+    {
+      "name": "hLevent",
+      "source": "strict upper neighborhood and hL0",
+      "type": "∀ᶠ k : ℕ in Filter.atTop, Lη k < cBudget * z ^ 2"
+    },
+    {
+      "name": "htail",
+      "source": "eventual conjunction",
+      "type": "∀ᶠ k : ℕ in Filter.atTop, (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2"
+    }
+  ],
+  "witnesses": [
+    {
+      "type": "ℕ",
+      "dependsOn": [
+        "Ω",
+        "ν",
+        "n",
+        "ξ",
+        "Y",
+        "ε",
+        "z",
+        "cBudget",
+        "all displayed hypotheses including hδ0 and hL0"
+      ],
+      "specificationType": "∀ k : ℕ, k0 ≤ k → (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2",
+      "name": "k0",
+      "uniformIn": [],
+      "specificationName": "hk0",
+      "selection": "existential Nat-atTop tail extraction after fixed inputs and explicit strict margins",
+      "deterministicRhs": null
+    }
+  ],
+  "callbacks": [
+    {
+      "expression": "fun (ω : Ω) => Fz (ξ i ω)",
+      "valueCaptures": [
+        "Fz",
+        "ξ",
+        "i"
+      ],
+      "type": "Ω → ℝ"
+    },
+    {
+      "expression": "fun (ω : Ω) => Fz (η k i ω)",
+      "valueCaptures": [
+        "Fz",
+        "η",
+        "k",
+        "i"
+      ],
+      "type": "Ω → ℝ"
+    },
+    {
+      "expression": "fun (k : ℕ) => δη k i",
+      "valueCaptures": [
+        "δη",
+        "i"
+      ],
+      "type": "ℕ → ℝ"
+    },
+    {
+      "expression": "fun (k : ℕ) => ∀ i : Fin n, δη k i < (1 / 2 : ℝ)",
+      "valueCaptures": [
+        "δη"
+      ],
+      "type": "ℕ → Prop",
+      "typeCaptures": [
+        "n"
+      ]
+    },
+    {
+      "expression": "fun (k : ℕ) => Lη k < cBudget * z ^ 2",
+      "valueCaptures": [
+        "Lη",
+        "cBudget",
+        "z"
+      ],
+      "type": "ℕ → Prop"
+    },
+    {
+      "expression": "fun (k : ℕ) => (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2",
+      "valueCaptures": [
+        "δη",
+        "Lη",
+        "cBudget",
+        "z"
+      ],
+      "type": "ℕ → Prop",
+      "typeCaptures": [
+        "n"
+      ]
+    }
+  ],
+  "publicCallbackPremises": [],
+  "auxiliaryPropBinders": [],
+  "additionalValueLets": [],
+  "newInstanceDeclarations": [],
+  "proofImplementationPresent": false,
+  "leanElaborationRun": false,
+  "allPlannedValueRhsLocation": "CANDIDATE.md",
+  "exactPreambleHeadClosingLocation": "CANDIDATE.md",
+  "exactArgumentMapLocation": "ROUTE.md",
+  "excluded": [
+    "unqualified unit228",
+    "independence premise/conclusion",
+    "atomlessness premise/conclusion",
+    "Omega topology",
+    "StandardBorel Ω",
+    "Nonempty Ω",
+    "countably-generated Ω",
+    "higher/mixed moments",
+    "target product-integrability premise",
+    "Qepsilon",
+    "original-model transport",
+    "published SZ constant identification",
+    "weighted costs",
+    "source R identification",
+    "CDF/atom/zero-event theorem",
+    "root closure"
+  ]
+}
