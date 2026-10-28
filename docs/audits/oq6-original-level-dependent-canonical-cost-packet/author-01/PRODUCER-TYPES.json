@@ -1,0 +1,334 @@
+{
+  "schema": "unit255-complete-source-producer-types-v1",
+  "note": "Full SOURCE expressions in the original mΩ/μ context and current n/y; not machine TYPE evidence.",
+  "qualified254Result": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ :=\n      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)\n    let rho : ℝ := Real.sqrt v\n    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)\n        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),\n      let μ₀ : @Measure Ω m₀ := μ.trim hm₀\n      letI : MeasurableSpace Ω := m₀\n      letI : MeasurableSpace.CountablyGenerated Ω := hcg\n      IsProbabilityMeasure μ₀ ∧\n      ∀ (n : ℕ) (hn : 4 ≤ n)\n          (y : ℝ) (hy : 1 ≤ y)\n          (hywindow : y ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ)))\n          (ε : ℝ) (hε : 0 < ε)\n          (hεsmall : ε < 1 / (4 * Real.sqrt (n : ℝ))),\n        let mN : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)\n        let mN₀ : MeasurableSpace (Fin n → Ω) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)\n        let P : @Measure (Fin n → Ω) mN :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)\n        let P₀ : @Measure (Fin n → Ω) mN₀ :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)\n        let N : ℝ := Real.sqrt (n : ℝ)\n        let O : Fin n → (Fin n → Ω) → Ω := fun i ξ => ξ i\n        let gcoord : Fin n → Ω → ℝ := fun _ o => g o / N\n        let Q : (Fin n → Ω) → (Fin n → Ω) := fun ξ i => O i ξ\n        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r\n        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho y\n        let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r 512 rho y\n        let Ddel : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n        let Jdel : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n        let Bdelete : (Fin n → Ω) → Fin n → ℝ := studentizerClipBudgetDeleted n r 512 rho y\n        let κ : (Fin n → Ω) → ℝ := fun _ => 0\n        let W0 : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, gcoord i (O i ξ)\n        let V0 : (Fin n → Ω) → ℝ :=\n          fun ξ => Real.sqrt (∑ i : Fin n, (gcoord i (O i ξ)) ^ 2)\n        let T0 : (Fin n → Ω) → ℝ := fun ξ =>\n          if V0 ξ = 0 then κ ξ else\n            (W0 ξ + D1 (Q ξ)) / (V0 ξ * Real.sqrt (1 + D2 (Q ξ)))\n        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)\n        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)\n        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=\n          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (fun _ : Fin n => mAugLocal)\n        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=\n          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01\n        let ν : @Measure (Fin n → Ω × ℝ) mAug :=\n          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)\n            (inferInstance : Fintype (Fin n))\n            (fun _ : Fin n => mAugLocal) νlocal\n        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1\n        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>\n          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode\n            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))\n        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => gcoord i t.1\n        let Ylocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n          Shao.OQ6.QuantizedObservationCoding.quantizedObservation ε (ξlocal i) (c i)\n        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => gcoord i (x i).1\n        let Y : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => Ylocal i (x i)\n        let a : Fin n → ℝ := Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν Y\n        let s : ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν Y\n        let ηlocal : Fin n → (Ω × ℝ) → ℝ := fun i =>\n          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a i) s (Ylocal i)\n        let η : Fin n → (Fin n → Ω × ℝ) → ℝ :=\n          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y\n        let C : (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun x i => η i x\n        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x\n        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)\n        let Wη : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, η i x\n        let Vη : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (η i x) ^ 2)\n        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))\n        let Dη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n          fun z x => D1 (q x) + W x - Wη x + z * b x * (Vη x - V x)\n        let Tη : ℝ → (Fin n → Ω × ℝ) → ℝ :=\n          fun z x => (Wη x + Dη z x) / (Vη x * b x)\n        let Z0 : Set (Fin n → Ω) := {ξ | projectionV n g ξ = 0}\n        let Z : Set (Fin n → Ω × ℝ) := {x | V x = 0}\n        let p0 : ℝ := P.real Z0\n        let comparisons : Set (ℝ → ℝ → Prop) :=\n          {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨\n            R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨\n            R = (fun a b : ℝ => a = b)}\n        let F0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) := fun R z =>\n          {ξ | R (projectionW n g ξ + D1 ξ)\n            (z * projectionV n g ξ * Real.sqrt (1 + D2 ξ))}\n        let A0 : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω) :=\n          fun R z => {ξ | R (Tclip ξ) z}\n        let Eη : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) :=\n          fun R z => {x | R (Tη z x) z}\n        @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧\n        P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧\n        (∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀) ∧\n        iIndepFun O P₀ ∧\n        (∀ i : Fin n, Measurable (gcoord i) ∧\n          MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧\n          (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧\n          (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ)) ∧\n        (∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 ∧\n        Q = id ∧ W0 = projectionW n g ∧ V0 = projectionV n g ∧ T0 = Tclip ∧\n        Measurable D1 ∧ Measurable D2 ∧\n        (∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ) ∧\n        Measurable[mN₀, borel ℝ] Tclip ∧ Measurable[mN, borel ℝ] Tclip ∧\n        @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P ∧\n        IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧\n        (1 / 2 : ℝ) < s ∧\n        (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i)) ∧\n        iIndepFun η ν ∧\n        (∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν) ∧\n        (∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν) ∧\n        (∀ i : Fin n, (∫ x, η i x ∂ν) = 0) ∧\n        (∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1 ∧\n        (∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0) ∧\n        ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0 ∧\n        (∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x) ∧\n        Measurable[mAug, borel (Fin n → ℝ)] C ∧\n        MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug ∧\n        (∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n          ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n            ∀ x : Fin n → Ω × ℝ, H x = F (C x)) ∧\n        (∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n          ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n            (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n              d y = F (fun j => ηlocal j.val (y j))) ∧\n            Measurable[borel (Fin n → ℝ), borel ℝ]\n              (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n            ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x)) ∧\n        (∃ G2 : (Fin n → ℝ) → ℝ,\n          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n          (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n          ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n            ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x)) ∧\n        (∀ i : Fin n,\n          ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (Ddel (q x) i, Jdel (q x) i, Bdelete (q x) i) =\n                Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x)) ∧\n        (∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z)) ∧\n        MeasurableSet[mN₀] Z0 ∧ MeasurableSet[mN] Z0 ∧ MeasurableSet Z ∧\n        ν Z = P₀ Z0 ∧ P₀ Z0 = P Z0 ∧ ν.real Z = p0 ∧\n        (∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n          Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x) ∧\n        (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n          MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n          MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n          MeasurableSet (Eη R z) ∧\n          ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n          (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n          P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n          |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)",
+  "qualified254CurrentContract": [
+    "@IsProbabilityMeasure (Fin n → Ω) mN₀ P₀",
+    "P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P",
+    "(∀ i : Fin n, Measurable (O i) ∧ MeasurePreserving (O i) P₀ μ₀)",
+    "iIndepFun O P₀",
+    "(∀ i : Fin n, Measurable (gcoord i) ∧\n          MemLp (fun ξ => gcoord i (O i ξ)) 2 P₀ ∧\n          (∫ ξ, gcoord i (O i ξ) ∂P₀) = 0 ∧\n          (∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1 / (n : ℝ))",
+    "(∑ i : Fin n, ∫ ξ, (gcoord i (O i ξ)) ^ 2 ∂P₀) = 1",
+    "Q = id",
+    "W0 = projectionW n g",
+    "V0 = projectionV n g",
+    "T0 = Tclip",
+    "Measurable D1",
+    "Measurable D2",
+    "(∀ ξ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ξ)",
+    "Measurable[mN₀, borel ℝ] Tclip",
+    "Measurable[mN, borel ℝ] Tclip",
+    "@Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) Tclip P₀ =\n          @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) Tclip P",
+    "IsProbabilityMeasure ν",
+    "MeasurePreserving q ν P₀",
+    "(1 / 2 : ℝ) < s",
+    "(∀ (i : Fin n) (x : Fin n → Ω × ℝ), η i x = ηlocal i (x i))",
+    "iIndepFun η ν",
+    "(∀ i : Fin n, Measurable (η i) ∧ MemLp (η i) 2 ν)",
+    "(∀ i : Fin n, Integrable (η i) ν ∧ Integrable (fun x => (η i x) ^ 2) ν)",
+    "(∀ i : Fin n, (∫ x, η i x ∂ν) = 0)",
+    "(∑ i : Fin n, ∫ x, (η i x) ^ 2 ∂ν) = 1",
+    "(∀ (i : Fin n) (t : ℝ), ν {x : Fin n → Ω × ℝ | η i x = t} = 0)",
+    "ν {x : Fin n → Ω × ℝ | Vη x = 0} = 0",
+    "(∀ᵐ x ∂ν, 0 < Vη x ∧ 0 < b x ∧ 0 < Vη x * b x)",
+    "Measurable[mAug, borel (Fin n → ℝ)] C",
+    "MeasurableSpace.comap C (borel (Fin n → ℝ)) = mAug",
+    "(∀ (H : (Fin n → Ω × ℝ) → ℝ), Measurable H →\n          ∃ F : (Fin n → ℝ) → ℝ, Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n            ∀ x : Fin n → Ω × ℝ, H x = F (C x))",
+    "(∀ (i : Fin n) (d : ({j : Fin n // j ≠ i} → Ω × ℝ) → ℝ), Measurable d →\n          ∃ F : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] F ∧\n            (∀ y : {j : Fin n // j ≠ i} → Ω × ℝ,\n              d y = F (fun j => ηlocal j.val (y j))) ∧\n            Measurable[borel (Fin n → ℝ), borel ℝ]\n              (fun t : Fin n → ℝ => F (fun j => t j.val)) ∧\n            ∀ x : Fin n → Ω × ℝ, d (fun j => x j.val) = F (fun j => η j.val x))",
+    "(∃ G2 : (Fin n → ℝ) → ℝ,\n          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n          (∀ x : Fin n → Ω × ℝ, D2 (q x) = G2 (C x)) ∧\n          ∀ z : ℝ, ∃ G1 : (Fin n → ℝ) → ℝ,\n            Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n            ∀ x : Fin n → Ω × ℝ, Dη z x = G1 (C x))",
+    "(∀ i : Fin n,\n          ∃ Fdel : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdel ∧\n            ∀ x : Fin n → Ω × ℝ,\n              (Ddel (q x) i, Jdel (q x) i, Bdelete (q x) i) =\n                Fdel (fun j : {j : Fin n // j ≠ i} => η j.val x))",
+    "(∀ z : ℝ, Measurable (Dη z) ∧ Measurable (Tη z))",
+    "MeasurableSet[mN₀] Z0",
+    "MeasurableSet[mN] Z0",
+    "MeasurableSet Z",
+    "ν Z = P₀ Z0",
+    "P₀ Z0 = P Z0",
+    "ν.real Z = p0",
+    "(∀ (z : ℝ) (x : Fin n → Ω × ℝ),\n          Wη x + Dη z x - z * Vη x * b x = W x + D1 (q x) - z * V x * b x)",
+    "(∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →\n          MeasurableSet[mN₀] (A0 R z) ∧ MeasurableSet[mN] (A0 R z) ∧\n          MeasurableSet[mN₀] (F0 R z) ∧ MeasurableSet[mN] (F0 R z) ∧\n          MeasurableSet (Eη R z) ∧\n          ν (Eη R z) = P₀ (F0 R z) ∧ P₀ (F0 R z) = P (F0 R z) ∧\n          (∀ ξ : Fin n → Ω, ξ ∈ (A0 R z ∆ F0 R z) → ξ ∈ Z0) ∧\n          P (A0 R z ∆ F0 R z) ≤ P Z0 ∧\n          |P.real (A0 R z) - ν.real (Eη R z)| ≤ p0)"
+  ],
+  "qualified252AtCurrentYFullResult": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N\n    let D : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r\n    let Ddelete : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r\n    let Jdelete : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r\n    let A : (Fin n → Ω) → ℝ := fun ζ => |D ζ|\n    let Adelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ => |Ddelete ζ i|\n    let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r 512 rho (y)\n    let Bdelete : Fin n → (Fin n → Ω) → ℝ :=\n      fun i ζ => studentizerClipBudgetDeleted n r 512 rho (y) ζ i\n    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho (y)\n    let V : (Fin n → Ω) → ℝ := fun ζ => Real.sqrt (∑ j : Fin n, (ξ0 j ζ) ^ 2)\n    let Vdelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ0 j ζ) ^ 2)\n    let H : (Fin n → Ω) → ℝ := fun ζ => (1 + V ζ) * (N + (y) * Real.sqrt (1 + B ζ))\n    let Hdelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n      (1 + Vdelete i ζ) * (N + (y) * Real.sqrt (1 + Bdelete i ζ))\n    let M : ℝ → (Fin n → Ω) → ℝ := fun ε ζ => 4 * ε * N * H ζ\n    let Mdelete : ℝ → Fin n → (Fin n → Ω) → ℝ := fun ε i ζ =>\n      4 * ε * N * Hdelete i ζ\n    let κ : Fin n → ℝ := fun i =>\n      4 * N * ((∫ ζ, H ζ ∂P) + (∫ ζ, Hdelete i ζ ∂P))\n    let Δ : ℝ → Fin n → (Fin n → Ω) → ℝ := fun ε i ζ =>\n      (A ζ + M ε ζ) - (Adelete i ζ + Mdelete ε i ζ) - (A ζ - Adelete i ζ)\n    MemLp D 2 P ∧\n    (∀ i : Fin n, MemLp (fun ζ => Ddelete ζ i) 2 P) ∧\n    Integrable J P ∧ (∀ i : Fin n, Integrable (fun ζ => Jdelete ζ i) P) ∧\n    Integrable A P ∧ (∀ i : Fin n, Integrable (Adelete i) P) ∧\n    Integrable B P ∧ (∀ i : Fin n, Integrable (Bdelete i) P) ∧ Integrable e P ∧\n    (∀ ζ : Fin n → Ω, 0 ≤ A ζ ∧ 0 ≤ B ζ ∧ |e ζ| ≤ B ζ) ∧\n    (∀ (i : Fin n) (ζ : Fin n → Ω), 0 ≤ Adelete i ζ ∧ 0 ≤ Bdelete i ζ) ∧\n    (∀ i : Fin n, Measurable (ξ0 i) ∧ MemLp (ξ0 i) 2 P ∧ (∫ ζ, ξ0 i ζ ∂P) = 0) ∧\n    (∑ i : Fin n, ∫ ζ, (ξ0 i ζ) ^ 2 ∂P) = 1 ∧\n    (∀ ζ : Fin n → Ω, V ζ = projectionV n g ζ) ∧\n    Measurable H ∧ Integrable H P ∧\n    (∀ i : Fin n, Measurable (Hdelete i) ∧ Integrable (Hdelete i) P) ∧\n    (∀ ζ : Fin n → Ω, 0 < H ζ) ∧\n    (∀ (i : Fin n) (ζ : Fin n → Ω), 0 < Hdelete i ζ) ∧\n    (∀ ε : ℝ, Measurable (M ε) ∧ Integrable (M ε) P ∧\n      Integrable (fun ζ => |M ε ζ|) P) ∧\n    (∀ (ε : ℝ) (i : Fin n), Measurable (Mdelete ε i) ∧ Integrable (Mdelete ε i) P ∧\n      Integrable (fun ζ => |Mdelete ε i ζ|) P) ∧\n    (∀ ε : ℝ, 0 ≤ ε → ∀ ζ : Fin n → Ω,\n      0 ≤ M ε ζ ∧ ∀ i : Fin n, 0 ≤ Mdelete ε i ζ) ∧\n    (∀ i : Fin n, 0 ≤ κ i) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ζ, M ε ζ ∂P) + (∫ ζ, Mdelete ε i ζ ∂P) = ε * κ i) ∧\n    (∀ (ε : ℝ) (i : Fin n),\n      (∫ ζ, |M ε ζ| ∂P) + (∫ ζ, |Mdelete ε i ζ| ∂P) = |ε| * κ i) ∧\n    (∀ (ε : ℝ) (i : Fin n) (ζ : Fin n → Ω),\n      Δ ε i ζ = M ε ζ - Mdelete ε i ζ) ∧\n    (∀ (ε : ℝ) (i : Fin n) (ζ : Fin n → Ω),\n      |Δ ε i ζ| ≤ |M ε ζ| + |Mdelete ε i ζ|) ∧\n    (∀ (ε : ℝ) (i : Fin n), Measurable (Δ ε i) ∧ Integrable (Δ ε i) P ∧\n      Integrable (fun ζ => |Δ ε i ζ|) P ∧\n      (∫ ζ, |Δ ε i ζ| ∂P) ≤ |ε| * κ i) ∧\n    (∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ζ, |Δ ε i ζ| ∂P)\n      (nhds (0 : ℝ)) (nhds (0 : ℝ)))",
+  "qualified252Lets": [
+    {
+      "name": "g",
+      "fullType": "Ω → ℝ",
+      "fullRHS": "fun o => ∫ y, h o y ∂μ",
+      "exactBlock": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+    },
+    {
+      "name": "r",
+      "fullType": "Ω → Ω → ℝ",
+      "fullRHS": "fun o y => h o y - g o - g y",
+      "exactBlock": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+    },
+    {
+      "name": "v",
+      "fullType": "ℝ",
+      "fullRHS": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "exactBlock": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)"
+    },
+    {
+      "name": "rho",
+      "fullType": "ℝ",
+      "fullRHS": "Real.sqrt v",
+      "exactBlock": "let rho : ℝ := Real.sqrt v"
+    },
+    {
+      "name": "P",
+      "fullType": "Measure (Fin n → Ω)",
+      "fullRHS": "Measure.pi (fun _ : Fin n => μ)",
+      "exactBlock": "let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)"
+    },
+    {
+      "name": "N",
+      "fullType": "ℝ",
+      "fullRHS": "Real.sqrt (n : ℝ)",
+      "exactBlock": "let N : ℝ := Real.sqrt (n : ℝ)"
+    },
+    {
+      "name": "ξ0",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ => g (ζ i) / N",
+      "exactBlock": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+    },
+    {
+      "name": "D",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "residualStatisticD n r",
+      "exactBlock": "let D : (Fin n → Ω) → ℝ := residualStatisticD n r"
+    },
+    {
+      "name": "J",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "residualEnergyJ n r",
+      "exactBlock": "let J : (Fin n → Ω) → ℝ := residualEnergyJ n r"
+    },
+    {
+      "name": "Ddelete",
+      "fullType": "(Fin n → Ω) → Fin n → ℝ",
+      "fullRHS": "residualStatisticDDeleted n r",
+      "exactBlock": "let Ddelete : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r"
+    },
+    {
+      "name": "Jdelete",
+      "fullType": "(Fin n → Ω) → Fin n → ℝ",
+      "fullRHS": "residualEnergyJDeleted n r",
+      "exactBlock": "let Jdelete : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r"
+    },
+    {
+      "name": "A",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "fun ζ => |D ζ|",
+      "exactBlock": "let A : (Fin n → Ω) → ℝ := fun ζ => |D ζ|"
+    },
+    {
+      "name": "Adelete",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ => |Ddelete ζ i|",
+      "exactBlock": "let Adelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ => |Ddelete ζ i|"
+    },
+    {
+      "name": "B",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "studentizerClipBudget n r 512 rho (y)",
+      "exactBlock": "let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r 512 rho (y)"
+    },
+    {
+      "name": "Bdelete",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ => studentizerClipBudgetDeleted n r 512 rho (y) ζ i",
+      "exactBlock": "let Bdelete : Fin n → (Fin n → Ω) → ℝ :=\n      fun i ζ => studentizerClipBudgetDeleted n r 512 rho (y) ζ i"
+    },
+    {
+      "name": "e",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "clippedCenteredDelta n g r 512 rho (y)",
+      "exactBlock": "let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho (y)"
+    },
+    {
+      "name": "V",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "fun ζ => Real.sqrt (∑ j : Fin n, (ξ0 j ζ) ^ 2)",
+      "exactBlock": "let V : (Fin n → Ω) → ℝ := fun ζ => Real.sqrt (∑ j : Fin n, (ξ0 j ζ) ^ 2)"
+    },
+    {
+      "name": "Vdelete",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ0 j ζ) ^ 2)",
+      "exactBlock": "let Vdelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ0 j ζ) ^ 2)"
+    },
+    {
+      "name": "H",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "fun ζ => (1 + V ζ) * (N + (y) * Real.sqrt (1 + B ζ))",
+      "exactBlock": "let H : (Fin n → Ω) → ℝ := fun ζ => (1 + V ζ) * (N + (y) * Real.sqrt (1 + B ζ))"
+    },
+    {
+      "name": "Hdelete",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ =>\n      (1 + Vdelete i ζ) * (N + (y) * Real.sqrt (1 + Bdelete i ζ))",
+      "exactBlock": "let Hdelete : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>\n      (1 + Vdelete i ζ) * (N + (y) * Real.sqrt (1 + Bdelete i ζ))"
+    },
+    {
+      "name": "M",
+      "fullType": "ℝ → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun ε ζ => 4 * ε * N * H ζ",
+      "exactBlock": "let M : ℝ → (Fin n → Ω) → ℝ := fun ε ζ => 4 * ε * N * H ζ"
+    },
+    {
+      "name": "Mdelete",
+      "fullType": "ℝ → Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun ε i ζ =>\n      4 * ε * N * Hdelete i ζ",
+      "exactBlock": "let Mdelete : ℝ → Fin n → (Fin n → Ω) → ℝ := fun ε i ζ =>\n      4 * ε * N * Hdelete i ζ"
+    },
+    {
+      "name": "κ",
+      "fullType": "Fin n → ℝ",
+      "fullRHS": "fun i =>\n      4 * N * ((∫ ζ, H ζ ∂P) + (∫ ζ, Hdelete i ζ ∂P))",
+      "exactBlock": "let κ : Fin n → ℝ := fun i =>\n      4 * N * ((∫ ζ, H ζ ∂P) + (∫ ζ, Hdelete i ζ ∂P))"
+    },
+    {
+      "name": "Δ",
+      "fullType": "ℝ → Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun ε i ζ =>\n      (A ζ + M ε ζ) - (Adelete i ζ + Mdelete ε i ζ) - (A ζ - Adelete i ζ)",
+      "exactBlock": "let Δ : ℝ → Fin n → (Fin n → Ω) → ℝ := fun ε i ζ =>\n      (A ζ + M ε ζ) - (Adelete i ζ + Mdelete ε i ζ) - (A ζ - Adelete i ζ)"
+    }
+  ],
+  "qualified252ExpandedConjuncts": [
+    "MemLp (D1) 2 (P)",
+    "(∀ i : Fin n, MemLp (fun ζ => (Ddel) ζ i) 2 (P))",
+    "Integrable (J) (P)",
+    "(∀ i : Fin n, Integrable (fun ζ => (Jdel) ζ i) (P))",
+    "Integrable (A) (P)",
+    "(∀ i : Fin n, Integrable ((fun i ζ => Adel ζ i) i) (P))",
+    "Integrable (B) (P)",
+    "(∀ i : Fin n, Integrable ((fun i ζ => Bdelete ζ i) i) (P))",
+    "Integrable (D2) (P)",
+    "(∀ ζ : Fin n → Ω, 0 ≤ (A) ζ ∧ 0 ≤ (B) ζ ∧ |(D2) ζ| ≤ (B) ζ)",
+    "(∀ (i : Fin n) (ζ : Fin n → Ω), 0 ≤ (fun i ζ => Adel ζ i) i ζ ∧ 0 ≤ (fun i ζ => Bdelete ζ i) i ζ)",
+    "(∀ i : Fin n, Measurable ((ξ0) i) ∧ MemLp ((ξ0) i) 2 (P) ∧ (∫ ζ, (ξ0) i ζ ∂(P)) = 0)",
+    "(∑ i : Fin n, ∫ ζ, ((ξ0) i ζ) ^ 2 ∂(P)) = 1",
+    "(∀ ζ : Fin n → Ω, (V0) ζ = projectionV n (g) ζ)",
+    "Measurable (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ)))",
+    "Integrable (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) (P)",
+    "(∀ i : Fin n, Measurable ((fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i) ∧ Integrable ((fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i) (P))",
+    "(∀ ζ : Fin n → Ω, 0 < (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ)",
+    "(∀ (i : Fin n) (ζ : Fin n → Ω), 0 < (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ)",
+    "(∀ ε : ℝ, Measurable ((fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε) ∧ Integrable ((fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε) (P) ∧\n      Integrable (fun ζ => |(fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ|) (P))",
+    "(∀ (ε : ℝ) (i : Fin n), Measurable ((fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i) ∧ Integrable ((fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i) (P) ∧\n      Integrable (fun ζ => |(fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ|) (P))",
+    "(∀ ε : ℝ, 0 ≤ ε → ∀ ζ : Fin n → Ω,\n      0 ≤ (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ ∧ ∀ i : Fin n, 0 ≤ (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ)",
+    "(∀ i : Fin n, 0 ≤ (fun i =>\n      4 * (N) * ((∫ ζ, (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ ∂(P)) + (∫ ζ, (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ ∂(P)))) i)",
+    "(∀ (ε : ℝ) (i : Fin n),\n      (∫ ζ, (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ ∂(P)) + (∫ ζ, (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ ∂(P)) = ε * (fun i =>\n      4 * (N) * ((∫ ζ, (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ ∂(P)) + (∫ ζ, (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ ∂(P)))) i)",
+    "(∀ (ε : ℝ) (i : Fin n),\n      (∫ ζ, |(fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ| ∂(P)) + (∫ ζ, |(fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ| ∂(P)) = |ε| * (fun i =>\n      4 * (N) * ((∫ ζ, (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ ∂(P)) + (∫ ζ, (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ ∂(P)))) i)",
+    "(∀ (ε : ℝ) (i : Fin n) (ζ : Fin n → Ω),\n      (fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i ζ = (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ - (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ)",
+    "(∀ (ε : ℝ) (i : Fin n) (ζ : Fin n → Ω),\n      |(fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i ζ| ≤ |(fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ| + |(fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ|)",
+    "(∀ (ε : ℝ) (i : Fin n), Measurable ((fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i) ∧ Integrable ((fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i) (P) ∧\n      Integrable (fun ζ => |(fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i ζ|) (P) ∧\n      (∫ ζ, |(fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i ζ| ∂(P)) ≤ |ε| * (fun i =>\n      4 * (N) * ((∫ ζ, (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ ∂(P)) + (∫ ζ, (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ ∂(P)))) i)",
+    "(∀ i : Fin n, Filter.Tendsto (fun ε : ℝ => ∫ ζ, |(fun ε i ζ =>\n      ((A) ζ + (fun ε ζ => 4 * ε * (N) * (fun ζ => (1 + (V0) ζ) * ((N) + (y) * Real.sqrt (1 + (B) ζ))) ζ) ε ζ) - ((fun i ζ => Adel ζ i) i ζ + (fun ε i ζ =>\n      4 * ε * (N) * (fun i ζ =>\n      (1 + (fun i ζ =>\n      Real.sqrt (∑ j ∈ Finset.univ.erase i, ((ξ0) j ζ) ^ 2)) i ζ) * ((N) + (y) * Real.sqrt (1 + (fun i ζ => Bdelete ζ i) i ζ))) i ζ) ε i ζ) - ((A) ζ - (fun i ζ => Adel ζ i) i ζ)) ε i ζ| ∂(P))\n      (nhds (0 : ℝ)) (nhds (0 : ℝ)))"
+  ],
+  "qualified250AtCurrentY512FullResult": "    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)\n    let rho : ℝ := Real.sqrt v\n    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)\n    let N : ℝ := Real.sqrt (n : ℝ)\n    let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N\n    let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r\n    let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r ((512 : ℝ)) rho (y)\n    let Bdelete : (Fin n → Ω) → Fin n → ℝ :=\n      studentizerClipBudgetDeleted n r ((512 : ℝ)) rho (y)\n    let S : (Fin n → Ω) → ℝ := fun ζ =>\n      ∑ j : Fin n, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)\n    let Sdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>\n      ∑ j ∈ Finset.univ.erase i, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)\n    let fullTest : (Fin n → Ω) → ℝ := fun ζ =>\n      (y) * |D1 ζ| + (y) ^ 2 * B ζ\n    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>\n      min |(y) * ξ0 i ζ| 1 *\n        (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +\n          (y) * |B ζ - Bdelete ζ i|)\n    let I : ℝ := ∫ ζ, Real.exp (S ζ) ∂P\n    let sourceCost : ℝ :=\n      ((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +\n        ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I\n    0 < I ∧\n    Integrable (fun ζ => fullTest ζ * Real.exp (S ζ)) P ∧\n    (∀ i : Fin n,\n      Integrable (fun ζ => deletedTest ζ i * Real.exp (Sdelete ζ i)) P) ∧\n    0 ≤ sourceCost ∧\n    sourceCost ≤\n      64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * ((512 : ℝ))) * (1 + rho) *\n        (1 + (y)) ^ 3 / Real.sqrt (n : ℝ)",
+  "qualified250Lets": [
+    {
+      "name": "g",
+      "fullType": "Ω → ℝ",
+      "fullRHS": "fun o => ∫ y, h o y ∂μ",
+      "exactBlock": "let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ"
+    },
+    {
+      "name": "r",
+      "fullType": "Ω → Ω → ℝ",
+      "fullRHS": "fun o y => h o y - g o - g y",
+      "exactBlock": "let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y"
+    },
+    {
+      "name": "v",
+      "fullType": "ℝ",
+      "fullRHS": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)",
+      "exactBlock": "let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)"
+    },
+    {
+      "name": "rho",
+      "fullType": "ℝ",
+      "fullRHS": "Real.sqrt v",
+      "exactBlock": "let rho : ℝ := Real.sqrt v"
+    },
+    {
+      "name": "P",
+      "fullType": "Measure (Fin n → Ω)",
+      "fullRHS": "Measure.pi (fun _ : Fin n => μ)",
+      "exactBlock": "let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)"
+    },
+    {
+      "name": "N",
+      "fullType": "ℝ",
+      "fullRHS": "Real.sqrt (n : ℝ)",
+      "exactBlock": "let N : ℝ := Real.sqrt (n : ℝ)"
+    },
+    {
+      "name": "ξ0",
+      "fullType": "Fin n → (Fin n → Ω) → ℝ",
+      "fullRHS": "fun i ζ => g (ζ i) / N",
+      "exactBlock": "let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N"
+    },
+    {
+      "name": "D1",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "residualStatisticD n r",
+      "exactBlock": "let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r"
+    },
+    {
+      "name": "B",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "studentizerClipBudget n r ((512 : ℝ)) rho (y)",
+      "exactBlock": "let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r ((512 : ℝ)) rho (y)"
+    },
+    {
+      "name": "Bdelete",
+      "fullType": "(Fin n → Ω) → Fin n → ℝ",
+      "fullRHS": "studentizerClipBudgetDeleted n r ((512 : ℝ)) rho (y)",
+      "exactBlock": "let Bdelete : (Fin n → Ω) → Fin n → ℝ :=\n      studentizerClipBudgetDeleted n r ((512 : ℝ)) rho (y)"
+    },
+    {
+      "name": "S",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "fun ζ =>\n      ∑ j : Fin n, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)",
+      "exactBlock": "let S : (Fin n → Ω) → ℝ := fun ζ =>\n      ∑ j : Fin n, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)"
+    },
+    {
+      "name": "Sdelete",
+      "fullType": "(Fin n → Ω) → Fin n → ℝ",
+      "fullRHS": "fun ζ i =>\n      ∑ j ∈ Finset.univ.erase i, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)",
+      "exactBlock": "let Sdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>\n      ∑ j ∈ Finset.univ.erase i, ((y) * ξ0 j ζ - ((y) * ξ0 j ζ) ^ 2 / 2)"
+    },
+    {
+      "name": "fullTest",
+      "fullType": "(Fin n → Ω) → ℝ",
+      "fullRHS": "fun ζ =>\n      (y) * |D1 ζ| + (y) ^ 2 * B ζ",
+      "exactBlock": "let fullTest : (Fin n → Ω) → ℝ := fun ζ =>\n      (y) * |D1 ζ| + (y) ^ 2 * B ζ"
+    },
+    {
+      "name": "deletedTest",
+      "fullType": "(Fin n → Ω) → Fin n → ℝ",
+      "fullRHS": "fun ζ i =>\n      min |(y) * ξ0 i ζ| 1 *\n        (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +\n          (y) * |B ζ - Bdelete ζ i|)",
+      "exactBlock": "let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>\n      min |(y) * ξ0 i ζ| 1 *\n        (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +\n          (y) * |B ζ - Bdelete ζ i|)"
+    },
+    {
+      "name": "I",
+      "fullType": "ℝ",
+      "fullRHS": "∫ ζ, Real.exp (S ζ) ∂P",
+      "exactBlock": "let I : ℝ := ∫ ζ, Real.exp (S ζ) ∂P"
+    },
+    {
+      "name": "sourceCost",
+      "fullType": "ℝ",
+      "fullRHS": "((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +\n        ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I",
+      "exactBlock": "let sourceCost : ℝ :=\n      ((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +\n        ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I"
+    }
+  ],
+  "qualified250ExpandedConjuncts": [
+    "0 < (Ioriginal)",
+    "Integrable (fun ζ => (fullTest0) ζ * Real.exp ((S0) ζ)) (P)",
+    "(∀ i : Fin n,\n      Integrable (fun ζ => (deleteTest0) ζ i * Real.exp ((S0delete) ζ i)) (P))",
+    "0 ≤ (costOriginal)",
+    "(costOriginal) ≤\n      64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * ((512 : ℝ))) * (1 + (rho)) *\n        (1 + (y)) ^ 3 / Real.sqrt (n : ℝ)"
+  ]
+}
