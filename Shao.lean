@@ -227,6 +227,7 @@ import Shao.C2.UnitSecondEnergyLowerTailPayment
 import Shao.Checks.Boundaries
 import Shao.OQ3.ActualCGFDerivativeScaling
 import Shao.OQ3.ActualCGFFirstWeightGaussianZero
+import Shao.OQ3.ActualCGFHigherWeightGaussianIntegral
 import Shao.OQ3.ActualCGFNormalizedOcticPolynomial
 import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
@@ -265,6 +266,7 @@ import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothing
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothingSmall
+import Shao.OQ3.CompactOpenDomainActualCellHermite
 import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCharacteristicMoments
 import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
@@ -279,6 +281,7 @@ import Shao.OQ3.CompactOpenDomainNormalizedOcticCGFLogExponent
 import Shao.OQ3.CompactOpenDomainOcticCGFLogRemainder
 import Shao.OQ3.CompactOpenDomainOcticExponentialError
 import Shao.OQ3.CompactOpenDomainPairProbability
+import Shao.OQ3.CompactOpenDomainPhysicalCellHermite
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
 import Shao.OQ3.CompactOpenDomainSixOrderEdgeworthPolynomialError
@@ -472,6 +475,8 @@ import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
 import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
 import Shao.OQ3.ScalarTaylorMomentPolynomial
+import Shao.OQ3.SixOrderHigherWeightGrowth
+import Shao.OQ3.SixOrderWordHigherDecomposition
 import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCanonicalRate
 import Shao.OQ3.SourceCanonicalSaddle
