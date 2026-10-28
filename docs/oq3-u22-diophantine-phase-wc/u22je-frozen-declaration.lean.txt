@@ -1,0 +1,13 @@
+theorem symmetric_eight_atom_coordinate_phase_gaps
+    (a : Fin 8 → ℝ) :
+    let A : Fin (8 + 8) → ℝ := Fin.append a (fun i => -a i)
+    let mu : Measure ℝ := Measure.sum fun k : Fin (8 + 8) =>
+      ENNReal.ofReal ((1 : ℝ) / 16) • Measure.dirac (A k)
+    ∀ xi eta : ℝ,
+      (∀ i : Fin 8,
+        ((1 : ℝ) / 1024) * ‖jointPhase (2 * xi) 0 (a i) - 1‖ ^ 2 ≤
+          1 - ‖jointCharacteristic mu xi eta‖) ∧
+      (∀ i j : Fin 8,
+        ((1 : ℝ) / 4096) *
+            ‖jointPhase 0 (2 * eta) (a i) - jointPhase 0 (2 * eta) (a j)‖ ^ 2 ≤
+          1 - ‖jointCharacteristic mu xi eta‖)

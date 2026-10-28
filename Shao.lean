@@ -290,6 +290,7 @@ import Shao.OQ3.CenteredLogMGF
 import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
+import Shao.OQ3.CirclePhaseChordLattice
 import Shao.OQ3.CompactActualChartWindowProbabilityLaplace
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothing
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothingSmall
@@ -370,12 +371,14 @@ import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
 import Shao.OQ3.EuclideanGaussianWeightedTail
 import Shao.OQ3.FarEnergyExponentialCover
+import Shao.OQ3.FiniteAtomicJointPhaseGap
 import Shao.OQ3.FiniteConstraints
 import Shao.OQ3.FiniteFarArc
 import Shao.OQ3.FiniteNormalSpan
 import Shao.OQ3.FinitePrefixLaw
 import Shao.OQ3.FiniteStageMeasure
 import Shao.OQ3.FiniteStageRate
+import Shao.OQ3.FiniteWeightedUnitPhaseGap
 import Shao.OQ3.FiniteWordMonomialEncoding
 import Shao.OQ3.FundamentalFourierAsymptotic
 import Shao.OQ3.GaussianBoundaryConstant
@@ -557,6 +560,10 @@ import Shao.OQ3.StandardizedPairQuarticExponentialError
 import Shao.OQ3.StandardizedPairQuarticLogRemainder
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
+import Shao.OQ3.SymmetricEightAtomCoordinateGaps
+import Shao.OQ3.SymmetricEightAtomDiophantine
+import Shao.OQ3.SymmetricEightAtomLaw
+import Shao.OQ3.SymmetricEightAtomWeakCramer
 import Shao.OQ3.TiltedMeasureDomination
 import Shao.OQ3.UniformPairCGFCumulantBounds
 import Shao.OQ3.UniformPairCharacteristicGaussianError
@@ -902,6 +909,7 @@ import Shao.OQ6.OriginalSameWitnessClippedPaidTailApplication
 import Shao.OQ6.OriginalSameWitnessClippedTailApplication
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
 import Shao.OQ6.OriginalSameWitnessEventualTailApplication
+import Shao.OQ6.OriginalSameWitnessPhysicalPaidTailApplication
 import Shao.OQ6.OriginalSameWitnessScalarTailApplication
 import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment

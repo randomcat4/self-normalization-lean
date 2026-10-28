@@ -1,0 +1,64 @@
+(
+          let Tphysical : (Fin n → Ω) → ℝ := fun ζ : Fin n → Ω =>
+            if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
+              (projectionW n g ζ + residualStatisticD n r ζ) /
+                Real.sqrt (centeredSq n g r ζ)
+          let H1source : Set (Fin n → Ω) := projectionGood n g 1 ∩ C2source
+          let payment1 : ℝ := (3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) +
+              (4 : ℝ) * Real.exp (-Real.sqrt (n : ℝ) / (2 : ℝ))
+          let Ephysical : Set (Fin n → Ω) := {ζ : Fin n → Ω | T0 ζ ≠ Tphysical ζ}
+          (1 : ℝ) ≤ remainderWindowScale Ktail t0 *
+            Real.rpow (n : ℝ) (1 / 6 : ℝ) ∧
+          @MeasurableSet (Fin n → Ω) mN H1source ∧
+          P.real H1sourceᶜ ≤ payment1 ∧
+          Measurable[mN, borel ℝ] Tphysical ∧
+          Measurable[mN, borel ℝ] T0 ∧
+          @MeasurableSet (Fin n → Ω) mN Ephysical ∧
+          (∀ ζ : Fin n → Ω, ζ ∈ H1source →
+            0 < projectionV n g ζ ∧
+            |centeredDelta n g r ζ| ≤ (1 / 32 : ℝ) ∧
+            -(1 / 2 : ℝ) ≤ centeredDelta n g r ζ) ∧
+          (1 + rho ≤ Real.sqrt (n : ℝ) →
+            (∀ ζ : Fin n → Ω, ζ ∈ H1source →
+              D2 ζ = centeredDelta n g r ζ ∧
+              0 < V0 ζ * Real.sqrt (1 + D2 ζ) ∧
+              0 < Real.sqrt (centeredSq n g r ζ) ∧
+              V0 ζ * Real.sqrt (1 + D2 ζ) =
+                Real.sqrt (centeredSq n g r ζ) ∧
+              T0 ζ = Tphysical ζ) ∧
+            Ephysical ⊆ H1sourceᶜ ∧
+            P.real Ephysical ≤ P.real H1sourceᶜ ∧
+            P.real Ephysical ≤ payment1 ∧
+            (∀ t : ℝ,
+              @MeasurableSet (Fin n → Ω) mN
+                {ζ : Fin n → Ω | t ≤ Tphysical ζ} ∧
+              @MeasurableSet (Fin n → Ω) mN
+                {ζ : Fin n → Ω | t ≤ T0 ζ} ∧
+              @MeasurableSet (Fin n → Ω) mN
+                {ζ : Fin n → Ω | Tphysical ζ ≤ t} ∧
+              @MeasurableSet (Fin n → Ω) mN
+                {ζ : Fin n → Ω | T0 ζ ≤ t} ∧
+              ({ζ : Fin n → Ω | t ≤ Tphysical ζ} ∆
+                {ζ : Fin n → Ω | t ≤ T0 ζ}) ⊆ Ephysical ∧
+              ({ζ : Fin n → Ω | Tphysical ζ ≤ t} ∆
+                {ζ : Fin n → Ω | T0 ζ ≤ t}) ⊆ Ephysical ∧
+              |P.real {ζ : Fin n → Ω | t ≤ Tphysical ζ} -
+                P.real {ζ : Fin n → Ω | t ≤ T0 ζ}| ≤ P.real Ephysical ∧
+              |P.real {ζ : Fin n → Ω | Tphysical ζ ≤ t} -
+                P.real {ζ : Fin n → Ω | T0 ζ ≤ t}| ≤ P.real Ephysical ∧
+              |P.real {ζ : Fin n → Ω | t ≤ Tphysical ζ} -
+                P.real {ζ : Fin n → Ω | t ≤ T0 ζ}| ≤ payment1 ∧
+              |P.real {ζ : Fin n → Ω | Tphysical ζ ≤ t} -
+                P.real {ζ : Fin n → Ω | T0 ζ ≤ t}| ≤ payment1) ∧
+            (∀ (C1 C2 C3 C4 : ℝ)
+                (hSZcBudget : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+                  cBudget C1 C2 C3 C4)
+                (hzMomentWindow : β = 0 ∨
+                  (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+                    Real.rpow (n : ℝ) ((p - 2) / (2 * p)))),
+              Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+                    (1 - C2 * sourceCost0) - payment - payment1 ≤
+                P.real {ζ : Fin n → Ω | z ≤ Tphysical ζ} ∧
+              P.real {ζ : Fin n → Ω | z ≤ Tphysical ζ} ≤
+                Shao.standardNormalTail z * Real.exp (C3 * L0) *
+                    (1 + C4 * sourceCost0) + 3 * payment + payment1)))
