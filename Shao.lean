@@ -938,6 +938,7 @@ import Shao.OQ6.OriginalLevelDependentCorrectionEnvelope
 import Shao.OQ6.OriginalLevelDependentCountablyGeneratedModel
 import Shao.OQ6.OriginalLevelDependentLiteralWeightedConsumer
 import Shao.OQ6.OriginalLevelDependentStrictMomentFrontier
+import Shao.OQ6.OriginalLevelDependentUpperPhysicalFrontier
 import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
