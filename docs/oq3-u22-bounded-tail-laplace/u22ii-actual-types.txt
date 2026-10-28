@@ -1,0 +1,16 @@
+DECL Shao.OQ3.bounded_actual_quadratic_exterior_exponential_bound
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (B : ℝ),
+  0 ≤ B →
+    (∀ᵐ (x : ℝ) ∂mu, |x| ≤ B) →
+      ∀ (A : Set (ℝ × ℝ)) (r : ℝ),
+        (∀ w ∈ Set.Icc (-B) B ×ˢ Set.Icc 0 (B ^ 2) ∩ closure A,
+            ↑r < Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w) →
+          ∃ C,
+            0 < C ∧
+              ∀ (n : ℕ),
+                1 ≤ n →
+                  have P := MeasureTheory.Measure.pi fun x => mu;
+                  have M := fun z => ((∑ i, z i) / ↑n, Shao.energy z / ↑n);
+                  P.real (M ⁻¹' A) ≤ C * Real.exp (-↑n * r)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
