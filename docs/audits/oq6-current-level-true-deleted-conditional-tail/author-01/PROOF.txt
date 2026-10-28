@@ -1,0 +1,213 @@
+:= by
+  classical
+  intro C W V Wη Vη b Dη Tη codedClip F Z Eη E2
+    ℓ0 ℓη S0 Sη S0minus Sηminus I0 Iη full0 fullη deleted0 deletedη
+    sourceCost0 sourceCostη δ0 δη L0 Lη lower0 lowerη upper0 upperη
+  intro hFullFactor hDeletedFactor hNonneg hDeletedNonneg hDom
+    hTilt hFullInt hDeletedInt hBudget hLlim hRlim hClippedLaw
+    hClipPay hZPay hE2Pay hUpperPay
+  rcases hSZ with ⟨hcSZ, hC1, hC2, hC3, hC4, hSource⟩
+  -- The conditional engine receives the true deleted factor at each k.
+  have hScalar (k : ℕ) (hd : ∀ i : Fin n, δη k i ≤ 1)
+      (hl : Lη k ≤ cSZ * z ^ 2) :
+      lowerη k ≤ ν.real {x : X | z ≤ Tη k x} ∧
+      ν.real {x : X | z ≤ Tη k x} ≤
+        upperη k + ν.real (Eη k) + ν.real E2 := by
+    obtain ⟨F1, F2, FA, FB, hF1, hF2, hFA, hFB, hFactor⟩ := hFullFactor k
+    let FAdelete (i : Fin n) : ({j : Fin n // j ≠ i} → ℝ) → ℝ :=
+      Classical.choose (hDeletedFactor k i)
+    let FBdelete (i : Fin n) : ({j : Fin n // j ≠ i} → ℝ) → ℝ :=
+      Classical.choose (Classical.choose_spec (hDeletedFactor k i))
+    have hDeleteSpec (i : Fin n) :
+        Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] (FAdelete i) ∧
+        Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] (FBdelete i) ∧
+        ∀ x : X, Adeleteη k i x = FAdelete i (fun j => η k j.val x) ∧
+          Bdelete i x = FBdelete i (fun j => η k j.val x) :=
+      Classical.choose_spec (Classical.choose_spec (hDeletedFactor k i))
+    have hF1eq (x : X) : Dη k x = F1 (fun i => η k i x) := (hFactor x).1
+    have hF2eq (x : X) : D2 x = F2 (fun i => η k i x) := (hFactor x).2.1
+    have hFAeq (x : X) : Aη k x = FA (fun i => η k i x) := (hFactor x).2.2.1
+    have hFBeq (x : X) : B x = FB (fun i => η k i x) := (hFactor x).2.2.2
+    have hFAdeleteEq (i : Fin n) (x : X) :
+        Adeleteη k i x = FAdelete i (fun j => η k j.val x) :=
+      ((hDeleteSpec i).2.2 x).1
+    have hFBdeleteEq (i : Fin n) (x : X) :
+        Bdelete i x = FBdelete i (fun j => η k j.val x) :=
+      ((hDeleteSpec i).2.2 x).2
+    have hs := hSource ν n hn (η k) F1 F2 FA FB FAdelete FBdelete
+      (hη k) (hηindep k) (hη2 k) (hηmean k) (hηenergy k)
+      hF1 hF2 hFA hFB (fun i => (hDeleteSpec i).1)
+      (fun i => (hDeleteSpec i).2.1) z
+    dsimp only at hs
+    simp only [← hF1eq, ← hF2eq, ← hFAeq, ← hFBeq,
+      ← hFAdeleteEq, ← hFBdeleteEq] at hs
+    exact hs (hNonneg k) (hDeletedNonneg k) (hDom k)
+      hD2pos (hηpos k) (hTilt k).1 (hTilt k).2
+      (hFullInt k) (hDeletedInt k) hz hd hl
+  have hEngineEventually : ∀ᶠ k : ℕ in Filter.atTop,
+      lowerη k ≤ ν.real {x : X | z ≤ Tη k x} ∧
+      ν.real {x : X | z ≤ Tη k x} ≤
+        upperη k + ν.real (Eη k) + ν.real E2 := by
+    filter_upwards [hBudget] with k hk
+    exact hScalar k (fun i => (hk.1 i).le.trans (by norm_num)) hk.2.le
+  -- These limits retain the literal full-Iη normalized source cost.
+  have hLowerExp : Filter.Tendsto (fun k : ℕ => Real.exp (-C1 * Lη k))
+      Filter.atTop (nhds (Real.exp (-C1 * L0))) :=
+    Real.continuous_exp.continuousAt.tendsto.comp (hLlim.const_mul (-C1))
+  have hLowerFactor : Filter.Tendsto (fun k : ℕ => 1 - C2 * sourceCostη k)
+      Filter.atTop (nhds (1 - C2 * sourceCost0)) :=
+    tendsto_const_nhds.sub (hRlim.const_mul C2)
+  have hLowerLim : Filter.Tendsto lowerη Filter.atTop (nhds lower0) :=
+    (tendsto_const_nhds.mul hLowerExp).mul hLowerFactor
+  have hUpperExp : Filter.Tendsto (fun k : ℕ => Real.exp (C3 * Lη k))
+      Filter.atTop (nhds (Real.exp (C3 * L0))) :=
+    Real.continuous_exp.continuousAt.tendsto.comp (hLlim.const_mul C3)
+  have hUpperFactor : Filter.Tendsto (fun k : ℕ => 1 + C4 * sourceCostη k)
+      Filter.atTop (nhds (1 + C4 * sourceCost0)) :=
+    tendsto_const_nhds.add (hRlim.const_mul C4)
+  have hUpperLim : Filter.Tendsto upperη Filter.atTop (nhds upper0) :=
+    (tendsto_const_nhds.mul hUpperExp).mul hUpperFactor
+  have hWm : Measurable W :=
+    Finset.measurable_sum Finset.univ (fun i _ => hξ i)
+  have hVm : Measurable V := by
+    apply Measurable.sqrt
+    exact Finset.measurable_sum Finset.univ
+      (fun i _ => (hξ i).pow_const (2 : ℕ))
+  have hbm : Measurable b := (measurable_const.add hD2).sqrt
+  have hCodedMeas : Measurable codedClip := by
+    exact Measurable.ite (measurableSet_eq_fun hVm measurable_const)
+      measurable_const ((hWm.add hD).div (hVm.mul hbm))
+  have hFm : MeasurableSet F :=
+    measurableSet_le ((measurable_const.mul hVm).mul hbm) (hWm.add hD)
+  have hCodedTailMeas : MeasurableSet {x : X | z ≤ codedClip x} :=
+    measurableSet_le measurable_const hCodedMeas
+  -- The raw event is fixed in k, so no continuity of a CDF is used.
+  have hSigned (k : ℕ) (x : X) :
+      Wη k x + Dη k x - z * Vη k x * b x =
+        W x + D x - z * V x * b x := by
+    dsimp only [Dη]
+    ring
+  have hTailMass (k : ℕ) : ν.real {x : X | z ≤ Tη k x} = ν.real F := by
+    have hAE : {x : X | z ≤ Tη k x} =ᵐ[ν] F := by
+      filter_upwards [hD2pos, hηpos k] with x hd2 hVη
+      have hbpos : 0 < b x := Real.sqrt_pos.mpr hd2
+      have hden : 0 < Vη k x * b x := mul_pos hVη hbpos
+      have hquot : z ≤ Tη k x ↔ z * Vη k x * b x ≤ Wη k x + Dη k x := by
+        simpa only [Tη, mul_assoc] using
+          (le_div_iff₀ hden :
+            z ≤ (Wη k x + Dη k x) / (Vη k x * b x) ↔
+              z * (Vη k x * b x) ≤ Wη k x + Dη k x)
+      have hraw : z * Vη k x * b x ≤ Wη k x + Dη k x ↔
+          z * V x * b x ≤ W x + D x := by
+        have hdist := hSigned k x
+        constructor <;> intro hle <;> linarith only [hdist, hle]
+      exact propext (hquot.trans hraw)
+    exact measureReal_congr hAE
+  have hLowerRaw : lower0 ≤ ν.real F := by
+    apply le_of_tendsto hLowerLim
+    filter_upwards [hEngineEventually] with k hk
+    calc
+      lowerη k ≤ ν.real {x : X | z ≤ Tη k x} := hk.1
+      _ = ν.real F := hTailMass k
+  have hUpperError (γ : ℝ) (hγ : 0 < γ) :
+      ν.real F ≤ upper0 + pUpper + γ + p2 := by
+    have hEv : ∀ᶠ k : ℕ in Filter.atTop,
+        ν.real F ≤ upperη k + pUpper + γ + p2 := by
+      filter_upwards [hEngineEventually, hUpperPay γ hγ] with k hk hpay
+      calc
+        ν.real F = ν.real {x : X | z ≤ Tη k x} := (hTailMass k).symm
+        _ ≤ upperη k + ν.real (Eη k) + ν.real E2 := hk.2
+        _ ≤ upperη k + pUpper + γ + p2 := by linarith only [hpay, hE2Pay]
+    have hLim : Filter.Tendsto (fun k : ℕ => upperη k + pUpper + γ + p2)
+        Filter.atTop (nhds (upper0 + pUpper + γ + p2)) :=
+      ((hUpperLim.add tendsto_const_nhds).add tendsto_const_nhds).add
+        tendsto_const_nhds
+    exact le_of_tendsto_of_tendsto tendsto_const_nhds hLim hEv
+  have hUpperRaw : ν.real F ≤ upper0 + pUpper + p2 := by
+    by_contra hnot
+    have hpos : 0 < ν.real F - (upper0 + pUpper + p2) :=
+      sub_pos.mpr (lt_of_not_ge hnot)
+    have hHalf := hUpperError ((ν.real F - (upper0 + pUpper + p2)) / 2)
+      (by linarith only [hpos])
+    linarith only [hHalf, hpos]
+  -- The coded projection-zero fee and original clipping fee stay separate.
+  have hRealSubset (S : Set X) (hS : ∀ᵐ x ∂ν, x ∈ S → x ∈ Z) :
+      ν.real S ≤ ν.real Z := by
+    have hEq : S =ᵐ[ν] (S ∩ Z) := by
+      filter_upwards [hS] with x hx
+      exact propext ⟨fun h => ⟨h, hx h⟩, fun h => h.1⟩
+    calc
+      ν.real S = ν.real (S ∩ Z) := measureReal_congr hEq
+      _ ≤ ν.real Z := measureReal_mono (fun _ hx => hx.2) (measure_ne_top ν Z)
+  have hCFsub : ∀ᵐ x ∂ν, x ∈ ({x : X | z ≤ codedClip x} ∆ F) → x ∈ Z := by
+    filter_upwards [hD2pos] with x hd2
+    intro hdiff
+    by_contra hnot
+    have hvne : V x ≠ 0 := hnot
+    have hv : 0 < V x := by
+      have hnonneg : 0 ≤ V x := Real.sqrt_nonneg _
+      by_contra hbad
+      apply hvne
+      linarith only [hnonneg, hbad]
+    have hbpos : 0 < b x := Real.sqrt_pos.mpr hd2
+    have hden : 0 < V x * b x := mul_pos hv hbpos
+    have heq : (x ∈ {x : X | z ≤ codedClip x} ↔ x ∈ F) := by
+      simpa only [codedClip, if_neg hvne, mul_assoc] using
+        (le_div_iff₀ hden : z ≤ (W x + D x) / (V x * b x) ↔
+          z * (V x * b x) ≤ W x + D x)
+    rcases Set.mem_symmDiff.mp hdiff with ⟨hc, hf⟩ | ⟨hf, hc⟩
+    · exact hf (heq.mp hc)
+    · exact hc (heq.mpr hf)
+  have hClipRaw : |ν.real {x : X | z ≤ codedClip x} - ν.real F| ≤ pZ :=
+    (abs_measureReal_sub_le_measureReal_symmDiff
+      hCodedTailMeas.nullMeasurableSet hFm.nullMeasurableSet).trans
+        ((hRealSubset ({x : X | z ≤ codedClip x} ∆ F) hCFsub).trans hZPay)
+  have hCodedTail : ν.real {x : X | z ≤ codedClip x} =
+      P.real {o : O | z ≤ originalClip o} := by
+    have hν := map_measureReal_apply (μ := ν) hCodedMeas
+      (measurableSet_Ici : MeasurableSet (Set.Ici z))
+    have hP := map_measureReal_apply (μ := P) hOriginalClip
+      (measurableSet_Ici : MeasurableSet (Set.Ici z))
+    change (Measure.map codedClip ν).real (Set.Ici z) =
+      ν.real {x : X | z ≤ codedClip x} at hν
+    rw [hClippedLaw] at hν
+    exact hν.symm.trans hP
+  have hOriginalTail : MeasurableSet {o : O | z ≤ originalClip o} :=
+    measurableSet_le measurable_const hOriginalClip
+  have hPhysicalTail : MeasurableSet {o : O | z ≤ physical o} :=
+    measurableSet_le measurable_const hPhysical
+  have hPhysicalSub :
+      ({o : O | z ≤ physical o} ∆ {o : O | z ≤ originalClip o}) ⊆
+        {o : O | originalClip o ≠ physical o} := by
+    intro o ho
+    change originalClip o ≠ physical o
+    intro heq
+    rcases Set.mem_symmDiff.mp ho with ⟨hp, hc⟩ | ⟨hc, hp⟩
+    · apply hc
+      change z ≤ originalClip o
+      rw [heq]
+      exact hp
+    · apply hp
+      change z ≤ physical o
+      rw [← heq]
+      exact hc
+  have hPhysicalCoded :
+      |P.real {o : O | z ≤ physical o} - ν.real {x : X | z ≤ codedClip x}| ≤ pClip := by
+    rw [hCodedTail]
+    exact (abs_measureReal_sub_le_measureReal_symmDiff
+      hPhysicalTail.nullMeasurableSet hOriginalTail.nullMeasurableSet).trans
+        ((measureReal_mono hPhysicalSub
+          (measure_ne_top P {o : O | originalClip o ≠ physical o})).trans hClipPay)
+  rcases abs_le.mp hClipRaw with ⟨hClipRawLower, hClipRawUpper⟩
+  rcases abs_le.mp hPhysicalCoded with ⟨hPhysicalLower, hPhysicalUpper⟩
+  have hLowerPhysical : lower0 - pZ - pClip ≤ P.real {o : O | z ≤ physical o} := by
+    linarith only [hLowerRaw, hClipRawLower, hPhysicalLower]
+  have hUpperPhysical : P.real {o : O | z ≤ physical o} ≤
+      upper0 + pUpper + p2 + pZ + pClip := by
+    linarith only [hUpperRaw, hClipRawUpper, hPhysicalUpper]
+  refine ⟨hEngineEventually, hLowerLim, hUpperLim, hTailMass,
+    hLowerRaw, hUpperRaw, hLowerPhysical, hUpperPhysical, ?_⟩
+  intro payment hUpperFee h2Fee hZFee hClipFee
+  constructor
+  · linarith only [hLowerPhysical, hZFee, hClipFee]
+  · linarith only [hUpperPhysical, hUpperFee, h2Fee, hZFee, hClipFee]
