@@ -1,0 +1,16 @@
+DECL Shao.OQ3.pair_gaussian_reference_damping_error_bound
+TYPE ∀ (P : ℝ × ℝ → ℂ),
+  Continuous P →
+    MeasureTheory.Integrable P MeasureTheory.volume →
+      MeasureTheory.Integrable (fun z => (z.1 ^ 2 + z.2 ^ 2) * ‖P z‖) MeasureTheory.volume →
+        ∀ (b : ℝ),
+          0 ≤ b →
+            have damping := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2));
+            have kernel := fun x z => Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2));
+            ∀ (x : ℝ × ℝ),
+              MeasureTheory.Integrable (fun z => kernel x z * (↑(damping z) * P z)) MeasureTheory.volume ∧
+                MeasureTheory.Integrable (fun z => kernel x z * P z) MeasureTheory.volume ∧
+                  ‖(∫ (z : ℝ × ℝ), kernel x z * (↑(damping z) * P z)) - ∫ (z : ℝ × ℝ), kernel x z * P z‖ ≤
+                    b * ∫ (z : ℝ × ℝ), (z.1 ^ 2 + z.2 ^ 2) * ‖P z‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,13 @@
+theorem pair_gaussian_reference_damping_error_bound
+    (P : (ℝ × ℝ) → ℂ) (hPc : Continuous P) (hP : Integrable P)
+    (hQP : Integrable (fun z : ℝ × ℝ => (z.1 ^ 2 + z.2 ^ 2) * ‖P z‖))
+    (b : ℝ) (hb : 0 ≤ b) :
+    let damping : (ℝ × ℝ) → ℝ := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))
+    let kernel : (ℝ × ℝ) → (ℝ × ℝ) → ℂ := fun x z =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ))
+    ∀ x : ℝ × ℝ,
+      Integrable (fun z => kernel x z * ((damping z : ℂ) * P z)) ∧
+        Integrable (fun z => kernel x z * P z) ∧
+          ‖(∫ z : ℝ × ℝ, kernel x z * ((damping z : ℂ) * P z)) -
+            (∫ z : ℝ × ℝ, kernel x z * P z)‖ ≤
+              b * (∫ z : ℝ × ℝ, (z.1 ^ 2 + z.2 ^ 2) * ‖P z‖)
