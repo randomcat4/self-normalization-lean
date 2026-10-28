@@ -1,0 +1,15 @@
+DECL Shao.OQ3.jointPhase.eq_1
+TYPE ∀ (xi eta x : ℝ), Shao.OQ3.jointPhase xi eta x = Complex.exp (↑(xi * x + eta * x ^ 2) * Complex.I)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.finite_atomic_joint_near_resonance
+TYPE ∀ (n : ℕ) (a w : Fin n → ℝ),
+  (∀ (i : Fin n), 0 ≤ w i) →
+    ∑ i, w i = 1 →
+      have mu := MeasureTheory.Measure.sum fun i => ENNReal.ofReal (w i) • MeasureTheory.Measure.dirac (a i);
+      ∀ (R eps : ℝ),
+        0 < eps →
+          ∃ xi,
+            R < xi ∧ ‖Shao.OQ3.jointCharacteristic mu xi 0 - 1‖ < eps ∧ 1 - eps < ‖Shao.OQ3.jointCharacteristic mu xi 0‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
