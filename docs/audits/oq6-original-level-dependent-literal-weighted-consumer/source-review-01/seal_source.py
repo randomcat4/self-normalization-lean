@@ -1,0 +1,27 @@
+import pathlib, json, hashlib, datetime, re
+R=pathlib.Path('C:/game/shao lean')
+O=R/'drafts/oq56/unit256/source-review-01'
+A=R/'drafts/oq56/unit256/author-01'
+def bind(p):
+    p=pathlib.Path(p); b=p.read_bytes()
+    return dict(path=p.as_posix(),sha256=hashlib.sha256(b).hexdigest(),bytes=len(b),LF=b.count(b'\n'))
+def load(p): return json.loads(pathlib.Path(p).read_text(encoding='utf-8'))
+def put(name,data):
+    (O/name).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+src=A/'OriginalLevelDependentLiteralWeightedConsumer.lean'
+s=src.read_text(encoding='utf-8')
+l=load(A/'LOCAL-CONTEXTS.json'); b=load(A/'BINDING-TYPES.json'); p=load(A/'PRODUCER-TYPES.json')
+counts={k:len(re.findall(r'^\s*(?:·\s*)?'+k+r'\s',s,re.M)) for k in ['let','letI','have']}
+assert sum(counts.values())==278 and len(l['declarations'])==278
+assert len(re.findall(r'^theorem\s',s,re.M))==1
+assert not re.findall(r'\b(sorry|admit|axiom|unsafe|native_decide)\b',s)
+runtime=dict(requestedModel='gpt-6.1-sol',requestedEffort='xhigh',freshContextRequested=True,actualModel=None,actualBackend=None,actualEffort=None,usage=dict(input=None,cachedInput=None,output=None,reasoningSubset=None))
+verdict=dict(schema='unit256-independent-complete-source-review-verdict-v1',atUTC=utc,STATUS='CORRECT',stage='SOURCE_ACCEPTED',sourceAccepted=True,qualified=False,machinePending=True,source=bind(src),freeze=bind(R/'drafts/oq56/unit256/freeze-02/frozen-declaration.json'),frozenHead=bind(R/'drafts/oq56/unit256/freeze-02/FROZEN-HEAD.txt'),proof=bind(A/'PROOF-BODY.txt'),fullSourceStatementProofReview=True,allLocalTypesRHSSourcesAndScopesReviewed=True,allProducerInstantiationsReviewed=True,all349PatternBindingsReviewed=True,sameM0BeforeAllNZEpsilon=True,whole255HforPreserved=True,onlyCurrentKFactorsUsed=True,current512RhoZ=True,trueRetainedDeletedFactors=True,allPartialDenominatorsFullI=True,additionalPremises=False,sourceCostCubicBound=True,onlyPositiveSlackEventualEtaBound=True,criticalGaps=[],actualOwnerCount=None,actualTYPELF=None,requiredVALUECount=None,recursiveAX=None,kernel='PENDING_PARENT_MACHINE_EVIDENCE',sameFirstOriginalObject='PENDING_PARENT_MACHINE_EVIDENCE',sourceReport=bind(O/'SOURCE-REPORT.md'),fullOQ56='OPEN',root='OPEN',authorReviewerSeparated=True,independentRole='/root/oq56_unit256_review',ownerChat='01a1822b-1815-7f21-a1af-2e0b15ee67a5',currentRoot='01a17d3c-6dfd-7cc0-94ed-35d758a423a5',runtime=runtime,operations=dict.fromkeys(['Lean','lake','PP','AX','server','network','upload','Git','API','children','sidebar','Goal','schedule'],0),sameContextRetainedForMachineStage=True,finalRelease=False)
+put('SOURCE-VERDICT.json',verdict)
+coverage=dict(schema='unit256-independent-complete-source-review-coverage-v1',atUTC=utc,source=bind(src),readSourceRanges=[[1,360],[361,720],[721,1053]],full1053LFRead=True,frozenHeadSourceRange=[14,487],proofSourceRange=[489,1049],headAndProofExactAssemblyVerified=True,sourceDerivedLocalCounts=counts,totalLocalDeclarations=278,binderCommands=27,patternBindings=349,bindingReadIndexRangesInclusive=[[0,7],[8,81],[82,214],[215,348]],allTypesRHSSourceScopesComplete=True,sourceSlicesRoundtrip=305,lexicalScopes=[dict(name=x['name'],kind=x['kind'],sourceStartLine=x['slice']['sourceStartLine'],sourceEndLine=x['slice']['sourceEndLine'],lexicalScopeEndLine=x['lexicalScopeEndLine'],sliceSHA256=x['slice']['sha256']) for x in l['declarations']],inventoryBindings=[bind(A/x) for x in ['LOCAL-CONTEXTS.json','BINDING-TYPES.json','PRODUCER-TYPES.json','INPUT-BINDINGS.json','REPORT.md','ROUTE.md','STATIC-CHECK.json','MANIFEST.json','FINALWRITE.json']],producerContracts=[dict(name=k,input=v['input'],sourceRange=[v['sourceStartLine'],v['sourceEndLine']],completeConditionsAndApplicationReviewed=True) for k,v in p['contracts'].items()],allEightInstantiationSitesReviewed=True,old228PublicContractRead=[1,224],qualified255EvidenceReusedWithoutOldProofOrActualTYPEAuditReplay=True,sourceReadOnlyBindings=[bind(R/'drafts/oq56/unit255/qualified-evidence.json'),bind(R/'drafts/oq56/unit255/source-review-01/FINAL-REPORT.md'),bind(R/'drafts/oq56/unit255/source-review-01/FINAL-VERDICT.json'),bind(R/'drafts/oq56/unit255/source-review-01/FINALWRITE.json'),bind('C:/game/shao/current/oq56/inputs02/p51.md'),bind('C:/game/shao/current/oq56/inputs02/p54.md'),bind(R/'coordination/integration-v149/original-t-relative-tail-cost-source-implication-review.md')],originalSourcesFullRead=True,v149CounterexampleAndP54RepairsPreserved=True,actualMachineOwnerCount=None,actualTYPELF=None,requiredVALUECount=None,machineCoverage='PENDING',qualified=False,finalRelease=False)
+put('SOURCE-COVERAGE.json',coverage)
+names=['review_inputs.py','seal_source.py','LOCAL-READ-FAILURES.json','SOURCE-BYTE-CHECK.json','SOURCE-REPORT.md','SOURCE-VERDICT.json','SOURCE-COVERAGE.json']
+manifest=dict(schema='unit256-independent-source-stage-manifest-v1',atUTC=utc,source=bind(src),payloadCount=len(names),payloads=[bind(O/x) for x in names],sourceAccepted=True,qualified=False,machinePending=True,immutableSourceStage=True,sameContextRetainedForMachineStage=True,finalRelease=False)
+put('SOURCE-MANIFEST.json',manifest)
+print(json.dumps({'sourceCounts':counts,'manifest':bind(O/'SOURCE-MANIFEST.json'),'verdict':bind(O/'SOURCE-VERDICT.json'),'report':bind(O/'SOURCE-REPORT.md'),'coverage':bind(O/'SOURCE-COVERAGE.json'),'SOURCE_ACCEPTED':True,'qualified':False,'machinePending':True},ensure_ascii=False,indent=2))
