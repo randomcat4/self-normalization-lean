@@ -235,6 +235,7 @@ import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualCubicHermiteCorrection
 import Shao.OQ3.ActualGaussianIntegralSumComparison
 import Shao.OQ3.ActualGaussianKernelComparison
+import Shao.OQ3.ActualHighEnergyExteriorRateGap
 import Shao.OQ3.ActualMeanChartBoundaryTaylor
 import Shao.OQ3.ActualMeanChartCompactLaplaceTiltWindows
 import Shao.OQ3.ActualMeanChartCompactTaylor
@@ -265,8 +266,10 @@ import Shao.OQ3.BoundaryLaplacePhysicalDomain
 import Shao.OQ3.BoundaryLaplaceScaledError
 import Shao.OQ3.BoundaryLaplaceScaling
 import Shao.OQ3.BoundedActualChartWindowProbabilityLaplace
+import Shao.OQ3.BoundedActualExteriorFromUniqueMinimum
 import Shao.OQ3.BoundedActualQuadraticExteriorExponentialBound
 import Shao.OQ3.BoundedActualSelfNormalizedTailLaplace
+import Shao.OQ3.BoundedActualSelfNormalizedTailUniqueMinimum
 import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
@@ -394,6 +397,7 @@ import Shao.OQ3.GaussianSmoothedPairLaw
 import Shao.OQ3.GaussianSmoothedRealDensity
 import Shao.OQ3.GaussianSmoothingScale
 import Shao.OQ3.GlobalNegativeLayerBound
+import Shao.OQ3.IIDMeasurableSetCountExponentialBound
 import Shao.OQ3.ImaginaryExponentialTaylorRemainder
 import Shao.OQ3.ImaginaryRealExponentialQuadraticError
 import Shao.OQ3.IndependentSumSmoothingBounds
@@ -498,8 +502,11 @@ import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
 import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
 import Shao.OQ3.ScalarTaylorMomentPolynomial
+import Shao.OQ3.SelfNormalizedLowEnergyCount
+import Shao.OQ3.SelfNormalizedLowEnergyExponentialBound
 import Shao.OQ3.SixOrderHigherWeightGrowth
 import Shao.OQ3.SixOrderWordHigherDecomposition
+import Shao.OQ3.SmallNonzeroIIDCountExponentialBound
 import Shao.OQ3.SourceBinaryEntropyGap
 import Shao.OQ3.SourceCanonicalRate
 import Shao.OQ3.SourceCanonicalSaddle
@@ -881,6 +888,7 @@ import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessClippedEventTransport
+import Shao.OQ6.OriginalSameWitnessClippedTailApplication
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
 import Shao.OQ6.OriginalSameWitnessEventualTailApplication
 import Shao.OQ6.OriginalSameWitnessScalarTailApplication
