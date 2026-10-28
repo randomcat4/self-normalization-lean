@@ -1,0 +1,220 @@
+STATIC AUTHOR FULL TYPES / COMPLETE RHS; NOT MACHINE PP
+
+[instP @ line 104]
+IsProbabilityMeasure P
+RHS:
+inferInstanceAs (IsProbabilityMeasure (Measure.pi (fun _ : Fin n => μ)))
+
+
+[h512 @ line 106]
+(0 : ℝ) ≤ 512
+RHS:
+by norm_num
+
+
+[hz0 @ line 107]
+(0 : ℝ) ≤ z
+RHS:
+le_trans (by norm_num : (0 : ℝ) ≤ 1) hz
+
+
+[hmeas @ line 111]
+Measurable physical ∧ Measurable clipped ∧ MeasurableSet Eclip
+RHS:
+Shao.OQ6.OriginalPhysicalClippedTailTransfer.physical_clipped_globally_measurable
+      n g r hg hr 512 rho z
+
+
+[hPhysicalMeas @ line 114]
+Measurable physical
+RHS:
+hmeas.1
+
+
+[hClippedMeas @ line 115]
+Measurable clipped
+RHS:
+hmeas.2.1
+
+
+[hEclipMeas @ line 116]
+MeasurableSet Eclip
+RHS:
+hmeas.2.2
+
+
+[hOn @ line 117]
+∀ (x : Fin n → Ω) (hx : x ∈ Hsource),
+  0 < V0 x ∧
+  z * |D1 x| ≤ V0 x / 8 ∧
+  z ^ 2 * |D2z x| ≤ (1 / 32 : ℝ) ∧
+  0 < Real.sqrt (centeredSq n g r x) ∧
+  Real.sqrt (centeredSq n g r x) = V0 x * Real.sqrt (1 + centeredDelta n g r x) ∧
+  D2z x = centeredDelta n g r x ∧
+  clipped x = physical x
+RHS:
+by
+    rcases hOldOn x hx with
+      ⟨hVpos, hEnergy, hNum, hNumStrict, hRawScaled, hRawAbs, hRawLower,
+        hOldContract, hOldScaled, hOldStrict, hOldAbs, hOldClipPos,
+        hSourcePos, hFactor⟩
+    have hCurrentClip := clippedCenteredDelta_bounds n g r 512 rho z x
+      h512 hrho hz0
+    have hContract : |D2z x| ≤ |centeredDelta n g r x| :=
+      hCurrentClip.2.2.1
+    have hScaled : z ^ 2 * |D2z x| ≤ (1 / 32 : ℝ) :=
+      (mul_le_mul_of_nonneg_left hContract (sq_nonneg z)).trans hRawScaled
+    have hLower : -(1 / 2 : ℝ) ≤ centeredDelta n g r x := by
+      linarith only [hRawLower]
+    have hLiteral := literal_clippedCentered_comparison_on_projectionGood
+      n g r rho z x hn.1 hz hsym hrho hGeometry hx.1 hLower
+    exact ⟨hVpos, hNum, hScaled, hLiteral.2.2.1, hFactor,
+      hLiteral.1, hLiteral.2.2.2.2⟩
+
+
+[hCurrentClip @ line 130]
+(1 / 2 : ℝ) ≤ 1 + clippedCenteredDelta n g r 512 rho z x ∧
+|clippedCenteredDelta n g r 512 rho z x| ≤ studentizerClipBudget n r 512 rho z x ∧
+|clippedCenteredDelta n g r 512 rho z x| ≤ |centeredDelta n g r x| ∧
+(0 < projectionV n g x → 0 < projectionV n g x * Real.sqrt (1 + clippedCenteredDelta n g r 512 rho z x))
+RHS:
+clippedCenteredDelta_bounds n g r 512 rho z x
+      h512 hrho hz0
+
+
+[hContract @ line 132]
+|D2z x| ≤ |centeredDelta n g r x|
+RHS:
+hCurrentClip.2.2.1
+
+
+[hScaled @ line 134]
+z ^ 2 * |D2z x| ≤ (1 / 32 : ℝ)
+RHS:
+(mul_le_mul_of_nonneg_left hContract (sq_nonneg z)).trans hRawScaled
+
+
+[hLower @ line 136]
+-(1 / 2 : ℝ) ≤ centeredDelta n g r x
+RHS:
+by
+      linarith only [hRawLower]
+
+
+[hLiteral @ line 138]
+clippedCenteredDelta n g r 512 rho z x = centeredDelta n g r x ∧
+0 < projectionV n g x * Real.sqrt (1 + clippedCenteredDelta n g r 512 rho z x) ∧
+0 < Real.sqrt (centeredSq n g r x) ∧
+projectionV n g x * Real.sqrt (1 + clippedCenteredDelta n g r 512 rho z x) = Real.sqrt (centeredSq n g r x) ∧
+clippedCenteredStatistic n g r 512 rho z x =
+  (if Real.sqrt (centeredSq n g r x) = 0 then 0 else
+    (projectionW n g x + residualStatisticD n r x) / Real.sqrt (centeredSq n g r x))
+RHS:
+literal_clippedCentered_comparison_on_projectionGood
+      n g r rho z x hn.1 hz hsym hrho hGeometry hx.1 hLower
+
+
+[hSafeSubset @ line 142]
+Hsource ⊆ Ssafe
+RHS:
+by
+    intro x hx
+    have hxOn := hOn x hx
+    refine ⟨hxOn.1, hxOn.2.1, ?_⟩
+    linarith only [hxOn.2.2.1]
+
+
+[hxOn @ line 144]
+0 < V0 x ∧
+  z * |D1 x| ≤ V0 x / 8 ∧
+  z ^ 2 * |D2z x| ≤ (1 / 32 : ℝ) ∧
+  0 < Real.sqrt (centeredSq n g r x) ∧
+  Real.sqrt (centeredSq n g r x) = V0 x * Real.sqrt (1 + centeredDelta n g r x) ∧
+  D2z x = centeredDelta n g r x ∧
+  clipped x = physical x
+RHS:
+hOn x hx
+
+
+[hUnionSubset @ line 147]
+(Ssafeᶜ ∪ Eclip ∪ Zphysical) ⊆ Hsourceᶜ
+RHS:
+by
+    intro x hx hxH
+    have hxOn := hOn x hxH
+    rcases hx with (hxSafe | hxClip) | hxPhysical
+    · exact hxSafe (hSafeSubset hxH)
+    · exact hxClip hxOn.2.2.2.2.2.2
+    · exact (ne_of_gt hxOn.2.2.2.1) hxPhysical
+
+
+[hxOn @ line 149]
+0 < V0 x ∧
+  z * |D1 x| ≤ V0 x / 8 ∧
+  z ^ 2 * |D2z x| ≤ (1 / 32 : ℝ) ∧
+  0 < Real.sqrt (centeredSq n g r x) ∧
+  Real.sqrt (centeredSq n g r x) = V0 x * Real.sqrt (1 + centeredDelta n g r x) ∧
+  D2z x = centeredDelta n g r x ∧
+  clipped x = physical x
+RHS:
+hOn x hxH
+
+
+[hRemainderSubset @ line 154]
+(E2 ∪ Z0) ⊆ Ssafeᶜ
+RHS:
+by
+    intro x hx hxSafe
+    rcases hx with hxE2 | hxZ0
+    · change (1 / 4 : ℝ) < z ^ 2 * |D2z x| at hxE2
+      linarith only [hxSafe.2.2, hxE2]
+    · exact (ne_of_gt hxSafe.1) hxZ0
+
+
+[hSafeComplSubset @ line 160]
+Ssafeᶜ ⊆ Hsourceᶜ
+RHS:
+by
+    intro x hx hxH
+    exact hx (hSafeSubset hxH)
+
+
+[hAllSubset @ line 163]
+(E2 ∪ Z0 ∪ Eclip ∪ Zphysical) ⊆ Hsourceᶜ
+RHS:
+by
+    intro x hx
+    rcases hx with ((hxE2 | hxZ0) | hxClip) | hxPhysical
+    · exact hSafeComplSubset (hRemainderSubset (Or.inl hxE2))
+    · exact hSafeComplSubset (hRemainderSubset (Or.inr hxZ0))
+    · exact hUnionSubset (Or.inl (Or.inr hxClip))
+    · exact hUnionSubset (Or.inr hxPhysical)
+
+
+[hEclipSubset @ line 170]
+Eclip ⊆ Hsourceᶜ
+RHS:
+by
+    intro x hx
+    exact hUnionSubset (Or.inl (Or.inr hx))
+
+
+[hSafeFee @ line 173]
+P.real Ssafeᶜ ≤ payment
+RHS:
+(measureReal_mono (μ := P) hSafeComplSubset
+      (measure_ne_top P Hsourceᶜ)).trans hHfee
+
+
+[hAllFee @ line 176]
+P.real (E2 ∪ Z0 ∪ Eclip ∪ Zphysical) ≤ payment
+RHS:
+(measureReal_mono (μ := P) hAllSubset
+      (measure_ne_top P Hsourceᶜ)).trans hHfee
+
+
+[hEclipFee @ line 179]
+P.real Eclip ≤ payment
+RHS:
+(measureReal_mono (μ := P) hEclipSubset
+      (measure_ne_top P Hsourceᶜ)).trans hHfee

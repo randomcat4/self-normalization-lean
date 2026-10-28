@@ -1,0 +1,197 @@
+  classical
+  intro g r v rho
+  -- Establish these facts in the original measurable space before selecting m₀.
+  have hgOriginal : Measurable[mΩ, borel ℝ] g :=
+    hh.stronglyMeasurable.integral_prod_right'.measurable
+  have hgSecond : (∫ o, g o ^ 2 ∂μ) = 1 := hprojectionsecond
+  have hgSquareIntegrable : Integrable[mΩ] (fun o => g o ^ 2) μ := by
+    by_contra hnot
+    have hzero : (∫ o, g o ^ 2 ∂μ) = 0 := integral_undef hnot
+    exact one_ne_zero (hgSecond.symm.trans hzero)
+  have hg2Original : MemLp g 2 μ :=
+    (memLp_two_iff_integrable_sq hgOriginal.aestronglyMeasurable).2
+      hgSquareIntegrable
+  have hOriginal :=
+    Shao.OQ6.OriginalLevelDependentLiteralWeightedConsumer.actual_original_level_dependent_literal_weighted_consumer
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+  dsimp only at hOriginal
+  rcases hOriginal with ⟨m₀, hm₀, hcg, hbase⟩
+  refine ⟨m₀, hm₀, hcg, ?_⟩
+  intro μ₀
+  letI : MeasurableSpace Ω := m₀
+  letI : MeasurableSpace.CountablyGenerated Ω := hcg
+  rcases hbase with ⟨hμ₀prob, hfor, hconsumer⟩
+  letI : IsProbabilityMeasure μ₀ := hμ₀prob
+  -- Both retained packets use this one witness, selected before p and cBudget.
+  refine ⟨hμ₀prob, hfor, ?_⟩
+  intro n hn z hz hwindow
+  intro mN mN₀ P P₀ N K ε ξ0 D1 D2 T0 A0 B0 A0delete B0delete
+    lambda01 mAugLocal mAug νlocal ν q c ξlocal Ylocal ξ Y a s ηlocal η C
+    W V Wη Vη b Qε Dη Tη A B Adelete Bdelete Vdelete H Hdelete
+    M Mdelete Anew AdeleteNew Δ ℓ0 ℓη S0 Sη S0minus Sηminus I0 Iη
+    fullTest0 fullTestη deletedTest0 deletedTestη compactDeletedTest0
+    compactDeletedTestη Lcompact0 Lcompactη sourceCost0 sourceCostη compactCost0 compactCostη
+  have hAnalytic := hconsumer n hn z hz hwindow
+  refine ⟨hAnalytic, ?_⟩
+  rcases hAnalytic with
+    ⟨hP₀prob, hP₀map, hνprob, hq, hε, hεlim, hξPacket, hξenergy, hYpacket,
+      hD2bounds, hT0zero, hTηzero, hηpacket, hSigned, hHm, hHint, hHd,
+      hQspec, hQlim, hAnew, hAdnew, hAnewL1, hAdnewL1, hAlim, hAdlim,
+      hΔeq, hΔI, hFullFactor, hDeletedFactor, hRemainderFactor,
+      hFullI, hFullηI, hDelI, hDelηI, hCompactI, hCompactηI,
+      hIpos, hIηpos, hIlim, hFullLim, hDelLim, hFullRatio, hDelRatio,
+      hCompactLim, hSourceLim, hCostLim, hSourceNonneg, hSourceBound,
+      hSourceEventually⟩
+  letI : @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ := hP₀prob
+  letI : @IsProbabilityMeasure (Fin n → Ω × ℝ) mAug ν := hνprob
+  change @MeasurePreserving (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν P₀ at hq
+  have hn1 : 1 ≤ n := by omega
+  have hPacket0 := hfor n hn z hz hwindow (ε 0) (hε 0).1 (hε 0).2
+  rcases hPacket0 with
+    ⟨hPacketP₀prob, hPacketP₀map, hO, hOindep, hgcoord, hPacketRest⟩
+  have hξ0Reduced (i : Fin n) : Measurable[mN₀, borel ℝ] (ξ0 i) :=
+    ((hgcoord i).1).comp (hO i).1
+  have hidΩ : Measurable[mΩ, m₀] (id : Ω → Ω) := measurable_id'' hm₀
+  have hidN : Measurable[mN, mN₀] (id : (Fin n → Ω) → (Fin n → Ω)) := by
+    apply (@measurable_pi_iff (Fin n → Ω) (Fin n) (fun _ : Fin n => Ω)
+      mN (fun _ : Fin n => m₀) (id : (Fin n → Ω) → (Fin n → Ω))).2
+    intro i
+    exact hidΩ.comp
+      (@measurable_pi_apply (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ) i)
+  have hId : @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀ :=
+    @MeasurePreserving.mk (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀
+      hidN hP₀map.symm
+  intro p hp2 hp3 hgp cBudget hcBudget
+  intro β cWindow Fz δoriginal δ0 δη Loriginal L0 Lη
+  -- The moment hypothesis and β belong to the original μ, never to μ₀.
+  have hOriginalBudget :=
+    @Shao.OQ6.IIDSourceStrictMomentBudgets.actual_iid_source_z_strict_moment_budgets
+      Ω mΩ μ (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+      g hgOriginal hg2Original p hp2 hp3 hgp cBudget hcBudget
+  dsimp only at hOriginalBudget
+  rcases hOriginalBudget with ⟨hβ, hcWindow, hcWindowPower, hcWindowSmall, hSource⟩
+  rcases hSource n hn1 z hz with
+    ⟨hPprob, hScalarI, hSourceI, hδScalar, hLScalar, hLi, hδNonneg,
+      hLNonneg, hRate, hZero, hSourceStrict⟩
+  change @IsProbabilityMeasure (Fin n → Ω) mN P at hPprob
+  change (∀ i : Fin n, Integrable[mN] (fun ζ => Fz (ξ0 i ζ)) P) at hSourceI
+  change (∀ i : Fin n, 0 ≤ δoriginal i) at hδNonneg
+  change 0 ≤ Loriginal at hLNonneg
+  change Loriginal ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) at hRate
+  change (β = 0 → Loriginal = 0 ∧ (∀ i : Fin n, δoriginal i = 0)) at hZero
+  have hFzReduced (i : Fin n) :
+      Measurable[mN₀, borel ℝ] (fun ζ => Fz (ξ0 i ζ)) := by
+    exact ((measurable_const.mul (hξ0Reduced i)).pow_const 2).mul
+      ((continuous_abs.measurable.comp
+        (measurable_const.mul (hξ0Reduced i))).min measurable_const)
+  have hOriginalIntegral (i : Fin n) :
+      (∫ ζ, Fz (ξ0 i ζ) ∂P₀) = δoriginal i := by
+    have hm :=
+      @integral_map_of_stronglyMeasurable (Fin n → Ω) ℝ
+        (inferInstance : NormedAddCommGroup ℝ) (inferInstance : NormedSpace ℝ ℝ)
+        mN P (Fin n → Ω) mN₀ id hidN (fun ζ => Fz (ξ0 i ζ))
+        ((hFzReduced i).stronglyMeasurable :
+          StronglyMeasurable (fun ζ => Fz (ξ0 i ζ)))
+    rw [hP₀map.symm] at hm
+    simpa only [δoriginal, Function.comp_def, id_eq] using hm
+  have hAugIntegral (i : Fin n) :
+      δ0 i = (∫ ζ, Fz (ξ0 i ζ) ∂P₀) := by
+    have hm :=
+      @integral_map (Fin n → Ω × ℝ) ℝ
+        (inferInstance : NormedAddCommGroup ℝ) (inferInstance : NormedSpace ℝ ℝ)
+        mAug ν (Fin n → Ω) mN₀ q hq.aemeasurable (fun ζ => Fz (ξ0 i ζ))
+        ((hFzReduced i).aestronglyMeasurable :
+          AEStronglyMeasurable (fun ζ => Fz (ξ0 i ζ))
+            (@Measure.map (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν))
+    rw [hq.map_eq] at hm
+    simpa only [δ0, Function.comp_def, ξ, ξlocal, ξ0, q] using hm.symm
+  have hReducedI (i : Fin n) :
+      Integrable[mN₀] (fun ζ => Fz (ξ0 i ζ)) P₀ :=
+    (hId.integrable_comp (hFzReduced i).aestronglyMeasurable).1 (hSourceI i)
+  have hAugI (i : Fin n) : Integrable[mAug] (fun x => Fz (ξ i x)) ν := by
+    have hi := hq.integrable_comp_of_integrable (hReducedI i)
+    simpa only [Function.comp_def, ξ, ξlocal, ξ0, q] using hi
+  have hδJoin (i : Fin n) : δ0 i = δoriginal i :=
+    (hAugIntegral i).trans (hOriginalIntegral i)
+  have hLJoin : L0 = Loriginal :=
+    Finset.sum_congr rfl (fun i _ => hδJoin i)
+  have hδ0Nonneg (i : Fin n) : 0 ≤ δ0 i := by
+    rw [hδJoin i]
+    exact hδNonneg i
+  have hL0Nonneg : 0 ≤ L0 := by
+    rw [hLJoin]
+    exact hLNonneg
+  have hRate0 : L0 ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) := by
+    rw [hLJoin]
+    exact hRate
+  have hZero0 : β = 0 → L0 = 0 ∧ (∀ i : Fin n, δ0 i = 0) := by
+    intro hβzero
+    refine ⟨hLJoin.trans (hZero hβzero).1, ?_⟩
+    intro i
+    exact (hδJoin i).trans ((hZero hβzero).2 i)
+  refine ⟨hβ, hcWindow, hcWindowPower, hcWindowSmall, hSourceI, hAugI,
+    hδJoin, hLJoin, hδ0Nonneg, hL0Nonneg, hRate0, hZero0, ?_⟩
+  intro hMomentWindow
+  rcases hSourceStrict hMomentWindow with ⟨hLc, hδHalf, hLStrict⟩
+  change (∀ i : Fin n, δoriginal i < (1 / 2 : ℝ)) at hδHalf
+  change Loriginal < cBudget * z ^ 2 at hLStrict
+  have hδ0Half : ∀ i : Fin n, δ0 i < (1 / 2 : ℝ) := by
+    intro i
+    rw [hδJoin i]
+    exact hδHalf i
+  have hL0Strict : L0 < cBudget * z ^ 2 := by
+    rw [hLJoin]
+    exact hLStrict
+  have hNormalized :=
+    @Shao.OQ6.NormalizedStrictMomentBudgets.actual_source_z_strict_truncated_moment_budgets
+      (Fin n → Ω × ℝ) mAug ν hνprob n hn1 ξ
+      (fun i => (hξPacket i).1) (fun i => (hξPacket i).2.1)
+      (fun i => (hξPacket i).2.2) hξenergy Y
+      (fun k i => (hYpacket k i).2.1) ε
+      (fun k => (hε k).1) (fun k => (hε k).2) hεlim
+      (fun k i => (hYpacket k i).2.2) z hz cBudget hcBudget
+  dsimp only at hNormalized
+  rcases hNormalized hδ0Half hL0Strict with
+    ⟨hδ0I, hδηI, hδlim, hLlim, kStrict, hkStrict⟩
+  change (∀ (k : ℕ) (i : Fin n),
+    Integrable[mAug] (fun x => Fz (η k i x)) ν) at hδηI
+  change (∀ i : Fin n, Filter.Tendsto (fun k : ℕ => δη k i)
+    Filter.atTop (nhds (δ0 i))) at hδlim
+  change Filter.Tendsto Lη Filter.atTop (nhds L0) at hLlim
+  change (∀ k : ℕ, kStrict ≤ k →
+    (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2) at hkStrict
+  refine ⟨hδ0Half, hL0Strict, hδηI, hδlim, hLlim, ?_⟩
+  intro τ δ hτ hδ
+  have hStrictEvent : ∀ᶠ k : ℕ in Filter.atTop,
+      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cBudget * z ^ 2 :=
+    Filter.eventually_atTop.2 ⟨kStrict, hkStrict⟩
+  have hQEvent : ∀ᶠ k : ℕ in Filter.atTop, (∫ x, |Qε k x| ∂ν) < τ :=
+    hQlim.eventually (eventually_lt_nhds hτ)
+  have hSourceEvent : ∀ᶠ k : ℕ in Filter.atTop,
+      |sourceCostη k - sourceCost0| < τ := by
+    change Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) at hSourceLim
+    exact (hSourceLim.sub_const sourceCost0).abs.eventually
+      (by simpa only [sub_self, abs_zero] using (eventually_lt_nhds hτ))
+  have hCostEvent : ∀ᶠ k : ℕ in Filter.atTop,
+      |compactCostη k - compactCost0| < τ := by
+    change Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0) at hCostLim
+    exact (hCostLim.sub_const compactCost0).abs.eventually
+      (by simpa only [sub_self, abs_zero] using (eventually_lt_nhds hτ))
+  have hSourceBoundEvent : ∀ᶠ k : ℕ in Filter.atTop,
+      sourceCostη k ≤
+        64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) *
+          (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) + δ :=
+    Filter.eventually_atTop.2 (hSourceEventually δ hδ)
+  have hJointEventually : ∀ᶠ k : ℕ in Filter.atTop,
+      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧
+      Lη k < cBudget * z ^ 2 ∧
+      (∫ x, |Qε k x| ∂ν) < τ ∧
+      |sourceCostη k - sourceCost0| < τ ∧
+      |compactCostη k - compactCost0| < τ ∧
+      sourceCostη k ≤
+        64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) *
+          (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) + δ := by
+    filter_upwards [hStrictEvent, hQEvent, hSourceEvent, hCostEvent, hSourceBoundEvent]
+      with k hkStrictTail hkQ hkSource hkCost hkSourceBound
+    exact ⟨hkStrictTail.1, hkStrictTail.2, hkQ, hkSource, hkCost, hkSourceBound⟩
+  exact Filter.eventually_atTop.1 hJointEventually
