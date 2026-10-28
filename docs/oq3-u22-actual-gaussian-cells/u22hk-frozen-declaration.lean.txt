@@ -1,0 +1,60 @@
+theorem compact_open_domain_hermite_first_correction_remainder_bound
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ))
+    (hcompact : IsCompact Theta)
+    (hTheta : Theta ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (beta c R : ℝ)
+    (hbeta : 0 ≤ beta) (hc : 0 < c) (hR : 0 ≤ R)
+    (hdet : ∀ p ∈ Theta, 0 < (parabolaCovariance
+      (mu.tilted (fun x => p.1 * x + p.2 * x ^ 2))).det)
+    (hWC : ∀ p ∈ Theta, ∀ xi eta : ℝ, R < Real.sqrt (xi ^ 2 + eta ^ 2) →
+      ‖jointCharacteristic (mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)) xi eta‖ ≤
+        1 - c * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-beta)) :
+    let tilt : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let D : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p => parabolaCovariance (tilt p)
+    let s : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 * D p 1 1 - (D p 0 1) ^ 2)
+    let t : (ℝ × ℝ) → ℝ := fun p => Real.sqrt (D p 0 0 + D p 1 1 + 2 * s p)
+    let A : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun p =>
+      ![![(D p 1 1 + s p) / (s p * t p), -(D p 0 1) / (s p * t p)],
+        ![-(D p 0 1) / (s p * t p), (D p 0 0 + s p) / (s p * t p)]]
+    let means : (ℝ × ℝ) → (Fin 2 → ℝ) := fun p =>
+      ![∫ x : ℝ, x ∂tilt p, ∫ x : ℝ, x ^ 2 ∂tilt p]
+    let Y : (ℝ × ℝ) → ℝ → (Fin 2 → ℝ) := fun p x => A p *ᵥ (![x, x ^ 2] - means p)
+    let laws : (ℝ × ℝ) → Measure (Fin 2 → ℝ) := fun p => (tilt p).map (Y p)
+    let Phi : (ℝ × ℝ) → ℝ → ℝ → ℂ := fun p xi eta =>
+      ∫ y : Fin 2 → ℝ,
+        Complex.exp (((xi * y 0 + eta * y 1 : ℝ) : ℂ) * Complex.I) ∂laws p
+    let b : Theta → Fin 4 → ℝ := fun p j =>
+      ∫ y : Fin 2 → ℝ, y 0 ^ j.val * y 1 ^ (3 - j.val) ∂laws p
+    let P1 : Theta → (ℝ × ℝ) → ℝ := fun p x => (1 / 6 : ℝ) *
+      ∑ j : Fin 4, (Nat.choose 3 j.val : ℝ) * b p j *
+        (gaussianHermitePolynomial j.val).eval x.1 *
+          (gaussianHermitePolynomial (3 - j.val)).eval x.2
+    ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, 1 ≤ n → ∀ p : Theta,
+      let X : (ℝ × ℝ) → (Fin 2 → ℝ) → ℝ := fun z y => z.1 * y 0 + z.2 * y 1
+      let kappa : ℕ → (ℝ × ℝ) → ℝ := fun j z =>
+        iteratedDeriv j (ProbabilityTheory.cgf (X z) (laws p)) 0
+      let a : (ℝ × ℝ) → Fin 6 → ℂ := fun z j =>
+        (Complex.I ^ (j.val + 3) / ((j.val + 3).factorial : ℂ)) *
+          (kappa (j.val + 3) z : ℂ) / (Real.sqrt (n : ℝ) : ℂ) ^ (j.val + 1)
+      let Sn : (ℝ × ℝ) → ℂ := fun z =>
+        ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+          ∑ sigma : Fin q.val → Fin 6,
+            if (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a z (sigma l) else 0
+      let G : (ℝ × ℝ) → ℂ := fun z => Complex.exp (-((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)
+      let kernel : (ℝ × ℝ) → (ℝ × ℝ) → ℂ := fun x z =>
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ))
+      let phi : (ℝ × ℝ) → ℝ := fun x =>
+        (1 / (2 * Real.pi)) * Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2)
+      ∀ H : MvPolynomial (Fin 2) ℝ,
+        (∀ z : ℝ × ℝ, MvPolynomial.eval₂ Complex.ofRealHom
+          ![Complex.I * (z.1 : ℂ), Complex.I * (z.2 : ℂ)] H = Sn z) →
+        let reference : (ℝ × ℝ) → ℝ := fun x => (1 / (2 * Real.pi)) *
+          (∑ d ∈ H.support, H.coeff d *
+            (gaussianHermitePolynomial (d 0)).eval x.1 *
+              (gaussianHermitePolynomial (d 1)).eval x.2) *
+                Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2)
+        ∀ x : ℝ × ℝ,
+          Integrable (fun z : ℝ × ℝ => kernel x z * Sn z * G z) ∧
+            |reference x - phi x * (1 + P1 p x / Real.sqrt (n : ℝ))| ≤ C / (n : ℝ)

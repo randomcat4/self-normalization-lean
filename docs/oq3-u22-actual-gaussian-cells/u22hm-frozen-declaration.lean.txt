@@ -1,0 +1,13 @@
+theorem nonnegative_weighted_relative_reference_error
+    (phi reference f : (ℝ × ℝ) → ℝ)
+    (hphi : Measurable phi) (href : Measurable reference) (hf : Measurable f)
+    (hfi : Integrable f)
+    (hf0 : ∀ z : ℝ × ℝ, 0 ≤ f z) (hphi0 : ∀ z : ℝ × ℝ, 0 ≤ phi z)
+    (B delta : ℝ) (hB : 0 ≤ B) (hdelta : 0 ≤ delta)
+    (hphiBound : ∀ z : ℝ × ℝ, phi z ≤ B)
+    (herror : ∀ z : ℝ × ℝ, f z ≠ 0 → |reference z - phi z| ≤ delta * phi z) :
+    Integrable (fun z : ℝ × ℝ => f z * phi z) ∧
+      Integrable (fun z : ℝ × ℝ => f z * reference z) ∧
+        0 ≤ (∫ z : ℝ × ℝ, f z * phi z) ∧
+          |(∫ z : ℝ × ℝ, f z * reference z) -
+            (∫ z : ℝ × ℝ, f z * phi z)| ≤ delta * (∫ z : ℝ × ℝ, f z * phi z)
