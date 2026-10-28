@@ -1,0 +1,45 @@
+# Unit245 author implementation
+
+STATUS: COMPLETE_LOCAL_IMPLEMENTATION_UNCHECKED. This is the author's production source, not an independent SOURCE acceptance, Lean pass, axiom receipt or qualified result. The next owner is the separate independent SOURCE reviewer. All work in this context was local and confined to `drafts/oq56/unit245/author-01/`.
+
+The production source is `OriginalSameWitnessClippedEventTransport.lean`, SHA256 `f4ed3791005e6869768582b629e70d9f8c17da55f3b7f73f003e1c58ba70a93b`, 192266 bytes, 2914 LF lines, UTF-8 without BOM. It contains one public theorem and no auxiliary declaration. No local Lean, PP probe, server command, upload, network, Git/API action or child context was used. The pinned project version was read as `leanprover/lean4:v4.36.0-rc1`; this author did not execute it.
+
+The activation `6e5b30da0950be10867bb07fa12a8b36e7ae7fc4225856c2589d6321686ba855` and all 38 bound inputs were verified before FIRSTWRITE. The Stage1 writer's exact FINALWRITE release `cb5b15e025f8cf4bc5c87614ceec72b7ef01911d59130bb42411f9189cd21047` had writer/heavy/inflight/pendingExternal/children/uncertain all zero. Its historical prospective/unqualified244 wording is superseded solely by the exact implementation activation and producer qualification; no archived bytes were changed.
+
+Producer244 is reused through qualified packet `c07de540c3fe9e26bc5e12f11f167f44096f5e9f850b0b1dd497cb0dd2b8d528`. The exact source is `bb5678d0be62d317650d9bcabf55e6a478a81caf376d178806f62999efc30d6e`/178894B, first original object `4988cc509c42b7924e87ad30c9303f25d22619e13858557d64bf926584f3e126`. Parent qualification records actual native04 RC0 and same-first-object AX01 RC0, one actual theorem, 9864 TYPE lines, zero VALUE lines, only propext/Classical.choice/Quot.sound. This author checked the binding and qualified intake, and did not repeat old proof review, kernel or axiom checks.
+
+## Frozen interface and context retention
+
+The preamble, complete public head `c8ef50722a1c0ea0c3f8cd259ab6c5084ea89f9fd42c593c2d48a4ce4734c148`/38166B and closing are byte-exact. The 227B qualified244 call is placed immediately after the frozen initial intro and before `intro g r v rho β cWindow`. It is the sole allowed inferred named fact; its complete expected Prop is byte-exact `f933534201855e122b4f1600bc31c4d605116e27052203ae697bb393185c3c07`/36190B.
+
+Exactly one cg and one m₀ are selected from the entire qualified244 output, before n/C0/z. The literal trim μ₀, finite product mAug/ν, q, coding and actualNormalizedFamily are the frozen result lets introduced directly, never redefined. At fixed original n≥4/C0≥0/z≥0 the old universal proposition has 61 top-level conjuncts. The first 60 are forwarded in order, then the nine frozen new conjuncts, then the final old strict-window implication. The separate eventual-payment branch is forwarded as `hbase.2.2` without opening or reconstructing it.
+
+All 138 public ordinary records remain exact. The 143 approved optional records are completely retained in the ledger: 94 are used as exact local introductions/selections and 49 are explicitly unused; the latter live only inside retained public propositions. The seven approved instance entries are recorded with actual scope and coordinates. Only the prescribed ν probability instance is newly installed, and only inside the finite-k branch, with RHS hνProbability. The generic theorem's 15 result-local lets remain within the complete explicit result Prop and are not new data aliases.
+
+There are 72 actual named facts: h244 is the approved inference exception, and every other fact has a complete explicit Prop. Two additional facts, hbase and hOriginal244, package previously proved logical conjunctions with full types; they introduce no data or assumptions. The frozen countable-generation proof record is named hcg in the source, matching the frozen existential and instance binder; its full type and exact original choice RHS are recorded. No missing ordinary-data or instance interface was found or added.
+
+## Complete proof route
+
+1. At source line 2245, specialize only the same selected244 universal branch. Extract literal q measure-preservation, P₀ map identity, ν probability, C/ξ/Y measurability, clipped denominator lower bound, finite-k perturbed positive energy, Qε measurability and the exact Dη=D1∘q+Qε identity. These facts all retain their frozen full Props.
+
+2. At lines 2555–2591, use the numerator-factor clause at literal k=0. The two approved factor selections preserve the paired measurable/full pointwise specification. Compose the measurable factors with C0 to get Dη0 and D2∘q measurable. The exact additive identity gives D1∘q=Dη0−Qε0. No integrability-to-pointwise-measurability inference is used.
+
+3. At lines 2597–2657, use the sole explicit section0 ζ i=(ζ i,0), which needs no point in Ω, default value or standard-Borel premise. Coordinate evaluation paired with real zero proves its measurability; q(section0 ζ)=ζ is definitional. Descend D1,D2 along this section. Finite measurable sums, squares and sqrt prove W,V measurability. W agrees with projectionW by distributing a common division; N²=n gives the exact energy equality and hence V agrees with projectionV. Composing with section0 gives reduced projectionW/projectionV measurability.
+
+4. At lines 2661–2753, use the literal zero-branch clipped statistic to obtain reduced T0 measurability. The identity map is measurable from the larger original product sigma algebra to the smaller selected one; this is the correct direction. It gives original T0/projectionV measurability, while q gives augmented T0 measurability. Apply the map equalities first in ENNReal to reduced threshold and zero sets, then apply ENNReal.toReal. This proves exact original/augmented clipped-tail equality and exact original projection-zero payment equality.
+
+5. At lines 2829–2904, fix any finite k and install only the approved ν probability instance. Apply actual_normalized_quotient_projection_zero_transport to SAME ν, ξ, Yk, literal D1∘q/D2∘q and zero fallback. Positivity of 1+D2 follows from its global 1/2 bound; positivity of the normalized perturbed energy is the retained finite-k a.e. fact. Use the third comparison `fun a b => b≤a`, which denotes z≤T. The perturbed quotient is definitionally the same literal Tηk. The original zero-convention quotient is pointwise T0∘q by hT0Literal, not by a.e. positivity. Symmetric-difference commutativity gives the requested E∆A direction; abs_sub_comm gives its probability orientation. Exact map equalities replace the augmented tail and zero payment by the original probabilities.
+
+## Mathematical source fidelity
+
+The complete relevant source text, exact hashes and line coordinates are included in ACTUAL-PROP-CONTEXTS.json: p51 S3/S12 and S4/S20–S23, and p54 §2. p51 defines the centered-row clipped statistic with clipping1 and T=0 on projection energy zero; S22–S23 give the signed threshold identity. p54 explicitly repairs zero-event handling: exact threshold equality holds away from V=0 and the remaining original projection-zero probability is paid separately. The new statement retains that explicit probability; it does not claim it vanishes or estimate it.
+
+No original assumptions, n coefficients, (n−2) deletion normalization, original h/μ/g/r/v/rho, scalar budget or clipping constant are changed. The new every-k clause has no externalSZ premise. All old universal and eventual source-payment outputs, including their external-result attribution and bounded-product scope, remain available exactly as in244.
+
+## Boundaries and exact next dependency
+
+This unit proves only the frozen original clipped-event transport proposition as an unchecked author implementation. It claims no external Shao–Zhou input existence, original atom-free law, CDF continuity, physical/unclipped comparison, probability limit, rate uniformity, source completeness or root/OQ56 closure. No239 or other separately selected model is identified with this one. In particular this unit does not remove upper k-dependent exceptional terms or estimate the original projection-zero error.
+
+Local static compatibility checks pass: exact head/call/order, all38 inputs, exact Stage1 release, derived declaration/ordinary/instance counts, source coordinate coverage, UTF-8/LF and absence of forbidden proof escape tokens. These checks are not kernel checking or an independent proof review. Actual backend/model/effort and input/cached-input/output/reasoning-subset usage are unavailable and remain null; only requested gpt-6.1-sol/xhigh is recorded.
+
+Next exact dependency: a separate qualified independent complete SOURCE review of this exact source and complete ledgers; only after its acceptance may the lead run targeted new245 server native checking and same-FIRSTO all-owned recursive axiom audit, followed by a qualified final join. Unit246 waits for qualified245. No old check is to be replayed. The final lastzeroRELEASE is FINALWRITE; after that this author has no remaining writer, execution or child authority.
