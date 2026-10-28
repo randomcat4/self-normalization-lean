@@ -1,0 +1,9 @@
+theorem iid_measurable_set_count_exponential_bound
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (H : Set ℝ) (hH : MeasurableSet H) (t alpha : ℝ) (ht : 0 < t) (n : ℕ) :
+    let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+    let Count : Shao.Path n → ℕ := fun z =>
+      (Finset.univ.filter (fun i : Fin n => z i ∈ H)).card
+    P.real {z | alpha * (n : ℝ) ≤ (Count z : ℝ)} ≤
+      Real.exp (-(t * alpha) * (n : ℝ)) *
+        (1 + (Real.exp t - 1) * mu.real H) ^ n

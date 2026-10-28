@@ -1,0 +1,11 @@
+DECL Shao.OQ3.iid_measurable_set_count_exponential_bound
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (H : Set ℝ),
+  MeasurableSet H →
+    ∀ (t alpha : ℝ),
+      0 < t →
+        ∀ (n : ℕ),
+          have P := MeasureTheory.Measure.pi fun x => mu;
+          have Count := fun z => {i | z i ∈ H}.card;
+          P.real {z | alpha * ↑n ≤ ↑(Count z)} ≤ Real.exp (-(t * alpha) * ↑n) * (1 + (Real.exp t - 1) * mu.real H) ^ n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
