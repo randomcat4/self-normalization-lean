@@ -1,0 +1,26 @@
+DECL Shao.OQ3.cubic_gaussian_half_oscillation_noise_superpolynomial
+TYPE ∀ (a : ℝ),
+  0 ≤ a →
+    ∃ N,
+      2 ≤ N ∧
+        ∀ (n : ℕ),
+          N ≤ n →
+            have b := 1 / (2 * ↑n ^ 6);
+            have h := Real.log ↑n / ↑n ^ 3;
+            have v := (2 * b).toNNReal;
+            have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+            0 < b ∧
+              0 < h ∧
+                gamma.real {d | h / 2 < ‖d‖} ≤ 4 * Real.exp (-Real.log ↑n ^ 2 / 8) ∧
+                  gamma.real {d | h / 2 < ‖d‖} ≤ (↑n).rpow (-a)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.log_square_gaussian_half_four_le_rpow
+TYPE ∀ (a x : ℝ),
+  0 ≤ a → 0 < x → 1 ≤ Real.log x → 8 * (a + Real.log 4) ≤ Real.log x → 4 * Real.exp (-Real.log x ^ 2 / 8) ≤ x.rpow (-a)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.cubic_gaussian_half_oscillation_noise_superpolynomial._proof_1_1
+TYPE ∀ (a : ℝ) (N n : ℕ), 2 ≤ n ∧ 1 ≤ Real.log ↑n ∧ 8 * (a + Real.log 4) ≤ Real.log ↑n → ¬0 < n → False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

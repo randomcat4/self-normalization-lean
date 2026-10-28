@@ -1,0 +1,10 @@
+theorem independent_sum_bounded_test_oscillation_bound
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (f : (ℝ × ℝ) → ℝ) (hf : Measurable f) (C h : ℝ)
+    (hC : 0 ≤ C) (hh : 0 < h) (hbound : ∀ z : ℝ × ℝ, |f z| ≤ C) :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    IsProbabilityMeasure rho ∧ Integrable f nu ∧ Integrable f rho ∧
+      Integrable (openBallOscillation f h) rho ∧
+      |(∫ z : ℝ × ℝ, f z ∂rho) - (∫ z : ℝ × ℝ, f z ∂nu)| ≤
+        (∫ z : ℝ × ℝ, openBallOscillation f h z ∂rho) +
+          2 * C * eta.real {d : ℝ × ℝ | h / 2 < ‖d‖}

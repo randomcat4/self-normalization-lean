@@ -1,0 +1,15 @@
+theorem bounded_density_compact_test_gaussian_comparison
+    (rho : Measure (ℝ × ℝ)) [IsProbabilityMeasure rho]
+    (k : (ℝ × ℝ) → ℝ) (hk : Measurable k)
+    (hk0 : ∀ z : ℝ × ℝ, 0 ≤ k z)
+    (hrho : rho = volume.withDensity (fun z => ENNReal.ofReal (k z)))
+    (K R C : ℝ) (hK : 0 ≤ K) (hR : 0 ≤ R) (hC : 0 ≤ C)
+    (hbound : ∀ z : ℝ × ℝ, k z ≤ K)
+    (f : (ℝ × ℝ) → ℝ) (hf : Measurable f)
+    (hf0 : ∀ z : ℝ × ℝ, 0 ≤ f z) (hfC : ∀ z : ℝ × ℝ, f z ≤ C)
+    (hzero : ∀ z : ℝ × ℝ, R < ‖z‖ → f z = 0) :
+    let Phi : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1)
+    Integrable f rho ∧ Integrable f Phi ∧
+      (∫ z : ℝ × ℝ, f z ∂rho) ≤
+        ((2 * Real.pi) * K * Real.exp (R ^ 2)) * (∫ z : ℝ × ℝ, f z ∂Phi)
