@@ -266,6 +266,7 @@ import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothing
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothingSmall
+import Shao.OQ3.CompactOpenDomainActualCellGaussian
 import Shao.OQ3.CompactOpenDomainActualCellHermite
 import Shao.OQ3.CompactOpenDomainAffineFrequencyGap
 import Shao.OQ3.CompactOpenDomainCharacteristicMoments
@@ -273,6 +274,8 @@ import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainEdgeworthCGFIdentification
 import Shao.OQ3.CompactOpenDomainEdgeworthPolynomialError
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
+import Shao.OQ3.CompactOpenDomainHermiteFirstRemainder
+import Shao.OQ3.CompactOpenDomainHermiteLocalGaussian
 import Shao.OQ3.CompactOpenDomainLogCubicDampedWindow
 import Shao.OQ3.CompactOpenDomainLogCubicOscillation
 import Shao.OQ3.CompactOpenDomainLogMomentApproximation
@@ -281,6 +284,7 @@ import Shao.OQ3.CompactOpenDomainNormalizedOcticCGFLogExponent
 import Shao.OQ3.CompactOpenDomainOcticCGFLogRemainder
 import Shao.OQ3.CompactOpenDomainOcticExponentialError
 import Shao.OQ3.CompactOpenDomainPairProbability
+import Shao.OQ3.CompactOpenDomainPhysicalCellGaussian
 import Shao.OQ3.CompactOpenDomainPhysicalCellHermite
 import Shao.OQ3.CompactOpenDomainQuarticExponentialError
 import Shao.OQ3.CompactOpenDomainQuarticLogRemainder
@@ -523,6 +527,7 @@ import Shao.OQ3.UniformPairCharacteristicLocalGaussian
 import Shao.OQ3.WeakCramerPairCompactGap
 import Shao.OQ3.WeakCramerPairNonlattice
 import Shao.OQ3.WeightedOscillatoryErrorIntegral
+import Shao.OQ3.WeightedRelativeReferenceIntegral
 import Shao.OQ4.AveragedResidual
 import Shao.OQ4.BoundaryOccupation
 import Shao.OQ4.BrownianFixedTimeNormalization
