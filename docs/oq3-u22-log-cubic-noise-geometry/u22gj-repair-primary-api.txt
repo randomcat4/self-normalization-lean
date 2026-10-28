@@ -1,0 +1,61 @@
+warning: mathlib: repository has local changes:
+  /root/rivermind-data/shao-lean-20261021/workspaces/lead-oq3/.lake/packages/mathlib
+Shao/OQ3/ParabolaCellLogCubicOscillation.lean:69:5: error(lean.unknownIdentifier): Unknown constant `Real.isLittleO_log_rpow_atTop`
+Shao/OQ3/ParabolaCellLogCubicOscillation.lean:72:4: error: Type mismatch: After simplification, term
+  Tendsto.comp ht tendsto_natCast_atTop_atTop
+ has type
+  @Tendsto ℕ ℝ (fun x => Real.log ↑x / (↑x).rpow (1 / 2)) atTop (𝓝 0)
+but is expected to have type
+  @Tendsto ℕ ℝ (fun n => Real.log ↑n / ↑n ^ (1 / 2)) atTop (𝓝 0)
+
+POW_NAMESPACE_CONTEXT
+21 open Real NNReal ENNReal Filter Set
+23 open scoped Topology
+32 open Real Filter
+51 open Asymptotics in
+161 end Limits
+168 namespace Complex
+174 open Asymptotics
+215 end Complex
+217 open Real
+219 namespace Asymptotics
+312 end Asymptotics
+314 open Asymptotics
+SQRT_RPOW_CONTEXT
+988 section Sqrt
+989 
+990 theorem sqrt_eq_rpow (x : ℝ) : √x = x ^ (1 / (2 : ℝ)) := by
+991   obtain h | h := le_or_gt 0 x
+992   · rw [← mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg h _), mul_self_sqrt h, ← sq,
+993       ← rpow_natCast, ← rpow_mul h]
+997 
+998 theorem rpow_div_two_eq_sqrt {x : ℝ} (r : ℝ) (hx : 0 ≤ x) : x ^ (r / 2) = √x ^ r := by
+999   rw [sqrt_eq_rpow, ← rpow_mul hx]
+1000   congr
+1001   ring
+1002 
+1009 lemma cpow_inv_two_re (x : ℂ) : (x ^ (2⁻¹ : ℂ)).re = √((‖x‖ + x.re) / 2) := by
+1010   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_re, ← div_eq_mul_inv, ← one_div,
+1011     ← Real.sqrt_eq_rpow, cos_half, ← sqrt_mul, ← mul_div_assoc, mul_add, mul_one, norm_mul_cos_arg]
+1012   exacts [norm_nonneg _, (neg_pi_lt_arg _).le, arg_le_pi _]
+1013 
+1014 lemma cpow_inv_two_im_eq_sqrt {x : ℂ} (hx : 0 ≤ x.im) :
+1015     (x ^ (2⁻¹ : ℂ)).im = √((‖x‖ - x.re) / 2) := by
+1016   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,
+1017     ← Real.sqrt_eq_rpow, sin_half_eq_sqrt, ← sqrt_mul (norm_nonneg _), ← mul_div_assoc, mul_sub,
+1018     mul_one, norm_mul_cos_arg]
+1019   · rwa [arg_nonneg_iff]
+1020   · linarith [pi_pos, arg_le_pi x]
+1023     (x ^ (2⁻¹ : ℂ)).im = -√((‖x‖ - x.re) / 2) := by
+1024   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,
+1025     ← Real.sqrt_eq_rpow, sin_half_eq_neg_sqrt, mul_neg, ← sqrt_mul (norm_nonneg _),
+1026     ← mul_div_assoc, mul_sub, mul_one, norm_mul_cos_arg]
+1027   · linarith [pi_pos, neg_pi_lt_arg x]
+1028   · exact (arg_neg_iff.2 hx).le
+1030 lemma abs_cpow_inv_two_im (x : ℂ) : |(x ^ (2⁻¹ : ℂ)).im| = √((‖x‖ - x.re) / 2) := by
+1031   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,
+1032     ← Real.sqrt_eq_rpow, abs_mul, abs_of_nonneg (sqrt_nonneg _), abs_sin_half,
+1033     ← sqrt_mul (norm_nonneg _), ← mul_div_assoc, mul_sub, mul_one, norm_mul_cos_arg]
+1034 
+1035 open scoped ComplexOrder in
+OWN_OBJECT_EXISTS False

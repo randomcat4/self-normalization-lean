@@ -1,0 +1,36 @@
+FILE Mathlib/Analysis/SpecialFunctions/Exp.lean SHA256 1dcb27b9ea4dbfea015fd97196f0cb6ac294633be79590dba8af8685d11b03e8
+254:     eventually_atTop.1
+255:       ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).eventually
+256:         (gt_mem_nhds this))
+257:   simp only [← exp_nat_mul, mul_one, div_lt_iff₀, exp_pos, ← div_eq_inv_mul] at hN
+258:   refine ⟨N, trivial, fun x hx => ?_⟩
+259:   rw [Set.mem_Ioi] at hx
+260:   have hx₀ : 0 < x := (Nat.cast_nonneg N).trans_lt hx
+261:   rw [Set.mem_Ici, le_div_iff₀ (pow_pos hx₀ _), ← le_div_iff₀' hC₀]
+262:   calc
+458:     (fun x => exp (f x)) =Θ[l] (fun _ => 1 : α → ℝ) ↔ IsBoundedUnder (· ≤ ·) l fun x => |f x| := by
+459:   simp only [← exp_zero, isTheta_exp_comp_exp_comp, sub_zero]
+460: 
+461: lemma summable_exp_nat_mul_iff {a : ℝ} :
+462:     Summable (fun n : ℕ ↦ exp (n * a)) ↔ a < 0 := by
+463:   simp only [exp_nat_mul, summable_geometric_iff_norm_lt_one, norm_of_nonneg (exp_nonneg _),
+464:     exp_lt_one_iff]
+465: 
+466: lemma summable_exp_neg_nat : Summable fun n : ℕ ↦ exp (-n) := by
+467:   simpa only [mul_neg_one] using summable_exp_nat_mul_iff.mpr neg_one_lt_zero
+468: 
+469: lemma summable_exp_nat_mul_of_ge {c : ℝ} (hc : c < 0) {f : ℕ → ℝ} (hf : ∀ i, i ≤ f i) :
+470:     Summable fun i : ℕ ↦ exp (c * f i) := by
+471:   refine (Real.summable_exp_nat_mul_iff.mpr hc).of_nonneg_of_le (fun _ ↦ by positivity) fun i ↦ ?_
+472:   refine Real.exp_monotone ?_
+473:   conv_rhs => rw [mul_comm]
+474:   exact mul_le_mul_of_nonpos_left (hf i) hc.le
+475: 
+476: lemma summable_pow_mul_exp_neg_nat_mul (k : ℕ) {r : ℝ} (hr : 0 < r) :
+477:     Summable fun n : ℕ ↦ n ^ k * exp (-r * n) := by
+478:   simp_rw [mul_comm (-r), exp_nat_mul]
+479:   apply summable_pow_mul_geometric_of_norm_lt_one
+480:   rwa [norm_of_nonneg (exp_nonneg _), exp_lt_one_iff, neg_lt_zero]
+481: 
+482: end Real
+483:

@@ -1,0 +1,39 @@
+theorem log_square_gaussian_six_power_le_rpow
+    (a c x : ℝ) (ha : 0 ≤ a) (hc : 0 < c) (hx : 0 < x)
+    (hlogone : 1 ≤ Real.log x)
+    (hloglarge : 4 * (a + 6 + |Real.log c|) ≤ Real.log x) :
+    c * x ^ 6 * Real.exp (-(Real.log x) ^ 2 / 4) ≤ Real.rpow x (-a)
+
+theorem cubic_gaussian_smoothed_inverse_window_tail_bound
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (n : ℕ) (hn : 1 ≤ n) (x : ℝ × ℝ) :
+    let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+    let R : ℝ := (n : ℝ) ^ 3 * Real.log (n : ℝ)
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let tail : Set (ℝ × ℝ) := {z | R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2}
+    let f : (ℝ × ℝ) → ℂ := fun z =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+        ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho
+    Integrable f ∧ IntegrableOn f tail ∧
+      ‖∫ z in tail, f z‖ ≤
+        (4 * Real.pi) * (n : ℝ) ^ 6 * Real.exp (-(Real.log (n : ℝ)) ^ 2 / 4)
+
+theorem eventually_cubic_gaussian_smoothed_inverse_window_tail
+    (a : ℝ) (ha : 0 ≤ a) :
+    ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+      ∀ (nu : Measure (ℝ × ℝ)) (_hnu : IsProbabilityMeasure nu) (x : ℝ × ℝ),
+      let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+      let R : ℝ := (n : ℝ) ^ 3 * Real.log (n : ℝ)
+      let v : ℝ≥0 := Real.toNNReal (2 * b)
+      let gamma : Measure (ℝ × ℝ) :=
+        (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+      let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+      let tail : Set (ℝ × ℝ) := {z | R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2}
+      let f : (ℝ × ℝ) → ℂ := fun z =>
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+          ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho
+      Integrable f ∧ IntegrableOn f tail ∧
+        ‖∫ z in tail, f z‖ ≤ Real.rpow (n : ℝ) (-a)

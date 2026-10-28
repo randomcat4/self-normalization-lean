@@ -1,0 +1,40 @@
+FILE .lake/packages/mathlib/Mathlib/Analysis/Complex/Exponential.lean SHA256 35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146
+156:   ring_nf
+157: 
+158: theorem exp_nat_mul (x : ℂ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
+159:   | 0 => by rw [Nat.cast_zero, zero_mul, exp_zero, pow_zero]
+160:   | Nat.succ n => by rw [pow_succ, Nat.cast_add_one, add_mul, exp_add, ← exp_nat_mul _ n, one_mul]
+161: 
+162: @[simp]
+163: theorem exp_ne_zero : exp x ≠ 0 := fun h =>
+164:   zero_ne_one (α := ℂ) <| by rw [← exp_zero, ← add_neg_cancel x, exp_add, h]; simp
+172: theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ n := by
+173:   cases n
+174:   · simp [exp_nat_mul]
+175:   · simp [exp_add, add_mul, pow_add, exp_neg, exp_nat_mul]
+176: 
+177: @[simp]
+178: theorem exp_conj : exp (conj x) = conj (exp x) := by
+179:   simp only [exp]
+232:   @MonoidHom.map_pow (Multiplicative ℝ) ℝ _ _ expMonoidHom _ _
+233: 
+234: nonrec theorem exp_nat_mul (x : ℝ) (n : ℕ) : exp (n * x) = exp x ^ n :=
+235:   ofReal_injective (by simp [exp_nat_mul])
+236: 
+237: @[simp]
+238: nonrec theorem exp_ne_zero : exp x ≠ 0 := fun h =>
+239:   exp_ne_zero x <| by rw [exp, ← ofReal_inj] at h; simp_all
+650:       · exact sub_nonneg.2 <| div_le_one_of_le₀ ht' n.cast_nonneg
+651:       · exact one_sub_le_exp_neg _
+652:     _ = rexp (-t) := by rw [← Real.exp_nat_mul, mul_neg, mul_comm, div_mul_cancel₀]; positivity
+653: 
+654: lemma one_add_inv_pow_le_exp {n : ℕ} : (1 + (n : ℝ)⁻¹) ^ n ≤ exp 1 := by
+655:   convert one_sub_div_pow_le_exp_neg (n := n) (t := -1) (by grind) using 1
+656:   · field
+665: lemma exp_lt_two_add_div_two_sub {x : ℝ} (hx : 0 < x) (hx' : x < 2) :
+666:     exp x < (2 + x) / (2 - x) := by calc
+667:   _ = exp (x / 2) ^ 2 := by grind [Real.exp_nat_mul (x / 2) 2]
+668:   _ ≤ _ := by
+669:     grw [Real.exp_bound' (x := x / 2) (by grind) (by grind) (n := 3) (by simp)]
+670:     apply Real.exp_nonneg
+671:   _ < (2 + x) / (2 - x) := by
