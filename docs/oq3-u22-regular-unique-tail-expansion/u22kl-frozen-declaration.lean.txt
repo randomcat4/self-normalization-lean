@@ -1,0 +1,12 @@
+theorem scaled_tangent_positive_curvature_neighborhood
+    (J : (ℝ × ℝ) → ℝ) (P : (ℝ × ℝ) → (ℝ × ℝ))
+    (q0 : ℝ) (hq0 : 0 < q0)
+    (hsmooth : ContDiffAt ℝ (3 : WithTop ENat) J (0, q0))
+    (hP : ContinuousAt P (0, q0)) (hP0 : P (0, q0) = (0, 0))
+    (hcurvature : 0 <
+      (fderiv ℝ (fun z => fderiv ℝ J z) (0, q0) (0, 1)) (0, 1)) :
+    ∃ eta rho : ℝ, 0 < eta ∧ 0 < rho ∧ rho < q0 ∧ ∀ (level : ℝ) (z : ℝ × ℝ),
+      |level| ≤ eta → dist z (0, q0) ≤ rho →
+        0 < 2 * (P z).2 +
+          (fderiv ℝ (fun w => fderiv ℝ J w) z
+            (level, 2 * Real.sqrt z.2)) (level, 2 * Real.sqrt z.2)

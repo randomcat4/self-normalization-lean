@@ -1,0 +1,15 @@
+theorem bounded_parabola_whole_tail_rate_gap_of_unique_minimum
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (lower upper : ℝ) (hlower : 0 < lower)
+    (henergy : ∀ᵐ x ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper)
+    (level a0 rho J0 : ℝ) (hrho : 0 < rho) :
+    let I : (ℝ × ℝ) → EReal :=
+      Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+    let center : ℝ × ℝ := (a0, a0 ^ 2 / level ^ 2)
+    let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+    let U : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+      |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho}
+    I center = (J0 : EReal) →
+      (∀ w ∈ Tail, I center ≤ I w ∧ (I w = I center ↔ w = center)) →
+        ∃ delta : ℝ, 0 < delta ∧ ∀ w ∈ Tail \ U,
+          ((J0 + delta : ℝ) : EReal) < I w
