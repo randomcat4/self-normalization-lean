@@ -1,0 +1,35 @@
+DECL Shao.OQ3.exists_symmetric_eight_atom_weak_not_strong
+TYPE ∃ a,
+  a 0 = 1 ∧
+    StrictMono a ∧
+      (∀ (i : Fin 8), 0 < a i) ∧
+        have A := Fin.append a fun i => -a i;
+        have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+        Function.Injective A ∧
+          MeasureTheory.IsProbabilityMeasure mu ∧
+            MeasureTheory.Integrable (fun x => x) mu ∧
+              ∫ (x : ℝ), x ∂mu = 0 ∧
+                (∃ B, 0 ≤ B ∧ ∀ᵐ (x : ℝ) ∂mu, |x| ≤ B) ∧
+                  (∀ (xi eta : ℝ), xi ≠ 0 ∨ eta ≠ 0 → ‖Shao.OQ3.jointCharacteristic mu xi eta‖ < 1) ∧
+                    (∃ c,
+                        0 < c ∧
+                          ∃ R,
+                            0 ≤ R ∧
+                              ∀ (xi eta : ℝ),
+                                R < √(xi ^ 2 + eta ^ 2) →
+                                  ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤
+                                    1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-3 / 8)) ∧
+                      (∀ (R eps : ℝ),
+                          0 < eps →
+                            ∃ xi,
+                              R < xi ∧
+                                ‖Shao.OQ3.jointCharacteristic mu xi 0 - 1‖ < eps ∧
+                                  1 - eps < ‖Shao.OQ3.jointCharacteristic mu xi 0‖) ∧
+                        ¬∃ delta,
+                            0 < delta ∧
+                              ∃ R,
+                                0 ≤ R ∧
+                                  ∀ (xi eta : ℝ),
+                                    R < √(xi ^ 2 + eta ^ 2) → ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤ 1 - delta
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
