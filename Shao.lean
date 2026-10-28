@@ -233,6 +233,9 @@ import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
 import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualCubicHermiteCorrection
+import Shao.OQ3.ActualGaussianKernelComparison
+import Shao.OQ3.ActualMeanChartCompactTaylor
+import Shao.OQ3.ActualMeanChartRateDerivatives
 import Shao.OQ3.ActualMixedThirdMomentHermiteBound
 import Shao.OQ3.ActualMomentCumulantRecurrence
 import Shao.OQ3.ActualStandardizedIIDCellTest
@@ -255,9 +258,14 @@ import Shao.OQ3.BoundaryLaplaceNormalization
 import Shao.OQ3.BoundaryLaplacePhysicalDomain
 import Shao.OQ3.BoundaryLaplaceScaledError
 import Shao.OQ3.BoundaryLaplaceScaling
+import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
+import Shao.OQ3.BoundedPhysicalWindowActualGaussian
+import Shao.OQ3.BoundedPhysicalWindowCovarianceGaussianSum
+import Shao.OQ3.BoundedPhysicalWindowGaussianSum
 import Shao.OQ3.BoundedSupportTestIntegrability
+import Shao.OQ3.CanonicalPairWhiteningJacobian
 import Shao.OQ3.CellAveragedOscillation
 import Shao.OQ3.CellBoundaryOscillation
 import Shao.OQ3.CenteredLogMGF
@@ -312,6 +320,7 @@ import Shao.OQ3.CompactOpenDomainWhitenedAnnulusGap
 import Shao.OQ3.CompactParabolaGaussianOscillation
 import Shao.OQ3.CompactParabolaLogCubicOscillation
 import Shao.OQ3.CompactParabolaRateProbability
+import Shao.OQ3.CompactPlaneTaylorAmplitude
 import Shao.OQ3.CompactTiltCovarianceSpectrum
 import Shao.OQ3.CompactTiltDomination
 import Shao.OQ3.CompactTiltLayerMassBound
@@ -513,6 +522,7 @@ import Shao.OQ3.StandardizedCellChangeOfMeasure
 import Shao.OQ3.StandardizedCellOscillation
 import Shao.OQ3.StandardizedFrontierTransport
 import Shao.OQ3.StandardizedGaussianCellOscillation
+import Shao.OQ3.StandardizedGaussianCellPullback
 import Shao.OQ3.StandardizedPairEdgeworthPolynomialError
 import Shao.OQ3.StandardizedPairLogMomentApproximation
 import Shao.OQ3.StandardizedPairNormalizedLogExponent
@@ -861,6 +871,7 @@ import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
+import Shao.OQ6.OriginalSameWitnessEventualTailApplication
 import Shao.OQ6.OriginalSameWitnessScalarTailApplication
 import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment
