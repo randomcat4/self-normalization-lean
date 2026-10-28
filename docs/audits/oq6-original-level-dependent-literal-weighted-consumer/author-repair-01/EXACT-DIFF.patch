@@ -1,0 +1,41 @@
+--- author-01/OriginalLevelDependentLiteralWeightedConsumer.lean
++++ author-repair-01/OriginalLevelDependentLiteralWeightedConsumer.lean
+@@ -752,11 +752,11 @@
+         · exact measurable_const.mul
+             ((measurable_const.add hFUMeas.sqrt).mul
+               (measurable_const.add (measurable_const.mul
+                 (measurable_const.add hFdelMeas.snd.snd).sqrt)))
+         · apply Measurable.prodMk
+-          · simpa only [Real.norm_eq_abs] using hFdelMeas.fst.norm.add
++          · exact (continuous_abs.measurable.comp hFdelMeas.fst).add
+               (measurable_const.mul
+                 ((measurable_const.add hFUMeas.sqrt).mul
+                   (measurable_const.add (measurable_const.mul
+                     (measurable_const.add hFdelMeas.snd.snd).sqrt))))
+           · exact hFdelMeas.snd.snd
+@@ -792,11 +792,11 @@
+       Integrable[mAug] (fun x => |Δ k i x|) ν ∧
+       (∫ x, |Δ k i x| ∂ν) ≤ ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) := by
+     have hMI : Integrable[mAug] (M k) ν := hHint.const_mul (K * ε k)
+     have hMdI : Integrable[mAug] (Mdelete k i) ν := (hHdeleteSpec i).2.const_mul (K * ε k)
+     have hDI : Integrable[mAug] (fun x => |Δ k i x|) ν := by
+-      simpa only [hDeltaEq k i] using (hMI.sub hMdI).abs
++      simpa only [hDeltaEq k i, Pi.sub_apply] using (hMI.sub hMdI).abs
+     refine ⟨hDI, ?_⟩
+     calc
+       _ ≤ ∫ x, M k x + Mdelete k i x ∂ν :=
+         integral_mono hDI (hMI.add hMdI) (hDeltaBound k i)
+       _ = ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))) := by
+@@ -1025,11 +1025,11 @@
+         64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) *
+           (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) + δ := by
+     have htail : ∀ᶠ k : ℕ in Filter.atTop, sourceCostη k < sourceCost0 + δ :=
+       hSourceLim.eventually (gt_mem_nhds (lt_add_of_pos_right sourceCost0 hδ))
+     obtain ⟨k₀, hk₀⟩ := Filter.eventually_atTop.1 htail
+-    exact ⟨k₀, fun k hk => (hk₀ k hk).le.trans (add_le_add_right hSourceBound δ)⟩
++    exact ⟨k₀, fun k hk => (hk₀ k hk).le.trans (add_le_add hSourceBound (le_refl δ))⟩
+   refine ⟨hP₀prob, hP₀map, hνprob, hq, (fun k => ⟨hε k, hεsmall k⟩), hεlim,
+     (fun i => ⟨hξ i, hξ2 i, hξmean i⟩), hξenergy,
+     (fun k i => ⟨hYlocal k i, hY k i, herr k i⟩),
+     (fun ζ => ⟨hhalf0 ζ, (hFullBounds ζ).2.2⟩), hT0zero, hTηzero,
+     (fun k => (hCurrent k).1), ?_, hHm, hHint, hHdeleteSpec,
