@@ -1,0 +1,44 @@
+theorem actual_mean_chart_gaussian_grid_integral_comparison
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ))
+    (he : (e : (ℝ × ℝ) → (ℝ × ℝ)) = fun p =>
+      (∫ x : ℝ, x ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2),
+        ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)))
+    (hsource : e.source ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (V : Set (ℝ × ℝ)) (hCompact : IsCompact V) (hTarget : V ⊆ e.target)
+    (hPositive : ∀ y ∈ V, 0 < (parabolaCovariance
+      (mu.tilted (fun x => (e.symm y).1 * x + (e.symm y).2 * x ^ 2))).det) :
+    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let D : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun y =>
+      parabolaCovariance (nu (e.symm y))
+    let K : (ℝ × ℝ) → ℝ := fun p => Real.log
+      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    let J : (ℝ × ℝ) → ℝ := fun y =>
+      (e.symm y).1 * y.1 + (e.symm y).2 * y.2 - K (e.symm y)
+    let A : (ℝ × ℝ) → ℝ := fun y => (Real.sqrt (D y).det)⁻¹
+    let Q : (ℝ × ℝ) → (ℝ × ℝ) → ℝ := fun y v =>
+      (D y 1 1 * v.1 ^ 2 - 2 * D y 0 1 * v.1 * v.2 + D y 0 0 * v.2 ^ 2) /
+        (D y).det
+    ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, 1 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+      let cell : (ℤ × ℤ) → Set (ℝ × ℝ) := fun k =>
+        (Set.Ioc ((k.1 : ℝ) / (n : ℝ)) (((k.1 : ℝ) + 1) / (n : ℝ)) ×ˢ
+          Set.Ioc ((k.2 : ℝ) / (n : ℝ)) (((k.2 : ℝ) + 1) / (n : ℝ))) ∩ V
+      ∀ Kcells : Finset (ℤ × ℤ),
+        (∀ k : ℤ × ℤ, k ∈ Kcells ↔ (cell k).Nonempty) →
+      ∀ y : Kcells → V,
+        (∀ k : Kcells, (y k : ℝ × ℝ) ∈
+          Set.Icc ((k.val.1 : ℝ) / (n : ℝ)) (((k.val.1 : ℝ) + 1) / (n : ℝ)) ×ˢ
+          Set.Icc ((k.val.2 : ℝ) / (n : ℝ)) (((k.val.2 : ℝ) + 1) / (n : ℝ))) →
+      ∀ J0 : ℝ,
+        let T : (ℝ × ℝ) → ℝ := fun w => A w * Real.exp (-(n : ℝ) * (J w - J0))
+        let g : Kcells → (ℝ × ℝ) → ℝ := fun k w =>
+          A (y k) * Real.exp (-(n : ℝ) * (J (y k) +
+            ((e.symm (y k)).1 * (w - y k).1 + (e.symm (y k)).2 * (w - y k).2) +
+              Q (y k) (w - y k) / 2 - J0))
+        let G : ℝ := ((n : ℝ) / (2 * Real.pi)) *
+          ∑ k : Kcells, ∫ w : ℝ × ℝ in cell k, g k w
+        let L : ℝ := ((n : ℝ) / (2 * Real.pi)) * ∫ w : ℝ × ℝ in V, T w
+        IntegrableOn T V ∧ (∀ k : Kcells, IntegrableOn (g k) (cell k)) ∧
+          0 ≤ L ∧ |G - L| ≤ (C / (n : ℝ)) * L
