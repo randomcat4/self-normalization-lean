@@ -1,0 +1,56 @@
+DECL Shao.OQ3.actual_mean_chart_gaussian_grid_integral_comparison._proof_1_1
+TYPE ∀ (N n : ℕ), 1 ≤ n → ¬0 < n → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.actual_mean_chart_gaussian_grid_integral_comparison
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu]
+  (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+  (↑e = fun p =>
+      (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+        ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+    e.source ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (V : Set (ℝ × ℝ)),
+        IsCompact V →
+          V ⊆ e.target →
+            (∀ y ∈ V,
+                0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => (↑e.symm y).1 * x + (↑e.symm y).2 * x ^ 2)).det) →
+              have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+              have D := fun y => Shao.OQ3.parabolaCovariance (nu (↑e.symm y));
+              have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+              have J := fun y => (↑e.symm y).1 * y.1 + (↑e.symm y).2 * y.2 - K (↑e.symm y);
+              have A := fun y => (√(D y).det)⁻¹;
+              have Q := fun y v => (D y 1 1 * v.1 ^ 2 - 2 * D y 0 1 * v.1 * v.2 + D y 0 0 * v.2 ^ 2) / (D y).det;
+              ∃ C,
+                0 < C ∧
+                  ∃ N,
+                    1 ≤ N ∧
+                      ∀ (n : ℕ),
+                        N ≤ n →
+                          have cell := fun k =>
+                            Set.Ioc (↑k.1 / ↑n) ((↑k.1 + 1) / ↑n) ×ˢ Set.Ioc (↑k.2 / ↑n) ((↑k.2 + 1) / ↑n) ∩ V;
+                          ∀ (Kcells : Finset (ℤ × ℤ)),
+                            (∀ (k : ℤ × ℤ), k ∈ Kcells ↔ (cell k).Nonempty) →
+                              ∀ (y : ↥Kcells → ↑V),
+                                (∀ (k : ↥Kcells),
+                                    ↑(y k) ∈
+                                      Set.Icc (↑(↑k).1 / ↑n) ((↑(↑k).1 + 1) / ↑n) ×ˢ
+                                        Set.Icc (↑(↑k).2 / ↑n) ((↑(↑k).2 + 1) / ↑n)) →
+                                  ∀ (J0 : ℝ),
+                                    have T := fun w => A w * Real.exp (-↑n * (J w - J0));
+                                    have g := fun k w =>
+                                      A ↑(y k) *
+                                        Real.exp
+                                          (-↑n *
+                                            (J ↑(y k) +
+                                                  ((↑e.symm ↑(y k)).1 * (w - ↑(y k)).1 +
+                                                    (↑e.symm ↑(y k)).2 * (w - ↑(y k)).2) +
+                                                Q (↑(y k)) (w - ↑(y k)) / 2 -
+                                              J0));
+                                    have G := ↑n / (2 * Real.pi) * ∑ k, ∫ (w : ℝ × ℝ) in cell ↑k, g k w;
+                                    have L := ↑n / (2 * Real.pi) * ∫ (w : ℝ × ℝ) in V, T w;
+                                    MeasureTheory.IntegrableOn T V MeasureTheory.volume ∧
+                                      (∀ (k : ↥Kcells),
+                                          MeasureTheory.IntegrableOn (g k) (cell ↑k) MeasureTheory.volume) ∧
+                                        0 ≤ L ∧ |G - L| ≤ C / ↑n * L
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
