@@ -1,0 +1,17 @@
+# Bounded-law actual Gaussian window and finite sum
+
+HP transfers single-reference-tilt weak Cramer to one compact actual tilt family under explicit bounded support, then derives the original IID probability Gaussian-cell bound using the same actual means, covariance whitening E, inverse-exponential indicator and true L1 Gaussian integral. The strict0<beta<2/5 threshold and unchanged beta/radius are retained; the family domination constant is chosen before all parameters and cells.
+
+HQ attaches that bound to the SAME actual inverse-mean chart, new physical window V, compact true-MGF-interior Theta, true EReal rate=J, actual mean identity, common rate floor and closure-rate minimizers. It explicitly proves rateAtMean=J(y) before substitution. Lambda1>0 remains an explicit conditional requirement. E/C precede epsilon and N precedes every n/cell; anchors need only lie in closure(cell), the closed containing rectangle and V.
+
+HR uses the actual finite active signed half-open1/n grid, exact original-IID probability partition and explicit B*n^2 cardinality from qualified BW. It selects HQ's actual closure anchors on this SAME grid, forms the actual inverse-exponential Gaussian integrals JG and W=exp(n*(Jcenter-Jy)), proves0<W<=1 from the SAME rate floor, and derives for G=sum W*JG:
+
+|exp(n*Jcenter)*P(actualM in V)-G| <= (C/n)*G+B*epsilon/n.
+
+C/E precede epsilon, N precedes all n and cells. The theorem assumes neither the desired cell count nor probability partition nor a free Gaussian comparison. Atomic gridline mass, thin cells, empty active-family sums and zero JG/G remain valid; no division by area/probability/G/JG occurs. This is a finite Gaussian-window reconstruction with its proved payment, not a continuous-integral or root asymptotic.
+
+All three exact sources have full fresh independent source-to-original-statement/proof review, all actual-owned full TYPE/required VALUE coverage, parent ENTIRE final-report reading and observed reviewer stop, plus server first-success native and same-first-object recursive ALL-owner axiom receipts. Only propext,Classical.choice,Quot.sound occur. Sources and evidence remain exact; failed sources/log hashes/repairs are retained. HQ failed001 and HR failed001 huge repeated contexts remain server-only, honestly rawFullRead=false; all error headers and complete terminal goals were read. Compact failed/success logs were fully read. No accepted old proof/producer/AX was replayed and no successful source was restyled.
+
+Legacy U21a/BZ/BW historical first-object identities remain null; separately qualified retained objects were verified by exact byte equality, never backdated. New original objects retain stricter view/target identity. C1 immutablev85 and assigned original C2/C12 completed scopes are unaffected. Preserve source p54 v_corr=-hat_t0*sqrt(detDelta)*sqrt(Lambda1), external Song uniform-in-law/s8 attribution, strict weak Cramer and accepted genuine joint-nonlattice counterexample.
+
+HS308 affine Gaussian-cell pullback and HT309 canonical-whitening Jacobian are excluded pending their same-model independent review after capacity interruptions. Their saved native/AX results are not qualifications. Actual Gaussian-to-continuous-rate integral, Taylor/amplitude comparison, boundary Laplace, exterior localization, original B-D and positive OQ3 root remain OPEN. Root alone integrates and merges; this lane does not merge.

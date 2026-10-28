@@ -1,0 +1,333 @@
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_8
+TYPE ∀ {M₀ : Type u_1} [inst : MonoidWithZero M₀] {a : M₀} [IsReduced M₀] (n : ℕ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_3
+TYPE ∀ {ι : Type u_1} {R : Type u_4} [inst : NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R) (a : R),
+  ∑ i ∈ s, a * f i = a * ∑ i ∈ s, f i
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._proof_1_2
+TYPE ∀ (N n : ℕ), 1 ≤ n → ¬0 < n → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_9
+TYPE ∀ {G₀ : Type u_3} [inst : GroupWithZero G₀] {a : G₀} (n : ℤ), a ≠ 0 → (a ^ n = 0) = False
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_10
+TYPE ∀ {R : Type u_1} [inst : AddMonoidWithOne R] [CharZero R] (n : ℕ), (↑n + 1 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_6
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 4] [NeZero 4], (4 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._proof_1_1
+TYPE ∀ (N : ℕ), 2 ≤ N → ∀ (n : ℕ), N ≤ n → ¬1 ≤ n → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_5
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 3] [NeZero 3], (3 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  ∀ (supportRadius : ℝ),
+                    0 ≤ supportRadius →
+                      (∀ᵐ (x : ℝ) ∂mu, |x| ≤ supportRadius) →
+                        ∀ (beta c R : ℝ),
+                          0 < beta →
+                            beta < 2 / 5 →
+                              0 < c →
+                                0 ≤ R →
+                                  (∀ (xi eta : ℝ),
+                                      R < √(xi ^ 2 + eta ^ 2) →
+                                        ‖Shao.OQ3.jointCharacteristic (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)
+                                              xi eta‖ ≤
+                                          1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                                    have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                                    have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                                    have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                                    have D := Shao.OQ3.parabolaCovariance (nu theta);
+                                    have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                                    have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                                    have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                                    have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                                    ∃ L e,
+                                      ↑L = row0.prod row1 ∧
+                                        ↑e = means ∧
+                                          theta ∈ e.source ∧
+                                            e.source ⊆ Omega ∧
+                                              have K := fun p =>
+                                                Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                                              have J := fun w =>
+                                                (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - K (↑e.symm w);
+                                              have v := (1, 2 * a0 / level ^ 2);
+                                              have Lambda1 :=
+                                                2 * theta.2 / level ^ 2 + (L.symm v).1 +
+                                                  2 * a0 / level ^ 2 * (L.symm v).2;
+                                              0 < -theta.2 ∧
+                                                (0 < Lambda1 →
+                                                  ∃ cap rho,
+                                                    0 < cap ∧
+                                                      0 < rho ∧
+                                                        rho ≤ cap ∧
+                                                          have U :=
+                                                            {w | |w.1 - a0| ≤ rho ∧ |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho};
+                                                          have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+                                                          let V :=
+                                                            {w |
+                                                              |w.1 - a0| ≤ rho ∧
+                                                                0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧
+                                                                  w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+                                                          let Theta := ↑e.symm '' V;
+                                                          (have cov := fun p => Shao.OQ3.parabolaCovariance (nu p);
+                                                            have sd := fun p =>
+                                                              √(cov p 0 0 * cov p 1 1 - cov p 0 1 ^ 2);
+                                                            have tr := fun p => √(cov p 0 0 + cov p 1 1 + 2 * sd p);
+                                                            have whitening := fun p =>
+                                                              ![![(cov p 1 1 + sd p) / (sd p * tr p),
+                                                                  -cov p 0 1 / (sd p * tr p)],
+                                                                ![-cov p 0 1 / (sd p * tr p),
+                                                                  (cov p 0 0 + sd p) / (sd p * tr p)]];
+                                                            have pOf := fun y => ⟨↑e.symm ↑y, ⋯⟩;
+                                                            have phi := fun z =>
+                                                              1 / (2 * Real.pi) * Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 2);
+                                                            ∃ lo hi,
+                                                              0 < lo ∧
+                                                                0 < hi ∧
+                                                                  (∀ p ∈ Theta,
+                                                                      ∀ (xi eta : ℝ),
+                                                                        lo * (xi ^ 2 + eta ^ 2) ≤
+                                                                            xi ^ 2 * cov p 0 0 +
+                                                                                2 * xi * eta * cov p 0 1 +
+                                                                              eta ^ 2 * cov p 1 1 ∧
+                                                                          xi ^ 2 * cov p 0 0 +
+                                                                                2 * xi * eta * cov p 0 1 +
+                                                                              eta ^ 2 * cov p 1 1 ≤
+                                                                            hi * (xi ^ 2 + eta ^ 2)) ∧
+                                                                    ∃ E,
+                                                                      (∀ (p : ↑Theta),
+                                                                          (∀ (w : ℝ × ℝ),
+                                                                              (E p) w =
+                                                                                (whitening (↑p) 0 0 * w.1 +
+                                                                                    whitening (↑p) 0 1 * w.2,
+                                                                                  whitening (↑p) 1 0 * w.1 +
+                                                                                    whitening (↑p) 1 1 * w.2)) ∧
+                                                                            ‖↑(E p)‖ ≤ 2 * (1 / √lo) ∧
+                                                                              ‖↑(E p).symm‖ ≤ 4 * hi * (1 / √lo)) ∧
+                                                                        ∃ C,
+                                                                          0 < C ∧
+                                                                            ∀ (epsilon : ℝ),
+                                                                              0 < epsilon →
+                                                                                ∃ N,
+                                                                                  2 ≤ N ∧
+                                                                                    ∀ (n : ℕ),
+                                                                                      N ≤ n →
+                                                                                        have cell := fun k =>
+                                                                                          Set.Ioc (↑k.1 / ↑n)
+                                                                                                ((↑k.1 + 1) / ↑n) ×ˢ
+                                                                                              Set.Ioc (↑k.2 / ↑n)
+                                                                                                ((↑k.2 + 1) / ↑n) ∩
+                                                                                            V;
+                                                                                        have B :=
+                                                                                          (2 * rho + 2) *
+                                                                                            ((|a0| + rho) ^ 2 /
+                                                                                                  level ^ 2 +
+                                                                                                rho +
+                                                                                              2);
+                                                                                        have P :=
+                                                                                          MeasureTheory.Measure.pi
+                                                                                            fun x => mu;
+                                                                                        have M := fun z =>
+                                                                                          ((∑ i, z i) / ↑n,
+                                                                                            Shao.energy z / ↑n);
+                                                                                        0 < B ∧
+                                                                                          ∃ Kcells,
+                                                                                            (∀ (k : ℤ × ℤ),
+                                                                                                k ∈ Kcells ↔
+                                                                                                  (cell k).Nonempty) ∧
+                                                                                              ↑Kcells.card ≤
+                                                                                                  B * ↑n ^ 2 ∧
+                                                                                                ∃ y,
+                                                                                                  (∀ (k : ↥Kcells),
+                                                                                                      ↑(y k) ∈
+                                                                                                          closure
+                                                                                                            (cell ↑k) ∧
+                                                                                                        ↑(y k) ∈
+                                                                                                            Set.Icc
+                                                                                                                (↑(↑k).1 /
+                                                                                                                  ↑n)
+                                                                                                                ((↑(↑k).1 +
+                                                                                                                    1) /
+                                                                                                                  ↑n) ×ˢ
+                                                                                                              Set.Icc
+                                                                                                                (↑(↑k).2 /
+                                                                                                                  ↑n)
+                                                                                                                ((↑(↑k).2 +
+                                                                                                                    1) /
+                                                                                                                  ↑n) ∧
+                                                                                                          ∀
+                                                                                                            w ∈
+                                                                                                              closure
+                                                                                                                (cell
+                                                                                                                  ↑k),
+                                                                                                            J ↑(y k) ≤
+                                                                                                              J w) ∧
+                                                                                                    have F := fun k w =>
+                                                                                                      √↑n •
+                                                                                                        (E (pOf (y k)))
+                                                                                                          (w -
+                                                                                                            means
+                                                                                                              ↑(pOf
+                                                                                                                  (y
+                                                                                                                    k)));
+                                                                                                    have g := fun k z =>
+                                                                                                      Real.exp
+                                                                                                        (-√↑n *
+                                                                                                          ((↑(pOf
+                                                                                                                    (y
+                                                                                                                      k))).1 *
+                                                                                                              ((E
+                                                                                                                      (pOf
+                                                                                                                        (y
+                                                                                                                          k))).symm
+                                                                                                                  z).1 +
+                                                                                                            (↑(pOf
+                                                                                                                    (y
+                                                                                                                      k))).2 *
+                                                                                                              ((E
+                                                                                                                      (pOf
+                                                                                                                        (y
+                                                                                                                          k))).symm
+                                                                                                                  z).2));
+                                                                                                    have JG := fun k =>
+                                                                                                      ∫ (z : ℝ × ℝ),
+                                                                                                        (F k ''
+                                                                                                                cell
+                                                                                                                  ↑k).indicator
+                                                                                                            (g k) z *
+                                                                                                          phi z;
+                                                                                                    have W := fun k =>
+                                                                                                      Real.exp
+                                                                                                        (↑n *
+                                                                                                          (J
+                                                                                                              (a0,
+                                                                                                                a0 ^ 2 /
+                                                                                                                  level ^
+                                                                                                                    2) -
+                                                                                                            J ↑(y k)));
+                                                                                                    have G :=
+                                                                                                      ∑ k, W k * JG k;
+                                                                                                    (∀ (k : ↥Kcells),
+                                                                                                        0 ≤ JG k ∧
+                                                                                                          0 < W k ∧
+                                                                                                            W k ≤ 1) ∧
+                                                                                                      0 ≤ G ∧
+                                                                                                        |Real.exp
+                                                                                                                  (↑n *
+                                                                                                                    J
+                                                                                                                      (a0,
+                                                                                                                        a0 ^
+                                                                                                                            2 /
+                                                                                                                          level ^
+                                                                                                                            2)) *
+                                                                                                                P.real
+                                                                                                                  (M ⁻¹'
+                                                                                                                    V) -
+                                                                                                              G| ≤
+                                                                                                          C / ↑n * G +
+                                                                                                            B *
+                                                                                                                epsilon /
+                                                                                                              ↑n) ∧
+                                                            IsCompact Theta ∧
+                                                              theta ∈ Theta ∧
+                                                                Theta ⊆ Omega ∧
+                                                                  (∀ p ∈ Theta,
+                                                                      p ∈ e.source ∧
+                                                                        means p ∈ V ∧
+                                                                          0 <
+                                                                            (Shao.OQ3.parabolaCovariance (nu p)).det) ∧
+                                                                    (∀ w ∈ V, ↑e.symm w ∈ Theta) ∧
+                                                                      V = U ∩ Tail ∧
+                                                                        IsCompact V ∧
+                                                                          (∀ w ∈ V,
+                                                                              0 < w.1 ∧
+                                                                                0 < w.2 ∧
+                                                                                  w ∈ e.target ∧
+                                                                                    ↑e.symm w ∈ e.source ∧
+                                                                                      ↑e.symm w ∈ Omega ∧
+                                                                                        means (↑e.symm w) = w ∧
+                                                                                          0 <
+                                                                                              (Shao.OQ3.parabolaCovariance
+                                                                                                  (nu
+                                                                                                    (↑e.symm w))).det ∧
+                                                                                            Shao.Probability.bivariateLegendreRate
+                                                                                                mu (fun x => (x, x ^ 2))
+                                                                                                w =
+                                                                                              ↑(J w)) ∧
+                                                                            (∀ w ∈ V,
+                                                                                J (a0, a0 ^ 2 / level ^ 2) ≤ J w) ∧
+                                                                              ∀ (aL aR qL qR : ℝ),
+                                                                                have A :=
+                                                                                  Set.Ioc aL aR ×ˢ Set.Ioc qL qR ∩ V;
+                                                                                have Q :=
+                                                                                  Set.Icc aL aR ×ˢ Set.Icc qL qR;
+                                                                                A.Nonempty →
+                                                                                  ∃ y ∈ closure A,
+                                                                                    y ∈ Q ∩ V ∧
+                                                                                      0 < y.1 ∧
+                                                                                        0 < y.2 ∧
+                                                                                          y ∈ e.target ∧
+                                                                                            ↑e.symm y ∈ e.source ∧
+                                                                                              ↑e.symm y ∈ Omega ∧
+                                                                                                means (↑e.symm y) = y ∧
+                                                                                                  0 <
+                                                                                                      (Shao.OQ3.parabolaCovariance
+                                                                                                          (nu
+                                                                                                            (↑e.symm
+                                                                                                              y))).det ∧
+                                                                                                    Shao.Probability.bivariateLegendreRate
+                                                                                                          mu
+                                                                                                          (fun x =>
+                                                                                                            (x, x ^ 2))
+                                                                                                          y =
+                                                                                                        ↑(J y) ∧
+                                                                                                      ∀ w ∈ closure A,
+                                                                                                        Shao.Probability.bivariateLegendreRate
+                                                                                                              mu
+                                                                                                              (fun x =>
+                                                                                                                (x,
+                                                                                                                  x ^
+                                                                                                                    2))
+                                                                                                              y ≤
+                                                                                                            Shao.Probability.bivariateLegendreRate
+                                                                                                              mu
+                                                                                                              (fun x =>
+                                                                                                                (x,
+                                                                                                                  x ^
+                                                                                                                    2))
+                                                                                                              w ∧
+                                                                                                          J y ≤ J w)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_4
+TYPE ∀ {α : Type u_2} [inst : Zero α] [inst_1 : OfNat α 2] [NeZero 2], (2 = 0) = False
+AXIOMS [propext]
+KIND theorem
+DECL Shao.OQ3.bounded_physical_window_actual_gaussian_grid_sum._simp_1_7
+TYPE ∀ {M₀ : Type u_1} [inst : Mul M₀] [inst_1 : Zero M₀] [NoZeroDivisors M₀] {a b : M₀},
+  a ≠ 0 → b ≠ 0 → (a * b = 0) = False
+AXIOMS [propext]
+KIND theorem
