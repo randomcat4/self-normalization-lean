@@ -233,6 +233,7 @@ import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
 import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualCubicHermiteCorrection
+import Shao.OQ3.ActualGaussianIntegralSumComparison
 import Shao.OQ3.ActualGaussianKernelComparison
 import Shao.OQ3.ActualMeanChartCompactTaylor
 import Shao.OQ3.ActualMeanChartRateDerivatives
@@ -262,6 +263,7 @@ import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
 import Shao.OQ3.BoundedPhysicalWindowActualGaussian
+import Shao.OQ3.BoundedPhysicalWindowContinuousRate
 import Shao.OQ3.BoundedPhysicalWindowCovarianceGaussianSum
 import Shao.OQ3.BoundedPhysicalWindowGaussianSum
 import Shao.OQ3.BoundedSupportTestIntegrability
