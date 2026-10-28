@@ -1,0 +1,10 @@
+theorem bounded_parabola_rectangle_exponential_separation
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (lower upper : ℝ)
+    (henergy : ∀ᵐ x ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper) :
+    Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)) = Set.univ ∧
+      ∀ z : ℝ × ℝ, (z.1 < -M ∨ M < z.1 ∨ z.2 < lower ∨ upper < z.2) →
+        ∀ L : ℝ, ∃ theta : Shao.Probability.bivariateMGFDomain mu
+          (fun x : ℝ => (x, x ^ 2)),
+          L < (theta : ℝ × ℝ).1 * z.1 + (theta : ℝ × ℝ).2 * z.2 -
+            Shao.Probability.bivariateLogMGF mu (fun x : ℝ => (x, x ^ 2)) theta := by

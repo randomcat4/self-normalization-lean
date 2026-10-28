@@ -1,0 +1,9 @@
+DECL Shao.OQ3.symmetric_eight_atom_positive_energy_support
+TYPE ∀ (a : Fin 8 → ℝ),
+  (∀ (i : Fin 8), 1 ≤ a i) →
+    have A := Fin.append a fun i => -a i;
+    have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+    have B := ∑ i, |a i|;
+    0 < B ∧ (∀ᵐ (x : ℝ) ∂mu, 1 ≤ |x| ∧ |x| ≤ B) ∧ (∀ᵐ (x : ℝ) ∂mu, 1 ≤ x ^ 2 ∧ x ^ 2 ≤ B ^ 2) ∧ 0 < mu (Set.Ioi 0)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

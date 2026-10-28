@@ -1,0 +1,76 @@
+DECL Shao.OQ3.exists_symmetric_eight_atom_small_positive_minimum
+TYPE ∃ a,
+  a 0 = 1 ∧
+    StrictMono a ∧
+      (∀ (i : Fin 8), 0 < a i) ∧
+        let A := Fin.append a fun i => -a i;
+        let mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+        Function.Injective A ∧
+          MeasureTheory.IsProbabilityMeasure mu ∧
+            MeasureTheory.Integrable (fun x => x) mu ∧
+              ∫ (x : ℝ), x ∂mu = 0 ∧
+                (∃ B, 0 < B ∧ (∀ᵐ (x : ℝ) ∂mu, 1 ≤ |x| ∧ |x| ≤ B) ∧ ∀ᵐ (x : ℝ) ∂mu, 1 ≤ x ^ 2 ∧ x ^ 2 ≤ B ^ 2) ∧
+                  0 < mu (Set.Ioi 0) ∧
+                    (∀ (xi eta : ℝ), xi ≠ 0 ∨ eta ≠ 0 → ‖Shao.OQ3.jointCharacteristic mu xi eta‖ < 1) ∧
+                      (∃ c,
+                          0 < c ∧
+                            ∃ R,
+                              0 ≤ R ∧
+                                (∀ (xi eta : ℝ),
+                                    R < √(xi ^ 2 + eta ^ 2) →
+                                      ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤
+                                        1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-3 / 8)) ∧
+                                  ∀ (K : Set (ℝ × ℝ)),
+                                    IsCompact K →
+                                      ∃ m,
+                                        0 < m ∧
+                                          m ≤ 1 ∧
+                                            0 < m ^ 2 * c / 2 ∧
+                                              ∀ p ∈ K,
+                                                (ENNReal.ofReal m • mu ≤ mu.tilted fun x => p.1 * x + p.2 * x ^ 2) ∧
+                                                  (∀ (xi eta : ℝ),
+                                                      m ^ 2 * (1 - ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ^ 2) ≤
+                                                        1 -
+                                                          ‖Shao.OQ3.jointCharacteristic
+                                                                (mu.tilted fun x => p.1 * x + p.2 * x ^ 2) xi eta‖ ^
+                                                            2) ∧
+                                                    ∀ (xi eta : ℝ),
+                                                      R < √(xi ^ 2 + eta ^ 2) →
+                                                        ‖Shao.OQ3.jointCharacteristic
+                                                              (mu.tilted fun x => p.1 * x + p.2 * x ^ 2) xi eta‖ ≤
+                                                          1 - m ^ 2 * c / 2 * (√(xi ^ 2 + eta ^ 2)).rpow (-3 / 8)) ∧
+                        (∀ (R eps : ℝ),
+                            0 < eps →
+                              ∃ xi,
+                                R < xi ∧
+                                  ‖Shao.OQ3.jointCharacteristic mu xi 0 - 1‖ < eps ∧
+                                    1 - eps < ‖Shao.OQ3.jointCharacteristic mu xi 0‖) ∧
+                          (¬∃ delta,
+                                0 < delta ∧
+                                  ∃ R,
+                                    0 ≤ R ∧
+                                      ∀ (xi eta : ℝ),
+                                        R < √(xi ^ 2 + eta ^ 2) →
+                                          ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤ 1 - delta) ∧
+                            0 < (Shao.OQ3.parabolaCovariance mu).det ∧
+                              ∃ epsilon,
+                                0 < epsilon ∧
+                                  epsilon ≤ 1 ∧
+                                    ∀ (level : ℝ),
+                                      0 < level →
+                                        level < epsilon →
+                                          ∃ z,
+                                            0 < z.2 ∧
+                                              level * √z.2 ≤ z.1 ∧
+                                                0 ≤ Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) z ∧
+                                                  Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) z <
+                                                      ⊤ ∧
+                                                    ∀ (y : ℝ × ℝ),
+                                                      0 < y.2 →
+                                                        level * √y.2 ≤ y.1 →
+                                                          Shao.Probability.bivariateLegendreRate mu
+                                                              (fun x => (x, x ^ 2)) z ≤
+                                                            Shao.Probability.bivariateLegendreRate mu
+                                                              (fun x => (x, x ^ 2)) y
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
