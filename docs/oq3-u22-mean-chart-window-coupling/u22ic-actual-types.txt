@@ -1,0 +1,47 @@
+DECL Shao.OQ3.actual_mean_chart_boundary_taylor
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  ∀ (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+                    (↑e = fun p =>
+                        (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+                          ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+                      theta ∈ e.source →
+                        e.source ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+                          have Omega := interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                          have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                          have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                          have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                          have D := Shao.OQ3.parabolaCovariance (nu theta);
+                          have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                          have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                          have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                          have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                          ∀ (L : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+                            ↑L = row0.prod row1 →
+                              have J := fun w => (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - K (↑e.symm w);
+                              have G := fun w => (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2);
+                              have F := fun w => J (G w);
+                              have v := (1, 2 * a0 / level ^ 2);
+                              have Lambda1 :=
+                                2 * theta.2 / level ^ 2 + (L.symm v).1 + 2 * a0 / level ^ 2 * (L.symm v).2;
+                              ContDiffAt ℝ (↑⊤) F (0, 0) ∧
+                                ∃ rho C,
+                                  0 < rho ∧
+                                    0 < C ∧
+                                      ∀ (r z : ℝ),
+                                        |r| ≤ rho →
+                                          0 ≤ z →
+                                            z ≤ rho →
+                                              |F (r, z) - F (0, 0) - -theta.2 * z - Lambda1 / 2 * r ^ 2| ≤
+                                                C * (|r| ^ 3 + |r| * z + z ^ 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
