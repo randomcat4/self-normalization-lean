@@ -1,0 +1,261 @@
+      ∃ cg : ℝ, 0 < cg ∧
+      ∀ (Cenv aenv t0 Menv : ℝ)
+        (hCenv : 0 ≤ Cenv) (haenv : 0 ≤ aenv)
+        (ht0 : 0 < t0) (hMenv : 0 ≤ Menv),
+        ∀ᶠ n : ℕ in Filter.atTop,
+          4 ≤ n ∧
+          ∀ (w : Ω → ℝ)
+            (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+            (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight Cenv aenv n)
+            (hSq : Integrable[mΩ] (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+            (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ Menv)
+            (hEnv : ∀ᵐ t : Ω × Ω ∂(@Measure.prod Ω Ω mΩ mΩ μ μ),
+              |r t.1 t.2| ≤ w t.1 * w t.2)
+            (z : ℝ) (hz : 1 ≤ z)
+            (hTiltWindow : z ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ)))
+            (hEnvelopeWindow : z ≤ remainderWindowScale
+              (Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv) t0 *
+                Real.rpow (n : ℝ) (1 / 6 : ℝ))
+            (hGeometry : (1 + rho) * z ≤ Real.sqrt (n : ℝ)),
+        let mN : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+        let mN₀ : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+        let P : @Measure (Fin n → Ω) mN :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+        let P₀ : @Measure (Fin n → Ω) mN₀ :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+        let N : ℝ := Real.sqrt (n : ℝ)
+        let K : ℝ := 4 * Real.sqrt (n : ℝ)
+        let ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+        let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho z
+        let T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r 512 rho z
+        let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|
+        let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r 512 rho z
+        let A0delete : Fin n → (Fin n → Ω) → ℝ :=
+          fun i ζ => |residualStatisticDDeleted n r ζ i|
+        let B0delete : Fin n → (Fin n → Ω) → ℝ :=
+          fun i ζ => studentizerClipBudgetDeleted n r 512 rho z ζ i
+        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=
+          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+        let ν : @Measure (Fin n → Ω × ℝ) mAug :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+        let Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+        let Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+        let a : ℕ → Fin n → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+        let s : ℕ → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+        let ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+        let η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+        let C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+        let Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+        let Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+        let Qε : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+        let Dη : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+        let Tη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)
+        let A : (Fin n → Ω × ℝ) → ℝ := fun x => A0 (q x)
+        let B : (Fin n → Ω × ℝ) → ℝ := fun x => B0 (q x)
+        let Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => A0delete i (q x)
+        let Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => B0delete i (q x)
+        let Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)
+        let H : (Fin n → Ω × ℝ) → ℝ :=
+          fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))
+        let Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))
+        let M : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => K * ε k * H x
+        let Mdelete : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => K * ε k * Hdelete i x
+        let Anew : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => A x + M k x
+        let AdeleteNew : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Adelete i x + Mdelete k i x
+        let Δ : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)
+        let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2
+        let ℓη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2
+        let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ
+        let Sη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, ℓη k i x
+        let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ
+        let Sηminus : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x
+        let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P
+        let Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν
+        let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ
+        let fullTestη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => z * Anew k x + z ^ 2 * B x
+        let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+        let deletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+        let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+        let compactDeletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+        let Lcompact0 : ℝ := ∑ i : Fin n,
+          ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P
+        let Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n,
+          ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν
+        let sourceCost0 : ℝ :=
+          ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +
+            ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0
+        let sourceCostη : ℕ → ℝ := fun k =>
+          ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+            ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+        let compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +
+          ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P
+        let compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ x, Anew k x ∂ν) +
+          z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν
+         let V0 : (Fin n → Ω) → ℝ := projectionV n g
+         let qOrder : ℝ := boundedPolylogMomentOrder t0 n
+         let Ktail : ℝ := Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv
+         let Gsource : Set (Fin n → Ω) := projectionGood n g z
+         let C2source : Set (Fin n → Ω) :=
+           {ζ : Fin n → Ω |
+             |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ζ| ≤
+               Ktail * (n : ℝ) * qOrder ∧
+             ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r ζ‖ ^ (2 : ℕ) ≤
+               Ktail * (n : ℝ) ^ (2 : ℕ) * qOrder}
+         let Hsource : Set (Fin n → Ω) := Gsource ∩ C2source
+         let Ssafe : Set (Fin n → Ω) :=
+           {ζ : Fin n → Ω |
+             0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧
+               z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 8 : ℝ)}
+         let Jsafe : Set (Fin n → Ω × ℝ) := q ⁻¹' Ssafe
+         let E : ℕ → Set (Fin n → Ω × ℝ) := fun k =>
+           {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4}
+         let E2 : Set (Fin n → Ω × ℝ) :=
+           {x : Fin n → Ω × ℝ | z ^ (2 : ℕ) * |D2 (q x)| > (1 / 4 : ℝ)}
+         let Z : Set (Fin n → Ω × ℝ) := {x : Fin n → Ω × ℝ | V x = 0}
+         let physical : (Fin n → Ω) → ℝ := fun ζ : Fin n → Ω =>
+           if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
+             (projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ)
+         let Eclip : Set (Fin n → Ω) := {ζ : Fin n → Ω | T0 ζ ≠ physical ζ}
+         let E2original : Set (Fin n → Ω) :=
+           {ζ : Fin n → Ω | z ^ (2 : ℕ) * |D2 ζ| > (1 / 4 : ℝ)}
+         let Z0 : Set (Fin n → Ω) := {ζ : Fin n → Ω | V0 ζ = 0}
+         let Zphysical : Set (Fin n → Ω) :=
+           {ζ : Fin n → Ω | Real.sqrt (centeredSq n g r ζ) = 0}
+         let physicalBad : Set (Fin n → Ω) := E2original ∪ Z0 ∪ Eclip ∪ Zphysical
+         let payment : ℝ :=
+           (3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) +
+             (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))
+         @IsProbabilityMeasure (Fin n → Ω) mN P ∧
+         @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧
+         @IsProbabilityMeasure (Fin n → Ω × ℝ) mAug ν ∧
+         @MeasurePreserving (Fin n → Ω) (Fin n → Ω) mN mN₀ id P P₀ ∧
+         @MeasurePreserving (Fin n → Ω × ℝ) (Fin n → Ω) mAug mN₀ q ν P₀ ∧
+         (∀ i : Fin n, Measurable[mN₀, borel ℝ] (ξ0 i)) ∧
+         Measurable[mN₀, borel ℝ] V0 ∧
+         Measurable[mN₀, borel ℝ] D1 ∧ Measurable[mN₀, borel ℝ] D2 ∧
+         Measurable[mAug, borel ℝ] (fun x => D1 (q x)) ∧
+         Measurable[mAug, borel ℝ] (fun x => D2 (q x)) ∧
+         (∀ ζ : Fin n → Ω, V0 ζ = Real.sqrt (∑ i : Fin n, (ξ0 i ζ) ^ (2 : ℕ))) ∧
+         (∀ x : Fin n → Ω × ℝ, W x = projectionW n g (q x) ∧ V x = V0 (q x)) ∧
+         Measurable[mN₀, borel ℝ] T0 ∧ Measurable[mN, borel ℝ] T0 ∧
+         @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) T0 P₀ =
+           @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T0 P ∧
+         @Measure.map (Fin n → Ω × ℝ) ℝ mAug (borel ℝ) (fun x => T0 (q x)) ν =
+           @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T0 P ∧
+         Measurable[mN, borel ℝ] physical ∧
+         MeasurableSet[mN] Hsource ∧ MeasurableSet[mN] Eclip ∧
+         MeasurableSet[mN₀] Ssafe ∧ MeasurableSet[mN] Ssafe ∧
+         MeasurableSet[mAug] Jsafe ∧
+         Hsource ⊆ Ssafe ∧
+         (∀ ζ : Fin n → Ω, ζ ∈ Hsource →
+           0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧
+           z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 32 : ℝ) ∧
+           0 < Real.sqrt (centeredSq n g r ζ) ∧
+           Real.sqrt (centeredSq n g r ζ) =
+             V0 ζ * Real.sqrt (1 + centeredDelta n g r ζ) ∧
+           D2 ζ = centeredDelta n g r ζ ∧ T0 ζ = physical ζ) ∧
+         (Ssafeᶜ ∪ Eclip ∪ Zphysical) ⊆ Hsourceᶜ ∧
+         (E2original ∪ Z0) ⊆ Ssafeᶜ ∧
+         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+           0 < V x ∧ z * |D1 (q x)| ≤ V x / 8 ∧
+             z ^ (2 : ℕ) * |D2 (q x)| ≤ (1 / 8 : ℝ)) ∧
+         ν.real Jsafeᶜ = P₀.real Ssafeᶜ ∧
+         P₀.real Ssafeᶜ = P.real Ssafeᶜ ∧
+         P.real Ssafeᶜ ≤ P.real Hsourceᶜ ∧
+         P.real Hsourceᶜ ≤ payment ∧ ν.real Jsafeᶜ ≤ payment ∧
+         P.real Ssafeᶜ ≤ payment ∧
+         P.real physicalBad ≤ payment ∧ P.real Eclip ≤ payment ∧
+         (∀ (BorelEvent : Set ℝ), MeasurableSet[borel ℝ] BorelEvent →
+           |P.real (physical ⁻¹' BorelEvent) -
+             ν.real ((fun x => T0 (q x)) ⁻¹' BorelEvent)| ≤ P.real Eclip ∧
+           |P.real (physical ⁻¹' BorelEvent) -
+             ν.real ((fun x => T0 (q x)) ⁻¹' BorelEvent)| ≤ payment) ∧
+         (∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (η k i)) ∧
+         (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧
+           Measurable[mAug, borel ℝ] (Dη k) ∧ MeasurableSet[mAug] (E k)) ∧
+         MeasurableSet[mAug] E2 ∧ MeasurableSet[mAug] Z ∧
+         (∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+           Filter.Tendsto (fun k : ℕ => η k i x) Filter.atTop (nhds (ξ i x))) ∧
+         (∀ x : Fin n → Ω × ℝ, Filter.Tendsto (fun k : ℕ => Wη k x)
+           Filter.atTop (nhds (W x))) ∧
+         (∀ x : Fin n → Ω × ℝ, Filter.Tendsto (fun k : ℕ => Vη k x)
+           Filter.atTop (nhds (V x))) ∧
+         (∀ x : Fin n → Ω × ℝ, Filter.Tendsto (fun k : ℕ => Qε k x)
+           Filter.atTop (nhds (0 : ℝ))) ∧
+         (∀ x : Fin n → Ω × ℝ, Filter.Tendsto (fun k : ℕ => Dη k x)
+           Filter.atTop (nhds (D1 (q x)))) ∧
+         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+           (7 / 8 : ℝ) ≤ 1 + D2 (q x) ∧ 0 < b x) ∧
+         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+           ∀ᶠ k : ℕ in Filter.atTop, 0 < Vη k x ∧ z * |Dη k x| ≤ Vη k x / 4) ∧
+         E2 ⊆ Jsafeᶜ ∧ Z ⊆ Jsafeᶜ ∧
+         ν.real E2 ≤ ν.real Jsafeᶜ ∧ ν.real Z ≤ ν.real Jsafeᶜ ∧
+         ν.real E2 ≤ payment ∧ ν.real Z ≤ payment ∧
+         (∀ γ : ℝ, 0 < γ → ∀ᶠ k : ℕ in Filter.atTop,
+           ν.real (E k) ≤ ν.real Jsafeᶜ + γ) ∧
+         Filter.limsup (fun k : ℕ => ν.real (E k)) Filter.atTop ≤ ν.real Jsafeᶜ ∧
+         (∀ γ : ℝ, 0 < γ → ∀ᶠ k : ℕ in Filter.atTop,
+           ν.real (E k) ≤ payment + γ ∧
+           ν.real (E k) + P.real physicalBad ≤ 2 * payment + γ) ∧
+         Filter.limsup (fun k : ℕ => ν.real (E k)) Filter.atTop ≤ payment ∧
+         Filter.limsup (fun k : ℕ => ν.real (E k) + P.real physicalBad)
+           Filter.atTop ≤ 2 * payment ∧
+         ∀ (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+           (hgp : Integrable[mΩ] (fun o : Ω => Real.rpow |g o| p) μ)
+           (cBudget : ℝ) (hcBudget : 0 < cBudget),
+         let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+         let cWindow : ℝ := Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)
+         let Fz : ℝ → ℝ := fun t => (z * t) ^ 2 * min |z * t| 1
+         let δ0 : Fin n → ℝ := fun i => ∫ x, Fz (ξ i x) ∂ν
+         let δη : ℕ → Fin n → ℝ := fun k i => ∫ x, Fz (η k i x) ∂ν
+         let L0 : ℝ := ∑ i : Fin n, δ0 i
+         let Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i
+         ((β = 0 ∨ (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+             Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →
+           ∀ (τ δ γ : ℝ), 0 < τ → 0 < δ → 0 < γ →
+             ∃ k₀ : ℕ, ∀ k : ℕ, k₀ ≤ k →
+               (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧
+               Lη k < cBudget * z ^ 2 ∧
+               (∫ x, |Qε k x| ∂ν) < τ ∧
+               |sourceCostη k - sourceCost0| < τ ∧
+               |compactCostη k - compactCost0| < τ ∧
+               sourceCostη k ≤
+                 64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) *
+                   (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) + δ ∧
+               ν.real (E k) ≤ payment + γ ∧
+               ν.real (E k) + P.real physicalBad ≤ 2 * payment + γ)
