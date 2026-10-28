@@ -1,0 +1,16 @@
+theorem bounded_parabola_legendre_zero_and_strictly_positive
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) :
+    ∀ z : ℝ × ℝ,
+      0 ≤ Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z ∧
+        (Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z = 0 ↔
+          z = (∫ x : ℝ, x ∂mu, ∫ x : ℝ, x ^ 2 ∂mu)) ∧
+        (z ≠ (∫ x : ℝ, x ∂mu, ∫ x : ℝ, x ^ 2 ∂mu) →
+          0 < Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z) := by
+
+theorem bounded_centered_parabola_positive_tail_rate
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (hmean : (∫ x : ℝ, x ∂mu) = 0)
+    (level : ℝ) (hlevel : 0 < level) (z : ℝ × ℝ)
+    (hzq : 0 < z.2) (hzcone : level * Real.sqrt z.2 ≤ z.1) :
+    0 < Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z := by

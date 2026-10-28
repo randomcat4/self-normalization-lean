@@ -1,0 +1,8 @@
+theorem symmetric_eight_atom_positive_energy_support
+    (a : Fin 8 → ℝ) (ha : ∀ i, 1 ≤ a i) :
+    let A : Fin (8 + 8) → ℝ := Fin.append a (fun i => -a i)
+    let mu : Measure ℝ := Measure.sum fun k : Fin (8 + 8) =>
+      ENNReal.ofReal ((1 : ℝ) / 16) • Measure.dirac (A k)
+    let B : ℝ := ∑ i : Fin 8, |a i|
+    0 < B ∧ (∀ᵐ x ∂mu, 1 ≤ |x| ∧ |x| ≤ B) ∧
+      (∀ᵐ x ∂mu, 1 ≤ x ^ 2 ∧ x ^ 2 ≤ B ^ 2) ∧ 0 < mu (Set.Ioi 0) := by

@@ -1,0 +1,13 @@
+theorem bounded_centered_parabola_small_positive_global_minimum
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (lower upper : ℝ) (hlower : 0 < lower)
+    (henergy : ∀ᵐ x ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper)
+    (hmean : (∫ x : ℝ, x ∂mu) = 0) (hdet : (parabolaCovariance mu).det ≠ 0) :
+    ∃ epsilon : ℝ, 0 < epsilon ∧ epsilon ≤ 1 ∧
+      ∀ level : ℝ, 0 < level → level < epsilon → ∃ z : ℝ × ℝ,
+        0 < z.2 ∧ level * Real.sqrt z.2 ≤ z.1 ∧
+          0 ≤ Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z ∧
+          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z < ⊤ ∧
+          ∀ y : ℝ × ℝ, 0 < y.2 → level * Real.sqrt y.2 ≤ y.1 →
+            Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) z ≤
+              Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) y := by
