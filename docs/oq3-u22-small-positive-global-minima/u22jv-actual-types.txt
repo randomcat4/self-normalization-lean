@@ -1,0 +1,16 @@
+DECL Shao.OQ3.bounded_parabola_rectangle_exponential_separation
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (M : ℝ),
+  0 ≤ M →
+    (∀ᵐ (x : ℝ) ∂mu, |x| ≤ M) →
+      ∀ (lower upper : ℝ),
+        (∀ᵐ (x : ℝ) ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper) →
+          (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) = Set.univ ∧
+            ∀ (z : ℝ × ℝ),
+              z.1 < -M ∨ M < z.1 ∨ z.2 < lower ∨ upper < z.2 →
+                ∀ (L : ℝ),
+                  ∃ theta,
+                    L <
+                      (↑theta).1 * z.1 + (↑theta).2 * z.2 -
+                        Shao.Probability.bivariateLogMGF mu (fun x => (x, x ^ 2)) theta
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

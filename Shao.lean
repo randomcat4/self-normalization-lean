@@ -273,9 +273,16 @@ import Shao.OQ3.BoundedActualQuadraticExteriorExponentialBound
 import Shao.OQ3.BoundedActualSelfNormalizedTailLaplace
 import Shao.OQ3.BoundedActualSelfNormalizedTailUniqueMinimum
 import Shao.OQ3.BoundedCanonicalActualTailScaledExpansion
+import Shao.OQ3.BoundedCenteredParabolaMinimumLocalization
+import Shao.OQ3.BoundedCenteredParabolaSmallPositiveMinimum
 import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
+import Shao.OQ3.BoundedParabolaLegendreCompactSublevels
+import Shao.OQ3.BoundedParabolaLegendreZeroSet
+import Shao.OQ3.BoundedParabolaMeanRateGap
+import Shao.OQ3.BoundedParabolaRectangleSeparation
+import Shao.OQ3.BoundedParabolaTailGlobalMinimum
 import Shao.OQ3.BoundedPhysicalWindowActualGaussian
 import Shao.OQ3.BoundedPhysicalWindowContinuousRate
 import Shao.OQ3.BoundedPhysicalWindowCovarianceGaussianSum
@@ -565,9 +572,12 @@ import Shao.OQ3.StandardizedPairQuarticExponentialError
 import Shao.OQ3.StandardizedPairQuarticLogRemainder
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
+import Shao.OQ3.SymmetricEightAtomCompactTiltWitness
 import Shao.OQ3.SymmetricEightAtomCoordinateGaps
 import Shao.OQ3.SymmetricEightAtomDiophantine
 import Shao.OQ3.SymmetricEightAtomLaw
+import Shao.OQ3.SymmetricEightAtomPositiveEnergySupport
+import Shao.OQ3.SymmetricEightAtomSmallPositiveMinimum
 import Shao.OQ3.SymmetricEightAtomWeakCramer
 import Shao.OQ3.SymmetricEightAtomWeakCramerExistence
 import Shao.OQ3.SymmetricEightAtomWeakCramerNonlattice
@@ -908,6 +918,8 @@ import Shao.OQ6.OriginalGhostGoodEvent
 import Shao.OQ6.OriginalGoodEventBridge
 import Shao.OQ6.OriginalGoodEventProbability
 import Shao.OQ6.OriginalKernelObservableTransport
+import Shao.OQ6.OriginalLevelDependentClippedSourcePackage
+import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLowEnergyTail
@@ -921,6 +933,7 @@ import Shao.OQ6.OriginalSameWitnessClippedTailApplication
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
 import Shao.OQ6.OriginalSameWitnessEventualTailApplication
 import Shao.OQ6.OriginalSameWitnessPhysicalPaidTailApplication
+import Shao.OQ6.OriginalSameWitnessPhysicalRelativeTailApplication
 import Shao.OQ6.OriginalSameWitnessScalarTailApplication
 import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment

@@ -1,0 +1,46 @@
+theorem actual_original_level_dependent_weighted_source_cost
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 4 ≤ n)
+    (z : ℝ) (hz : 1 ≤ z)
+    (hwindow : z ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ)))
+    (C0 : ℝ) (hC0 : 0 ≤ C0) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let rho : ℝ := Real.sqrt v
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let N : ℝ := Real.sqrt (n : ℝ)
+    let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+    let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+    let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho z
+    let Bdelete : (Fin n → Ω) → Fin n → ℝ :=
+      studentizerClipBudgetDeleted n r C0 rho z
+    let S : (Fin n → Ω) → ℝ := fun ζ =>
+      ∑ j : Fin n, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+    let Sdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+      ∑ j ∈ Finset.univ.erase i, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+    let fullTest : (Fin n → Ω) → ℝ := fun ζ =>
+      z * |D1 ζ| + z ^ 2 * B ζ
+    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+      min |z * ξ0 i ζ| 1 *
+        (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +
+          z * |B ζ - Bdelete ζ i|)
+    let I : ℝ := ∫ ζ, Real.exp (S ζ) ∂P
+    let sourceCost : ℝ :=
+      ((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +
+        ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I
+    0 < I ∧
+    Integrable (fun ζ => fullTest ζ * Real.exp (S ζ)) P ∧
+    (∀ i : Fin n,
+      Integrable (fun ζ => deletedTest ζ i * Real.exp (Sdelete ζ i)) P) ∧
+    0 ≤ sourceCost ∧
+    sourceCost ≤
+      64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * C0) * (1 + rho) *
+        (1 + z) ^ 3 / Real.sqrt (n : ℝ)

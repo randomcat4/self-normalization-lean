@@ -1,0 +1,298 @@
+  classical
+  dsimp only
+  let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+  let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+  let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+  let rho : ℝ := Real.sqrt v
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  let N : ℝ := Real.sqrt (n : ℝ)
+  let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+  let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+  let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho z
+  let Bdelete : (Fin n → Ω) → Fin n → ℝ :=
+    studentizerClipBudgetDeleted n r C0 rho z
+  let S : (Fin n → Ω) → ℝ := fun ζ =>
+    ∑ j : Fin n, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+  let Sdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+    ∑ j ∈ Finset.univ.erase i, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+  let fullTest : (Fin n → Ω) → ℝ := fun ζ =>
+    z * |D1 ζ| + z ^ 2 * B ζ
+  let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+    min |z * ξ0 i ζ| 1 *
+      (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +
+        z * |B ζ - Bdelete ζ i|)
+  let I : ℝ := ∫ ζ, Real.exp (S ζ) ∂P
+  let sourceCost : ℝ :=
+    ((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +
+      ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I
+  let φ : Ω → ℝ := fun o =>
+    z * (g o / N) - (z * (g o / N)) ^ 2 / 2
+  let m : ℝ := ∫ o, Real.exp (φ o) ∂μ
+  let e : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ζ j k => r (ζ j) (ζ k)
+  let L : (Fin n → Ω) → ℝ := fun ζ =>
+    ∑ j : Fin n, (Shao.OQ6.ResidualDeletion.rowSum (e ζ) j) ^ 2
+  let Ldelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+    ∑ j : Fin n, (Shao.OQ6.ResidualDeletion.rowSum
+      (Shao.OQ6.ResidualDeletion.eraseIncident (e ζ) i) j) ^ 2
+  let K : ℝ := ((n : ℝ) - 2) ^ 2
+  let Q : ℝ := (1 + rho) * z * N
+  let A : ℝ := (1 + rho) * z / N
+  let denA : ℝ := (1 + rho) * z * ((n : ℝ) ^ 2 * N)
+  let k : ℝ := C0 / (K * Q)
+  let kA : ℝ := (4 * C0) / denA
+  let BA : (Fin n → Ω) → ℝ := fun ζ =>
+    (4 * C0) * (A + L ζ / denA)
+  let BAdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+    (4 * C0) * (A + Ldelete ζ i / denA)
+  let sourceFull : (Fin n → Ω) → ℝ := fun ζ => z * |D1 ζ| + z ^ 2 * BA ζ
+  let sourceDelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+    min |z * ξ0 i ζ| 1 *
+      (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +
+        z * |BA ζ - BAdelete ζ i|)
+  let Pa : Measure (Fin n → Ω) := P.tilted S
+  let R : (Fin n → Ω) → Fin n → ℝ := fun ζ i => Real.exp (Sdelete ζ i) / I
+  let sourceCostA : ℝ :=
+    ((∫ ζ, sourceFull ζ * Real.exp (S ζ) ∂P) +
+      ∑ i : Fin n, ∫ ζ, sourceDelete ζ i * Real.exp (Sdelete ζ i) ∂P) / I
+  change 0 < I ∧
+    Integrable (fun ζ => fullTest ζ * Real.exp (S ζ)) P ∧
+    (∀ i : Fin n, Integrable (fun ζ => deletedTest ζ i * Real.exp (Sdelete ζ i)) P) ∧
+    0 ≤ sourceCost ∧
+    sourceCost ≤ 64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * C0) *
+      (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ)
+  have hn3 : 3 ≤ n := Nat.le_trans (by norm_num : 3 ≤ 4) hn
+  have hnR : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hnpos : 0 < (n : ℝ) := by linarith only [hnR]
+  have hNpos : 0 < N := Real.sqrt_pos.mpr hnpos
+  have hzpos : 0 < z := lt_of_lt_of_le (by norm_num : (0 : ℝ) < 1) hz
+  have hz0 : 0 ≤ z := hzpos.le
+  have hrho0 : 0 ≤ rho := Real.sqrt_nonneg v
+  have hspos : 0 < 1 + rho := by linarith only [hrho0]
+  have hQpos : 0 < Q := mul_pos (mul_pos hspos hzpos) hNpos
+  have hKpos : 0 < K := pow_pos (by linarith only [hnR] : 0 < (n : ℝ) - 2) 2
+  have hn2pos : 0 < (n : ℝ) ^ 2 := sq_pos_of_pos hnpos
+  have hA0 : 0 ≤ A := div_nonneg (mul_nonneg hspos.le hz0) hNpos.le
+  have hdenAeq : denA = (n : ℝ) ^ 2 * Q := by dsimp only [denA, Q]; ring
+  have hdenApos : 0 < denA := by rw [hdenAeq]; exact mul_pos hn2pos hQpos
+  have hk0 : 0 ≤ k := div_nonneg hC0 (mul_pos hKpos hQpos).le
+  have hkA0 : 0 ≤ kA := div_nonneg (mul_nonneg (by norm_num) hC0) hdenApos.le
+  have hdenCompare : (n : ℝ) ^ 2 ≤ 4 * K := by
+    dsimp only [K]
+    nlinarith only [hnR, sq_nonneg ((n : ℝ) - 4)]
+  have hcoeff : k ≤ kA := by
+    dsimp only [k, kA]
+    rw [hdenAeq]
+    apply (div_le_div_iff₀ (mul_pos hKpos hQpos) (mul_pos hn2pos hQpos)).mpr
+    calc
+      C0 * ((n : ℝ) ^ 2 * Q) = (C0 * (n : ℝ) ^ 2) * Q := by ring
+      _ ≤ (C0 * (4 * K)) * Q :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hdenCompare hC0) hQpos.le
+      _ = (4 * C0) * (K * Q) := by ring
+  have hL0 (ζ : Fin n → Ω) : 0 ≤ L ζ :=
+    Finset.sum_nonneg (fun j _ => sq_nonneg _)
+  have hJform (ζ : Fin n → Ω) : residualEnergyJ n r ζ = L ζ / K :=
+    residualEnergyJ_eq_rowSqSum n r ζ
+  have hBform (ζ : Fin n → Ω) : B ζ = C0 * A + k * L ζ := by
+    change C0 * (A + residualEnergyJ n r ζ / Q) = _
+    rw [hJform ζ, div_div]
+    dsimp only [k]
+    ring
+  have hBdeleteform (ζ : Fin n → Ω) (i : Fin n) :
+      Bdelete ζ i = C0 * A + k * Ldelete ζ i := by
+    change C0 * (A + (Ldelete ζ i / K) / Q) = _
+    rw [div_div]
+    dsimp only [k]
+    ring
+  have hBAform (ζ : Fin n → Ω) : BA ζ = (4 * C0) * A + kA * L ζ := by
+    dsimp only [BA, kA]
+    ring
+  have hBAdeleteform (ζ : Fin n → Ω) (i : Fin n) :
+      BAdelete ζ i = (4 * C0) * A + kA * Ldelete ζ i := by
+    dsimp only [BAdelete, kA]
+    ring
+  have hB0 (ζ : Fin n → Ω) : 0 ≤ B ζ := by
+    rw [hBform ζ]
+    exact add_nonneg (mul_nonneg hC0 hA0) (mul_nonneg hk0 (hL0 ζ))
+  have hBdom (ζ : Fin n → Ω) : B ζ ≤ BA ζ := by
+    rw [hBform ζ, hBAform ζ]
+    exact add_le_add
+      (mul_le_mul_of_nonneg_right (by linarith only [hC0] : C0 ≤ 4 * C0) hA0)
+      (mul_le_mul_of_nonneg_right hcoeff (hL0 ζ))
+  -- The shared deterministic terms cancel BEFORE taking absolute values.
+  have hBdiff (ζ : Fin n → Ω) (i : Fin n) :
+      |B ζ - Bdelete ζ i| = k * |L ζ - Ldelete ζ i| := by
+    rw [hBform ζ, hBdeleteform ζ i]
+    rw [show C0 * A + k * L ζ - (C0 * A + k * Ldelete ζ i) =
+      k * (L ζ - Ldelete ζ i) by ring]
+    rw [abs_mul, abs_of_nonneg hk0]
+  have hBAdiff (ζ : Fin n → Ω) (i : Fin n) :
+      |BA ζ - BAdelete ζ i| = kA * |L ζ - Ldelete ζ i| := by
+    rw [hBAform ζ, hBAdeleteform ζ i]
+    rw [show (4 * C0) * A + kA * L ζ - ((4 * C0) * A + kA * Ldelete ζ i) =
+      kA * (L ζ - Ldelete ζ i) by ring]
+    rw [abs_mul, abs_of_nonneg hkA0]
+  have hBdiffdom (ζ : Fin n → Ω) (i : Fin n) :
+      |B ζ - Bdelete ζ i| ≤ |BA ζ - BAdelete ζ i| := by
+    rw [hBdiff ζ i, hBAdiff ζ i]
+    exact mul_le_mul_of_nonneg_right hcoeff (abs_nonneg _)
+  have hg : Measurable g := hh.stronglyMeasurable.integral_prod_right'.measurable
+  have hr : Measurable (fun t : Ω × Ω => r t.1 t.2) :=
+    (hh.sub (hg.comp measurable_fst)).sub (hg.comp measurable_snd)
+  have hφ : Measurable φ :=
+    ((hg.div_const N).const_mul z).sub
+      ((((hg.div_const N).const_mul z).pow_const (2 : ℕ)).div_const 2)
+  have hw : Integrable (fun o => Real.exp (φ o)) μ := by
+    apply (integrable_const (Real.exp (1 / 2 : ℝ))).mono' hφ.exp.aestronglyMeasurable
+    exact Filter.Eventually.of_forall fun o => by
+      rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+      exact (Shao.OQ6.QuadraticTilt.weight_bounds (z * (g o / N)) 0).2.1
+  have hNorm : I = m ^ n := by
+    simpa only [I, S, ξ0, φ, m, Finset.prod_const, Finset.card_univ, Fintype.card_fin] using
+      (Shao.OQ6.finite_observation_product_tilt n (fun _ : Fin n => μ)
+        (fun _ : Fin n => φ) (fun _ : Fin n => hw)).2.1
+  have hIpos : 0 < I := by
+    exact (Shao.OQ6.finite_observation_product_tilt n (fun _ : Fin n => μ)
+      (fun _ : Fin n => φ) (fun _ : Fin n => hw)).2.2.1
+  have hscale (o : Ω) : (z / N) * g o = z * (g o / N) := by ring
+  -- This is the accepted analytic producer, instantiated once at coefficient 4*C0.
+  have hSource :
+      Integrable (fun ζ => sourceFull ζ * Real.exp (S ζ)) P ∧
+      (∀ i : Fin n, Integrable (fun ζ => sourceDelete ζ i * Real.exp (Sdelete ζ i)) P) ∧
+      sourceCostA =
+        z * (∫ ζ, |D1 ζ| ∂Pa) + z ^ 2 * (∫ ζ, BA ζ ∂Pa) +
+          ∑ i : Fin n, ∫ ζ, R ζ i * sourceDelete ζ i ∂P ∧
+      sourceCostA ≤ 64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * C0) *
+        (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) := by
+    dsimp only [sourceCostA, R, Pa]
+    simp only [hNorm]
+    simpa only [g, r, v, rho, P, N, ξ0, D1, S, Sdelete, φ, m,
+      e, L, Ldelete, A, denA, BA, BAdelete, sourceFull, sourceDelete,
+      residualStatisticD, residualStatisticDDeleted,
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper,
+      Shao.OQ5.P35.unorderedPairSum, div_mul_eq_mul_div, mul_div_assoc] using
+      (Shao.OQ6.SourceAnalyticCost.actual_quadratic_source_analytic_cost
+        μ h hh hh2 hhsymm hcenter hprojectionsecond n hn3 z hz hwindow
+        (4 * C0) (mul_nonneg (by norm_num) hC0))
+  have hEdgeM (j k' : Fin n) : Measurable (fun ζ : Fin n → Ω => e ζ j k') := by
+    simpa only [e, Function.comp_def] using
+      hr.comp ((measurable_pi_apply j).prodMk (measurable_pi_apply k'))
+  have hEraseM (i j k' : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      Shao.OQ6.ResidualDeletion.eraseIncident (e ζ) i j k') := by
+    by_cases hij : j = i ∨ k' = i
+    · simpa only [Shao.OQ6.ResidualDeletion.eraseIncident, if_pos hij] using
+        (measurable_const : Measurable (fun _ : Fin n → Ω => (0 : ℝ)))
+    · simpa only [Shao.OQ6.ResidualDeletion.eraseIncident, if_neg hij] using hEdgeM j k'
+  have hPairM : Measurable (fun ζ : Fin n → Ω => Shao.OQ5.P35.unorderedPairSum (e ζ)) := by
+    unfold Shao.OQ5.P35.unorderedPairSum
+    apply Finset.measurable_sum
+    intro j hj
+    apply Finset.measurable_sum
+    intro k' hk'
+    by_cases hjk : j < k'
+    · simpa only [if_pos hjk] using hEdgeM j k'
+    · simpa only [if_neg hjk] using
+        (measurable_const : Measurable (fun _ : Fin n → Ω => (0 : ℝ)))
+  have hPairDeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      Shao.OQ5.P35.unorderedPairSum (Shao.OQ6.ResidualDeletion.eraseIncident (e ζ) i)) := by
+    unfold Shao.OQ5.P35.unorderedPairSum
+    apply Finset.measurable_sum
+    intro j hj
+    apply Finset.measurable_sum
+    intro k' hk'
+    by_cases hjk : j < k'
+    · simpa only [if_pos hjk] using hEraseM i j k'
+    · simpa only [if_neg hjk] using
+        (measurable_const : Measurable (fun _ : Fin n → Ω => (0 : ℝ)))
+  have hDM : Measurable (fun ζ : Fin n → Ω => |D1 ζ|) := by
+    simpa only [D1, residualStatisticD, N, e, Shao.OQ5.P35.unorderedPairSum,
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper, Real.norm_eq_abs] using
+      (hPairM.div_const (N * ((n : ℝ) - 1))).norm
+  have hDdeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      |residualStatisticDDeleted n r ζ i|) := by
+    simpa only [residualStatisticDDeleted, N, e, Real.norm_eq_abs] using
+      ((hPairDeleteM i).div_const (N * ((n : ℝ) - 1))).norm
+  have hRowM (j : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      Shao.OQ6.ResidualDeletion.rowSum (e ζ) j) := by
+    unfold Shao.OQ6.ResidualDeletion.rowSum
+    exact Finset.measurable_sum _ (fun k' _ => hEdgeM j k')
+  have hRowDeleteM (i j : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      Shao.OQ6.ResidualDeletion.rowSum (Shao.OQ6.ResidualDeletion.eraseIncident (e ζ) i) j) := by
+    unfold Shao.OQ6.ResidualDeletion.rowSum
+    exact Finset.measurable_sum _ (fun k' _ => hEraseM i j k')
+  have hLM : Measurable L :=
+    Finset.measurable_sum _ (fun j _ => (hRowM j).pow_const 2)
+  have hLdeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω => Ldelete ζ i) :=
+    Finset.measurable_sum _ (fun j _ => (hRowDeleteM i j).pow_const 2)
+  have hBM : Measurable B := by
+    change Measurable (fun ζ : Fin n → Ω => B ζ)
+    simp_rw [hBform]
+    exact measurable_const.add (hLM.const_mul k)
+  have hBdeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω => Bdelete ζ i) := by
+    simp_rw [hBdeleteform]
+    exact measurable_const.add ((hLdeleteM i).const_mul k)
+  have hξM (i : Fin n) : Measurable (ξ0 i) :=
+    (hg.comp (measurable_pi_apply i)).div_const N
+  have hphaseM (j : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2) :=
+    ((hξM j).const_mul z).sub ((((hξM j).const_mul z).pow_const (2 : ℕ)).div_const 2)
+  have hSM : Measurable S := Finset.measurable_sum _ (fun j _ => hphaseM j)
+  have hSdeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω => Sdelete ζ i) :=
+    Finset.measurable_sum _ (fun j _ => hphaseM j)
+  have hcapM (i : Fin n) : Measurable (fun ζ : Fin n → Ω => min |z * ξ0 i ζ| 1) := by
+    simpa only [Real.norm_eq_abs] using ((hξM i).const_mul z).norm.min measurable_const
+  have hFullM : Measurable (fun ζ : Fin n → Ω => fullTest ζ * Real.exp (S ζ)) :=
+    ((hDM.const_mul z).add (hBM.const_mul (z ^ 2))).mul hSM.exp
+  have hDeleteM (i : Fin n) : Measurable (fun ζ : Fin n → Ω =>
+      deletedTest ζ i * Real.exp (Sdelete ζ i)) := by
+    have hAbsD : Measurable (fun ζ : Fin n → Ω =>
+        |(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)|) := by
+      simpa only [Real.norm_eq_abs, Pi.sub_apply] using (hDM.sub (hDdeleteM i)).norm
+    have hAbsB : Measurable (fun ζ : Fin n → Ω => |B ζ - Bdelete ζ i|) := by
+      simpa only [Real.norm_eq_abs, Pi.sub_apply] using (hBM.sub (hBdeleteM i)).norm
+    exact ((hcapM i).mul (hAbsD.add (hAbsB.const_mul z))).mul (hSdeleteM i).exp
+  have hcap0 (ζ : Fin n → Ω) (i : Fin n) : 0 ≤ min |z * ξ0 i ζ| 1 :=
+    le_min (abs_nonneg _) (by norm_num)
+  have hFull0 (ζ : Fin n → Ω) : 0 ≤ fullTest ζ * Real.exp (S ζ) :=
+    mul_nonneg (add_nonneg (mul_nonneg hz0 (abs_nonneg _))
+      (mul_nonneg (sq_nonneg z) (hB0 ζ))) (Real.exp_pos _).le
+  have hDelete0 (ζ : Fin n → Ω) (i : Fin n) :
+      0 ≤ deletedTest ζ i * Real.exp (Sdelete ζ i) :=
+    mul_nonneg (mul_nonneg (hcap0 ζ i)
+      (add_nonneg (abs_nonneg _) (mul_nonneg hz0 (abs_nonneg _)))) (Real.exp_pos _).le
+  have hFullDom (ζ : Fin n → Ω) :
+      fullTest ζ * Real.exp (S ζ) ≤ sourceFull ζ * Real.exp (S ζ) := by
+    apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
+    exact add_le_add_left (mul_le_mul_of_nonneg_left (hBdom ζ) (sq_nonneg z)) _
+  have hDeleteDom (ζ : Fin n → Ω) (i : Fin n) :
+      deletedTest ζ i * Real.exp (Sdelete ζ i) ≤
+        sourceDelete ζ i * Real.exp (Sdelete ζ i) := by
+    apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
+    apply mul_le_mul_of_nonneg_left _ (hcap0 ζ i)
+    exact add_le_add_left (mul_le_mul_of_nonneg_left (hBdiffdom ζ i) hz0) _
+  have hFullI : Integrable (fun ζ => fullTest ζ * Real.exp (S ζ)) P := by
+    apply hSource.1.mono' hFullM.aestronglyMeasurable
+    exact Filter.Eventually.of_forall fun ζ => by
+      rw [Real.norm_eq_abs, abs_of_nonneg (hFull0 ζ)]
+      exact hFullDom ζ
+  have hDeleteI (i : Fin n) : Integrable
+      (fun ζ => deletedTest ζ i * Real.exp (Sdelete ζ i)) P := by
+    apply (hSource.2.1 i).mono' (hDeleteM i).aestronglyMeasurable
+    exact Filter.Eventually.of_forall fun ζ => by
+      rw [Real.norm_eq_abs, abs_of_nonneg (hDelete0 ζ i)]
+      exact hDeleteDom ζ i
+  have hNum0 : 0 ≤ (∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +
+      ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P :=
+    add_nonneg (integral_nonneg hFull0)
+      (Finset.sum_nonneg (fun i _ => integral_nonneg (fun ζ => hDelete0 ζ i)))
+  have hNumDom :
+      (∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +
+          ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P ≤
+        (∫ ζ, sourceFull ζ * Real.exp (S ζ) ∂P) +
+          ∑ i : Fin n, ∫ ζ, sourceDelete ζ i * Real.exp (Sdelete ζ i) ∂P :=
+    add_le_add (integral_mono hFullI hSource.1 hFullDom)
+      (Finset.sum_le_sum (fun i _ =>
+        integral_mono (hDeleteI i) (hSource.2.1 i) (fun ζ => hDeleteDom ζ i)))
+  have hCostDom : sourceCost ≤ sourceCostA :=
+    div_le_div_of_nonneg_right hNumDom hIpos.le
+  exact ⟨hIpos, hFullI, hDeleteI, div_nonneg hNum0 hIpos.le,
+    hCostDom.trans hSource.2.2.2⟩
