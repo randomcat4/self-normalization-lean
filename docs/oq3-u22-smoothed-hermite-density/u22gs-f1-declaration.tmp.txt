@@ -1,0 +1,13 @@
+theorem gaussian_smoothed_pair_absolute_tail_bound
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b R : ℝ) (hb : 0 < b) (hR : 0 ≤ R)
+    (s : Set (ℝ × ℝ)) (hs : MeasurableSet s)
+    (hout : ∀ z ∈ s, R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let Phi : (ℝ × ℝ) → ℂ := fun z =>
+      ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho
+    Integrable Phi ∧ IntegrableOn Phi s ∧
+      (∫ z in s, ‖Phi z‖) ≤ (2 * Real.pi / b) * Real.exp (-b * R ^ 2 / 2)
