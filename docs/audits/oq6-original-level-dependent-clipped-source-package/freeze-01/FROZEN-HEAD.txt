@@ -1,0 +1,86 @@
+theorem actual_original_level_dependent_clipped_source_package
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 4 ≤ n)
+    (z : ℝ) (hz : 1 ≤ z)
+    (hwindow : z ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ))) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let rho : ℝ := Real.sqrt v
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let N : ℝ := Real.sqrt (n : ℝ)
+    let W : (Fin n → Ω) → ℝ := projectionW n g
+    let V : (Fin n → Ω) → ℝ := projectionV n g
+    let D : (Fin n → Ω) → ℝ := residualStatisticD n r
+    let J : (Fin n → Ω) → ℝ := residualEnergyJ n r
+    let Ddelete : (Fin n → Ω) → Fin n → ℝ := residualStatisticDDeleted n r
+    let Jdelete : (Fin n → Ω) → Fin n → ℝ := residualEnergyJDeleted n r
+    let A : (Fin n → Ω) → ℝ := fun ζ => |D ζ|
+    let Adelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i => |Ddelete ζ i|
+    let B : (Fin n → Ω) → ℝ := studentizerClipBudget n r 512 rho z
+    let Bdelete : (Fin n → Ω) → Fin n → ℝ :=
+      studentizerClipBudgetDeleted n r 512 rho z
+    let d : (Fin n → Ω) → ℝ := centeredDelta n g r
+    let e : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho z
+    let Tclip : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r 512 rho z
+    let s : (Fin n → Ω) → ℝ := fun ζ => Real.sqrt (centeredSq n g r ζ)
+    let Tphysical : (Fin n → Ω) → ℝ := fun ζ =>
+      if s ζ = 0 then 0 else (W ζ + D ζ) / s ζ
+    let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+    let cap : (Fin n → Ω) → Fin n → ℝ := fun ζ i => min |z * ξ0 i ζ| 1
+    let S : (Fin n → Ω) → ℝ := fun ζ =>
+      ∑ j : Fin n, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+    let Sdelete : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+      ∑ j ∈ Finset.univ.erase i, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)
+    let fullTest : (Fin n → Ω) → ℝ := fun ζ => z * A ζ + z ^ 2 * B ζ
+    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+      cap ζ i * (|A ζ - Adelete ζ i| + z * |B ζ - Bdelete ζ i|)
+    let I : ℝ := ∫ ζ, Real.exp (S ζ) ∂P
+    let sourceCost : ℝ :=
+      ((∫ ζ, fullTest ζ * Real.exp (S ζ) ∂P) +
+        ∑ i : Fin n, ∫ ζ, deletedTest ζ i * Real.exp (Sdelete ζ i) ∂P) / I
+    Measurable W ∧ Measurable V ∧ Measurable D ∧ Measurable J ∧
+    Measurable A ∧ Measurable B ∧ Measurable d ∧ Measurable e ∧
+    Measurable s ∧ Measurable Tclip ∧ Measurable Tphysical ∧
+    Measurable fullTest ∧
+    MeasurableSet {ζ : Fin n → Ω | V ζ = 0} ∧
+    MeasurableSet {ζ : Fin n → Ω | s ζ = 0} ∧
+    (∀ ζ : Fin n → Ω,
+      (1 / 2 : ℝ) ≤ 1 + e ζ ∧ |e ζ| ≤ B ζ ∧ |e ζ| ≤ |d ζ| ∧
+      (0 < V ζ → 0 < V ζ * Real.sqrt (1 + e ζ))) ∧
+    (∀ ζ : Fin n → Ω, V ζ = 0 → d ζ = 0 ∧ e ζ = 0 ∧ Tclip ζ = 0) ∧
+    (∀ ζ : Fin n → Ω, s ζ = 0 → Tphysical ζ = 0) ∧
+    (∀ i : Fin n,
+      Measurable (fun ζ : Fin n → Ω => cap ζ i) ∧
+      Measurable (fun ζ : Fin n → Ω => Ddelete ζ i) ∧
+      Measurable (fun ζ : Fin n → Ω => Jdelete ζ i) ∧
+      Measurable (fun ζ : Fin n → Ω => Adelete ζ i) ∧
+      Measurable (fun ζ : Fin n → Ω => Bdelete ζ i) ∧
+      Measurable (fun ζ : Fin n → Ω => deletedTest ζ i) ∧
+      ∃ E : ({j : Fin n // j ≠ i} → Ω) → ℝ × ℝ × ℝ,
+        Measurable E ∧ ∀ ζ : Fin n → Ω,
+          (Ddelete ζ i, Jdelete ζ i, Bdelete ζ i) =
+            E (fun j : {j : Fin n // j ≠ i} => ζ j.val)) ∧
+    ((1 + rho) * z ≤ N →
+      (∀ ζ : Fin n → Ω, ζ ∈ projectionGood n g z →
+        -(1 / 2 : ℝ) ≤ d ζ →
+        e ζ = d ζ ∧ 0 < V ζ * Real.sqrt (1 + e ζ) ∧
+        0 < s ζ ∧ V ζ * Real.sqrt (1 + e ζ) = s ζ ∧
+        Tclip ζ = Tphysical ζ) ∧
+      {ζ : Fin n → Ω | Tclip ζ ≠ Tphysical ζ} ⊆
+        (projectionGood n g z)ᶜ ∪ lowerStudentizerBad n g r z) ∧
+    0 < I ∧
+    Integrable (fun ζ => fullTest ζ * Real.exp (S ζ)) P ∧
+    (∀ i : Fin n,
+      Integrable (fun ζ => deletedTest ζ i * Real.exp (Sdelete ζ i)) P) ∧
+    0 ≤ sourceCost ∧
+    sourceCost ≤
+      64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) * (1 + rho) *
+        (1 + z) ^ 3 / Real.sqrt (n : ℝ)
