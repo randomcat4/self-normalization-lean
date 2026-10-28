@@ -1,0 +1,13 @@
+# Unit 261 author interface report
+
+PROPOSAL_READY. The author has read complete exact sources 259 (1136c7f4…, 70472 bytes, 1114 LF) and 260 (67e7b06f…, 18477 bytes, 338 LF), including both proofs. This is interface-only work; no proof body has been written.
+
+The three `FROZEN-*-PROPOSAL.txt` files propose one theorem in `OriginalCurrentLevelPhysicalFiniteCostTail`. It retains original h product-measurability/L2/symmetry/centering/projection variance 1; the original-μ p-moment with 2<p≤3; the exact β=0 or positive-β cWindow branch; distinct tilt, product-envelope and physical-geometry windows; and the original-law nonnegative/bounded-height/L2/product envelope conditions. The broader-L2 `ScalarShaoZhouFiniteCostTailInput.{u}` stays an explicit conditional input.
+
+The public conclusion uses only original P: nonnegative sourceCost0, its existing cubic bound, the desired exact finite-cost Gaussian lower/upper bounds with −2payment/+4payment, and their immediate cubic-cost replacements. No pUpper/p2/pZ/pClip, event-payment, reduced-Hsource-measurability, coding-map or theorem-as-callback hypothesis is introduced. The one canonical m₀ is selected once internally from 259 before n,z,p/budget introduction. cg and eventual-n ordering are preserved.
+
+`MATHEMATICAL-ROUTE.md` maps every 260 primitive input to actual 259 bearing lines, keeping true AdeleteNew and full Iη/sourceCost0. The only analytic datum not explicitly printed as an integrability conjunct in the retained 259 packet is integrability of exp(Sη); the existing exact normalized projection API supplies it from 259's ξ/Y/ε primitives. An elementary bound exp(Sη)≤exp(n/2) supplies the same datum without an extra assumption. Four fees remain separate in the route and are each derived from 259 and internally set to its explicit payment.
+
+No mathematical interface gap was identified. 260 final qualification and lead freeze are pending before any implementation. The proposal has only deterministic local formatting/contract checks; it has not been elaborated, kernel checked, independently reviewed or axiom audited as a new result. Qualified old evidence is cited only at exact source hashes. No accepted check was rerun.
+
+The author retains exclusive authority over this directory and enters IDLE_PROPOSAL_READY, with no final implementation release. Requested model/effort are gpt-6.1-sol/xhigh; actual backend/model/effort and input/cached-input/output/reasoning-subset counts are unavailable and remain null. No children, Lean/lake/PP/AX/server/network/upload/Git/API/Goal/schedule/sidebar actions were used. Full OQ56, external SZ, CDF, relative-tail, DC and root scopes remain OPEN.
