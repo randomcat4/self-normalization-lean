@@ -1,0 +1,24 @@
+DECL Shao.OQ3.actual_mean_chart_local_compatibility
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (theta : ℝ × ℝ)
+  (e f : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+  (↑e = fun p =>
+      (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+        ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+    (↑f = fun p =>
+        (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+          ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+      theta ∈ e.source →
+        theta ∈ f.source →
+          have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+          have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+          have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+          have Je := fun w => (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - K (↑e.symm w);
+          have Jf := fun w => (↑f.symm w).1 * w.1 + (↑f.symm w).2 * w.2 - K (↑f.symm w);
+          have Ae := fun w => (√(Shao.OQ3.parabolaCovariance (nu (↑e.symm w))).det)⁻¹;
+          have Af := fun w => (√(Shao.OQ3.parabolaCovariance (nu (↑f.symm w))).det)⁻¹;
+          ↑e.symm (means theta) = theta ∧
+            ↑f.symm (means theta) = theta ∧
+              ∀ᶠ (w : ℝ × ℝ) in nhds (means theta),
+                w ∈ e.target ∧ w ∈ f.target ∧ ↑e.symm w = ↑f.symm w ∧ Je w = Jf w ∧ Ae w = Af w
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,46 @@
+theorem actual_mean_chart_boundary_taylor
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)
+    (htheta : theta ∈ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (hdet : 0 < (parabolaCovariance
+      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det)
+    (level a0 : ℝ) (hlevel : 0 < level) (ha0 : 0 < a0) (hnegative : theta.2 < 0)
+    (hmean : (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),
+      ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =
+        (a0, a0 ^ 2 / level ^ 2))
+    (hsaddle : theta.1 = -2 * a0 * theta.2 / level ^ 2)
+    (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ))
+    (he : (e : (ℝ × ℝ) → (ℝ × ℝ)) = fun p =>
+      (∫ x : ℝ, x ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2),
+        ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)))
+    (hte : theta ∈ e.source)
+    (hsource : e.source ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))) :
+    let Omega : Set (ℝ × ℝ) := interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))
+    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>
+      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)
+    let K : (ℝ × ℝ) → ℝ := fun p => Real.log
+      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance (nu theta)
+    let pr0 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+    let pr1 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
+    let row0 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 0 • pr0 + D 0 1 • pr1
+    let row1 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 1 • pr0 + D 1 1 • pr1
+    ∀ L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ),
+      (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) = row0.prod row1 →
+      let J : (ℝ × ℝ) → ℝ := fun w =>
+        (e.symm w).1 * w.1 + (e.symm w).2 * w.2 - K (e.symm w)
+      let G : (ℝ × ℝ) → (ℝ × ℝ) := fun w =>
+        (a0 + w.1, (a0 + w.1) ^ 2 / level ^ 2 - w.2)
+      let F : (ℝ × ℝ) → ℝ := fun w => J (G w)
+      let v : ℝ × ℝ := (1, 2 * a0 / level ^ 2)
+      let Lambda1 : ℝ := 2 * theta.2 / level ^ 2 +
+        (L.symm v).1 + (2 * a0 / level ^ 2) * (L.symm v).2
+      ContDiffAt ℝ ∞ F (0, 0) ∧
+        ∃ rho C : ℝ, 0 < rho ∧ 0 < C ∧ ∀ r z : ℝ,
+          |r| ≤ rho → 0 ≤ z → z ≤ rho →
+          |F (r, z) - F (0, 0) - (-theta.2) * z - Lambda1 / 2 * r ^ 2| ≤
+            C * (|r| ^ 3 + |r| * z + z ^ 2)
