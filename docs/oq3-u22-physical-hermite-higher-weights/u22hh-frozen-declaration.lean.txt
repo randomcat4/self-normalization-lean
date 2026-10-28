@@ -1,0 +1,11 @@
+theorem complex_six_order_higher_weight_growth_bound
+    (A : Fin 6 → ℝ) (hA : ∀ j, 0 ≤ A j) :
+    let W : (Fin 6 → ℂ) → ℂ := fun a =>
+      ∑ q : Fin 7, (1 / (q.val.factorial : ℂ)) *
+        ∑ sigma : Fin q.val → Fin 6,
+          if 2 ≤ (∑ l, ((sigma l).val + 1)) ∧
+            (∑ l, ((sigma l).val + 1)) ≤ 6 then ∏ l, a (sigma l) else 0
+    ∃ K : ℝ, 0 < K ∧ ∀ t r : ℝ, 0 ≤ t → t ≤ 1 → 0 ≤ r →
+      ∀ a : Fin 6 → ℂ,
+        (∀ j, ‖a j‖ ≤ A j * t ^ (j.val + 1) * r ^ (j.val + 3)) →
+        ‖W a‖ ≤ K * t ^ 2 * (1 + r ^ 18)

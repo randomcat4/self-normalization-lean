@@ -1,0 +1,35 @@
+DECL Shao.OQ3.uniform_actual_cgf_higher_weight_gaussian_integral_bound
+TYPE ∀ {ι : Type u_1} (law : ι → MeasureTheory.Measure (Fin 2 → ℝ)),
+  (∀ (i : ι), MeasureTheory.IsProbabilityMeasure (law i)) →
+    (∀ (i : ι) (u v : ℝ), 0 ∈ interior (ProbabilityTheory.integrableExpSet (fun y => u * y 0 + v * y 1) (law i))) →
+      (∀ (i : ι) (k : ℕ), MeasureTheory.Integrable (fun y => √(y 0 ^ 2 + y 1 ^ 2) ^ k) (law i)) →
+        ∀ (B : Fin 6 → ℝ),
+          (∀ (j : Fin 6), 0 ≤ B j) →
+            (∀ (j : Fin 6) (i : ι) (u v : ℝ),
+                |iteratedDeriv (↑j + 3) (ProbabilityTheory.cgf (fun y => u * y 0 + v * y 1) (law i)) 0| ≤
+                  B j * √(u ^ 2 + v ^ 2) ^ (↑j + 3)) →
+              have X := fun i z y => z.1 * y 0 + z.2 * y 1;
+              have kappa := fun i j z => iteratedDeriv j (ProbabilityTheory.cgf (X i z) (law i)) 0;
+              have a := fun i n z j =>
+                Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa i (↑j + 3) z) / ↑√↑n ^ (↑j + 1);
+              have Rn := fun i n z =>
+                Complex.exp (-↑(z.1 ^ 2 + z.2 ^ 2) / 2) *
+                  ∑ q,
+                    1 / ↑(↑q).factorial *
+                      ∑ sigma,
+                        if 2 ≤ ∑ l, (↑(sigma l) + 1) ∧ ∑ l, (↑(sigma l) + 1) ≤ 6 then ∏ l, a i n z (sigma l) else 0;
+              have kernel := fun x z => Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2));
+              ∃ C,
+                0 < C ∧
+                  ∀ (n : ℕ),
+                    1 ≤ n →
+                      ∀ (i : ι),
+                        Continuous (Rn i n) ∧
+                          MeasureTheory.Integrable (Rn i n) MeasureTheory.volume ∧
+                            MeasureTheory.Integrable (fun z => ‖Rn i n z‖) MeasureTheory.volume ∧
+                              ∫ (z : ℝ × ℝ), ‖Rn i n z‖ ≤ C / ↑n ∧
+                                ∀ (x : ℝ × ℝ),
+                                  MeasureTheory.Integrable (fun z => kernel x z * Rn i n z) MeasureTheory.volume ∧
+                                    ‖∫ (z : ℝ × ℝ), kernel x z * Rn i n z‖ ≤ C / ↑n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
