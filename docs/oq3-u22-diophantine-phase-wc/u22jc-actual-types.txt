@@ -1,0 +1,13 @@
+DECL Shao.OQ3.finite_atomic_joint_phase_gap
+TYPE ∀ (n : ℕ) (a w : Fin n → ℝ),
+  (∀ (k : Fin n), 0 ≤ w k) →
+    ∑ k, w k = 1 →
+      have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (w k) • MeasureTheory.Measure.dirac (a k);
+      MeasureTheory.IsProbabilityMeasure mu ∧
+        ∀ (xi eta : ℝ),
+          Shao.OQ3.jointCharacteristic mu xi eta = ∑ k, w k • Shao.OQ3.jointPhase xi eta (a k) ∧
+            ∀ (i j : Fin n),
+              w i * w j / 4 * ‖Shao.OQ3.jointPhase xi eta (a i) - Shao.OQ3.jointPhase xi eta (a j)‖ ^ 2 ≤
+                1 - ‖Shao.OQ3.jointCharacteristic mu xi eta‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

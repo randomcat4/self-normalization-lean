@@ -1,0 +1,26 @@
+DECL Shao.OQ3.symmetric_eight_atom_weak_cramer_of_diophantine_bounds
+TYPE ∀ (a : Fin 8 → ℝ) (cL cQ TL TQ : ℝ),
+  0 < cL →
+    0 < cQ →
+      0 ≤ TL →
+        0 ≤ TQ →
+          (∀ (t : ℝ), TL < |t| → ∃ i, ∀ (k : ℤ), cL * |t|.rpow (-3 / 16) ≤ |2 * t * a i - 2 * Real.pi * ↑k|) →
+            (∀ (t : ℝ),
+                TQ < |t| →
+                  ∃ j,
+                    ∀ (k : ℤ), cQ * |t|.rpow (-3 / 16) ≤ |2 * t * a j.succ ^ 2 - 2 * t * a 0 ^ 2 - 2 * Real.pi * ↑k|) →
+              have A := Fin.append a fun i => -a i;
+              have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+              ∃ c,
+                0 < c ∧
+                  ∃ R,
+                    0 ≤ R ∧
+                      ∀ (xi eta : ℝ),
+                        R < √(xi ^ 2 + eta ^ 2) →
+                          ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤ 1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-3 / 8)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.jointPhase.eq_1
+TYPE ∀ (xi eta x : ℝ), Shao.OQ3.jointPhase xi eta x = Complex.exp (↑(xi * x + eta * x ^ 2) * Complex.I)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

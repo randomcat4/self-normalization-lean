@@ -1,0 +1,7 @@
+# JG348: actual circle chord and nearest distance to the two-pi integer lattice
+
+For all real phase angles theta and phi, fix k by rounding (theta-phi)/(2*pi) to the nearest integer and d=abs(theta-phi-2*pi*k). Prove d<=pi and minimality against EVERY integer m, then prove BOTH quantitative bounds (2/pi)*d <= norm(exp(i*theta)-exp(i*phi)) <= d. Integer half-ties follow the pinned round convention; either minimizer is legitimate. Zero phases, negative angles, exact resonances and antipodal boundary are included. No Diophantine or spectral assumption.
+
+This is the classical circle-chord/lattice comparison used in original sourceD equations26-27, with exact phase constants and actual real lattice minimization, rather than a substitute vector model. Nearest-integer estimates, integer two-pi exponential periodicity, the norm/sine half-angle identity and Jordan's inequality are pinned primary library inputs. The new assembly proof, full actual owned TYPE/VALUE and transitive axioms require complete independent review plus server kernel/same-first-original-object audit. Freeze before implementation; preserve all failed versions and no accepted old producer or leaf audit replay.
+
+This does NOT prove either real-parameter Diophantine property, simultaneous positive ordered eight-amplitude existence, actual finite-law WC without those arithmetic hypotheses, near resonance/strong nonlattice failure, a small positive saddle or originalD/root completion. No novelty claim. JF347's conditional coordinate assembly is separate and remains under independent review.

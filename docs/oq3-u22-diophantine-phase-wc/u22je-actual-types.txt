@@ -1,0 +1,12 @@
+DECL Shao.OQ3.symmetric_eight_atom_coordinate_phase_gaps
+TYPE ∀ (a : Fin 8 → ℝ),
+  have A := Fin.append a fun i => -a i;
+  have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+  ∀ (xi eta : ℝ),
+    (∀ (i : Fin 8),
+        1 / 1024 * ‖Shao.OQ3.jointPhase (2 * xi) 0 (a i) - 1‖ ^ 2 ≤ 1 - ‖Shao.OQ3.jointCharacteristic mu xi eta‖) ∧
+      ∀ (i j : Fin 8),
+        1 / 4096 * ‖Shao.OQ3.jointPhase 0 (2 * eta) (a i) - Shao.OQ3.jointPhase 0 (2 * eta) (a j)‖ ^ 2 ≤
+          1 - ‖Shao.OQ3.jointCharacteristic mu xi eta‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

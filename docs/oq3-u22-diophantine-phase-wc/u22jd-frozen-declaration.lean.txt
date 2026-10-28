@@ -1,0 +1,16 @@
+theorem symmetric_eight_atom_law_and_phase_gap
+    (a : Fin 8 → ℝ) :
+    let A : Fin (8 + 8) → ℝ := Fin.append a (fun i => -a i)
+    let mu : Measure ℝ := Measure.sum fun k : Fin (8 + 8) =>
+      ENNReal.ofReal ((1 : ℝ) / 16) • Measure.dirac (A k)
+    let B : ℝ := ∑ i : Fin 8, |a i|
+    IsProbabilityMeasure mu ∧ Integrable (fun x : ℝ => x) mu ∧
+      (∫ x : ℝ, x ∂mu) = 0 ∧ 0 ≤ B ∧ (∀ᵐ x ∂mu, |x| ≤ B) ∧
+      ∀ xi eta : ℝ,
+        jointCharacteristic mu xi eta = ((1 : ℝ) / 16) •
+          ((∑ i : Fin 8, jointPhase xi eta (a i)) +
+            ∑ i : Fin 8, jointPhase xi eta (-a i)) ∧
+        ∀ i j : Fin (8 + 8),
+          ((1 : ℝ) / 1024) *
+              ‖jointPhase xi eta (A i) - jointPhase xi eta (A j)‖ ^ 2 ≤
+            1 - ‖jointCharacteristic mu xi eta‖

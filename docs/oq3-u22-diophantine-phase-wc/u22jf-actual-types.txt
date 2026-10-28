@@ -1,0 +1,23 @@
+DECL Shao.OQ3.symmetric_eight_atom_weak_cramer_of_coordinate_phase_bounds
+TYPE ∀ (a : Fin 8 → ℝ) (cL cQ TL TQ : ℝ),
+  0 < cL →
+    0 < cQ →
+      0 ≤ TL →
+        0 ≤ TQ →
+          (∀ (t : ℝ), TL < |t| → ∃ i, cL * |t|.rpow (-3 / 8) ≤ ‖Shao.OQ3.jointPhase (2 * t) 0 (a i) - 1‖ ^ 2) →
+            (∀ (t : ℝ),
+                TQ < |t| →
+                  ∃ j,
+                    cQ * |t|.rpow (-3 / 8) ≤
+                      ‖Shao.OQ3.jointPhase 0 (2 * t) (a j.succ) - Shao.OQ3.jointPhase 0 (2 * t) (a 0)‖ ^ 2) →
+              have A := Fin.append a fun i => -a i;
+              have mu := MeasureTheory.Measure.sum fun k => ENNReal.ofReal (1 / 16) • MeasureTheory.Measure.dirac (A k);
+              ∃ c,
+                0 < c ∧
+                  ∃ R,
+                    0 ≤ R ∧
+                      ∀ (xi eta : ℝ),
+                        R < √(xi ^ 2 + eta ^ 2) →
+                          ‖Shao.OQ3.jointCharacteristic mu xi eta‖ ≤ 1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-3 / 8)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
