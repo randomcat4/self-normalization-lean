@@ -1,0 +1,11 @@
+theorem finite_atomic_joint_phase_gap
+    (n : ℕ) (a w : Fin n → ℝ) (hw : ∀ k, 0 ≤ w k)
+    (hsum : ∑ k : Fin n, w k = 1) :
+    let mu : Measure ℝ := Measure.sum fun k : Fin n =>
+      ENNReal.ofReal (w k) • Measure.dirac (a k)
+    IsProbabilityMeasure mu ∧ ∀ xi eta : ℝ,
+      jointCharacteristic mu xi eta =
+        ∑ k : Fin n, w k • jointPhase xi eta (a k) ∧
+      ∀ i j : Fin n,
+        (w i * w j / 4) * ‖jointPhase xi eta (a i) - jointPhase xi eta (a j)‖ ^ 2 ≤
+          1 - ‖jointCharacteristic mu xi eta‖
