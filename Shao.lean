@@ -235,7 +235,12 @@ import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualCubicHermiteCorrection
 import Shao.OQ3.ActualGaussianIntegralSumComparison
 import Shao.OQ3.ActualGaussianKernelComparison
+import Shao.OQ3.ActualMeanChartBoundaryTaylor
+import Shao.OQ3.ActualMeanChartCompactLaplaceTiltWindows
 import Shao.OQ3.ActualMeanChartCompactTaylor
+import Shao.OQ3.ActualMeanChartLaplaceCutoff
+import Shao.OQ3.ActualMeanChartLaplaceNatPhysicalWindow
+import Shao.OQ3.ActualMeanChartLocalCompatibility
 import Shao.OQ3.ActualMeanChartRateDerivatives
 import Shao.OQ3.ActualMixedThirdMomentHermiteBound
 import Shao.OQ3.ActualMomentCumulantRecurrence
@@ -259,6 +264,9 @@ import Shao.OQ3.BoundaryLaplaceNormalization
 import Shao.OQ3.BoundaryLaplacePhysicalDomain
 import Shao.OQ3.BoundaryLaplaceScaledError
 import Shao.OQ3.BoundaryLaplaceScaling
+import Shao.OQ3.BoundedActualChartWindowProbabilityLaplace
+import Shao.OQ3.BoundedActualQuadraticExteriorExponentialBound
+import Shao.OQ3.BoundedActualSelfNormalizedTailLaplace
 import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
@@ -872,6 +880,7 @@ import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
+import Shao.OQ6.OriginalSameWitnessClippedEventTransport
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
 import Shao.OQ6.OriginalSameWitnessEventualTailApplication
 import Shao.OQ6.OriginalSameWitnessScalarTailApplication
