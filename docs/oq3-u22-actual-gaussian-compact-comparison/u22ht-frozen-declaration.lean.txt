@@ -1,0 +1,17 @@
+theorem pair_linear_map_determinant_of_rows
+    (L : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ)) (a b c d : ℝ)
+    (hL : ∀ w : ℝ × ℝ, L w = (a * w.1 + b * w.2, c * w.1 + d * w.2)) :
+    L.det = a * d - b * c
+
+theorem canonical_pair_whitening_determinant_quadratic
+    (a b d : ℝ) (ha : 0 < a) (hdet : 0 < a * d - b ^ 2)
+    (E : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ)) :
+    let s : ℝ := Real.sqrt (a * d - b ^ 2)
+    let t : ℝ := Real.sqrt (a + d + 2 * s)
+    (∀ w : ℝ × ℝ, E w =
+      (((d + s) / (s * t)) * w.1 + (-(b) / (s * t)) * w.2,
+        (-(b) / (s * t)) * w.1 + ((a + s) / (s * t)) * w.2)) →
+    (E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)).toLinearMap.det = 1 / s ∧
+      |(E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)).toLinearMap.det| = 1 / s ∧
+      ∀ w : ℝ × ℝ, (E w).1 ^ 2 + (E w).2 ^ 2 =
+        (d * w.1 ^ 2 - 2 * b * w.1 * w.2 + a * w.2 ^ 2) / (a * d - b ^ 2)

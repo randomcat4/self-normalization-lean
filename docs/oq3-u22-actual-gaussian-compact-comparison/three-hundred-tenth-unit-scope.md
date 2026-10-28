@@ -1,0 +1,6 @@
+# HU310 frozen source scope
+
+Source: original OQ3 r2 report 112–322/343–369 and repair01 113–185, continuing HP305/HQ306/HR307 actual bounded-window chain. Preserve all bounded-law, strict beta, reference weak-Cramer, original Lambda1>0, source chart and p54 repair requirements.
+Freeze one exact public theorem. Consume the SAME HR actual chart/window/compact tilt family/covariance bounds/whitening/mean-correct closure anchors/grid/weights/constants and actual-law error. Derive positive leading covariance entry from the existing lower quadratic bound, use the actual symmetric covariance determinant, instantiate HT309 on the actual canonical rows, and apply HS308 on each measurable actual cell.
+Output the literal physical-cell integral with prefactor n/(2*pi*sqrt(actual covariance determinant)), actual inverse-covariance quadratic, exact equality to HR standardized integral, and the same finite-window error C/n*G+B*epsilon/n. No new mathematical premise, free covariance, alternative anchor, L1 default-integral inference, final asymptotic or root closure.
+Taylor/uniform amplitude/Laplace/exterior/original B-D/positive OQ3 root remain OPEN. Do not rerun accepted old checks or change old bytes. Qualification requires exact new server native/all-owner recursive AX and one independent complete review.

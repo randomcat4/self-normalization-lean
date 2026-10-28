@@ -1,0 +1,35 @@
+DECL Shao.OQ3.actual_mean_chart_rate_covariance_derivatives
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu]
+  (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+  (↑e = fun p =>
+      (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+        ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+    e.source ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ w ∈ e.target,
+        0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => (↑e.symm w).1 * x + (↑e.symm w).2 * x ^ 2)).det →
+          have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+          have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+          have p := ↑e.symm w;
+          have D := Shao.OQ3.parabolaCovariance (nu p);
+          have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+          have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+          have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+          have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+          have covector := pr0.smulRight pr0 + pr1.smulRight pr1;
+          have K := fun q => Real.log (∫ (x : ℝ), Real.exp (q.1 * x + q.2 * x ^ 2) ∂mu);
+          have J := fun z => (↑e.symm z).1 * z.1 + (↑e.symm z).2 * z.2 - K (↑e.symm z);
+          have A := fun z => (√(Shao.OQ3.parabolaCovariance (nu (↑e.symm z))).det)⁻¹;
+          ∃ L,
+            ↑L = row0.prod row1 ∧
+              ContDiffAt ℝ (↑⊤) (↑e.symm) w ∧
+                HasFDerivAt (↑e.symm) (↑L.symm) w ∧
+                  ContDiffAt ℝ (↑⊤) J w ∧
+                    HasFDerivAt J (p.1 • pr0 + p.2 • pr1) w ∧
+                      HasFDerivAt (fun z => fderiv ℝ J z) (covector ∘SL ↑L.symm) w ∧
+                        (∀ (v : ℝ × ℝ),
+                            ((fderiv ℝ (fun z => fderiv ℝ J z) w) v) v =
+                              (D 1 1 * v.1 ^ 2 - 2 * D 0 1 * v.1 * v.2 + D 0 0 * v.2 ^ 2) / D.det) ∧
+                          ContDiffAt ℝ (↑⊤) A w ∧
+                            Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w = ↑(J w)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

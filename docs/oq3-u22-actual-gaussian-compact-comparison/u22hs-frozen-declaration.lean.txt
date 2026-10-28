@@ -1,0 +1,20 @@
+theorem standardized_plane_affine_jacobian
+    (n : ℕ) (E : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ)) :
+    |(Real.sqrt (n : ℝ) • (E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ))).toLinearMap.det| =
+      (n : ℝ) * |(E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)).toLinearMap.det|
+
+theorem standardized_exponential_gaussian_cell_pullback
+    (n : ℕ) (hn : 1 ≤ n) (E : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ))
+    (y theta : ℝ × ℝ) (A : Set (ℝ × ℝ)) (hA : MeasurableSet A) :
+    let F : (ℝ × ℝ) → (ℝ × ℝ) := fun w => Real.sqrt (n : ℝ) • E (w - y)
+    let phi : (ℝ × ℝ) → ℝ := fun z =>
+      (1 / (2 * Real.pi)) * Real.exp (-(z.1 ^ 2 + z.2 ^ 2) / 2)
+    let g : (ℝ × ℝ) → ℝ := fun z => Real.exp (-Real.sqrt (n : ℝ) *
+      (theta.1 * (E.symm z).1 + theta.2 * (E.symm z).2))
+    MeasurableSet (F '' A) ∧
+      (∫ z : ℝ × ℝ, ((F '' A).indicator g) z * phi z) =
+        ((n : ℝ) * |(E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)).toLinearMap.det| /
+          (2 * Real.pi)) *
+          ∫ w : ℝ × ℝ in A, Real.exp (-(n : ℝ) *
+            (theta.1 * (w - y).1 + theta.2 * (w - y).2) -
+            ((n : ℝ) / 2) * ((E (w - y)).1 ^ 2 + (E (w - y)).2 ^ 2))

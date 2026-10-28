@@ -1,0 +1,6 @@
+# HX313 frozen source scope
+
+Apply new exact HV311 and HW312 analytic interfaces to an arbitrary GIVEN actual mean chart e and an arbitrary compact V in its target with positive actual tilted covariance determinant. These are the same facts already supplied on HR/HU's actual V; do not select another chart/window/anchor.
+Freeze actual J, reciprocal-square-root covariance amplitude A and inverse-covariance quadratic Q. Derive common positive delta,C,amin,amax: amplitude bounds on V, all-vector quadratic bound, and actual first-order rate Taylor quadratic remainder/linear amplitude difference in a common ambient neighborhood. Empty V is allowed; no nonempty/global convexity premise.
+The positive-determinant subset of e.target must be proved open from actual covariance continuity. Use exact same-chart gradient/Hessian, compact derivative bounds and genuine actual positive amplitude. No free Taylor constant, Hessian, uniform positivity or desired estimate is assumed.
+HV/HW independent complete review is currently running; their new exact author kernel/all-owned AX receipts are available. Preserve pending dependency status until qualified; no final acceptance/publication without their qualified evidence. Continuous integral comparison, Laplace/exterior and original B-D/positive OQ3 root remain OPEN.

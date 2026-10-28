@@ -1,0 +1,6 @@
+# HY314 frozen source scope
+
+Continue exact HX313 same-chart compact Taylor/amplitude bounds toward HU310 physical-cell Gaussian sum to continuous-rate integral. Freeze a scalar positive-reference weighted exponential relative error at mesh1/r, then its actual same-chart compact application.
+Scalar theorem uses r>=1, C,D>=0, amin>0, amin<=v<=amax, |u-v|<=C/r, |a-b|<=D/r; derive the explicit coefficient ((C+amax*D)*exp(D)/amin)/r times v*exp(-b). No sign or lower bound on a,b and no division by the error/zero Gaussian mass.
+Actual theorem retains GIVEN e, true actual J, amplitude and inverse-covariance Q on SAME compact V. Derive C>0 and N>=1 before all n/y/w/J0; for norm distance<=1/n prove Gaussian local physical kernel relative error<=C/n times actual variable-rate kernel. Exact actual p=e.symm(y), no proxy/fresh chart/window. Use existing Taylor and Q bounds to derive exponentdifference and actual positive amplitude bounds, not assume the desired comparison.
+Direct HX exact author machine evidence exists; own/ancestor independent reviews are pending. No acceptance/publication until exact qualified independent coverage. The finite integral/sum comparison, boundary Laplace, exterior and original B-D/positive OQ3 root remain OPEN. Reuse qualified old BoundaryLaplaceExponential and preserve Song/p54/counterexample scope.
