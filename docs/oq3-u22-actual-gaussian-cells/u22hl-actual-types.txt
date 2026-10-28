@@ -1,0 +1,58 @@
+DECL Shao.OQ3.compact_open_domain_hermite_local_gaussian_relative_bound
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu] (Theta : Set (ℝ × ℝ)),
+  IsCompact Theta →
+    Theta ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (beta c R : ℝ),
+        0 ≤ beta →
+          0 < c →
+            0 ≤ R →
+              (∀ p ∈ Theta, 0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => p.1 * x + p.2 * x ^ 2)).det) →
+                (∀ p ∈ Theta,
+                    ∀ (xi eta : ℝ),
+                      R < √(xi ^ 2 + eta ^ 2) →
+                        ‖Shao.OQ3.jointCharacteristic (mu.tilted fun x => p.1 * x + p.2 * x ^ 2) xi eta‖ ≤
+                          1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                  ∀ (K : ℝ),
+                    0 ≤ K →
+                      have tilt := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                      have D := fun p => Shao.OQ3.parabolaCovariance (tilt p);
+                      have s := fun p => √(D p 0 0 * D p 1 1 - D p 0 1 ^ 2);
+                      have t := fun p => √(D p 0 0 + D p 1 1 + 2 * s p);
+                      have A := fun p =>
+                        ![![(D p 1 1 + s p) / (s p * t p), -D p 0 1 / (s p * t p)],
+                          ![-D p 0 1 / (s p * t p), (D p 0 0 + s p) / (s p * t p)]];
+                      have means := fun p => ![∫ (x : ℝ), x ∂tilt p, ∫ (x : ℝ), x ^ 2 ∂tilt p];
+                      have Y := fun p x => (A p).mulVec (![x, x ^ 2] - means p);
+                      have laws := fun p => MeasureTheory.Measure.map (Y p) (tilt p);
+                      ∃ C,
+                        0 < C ∧
+                          ∃ N,
+                            1 ≤ N ∧
+                              ∀ (n : ℕ),
+                                N ≤ n →
+                                  ∀ (p : ↑Theta),
+                                    have X := fun z y => z.1 * y 0 + z.2 * y 1;
+                                    have kappa := fun j z => iteratedDeriv j (ProbabilityTheory.cgf (X z) (laws ↑p)) 0;
+                                    have a := fun z j =>
+                                      Complex.I ^ (↑j + 3) / ↑(↑j + 3).factorial * ↑(kappa (↑j + 3) z) /
+                                        ↑√↑n ^ (↑j + 1);
+                                    have Sn := fun z =>
+                                      ∑ q,
+                                        1 / ↑(↑q).factorial *
+                                          ∑ sigma, if ∑ l, (↑(sigma l) + 1) ≤ 6 then ∏ l, a z (sigma l) else 0;
+                                    have phi := fun x => 1 / (2 * Real.pi) * Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2);
+                                    ∀ (H : MvPolynomial (Fin 2) ℝ),
+                                      (∀ (z : ℝ × ℝ),
+                                          MvPolynomial.eval₂ Complex.ofRealHom ![Complex.I * ↑z.1, Complex.I * ↑z.2] H =
+                                            Sn z) →
+                                        have reference := fun x =>
+                                          (1 / (2 * Real.pi) *
+                                              ∑ d ∈ H.support,
+                                                H.coeff d *
+                                                    Polynomial.eval x.1 (Shao.OQ3.gaussianHermitePolynomial (d 0)) *
+                                                  Polynomial.eval x.2 (Shao.OQ3.gaussianHermitePolynomial (d 1))) *
+                                            Real.exp (-(x.1 ^ 2 + x.2 ^ 2) / 2);
+                                        ∀ (x : ℝ × ℝ),
+                                          √(x.1 ^ 2 + x.2 ^ 2) ≤ K / √↑n → |reference x - phi x| ≤ C / ↑n * phi x
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
