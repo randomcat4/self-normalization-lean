@@ -1,0 +1,24 @@
+# v145: Integrate bounded unique-minimum Laplace and original clipped tail v145
+
+IK326/IL327/IM328/IN329 control the literal original positive self-normalized tail at small positive raw energy: for every R>0 choose eta>0 BEFORE ALL n>=1, P(Tail_n and energy<=eta*n)<=exp(-Rn), retaining zero atoms and energy=0=>T=0. The deterministic count forces at least level^2*n/2 genuinely small NONZERO coordinates; IID count MGF/Chernoff is proved on original mu^n. IO330 derives a strict true EReal rate gap only on the compact CLOSED high-energy exterior, which stays in q>0 and excludes the center; finite center rate and original true Tail unique minimizer are explicit. IP331 joins this with the low-energy event and accepted II324 to pay actual exterior P<=C exp(-n(J0+delta)), C/delta before all n>=1. IQ332 joins SAME original bounded mu/theta/GIVEN actual mean chart e/covariance row L/window V with accepted IG322 local probability Laplace; the previous stronger whole-closure-gap premise is removed in favor of the original unique global minimum on positive-energy Tail. It does not assert a gap atq=0. Common cap is chosen BEFORE ALL smaller positive rho; for eachrho C,N before all n>=N>=2. Full original zero-convention sample tail has main=1/(sqrt(2pi*n)*(-theta2)*sqrt(detD)*sqrtLambda1)>0 and relative error C/sqrt(n). Explicit bounded support, true MGF interior/regular saddle/positive actual covariance determinant, GIVEN chart and row equivalence, Lambda1>0 and single-reference tilted WC strict0<beta<2/5 remain. No unbounded-law/canonical chart removal/positive B-D root closure. Accepted counterexample/p54 correction/external Song attribution preserved. All7sources/11actual theoremowners/0VALUES independently completely SOURCE/proof/allactualTYPE/recursiveAX reviewed; exact first-success objects and prior qualified bearing evidence reused.
+
+Unit246 adds conditional clipped ORIGINAL scalar-tail application on the SAME cg/m0, trim mu0, original/reduced/augmented product, canonical coding and actual eta witness, retaining all70 preceding universal branches and the separate complete bounded-product payer branch. For real C1..C4 and GIVEN ScalarShaoZhouFiniteCostTailInput at SAME cBudget, z>=1 and original strict moment window, the original clipping1 T0 lower bound uses originalL0/sourceCost0 and subtracts literal original P{projectionV=0}. Lower positive tolerance is eliminated only by a real-order half-gap argument. For everytau>0 ONE eventualk0 and ALL samek>=k0 jointly retain18 old cost/strictbudget/convergence clauses and add2 clipped tail bounds; upper retains both actual k-dependent augmented exceptional probabilities, originalPzero andtau. No tail-probability continuity/atomfree/vanishingerror inference. Original16assumptions/138publicordinary bindings/full71universal clauses and payment branch exact. Separate payer branch is NOT yet applied to the new tail consumer; intended original envelope/moment/window/bad-event andzero payments remain obligations. T0 is clipping1, not originalunclippedT. ExternalSZ existence/proof, originaltail/CDF/atoms/limits/fullS11/generalS15/DC/root remainOPEN. Qualified never-author complete SOURCE/proof review and final native/FIRSTO/all3actualTYPE/0VALUE/recursiveAX join reused: publicTYPE12324LF plus2 complete Expr DAG roots132302nodes/12466225B, fully independently semantically read with reversible scope/capture grammar; legacy2printer-failure lines not coverage. Actualnative/audit/affectedhelperobserver0/0/0; strictwrapperfalse/outer1 and originalfailed observationchain1,-15,1 preserved. Only affected same-FIRSTO helperTYPE was supplemented; no producer/publicTYPE/AX replay.
+The single aggregate integration gate PASS gives 1068 modules,
+4289 public source theorems,
+8502 namespace theorem constants including generated,
+and 16745 actual owned constants. The batch adds
+8 new module, updates 0 existing module, and adds
+8 public theorems. All 1060
+unchanged prior source modules and 1837 unaffected prior project
+artifacts remain exact. All 16731 prior actual owned
+names remain present; all 14 new names are covered by different
+fresh complete reviews. The 8 original successful producer
+objects are reused; only the new aggregate is compiled. There is no producer
+or prior per-module owner-audit replay. The exact aggregate import check passes. Transitive axioms of the changed/affected
+owners pass with propext, Classical.choice and Quot.sound only; unchanged exact
+accepted evidence is reused, with inventories counted separately from new checks.
+Metadata LF copies preserve original hashes and JSON meaning. Counts do not
+imply original root closure.
+The qualified sources, original review seals, failures and first successful objects remain exact.
+Documentation formatting changes, if any, are recorded separately with original/new hashes;
+no producer is recompiled and no old per-module audit is repeated for metadata.

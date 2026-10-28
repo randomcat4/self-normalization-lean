@@ -1,0 +1,10 @@
+theorem exists_self_normalized_low_energy_arbitrary_exponential_bound
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (level R : ℝ) (hlevel : 0 < level) (hR : 0 < R) :
+    ∃ eta : ℝ, 0 < eta ∧ ∀ n : ℕ, 1 ≤ n →
+      let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+      let T : Set (Shao.Path n) := {z | level * Real.sqrt (n : ℝ) ≤
+        (if Shao.energy z = 0 then 0 else
+          (∑ i : Fin n, z i) / Real.sqrt (Shao.energy z))}
+      P.real (T ∩ {z | Shao.energy z ≤ eta * (n : ℝ)}) ≤
+        Real.exp (-R * (n : ℝ))

@@ -1,0 +1,117 @@
+DECL Shao.OQ3.bounded_actual_self_normalized_tail_laplace_of_unique_minimum._proof_1_1
+TYPE ∀ (NL n : ℕ), ¬1 ≤ 2 → False
+AXIOMS [propext, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.bounded_actual_self_normalized_tail_laplace_of_unique_minimum
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  ∀ (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+                    (↑e = fun p =>
+                        (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+                          ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+                      theta ∈ e.source →
+                        e.source ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+                          ∀ (rmax : ℝ),
+                            0 < rmax →
+                              ∀ (supportRadius : ℝ),
+                                0 ≤ supportRadius →
+                                  (∀ᵐ (x : ℝ) ∂mu, |x| ≤ supportRadius) →
+                                    ∀ (beta c R : ℝ),
+                                      0 < beta →
+                                        beta < 2 / 5 →
+                                          0 < c →
+                                            0 ≤ R →
+                                              (∀ (xi eta : ℝ),
+                                                  R < √(xi ^ 2 + eta ^ 2) →
+                                                    ‖Shao.OQ3.jointCharacteristic
+                                                          (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) xi eta‖ ≤
+                                                      1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                                                have Omega :=
+                                                  interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2));
+                                                have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+                                                have means := fun p => (∫ (x : ℝ), x ∂nu p, ∫ (x : ℝ), x ^ 2 ∂nu p);
+                                                have K := fun p =>
+                                                  Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+                                                have D := Shao.OQ3.parabolaCovariance (nu theta);
+                                                have pr0 := ContinuousLinearMap.fst ℝ ℝ ℝ;
+                                                have pr1 := ContinuousLinearMap.snd ℝ ℝ ℝ;
+                                                have row0 := D 0 0 • pr0 + D 0 1 • pr1;
+                                                have row1 := D 0 1 • pr0 + D 1 1 • pr1;
+                                                ∀ (L : (ℝ × ℝ) ≃L[ℝ] ℝ × ℝ),
+                                                  ↑L = row0.prod row1 →
+                                                    have J := fun w =>
+                                                      (↑e.symm w).1 * w.1 + (↑e.symm w).2 * w.2 - K (↑e.symm w);
+                                                    have v := (1, 2 * a0 / level ^ 2);
+                                                    have Lambda1 :=
+                                                      2 * theta.2 / level ^ 2 + (L.symm v).1 +
+                                                        2 * a0 / level ^ 2 * (L.symm v).2;
+                                                    have J0 := J (a0, a0 ^ 2 / level ^ 2);
+                                                    0 < -theta.2 ∧
+                                                      (0 < Lambda1 →
+                                                        ∃ cap,
+                                                          0 < cap ∧
+                                                            cap ≤ rmax ∧
+                                                              ∀ (rho : ℝ),
+                                                                0 < rho →
+                                                                  rho ≤ cap →
+                                                                    have U :=
+                                                                      {w |
+                                                                        |w.1 - a0| ≤ rho ∧
+                                                                          |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho};
+                                                                    have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+                                                                    have V :=
+                                                                      {w |
+                                                                        |w.1 - a0| ≤ rho ∧
+                                                                          0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧
+                                                                            w.1 ^ 2 / level ^ 2 - w.2 ≤ rho};
+                                                                    V = U ∩ Tail ∧
+                                                                      ((∀ w ∈ Tail,
+                                                                          Shao.Probability.bivariateLegendreRate mu
+                                                                                (fun x => (x, x ^ 2))
+                                                                                (a0, a0 ^ 2 / level ^ 2) ≤
+                                                                              Shao.Probability.bivariateLegendreRate mu
+                                                                                (fun x => (x, x ^ 2)) w ∧
+                                                                            (Shao.Probability.bivariateLegendreRate mu
+                                                                                  (fun x => (x, x ^ 2)) w =
+                                                                                Shao.Probability.bivariateLegendreRate
+                                                                                  mu (fun x => (x, x ^ 2))
+                                                                                  (a0, a0 ^ 2 / level ^ 2) ↔
+                                                                              w = (a0, a0 ^ 2 / level ^ 2))) →
+                                                                        ∃ C,
+                                                                          0 < C ∧
+                                                                            ∃ N,
+                                                                              2 ≤ N ∧
+                                                                                ∀ (n : ℕ),
+                                                                                  N ≤ n →
+                                                                                    have P :=
+                                                                                      MeasureTheory.Measure.pi fun x =>
+                                                                                        mu;
+                                                                                    have T :=
+                                                                                      {z |
+                                                                                        level * √↑n ≤
+                                                                                          if Shao.energy z = 0 then 0
+                                                                                          else
+                                                                                            (∑ i, z i) /
+                                                                                              √(Shao.energy z)};
+                                                                                    have main :=
+                                                                                      1 /
+                                                                                        (√(2 * Real.pi * ↑n) *
+                                                                                              -theta.2 *
+                                                                                            √D.det *
+                                                                                          √Lambda1);
+                                                                                    0 < main ∧
+                                                                                      |Real.exp (↑n * J0) * P.real T /
+                                                                                              main -
+                                                                                            1| ≤
+                                                                                        C / √↑n))
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

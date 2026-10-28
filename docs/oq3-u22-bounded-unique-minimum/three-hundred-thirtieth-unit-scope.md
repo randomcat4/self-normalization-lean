@@ -1,0 +1,7 @@
+# IO330: high-energy exterior compact true-rate gap
+
+Freeze this exact declaration before implementation. For the true global EReal Legendre rate of the original law and parabola vector, assume the source finite rate at center and its exact unique global minimum on Tail={q>0, level*sqrt(q)<=a}. For every eta>0 and rho>0, derive delta>0 on Carrier intersect closure((Tail minus U) intersect {eta<=q}), where Carrier is the actual bounded-coordinate rectangle and U is the same closed physical tube around center. The high-energy set is essential; no gap on the q=0 closure or atomlessness is assumed or concluded.
+
+Reuse accepted BI ParabolaCellRateAnchor lower-semicontinuity theorem (exact label will be derived from existing receipt, not asserted by descriptive unit count). Carrier is compact; high-energy closed constraints keep its closure in Tail. Center lies in interior U and is excluded from closure of Tail minus U. Source unique global minimum therefore gives strict pointwise rate above finite J0; lower-semicontinuous compact attainment and EReal real interpolation produce a uniform positive gap, including an empty-compact case. No boundedness premise is needed for this pure geometric lemma; later sample-probability consumer will supply original AE boundedness.
+
+This is a source-bound dependency, not a new research theorem. It does not control low energy, prove a probability bound itself, remove all original unbounded-law/external conditions or close OQ3 B-D/root. All original p54, strict beta<2/5 and Song attribution remain.

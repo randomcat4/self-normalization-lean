@@ -1,0 +1,7 @@
+# IP331: bounded-law actual exterior probability from original unique minimum
+
+Freeze exact declaration before proof. Under original AE boundedness, positive level and physical-window width rho, and the source finite true-rate value/unique global minimum on Tail={q>0,a>=level sqrtq}, derive a positive delta and positive C before all n>=1 for the actual original IID probability of sample mean/energy in Tail minus U. No assumed closure gap at q=0, no atomlessness or positive minimum energy is allowed as a new premise.
+
+Choose R0=abs(J0)+1 and obtain eta>0 from IN329 controlling the source selfnormalized tail with raw energy<=eta*n. IO330 gives the true-rate compact closure gap only on high-energy exterior A=(Tail minus U) intersect {eta<=q}. Accepted II324 supplies actual bounded-law probability for A. The actual sample exterior is contained in the union of the low-energy source-tail event and preimage A; source AN121 gives the exact statistic-to-parabola equivalence including zero-energy convention. Bound that union, take delta=min(deltaHigh,1/2), and compare both exponentials. Reuse exact qualified old producers; IN and IO final reviews pending must be closed before acceptance.
+
+This proves a probability exterior bound without claiming a false whole-closure rate gap. Local Laplace assembly/common-chart interface and unbounded-law original B-D/root remain separate. Preserve p54, strict beta<2/5, external Song uniform s8 and accepted counterexample.
