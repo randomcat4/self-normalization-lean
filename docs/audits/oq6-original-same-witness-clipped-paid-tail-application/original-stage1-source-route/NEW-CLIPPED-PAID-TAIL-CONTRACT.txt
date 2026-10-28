@@ -1,0 +1,29 @@
+        let T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r 512 rho 1
+        let L0 : ℝ := ∑ i : Fin n,
+          ∫ ζ, (z * ξ0 i ζ) ^ 2 * min |z * ξ0 i ζ| 1 ∂P
+        let sourceCost0 : ℝ :=
+          ((∫ ζ,
+              (z * |D1 ζ| + z ^ 2 * studentizerClipBudget n r 512 rho 1 ζ) *
+                Real.exp (∑ j : Fin n, (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)) ∂P) +
+            ∑ i : Fin n, ∫ ζ,
+              (min |z * ξ0 i ζ| 1 *
+                (|(|D1 ζ|) - (|residualStatisticDDeleted n r ζ i|)| +
+                  z * |studentizerClipBudget n r 512 rho 1 ζ -
+                    studentizerClipBudgetDeleted n r 512 rho 1 ζ i|)) *
+                Real.exp (∑ j ∈ Finset.univ.erase i,
+                  (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)) ∂P) /
+            (∫ ζ, Real.exp (∑ j : Fin n,
+              (z * ξ0 j ζ - (z * ξ0 j ζ) ^ 2 / 2)) ∂P)
+
+        (∀ (C1 C2 C3 C4 : ℝ)
+            (hSZcBudget : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+              cBudget C1 C2 C3 C4)
+            (hzMomentWindow : β = 0 ∨
+              (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))),
+          Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+                (1 - C2 * sourceCost0) - payment ≤
+            P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+          P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ≤
+            Shao.standardNormalTail z * Real.exp (C3 * L0) *
+                (1 + C4 * sourceCost0) + 3 * payment) ∧

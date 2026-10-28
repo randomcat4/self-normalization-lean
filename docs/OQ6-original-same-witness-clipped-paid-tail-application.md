@@ -1,0 +1,15 @@
+# Same-witness original clipped paid-tail application
+
+This exact qualified unit retains the entire previous source result and proves a finite conditional tail bound for the original clipped statistic at constant512 and clipping1. The original lower expression loses one literal payment; the upper expression gains three literal payments. The witnesses, original product measure, weighted full/deleted source cost, original moment/remainder windows and explicit external Shao–Zhou finite-cost input are unchanged.
+
+The proof uses two natural cutoffs at the same n/w/z/input/tolerance, evaluates both at their sum, pays the three actual exceptional events, and removes only a real-order tolerance using a positive quarter-gap. It makes no claim that any exceptional probability or weighted cost vanishes.
+
+Exact source SHA256 is6f64eb0d74346cf03f5eac8832cc39f377b0fb3ac50007200bdf11eefdc4ecaf,212204B/3093LF. Independent complete SOURCE review is reused unchanged. The same never-author reviewer completed the full current kernel TYPE/metadata/evidence join and released with FINALWRITE/sixZero. Parent qualification is3259f8361add27c4125f3cd97c50e1e5ee0cbe66bd984e393f9622f38625a52d.
+
+New native01 returned0 in27.632s. FIRST original object e926c6395aab6d532d9024dbabeb630e1ede634c277ab0167df0dbaf934701ca,9886584B/ns1793172838706846170, was audited import-only without source recompilation; audit returned0 in6.472s. Module-index discovery found exactly1 public theorem,0 helpers/definitions,12922 complete TYPE lines and no required VALUE. Every actual owned recursive axiom is propext,Classical.choice,Quot.sound. All2074284 TYPE bytes/55079 tokens/trivia and all raw audit metadata were independently restored after complete reading.
+
+Native strict wrapper=false/outer1,44 warnings(41unused/3style), and the standing134B mathlib stderr are retained. Audit strict wrapper=false/outer1 is retained. No FIRSTEMPTY or unobserved live-thread sample is claimed. The author instance-coordinate688 was a type-local restatement; actual executable selected-space install1930 is recorded by independent review. One read-only diagnostic projection KeyError was corrected without a new Lean invocation.
+
+All old exact sources, objects, receipts and own references are preserved. This publication adds only the newly qualified source and its reviewable evidence. It performs no Lean/AX replay, cache write, Git push or merge. P167 metadata was adopted once in this source's native config. This P168 publication delta must be adopted once by the next new-source native configuration, never by recompiling old producers.
+
+The external scalar input's existence/proof, sourceCost0 smallness, payment/error absorption, original physical/unclipped identification, CDF/atom/zero-denominator passage, fullS11/S15/DC and fullOQ56/root completion remain OPEN. Other lanes' completion is governed solely by Root's current accepted registry. The next source248 has a frozen conditional physical paid-tail interface and a same-author local proof in progress.
