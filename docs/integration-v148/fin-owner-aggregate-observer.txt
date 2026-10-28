@@ -1,0 +1,31 @@
+import Shao
+
+import Lean
+set_option pp.deepTerms true
+set_option pp.proofs true
+set_option pp.maxSteps 1000000
+open Lean Elab Command in
+run_cmd do
+  let env <- getEnv
+  let name := `Fin.insertNthEquiv.eq_1
+  let info <- getConstInfo name
+  let owner := match env.getModuleIdxFor? name with
+    | some idx => env.header.moduleNames[idx.toNat]!
+    | none => Name.anonymous
+  logInfo m!"ACTUAL_NAME {name}"
+  logInfo m!"ACTUAL_OWNER {owner}"
+  logInfo m!"LEVELS {info.levelParams}"
+  logInfo m!"FULL_TYPE {info.type}"
+  logInfo m!"RAW_TYPE {reprStr info.type}"
+  match info with
+  | .thmInfo t =>
+      logInfo m!"KIND theorem"
+      logInfo m!"FULL_PROOF {t.value}"
+      logInfo m!"RAW_PROOF {reprStr t.value}"
+  | _ => throwError "Expected theorem"
+
+  let axioms <- Lean.collectAxioms name
+  for ax in axioms do
+    unless [`propext, `Classical.choice, `Quot.sound].contains ax do
+      throwError "Disallowed axiom {ax}"
+  logInfo m!"AXIOMS {axioms}"

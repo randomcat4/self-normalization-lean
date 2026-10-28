@@ -1,0 +1,11 @@
+theorem exists_symmetric_eight_atom_weak_cramer :
+    ∃ a : Fin 8 → ℝ, a 0 = 1 ∧ StrictMono a ∧ (∀ i, 0 < a i) ∧
+      let A : Fin (8 + 8) → ℝ := Fin.append a (fun i => -a i)
+      let mu : Measure ℝ := Measure.sum fun k : Fin (8 + 8) =>
+        ENNReal.ofReal ((1 : ℝ) / 16) • Measure.dirac (A k)
+      IsProbabilityMeasure mu ∧ Integrable (fun x : ℝ => x) mu ∧
+        (∫ x : ℝ, x ∂mu) = 0 ∧ (∃ B : ℝ, 0 ≤ B ∧ ∀ᵐ x ∂mu, |x| ≤ B) ∧
+        ∃ c : ℝ, 0 < c ∧ ∃ R : ℝ, 0 ≤ R ∧ ∀ xi eta : ℝ,
+          R < Real.sqrt (xi ^ 2 + eta ^ 2) →
+          ‖jointCharacteristic mu xi eta‖ ≤
+            1 - c * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-(3 : ℝ) / 8) := by
