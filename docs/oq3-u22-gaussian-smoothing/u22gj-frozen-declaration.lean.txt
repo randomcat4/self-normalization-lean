@@ -1,0 +1,37 @@
+theorem log_cubic_gaussian_radius_admissible
+    (n : ℕ) (hn : 2 ≤ n) :
+    0 < Real.log (n : ℝ) / (n : ℝ) ^ 3 ∧
+      Real.log (n : ℝ) / (n : ℝ) ^ 3 ≤ 1 / Real.sqrt (n : ℝ)
+
+theorem actual_parabola_cell_log_cubic_gaussian_oscillation_bound
+    (n : ℕ) (hn : 2 ≤ n) (theta : ℝ × ℝ)
+    (E : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ)) (y : ℝ × ℝ)
+    (aL aR qL qR level a0 rho : ℝ) (hrho : 0 ≤ rho)
+    (hy : y ∈ Set.Icc aL aR ×ˢ Set.Icc qL qR)
+    (hawidth : aR - aL ≤ 1 / (n : ℝ)) (hqwidth : qR - qL ≤ 1 / (n : ℝ))
+    :
+    let h : ℝ := Real.log (n : ℝ) / (n : ℝ) ^ 3
+    let A : Set (ℝ × ℝ) := (Set.Ioc aL aR ×ˢ Set.Ioc qL qR) ∩
+      {w : ℝ × ℝ | |w.1 - a0| ≤ rho ∧
+        0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho}
+    let B : Set (ℝ × ℝ) :=
+      (fun w : ℝ × ℝ => Real.sqrt (n : ℝ) • E (w - y)) '' A
+    let g : (ℝ × ℝ) → ℝ := fun v => Real.exp (-Real.sqrt (n : ℝ) *
+      (theta.1 * (E.symm v).1 + theta.2 * (E.symm v).2))
+    let kappa : ℝ := (|theta.1| + |theta.2|) *
+      ‖(E.symm : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ))‖
+    let R : ℝ := ‖(E : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ))‖
+    let C : ℝ := Real.exp (kappa * R)
+    let G : ℝ := R * (1 + 2 * (|a0| + rho) / level ^ 2)
+    let Φ : MeasureTheory.Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1)
+    MeasureTheory.Integrable (openBallOscillation (B.indicator g) h) Φ ∧
+      (∫ z, openBallOscillation (B.indicator g) h z ∂Φ) ≤
+        C * (8 * kappa * (R + 1) ^ 2 + 768 * (G + 1)) * Real.log (n : ℝ) /
+          ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ))
+
+theorem log_cubic_gaussian_oscillation_normalized_tendsto_zero :
+    Filter.Tendsto
+      (fun n : ℕ => (n : ℝ) ^ 3 *
+        (Real.log (n : ℝ) / ((n : ℝ) ^ 3 * Real.sqrt (n : ℝ))))
+      Filter.atTop (nhds 0)

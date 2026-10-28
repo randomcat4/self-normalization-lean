@@ -1,0 +1,29 @@
+--- author-repair-01/OriginalSameWitnessScalarTailApplication.lean
++++ author-pi-implementation-01/OriginalSameWitnessScalarTailApplication.lean
+@@ -9,7 +9,8 @@
+ namespace Shao.OQ6.OriginalSameWitnessScalarTailApplication
+ noncomputable section
+ 
+-theorem actual_original_same_witness_scalar_finite_cost_tail_application
++theorem actual_original_same_witness_scalar_finite_cost_tail_application :
++  ∀
+     {Ω : Type u} [mΩ : MeasurableSpace Ω]
+     (μ : Measure Ω) [IsProbabilityMeasure μ]
+     (h : Ω → Ω → ℝ)
+@@ -20,7 +21,7 @@
+     (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+     (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+     (hgp : Integrable (fun o : Ω => Real.rpow |∫ y, h o y ∂μ| p) μ)
+-    (cBudget : ℝ) (hcBudget : 0 < cBudget) :
++    (cBudget : ℝ) (hcBudget : 0 < cBudget),
+     let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+     let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+     let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+@@ -551,6 +552,7 @@
+         Filter.limsup (fun k : ℕ => ν.real (E k))
+           Filter.atTop ≤ payment)
+  := by
++  intro Ω mΩ μ hμProbability h hh hh2 hhsymm hcenter hprojectionsecond p hp2 hp3 hgp cBudget hcBudget
+   intro g r v rho β cWindow
+   have h242 :
+       let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ

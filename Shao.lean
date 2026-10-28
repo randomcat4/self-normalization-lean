@@ -266,6 +266,7 @@ import Shao.OQ3.CompactOpenDomainCovarianceSpectrum
 import Shao.OQ3.CompactOpenDomainEdgeworthCGFIdentification
 import Shao.OQ3.CompactOpenDomainEdgeworthPolynomialError
 import Shao.OQ3.CompactOpenDomainGaussianOscillation
+import Shao.OQ3.CompactOpenDomainLogCubicOscillation
 import Shao.OQ3.CompactOpenDomainLogMomentApproximation
 import Shao.OQ3.CompactOpenDomainNormalizedIIDLogExponent
 import Shao.OQ3.CompactOpenDomainNormalizedOcticCGFLogExponent
@@ -293,6 +294,7 @@ import Shao.OQ3.CompactOpenDomainWeightedLocalError
 import Shao.OQ3.CompactOpenDomainWeightedMiddleFrequency
 import Shao.OQ3.CompactOpenDomainWhitenedAnnulusGap
 import Shao.OQ3.CompactParabolaGaussianOscillation
+import Shao.OQ3.CompactParabolaLogCubicOscillation
 import Shao.OQ3.CompactParabolaRateProbability
 import Shao.OQ3.CompactTiltCovarianceSpectrum
 import Shao.OQ3.CompactTiltDomination
@@ -312,6 +314,7 @@ import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceWhitening
+import Shao.OQ3.CubicGaussianNoiseSandwich
 import Shao.OQ3.CubicHermiteLocalBound
 import Shao.OQ3.DirectionalCGFComplexHomogeneousPolynomial
 import Shao.OQ3.DirectionalCGFCumulantContinuity
@@ -332,6 +335,8 @@ import Shao.OQ3.FundamentalFourierAsymptotic
 import Shao.OQ3.GaussianBoundaryConstant
 import Shao.OQ3.GaussianBoundaryLaplaceMixture
 import Shao.OQ3.GaussianCurveTube
+import Shao.OQ3.GaussianDampedCharacteristicIntegral
+import Shao.OQ3.GaussianDampedWeightedErrorIntegral
 import Shao.OQ3.GaussianFiniteArcTube
 import Shao.OQ3.GaussianFiniteHermiteIntegral
 import Shao.OQ3.GaussianFourierMomentDerivative
@@ -340,11 +345,20 @@ import Shao.OQ3.GaussianHermiteOddCorrection
 import Shao.OQ3.GaussianHermitePolynomialRecursor
 import Shao.OQ3.GaussianHermiteScaledDerivative
 import Shao.OQ3.GaussianMvPolynomialHermiteIntegral
+import Shao.OQ3.GaussianNoiseTailBounds
 import Shao.OQ3.GaussianOscillatoryIntegral
 import Shao.OQ3.GaussianSixOrderActualCGFHermiteIntegral
+import Shao.OQ3.GaussianSmoothedFourierTail
+import Shao.OQ3.GaussianSmoothedLogCubicWindowTail
+import Shao.OQ3.GaussianSmoothedPairDensity
+import Shao.OQ3.GaussianSmoothedPairLaw
+import Shao.OQ3.GaussianSmoothedRealDensity
+import Shao.OQ3.GaussianSmoothingScale
 import Shao.OQ3.GlobalNegativeLayerBound
 import Shao.OQ3.ImaginaryExponentialTaylorRemainder
 import Shao.OQ3.ImaginaryRealExponentialQuadraticError
+import Shao.OQ3.IndependentSumSmoothingBounds
+import Shao.OQ3.IndependentSumThickeningBounds
 import Shao.OQ3.InverseTilt
 import Shao.OQ3.JointNonlattice
 import Shao.OQ3.LocalBoundaryLowerBound
@@ -406,6 +420,7 @@ import Shao.OQ3.ParabolaArcLipschitz
 import Shao.OQ3.ParabolaCellArcs
 import Shao.OQ3.ParabolaCellAveragedOscillation
 import Shao.OQ3.ParabolaCellGaussianTube
+import Shao.OQ3.ParabolaCellLogCubicOscillation
 import Shao.OQ3.ParabolaCellNcubeOscillation
 import Shao.OQ3.ParabolaCellRateAnchor
 import Shao.OQ3.ParabolaFin2IIDCharacteristic
@@ -419,6 +434,7 @@ import Shao.OQ3.PhysicalGridRateAnchorReconstruction
 import Shao.OQ3.PhysicalGridWeightedReconstruction
 import Shao.OQ3.PhysicalWindowCellRateAnchors
 import Shao.OQ3.PhysicalWindowCompactTiltParameters
+import Shao.OQ3.PhysicalWindowLogCubicGaussianCells
 import Shao.OQ3.PhysicalWindowRateFloor
 import Shao.OQ3.PhysicalWindowRateFloorAnchors
 import Shao.OQ3.PhysicalWindowRateFloorGaussianCells
@@ -821,6 +837,7 @@ import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
+import Shao.OQ6.OriginalSameWitnessScalarTailApplication
 import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment
 import Shao.OQ6.OriginalSelfNormalizedTail

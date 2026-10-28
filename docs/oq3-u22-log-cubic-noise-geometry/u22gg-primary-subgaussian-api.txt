@@ -1,0 +1,87 @@
+FILE .lake/packages/mathlib/Mathlib/Probability/Moments/SubGaussian.lean SHA256 fa3ae46a430a3ac29b92421d737fcb9fcbab5fe581c3a5e82762547f6bfefb7d
+583: end Conditional
+584: 
+585: /-! ### Sub-Gaussian moment-generating function -/
+586: 
+587: variable {Ω : Type*} {m mΩ : MeasurableSpace Ω} {μ : Measure Ω} {X : Ω → ℝ} {c : ℝ≥0}
+588: 
+589: /-- A random variable `X` has a sub-Gaussian moment-generating function with parameter `c`
+590: with respect to a measure `μ` if for all `t : ℝ`, `exp (t * X)` is `μ`-integrable and
+591: the moment-generating function of `X` is bounded by `exp (c * t ^ 2 / 2)` for all `t : ℝ`.
+592: This implies in particular that `X` has expectation 0.
+593: 
+594: This is equivalent to `Kernel.HasSubgaussianMGF X c (Kernel.const Unit μ) (Measure.dirac ())`,
+595: as proved in `HasSubgaussianMGF_iff_kernel`.
+596: Properties about sub-Gaussian moment-generating functions should be proved first for
+597: `Kernel.HasSubgaussianMGF` when possible. -/
+598: structure HasSubgaussianMGF (X : Ω → ℝ) (c : ℝ≥0) (μ : Measure Ω := by volume_tac) : Prop where
+599:   integrable_exp_mul : ∀ t : ℝ, Integrable (fun ω ↦ exp (t * X ω)) μ
+600:   mgf_le : ∀ t : ℝ, mgf X μ t ≤ exp (c * t ^ 2 / 2)
+601: 
+602: lemma HasSubgaussianMGF_iff_kernel :
+603:     HasSubgaussianMGF X c μ
+604:       ↔ Kernel.HasSubgaussianMGF X c (Kernel.const Unit μ) (Measure.dirac ()) :=
+605:   ⟨fun ⟨h1, h2⟩ ↦ ⟨by simpa, by simpa⟩, fun ⟨h1, h2⟩ ↦ ⟨by simpa using h1, by simpa using h2⟩⟩
+606: 
+607: namespace HasSubgaussianMGF
+608: 
+609: lemma aestronglyMeasurable (h : HasSubgaussianMGF X c μ) : AEStronglyMeasurable X μ := by
+610:   have h_int := h.integrable_exp_mul 1
+611:   simpa using (aemeasurable_of_aemeasurable_exp h_int.1.aemeasurable).aestronglyMeasurable
+612: 
+613: lemma aemeasurable (h : HasSubgaussianMGF X c μ) : AEMeasurable X μ :=
+614:   h.aestronglyMeasurable.aemeasurable
+615: 
+616: lemma congr (h : HasSubgaussianMGF X c μ) {Y : Ω → ℝ} (h' : X =ᵐ[μ] Y) :
+617:     HasSubgaussianMGF Y c μ := by
+618:   rw [HasSubgaussianMGF_iff_kernel] at h ⊢
+619:   apply h.congr
+620:   simpa
+621: 
+622: lemma memLp_exp_mul (h : HasSubgaussianMGF X c μ) (t : ℝ) (p : ℝ≥0) :
+623:     MemLp (fun ω ↦ exp (t * X ω)) p μ := by
+624:   rw [HasSubgaussianMGF_iff_kernel] at h
+625:   simpa using h.memLp_exp_mul t p
+626: 
+635: @[simp]
+636: lemma zero [IsZeroOrProbabilityMeasure μ] : HasSubgaussianMGF 0 0 μ := fun_zero
+637: 
+638: lemma neg {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) : HasSubgaussianMGF (-X) c μ := by
+639:   simpa [HasSubgaussianMGF_iff_kernel] using (HasSubgaussianMGF_iff_kernel.1 h).neg
+640: 
+693: section ChernoffBound
+694: 
+695: /-- Chernoff bound on the right tail of a sub-Gaussian random variable. -/
+696: lemma measure_ge_le (h : HasSubgaussianMGF X c μ) {ε : ℝ} (hε : 0 ≤ ε) :
+697:     μ.real {ω | ε ≤ X ω} ≤ exp (-ε ^ 2 / (2 * c)) := by
+698:   rw [HasSubgaussianMGF_iff_kernel] at h
+699:   simpa using h.measure_ge_le hε
+FILE .lake/packages/mathlib/Mathlib/Probability/Distributions/Gaussian/Real.lean SHA256 9edebfff169cb577b6dab1a7912f2e8fec0e70a8dac39db105263e1a0f31b383
+490: theorem mgf_gaussianReal (hX : HasLaw X (gaussianReal μ v) p) (t : ℝ) :
+491:     mgf X p t = rexp (μ * t + v * t ^ 2 / 2) := by
+492:   suffices (mgf X p t : ℂ) = rexp (μ * t + ↑v * t ^ 2 / 2) from mod_cast this
+493:   rw [← mgf_id_map hX.aemeasurable, ← complexMGF_ofReal, hX.map_eq, complexMGF_id_gaussianReal,
+494:     mul_comm μ]
+495:   norm_cast
+496: 
+497: theorem mgf_fun_id_gaussianReal :
+498:     mgf (fun x ↦ x) (gaussianReal μ v) = fun t ↦ rexp (μ * t + v * t ^ 2 / 2) := by
+499:   ext t
+500:   rw [mgf_gaussianReal]
+501:   simp
+502: 
+503: theorem mgf_id_gaussianReal : mgf id (gaussianReal μ v) = fun t ↦ rexp (μ * t + v * t ^ 2 / 2) :=
+504:   mgf_fun_id_gaussianReal
+505: 
+506: /-- The cumulant-generating function of a random variable with Gaussian distribution
+507: with mean `μ` and variance `v` is given by `t ↦ μ * t + v * t ^ 2 / 2`. -/
+508: theorem cgf_gaussianReal (hX : HasLaw X (gaussianReal μ v) p) (t : ℝ) :
+509:     cgf X p t = μ * t + v * t ^ 2 / 2 := by
+510:   rw [cgf, mgf_gaussianReal hX t, Real.log_exp]
+511: 
+512: lemma integrable_exp_mul_gaussianReal (t : ℝ) :
+513:     Integrable (fun x ↦ rexp (t * x)) (gaussianReal μ v) := by
+514:   rw [← mgf_pos_iff, mgf_gaussianReal (μ := μ) (v := v) (by simp)]
+515:   exact Real.exp_pos _
+516: 
+517: @[simp]

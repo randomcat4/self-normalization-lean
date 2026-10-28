@@ -1,0 +1,39 @@
+theorem pair_gaussian_pdf_normalization
+    (b : ℝ) (hb : 0 < b) (u : ℝ × ℝ) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    (ProbabilityTheory.gaussianPDFReal 0 v u.1 * ProbabilityTheory.gaussianPDFReal 0 v u.2 =
+      (1 / (4 * Real.pi * b)) * Real.exp (-(u.1 ^ 2 + u.2 ^ 2) / (4 * b))) ∧
+      ProbabilityTheory.gaussianPDF 0 v u.1 * ProbabilityTheory.gaussianPDF 0 v u.2 =
+        ENNReal.ofReal ((1 / (4 * Real.pi * b)) * Real.exp (-(u.1 ^ 2 + u.2 ^ 2) / (4 * b)))
+
+theorem gaussian_smoothed_pair_real_density
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b : ℝ) (hb : 0 < b) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let k : (ℝ × ℝ) → ℝ := fun x => (1 / (4 * Real.pi * b)) *
+      ∫ w : ℝ × ℝ, Real.exp (-((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b)) ∂nu
+    IsProbabilityMeasure rho ∧ rho = volume.withDensity (fun x => ENNReal.ofReal (k x)) ∧
+      Measurable k ∧ (∀ x : ℝ × ℝ, 0 ≤ k x ∧ k x ≤ 1 / (4 * Real.pi * b)) ∧
+        Integrable k ∧ (∫ x : ℝ × ℝ, k x) = 1
+
+theorem gaussian_smoothed_pair_normalized_inverse
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b : ℝ) (hb : 0 < b) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let k : (ℝ × ℝ) → ℝ := fun x => (1 / (4 * Real.pi * b)) *
+      ∫ w : ℝ × ℝ, Real.exp (-((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b)) ∂nu
+    ∀ x : ℝ × ℝ,
+      Integrable (fun z : ℝ × ℝ =>
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+          (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho)) ∧
+        (((1 / (2 * Real.pi) ^ 2 : ℝ) : ℂ) *
+          ∫ z : ℝ × ℝ,
+            Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+              (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho)) =
+          ((k x : ℝ) : ℂ)

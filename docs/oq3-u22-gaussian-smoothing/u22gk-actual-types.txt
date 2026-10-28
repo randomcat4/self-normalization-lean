@@ -1,0 +1,24 @@
+DECL Shao.OQ3.gaussian_smoothed_pair_inverse_tail_bound
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (b R : ℝ),
+  0 < b →
+    0 ≤ R →
+      ∀ (x : ℝ × ℝ),
+        have v := (2 * b).toNNReal;
+        have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+        have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+        have tail := {z | R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2};
+        have f := fun z =>
+          Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) *
+            ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho;
+        MeasureTheory.Integrable f MeasureTheory.volume ∧
+          MeasureTheory.IntegrableOn f tail MeasureTheory.volume ∧
+            ‖∫ (z : ℝ × ℝ) in tail, f z‖ ≤ 2 * Real.pi / b * Real.exp (-b * R ^ 2 / 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_real_gaussian_integral
+TYPE ∀ (b : ℝ),
+  0 < b →
+    MeasureTheory.Integrable (fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))) MeasureTheory.volume ∧
+      ∫ (z : ℝ × ℝ), Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2)) = Real.pi / b
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

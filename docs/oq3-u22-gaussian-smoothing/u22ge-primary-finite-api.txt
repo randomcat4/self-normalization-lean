@@ -1,0 +1,30 @@
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/HasFiniteIntegral.lean SHA256 cab8f2f4781c1363583f9c91df1d08843de863a48f5f94a308823e74ed83410f
+79: /-- `HasFiniteIntegral f μ` means that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.
+80:   `HasFiniteIntegral f` means `HasFiniteIntegral f volume`. -/
+81: @[fun_prop]
+82: def HasFiniteIntegral {_ : MeasurableSpace α} (f : α → ε)
+83:     (μ : Measure α := by volume_tac) : Prop :=
+84:   ∫⁻ a, ‖f a‖ₑ ∂μ < ∞
+85: 
+86: theorem hasFiniteIntegral_def {_ : MeasurableSpace α} (f : α → ε) (μ : Measure α) :
+87:     HasFiniteIntegral f μ ↔ (∫⁻ a, ‖f a‖ₑ ∂μ < ∞) :=
+88:   Iff.rfl
+89: 
+90: theorem hasFiniteIntegral_iff_enorm {f : α → ε} : HasFiniteIntegral f μ ↔ ∫⁻ a, ‖f a‖ₑ ∂μ < ∞ := by
+91:   simp only [HasFiniteIntegral]
+92: 
+93: theorem hasFiniteIntegral_iff_norm (f : α → β) :
+94:     HasFiniteIntegral f μ ↔ (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) < ∞ := by
+95:   simp only [hasFiniteIntegral_iff_enorm, ofReal_norm]
+96: 
+97: theorem hasFiniteIntegral_iff_edist (f : α → β) :
+98:     HasFiniteIntegral f μ ↔ (∫⁻ a, edist (f a) 0 ∂μ) < ∞ := by
+99:   simp only [hasFiniteIntegral_iff_norm, edist_dist, dist_zero_right]
+100: 
+101: theorem hasFiniteIntegral_iff_ofReal {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
+102:     HasFiniteIntegral f μ ↔ (∫⁻ a, ENNReal.ofReal (f a) ∂μ) < ∞ := by
+103:   rw [hasFiniteIntegral_iff_enorm, lintegral_enorm_of_ae_nonneg h]
+104: 
+105: theorem hasFiniteIntegral_iff_ofNNReal {f : α → ℝ≥0} :
+106:     HasFiniteIntegral (fun x => (f x : ℝ)) μ ↔ (∫⁻ a, f a ∂μ) < ∞ := by
+107:   simp [hasFiniteIntegral_iff_norm]

@@ -1,0 +1,84 @@
+FILE Mathlib/MeasureTheory/Integral/Bochner/Set.lean SHA256 e4d90b9fde463a9123e1ac3321ce25c0714e19ce92e172f297e062d9de16be75
+734:     (hf : 0 ≤ᵐ[μ.restrict t] f) (hst : s ≤ᵐ[μ] t) :
+735:     ∫ x in s, f x ∂μ ≤ ∫ x in t, f x ∂μ :=
+736:   integral_mono_measure (Measure.restrict_mono_ae hst) hf hfi
+737: 
+738: theorem setIntegral_le_integral [OrderClosedTopology E] (hfi : Integrable f μ) (hf : 0 ≤ᵐ[μ] f) :
+739:     ∫ x in s, f x ∂μ ≤ ∫ x, f x ∂μ :=
+740:   integral_mono_measure (Measure.restrict_le_self) hf hfi
+741: 
+742: variable [ClosedIciTopology E]
+743: 
+744: section
+745: variable (hf : IntegrableOn f s μ) (hg : IntegrableOn g s μ)
+746: include hf hg
+FILE Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+619: 
+620: @[gcongr]
+621: lemma integral_mono_measure [OrderClosedTopology E] {f : α → E} {ν : Measure α} (hle : μ ≤ ν)
+622:     (hf : 0 ≤ᵐ[ν] f) (hfi : Integrable f ν) : ∫ (a : α), f a ∂μ ≤ ∫ (a : α), f a ∂ν := by
+623:   by_cases hE : CompleteSpace E
+624:   swap; · simp [integral, hE]
+625:   borelize E
+626:   obtain ⟨g, hg, hg_nonneg, hfg⟩ := hfi.1.exists_stronglyMeasurable_range_subset
+627:     isClosed_Ici.measurableSet (Set.nonempty_Ici (a := 0)) hf
+633:     (hfi.mono_measure hle) _ le_rfl
+634:   apply le_of_tendsto_of_tendsto' h₂ h₁
+635:   exact fun n ↦ SimpleFunc.integral_mono_measure
+636:     (Eventually.of_forall <| SimpleFunc.approxOn_range_nonneg hg_nonneg n) hle
+637:     (SimpleFunc.integrable_approxOn_range _ hfi n)
+638: 
+639: variable [ClosedIciTopology E]
+640: 
+641: /-- The integral of a function which is nonnegative almost everywhere is nonnegative. -/
+735:     hfi.hasFiniteIntegral
+736: 
+737: theorem ofReal_integral_eq_lintegral_ofReal {f : α → ℝ} (hfi : Integrable f μ) (f_nn : 0 ≤ᵐ[μ] f) :
+738:     ENNReal.ofReal (∫ x, f x ∂μ) = ∫⁻ x, ENNReal.ofReal (f x) ∂μ := by
+739:   have : f =ᵐ[μ] (‖f ·‖) := f_nn.mono fun _x hx ↦ (abs_of_nonneg hx).symm
+740:   simp_rw [integral_congr_ae this, ofReal_integral_norm_eq_lintegral_enorm hfi,
+741:     ← ofReal_norm]
+742:   exact lintegral_congr_ae (this.symm.fun_comp ENNReal.ofReal)
+743: 
+822:   have h_cont := ENNReal.continuousAt_toReal (x := ∫⁻ a, ENNReal.ofReal ((F - f 0) a) ∂μ) ?_
+823:   swap
+824:   · rw [← ofReal_integral_eq_lintegral_ofReal (hF.sub (hf 0)) hF_ge]
+825:     finiteness
+826:   refine h_cont.tendsto.comp ?_
+827:   -- use the result for the Lebesgue integral
+828:   refine lintegral_tendsto_of_tendsto_of_monotone ?_ ?_ ?_
+829:   · exact fun n ↦ ((hf n).sub (hf 0)).aemeasurable.ennreal_ofReal
+830:   · filter_upwards [h_mono] with x hx n m hnm
+865:     intro i
+866:     unfold f'
+867:     rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub (hf_int i) (hf_int 0)]
+868:     · exact (hf_int i).sub (hf_int 0)
+869:     · filter_upwards [hf_mono] with a h_mono
+870:       simp [h_mono zero_le]
+871:   have hF'_int_eq : ∫⁻ a, F' a ∂μ = ENNReal.ofReal (∫ a, F a ∂μ - ∫ a, f 0 a ∂μ) := by
+872:     unfold F'
+873:     rw [← ofReal_integral_eq_lintegral_ofReal, integral_sub hF_int (hf_int 0)]
+874:     · exact hF_int.sub (hf_int 0)
+875:     · filter_upwards [hf_bound] with a h_bound
+876:       simp [h_bound 0]
+877:   have h_tendsto : Tendsto (fun i ↦ ∫⁻ a, f' i a ∂μ) atTop (𝓝 (∫⁻ a, F' a ∂μ)) := by
+878:     simp_rw [hf'_int_eq, hF'_int_eq]
+879:     refine (ENNReal.continuous_ofReal.tendsto _).comp ?_
+891:   rotate_left
+892:   · exact (hF_int.1.aemeasurable.sub (hf_int 0).1.aemeasurable).ennreal_ofReal
+893:   · exact ((lintegral_ofReal_le_lintegral_enorm _).trans_lt (hF_int.sub (hf_int 0)).2).ne
+894:   filter_upwards [h, hf_mono, hf_bound] with a ha ha_mono ha_bound
+895:   have h1 : (fun i ↦ f i a) = fun i ↦ (f' i a).toReal + f 0 a := by
+896:     unfold f'
+897:     ext i
+898:     rw [ENNReal.toReal_ofReal]
+899:     · abel
+1177:         integral_mono_ae (integrable_const _) (hf_int.mono_measure μ.restrict_le_self) <|
+1178:           ae_restrict_mem₀ <| hf_int.aemeasurable.nullMeasurable measurableSet_Ici
+1179:       _ ≤ _ := integral_mono_measure μ.restrict_le_self hf_nonneg hf_int
+1180: 
+1181: /-- Hölder's inequality for the integral of a product of norms. The integral of the product of two
+1182: norms of functions is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are
+1183: conjugate exponents. -/
+1184: theorem integral_mul_norm_le_Lp_mul_Lq {E} [NormedAddCommGroup E] {f g : α → E} {p q : ℝ}
+1185:     (hpq : p.HolderConjugate q) (hf : MemLp f (ENNReal.ofReal p) μ)

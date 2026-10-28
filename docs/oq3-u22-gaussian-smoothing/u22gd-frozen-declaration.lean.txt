@@ -1,0 +1,27 @@
+theorem pair_gaussian_noise_withDensity
+    (v : ℝ≥0) (hv : v ≠ 0) :
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    gamma = (volume : Measure (ℝ × ℝ)).withDensity (fun x =>
+      ProbabilityTheory.gaussianPDF 0 v x.1 * ProbabilityTheory.gaussianPDF 0 v x.2) ∧
+      gamma ≪ volume
+
+theorem pair_sum_withDensity_kernel
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (k : (ℝ × ℝ) → ℝ≥0∞) (hk : Measurable k) :
+    let gamma : Measure (ℝ × ℝ) := volume.withDensity k
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let K : (ℝ × ℝ) → ℝ≥0∞ := fun x => ∫⁻ w : ℝ × ℝ, k (x - w) ∂nu
+    rho = volume.withDensity K ∧ Measurable K ∧ rho ≪ volume
+
+theorem gaussian_smoothed_pair_law_density
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (v : ℝ≥0) (hv : v ≠ 0) :
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let K : (ℝ × ℝ) → ℝ≥0∞ := fun x =>
+      ∫⁻ w : ℝ × ℝ,
+        ProbabilityTheory.gaussianPDF 0 v (x.1 - w.1) *
+          ProbabilityTheory.gaussianPDF 0 v (x.2 - w.2) ∂nu
+    IsProbabilityMeasure rho ∧ rho = volume.withDensity K ∧ Measurable K ∧ rho ≪ volume

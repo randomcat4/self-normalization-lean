@@ -1,0 +1,18 @@
+DECL Shao.OQ3.pair_gaussian_damped_weighted_error_integral_bound
+TYPE ∀ (e : ℝ × ℝ → ℂ),
+  Continuous e →
+    ∀ (s : Set (ℝ × ℝ)) (k : ℕ) (b : ℝ),
+      0 ≤ b →
+        MeasureTheory.IntegrableOn (fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k * ‖e z‖) s MeasureTheory.volume →
+          have weight := fun z => √(z.1 ^ 2 + z.2 ^ 2) ^ k;
+          have damping := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2));
+          have kernel := fun x z => Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2));
+          MeasureTheory.IntegrableOn (fun z => weight z * ‖↑(damping z) * e z‖) s MeasureTheory.volume ∧
+            ∫ (z : ℝ × ℝ) in s, weight z * ‖↑(damping z) * e z‖ ≤ ∫ (z : ℝ × ℝ) in s, weight z * ‖e z‖ ∧
+              ∀ (x : ℝ × ℝ),
+                MeasureTheory.IntegrableOn (fun z => kernel x z * ↑(weight z) * (↑(damping z) * e z)) s
+                    MeasureTheory.volume ∧
+                  ‖∫ (z : ℝ × ℝ) in s, kernel x z * ↑(weight z) * (↑(damping z) * e z)‖ ≤
+                    ∫ (z : ℝ × ℝ) in s, weight z * ‖e z‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
