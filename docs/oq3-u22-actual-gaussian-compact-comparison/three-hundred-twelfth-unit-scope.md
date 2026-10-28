@@ -1,0 +1,5 @@
+# HW312 frozen source scope
+
+Generic compact planar calculus interface needed to transfer HU310 physical-cell integrals to a continuous same-chart rate integral. Input an open set U, any compact K subset U, an actual C2 function f and C1 amplitude A at every point of U. No convexity of K or nonempty assumption.
+Prove one uniform positive neighborhood radius and constant: every x in K and every y within that radius remain in U, with a quadratic first-order Taylor remainder and a linear amplitude difference bound. Use actual Frechet derivatives, the standard max product norm, compact closed-thickening derivative bounds, and convex closed-ball mean-value estimates. All dependencies are pinned Mathlib APIs; no mathematical axiom or proof escape.
+This is an analytic helper only. Its actual HR/HU same-chart/positive covariance application, finite-to-continuous integral comparison, Laplace/exterior and original B-D/positive OQ3 root remain OPEN. Do not replace the source theorem by this helper. New server native/all-owner recursive AX and one qualified independent complete review are required.
