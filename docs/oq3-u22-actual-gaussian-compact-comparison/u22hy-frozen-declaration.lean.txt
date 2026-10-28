@@ -1,0 +1,39 @@
+theorem weighted_exponential_mesh_relative_error
+    (r C D amin amax u v a b : ℝ)
+    (hr : 1 ≤ r) (hC : 0 ≤ C) (hD : 0 ≤ D) (hamin : 0 < amin)
+    (hvmin : amin ≤ v) (hvmax : v ≤ amax)
+    (hamplitude : |u - v| ≤ C / r) (hexponent : |a - b| ≤ D / r) :
+    |u * Real.exp (-a) - v * Real.exp (-b)| ≤
+      (((C + amax * D) * Real.exp D / amin) / r) * (v * Real.exp (-b))
+
+theorem actual_mean_chart_uniform_gaussian_kernel_comparison
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ))
+    (he : (e : (ℝ × ℝ) → (ℝ × ℝ)) = fun p =>
+      (∫ x : ℝ, x ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2),
+        ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)))
+    (hsource : e.source ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (V : Set (ℝ × ℝ)) (hCompact : IsCompact V) (hTarget : V ⊆ e.target)
+    (hPositive : ∀ y ∈ V, 0 < (parabolaCovariance
+      (mu.tilted (fun x => (e.symm y).1 * x + (e.symm y).2 * x ^ 2))).det) :
+    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let D : (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ := fun y =>
+      parabolaCovariance (nu (e.symm y))
+    let K : (ℝ × ℝ) → ℝ := fun p => Real.log
+      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    let J : (ℝ × ℝ) → ℝ := fun y =>
+      (e.symm y).1 * y.1 + (e.symm y).2 * y.2 - K (e.symm y)
+    let A : (ℝ × ℝ) → ℝ := fun y => (Real.sqrt (D y).det)⁻¹
+    let Q : (ℝ × ℝ) → (ℝ × ℝ) → ℝ := fun y v =>
+      (D y 1 1 * v.1 ^ 2 - 2 * D y 0 1 * v.1 * v.2 + D y 0 0 * v.2 ^ 2) /
+        (D y).det
+    ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, 1 ≤ N ∧
+      ∀ n : ℕ, N ≤ n → ∀ y ∈ V, ∀ w ∈ V,
+        ‖w - y‖ ≤ 1 / (n : ℝ) → ∀ J0 : ℝ,
+          |A y * Real.exp (-(n : ℝ) * (J y +
+              ((e.symm y).1 * (w - y).1 + (e.symm y).2 * (w - y).2) +
+                Q y (w - y) / 2 - J0)) -
+            A w * Real.exp (-(n : ℝ) * (J w - J0))| ≤
+              (C / (n : ℝ)) * (A w * Real.exp (-(n : ℝ) * (J w - J0)))

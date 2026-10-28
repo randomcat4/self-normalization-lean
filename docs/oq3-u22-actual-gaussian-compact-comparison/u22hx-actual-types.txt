@@ -1,0 +1,35 @@
+DECL Shao.OQ3.actual_mean_chart_compact_taylor_amplitude
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [MeasureTheory.IsProbabilityMeasure mu]
+  (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ)),
+  (↑e = fun p =>
+      (∫ (x : ℝ), x ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2,
+        ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => p.1 * x + p.2 * x ^ 2)) →
+    e.source ⊆ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) →
+      ∀ (V : Set (ℝ × ℝ)),
+        IsCompact V →
+          V ⊆ e.target →
+            (∀ y ∈ V,
+                0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => (↑e.symm y).1 * x + (↑e.symm y).2 * x ^ 2)).det) →
+              have nu := fun p => mu.tilted fun x => p.1 * x + p.2 * x ^ 2;
+              have D := fun y => Shao.OQ3.parabolaCovariance (nu (↑e.symm y));
+              have K := fun p => Real.log (∫ (x : ℝ), Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu);
+              have J := fun y => (↑e.symm y).1 * y.1 + (↑e.symm y).2 * y.2 - K (↑e.symm y);
+              have A := fun y => (√(D y).det)⁻¹;
+              have Q := fun y v => (D y 1 1 * v.1 ^ 2 - 2 * D y 0 1 * v.1 * v.2 + D y 0 0 * v.2 ^ 2) / (D y).det;
+              ∃ delta C amin amax,
+                0 < delta ∧
+                  0 < C ∧
+                    0 < amin ∧
+                      0 < amax ∧
+                        (∀ y ∈ V, amin ≤ A y ∧ A y ≤ amax) ∧
+                          (∀ y ∈ V, ∀ (v : ℝ × ℝ), |Q y v| ≤ C * ‖v‖ ^ 2) ∧
+                            ∀ y ∈ V,
+                              ∀ (w : ℝ × ℝ),
+                                ‖w - y‖ ≤ delta →
+                                  w ∈ e.target ∧
+                                    0 < (D w).det ∧
+                                      |J w - J y - ((↑e.symm y).1 * (w - y).1 + (↑e.symm y).2 * (w - y).2)| ≤
+                                          C * ‖w - y‖ ^ 2 ∧
+                                        |A w - A y| ≤ C * ‖w - y‖
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
