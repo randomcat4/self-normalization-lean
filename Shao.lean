@@ -233,6 +233,7 @@ import Shao.OQ3.ActualCGFOcticLogPolynomial
 import Shao.OQ3.ActualCGFSixOrderEdgeworthPolynomial
 import Shao.OQ3.ActualCGFSixOrderGaussianPolynomialTail
 import Shao.OQ3.ActualCubicHermiteCorrection
+import Shao.OQ3.ActualExteriorFromUniqueMinimum
 import Shao.OQ3.ActualGaussianIntegralSumComparison
 import Shao.OQ3.ActualGaussianKernelComparison
 import Shao.OQ3.ActualHighEnergyExteriorRateGap
@@ -245,6 +246,7 @@ import Shao.OQ3.ActualMeanChartLocalCompatibility
 import Shao.OQ3.ActualMeanChartRateDerivatives
 import Shao.OQ3.ActualMixedThirdMomentHermiteBound
 import Shao.OQ3.ActualMomentCumulantRecurrence
+import Shao.OQ3.ActualSelfNormalizedTailUniqueMinimum
 import Shao.OQ3.ActualStandardizedIIDCellTest
 import Shao.OQ3.AdaptiveTailBudget
 import Shao.OQ3.AffineWeakCramer
@@ -270,6 +272,7 @@ import Shao.OQ3.BoundedActualExteriorFromUniqueMinimum
 import Shao.OQ3.BoundedActualQuadraticExteriorExponentialBound
 import Shao.OQ3.BoundedActualSelfNormalizedTailLaplace
 import Shao.OQ3.BoundedActualSelfNormalizedTailUniqueMinimum
+import Shao.OQ3.BoundedCanonicalActualTailScaledExpansion
 import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
@@ -278,6 +281,8 @@ import Shao.OQ3.BoundedPhysicalWindowContinuousRate
 import Shao.OQ3.BoundedPhysicalWindowCovarianceGaussianSum
 import Shao.OQ3.BoundedPhysicalWindowGaussianSum
 import Shao.OQ3.BoundedSupportTestIntegrability
+import Shao.OQ3.CanonicalActualSelfNormalizedTail
+import Shao.OQ3.CanonicalActualTailScaledExpansion
 import Shao.OQ3.CanonicalPairWhiteningJacobian
 import Shao.OQ3.CellAveragedOscillation
 import Shao.OQ3.CellBoundaryOscillation
@@ -285,6 +290,7 @@ import Shao.OQ3.CenteredLogMGF
 import Shao.OQ3.CenteredSampleTilt
 import Shao.OQ3.CentralFourierIntegral
 import Shao.OQ3.CharacteristicMeasureDomination
+import Shao.OQ3.CompactActualChartWindowProbabilityLaplace
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothing
 import Shao.OQ3.CompactOpenDomainActualCellDesmoothingSmall
 import Shao.OQ3.CompactOpenDomainActualCellGaussian
@@ -351,6 +357,7 @@ import Shao.OQ3.ComplexSixOrderPolynomialGrowth
 import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
 import Shao.OQ3.CorrectedScaleContinuity
+import Shao.OQ3.CovarianceRowInverseQuadratic
 import Shao.OQ3.CovarianceWhitening
 import Shao.OQ3.CubicGaussianNoiseSandwich
 import Shao.OQ3.CubicHermiteLocalBound
@@ -405,6 +412,7 @@ import Shao.OQ3.IndependentSumTestOscillation
 import Shao.OQ3.IndependentSumThickeningBounds
 import Shao.OQ3.InverseTilt
 import Shao.OQ3.JointNonlattice
+import Shao.OQ3.LargeIIDCountExponentialBound
 import Shao.OQ3.LocalBoundaryLowerBound
 import Shao.OQ3.LocalBoundaryTaylor
 import Shao.OQ3.LocalCubicTaylor
@@ -502,6 +510,8 @@ import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
 import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
 import Shao.OQ3.ScalarTaylorMomentPolynomial
+import Shao.OQ3.SelfNormalizedHighEnergyCount
+import Shao.OQ3.SelfNormalizedHighEnergyExponentialBound
 import Shao.OQ3.SelfNormalizedLowEnergyCount
 import Shao.OQ3.SelfNormalizedLowEnergyExponentialBound
 import Shao.OQ3.SixOrderHigherWeightGrowth
@@ -888,6 +898,7 @@ import Shao.OQ6.OriginalPhysicalClippedTailTransfer
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessClippedEventTransport
+import Shao.OQ6.OriginalSameWitnessClippedPaidTailApplication
 import Shao.OQ6.OriginalSameWitnessClippedTailApplication
 import Shao.OQ6.OriginalSameWitnessCodingGeneration
 import Shao.OQ6.OriginalSameWitnessEventualTailApplication
