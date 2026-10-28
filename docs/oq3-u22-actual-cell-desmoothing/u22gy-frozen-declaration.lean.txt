@@ -1,0 +1,17 @@
+theorem log_square_gaussian_half_four_le_rpow
+    (a x : ℝ) (ha : 0 ≤ a) (hx : 0 < x)
+    (hlogone : 1 ≤ Real.log x) (hloglarge : 8 * (a + Real.log 4) ≤ Real.log x) :
+    4 * Real.exp (-(Real.log x) ^ 2 / 8) ≤ Real.rpow x (-a)
+
+theorem cubic_gaussian_half_oscillation_noise_superpolynomial
+    (a : ℝ) (ha : 0 ≤ a) :
+    ∃ N : ℕ, 2 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+      let b : ℝ := 1 / (2 * (n : ℝ) ^ 6)
+      let h : ℝ := Real.log (n : ℝ) / (n : ℝ) ^ 3
+      let v : ℝ≥0 := Real.toNNReal (2 * b)
+      let gamma : Measure (ℝ × ℝ) :=
+        (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+      0 < b ∧ 0 < h ∧
+        gamma.real {d : ℝ × ℝ | h / 2 < ‖d‖} ≤
+          4 * Real.exp (-(Real.log (n : ℝ)) ^ 2 / 8) ∧
+        gamma.real {d : ℝ × ℝ | h / 2 < ‖d‖} ≤ Real.rpow (n : ℝ) (-a)

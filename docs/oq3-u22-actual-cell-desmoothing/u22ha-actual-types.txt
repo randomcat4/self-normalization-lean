@@ -1,0 +1,41 @@
+DECL Shao.OQ3.bounded_density_indicator_desmoothing_bound
+TYPE ∀ (nu eta : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu]
+  [MeasureTheory.IsProbabilityMeasure eta] (A : Set (ℝ × ℝ)),
+  MeasurableSet A →
+    ∀ (g : ℝ × ℝ → ℝ),
+      Measurable g →
+        ∀ (C R h K : ℝ),
+          0 ≤ C →
+            0 ≤ R →
+              0 < h →
+                0 ≤ K →
+                  (∀ u ∈ A, |g u| ≤ C) →
+                    (∀ u ∈ A, ‖u‖ ≤ R) →
+                      have f := A.indicator g;
+                      have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod eta);
+                      ∀ (k : ℝ × ℝ → ℝ),
+                        Measurable k →
+                          (∀ (z : ℝ × ℝ), 0 ≤ k z ∧ k z ≤ K) →
+                            (rho = MeasureTheory.volume.withDensity fun z => ENNReal.ofReal (k z)) →
+                              have Phi :=
+                                (ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1);
+                              MeasureTheory.IsProbabilityMeasure rho ∧
+                                MeasureTheory.Integrable f nu ∧
+                                  MeasureTheory.Integrable f rho ∧
+                                    MeasureTheory.Integrable (Shao.OQ3.openBallOscillation f h) rho ∧
+                                      MeasureTheory.Integrable (Shao.OQ3.openBallOscillation f h) Phi ∧
+                                        |∫ (z : ℝ × ℝ), f z ∂rho - ∫ (z : ℝ × ℝ), f z ∂nu| ≤
+                                          2 * Real.pi * K * Real.exp ((R + h) ^ 2) *
+                                              ∫ (z : ℝ × ℝ), Shao.OQ3.openBallOscillation f h z ∂Phi +
+                                            2 * C * eta.real {d | h / 2 < ‖d‖}
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.indicator_open_ball_oscillation_support_bound._simp_1_1
+TYPE ∀ {α : Type u} [inst : PseudoMetricSpace α] {x y : α} {ε : ℝ}, (y ∈ Metric.ball x ε) = (dist y x < ε)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.indicator_open_ball_oscillation_support_bound
+TYPE ∀ (A : Set (ℝ × ℝ)) (g : ℝ × ℝ → ℝ) (R h : ℝ),
+  (∀ u ∈ A, ‖u‖ ≤ R) → ∀ (z : ℝ × ℝ), R + h < ‖z‖ → Shao.OQ3.openBallOscillation (A.indicator g) h z = 0
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

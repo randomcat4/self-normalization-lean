@@ -1,0 +1,46 @@
+DECL Shao.OQ3.gaussian_smoothed_pair_density_damped_reference_bound
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (P : ℝ × ℝ → ℂ),
+  Continuous P →
+    MeasureTheory.Integrable P MeasureTheory.volume →
+      ∀ (b R : ℝ),
+        0 < b →
+          0 ≤ R →
+            have v := (2 * b).toNNReal;
+            have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+            have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+            have k := fun x =>
+              1 / (4 * Real.pi * b) * ∫ (w : ℝ × ℝ), Real.exp (-((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b)) ∂nu;
+            have damping := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2));
+            have Phi := fun z => ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂nu;
+            have error := fun z => ↑(damping z) * (Phi z - P z);
+            have window := {z | √(z.1 ^ 2 + z.2 ^ 2) ≤ R};
+            have kernel := fun x z => Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2));
+            MeasureTheory.IsProbabilityMeasure rho ∧
+              (rho = MeasureTheory.volume.withDensity fun x => ENNReal.ofReal (k x)) ∧
+                MeasureTheory.Integrable k MeasureTheory.volume ∧
+                  ∫ (x : ℝ × ℝ), k x = 1 ∧
+                    MeasureTheory.Integrable error MeasureTheory.volume ∧
+                      ∀ (x : ℝ × ℝ),
+                        MeasureTheory.Integrable (fun z => kernel x z * (↑(damping z) * P z)) MeasureTheory.volume ∧
+                          ‖↑(k x) - ↑(1 / (2 * Real.pi) ^ 2) * ∫ (z : ℝ × ℝ), kernel x z * (↑(damping z) * P z)‖ ≤
+                            1 / (2 * Real.pi) ^ 2 *
+                              ((∫ (z : ℝ × ℝ) in window, ‖error z‖) + 2 * Real.pi / b * Real.exp (-b * R ^ 2 / 2) +
+                                ∫ (z : ℝ × ℝ) in windowᶜ, ‖P z‖)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.gaussian_smoothed_pair_absolute_tail_bound
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (b R : ℝ),
+  0 < b →
+    0 ≤ R →
+      ∀ (s : Set (ℝ × ℝ)),
+        MeasurableSet s →
+          (∀ z ∈ s, R ^ 2 ≤ z.1 ^ 2 + z.2 ^ 2) →
+            have v := (2 * b).toNNReal;
+            have gamma := (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v);
+            have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod gamma);
+            have Phi := fun z => ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂rho;
+            MeasureTheory.Integrable Phi MeasureTheory.volume ∧
+              MeasureTheory.IntegrableOn Phi s MeasureTheory.volume ∧
+                ∫ (z : ℝ × ℝ) in s, ‖Phi z‖ ≤ 2 * Real.pi / b * Real.exp (-b * R ^ 2 / 2)
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

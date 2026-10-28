@@ -1,0 +1,27 @@
+theorem gaussian_smoothed_pair_density_damped_reference_bound
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (P : (ℝ × ℝ) → ℂ) (hPc : Continuous P) (hP : Integrable P)
+    (b R : ℝ) (hb : 0 < b) (hR : 0 ≤ R) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    let k : (ℝ × ℝ) → ℝ := fun x => (1 / (4 * Real.pi * b)) *
+      ∫ w : ℝ × ℝ, Real.exp (-((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b)) ∂nu
+    let damping : (ℝ × ℝ) → ℝ := fun z => Real.exp (-b * (z.1 ^ 2 + z.2 ^ 2))
+    let Phi : (ℝ × ℝ) → ℂ := fun z =>
+      ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂nu
+    let error : (ℝ × ℝ) → ℂ := fun z => (damping z : ℂ) * (Phi z - P z)
+    let window : Set (ℝ × ℝ) := {z | Real.sqrt (z.1 ^ 2 + z.2 ^ 2) ≤ R}
+    let kernel : (ℝ × ℝ) → (ℝ × ℝ) → ℂ := fun x z =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ))
+    IsProbabilityMeasure rho ∧ rho = volume.withDensity (fun x => ENNReal.ofReal (k x)) ∧
+      Integrable k ∧ (∫ x : ℝ × ℝ, k x) = 1 ∧ Integrable error ∧
+      ∀ x : ℝ × ℝ,
+        Integrable (fun z => kernel x z * ((damping z : ℂ) * P z)) ∧
+          ‖((k x : ℝ) : ℂ) - (((1 / (2 * Real.pi) ^ 2 : ℝ) : ℂ) *
+            ∫ z : ℝ × ℝ, kernel x z * ((damping z : ℂ) * P z))‖ ≤
+            (1 / (2 * Real.pi) ^ 2) *
+              ((∫ z in window, ‖error z‖) +
+                (2 * Real.pi / b) * Real.exp (-b * R ^ 2 / 2) +
+                  ∫ z in windowᶜ, ‖P z‖)

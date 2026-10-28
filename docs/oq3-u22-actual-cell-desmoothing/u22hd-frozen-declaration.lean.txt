@@ -1,0 +1,14 @@
+theorem density_weighted_test_error_bound
+    (rho : Measure (ℝ × ℝ)) [IsProbabilityMeasure rho]
+    (k reference f : (ℝ × ℝ) → ℝ)
+    (hk : Measurable k) (hk0 : ∀ z : ℝ × ℝ, 0 ≤ k z)
+    (hrho : rho = volume.withDensity (fun z => ENNReal.ofReal (k z)))
+    (href : Measurable reference) (hf : Measurable f) (hfi : Integrable f)
+    (C delta : ℝ) (hC : 0 ≤ C) (hdelta : 0 ≤ delta)
+    (hfBound : ∀ z : ℝ × ℝ, |f z| ≤ C)
+    (herror : ∀ z : ℝ × ℝ, |k z - reference z| ≤ delta) :
+    Integrable f rho ∧
+      Integrable (fun z : ℝ × ℝ => f z * k z) ∧
+        Integrable (fun z : ℝ × ℝ => f z * reference z) ∧
+          |(∫ z : ℝ × ℝ, f z ∂rho) - (∫ z : ℝ × ℝ, f z * reference z)| ≤
+            delta * (∫ z : ℝ × ℝ, |f z|)
