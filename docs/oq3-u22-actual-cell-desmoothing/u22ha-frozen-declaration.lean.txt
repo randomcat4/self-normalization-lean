@@ -1,0 +1,25 @@
+theorem indicator_open_ball_oscillation_support_bound
+    (A : Set (ℝ × ℝ)) (g : (ℝ × ℝ) → ℝ) (R h : ℝ)
+    (hA : ∀ u ∈ A, ‖u‖ ≤ R) (z : ℝ × ℝ) (hz : R + h < ‖z‖) :
+    openBallOscillation (A.indicator g) h z = 0
+
+theorem bounded_density_indicator_desmoothing_bound
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta]
+    (A : Set (ℝ × ℝ)) (hAm : MeasurableSet A)
+    (g : (ℝ × ℝ) → ℝ) (hg : Measurable g)
+    (C R h K : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) (hh : 0 < h) (hK : 0 ≤ K)
+    (hbound : ∀ u ∈ A, |g u| ≤ C) (hA : ∀ u ∈ A, ‖u‖ ≤ R) :
+    let f : (ℝ × ℝ) → ℝ := A.indicator g
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    ∀ k : (ℝ × ℝ) → ℝ, Measurable k →
+      (∀ z : ℝ × ℝ, 0 ≤ k z ∧ k z ≤ K) →
+      rho = volume.withDensity (fun z => ENNReal.ofReal (k z)) →
+      let Phi : Measure (ℝ × ℝ) :=
+        (ProbabilityTheory.gaussianReal 0 1).prod (ProbabilityTheory.gaussianReal 0 1)
+      IsProbabilityMeasure rho ∧ Integrable f nu ∧ Integrable f rho ∧
+        Integrable (openBallOscillation f h) rho ∧
+          Integrable (openBallOscillation f h) Phi ∧
+            |(∫ z : ℝ × ℝ, f z ∂rho) - (∫ z : ℝ × ℝ, f z ∂nu)| ≤
+              ((2 * Real.pi) * K * Real.exp ((R + h) ^ 2)) *
+                (∫ z : ℝ × ℝ, openBallOscillation f h z ∂Phi) +
+                  2 * C * eta.real {d : ℝ × ℝ | h / 2 < ‖d‖}

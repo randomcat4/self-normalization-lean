@@ -1,0 +1,21 @@
+DECL Shao.OQ3.independent_sum_bounded_test_oscillation_bound._abel_1_1
+TYPE ∀ (q : (ℝ × ℝ) × ℝ × ℝ), q.1 - (q.1 + q.2) = -q.2
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.independent_sum_bounded_test_oscillation_bound
+TYPE ∀ (nu eta : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu]
+  [MeasureTheory.IsProbabilityMeasure eta] (f : ℝ × ℝ → ℝ),
+  Measurable f →
+    ∀ (C h : ℝ),
+      0 ≤ C →
+        0 < h →
+          (∀ (z : ℝ × ℝ), |f z| ≤ C) →
+            have rho := MeasureTheory.Measure.map (fun q => q.1 + q.2) (nu.prod eta);
+            MeasureTheory.IsProbabilityMeasure rho ∧
+              MeasureTheory.Integrable f nu ∧
+                MeasureTheory.Integrable f rho ∧
+                  MeasureTheory.Integrable (Shao.OQ3.openBallOscillation f h) rho ∧
+                    |∫ (z : ℝ × ℝ), f z ∂rho - ∫ (z : ℝ × ℝ), f z ∂nu| ≤
+                      ∫ (z : ℝ × ℝ), Shao.OQ3.openBallOscillation f h z ∂rho + 2 * C * eta.real {d | h / 2 < ‖d‖}
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

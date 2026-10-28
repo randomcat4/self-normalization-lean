@@ -1,0 +1,20 @@
+DECL Shao.OQ3.density_weighted_test_error_bound
+TYPE ∀ (rho : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure rho] (k reference f : ℝ × ℝ → ℝ),
+  Measurable k →
+    (∀ (z : ℝ × ℝ), 0 ≤ k z) →
+      (rho = MeasureTheory.volume.withDensity fun z => ENNReal.ofReal (k z)) →
+        Measurable reference →
+          Measurable f →
+            MeasureTheory.Integrable f MeasureTheory.volume →
+              ∀ (C delta : ℝ),
+                0 ≤ C →
+                  0 ≤ delta →
+                    (∀ (z : ℝ × ℝ), |f z| ≤ C) →
+                      (∀ (z : ℝ × ℝ), |k z - reference z| ≤ delta) →
+                        MeasureTheory.Integrable f rho ∧
+                          MeasureTheory.Integrable (fun z => f z * k z) MeasureTheory.volume ∧
+                            MeasureTheory.Integrable (fun z => f z * reference z) MeasureTheory.volume ∧
+                              |∫ (z : ℝ × ℝ), f z ∂rho - ∫ (z : ℝ × ℝ), f z * reference z| ≤
+                                delta * ∫ (z : ℝ × ℝ), |f z|
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
