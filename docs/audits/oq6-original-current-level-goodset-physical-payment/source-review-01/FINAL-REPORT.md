@@ -1,0 +1,33 @@
+# unit258 最终独立源码与机器资格审阅
+
+STATUS: CORRECT
+
+裁决：精确 unit258 已完成独立完整 SOURCE→statement/proof、首个原对象内核与全部实际所属TYPE/必要VALUE/递归AX的最终审阅，可以按冻结范围记为 qualified=true。Root整合接受仍由Root决定。本裁决不关闭 full OQ56、原CDF/relative-tail/DC 或任何root范围。
+
+同一独立上下文 /root/oq56_unit258_review 复用先前完整SOURCE审阅：SOURCE-REPORT.md SHA256 fbab0a5bf4f749ac386917026dcf1d277e315870a9bc11d38558cafafea4de71。该报告、SOURCE-VERDICT/COVERAGE/MANIFEST及原ACTUAL-READ-ACK字节全部保持。首次机器完整阅读后另写 MACHINE-ACTUAL-READ-ACK.json；没有重做旧producer proof/TYPE/AX，没有读未合格257，没有新Lean、服务器、网络、Git/API或子代理调用。
+
+精确源 SHA256 991112dd3ae4bdb977b80fef9025b748a0912c371d2b44426d4fb9e0f00f7758，9083B/186LF，仍与冻结、作者六零释放和SOURCE审阅绑定一致。新首个原对象 SHA256 59c410069b4efdd8d20a69d5b1a22957253f5985d6f3fe115c2ce0e987350d3e，611608B，mtime_ns 1793210253451294659。对象在首次native之后、audit之前/之后/current投影三处完全相同。
+
+native01实际Lean RC0，5.369777452200651秒；receipt SHA256 95561831801fb3e167ce5af1ff5a3b6952b04441ef291b85298028c8a7decac5，28645150B。同首O audit01实际Lean RC0，5.407469965517521秒；receipt SHA256 4a17f959a5bbd17f08297733c553ac8f80de7f9bead85b8fbc3db9f9026326c2，28651004B。两次自然结束，所供现有receipt投影记录无timeout、cleanup、ownershipIssue或postError，before=after的受保护记录数分别27928/27938。这里交叉核验的是原有服务器回执指纹和完整窄投影；没有将28MB原回执、对象、缓存或原日志下载到本地，也没有声称本审阅者另行执行了这些命令。
+
+两个严格wrapperSuccess均为false，两个transport exit_code均为1，原记录保留。native stdout为7338B，含20条source warning（2 style、18 unused），stderr为134B环境warning；audit stdout为完整36931B所属项文本，stderr为同一134B环境warning。实际Lean内层RC均为0，这不同于严格空流通过。本裁决依据实际退出、实际对象、完整类型与递归公理证据，不把封装false改写成true。环境的mathlib local changes警告原样保留；两次命令的pin/受保护记录前后一致，不声称工作树洁净。
+
+完整 machine-command-and-stop-existing-receipts-projection.json（SHA256 740ef15141437f52c65a0a9ad92fddd3bd8732289a387ecccef982034d3760d3，11937B）含实际argv：首次native在CPU52–55用-M8192 -j4输出该首O；audit同CPU/限制且argv没有-o，仅import Shao.OQ6.OriginalCurrentLevelGoodsetPhysicalPayment。audit输入 SHA256 7173b682148280a534e62bd59b34e520712c50add913a45c14f1f8f57bf9582d，2803B/62LF，全文读取。它按anchor的actual module index扫描全部env.constants，无namespace过滤，逐项collectAxioms并输出完整TYPE，若有def/opaque则输出所需完整VALUE。它没有重新编译原证明。
+
+同投影的pin全文为leanprover/lean4:v4.36.0-rc1，含末尾LF共29B，SHA256 d581a24b57a4ae9e0b2132ca8ac7cc3ac336a9fc2751fe6b29414e2d434d54c4；before/current一致。Mathlib_HEAD为807d3836b165983210ee2ecf3cd28f239436949c。native/audit配置指纹及所选模式、unit、source/module/ownedO字段均与源→命令→首O绑定相符；未新建执行wrapper。完整AUTHOR-STOP原文1288B的SHA256 6b58312b1a9a8a4e7b33af345fac9b076a696ad28a1ef9979da7f921084f8096独立核验，明确原作者Lean停止且不为warning重编译。
+
+五份归一化文本均独立计算本地指纹并与server binding、normalizer result、transfer binding逐项相等，派生总计84262B：TYPE 35831B、metadata 40888B、VALUE 0B、summary4689B、binding2854B。完整读取现有normalizer适配脚本及其返回，未执行它。本地从metadata的全部rawOwnedJSON/TYPE/必要VALUE/count块在内存无损重构原audit stdout，得36931B、SHA256 6b78a5f8bd7b2665af752ba131e343175b663b35c0da13588973e3563ba8a142，与原stdout指纹完全一致；没有写出原日志。metadata内类型与完整读取的TYPE文本字节一致，所有原JSON字段也逐项解析比对。
+
+实际所属库存由完整module-index扫描结果独立重算：2个thmInfo，均bodyExpressionPresent=true；0个非定理，0个所需VALUE。475TYPELF全部阅读，其中generated _proof_1_1为6LF，公开主定理为469LF。空VALUE的SHA256为e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855；它来自实际全所属项均为定理，不是遗漏定义。没有只读取主声明。
+
+generated _proof_1_1的完整类型是任意原可测Ω、概率μ和n上sampleLaw n μ的概率实例，对应源码instP；其宇宙参数u_1与主定理u正常分离。它无额外数学前提、无隐藏公理，不能因是generated项而省略。主定理全部469LF的展开类型与冻结原数学对象一致：任意原mΩ与μ概率律、可测g、L2、均值0和二矩1保留；TYPE第64行先∃cg>0，第66行后才∀C/a/t0/M，第74行eventually-n、第76行r/w随后，cg没有晚选。
+
+TYPE第95–180行完整保留双向canonical、w非负/有界高度/平方可积及M界、原产品包络与对称假设；第201行独立hGeometry仍是(1+rho)z<=sqrt(n)。18个unused binder的提示不代表任何假设被编译器删除：hC/ha/ht0/hM/hr/hr1/hcR/hcL/hW/hWR/hSq/hSqBound/hEnv/hsym/hrho/hz/hzWindow/hGeometry的完整∀binder均实际存在。它们在结论类型中不被显式引用只是依赖式类型的常见情形，不能借warning弱化定理前提。
+
+TYPE第208行开始的17let保留q、K、原P=sampleLaw n μ、当前G_z和真实upper/rows界及Hsource=G∩C2。第251行D2z和第303行clipped均为512/rho/currentz；没有变回clip1。第291行physical保留真实sqrt(centeredSq)=0时取0、否则(W+D)/sqrt(centeredSq)的原约定；Z0与Zphysical分别仍是投影与真实分母零。第334行payment逐项是3exp(-q)+exp(-cg*n)+4exp(-z*sqrt(n)/2)。TYPE第364–475行保留原mΩ乘积可测性、Hsource⊆Ssafe、同Hsource上的1/32严格安全余量、真实分母正与因式分解、D2z=rawdelta及当前clip=physical、两条包含和全部单一payment上界；四事件并以原P整体付款，不是两个付款相加后保持旧常数。
+
+两个actual owner的Lean.collectAxioms完整递归结果都恰为propext、Classical.choice、Quot.sound，独立派生occurrences各2。全部所属项均被覆盖，没有新增sorryAx、目标axiom、unsafe或native_decide。无类型省略标记、pretty-print失败或缺失VALUE。先前完整SOURCE审阅已证明点态/事件链，此轮内核与全所属证据补齐该精确版本的机器门。
+
+接受范围严格为原P下的当前层级好集/物理比较/四实际坏事件共同付款。没有m0/eta/共同编码见证选择，没有Ssafe在未来mN0可测的假设或结论，没有声称编码ν upper事件与原P physical事件联合只付一次B；也没有strictbudget/source引擎存在性/CDF/relative-tail/DC/未截断包络应用/full OQ56/root闭合。p54条件p矩只收敛及最终统一有界修复、fixedclip1三次费用反例、外部Shao–Zhou/鞅/随机区间结果归属全部保留。
+
+issues=[]。最后FINALWRITE记录writers/heavy/inflight/pendingExternal/children/uncertain六项0后，审阅者停止全部写入并释放本任务权限。请求模型gpt-6.1-sol/xhigh；实际model/backend/effort及四类usage不可见均null。
