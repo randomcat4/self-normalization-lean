@@ -1,0 +1,878 @@
+   1: import Shao.OQ6.OriginalSameWitnessClippedEventTransport
+   2: 
+   3: set_option autoImplicit false
+   4: universe u
+   5: open MeasureTheory ProbabilityTheory
+   6: open scoped BigOperators Classical Topology MeasureTheory symmDiff
+   7: open Shao.OQ5.P51
+   8: namespace Shao.OQ6.OriginalSameWitnessClippedTailApplication
+   9: noncomputable section
+  10: 
+  11: theorem actual_original_same_witness_clipped_scalar_tail_application :
+  12:   ∀
+  13:     {Ω : Type u} [mΩ : MeasurableSpace Ω]
+  14:     (μ : Measure Ω) [IsProbabilityMeasure μ]
+  15:     (h : Ω → Ω → ℝ)
+  16:     (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+  17:     (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+  18:     (hhsymm : ∀ o y, h o y = h y o)
+  19:     (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+  20:     (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+  21:     (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+  22:     (hgp : Integrable (fun o : Ω => Real.rpow |∫ y, h o y ∂μ| p) μ)
+  23:     (cBudget : ℝ) (hcBudget : 0 < cBudget),
+  24:     let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+  25:     let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+  26:     let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+  27:     let rho : ℝ := Real.sqrt v
+  28:     let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+  29:     let cWindow : ℝ := Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)
+  30:     Measurable[mΩ, borel ℝ] g ∧ MemLp g 2 μ ∧
+  31:     0 ≤ β ∧ 0 < cWindow ∧
+  32:     Real.rpow cWindow p = min (1 / 2 : ℝ) cBudget / 2 ∧
+  33:     Real.rpow cWindow p < min (1 / 2 : ℝ) cBudget ∧
+  34:     ∃ cg : ℝ, 0 < cg ∧
+  35:     ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)
+  36:         (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),
+  37:       let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+  38:       letI : MeasurableSpace Ω := m₀
+  39:       letI : MeasurableSpace.CountablyGenerated Ω := hcg
+  40:       IsProbabilityMeasure μ₀ ∧
+  41:       (∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)
+  42:           (z : ℝ) (hz : 0 ≤ z),
+  43:         let mN : MeasurableSpace (Fin n → Ω) :=
+  44:           @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+  45:         let mN₀ : MeasurableSpace (Fin n → Ω) :=
+  46:           @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+  47:         let P : @Measure (Fin n → Ω) mN :=
+  48:           @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+  49:             (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+  50:         let P₀ : @Measure (Fin n → Ω) mN₀ :=
+  51:           @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+  52:             (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+  53:         let N : ℝ := Real.sqrt (n : ℝ)
+  54:         let K : ℝ := 4 * Real.sqrt (n : ℝ)
+  55:         let ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+  56:         let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+  57:         let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+  58:         let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+  59:         let T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1
+  60:         let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|
+  61:         let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+  62:         let A0delete : Fin n → (Fin n → Ω) → ℝ :=
+  63:           fun i ζ => |residualStatisticDDeleted n r ζ i|
+  64:         let B0delete : Fin n → (Fin n → Ω) → ℝ :=
+  65:           fun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i
+  66:         let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+  67:         let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+  68:         let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=
+  69:           @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+  70:             (fun _ : Fin n => mAugLocal)
+  71:         let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=
+  72:           fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+  73:         let ν : @Measure (Fin n → Ω × ℝ) mAug :=
+  74:           @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+  75:             (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+  76:         let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+  77:         let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+  78:           Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+  79:             (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+  80:         let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+  81:         let Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+  82:           Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+  83:         let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+  84:         let Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+  85:         let a : ℕ → Fin n → ℝ := fun k =>
+  86:           Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+  87:         let s : ℕ → ℝ := fun k =>
+  88:           Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+  89:         let ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+  90:           Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+  91:         let η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+  92:           Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+  93:         let C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+  94:         let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+  95:         let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+  96:         let Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+  97:         let Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+  98:         let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+  99:         let Qε : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+ 100:           fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+ 101:         let Dη : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+ 102:           fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+ 103:         let Tη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)
+ 104:         let A : (Fin n → Ω × ℝ) → ℝ := fun x => A0 (q x)
+ 105:         let B : (Fin n → Ω × ℝ) → ℝ := fun x => B0 (q x)
+ 106:         let Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => A0delete i (q x)
+ 107:         let Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => B0delete i (q x)
+ 108:         let Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+ 109:           fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)
+ 110:         let H : (Fin n → Ω × ℝ) → ℝ :=
+ 111:           fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))
+ 112:         let Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+ 113:           fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))
+ 114:         let M : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => K * ε k * H x
+ 115:         let Mdelete : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => K * ε k * Hdelete i x
+ 116:         let Anew : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => A x + M k x
+ 117:         let AdeleteNew : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Adelete i x + Mdelete k i x
+ 118:         let Δ : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ :=
+ 119:           fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)
+ 120:         let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2
+ 121:         let ℓη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2
+ 122:         let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ
+ 123:         let Sη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, ℓη k i x
+ 124:         let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ
+ 125:         let Sηminus : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x
+ 126:         let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P
+ 127:         let Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν
+ 128:         let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ
+ 129:         let fullTestη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => z * Anew k x + z ^ 2 * B x
+ 130:         let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+ 131:           min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+ 132:         let deletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+ 133:           min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+ 134:         let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+ 135:           min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+ 136:         let compactDeletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+ 137:           min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+ 138:         let Lcompact0 : ℝ := ∑ i : Fin n,
+ 139:           ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P
+ 140:         let Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n,
+ 141:           ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν
+ 142:         let sourceCost0 : ℝ :=
+ 143:           ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +
+ 144:             ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0
+ 145:         let sourceCostη : ℕ → ℝ := fun k =>
+ 146:           ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+ 147:             ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+ 148:         let compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +
+ 149:           ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P
+ 150:         let compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ x, Anew k x ∂ν) +
+ 151:           z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν
+ 152:         let Fz : ℝ → ℝ := fun t => (z * t) ^ 2 * min |z * t| 1
+ 153:         let δ0 : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P
+ 154:         let δreduced : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P₀
+ 155:         let δν : Fin n → ℝ := fun i => ∫ x, Fz (ξ i x) ∂ν
+ 156:         let δη : ℕ → Fin n → ℝ := fun k i => ∫ x, Fz (η k i x) ∂ν
+ 157:         let L0 : ℝ := ∑ i : Fin n, δ0 i
+ 158:         let Lν : ℝ := ∑ i : Fin n, δν i
+ 159:         let Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i
+ 160:         let scalarBudget : ℝ := ∫ o : Ω, Fz (g o / N) ∂μ
+ 161:         let deletedTestUnperturbedη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+ 162:           min |z * η k i x| 1 * (|Anew k x - Adelete i x| + z * |B x - Bdelete i x|)
+ 163:         let unperturbedSourceCostη : ℕ → ℝ := fun k =>
+ 164:           ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+ 165:             ∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+ 166:         (∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (ξlocal i)) ∧
+ 167:         (∀ (k : ℕ) (i : Fin n),
+ 168:           Measurable[mAugLocal, borel ℝ] (ηlocal k i) ∧
+ 169:           MeasurableSpace.comap (ηlocal k i) (borel ℝ) = mAugLocal) ∧
+ 170:         (∀ k : ℕ,
+ 171:           Measurable[mAug, borel (Fin n → ℝ)] (C k) ∧
+ 172:           MeasurableSpace.comap (C k) (borel (Fin n → ℝ)) = mAug ∧
+ 173:           ∀ (f : (Fin n → Ω × ℝ) → ℝ), Measurable[mAug, borel ℝ] f →
+ 174:             ∃ F : (Fin n → ℝ) → ℝ,
+ 175:               Measurable[borel (Fin n → ℝ), borel ℝ] F ∧
+ 176:               ∀ x : Fin n → Ω × ℝ, f x = F (C k x)) ∧
+ 177:         (∀ (k : ℕ) (i : Fin n),
+ 178:           let J : Type := {j : Fin n // j ≠ i}
+ 179:           let mDel : MeasurableSpace (J → Ω × ℝ) :=
+ 180:             @MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)
+ 181:           let Cdel : (J → Ω × ℝ) → (J → ℝ) :=
+ 182:             fun y j => ηlocal k j.val (y j)
+ 183:           let pX : (Fin n → Ω × ℝ) → (J → Ω × ℝ) := fun x j => x j.val
+ 184:           let pR : (Fin n → ℝ) → (J → ℝ) := fun t j => t j.val
+ 185:           Measurable[mAug, mDel] pX ∧
+ 186:           Measurable[borel (Fin n → ℝ), borel (J → ℝ)] pR ∧
+ 187:           Measurable[mDel, borel (J → ℝ)] Cdel ∧
+ 188:           MeasurableSpace.comap Cdel (borel (J → ℝ)) = mDel ∧
+ 189:           (∀ x : Fin n → Ω × ℝ, pR (C k x) = Cdel (pX x)) ∧
+ 190:           MeasurableSpace.comap (fun x : Fin n → Ω × ℝ => pR (C k x))
+ 191:               (borel (J → ℝ)) = MeasurableSpace.comap pX mDel ∧
+ 192:           ∀ (d : (J → Ω × ℝ) → ℝ), Measurable[mDel, borel ℝ] d →
+ 193:             ∃ F : (J → ℝ) → ℝ,
+ 194:               Measurable[borel (J → ℝ), borel ℝ] F ∧
+ 195:               (∀ y : J → Ω × ℝ, d y = F (Cdel y)) ∧
+ 196:               Measurable[borel (Fin n → ℝ), borel ℝ] (fun t => F (pR t)) ∧
+ 197:               ∀ x : Fin n → Ω × ℝ, d (pX x) = F (pR (C k x))) ∧
+ 198:         (∀ (k : ℕ) (i : Fin n),
+ 199:           ∃ FAdelete FBdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+ 200:             Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FAdelete ∧
+ 201:             Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FBdelete ∧
+ 202:             ∀ x : Fin n → Ω × ℝ,
+ 203:               Adelete i x = FAdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x) ∧
+ 204:               Bdelete i x = FBdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧
+ 205:         @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧
+ 206:         P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧
+ 207:         IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧
+ 208:         (∀ k : ℕ, 0 < ε k ∧ ε k < 1 / (4 * Real.sqrt (n : ℝ))) ∧
+ 209:         Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)) ∧
+ 210:         (∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν ∧
+ 211:           (∫ x, ξ i x ∂ν) = 0) ∧
+ 212:         (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1 ∧
+ 213:         (∀ (k : ℕ) (i : Fin n), Measurable[mAugLocal, borel ℝ] (Ylocal k i) ∧
+ 214:           Measurable[mAug, borel ℝ] (Y k i) ∧ ∀ x : Fin n → Ω × ℝ, |Y k i x - ξ i x| ≤ ε k) ∧
+ 215:         (∀ ζ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ζ ∧ |D2 ζ| ≤ B0 ζ) ∧
+ 216:         (∀ ζ : Fin n → Ω, projectionV n g ζ = 0 → T0 ζ = 0) ∧
+ 217:         (∀ (k : ℕ) (x : Fin n → Ω × ℝ), Vη k x = 0 → Tη k x = 0) ∧
+ 218:         (∀ k : ℕ, (1 / 2 : ℝ) < s k ∧
+ 219:           (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η k i x = ηlocal k i (x i)) ∧
+ 220:           iIndepFun (η k) ν ∧
+ 221:           (∀ i : Fin n, Measurable[mAug, borel ℝ] (η k i) ∧ MemLp (η k i) 2 ν ∧
+ 222:             (∫ x, η k i x ∂ν) = 0) ∧
+ 223:           (∑ i : Fin n, ∫ x, (η k i x) ^ 2 ∂ν) = 1 ∧
+ 224:           ν {x : Fin n → Ω × ℝ | Vη k x = 0} = 0 ∧
+ 225:           (∀ᵐ x ∂ν, 0 < Vη k x ∧ 0 < b x ∧ 0 < Vη k x * b x)) ∧
+ 226:         (∀ (k : ℕ) (x : Fin n → Ω × ℝ),
+ 227:           Dη k x = D1 (q x) + Qε k x ∧
+ 228:           Wη k x + Dη k x - z * Vη k x * b x = W x + D1 (q x) - z * V x * b x ∧
+ 229:           |Qε k x| ≤ M k x ∧ |Dη k x| ≤ Anew k x) ∧
+ 230:         Measurable[mAug, borel ℝ] H ∧ Integrable[mAug] H ν ∧
+ 231:         (∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν) ∧
+ 232:         (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧ Integrable[mAug] (Qε k) ν ∧
+ 233:           Integrable[mAug] (fun x => |Qε k x|) ν ∧
+ 234:           (∫ x, |Qε k x| ∂ν) ≤ K * ε k * (∫ x, H x ∂ν)) ∧
+ 235:         Filter.Tendsto (fun k => ∫ x, |Qε k x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧
+ 236:         (∀ k : ℕ, Measurable[mAug, borel ℝ] (Anew k) ∧ Integrable[mAug] (Anew k) ν ∧
+ 237:           ∀ x : Fin n → Ω × ℝ, 0 ≤ Anew k x) ∧
+ 238:         (∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (AdeleteNew k i) ∧
+ 239:           Integrable[mAug] (AdeleteNew k i) ν ∧ ∀ x : Fin n → Ω × ℝ, 0 ≤ AdeleteNew k i x) ∧
+ 240:         (∀ k : ℕ, Integrable[mAug] (fun x => |Anew k x - A x|) ν ∧
+ 241:           (∫ x, |Anew k x - A x| ∂ν) = ε k * (K * (∫ x, H x ∂ν))) ∧
+ 242:         (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |AdeleteNew k i x - Adelete i x|) ν ∧
+ 243:           (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) = ε k * (K * (∫ x, Hdelete i x ∂ν))) ∧
+ 244:         Filter.Tendsto (fun k => ∫ x, |Anew k x - A x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧
+ 245:         (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, |AdeleteNew k i x - Adelete i x| ∂ν)
+ 246:           Filter.atTop (nhds (0 : ℝ))) ∧
+ 247:         (∀ (k : ℕ) (i : Fin n) (x : Fin n → Ω × ℝ),
+ 248:           Δ k i x = M k x - Mdelete k i x ∧ |Δ k i x| ≤ M k x + Mdelete k i x) ∧
+ 249:         (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |Δ k i x|) ν ∧
+ 250:           (∫ x, |Δ k i x| ∂ν) ≤ ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)))) ∧
+ 251:         (∀ k : ℕ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,
+ 252:           Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧
+ 253:           ∀ x : Fin n → Ω × ℝ, (M k x, Anew k x, B x) = Ffull (C k x)) ∧
+ 254:         (∀ (k : ℕ) (i : Fin n), ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,
+ 255:           Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧
+ 256:           ∀ x : Fin n → Ω × ℝ,
+ 257:             (Mdelete k i x, AdeleteNew k i x, Bdelete i x) =
+ 258:               Fdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧
+ 259:         (∀ k : ℕ, ∃ G1 G2 : (Fin n → ℝ) → ℝ,
+ 260:           Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧
+ 261:           Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧
+ 262:           ∀ x : Fin n → Ω × ℝ, Dη k x = G1 (C k x) ∧ D2 (q x) = G2 (C k x)) ∧
+ 263:         Integrable[mN] (fun ζ => fullTest0 ζ * Real.exp (S0 ζ)) P ∧
+ 264:         (∀ k : ℕ, Integrable[mAug] (fun x => fullTestη k x * Real.exp (Sη k x)) ν) ∧
+ 265:         (∀ i : Fin n, Integrable[mN] (fun ζ => deletedTest0 i ζ * Real.exp (S0minus i ζ)) P) ∧
+ 266:         (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => deletedTestη k i x * Real.exp (Sηminus k i x)) ν) ∧
+ 267:         (∀ i : Fin n, Integrable[mN] (compactDeletedTest0 i) P) ∧
+ 268:         (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (compactDeletedTestη k i) ν) ∧
+ 269:         0 < I0 ∧ (∀ k : ℕ, 0 < Iη k) ∧
+ 270:         Filter.Tendsto Iη Filter.atTop (nhds I0) ∧
+ 271:         Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)
+ 272:           Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)) ∧
+ 273:         (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)
+ 274:           Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P))) ∧
+ 275:         Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)
+ 276:           Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)) ∧
+ 277:         (∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)
+ 278:           Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧
+ 279:         (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)
+ 280:           Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P))) ∧
+ 281:         Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) ∧
+ 282:         Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0) ∧
+ 283:         (∀ (k : ℕ) (x : Fin n → Ω × ℝ),
+ 284:           A x + (4 * ε k * Real.sqrt (n : ℝ)) * H x = Anew k x) ∧
+ 285:         (∀ (k : ℕ) (i : Fin n),
+ 286:           Measurable[mAug, borel ℝ] (fun x =>
+ 287:             deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+ 288:               deletedTestη k i x * Real.exp (Sηminus k i x)) ∧
+ 289:           Integrable[mAug] (fun x =>
+ 290:             deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+ 291:               deletedTestη k i x * Real.exp (Sηminus k i x)) ν ∧
+ 292:           Integrable[mAug] (fun x =>
+ 293:             |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+ 294:               deletedTestη k i x * Real.exp (Sηminus k i x)|) ν ∧
+ 295:           Integrable[mAug] (fun x =>
+ 296:             deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x)) ν ∧
+ 297:           (∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+ 298:             deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν) ≤
+ 299:               |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+ 300:           |(∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+ 301:             (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+ 302:               |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν)))) ∧
+ 303:         (∀ i : Fin n,
+ 304:           Filter.Tendsto (fun k : ℕ =>
+ 305:             ∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+ 306:               deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν)
+ 307:             Filter.atTop (nhds (0 : ℝ)) ∧
+ 308:           Filter.Tendsto (fun k : ℕ =>
+ 309:             (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+ 310:               (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+ 311:             Filter.atTop (nhds (0 : ℝ)) ∧
+ 312:           Filter.Tendsto (fun k : ℕ =>
+ 313:             ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν)
+ 314:             Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)) ∧
+ 315:           Filter.Tendsto (fun k : ℕ =>
+ 316:             (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)
+ 317:             Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧
+ 318:         (∀ k : ℕ,
+ 319:           |(∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+ 320:             (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+ 321:               |ε k| * ∑ i : Fin n,
+ 322:                 Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+ 323:         Filter.Tendsto (fun k : ℕ =>
+ 324:           (∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+ 325:             (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+ 326:           Filter.atTop (nhds (0 : ℝ)) ∧
+ 327:         Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)
+ 328:           Filter.atTop (nhds (0 : ℝ)) ∧
+ 329:         Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0) ∧
+ 330:         (∀ (cSZ C1 C2 C3 C4 : ℝ)
+ 331:             (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+ 332:               cSZ C1 C2 C3 C4)
+ 333:             (k : ℕ) (hz1 : 1 ≤ z)
+ 334:             (hδη : ∀ i : Fin n, δη k i ≤ 1)
+ 335:             (hLη : Lη k ≤ cSZ * z ^ 2),
+ 336:           Shao.standardNormalTail z * Real.exp (-C1 * Lη k) *
+ 337:               (1 - C2 * unperturbedSourceCostη k) ≤
+ 338:             ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ∧
+ 339:           ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ≤
+ 340:             Shao.standardNormalTail z * Real.exp (C3 * Lη k) *
+ 341:                 (1 + C4 * unperturbedSourceCostη k) +
+ 342:               ν.real {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4} +
+ 343:               ν.real {x : Fin n → Ω × ℝ |
+ 344:                 z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)}) ∧
+ 345:         (∀ (C1 C2 C3 C4 : ℝ)
+ 346:             (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+ 347:               cBudget C1 C2 C3 C4)
+ 348:             (hz1 : 1 ≤ z)
+ 349:             (hzWindow : β = 0 ∨
+ 350:               (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+ 351:                 Real.rpow (n : ℝ) ((p - 2) / (2 * p))))
+ 352:             (τ : ℝ) (hτ : 0 < τ),
+ 353:           ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →
+ 354:             (∀ i : Fin n, δη k i ≤ 1) ∧
+ 355:             Lη k ≤ cBudget * z ^ 2 ∧
+ 356:             |unperturbedSourceCostη k - sourceCost0| < τ ∧
+ 357:             Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+ 358:                 (1 - C2 * sourceCost0) - τ ≤
+ 359:               ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ∧
+ 360:             ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ≤
+ 361:               Shao.standardNormalTail z * Real.exp (C3 * L0) *
+ 362:                   (1 + C4 * sourceCost0) +
+ 363:                 ν.real {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4} +
+ 364:                 ν.real {x : Fin n → Ω × ℝ |
+ 365:                   z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)} + τ) ∧
+ 366:         @MeasurableSet (Fin n → Ω) mN₀
+ 367:           {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+ 368:         @MeasurableSet (Fin n → Ω) mN
+ 369:           {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+ 370:         @MeasurableSet (Fin n → Ω × ℝ) mAug
+ 371:           {x : Fin n → Ω × ℝ | z ≤ T0 (q x)} ∧
+ 372:         @MeasurableSet (Fin n → Ω) mN₀
+ 373:           {ζ : Fin n → Ω | projectionV n g ζ = 0} ∧
+ 374:         @MeasurableSet (Fin n → Ω) mN
+ 375:           {ζ : Fin n → Ω | projectionV n g ζ = 0} ∧
+ 376:         @MeasurableSet (Fin n → Ω × ℝ) mAug
+ 377:           {x : Fin n → Ω × ℝ | V x = 0} ∧
+ 378:         ν.real {x : Fin n → Ω × ℝ | z ≤ T0 (q x)} =
+ 379:           P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+ 380:         ν.real {x : Fin n → Ω × ℝ | V x = 0} =
+ 381:           P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ∧
+ 382:         (∀ k : ℕ,
+ 383:           @MeasurableSet (Fin n → Ω × ℝ) mAug
+ 384:             {x : Fin n → Ω × ℝ | z ≤ Tη k x} ∧
+ 385:           ν ({x : Fin n → Ω × ℝ | z ≤ Tη k x} ∆
+ 386:             {x : Fin n → Ω × ℝ | z ≤ T0 (q x)}) ≤
+ 387:               ν {x : Fin n → Ω × ℝ | V x = 0} ∧
+ 388:           |ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} -
+ 389:             P.real {ζ : Fin n → Ω | z ≤ T0 ζ}| ≤
+ 390:               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0}) ∧
+ 391–396: EXACT LINE TAIL REUSE source 345–350; target indents=[8,12,14,12,12,14]
+ 397:                 Real.rpow (n : ℝ) ((p - 2) / (2 * p)))),
+ 398:           Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+ 399:                 (1 - C2 * sourceCost0) -
+ 400:             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ≤
+ 401:             P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+ 402:           ∀ (τ : ℝ) (hτ : 0 < τ),
+ 403–405: EXACT LINE TAIL REUSE source 353–355; target indents=[12,14,14]
+ 406:               (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧
+ 407:               Lη k < cBudget * z ^ 2 ∧
+ 408:               (∀ i : Fin n, |δη k i - δ0 i| < τ) ∧
+ 409:               |Lη k - L0| < τ ∧
+ 410:               (∫ x, |Qε k x| ∂ν) < τ ∧
+ 411:               (∫ x, |Anew k x - A x| ∂ν) < τ ∧
+ 412:               (∀ i : Fin n, (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) < τ) ∧
+ 413:               |Iη k - I0| < τ ∧
+ 414:               |(∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) -
+ 415:                 (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)| < τ ∧
+ 416:               (∀ i : Fin n,
+ 417:                 |(∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) -
+ 418:                   (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)| < τ) ∧
+ 419:               |((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k) -
+ 420:                 ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)| < τ ∧
+ 421:               (∀ i : Fin n,
+ 422:                 |((∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k) -
+ 423:                   ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)| < τ) ∧
+ 424:               (∀ i : Fin n,
+ 425:                 |(∫ x, compactDeletedTestη k i x ∂ν) -
+ 426:                   (∫ ζ, compactDeletedTest0 i ζ ∂P)| < τ) ∧
+ 427:               |sourceCostη k - sourceCost0| < τ ∧
+ 428:               |compactCostη k - compactCost0| < τ ∧
+ 429:               |unperturbedSourceCostη k - sourceCost0| < τ ∧
+ 430:               Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+ 431:                               (1 - C2 * sourceCost0) - τ -
+ 432:                             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ≤
+ 433:                             P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+ 434:               P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ≤
+ 435–438: EXACT LINE TAIL REUSE source 361–364; target indents=[28,32,30,30]
+ 439:                                 z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)} +
+ 440:                               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} + τ) ∧
+ 441:         (1 ≤ z →
+ 442:           Integrable[mΩ] (fun o : Ω => Fz (g o / N)) μ ∧
+ 443:           (∀ i : Fin n,
+ 444:             Measurable[mN₀, borel ℝ] (fun ζ => Fz (ξ0 i ζ)) ∧
+ 445:             Integrable[mN] (fun ζ => Fz (ξ0 i ζ)) P ∧
+ 446:             Integrable[mN₀] (fun ζ => Fz (ξ0 i ζ)) P₀ ∧
+ 447:             Integrable[mAug] (fun x => Fz (ξ i x)) ν ∧
+ 448:             δreduced i = δ0 i ∧ δν i = δ0 i ∧ δ0 i = scalarBudget) ∧
+ 449:           L0 = (n : ℝ) * scalarBudget ∧
+ 450:           (∀ i : Fin n, L0 = (n : ℝ) * δ0 i) ∧
+ 451:           (∀ i : Fin n, 0 ≤ δ0 i) ∧ 0 ≤ L0 ∧ Lν = L0 ∧
+ 452:           L0 ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) ∧
+ 453:           (β = 0 → L0 = 0 ∧ (∀ i : Fin n, δ0 i = 0)) ∧
+ 454:           ((β = 0 ∨
+ 455:               (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+ 456:                 Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →
+ 457:             L0 ≤ Real.rpow cWindow p ∧
+ 458:             (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) ∧
+ 459:             L0 < cBudget * z ^ 2 ∧
+ 460:             (∀ (k : ℕ) (i : Fin n),
+ 461:               Integrable[mAug] (fun x => Fz (η k i x)) ν) ∧
+ 462:             (∀ i : Fin n,
+ 463:               Filter.Tendsto (fun k : ℕ => δη k i) Filter.atTop (nhds (δ0 i))) ∧
+ 464:             Filter.Tendsto Lη Filter.atTop (nhds L0) ∧
+ 465:             (∀ (τ : ℝ), 0 < τ →
+ 466:               ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →
+ 467–488: EXACT LINE TAIL REUSE source 406–427; target indents=[16,16,16,16,16,16,16,16,16,18,16,18,20,16,18,16,18,20,16,18,20,16]
+ 489:                 |compactCostη k - compactCost0| < τ)))) ∧
+ 490:       (∀ (Cenv aenv t0 Menv : ℝ)
+ 491:           (hCenv : 0 ≤ Cenv) (haenv : 0 ≤ aenv)
+ 492:           (ht0 : 0 < t0) (hMenv : 0 ≤ Menv),
+ 493:         ∀ᶠ n : ℕ in Filter.atTop,
+ 494:           4 ≤ n ∧
+ 495:           ∀ (w : Ω → ℝ)
+ 496:             (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+ 497:             (hWR : ∀ᵐ o : Ω ∂μ,
+ 498:               w o ≤ boundedPolylogHeight Cenv aenv n)
+ 499:             (hSq : Integrable[mΩ] (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+ 500:             (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ Menv)
+ 501:             (hEnv : ∀ᵐ t : Ω × Ω ∂(@Measure.prod Ω Ω mΩ mΩ μ μ),
+ 502:               |r t.1 t.2| ≤ w t.1 * w t.2)
+ 503:             (z : ℝ) (hz : (1 : ℝ) ≤ z)
+ 504:             (hzWindow : z ≤ remainderWindowScale
+ 505:               (Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv) t0 *
+ 506:                 Real.rpow (n : ℝ) (1 / 6 : ℝ)),
+ 507–517: EXACT LINE TAIL REUSE source 43–53; target indents=[8,10,8,10,8,10,12,8,10,12,8]
+ 518–520: EXACT LINE TAIL REUSE source 55–57; target indents=[8,8,8]
+ 521:         let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho 1
+ 522–558: EXACT LINE TAIL REUSE source 66–102; target indents=[8,8,8,10,12,8,10,8,10,12,8,8,10,12,8,8,10,8,8,8,10,8,10,8,10,8,10,8,8,8,8,8,8,8,10,8,10]
+ 559:         let V0 : (Fin n → Ω) → ℝ := projectionV n g
+ 560:         let qOrder : ℝ := boundedPolylogMomentOrder t0 n
+ 561:         let Ktail : ℝ := Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv
+ 562:         let Gsource : Set (Fin n → Ω) := projectionGood n g z
+ 563:         let C2source : Set (Fin n → Ω) :=
+ 564:           {ζ : Fin n → Ω |
+ 565:             |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ζ| ≤
+ 566:               Ktail * (n : ℝ) * qOrder ∧
+ 567:             ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r ζ‖ ^ (2 : ℕ) ≤
+ 568:               Ktail * (n : ℝ) ^ (2 : ℕ) * qOrder}
+ 569:         let Hsource : Set (Fin n → Ω) := Gsource ∩ C2source
+ 570:         let Ssafe : Set (Fin n → Ω) :=
+ 571:           {ζ : Fin n → Ω |
+ 572:             0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧
+ 573:               z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 8 : ℝ)}
+ 574:         let Jsafe : Set (Fin n → Ω × ℝ) := q ⁻¹' Ssafe
+ 575:         let E : ℕ → Set (Fin n → Ω × ℝ) := fun k =>
+ 576:           {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4}
+ 577:         let E2 : Set (Fin n → Ω × ℝ) :=
+ 578:           {x : Fin n → Ω × ℝ |
+ 579:             z ^ (2 : ℕ) * |D2 (q x)| > (1 / 4 : ℝ)}
+ 580:         let Z : Set (Fin n → Ω × ℝ) :=
+ 581:           {x : Fin n → Ω × ℝ | V x = 0}
+ 582:         let payment : ℝ :=
+ 583:           (3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) +
+ 584:             (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))
+ 585:         Measurable[mN₀, borel ℝ] V0 ∧
+ 586:         Measurable[mN₀, borel ℝ] D1 ∧
+ 587:         Measurable[mN₀, borel ℝ] D2 ∧
+ 588:         Measurable[mAug, borel ℝ] (fun x => D1 (q x)) ∧
+ 589:         Measurable[mAug, borel ℝ] (fun x => D2 (q x)) ∧
+ 590:         (∀ x : Fin n → Ω × ℝ,
+ 591:           W x = projectionW n g (q x) ∧ V x = V0 (q x)) ∧
+ 592:         @MeasurableSet (Fin n → Ω) mN Hsource ∧
+ 593:         @MeasurableSet (Fin n → Ω) mN₀ Ssafe ∧
+ 594:         @MeasurableSet (Fin n → Ω) mN Ssafe ∧
+ 595:         @MeasurableSet (Fin n → Ω × ℝ) mAug Jsafe ∧
+ 596:         Hsource ⊆ Ssafe ∧
+ 597:         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+ 598:           0 < V x ∧ z * |D1 (q x)| ≤ V x / 8 ∧
+ 599:             z ^ (2 : ℕ) * |D2 (q x)| ≤ (1 / 8 : ℝ)) ∧
+ 600:         ν.real Jsafeᶜ = P₀.real Ssafeᶜ ∧
+ 601:         P₀.real Ssafeᶜ = P.real Ssafeᶜ ∧
+ 602:         P.real Ssafeᶜ ≤ P.real Hsourceᶜ ∧
+ 603:         P.real Hsourceᶜ ≤ payment ∧
+ 604:         ν.real Jsafeᶜ ≤ payment ∧
+ 605:         (({ζ : Fin n → Ω | V0 ζ = 0} ∪
+ 606:           {ζ : Fin n → Ω | Real.sqrt (centeredSq n g r ζ) = 0}) ⊆
+ 607:             Hsourceᶜ) ∧
+ 608:         (∀ (k : ℕ) (i : Fin n),
+ 609:           Measurable[mAug, borel ℝ] (η k i)) ∧
+ 610:         (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧
+ 611:           Measurable[mAug, borel ℝ] (Dη k) ∧
+ 612:           @MeasurableSet (Fin n → Ω × ℝ) mAug (E k)) ∧
+ 613:         (@MeasurableSet (Fin n → Ω × ℝ) mAug E2 ∧
+ 614:           @MeasurableSet (Fin n → Ω × ℝ) mAug Z) ∧
+ 615:         (∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+ 616:           Filter.Tendsto (fun k : ℕ => η k i x)
+ 617:             Filter.atTop (nhds (ξ i x))) ∧
+ 618:         (∀ x : Fin n → Ω × ℝ,
+ 619:           Filter.Tendsto (fun k : ℕ => Wη k x)
+ 620:             Filter.atTop (nhds (W x))) ∧
+ 621:         (∀ x : Fin n → Ω × ℝ,
+ 622:           Filter.Tendsto (fun k : ℕ => Vη k x)
+ 623:             Filter.atTop (nhds (V x))) ∧
+ 624:         (∀ x : Fin n → Ω × ℝ,
+ 625:           Filter.Tendsto (fun k : ℕ => Qε k x)
+ 626:             Filter.atTop (nhds (0 : ℝ))) ∧
+ 627:         (∀ x : Fin n → Ω × ℝ,
+ 628:           Filter.Tendsto (fun k : ℕ => Dη k x)
+ 629:             Filter.atTop (nhds (D1 (q x)))) ∧
+ 630:         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+ 631:           (7 / 8 : ℝ) ≤ 1 + D2 (q x) ∧ 0 < b x) ∧
+ 632:         (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+ 633:           ∀ᶠ k : ℕ in Filter.atTop,
+ 634:             0 < Vη k x ∧ z * |Dη k x| ≤ Vη k x / 4) ∧
+ 635:         E2 ⊆ Jsafeᶜ ∧ Z ⊆ Jsafeᶜ ∧
+ 636:         ν.real E2 ≤ ν.real Jsafeᶜ ∧
+ 637:         ν.real Z ≤ ν.real Jsafeᶜ ∧
+ 638:         ν.real E2 ≤ payment ∧ ν.real Z ≤ payment ∧
+ 639:         (∀ δ : ℝ, 0 < δ →
+ 640:           ∀ᶠ k : ℕ in Filter.atTop,
+ 641:             ν.real (E k) ≤ ν.real Jsafeᶜ + δ) ∧
+ 642:         Filter.limsup (fun k : ℕ => ν.real (E k))
+ 643:           Filter.atTop ≤ ν.real Jsafeᶜ ∧
+ 644:         (∀ δ : ℝ, 0 < δ →
+ 645:           ∀ᶠ k : ℕ in Filter.atTop,
+ 646:             ν.real (E k) ≤ payment + δ) ∧
+ 647:         Filter.limsup (fun k : ℕ => ν.real (E k))
+ 648:           Filter.atTop ≤ payment)
+ 649:  := by
+ 650:   intro Ω mΩ μ hμProbability h hh hh2 hhsymm hcenter hprojectionsecond p hp2 hp3 hgp cBudget hcBudget
+ 651:   have h245 :=
+ 652:     Shao.OQ6.OriginalSameWitnessClippedEventTransport.actual_original_same_witness_clipped_event_transport
+ 653:       μ h hh hh2 hhsymm hcenter hprojectionsecond p hp2 hp3 hgp cBudget hcBudget
+ 654:   intro g r v rho β cWindow
+ 655:   have hCg :
+ 656–1012: EXACT LINE TAIL REUSE source 34–390; target indents=[6,6,10,8,8,8,8,8,12,10,12,10,12,10,12,14,10,12,14,10,10,10,10,10,10,10,10,10,10,12,10,12,10,10,10,12,14,10,12,10,12,14,10,10,12,14,10,10,12,10,10,10,12,10,12,10,12,10,12,10,10,10,10,10,10,10,12,10,12,10,10,10,10,10,10,12,10,12,10,12,10,10,10,10,10,12,10,10,10,10,10,10,10,10,10,10,10,12,10,12,10,12,10,12,10,12,10,12,10,12,14,10,12,14,10,12,10,12,10,10,10,10,10,10,10,10,10,10,12,10,12,14,10,10,12,12,10,12,12,12,14,16,16,10,12,12,14,12,14,12,12,12,12,12,12,12,12,16,12,14,16,16,16,16,10,12,14,14,14,16,16,10,10,10,10,10,10,12,10,10,12,10,10,10,10,12,12,12,14,12,12,12,10,12,12,12,10,10,10,12,12,10,10,12,10,12,10,12,10,12,10,10,12,10,12,10,12,10,12,12,10,12,12,14,16,10,12,12,12,10,10,10,10,10,10,10,10,10,12,10,12,10,12,10,12,10,12,10,10,10,12,10,12,14,16,12,14,16,12,14,16,12,14,12,14,16,12,14,16,10,12,14,16,14,12,14,16,14,12,14,14,12,14,14,10,12,14,16,18,10,12,14,12,10,12,10,10,14,16,14,14,14,12,16,14,12,14,18,16,16,18,10,14,16,14,14,16,18,14,12,14,14,14,14,18,16,14,16,20,18,18,20,10,12,10,12,10,12,10,12,10,12,10,12,10,12,10,12,10,12,14,12,14,16,12,14,16]
+1013–1219: EXACT LINE TAIL REUSE source 441–647; target indents=[10,12,12,14,14,14,14,14,12,12,12,12,12,12,16,18,14,14,14,14,16,14,16,14,14,16,18,18,18,18,18,18,18,18,18,20,18,20,22,18,20,18,20,22,18,20,22,18,18,8,12,12,10,12,12,14,14,16,14,14,14,16,14,14,16,18,10,12,10,12,10,12,14,10,12,14,10,10,10,10,10,10,10,10,12,14,10,12,10,12,14,10,10,12,14,10,10,12,10,10,10,12,10,12,10,12,10,12,10,10,10,10,10,10,10,12,10,12,10,10,10,10,10,12,14,16,14,16,10,10,12,14,16,10,10,12,10,12,14,10,12,10,12,14,10,10,10,10,10,10,12,10,10,10,10,10,10,12,14,10,10,10,10,10,10,12,14,10,12,10,12,12,10,12,10,12,14,10,12,14,10,12,14,10,12,14,10,12,14,10,12,10,12,14,10,10,10,10,10,12,14,10,12,10,12,14,10]
+1220:             Filter.atTop ≤ payment) :=
+1221:     h245.2.2.2.2.2.2
+1222:   let cg : ℝ := Classical.choose hCg
+1223:   have hcgpos :
+1224:       0 < cg :=
+1225:     (Classical.choose_spec hCg).1
+1226:   have hModel :
+1227–1790: EXACT LINE TAIL REUSE source 657–1220; target indents=[6,10,8,8,8,8,8,12,10,12,10,12,10,12,14,10,12,14,10,10,10,10,10,10,10,10,10,10,12,10,12,10,10,10,12,14,10,12,10,12,14,10,10,12,14,10,10,12,10,10,10,12,10,12,10,12,10,12,10,10,10,10,10,10,10,12,10,12,10,10,10,10,10,10,12,10,12,10,12,10,10,10,10,10,12,10,10,10,10,10,10,10,10,10,10,10,12,10,12,10,12,10,12,10,12,10,12,10,12,14,10,12,14,10,12,10,12,10,10,10,10,10,10,10,10,10,10,12,10,12,14,10,10,12,12,10,12,12,12,14,16,16,10,12,12,14,12,14,12,12,12,12,12,12,12,12,16,12,14,16,16,16,16,10,12,14,14,14,16,16,10,10,10,10,10,10,12,10,10,12,10,10,10,10,12,12,12,14,12,12,12,10,12,12,12,10,10,10,12,12,10,10,12,10,12,10,12,10,12,10,10,12,10,12,10,12,10,12,12,10,12,12,14,16,10,12,12,12,10,10,10,10,10,10,10,10,10,12,10,12,10,12,10,12,10,12,10,10,10,12,10,12,14,16,12,14,16,12,14,16,12,14,12,14,16,12,14,16,10,12,14,16,14,12,14,16,14,12,14,14,12,14,14,10,12,14,16,18,10,12,14,12,10,12,10,10,14,16,14,14,14,12,16,14,12,14,18,16,16,18,10,14,16,14,14,16,18,14,12,14,14,14,14,18,16,14,16,20,18,18,20,10,12,10,12,10,12,10,12,10,12,10,12,10,12,10,12,10,12,14,12,14,16,12,14,16,10,12,12,14,14,14,14,14,12,12,12,12,12,12,16,18,14,14,14,14,16,14,16,14,14,16,18,18,18,18,18,18,18,18,18,20,18,20,22,18,20,18,20,22,18,20,22,18,18,8,12,12,10,12,12,14,14,16,14,14,14,16,14,14,16,18,10,12,10,12,10,12,14,10,12,14,10,10,10,10,10,10,10,10,12,14,10,12,10,12,14,10,10,12,14,10,10,12,10,10,10,12,10,12,10,12,10,12,10,10,10,10,10,10,10,12,10,12,10,10,10,10,10,12,14,16,14,16,10,10,12,14,16,10,10,12,10,12,14,10,12,10,12,14,10,10,10,10,10,10,12,10,10,10,10,10,10,12,14,10,10,10,10,10,10,12,14,10,12,10,12,12,10,12,10,12,14,10,12,14,10,12,14,10,12,14,10,12,14,10,12,10,12,14,10,10,10,10,10,12,14,10,12,10,12,14,10,12]
+1791:     (Classical.choose_spec hCg).2
+1792:   let m₀ : MeasurableSpace Ω := Classical.choose hModel
+1793:   have hm₀ :
+1794:       m₀ ≤ mΩ :=
+1795:     Classical.choose (Classical.choose_spec hModel)
+1796:   have hcg :
+1797:       @MeasurableSpace.CountablyGenerated Ω m₀ :=
+1798:     Classical.choose (Classical.choose_spec (Classical.choose_spec hModel))
+1799:   refine ⟨h245.1, h245.2.1, h245.2.2.1, h245.2.2.2.1,
+1800:     h245.2.2.2.2.1, h245.2.2.2.2.2.1, cg, hcgpos, m₀, hm₀, hcg, ?_⟩
+1801:   intro μ₀
+1802:   letI : MeasurableSpace Ω := m₀
+1803:   letI : @MeasurableSpace.CountablyGenerated Ω m₀ := hcg
+1804:   have hμ₀Probability :
+1805:       @IsProbabilityMeasure Ω m₀ μ₀ :=
+1806:     (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec hModel))).1
+1807:   have hUniversal245 :
+1808–2205: EXACT LINE TAIL REUSE source 663–1060; target indents=[6,16,14,16,14,16,14,16,18,14,16,18,14,14,14,14,14,14,14,14,14,14,16,14,16,14,14,14,16,18,14,16,14,16,18,14,14,16,18,14,14,16,14,14,14,16,14,16,14,16,14,16,14,14,14,14,14,14,14,16,14,16,14,14,14,14,14,14,16,14,16,14,16,14,14,14,14,14,16,14,14,14,14,14,14,14,14,14,14,14,16,14,16,14,16,14,16,14,16,14,16,14,16,18,14,16,18,14,16,14,16,14,14,14,14,14,14,14,14,14,14,16,14,16,18,14,14,16,16,14,16,16,16,18,20,20,14,16,16,18,16,18,16,16,16,16,16,16,16,16,20,16,18,20,20,20,20,14,16,18,18,18,20,20,14,14,14,14,14,14,16,14,14,16,14,14,14,14,16,16,16,18,16,16,16,14,16,16,16,14,14,14,16,16,14,14,16,14,16,14,16,14,16,14,14,16,14,16,14,16,14,16,16,14,16,16,18,20,14,16,16,16,14,14,14,14,14,14,14,14,14,16,14,16,14,16,14,16,14,16,14,14,14,16,14,16,18,20,16,18,20,16,18,20,16,18,16,18,20,16,18,20,14,16,18,20,18,16,18,20,18,16,18,18,16,18,18,14,16,18,20,22,14,16,18,16,14,16,14,14,18,20,18,18,18,16,20,18,16,18,22,20,20,22,14,18,20,18,18,20,22,18,16,18,18,18,18,22,20,18,20,24,22,22,24,14,16,14,16,14,16,14,16,14,16,14,16,14,16,14,16,14,16,18,16,18,20,16,18,20,14,16,16,18,18,18,18,18,16,16,16,16,16,16,20,22,18,18,18,18,20,18,20,18,18,20,22,22,22,22,22,22,22,22,22,24,22,24,26,22,24,22,24,26,22,24,26,22]
+2206:                       |compactCostη k - compactCost0| < τ)))) :=
+2207:     (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec hModel))).2.1
+2208:   have hPayment245 :
+2209–2367: EXACT LINE TAIL REUSE source 1062–1220; target indents=[6,16,16,14,16,16,18,18,20,18,18,18,20,18,18,20,22,14,16,14,16,14,16,18,14,16,18,14,14,14,14,14,14,14,14,16,18,14,16,14,16,18,14,14,16,18,14,14,16,14,14,14,16,14,16,14,16,14,16,14,14,14,14,14,14,14,16,14,16,14,14,14,14,14,16,18,20,18,20,14,14,16,18,20,14,14,16,14,16,18,14,16,14,16,18,14,14,14,14,14,14,16,14,14,14,14,14,14,16,18,14,14,14,14,14,14,16,18,14,16,14,16,16,14,16,14,16,18,14,16,18,14,16,18,14,16,18,14,16,18,14,16,14,16,18,14,14,14,14,14,16,18,14,16,14,16,18,14,16]
+2368:     (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec hModel))).2.2
+2369:   refine ⟨hμ₀Probability, ?_, hPayment245⟩
+2370:   intro n hn C0 hC0 z hz
+2371:   intro mN mN₀ P P₀ N K ε ξ0 D1 D2 T0 A0
+2372:   intro B0 A0delete B0delete lambda01 mAugLocal mAug νlocal ν q c ξlocal Ylocal
+2373:   intro ξ Y a s ηlocal η C W V Wη Vη b
+2374:   intro Qε Dη Tη A B Adelete Bdelete Vdelete H Hdelete M Mdelete
+2375:   intro Anew AdeleteNew Δ ℓ0 ℓη S0 Sη S0minus Sηminus I0 Iη fullTest0
+2376:   intro fullTestη deletedTest0 deletedTestη compactDeletedTest0 compactDeletedTestη Lcompact0 Lcompactη sourceCost0 sourceCostη compactCost0 compactCostη Fz
+2377:   intro δ0 δreduced δν δη L0 Lν Lη scalarBudget deletedTestUnperturbedη unperturbedSourceCostη
+2378:   have hPoint245 :
+2379–2651: EXACT LINE TAIL REUSE source 788–1060; target indents=[6,14,16,16,14,16,16,16,18,20,20,14,16,16,18,16,18,16,16,16,16,16,16,16,16,20,16,18,20,20,20,20,14,16,18,18,18,20,20,14,14,14,14,14,14,16,14,14,16,14,14,14,14,16,16,16,18,16,16,16,14,16,16,16,14,14,14,16,16,14,14,16,14,16,14,16,14,16,14,14,16,14,16,14,16,14,16,16,14,16,16,18,20,14,16,16,16,14,14,14,14,14,14,14,14,14,16,14,16,14,16,14,16,14,16,14,14,14,16,14,16,18,20,16,18,20,16,18,20,16,18,16,18,20,16,18,20,14,16,18,20,18,16,18,20,18,16,18,18,16,18,18,14,16,18,20,22,14,16,18,16,14,16,14,14,18,20,18,18,18,16,20,18,16,18,22,20,20,22,14,18,20,18,18,20,22,18,16,18,18,18,18,22,20,18,20,24,22,22,24,14,16,14,16,14,16,14,16,14,16,14,16,14,16,14,16,14,16,18,16,18,20,16,18,20,14,16,16,18,18,18,18,18,16,16,16,16,16,16,20,22,18,18,18,18,20,18,20,18,18,20,22,22,22,22,22,22,22,22,22,24,22,24,26,22,24,22,24,26,22,24,26,22]
+2652:                       |compactCostη k - compactCost0| < τ))) :=
+2653:     hUniversal245 n hn C0 hC0 z hz
+2654:   have hTransportAll :
+2655:       ∀ k : ℕ,
+2656–2662: EXACT LINE TAIL REUSE source 383–389; target indents=[8,10,8,10,12,8,10]
+2663:             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} :=
+2664:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+2665:   have hNewContract :
+2666–2714: EXACT LINE TAIL REUSE source 391–439; target indents=[6,18,20,18,18,20,22,16,22,18,18,16,18,20,20,20,20,20,20,20,20,20,20,20,22,20,22,24,20,22,20,22,24,20,22,24,20,20,20,20,36,34,34,20,34,38,36,36,38]
+2715:                                     P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} + τ) :=
+2716:     by
+2717:     intro C1 C2 C3 C4 hSZ hz1 hzWindow
+2718:     have hClippedEventual :
+2719–2756: EXACT LINE TAIL REUSE source 402–439; target indents=[8,10,12,12,12,12,12,12,12,12,12,12,12,14,12,14,16,12,14,12,14,16,12,14,16,12,12,12,12,28,26,26,12,26,30,28,28,30]
+2757:                             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} + τ :=
+2758:       by
+2759:       intro τ hτ
+2760:       have hTailEventual :
+2761–2772: EXACT LINE TAIL REUSE source 353–364; target indents=[10,12,12,12,12,16,14,12,14,18,16,16]
+2773:                   z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)} + τ :=
+2774:         hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 C1 C2 C3 C4 hSZ hz1 hzWindow τ hτ
+2775:       let kTail : ℕ := Classical.choose hTailEventual
+2776:       have hTailAll :
+2777:           ∀ (k : ℕ), kTail ≤ k →
+2778–2789: EXACT LINE TAIL REUSE source 2762–2773; target indents=[12,12,12,12,16,14,12,14,18,16,16,18]
+2790:         Classical.choose_spec hTailEventual
+2791:       have hJointEventual :
+2792–2814: EXACT LINE TAIL REUSE source 466–488; target indents=[10,12,12,12,12,12,12,12,12,12,14,12,14,16,12,14,12,14,16,12,14,16,12]
+2815:             |compactCostη k - compactCost0| < τ :=
+2816:         ((hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2 hz1).2.2.2.2.2.2.2.2.2 hzWindow).2.2.2.2.2.2 τ hτ
+2817:       let kJoint : ℕ := Classical.choose hJointEventual
+2818:       have hJointAll :
+2819:           ∀ (k : ℕ), kJoint ≤ k →
+2820–2842: EXACT LINE TAIL REUSE source 2793–2815; target indents=[12,12,12,12,12,12,12,12,12,14,12,14,16,12,14,12,14,16,12,14,16,12,12]
+2843:         Classical.choose_spec hJointEventual
+2844:       refine ⟨kTail + kJoint, fun (k : ℕ) (hk : kTail + kJoint ≤ k) => ?_⟩
+2845:       have hTailCutoffLe :
+2846:           kTail ≤ k :=
+2847:         by omega
+2848:       have hJointCutoffLe :
+2849:           kJoint ≤ k :=
+2850:         by omega
+2851:       have hTransportAbs :
+2852–2854: EXACT LINE TAIL REUSE source 2661–2663; target indents=[10,12,12]
+2855:         (hTransportAll k).2.2
+2856:       have hTransportSignedLower :
+2857:           -(P.real {ζ : Fin n → Ω | projectionV n g ζ = 0}) ≤
+2858:             ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} - P.real {ζ : Fin n → Ω | z ≤ T0 ζ} :=
+2859:         (abs_le.mp hTransportAbs).1
+2860:       have hTransportSignedUpper :
+2861:           ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} - P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ≤
+2862:             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} :=
+2863:         (abs_le.mp hTransportAbs).2
+2864:       refine ⟨(hTailAll k hTailCutoffLe).1,
+2865:         (hTailAll k hTailCutoffLe).2.1,
+2866:         (hJointAll k hJointCutoffLe).1,
+2867:         (hJointAll k hJointCutoffLe).2.1,
+2868:         (hJointAll k hJointCutoffLe).2.2.1,
+2869:         (hJointAll k hJointCutoffLe).2.2.2.1,
+2870:         (hJointAll k hJointCutoffLe).2.2.2.2.1,
+2871:         (hJointAll k hJointCutoffLe).2.2.2.2.2.1,
+2872:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.1,
+2873:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.1,
+2874:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.1,
+2875:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.1,
+2876:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.2.1,
+2877:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.2.2.1,
+2878:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.2.2.2.1,
+2879:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+2880:         (hJointAll k hJointCutoffLe).2.2.2.2.2.2.2.2.2.2.2.2.2.2,
+2881:         (hTailAll k hTailCutoffLe).2.2.1, ?_, ?_⟩
+2882:       · linarith only [(hTailAll k hTailCutoffLe).2.2.2.1, hTransportSignedUpper]
+2883:       · linarith only [(hTailAll k hTailCutoffLe).2.2.2.2, hTransportSignedLower]
+2884:     have hExactLower :
+2885–2887: EXACT LINE TAIL REUSE source 398–400; target indents=[8,24,20]
+2888:                     P.real {ζ : Fin n → Ω | z ≤ T0 ζ} :=
+2889:       by
+2890:       exact Classical.byContradiction (fun (hExactFailed :
+2891:           ¬ (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2892:                           (1 - C2 * sourceCost0) -
+2893:                       P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ≤
+2894:                       P.real {ζ : Fin n → Ω | z ≤ T0 ζ})) => by
+2895:         have hGapPositive :
+2896:             0 < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2897:                             (1 - C2 * sourceCost0) -
+2898:               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} -
+2899:               P.real {ζ : Fin n → Ω | z ≤ T0 ζ}) / 2 :=
+2900:           by
+2901:             linarith only [not_le.mp hExactFailed]
+2902:         have hExactEventual :
+2903–2907: EXACT LINE TAIL REUSE source 403–407; target indents=[12,14,14,14,14]
+2908:               (∀ i : Fin n, |δη k i - δ0 i| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2909:                             (1 - C2 * sourceCost0) -
+2910:               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} -
+2911:               P.real {ζ : Fin n → Ω | z ≤ T0 ζ}) / 2) ∧
+2912:               |Lη k - L0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2913:                             (1 - C2 * sourceCost0) -
+2914:               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} -
+2915:               P.real {ζ : Fin n → Ω | z ≤ T0 ζ}) / 2 ∧
+2916:               (∫ x, |Qε k x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2917–2919: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2920:               (∫ x, |Anew k x - A x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2921–2923: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2924:               (∀ i : Fin n, (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2925–2927: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+2928:               |Iη k - I0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2929–2931: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2932:               |(∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) -
+2933:                 (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2934–2936: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2937:               (∀ i : Fin n,
+2938:                 |(∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) -
+2939:                   (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2940–2942: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+2943:               |((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k) -
+2944:                 ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2945–2948: EXACT LINE TAIL REUSE source 2934–2937; target indents=[28,14,14,14]
+2949:                 |((∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k) -
+2950:                   ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2951–2953: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+2954:               (∀ i : Fin n,
+2955:                 |(∫ x, compactDeletedTestη k i x ∂ν) -
+2956:                   (∫ ζ, compactDeletedTest0 i ζ ∂P)| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2957–2959: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+2960:               |sourceCostη k - sourceCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2961–2963: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2964:               |compactCostη k - compactCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2965–2967: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2968:               |unperturbedSourceCostη k - sourceCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2969–2971: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+2972:               Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2973:                               (1 - C2 * sourceCost0) - (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2974:                             (1 - C2 * sourceCost0) -
+2975:               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} -
+2976:               P.real {ζ : Fin n → Ω | z ≤ T0 ζ}) / 2 -
+2977–2984: EXACT LINE TAIL REUSE source 432–439; target indents=[28,28,14,28,32,30,30,32]
+2985:                               P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} + (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2986–2988: EXACT LINE TAIL REUSE source 2897–2899; target indents=[28,14,14]
+2989:           hClippedEventual ((Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+2990:                           (1 - C2 * sourceCost0) -
+2991:             P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} -
+2992:             P.real {ζ : Fin n → Ω | z ≤ T0 ζ}) / 2) hGapPositive
+2993:         let kExact : ℕ := Classical.choose hExactEventual
+2994:         have hExactAtCutoff :
+2995:             (∀ i : Fin n, δη kExact i ≤ 1) ∧
+2996:             Lη kExact ≤ cBudget * z ^ 2 ∧
+2997:             (∀ i : Fin n, δη kExact i < (1 / 2 : ℝ)) ∧
+2998:             Lη kExact < cBudget * z ^ 2 ∧
+2999:             (∀ i : Fin n, |δη kExact i - δ0 i| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3000–3002: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+3003:             |Lη kExact - L0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3004–3006: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3007:             (∫ x, |Qε kExact x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3008–3010: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3011:             (∫ x, |Anew kExact x - A x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3012–3014: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3015:             (∀ i : Fin n, (∫ x, |AdeleteNew kExact i x - Adelete i x| ∂ν) < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3016–3018: EXACT LINE TAIL REUSE source 2909–2911; target indents=[28,14,14]
+3019:             |Iη kExact - I0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3020–3022: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3023:             |(∫ x, fullTestη kExact x * Real.exp (Sη kExact x) ∂ν) -
+3024–3028: EXACT LINE TAIL REUSE source 2933–2937; target indents=[14,28,14,14,12]
+3029:               |(∫ x, deletedTestη kExact i x * Real.exp (Sηminus kExact i x) ∂ν) -
+3030–3033: EXACT LINE TAIL REUSE source 2939–2942; target indents=[16,28,14,14]
+3034:             |((∫ x, fullTestη kExact x * Real.exp (Sη kExact x) ∂ν) / Iη kExact) -
+3035–3039: EXACT LINE TAIL REUSE source 2944–2948; target indents=[14,28,14,14,12]
+3040:               |((∫ x, deletedTestη kExact i x * Real.exp (Sηminus kExact i x) ∂ν) / Iη kExact) -
+3041–3045: EXACT LINE TAIL REUSE source 2950–2954; target indents=[16,28,14,14,12]
+3046:               |(∫ x, compactDeletedTestη kExact i x ∂ν) -
+3047–3050: EXACT LINE TAIL REUSE source 2956–2959; target indents=[16,28,14,14]
+3051:             |sourceCostη kExact - sourceCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3052–3054: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3055:             |compactCostη kExact - compactCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3056–3058: EXACT LINE TAIL REUSE source 2913–2915; target indents=[28,14,14]
+3059:             |unperturbedSourceCostη kExact - sourceCost0| < (Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+3060–3072: EXACT LINE TAIL REUSE source 2969–2981; target indents=[28,14,14,12,28,28,14,14,26,26,12,26,30]
+3073:                             ν.real {x : Fin n → Ω × ℝ | z * |Dη kExact x| > Vη kExact x / 4} +
+3074–3079: EXACT LINE TAIL REUSE source 2983–2988; target indents=[28,30,28,28,14,14]
+3080:           (Classical.choose_spec hExactEventual) kExact le_rfl
+3081:         linarith only [not_le.mp hExactFailed,
+3082:           hExactAtCutoff.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1])
+3083:     exact ⟨hExactLower, hClippedEventual⟩
+3084:   exact ⟨hPoint245.1,
+3085:     hPoint245.2.1,
+3086:     hPoint245.2.2.1,
+3087:     hPoint245.2.2.2.1,
+3088:     hPoint245.2.2.2.2.1,
+3089:     hPoint245.2.2.2.2.2.1,
+3090:     hPoint245.2.2.2.2.2.2.1,
+3091:     hPoint245.2.2.2.2.2.2.2.1,
+3092:     hPoint245.2.2.2.2.2.2.2.2.1,
+3093:     hPoint245.2.2.2.2.2.2.2.2.2.1,
+3094:     hPoint245.2.2.2.2.2.2.2.2.2.2.1,
+3095:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.1,
+3096:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3097:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3098:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3099:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3100:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3101:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3102:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3103:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3104:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3105:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3106:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3107:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3108:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3109:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3110:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3111:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3112:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3113:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3114:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3115:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3116:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3117:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3118:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3119:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3120:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3121:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3122:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3123:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3124:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3125:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3126:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3127:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3128:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3129:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3130:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3131:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3132:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3133:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3134:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3135:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3136:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3137:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3138:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3139:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3140:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3141:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3142:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3143:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3144:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3145:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3146:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3147:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3148:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3149:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3150:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3151:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3152:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+3153:     hNewContract,
+3154:     hPoint245.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩
+3155: 
+3156: end
+3157: 
+3158: end Shao.OQ6.OriginalSameWitnessClippedTailApplication
+3159: 

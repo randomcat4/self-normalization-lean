@@ -1,0 +1,50 @@
+        (∀ (C1 C2 C3 C4 : ℝ)
+            (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+              cBudget C1 C2 C3 C4)
+            (hz1 : 1 ≤ z)
+            (hzWindow : β = 0 ∨
+              (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))),
+          Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+                (1 - C2 * sourceCost0) -
+            P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ≤
+            P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+          ∀ (τ : ℝ) (hτ : 0 < τ),
+            ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →
+              (∀ i : Fin n, δη k i ≤ 1) ∧
+              Lη k ≤ cBudget * z ^ 2 ∧
+              (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧
+              Lη k < cBudget * z ^ 2 ∧
+              (∀ i : Fin n, |δη k i - δ0 i| < τ) ∧
+              |Lη k - L0| < τ ∧
+              (∫ x, |Qε k x| ∂ν) < τ ∧
+              (∫ x, |Anew k x - A x| ∂ν) < τ ∧
+              (∀ i : Fin n, (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) < τ) ∧
+              |Iη k - I0| < τ ∧
+              |(∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) -
+                (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)| < τ ∧
+              (∀ i : Fin n,
+                |(∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) -
+                  (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)| < τ) ∧
+              |((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k) -
+                ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)| < τ ∧
+              (∀ i : Fin n,
+                |((∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k) -
+                  ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)| < τ) ∧
+              (∀ i : Fin n,
+                |(∫ x, compactDeletedTestη k i x ∂ν) -
+                  (∫ ζ, compactDeletedTest0 i ζ ∂P)| < τ) ∧
+              |sourceCostη k - sourceCost0| < τ ∧
+              |compactCostη k - compactCost0| < τ ∧
+              |unperturbedSourceCostη k - sourceCost0| < τ ∧
+              Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+                              (1 - C2 * sourceCost0) - τ -
+                            P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} ≤
+                            P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ∧
+              P.real {ζ : Fin n → Ω | z ≤ T0 ζ} ≤
+                            Shao.standardNormalTail z * Real.exp (C3 * L0) *
+                                (1 + C4 * sourceCost0) +
+                              ν.real {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4} +
+                              ν.real {x : Fin n → Ω × ℝ |
+                                z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)} +
+                              P.real {ζ : Fin n → Ω | projectionV n g ζ = 0} + τ) ∧
