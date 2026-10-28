@@ -1,0 +1,7 @@
+# IN329: actual low-positive-energy self-normalized tail
+
+Freeze the exact declaration before implementation. For any probability law mu on real numbers, level>0 and desired rate R>0, choose eta>0 before every natural n>=1. The probability under the actual original IID product measure of the source zero-energy-convention self-normalized positive-tail event intersected with actual raw energy <= eta*n is at most exp(-R*n). The two statement lets P and T are fixed actual definitions. There is no boundedness, moment, atomlessness, spectral, saddle, desired-count-bound or rate-gap premise. In particular an atom at zero is retained; an all-zero path cannot satisfy the positive-tail condition.
+
+Use IK326 actual finite counting geometry and IM328 small nonzero IID arbitrary exponential count bound with alpha=level^2/2 and eta=level^2*eps^2/2. Monotonicity of real measure applies to actual events; finite upper measure comes from the probability instance. IM is machine-passed and will receive an independent complete final review together with this consumer before either result is qualified. Exact IL327 and IK326 reviews/objects are reused.
+
+This closes only the low-energy probability dependency. No high-energy compact exterior gap, removal of the conditional IJ325 closure premise, unbounded extension, original OQ3 B-D/root or novel research theorem is claimed. Preserve original q>0 boundary issue, p54 corrected prefactor, strict beta<2/5 and external Song uniform s8 attribution.

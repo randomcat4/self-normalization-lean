@@ -1,0 +1,76 @@
+theorem bounded_actual_self_normalized_tail_laplace_of_unique_minimum
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)
+    (htheta : theta ∈ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (hdet : 0 < (parabolaCovariance
+      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det)
+    (level a0 : ℝ) (hlevel : 0 < level) (ha0 : 0 < a0) (hnegative : theta.2 < 0)
+    (hmean : (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),
+      ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =
+        (a0, a0 ^ 2 / level ^ 2))
+    (hsaddle : theta.1 = -2 * a0 * theta.2 / level ^ 2)
+    (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ))
+    (he : (e : (ℝ × ℝ) → (ℝ × ℝ)) = fun p =>
+      (∫ x : ℝ, x ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2),
+        ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)))
+    (hte : theta ∈ e.source)
+    (hsource : e.source ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (rmax : ℝ) (hrmax : 0 < rmax)
+    (supportRadius : ℝ) (hSupport : 0 ≤ supportRadius)
+    (hbounded : ∀ᵐ x ∂mu, |x| ≤ supportRadius)
+    (beta c R : ℝ) (hbeta : 0 < beta) (hbetaUpper : beta < (2 : ℝ) / 5)
+    (hc : 0 < c) (hR : 0 ≤ R)
+    (hWC : ∀ xi eta : ℝ, R < Real.sqrt (xi ^ 2 + eta ^ 2) →
+      ‖jointCharacteristic (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) xi eta‖ ≤
+        1 - c * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-beta)) :
+    let Omega : Set (ℝ × ℝ) := interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))
+    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>
+      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)
+    let K : (ℝ × ℝ) → ℝ := fun p => Real.log
+      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance (nu theta)
+    let pr0 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+    let pr1 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
+    let row0 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 0 • pr0 + D 0 1 • pr1
+    let row1 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 1 • pr0 + D 1 1 • pr1
+    ∀ L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ),
+      (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) = row0.prod row1 →
+      let J : (ℝ × ℝ) → ℝ := fun w =>
+        (e.symm w).1 * w.1 + (e.symm w).2 * w.2 - K (e.symm w)
+      let v : ℝ × ℝ := (1, 2 * a0 / level ^ 2)
+      let Lambda1 : ℝ := 2 * theta.2 / level ^ 2 +
+        (L.symm v).1 + (2 * a0 / level ^ 2) * (L.symm v).2
+      let J0 : ℝ := J (a0, a0 ^ 2 / level ^ 2)
+      0 < -theta.2 ∧ (0 < Lambda1 →
+        ∃ cap : ℝ, 0 < cap ∧ cap ≤ rmax ∧
+          ∀ rho : ℝ, 0 < rho → rho ≤ cap →
+            let U : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+              |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho}
+            let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+            let V : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+              0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho}
+            V = U ∩ Tail ∧
+              ((∀ w ∈ Tail,
+                  Shao.Probability.bivariateLegendreRate mu
+                      (fun x : ℝ => (x, x ^ 2)) (a0, a0 ^ 2 / level ^ 2) ≤
+                    Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w ∧
+                  (Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w =
+                      Shao.Probability.bivariateLegendreRate mu
+                        (fun x : ℝ => (x, x ^ 2)) (a0, a0 ^ 2 / level ^ 2) ↔
+                    w = (a0, a0 ^ 2 / level ^ 2))) →
+                ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, 2 ≤ N ∧ ∀ n : ℕ, N ≤ n →
+                  let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+                  let T : Set (Shao.Path n) := {z |
+                    level * Real.sqrt (n : ℝ) ≤
+                      (if Shao.energy z = 0 then 0 else
+                        (∑ i : Fin n, z i) / Real.sqrt (Shao.energy z))}
+                  let main : ℝ := 1 /
+                    (Real.sqrt (2 * Real.pi * (n : ℝ)) * (-theta.2) * Real.sqrt D.det *
+                      Real.sqrt Lambda1)
+                  0 < main ∧
+                    |(Real.exp ((n : ℝ) * J0) * P.real T) / main - 1| ≤
+                      C / Real.sqrt (n : ℝ)))

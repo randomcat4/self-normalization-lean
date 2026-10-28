@@ -1,0 +1,15 @@
+theorem actual_high_energy_exterior_rate_gap_of_unique_minimum
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (level a0 B eta rho J0 : ℝ) (heta : 0 < eta) (hrho : 0 < rho) :
+    let I : (ℝ × ℝ) → EReal :=
+      Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+    let center : ℝ × ℝ := (a0, a0 ^ 2 / level ^ 2)
+    let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+    let U : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+      |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho}
+    let Carrier : Set (ℝ × ℝ) := Set.Icc (-B) B ×ˢ Set.Icc 0 (B ^ 2)
+    let A : Set (ℝ × ℝ) := (Tail \ U) ∩ {w | eta ≤ w.2}
+    I center = (J0 : EReal) →
+      (∀ w ∈ Tail, I center ≤ I w ∧ (I w = I center ↔ w = center)) →
+        ∃ delta : ℝ, 0 < delta ∧ ∀ w ∈ Carrier ∩ closure A,
+          ((J0 + delta : ℝ) : EReal) < I w
