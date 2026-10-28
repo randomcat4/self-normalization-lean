@@ -1,0 +1,37 @@
+theorem bounded_centered_parabola_small_positive_regular_unique_saddle
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (lower upper : ℝ) (hlower : 0 < lower)
+    (henergy : ∀ᵐ x ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper)
+    (hmean : (∫ x : ℝ, x ∂mu) = 0) (hdet : 0 < (parabolaCovariance mu).det) :
+    ∃ epsilon : ℝ, 0 < epsilon ∧ epsilon ≤ 1 ∧
+      ∀ level : ℝ, 0 < level → level < epsilon →
+        ∃ (a0 : ℝ) (theta : ℝ × ℝ) (L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ)),
+          let D := parabolaCovariance
+            (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))
+          0 < a0 ∧ theta ∈ interior
+            (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))) ∧
+          0 < D.det ∧
+          (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),
+            ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =
+              (a0, a0 ^ 2 / level ^ 2) ∧
+          theta.1 = -2 * a0 * theta.2 / level ^ 2 ∧ 0 < theta.1 ∧ theta.2 < 0 ∧
+          (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) =
+            (D 0 0 • ContinuousLinearMap.fst ℝ ℝ ℝ +
+              D 0 1 • ContinuousLinearMap.snd ℝ ℝ ℝ).prod
+            (D 0 1 • ContinuousLinearMap.fst ℝ ℝ ℝ +
+              D 1 1 • ContinuousLinearMap.snd ℝ ℝ ℝ) ∧
+          0 < 2 * theta.2 / level ^ 2 +
+            (L.symm (1, 2 * a0 / level ^ 2)).1 +
+              (2 * a0 / level ^ 2) * (L.symm (1, 2 * a0 / level ^ 2)).2 ∧
+          0 < Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+            (a0, a0 ^ 2 / level ^ 2) ∧
+          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+            (a0, a0 ^ 2 / level ^ 2) < ⊤ ∧
+          (∀ y : ℝ × ℝ, 0 < y.2 → level * Real.sqrt y.2 ≤ y.1 →
+            Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+              (a0, a0 ^ 2 / level ^ 2) ≤
+              Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) y) ∧
+          ∀ y : ℝ × ℝ, 0 < y.2 → level * Real.sqrt y.2 ≤ y.1 →
+            Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) y ≤
+              Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+                (a0, a0 ^ 2 / level ^ 2) → y = (a0, a0 ^ 2 / level ^ 2)

@@ -1,0 +1,18 @@
+DECL Shao.OQ3.bounded_parabola_whole_tail_rate_gap_of_unique_minimum
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (M : ℝ),
+  0 ≤ M →
+    (∀ᵐ (x : ℝ) ∂mu, |x| ≤ M) →
+      ∀ (lower upper : ℝ),
+        0 < lower →
+          (∀ᵐ (x : ℝ) ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper) →
+            ∀ (level a0 rho J0 : ℝ),
+              0 < rho →
+                have I := Shao.Probability.bivariateLegendreRate mu fun x => (x, x ^ 2);
+                have center := (a0, a0 ^ 2 / level ^ 2);
+                have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+                have U := {w | |w.1 - a0| ≤ rho ∧ |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho};
+                I center = ↑J0 →
+                  (∀ w ∈ Tail, I center ≤ I w ∧ (I w = I center ↔ w = center)) →
+                    ∃ delta, 0 < delta ∧ ∀ w ∈ Tail \ U, ↑(J0 + delta) < I w
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

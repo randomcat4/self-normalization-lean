@@ -1,0 +1,12 @@
+theorem bounded_centered_parabola_uniform_energy_curvature
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (M : ℝ) (hM : 0 ≤ M)
+    (hb : ∀ᵐ x ∂mu, |x| ≤ M) (lower upper : ℝ) (hlower : 0 < lower)
+    (henergy : ∀ᵐ x ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper)
+    (hmean : (∫ x : ℝ, x ∂mu) = 0) (hdet : 0 < (parabolaCovariance mu).det) :
+    ∃ (F : (ℝ × ℝ) → ℝ) (eta rho : ℝ),
+      0 < eta ∧ 0 < rho ∧ rho < (∫ x : ℝ, x ^ 2 ∂mu) ∧ ∀ level q : ℝ,
+        |level| ≤ eta → |q - (∫ x : ℝ, x ^ 2 ∂mu)| ≤ rho →
+          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+            (level * Real.sqrt q, q) = (F (level, q) : EReal) ∧
+          ContDiffAt ℝ (2 : WithTop ENat) (fun energy : ℝ => F (level, energy)) q ∧
+            0 < deriv (deriv (fun energy : ℝ => F (level, energy))) q

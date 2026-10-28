@@ -1,0 +1,11 @@
+theorem parabola_energy_positive_curvature_neighborhood
+    (J : (ℝ × ℝ) → ℝ) (q0 : ℝ) (hq0 : 0 < q0)
+    (hsmooth : ContDiffAt ℝ (3 : WithTop ENat) J (0, q0))
+    (hcurvature : 0 <
+      (fderiv ℝ (fun z => fderiv ℝ J z) (0, q0) (0, 1)) (0, 1)) :
+    ∃ eta rho : ℝ, 0 < eta ∧ 0 < rho ∧ rho < q0 ∧ ∀ level q : ℝ,
+      |level| ≤ eta → |q - q0| ≤ rho →
+        ContDiffAt ℝ (2 : WithTop ENat)
+          (fun energy : ℝ => J (level * Real.sqrt energy, energy)) q ∧
+          0 < deriv (deriv
+            (fun energy : ℝ => J (level * Real.sqrt energy, energy))) q

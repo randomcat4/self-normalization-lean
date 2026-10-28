@@ -1,0 +1,42 @@
+DECL Shao.OQ3.bounded_centered_parabola_small_positive_global_boundary_tilt
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (M : ℝ),
+  0 ≤ M →
+    (∀ᵐ (x : ℝ) ∂mu, |x| ≤ M) →
+      ∀ (lower upper : ℝ),
+        0 < lower →
+          (∀ᵐ (x : ℝ) ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper) →
+            ∫ (x : ℝ), x ∂mu = 0 →
+              0 < (Shao.OQ3.parabolaCovariance mu).det →
+                ∃ epsilon,
+                  0 < epsilon ∧
+                    epsilon ≤ 1 ∧
+                      ∀ (level : ℝ),
+                        0 < level →
+                          level < epsilon →
+                            ∃ a0 theta,
+                              0 < a0 ∧
+                                theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)) ∧
+                                  (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                                        ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                                      (a0, a0 ^ 2 / level ^ 2) ∧
+                                    0 <
+                                        (Shao.OQ3.parabolaCovariance
+                                            (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det ∧
+                                      theta.1 = -2 * a0 * theta.2 / level ^ 2 ∧
+                                        0 < theta.1 ∧
+                                          theta.2 < 0 ∧
+                                            0 <
+                                                Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                  (a0, a0 ^ 2 / level ^ 2) ∧
+                                              Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                    (a0, a0 ^ 2 / level ^ 2) <
+                                                  ⊤ ∧
+                                                ∀ (y : ℝ × ℝ),
+                                                  0 < y.2 →
+                                                    level * √y.2 ≤ y.1 →
+                                                      Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                          (a0, a0 ^ 2 / level ^ 2) ≤
+                                                        Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                          y
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

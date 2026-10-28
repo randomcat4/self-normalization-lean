@@ -1,0 +1,28 @@
+  classical
+  intro f g r v rho rowIntegrable gLp projectionLaw pairLaw
+  obtain ⟨m₀, hm₀, hcount₀, hh₀, hf₀, hcore⟩ :=
+    @Shao.OQ6.OriginalCountablyGeneratedModel.actual_normalized_original_countably_generated_model.{u, v, w}
+      Ω mΩ μ (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+      h hh hh2 hhsymm hcenter hprojectionsecond
+  refine ⟨m₀, hm₀, hcount₀, hh₀, hf₀, ?_⟩
+  let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+  letI : MeasurableSpace Ω := m₀
+  let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀
+  let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y
+  let v₀ : ℝ :=
+    ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω m₀ m₀ μ₀ μ₀)
+  let rho₀ : ℝ := Real.sqrt v₀
+  rcases hcore with
+    ⟨hprob₀, hμmap, hgeq, hreq, hv, hrho, hrow, hh₂₀,
+      hcenter₀, hgmeas, hg₂₀, hgmean, hgsecond, hrmeas, hr₂₀, hrsymm,
+      hrcanonical, hglaw, hglp, hpair, hfinite, _hfixed⟩
+  letI : IsProbabilityMeasure μ₀ := hprob₀
+  refine ⟨hprob₀, hμmap, hgeq, hreq, hv, hrho, hrow, hh₂₀,
+    hcenter₀, hgmeas, hg₂₀, hgmean, hgsecond, hrmeas, hr₂₀, hrsymm,
+    hrcanonical, hglaw, hglp, hpair, hfinite, ?_⟩
+  intro n hn z hz hwindow
+  exact ⟨
+    @Shao.OQ6.OriginalLevelDependentClippedSourcePackage.actual_original_level_dependent_clipped_source_package
+      Ω m₀ μ₀ hprob₀ h hh₀ hh₂₀ hhsymm hcenter₀ hgsecond n hn z hz hwindow,
+    @Shao.OQ6.OriginalLevelDependentCorrectionEnvelope.actual_original_level_dependent_correction_envelope
+      Ω m₀ μ₀ hprob₀ h hh₀ hh₂₀ hhsymm hcenter₀ hgsecond n hn z hz hwindow⟩

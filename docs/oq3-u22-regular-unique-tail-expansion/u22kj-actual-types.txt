@@ -1,0 +1,22 @@
+DECL Shao.OQ3.bounded_centered_parabola_uniform_energy_curvature
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu] (M : ℝ),
+  0 ≤ M →
+    (∀ᵐ (x : ℝ) ∂mu, |x| ≤ M) →
+      ∀ (lower upper : ℝ),
+        0 < lower →
+          (∀ᵐ (x : ℝ) ∂mu, lower ≤ x ^ 2 ∧ x ^ 2 ≤ upper) →
+            ∫ (x : ℝ), x ∂mu = 0 →
+              0 < (Shao.OQ3.parabolaCovariance mu).det →
+                ∃ F eta rho,
+                  0 < eta ∧
+                    0 < rho ∧
+                      rho < ∫ (x : ℝ), x ^ 2 ∂mu ∧
+                        ∀ (level q : ℝ),
+                          |level| ≤ eta →
+                            |q - ∫ (x : ℝ), x ^ 2 ∂mu| ≤ rho →
+                              Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) (level * √q, q) =
+                                  ↑(F (level, q)) ∧
+                                ContDiffAt ℝ 2 (fun energy => F (level, energy)) q ∧
+                                  0 < deriv (deriv fun energy => F (level, energy)) q
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
