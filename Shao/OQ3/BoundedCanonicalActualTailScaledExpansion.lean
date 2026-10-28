@@ -1,0 +1,72 @@
+import Shao.OQ3.CanonicalActualTailScaledExpansion
+import Shao.OQ3.CompactTiltWeakCramer
+
+namespace Shao.OQ3
+open MeasureTheory
+open scoped BigOperators Matrix Topology
+noncomputable section
+
+theorem bounded_canonical_actual_tail_scaled_expansion
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)
+    (htheta : theta ∈ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (hdet : 0 < (parabolaCovariance
+      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det)
+    (level a0 : ℝ) (hlevel : 0 < level) (ha0 : 0 < a0) (hnegative : theta.2 < 0)
+    (hmean : (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),
+      ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =
+        (a0, a0 ^ 2 / level ^ 2))
+    (hsaddle : theta.1 = -2 * a0 * theta.2 / level ^ 2)
+    (supportRadius : ℝ) (hSupport : 0 ≤ supportRadius)
+    (hbounded : ∀ᵐ x ∂mu, |x| ≤ supportRadius)
+    (beta c R : ℝ) (hbeta : 0 < beta) (hbetaUpper : beta < (2 : ℝ) / 5)
+    (hc : 0 < c) (hR : 0 ≤ R)
+    (hWC : ∀ xi eta : ℝ, R < Real.sqrt (xi ^ 2 + eta ^ 2) →
+      ‖jointCharacteristic
+        (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) xi eta‖ ≤
+          1 - c * Real.rpow (Real.sqrt (xi ^ 2 + eta ^ 2)) (-beta)) :
+    let nu : Measure ℝ := mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)
+    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance nu
+    let v : Fin 2 → ℝ := ![1, 2 * a0 / level ^ 2]
+    let Lambda1 : ℝ := 2 * theta.2 / level ^ 2 + dotProduct v (D⁻¹ *ᵥ v)
+    let J0 : ℝ := theta.1 * a0 + theta.2 * (a0 ^ 2 / level ^ 2) -
+      Real.log (∫ x : ℝ, Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu)
+    let vCorr : ℝ := (-theta.2) * Real.sqrt D.det * Real.sqrt Lambda1
+    let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+    0 < Lambda1 →
+      (∀ w ∈ Tail,
+        Shao.Probability.bivariateLegendreRate mu
+            (fun x : ℝ => (x, x ^ 2)) (a0, a0 ^ 2 / level ^ 2) ≤
+          Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w ∧
+        (Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w =
+            Shao.Probability.bivariateLegendreRate mu
+              (fun x : ℝ => (x, x ^ 2)) (a0, a0 ^ 2 / level ^ 2) ↔
+          w = (a0, a0 ^ 2 / level ^ 2))) →
+      0 < vCorr ∧ ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, 2 ≤ N ∧
+        ∀ n : ℕ, N ≤ n →
+          let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+          let T : Set (Shao.Path n) := {z |
+            level * Real.sqrt (n : ℝ) ≤
+              (if Shao.energy z = 0 then 0 else
+                (∑ i : Fin n, z i) / Real.sqrt (Shao.energy z))}
+          |Real.sqrt (2 * Real.pi * (n : ℝ)) *
+              Real.exp ((n : ℝ) * J0) * P.real T - vCorr⁻¹| ≤
+            C / Real.sqrt (n : ℝ) := by
+  classical
+  intro nu D v Lambda1 J0 vCorr Tail hcurvature hUnique
+  let K : Set (ℝ × ℝ) := Metric.closedBall theta 1
+  have hK : IsCompact K := isCompact_closedBall theta 1
+  have hthetaK : theta ∈ interior K := by
+    apply mem_interior_iff_mem_nhds.mpr
+    exact Filter.mem_of_superset (Metric.ball_mem_nhds theta zero_lt_one)
+      Metric.ball_subset_closedBall
+  obtain ⟨m, _hm, _hm1, hnewc, hFamily⟩ :=
+    exists_compact_tilted_weakCramer_bound mu supportRadius hSupport hbounded K hK
+      theta.1 theta.2 beta c R hc hWC
+  exact canonical_actual_self_normalized_tail_scaled_expansion
+    mu theta htheta hdet level a0 hlevel ha0 hnegative hmean hsaddle
+      K hK hthetaK beta (m ^ 2 * c / 2) R hbeta hbetaUpper hnewc hR
+        (fun p hp => (hFamily p hp).2.2) hcurvature hUnique
+
+end
+end Shao.OQ3
