@@ -357,6 +357,7 @@ import Shao.OQ3.ComplexSixOrderPolynomialCoefficients
 import Shao.OQ3.ComplexSixOrderPolynomialGrowth
 import Shao.OQ3.ComplexTwoScalePolynomialTail
 import Shao.OQ3.ComplexWeightedMonomialRemainderBounds
+import Shao.OQ3.CoordinateSquareAffineAE
 import Shao.OQ3.CorrectedScaleContinuity
 import Shao.OQ3.CovarianceRowInverseQuadratic
 import Shao.OQ3.CovarianceWhitening
@@ -371,6 +372,7 @@ import Shao.OQ3.EnergyBernoulliMGF
 import Shao.OQ3.EuclideanGaussianPolynomialIntegrability
 import Shao.OQ3.EuclideanGaussianWeightedTail
 import Shao.OQ3.FarEnergyExponentialCover
+import Shao.OQ3.FiniteAtomicJointNearResonance
 import Shao.OQ3.FiniteAtomicJointPhaseGap
 import Shao.OQ3.FiniteConstraints
 import Shao.OQ3.FiniteFarArc
@@ -494,6 +496,7 @@ import Shao.OQ3.PhysicalWindowRateFloor
 import Shao.OQ3.PhysicalWindowRateFloorAnchors
 import Shao.OQ3.PhysicalWindowRateFloorGaussianCells
 import Shao.OQ3.PhysicalWindowUniformGaussianCells
+import Shao.OQ3.PositiveBoxSimultaneousDiophantine
 import Shao.OQ3.PositiveLayerTail
 import Shao.OQ3.PositiveRate
 import Shao.OQ3.ProductMeasureDomination
@@ -502,6 +505,8 @@ import Shao.OQ3.QuadraticSampleExponentialBound
 import Shao.OQ3.QuadraticTiltCumulants
 import Shao.OQ3.QuadraticWhiteningPairEquiv
 import Shao.OQ3.QuadraticWhiteningSpectralData
+import Shao.OQ3.RealParameterDiophantine
+import Shao.OQ3.RealRatioDiophantineAE
 import Shao.OQ3.RegularCovariance
 import Shao.OQ3.ResonanceArithmetic
 import Shao.OQ3.ResonantLimit
@@ -564,7 +569,13 @@ import Shao.OQ3.SymmetricEightAtomCoordinateGaps
 import Shao.OQ3.SymmetricEightAtomDiophantine
 import Shao.OQ3.SymmetricEightAtomLaw
 import Shao.OQ3.SymmetricEightAtomWeakCramer
+import Shao.OQ3.SymmetricEightAtomWeakCramerExistence
+import Shao.OQ3.SymmetricEightAtomWeakCramerNonlattice
+import Shao.OQ3.SymmetricEightAtomWeakNotStrong
 import Shao.OQ3.TiltedMeasureDomination
+import Shao.OQ3.TorusLargeReturns
+import Shao.OQ3.TorusMetricDiophantine
+import Shao.OQ3.TorusSimultaneousBadSet
 import Shao.OQ3.UniformPairCGFCumulantBounds
 import Shao.OQ3.UniformPairCharacteristicGaussianError
 import Shao.OQ3.UniformPairCharacteristicLocalGaussian
