@@ -1,0 +1,297 @@
+[
+  {
+    "index": 0,
+    "completeType": "(∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (ξlocal i))",
+    "projection": "hBranch.1"
+  },
+  {
+    "index": 1,
+    "completeType": "(∀ (k : ℕ) (i : Fin n),\n  Measurable[mAugLocal, borel ℝ] (ηlocal k i) ∧\n  MeasurableSpace.comap (ηlocal k i) (borel ℝ) = mAugLocal)",
+    "projection": "hBranch.2.1"
+  },
+  {
+    "index": 2,
+    "completeType": "(∀ k : ℕ,\n  Measurable[mAug, borel (Fin n → ℝ)] (C k) ∧\n  MeasurableSpace.comap (C k) (borel (Fin n → ℝ)) = mAug ∧\n  ∀ (f : (Fin n → Ω × ℝ) → ℝ), Measurable[mAug, borel ℝ] f →\n    ∃ F : (Fin n → ℝ) → ℝ,\n      Measurable[borel (Fin n → ℝ), borel ℝ] F ∧\n      ∀ x : Fin n → Ω × ℝ, f x = F (C k x))",
+    "projection": "hBranch.2.2.1"
+  },
+  {
+    "index": 3,
+    "completeType": "(∀ (k : ℕ) (i : Fin n),\n  let J : Type := {j : Fin n // j ≠ i}\n  let mDel : MeasurableSpace (J → Ω × ℝ) :=\n    @MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)\n  let Cdel : (J → Ω × ℝ) → (J → ℝ) :=\n    fun y j => ηlocal k j.val (y j)\n  let pX : (Fin n → Ω × ℝ) → (J → Ω × ℝ) := fun x j => x j.val\n  let pR : (Fin n → ℝ) → (J → ℝ) := fun t j => t j.val\n  Measurable[mAug, mDel] pX ∧\n  Measurable[borel (Fin n → ℝ), borel (J → ℝ)] pR ∧\n  Measurable[mDel, borel (J → ℝ)] Cdel ∧\n  MeasurableSpace.comap Cdel (borel (J → ℝ)) = mDel ∧\n  (∀ x : Fin n → Ω × ℝ, pR (C k x) = Cdel (pX x)) ∧\n  MeasurableSpace.comap (fun x : Fin n → Ω × ℝ => pR (C k x))\n      (borel (J → ℝ)) = MeasurableSpace.comap pX mDel ∧\n  ∀ (d : (J → Ω × ℝ) → ℝ), Measurable[mDel, borel ℝ] d →\n    ∃ F : (J → ℝ) → ℝ,\n      Measurable[borel (J → ℝ), borel ℝ] F ∧\n      (∀ y : J → Ω × ℝ, d y = F (Cdel y)) ∧\n      Measurable[borel (Fin n → ℝ), borel ℝ] (fun t => F (pR t)) ∧\n      ∀ x : Fin n → Ω × ℝ, d (pX x) = F (pR (C k x)))",
+    "projection": "hBranch.2.2.2.1"
+  },
+  {
+    "index": 4,
+    "completeType": "(∀ (k : ℕ) (i : Fin n),\n  ∃ FAdelete FBdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ,\n    Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FAdelete ∧\n    Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FBdelete ∧\n    ∀ x : Fin n → Ω × ℝ,\n      Adelete i x = FAdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x) ∧\n      Bdelete i x = FBdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x))",
+    "projection": "hBranch.2.2.2.2.1"
+  },
+  {
+    "index": 5,
+    "completeType": "@IsProbabilityMeasure (Fin n → Ω) mN₀ P₀",
+    "projection": "hBranch.2.2.2.2.2.1"
+  },
+  {
+    "index": 6,
+    "completeType": "P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P",
+    "projection": "hBranch.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 7,
+    "completeType": "IsProbabilityMeasure ν",
+    "projection": "hBranch.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 8,
+    "completeType": "MeasurePreserving q ν P₀",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 9,
+    "completeType": "(∀ k : ℕ, 0 < ε k ∧ ε k < 1 / (4 * Real.sqrt (n : ℝ)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 10,
+    "completeType": "Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 11,
+    "completeType": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν ∧\n  (∫ x, ξ i x ∂ν) = 0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 12,
+    "completeType": "(∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 13,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Measurable[mAugLocal, borel ℝ] (Ylocal k i) ∧\n  Measurable[mAug, borel ℝ] (Y k i) ∧ ∀ x : Fin n → Ω × ℝ, |Y k i x - ξ i x| ≤ ε k)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 14,
+    "completeType": "(∀ ζ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ζ ∧ |D2 ζ| ≤ B0 ζ)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 15,
+    "completeType": "(∀ ζ : Fin n → Ω, projectionV n g ζ = 0 → T0 ζ = 0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 16,
+    "completeType": "(∀ (k : ℕ) (x : Fin n → Ω × ℝ), Vη k x = 0 → Tη k x = 0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 17,
+    "completeType": "(∀ k : ℕ, (1 / 2 : ℝ) < s k ∧\n  (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η k i x = ηlocal k i (x i)) ∧\n  iIndepFun (η k) ν ∧\n  (∀ i : Fin n, Measurable[mAug, borel ℝ] (η k i) ∧ MemLp (η k i) 2 ν ∧\n    (∫ x, η k i x ∂ν) = 0) ∧\n  (∑ i : Fin n, ∫ x, (η k i x) ^ 2 ∂ν) = 1 ∧\n  ν {x : Fin n → Ω × ℝ | Vη k x = 0} = 0 ∧\n  (∀ᵐ x ∂ν, 0 < Vη k x ∧ 0 < b x ∧ 0 < Vη k x * b x))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 18,
+    "completeType": "(∀ (k : ℕ) (x : Fin n → Ω × ℝ),\n  Dη k x = D1 (q x) + Qε k x ∧\n  Wη k x + Dη k x - z * Vη k x * b x = W x + D1 (q x) - z * V x * b x ∧\n  |Qε k x| ≤ M k x ∧ |Dη k x| ≤ Anew k x)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 19,
+    "completeType": "Measurable[mAug, borel ℝ] H",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 20,
+    "completeType": "Integrable[mAug] H ν",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 21,
+    "completeType": "(∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 22,
+    "completeType": "(∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧ Integrable[mAug] (Qε k) ν ∧\n  Integrable[mAug] (fun x => |Qε k x|) ν ∧\n  (∫ x, |Qε k x| ∂ν) ≤ K * ε k * (∫ x, H x ∂ν))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 23,
+    "completeType": "Filter.Tendsto (fun k => ∫ x, |Qε k x| ∂ν) Filter.atTop (nhds (0 : ℝ))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 24,
+    "completeType": "(∀ k : ℕ, Measurable[mAug, borel ℝ] (Anew k) ∧ Integrable[mAug] (Anew k) ν ∧\n  ∀ x : Fin n → Ω × ℝ, 0 ≤ Anew k x)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 25,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (AdeleteNew k i) ∧\n  Integrable[mAug] (AdeleteNew k i) ν ∧ ∀ x : Fin n → Ω × ℝ, 0 ≤ AdeleteNew k i x)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 26,
+    "completeType": "(∀ k : ℕ, Integrable[mAug] (fun x => |Anew k x - A x|) ν ∧\n  (∫ x, |Anew k x - A x| ∂ν) = ε k * (K * (∫ x, H x ∂ν)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 27,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |AdeleteNew k i x - Adelete i x|) ν ∧\n  (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) = ε k * (K * (∫ x, Hdelete i x ∂ν)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 28,
+    "completeType": "Filter.Tendsto (fun k => ∫ x, |Anew k x - A x| ∂ν) Filter.atTop (nhds (0 : ℝ))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 29,
+    "completeType": "(∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, |AdeleteNew k i x - Adelete i x| ∂ν)\n  Filter.atTop (nhds (0 : ℝ)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 30,
+    "completeType": "(∀ (k : ℕ) (i : Fin n) (x : Fin n → Ω × ℝ),\n  Δ k i x = M k x - Mdelete k i x ∧ |Δ k i x| ≤ M k x + Mdelete k i x)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 31,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |Δ k i x|) ν ∧\n  (∫ x, |Δ k i x| ∂ν) ≤ ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν))))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 32,
+    "completeType": "(∀ k : ℕ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,\n  Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧\n  ∀ x : Fin n → Ω × ℝ, (M k x, Anew k x, B x) = Ffull (C k x))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 33,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,\n  Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧\n  ∀ x : Fin n → Ω × ℝ,\n    (Mdelete k i x, AdeleteNew k i x, Bdelete i x) =\n      Fdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 34,
+    "completeType": "(∀ k : ℕ, ∃ G1 G2 : (Fin n → ℝ) → ℝ,\n  Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧\n  Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧\n  ∀ x : Fin n → Ω × ℝ, Dη k x = G1 (C k x) ∧ D2 (q x) = G2 (C k x))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 35,
+    "completeType": "Integrable[mN] (fun ζ => fullTest0 ζ * Real.exp (S0 ζ)) P",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 36,
+    "completeType": "(∀ k : ℕ, Integrable[mAug] (fun x => fullTestη k x * Real.exp (Sη k x)) ν)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 37,
+    "completeType": "(∀ i : Fin n, Integrable[mN] (fun ζ => deletedTest0 i ζ * Real.exp (S0minus i ζ)) P)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 38,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => deletedTestη k i x * Real.exp (Sηminus k i x)) ν)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 39,
+    "completeType": "(∀ i : Fin n, Integrable[mN] (compactDeletedTest0 i) P)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 40,
+    "completeType": "(∀ (k : ℕ) (i : Fin n), Integrable[mAug] (compactDeletedTestη k i) ν)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 41,
+    "completeType": "0 < I0",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 42,
+    "completeType": "(∀ k : ℕ, 0 < Iη k)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 43,
+    "completeType": "Filter.Tendsto Iη Filter.atTop (nhds I0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 44,
+    "completeType": "Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)\n  Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 45,
+    "completeType": "(∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)\n  Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 46,
+    "completeType": "Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)\n  Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 47,
+    "completeType": "(∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n  Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 48,
+    "completeType": "(∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)\n  Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 49,
+    "completeType": "Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 50,
+    "completeType": "Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 51,
+    "completeType": "(∀ (k : ℕ) (x : Fin n → Ω × ℝ),\n  A x + (4 * ε k * Real.sqrt (n : ℝ)) * H x = Anew k x)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 52,
+    "completeType": "(∀ (k : ℕ) (i : Fin n),\n  Measurable[mAug, borel ℝ] (fun x =>\n    deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -\n      deletedTestη k i x * Real.exp (Sηminus k i x)) ∧\n  Integrable[mAug] (fun x =>\n    deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -\n      deletedTestη k i x * Real.exp (Sηminus k i x)) ν ∧\n  Integrable[mAug] (fun x =>\n    |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -\n      deletedTestη k i x * Real.exp (Sηminus k i x)|) ν ∧\n  Integrable[mAug] (fun x =>\n    deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x)) ν ∧\n  (∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -\n    deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν) ≤\n      |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧\n  |(∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -\n    (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤\n      |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 53,
+    "completeType": "(∀ i : Fin n,\n  Filter.Tendsto (fun k : ℕ =>\n    ∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -\n      deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν)\n    Filter.atTop (nhds (0 : ℝ)) ∧\n  Filter.Tendsto (fun k : ℕ =>\n    (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -\n      (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))\n    Filter.atTop (nhds (0 : ℝ)) ∧\n  Filter.Tendsto (fun k : ℕ =>\n    ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν)\n    Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)) ∧\n  Filter.Tendsto (fun k : ℕ =>\n    (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)\n    Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 54,
+    "completeType": "(∀ k : ℕ,\n  |(∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -\n    (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤\n      |ε k| * ∑ i : Fin n,\n        Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 55,
+    "completeType": "Filter.Tendsto (fun k : ℕ =>\n  (∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -\n    (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))\n  Filter.atTop (nhds (0 : ℝ))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 56,
+    "completeType": "Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)\n  Filter.atTop (nhds (0 : ℝ))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 57,
+    "completeType": "Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0)",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1"
+  },
+  {
+    "index": 58,
+    "completeType": "(1 ≤ z →\n  Integrable[mΩ] (fun o : Ω => Fz (g o / N)) μ ∧\n  (∀ i : Fin n,\n    Measurable[mN₀, borel ℝ] (fun ζ => Fz (ξ0 i ζ)) ∧\n    Integrable[mN] (fun ζ => Fz (ξ0 i ζ)) P ∧\n    Integrable[mN₀] (fun ζ => Fz (ξ0 i ζ)) P₀ ∧\n    Integrable[mAug] (fun x => Fz (ξ i x)) ν ∧\n    δreduced i = δ0 i ∧ δν i = δ0 i ∧ δ0 i = scalarBudget) ∧\n  L0 = (n : ℝ) * scalarBudget ∧\n  (∀ i : Fin n, L0 = (n : ℝ) * δ0 i) ∧\n  (∀ i : Fin n, 0 ≤ δ0 i) ∧ 0 ≤ L0 ∧ Lν = L0 ∧\n  L0 ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) ∧\n  (β = 0 → L0 = 0 ∧ (∀ i : Fin n, δ0 i = 0)) ∧\n  ((β = 0 ∨\n      (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *\n        Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →\n    L0 ≤ Real.rpow cWindow p ∧\n    (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) ∧\n    L0 < cBudget * z ^ 2 ∧\n    (∀ (k : ℕ) (i : Fin n),\n      Integrable[mAug] (fun x => Fz (η k i x)) ν) ∧\n    (∀ i : Fin n,\n      Filter.Tendsto (fun k : ℕ => δη k i) Filter.atTop (nhds (δ0 i))) ∧\n    Filter.Tendsto Lη Filter.atTop (nhds L0) ∧\n    (∀ (τ : ℝ), 0 < τ →\n      ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →\n        (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧\n        Lη k < cBudget * z ^ 2 ∧\n        (∀ i : Fin n, |δη k i - δ0 i| < τ) ∧\n        |Lη k - L0| < τ ∧\n        (∫ x, |Qε k x| ∂ν) < τ ∧\n        (∫ x, |Anew k x - A x| ∂ν) < τ ∧\n        (∀ i : Fin n, (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) < τ) ∧\n        |Iη k - I0| < τ ∧\n        |(∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) -\n          (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)| < τ ∧\n        (∀ i : Fin n,\n          |(∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) -\n            (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)| < τ) ∧\n        |((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k) -\n          ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)| < τ ∧\n        (∀ i : Fin n,\n          |((∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k) -\n            ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)| < τ) ∧\n        (∀ i : Fin n,\n          |(∫ x, compactDeletedTestη k i x ∂ν) -\n            (∫ ζ, compactDeletedTest0 i ζ ∂P)| < τ) ∧\n        |sourceCostη k - sourceCost0| < τ ∧\n        |compactCostη k - compactCost0| < τ)))",
+    "projection": "hBranch.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2"
+  }
+]

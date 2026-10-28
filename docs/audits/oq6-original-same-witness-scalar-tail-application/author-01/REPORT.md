@@ -1,0 +1,33 @@
+# Unit243 complete proof source
+
+STATUS: COMPLETE_SOURCE_IMPLEMENTATION; INDEPENDENT_REVIEW_AND_SERVER_KERNEL_ALL_OWNER_AXIOM_AUDIT_PENDING.
+
+This is the original Stage1 author's complete implementation of the exact freeze-02 public declaration. It uses the corrected first import of OriginalSameWitnessUnperturbedCostConsumer and reproduces the complete frozen preamble, theorem head and closing byte-exactly. The old Stage1/freeze-01 self-import bytes remain untouched. Only this author-01 directory was written.
+
+## Exact mathematical work
+
+The proof invokes qualified242 exactly once at the unchanged original μ,h,regularity,centering,projection-variance,p-moment,cBudget parameters. Its full result type is explicit. The sole cg and m₀ are selected through its full strengthened existential contexts; hm₀ and countable-generation evidence are explicitly typed Prop witnesses of that same model. The same μ₀=μ.trim hm₀ and augmented product law ν are used throughout. No independent240/239 model selection occurs.
+
+The entire original fixed-law/analytic/coding/strict-window output is retained. In the universal n>=4,C0>=0,z>=0 branch,59 old outer conjuncts are taken directly from the same result. The old strict common-cutoff/window conjunct is forwarded whole. The original eventual envelope/H-complement probability-payment branch is forwarded whole, without reassembling or narrowing it. All original assumptions and n/(n-2)^2/clipping1/p54 repaired source scope stay unchanged.
+
+The new conditional clause receives cSZ,C1,C2,C3,C4, the complete external ScalarShaoZhouFiniteCostTailInput, actual k,1<=z, individual δηki<=1 and Lηk<=cSZ*z² only after the sole model/witness and retained universal n/C0/z binders. It does not assume existence of the external input, change cBudget, assert a new source window/eventual budget or pass to a limit.
+
+## Direct external scalar application
+
+Seven approved ordinary factor values are introduced with exactly their frozen types, RHS and order. F1/F2 select the two retained SAME-k numerator factors. Ffull selects the retained full triple. FA/FB are its second/third projections, with explicit Borel-space equalities and typed measurable projection facts. The dependent FAdelete/FBdelete families select the retained UNPERTURBED deleted factor pairs at every i. Their complete choice-input propositions, measurability and literal factor equations are explicit in the source and ACTUAL-PROP-CONTEXTS.json. These are consequences of the same packet, not added factor callbacks.
+
+The required scalar ηk coordinates, independence, L2, mean0, total second moment1, positivity and domination facts come directly from qualified242. Anew nonnegativity is exported. B nonnegativity follows from |D2|<=B0. Adelete is an absolute value, and Bdelete nonnegativity uses the original clippedDeletion_envelopes_nonneg at C0>=0,rho=sqrt(v)>=0 and clipping1. No unweighted B/Bdelete measurability or integrability premise is added.
+
+The new local probability instance has the exact frozen type @IsProbabilityMeasure (Fin n→Ω×ℝ) mAug ν and RHS hνProbability, obtained from the SAME output. The tilted exponential integrability proof applies the pinned Bochner theorem Integrable.of_integral_ne_zero: literal Iηk equals that real integral and qualified242 supplies0<Iηk, hence the integral is nonzero. This uses the existing convention that a nonintegrable Bochner integral is zero. It does not infer a new measurable function from integrability and adds no premise/helper/instance. The complete API supplement was read. Full weighted and UNPERTURBED deleted weighted integrability are direct242 outputs.
+
+The explicit external universal input is applied at the same ν,n,actualηk and seven factors. All18 external consequent lets are retained only inside its fully annotated Prop; they are not implementation aliases. Four full factor equations are explicitly changed to the whole observation-vector Pi shape before simplification; dependent deleted equations retain literal erased-coordinate vectors. Only these six equations and definitional RHS reduction identify the external statistic/cost/events with actual Tηk,unperturbedSourceCostηk and the actual two perturbed exceptional-event probabilities. In particular the deleted integrand has Anewk on the full sample and UNPERTURBED Adelete/Bdelete; old perturbed sourceCostη is never substituted for R. No equality of their finite costs is claimed.
+
+The accepted generic actual_normalized_integrable_tail_assembly is not used: its extra unweighted A/B/deletion premises are not silently borrowed. No external ScalarShaoZhouFiniteCostTailInput theorem is proved or inserted as an axiom. Attribution is explicit conditional application of that existing universal external-input interface.
+
+## Data, contexts and validation
+
+The frozen interface has138 public ordinary occurrences and147 optional proof ordinary occurrences. This proof uses89 public-result mirrors, the sole2 cg/m₀ choices and7 frozen factor values:98 actual optional ordinary bindings. The unused49 consist of5 deleted-coordinate context lets and44 eventual-payment lets retained inside propositions. Four approved local instances are installed; together with original mΩ/μ-probability and finite-index instances they cover exactly7 approved entries. All other named facts are explicit complete Prop annotations; no inferred named have or rcases fact binding is used. ACTUAL-PROP-CONTEXTS.json records48 actual have declarations plus the full post-factor-rewrite external Prop context,49 records total.
+
+Deterministic checks verify all20 activation inputs and the old Stage1 six-zero release; exact frozen02 prefix/head/closing; one242 call;59 old outer clauses plus the one new conditional clause; exact approved factor type/RHS/order; no added ordinary/helper/import/instance/premise; UTF-8 without BOM with LF; textual bracket balance and forbidden-construct absence. This is a source/interface audit only. No Lean/local compilation/server/network/upload/Git/API/child command was run. The source is complete but NOT qualified or kernel-checked. Qualified old source/review/first-object evidence was reused without replay.
+
+The scope remains the same original normalized clipped model and a per-k explicitly conditional scalar finite-cost tail pair. No physical-statistic/CDF/atomlessness/zero-denominator/root closure, new limit theorem or unconditional external result is claimed. Next: lead source intake, qualified independent complete proof review, and authorized server native/same-first-object all-owner recursive-axiom audit. The author seals all payloads then writes a six-zero release as its last write.
