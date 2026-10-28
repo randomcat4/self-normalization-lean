@@ -1,0 +1,112 @@
+theorem actual_current_level_true_deleted_conditional_tail_consumer
+    {X : Type u} [MeasurableSpace X]
+    {O : Type v} [MeasurableSpace O]
+    (ν : Measure X) [IsProbabilityMeasure ν]
+    (P : Measure O) [IsProbabilityMeasure P]
+    (n : ℕ) (hn : 1 ≤ n)
+    (ξ : Fin n → X → ℝ) (ξ0 : Fin n → O → ℝ)
+    (η : ℕ → Fin n → X → ℝ)
+    (D D2 B : X → ℝ) (Aη : ℕ → X → ℝ)
+    (Adeleteη : ℕ → Fin n → X → ℝ) (Bdelete : Fin n → X → ℝ)
+    (A0 B0 : O → ℝ) (A0delete B0delete : Fin n → O → ℝ)
+    (originalClip physical : O → ℝ)
+    (hξ : ∀ i : Fin n, Measurable (ξ i))
+    (hD : Measurable D) (hD2 : Measurable D2)
+    (hOriginalClip : Measurable originalClip) (hPhysical : Measurable physical)
+    (hη : ∀ (k : ℕ) (i : Fin n), Measurable (η k i))
+    (hηindep : ∀ k : ℕ, iIndepFun (η k) ν)
+    (hη2 : ∀ (k : ℕ) (i : Fin n), MemLp (η k i) 2 ν)
+    (hηmean : ∀ (k : ℕ) (i : Fin n), (∫ x, η k i x ∂ν) = 0)
+    (hηenergy : ∀ k : ℕ, (∑ i : Fin n, ∫ x, (η k i x) ^ 2 ∂ν) = 1)
+    (hD2pos : ∀ᵐ x ∂ν, 0 < 1 + D2 x)
+    (hηpos : ∀ k : ℕ, ∀ᵐ x ∂ν,
+      0 < Real.sqrt (∑ i : Fin n, (η k i x) ^ 2))
+    (cSZ C1 C2 C3 C4 : ℝ)
+    (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+      cSZ C1 C2 C3 C4)
+    (z : ℝ) (hz : 1 ≤ z) (pUpper p2 pZ pClip : ℝ) :
+    let C : ℕ → X → (Fin n → ℝ) := fun k x i => η k i x
+    let W : X → ℝ := fun x => ∑ i : Fin n, ξ i x
+    let V : X → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+    let Wη : ℕ → X → ℝ := fun k x => ∑ i : Fin n, η k i x
+    let Vη : ℕ → X → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+    let b : X → ℝ := fun x => Real.sqrt (1 + D2 x)
+    let Dη : ℕ → X → ℝ := fun k x =>
+      D x + W x - Wη k x + z * b x * (Vη k x - V x)
+    let Tη : ℕ → X → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)
+    let codedClip : X → ℝ := fun x =>
+      if V x = 0 then 0 else (W x + D x) / (V x * b x)
+    let F : Set X := {x | z * V x * b x ≤ W x + D x}
+    let Z : Set X := {x | V x = 0}
+    let Eη : ℕ → Set X := fun k => {x | z * |Dη k x| > Vη k x / 4}
+    let E2 : Set X := {x | z ^ 2 * |D2 x| > (1 / 4 : ℝ)}
+    let ℓ0 : Fin n → O → ℝ := fun i o => z * ξ0 i o - (z * ξ0 i o) ^ 2 / 2
+    let ℓη : ℕ → Fin n → X → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2
+    let S0 : O → ℝ := fun o => ∑ i : Fin n, ℓ0 i o
+    let Sη : ℕ → X → ℝ := fun k x => ∑ i : Fin n, ℓη k i x
+    let S0minus : Fin n → O → ℝ := fun i o => ∑ j ∈ Finset.univ.erase i, ℓ0 j o
+    let Sηminus : ℕ → Fin n → X → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x
+    let I0 : ℝ := ∫ o, Real.exp (S0 o) ∂P
+    let Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν
+    let full0 : O → ℝ := fun o => (z * A0 o + z ^ 2 * B0 o) * Real.exp (S0 o)
+    let fullη : ℕ → X → ℝ := fun k x => (z * Aη k x + z ^ 2 * B x) * Real.exp (Sη k x)
+    let deleted0 : Fin n → O → ℝ := fun i o =>
+      (min |z * ξ0 i o| 1 * (|A0 o - A0delete i o| + z * |B0 o - B0delete i o|)) *
+        Real.exp (S0minus i o)
+    let deletedη : ℕ → Fin n → X → ℝ := fun k i x =>
+      (min |z * η k i x| 1 * (|Aη k x - Adeleteη k i x| + z * |B x - Bdelete i x|)) *
+        Real.exp (Sηminus k i x)
+    let sourceCost0 : ℝ := ((∫ o, full0 o ∂P) + ∑ i : Fin n, ∫ o, deleted0 i o ∂P) / I0
+    let sourceCostη : ℕ → ℝ := fun k =>
+      ((∫ x, fullη k x ∂ν) + ∑ i : Fin n, ∫ x, deletedη k i x ∂ν) / Iη k
+    let δ0 : Fin n → ℝ := fun i => ∫ o, (z * ξ0 i o) ^ 2 * min |z * ξ0 i o| 1 ∂P
+    let δη : ℕ → Fin n → ℝ := fun k i => ∫ x, (z * η k i x) ^ 2 * min |z * η k i x| 1 ∂ν
+    let L0 : ℝ := ∑ i : Fin n, δ0 i
+    let Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i
+    let lower0 : ℝ := Shao.standardNormalTail z * Real.exp (-C1 * L0) * (1 - C2 * sourceCost0)
+    let lowerη : ℕ → ℝ := fun k =>
+      Shao.standardNormalTail z * Real.exp (-C1 * Lη k) * (1 - C2 * sourceCostη k)
+    let upper0 : ℝ := Shao.standardNormalTail z * Real.exp (C3 * L0) * (1 + C4 * sourceCost0)
+    let upperη : ℕ → ℝ := fun k =>
+      Shao.standardNormalTail z * Real.exp (C3 * Lη k) * (1 + C4 * sourceCostη k)
+    (∀ k : ℕ, ∃ F1 F2 FA FB : (Fin n → ℝ) → ℝ,
+      Measurable[borel (Fin n → ℝ), borel ℝ] F1 ∧
+      Measurable[borel (Fin n → ℝ), borel ℝ] F2 ∧
+      Measurable[borel (Fin n → ℝ), borel ℝ] FA ∧
+      Measurable[borel (Fin n → ℝ), borel ℝ] FB ∧
+      ∀ x : X, Dη k x = F1 (C k x) ∧ D2 x = F2 (C k x) ∧
+        Aη k x = FA (C k x) ∧ B x = FB (C k x)) →
+    (∀ (k : ℕ) (i : Fin n),
+      ∃ FAdelete FBdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+        Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FAdelete ∧
+        Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FBdelete ∧
+        ∀ x : X, Adeleteη k i x = FAdelete (fun j => η k j.val x) ∧
+          Bdelete i x = FBdelete (fun j => η k j.val x)) →
+    (∀ (k : ℕ) (x : X), 0 ≤ Aη k x ∧ 0 ≤ B x) →
+    (∀ (k : ℕ) (i : Fin n) (x : X), 0 ≤ Adeleteη k i x ∧ 0 ≤ Bdelete i x) →
+    (∀ k : ℕ, ∀ᵐ x ∂ν, |Dη k x| ≤ Aη k x ∧ |D2 x| ≤ B x) →
+    (∀ k : ℕ, Integrable (fun x => Real.exp (Sη k x)) ν ∧ 0 < Iη k) →
+    (∀ k : ℕ, Integrable (fullη k) ν) →
+    (∀ (k : ℕ) (i : Fin n), Integrable (deletedη k i) ν) →
+    (∀ᶠ k : ℕ in Filter.atTop,
+      (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧ Lη k < cSZ * z ^ 2) →
+    Filter.Tendsto Lη Filter.atTop (nhds L0) →
+    Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) →
+    Measure.map codedClip ν = Measure.map originalClip P →
+    P.real {o : O | originalClip o ≠ physical o} ≤ pClip →
+    ν.real Z ≤ pZ →
+    ν.real E2 ≤ p2 →
+    (∀ γ : ℝ, 0 < γ → ∀ᶠ k : ℕ in Filter.atTop, ν.real (Eη k) ≤ pUpper + γ) →
+    (∀ᶠ k : ℕ in Filter.atTop,
+      lowerη k ≤ ν.real {x : X | z ≤ Tη k x} ∧
+      ν.real {x : X | z ≤ Tη k x} ≤ upperη k + ν.real (Eη k) + ν.real E2) ∧
+    Filter.Tendsto lowerη Filter.atTop (nhds lower0) ∧
+    Filter.Tendsto upperη Filter.atTop (nhds upper0) ∧
+    (∀ k : ℕ, ν.real {x : X | z ≤ Tη k x} = ν.real F) ∧
+    lower0 ≤ ν.real F ∧
+    ν.real F ≤ upper0 + pUpper + p2 ∧
+    lower0 - pZ - pClip ≤ P.real {o : O | z ≤ physical o} ∧
+    P.real {o : O | z ≤ physical o} ≤ upper0 + pUpper + p2 + pZ + pClip ∧
+    (∀ payment : ℝ, pUpper ≤ payment → p2 ≤ payment → pZ ≤ payment → pClip ≤ payment →
+      lower0 - 2 * payment ≤ P.real {o : O | z ≤ physical o} ∧
+      P.real {o : O | z ≤ physical o} ≤ upper0 + 4 * payment)
