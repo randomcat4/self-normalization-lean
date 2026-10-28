@@ -1,0 +1,9 @@
+# Compatibility and local validation scope
+
+Unit244 is a prospective declaration-only extension of the full exact243 frozen head. No theorem body or implementation is present. Its .lean extension is for statement review; the artifact intentionally is not an executable Lean module and no compilation is asserted.
+
+The deterministic local checks compare bytes and JSON data only: all16 activation inputs and activation SHA256/length; restoration of the entire243 head after removing exactly the new clause/restoring its theorem name; exact equality of all138 public type/RHS/scope rows; all140 optional ordinary rows as138 mirrors plus the sole cg/m₀ selections; full243, not weaker242, suffixes in both choices; complete typed Prop contexts; no new optional instance; no factor reselection; balanced candidate delimiters; and UTF8 without BOM with LF line endings. API heads have no theorem proof bodies or parameter/result ellipses.
+
+The new external input is a consequent at fixed cBudget after model selection. The strict window is the same literal formula. All old243 outputs including the arbitrary cSZ per-k conditional clause and the separate envelope/payment branch remain exact. The new probability errors are the literal perturbed errors, the scalar comparison uses original L0/sourceCost0, and unperturbed-cost closeness is a separate same-threshold conclusion. There is no finite cost identity or probability limit premise/conclusion.
+
+This static consistency check is not an independent source-to-statement/proof review, kernel check, axiom receipt or qualification. The unqualified complete243 dependency and explicit lead freeze/implementation activation remain mandatory. No local Lean, server, network, upload, Git/API, child, proof implementation, accepted old check replay or other-owner write occurred.
