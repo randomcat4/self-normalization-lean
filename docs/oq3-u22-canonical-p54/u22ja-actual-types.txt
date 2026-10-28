@@ -1,0 +1,60 @@
+DECL Shao.OQ3.bounded_canonical_actual_tail_scaled_expansion
+TYPE ∀ (mu : MeasureTheory.Measure ℝ) [inst : MeasureTheory.IsProbabilityMeasure mu],
+  ∀ theta ∈ interior (Shao.Probability.bivariateMGFDomain mu fun x => (x, x ^ 2)),
+    0 < (Shao.OQ3.parabolaCovariance (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)).det →
+      ∀ (level a0 : ℝ),
+        0 < level →
+          0 < a0 →
+            theta.2 < 0 →
+              (∫ (x : ℝ), x ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2,
+                    ∫ (x : ℝ), x ^ 2 ∂mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2) =
+                  (a0, a0 ^ 2 / level ^ 2) →
+                theta.1 = -2 * a0 * theta.2 / level ^ 2 →
+                  ∀ (supportRadius : ℝ),
+                    0 ≤ supportRadius →
+                      (∀ᵐ (x : ℝ) ∂mu, |x| ≤ supportRadius) →
+                        ∀ (beta c R : ℝ),
+                          0 < beta →
+                            beta < 2 / 5 →
+                              0 < c →
+                                0 ≤ R →
+                                  (∀ (xi eta : ℝ),
+                                      R < √(xi ^ 2 + eta ^ 2) →
+                                        ‖Shao.OQ3.jointCharacteristic (mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2)
+                                              xi eta‖ ≤
+                                          1 - c * (√(xi ^ 2 + eta ^ 2)).rpow (-beta)) →
+                                    have nu := mu.tilted fun x => theta.1 * x + theta.2 * x ^ 2;
+                                    have D := Shao.OQ3.parabolaCovariance nu;
+                                    have v := ![1, 2 * a0 / level ^ 2];
+                                    have Lambda1 := 2 * theta.2 / level ^ 2 + v ⬝ᵥ D⁻¹.mulVec v;
+                                    have J0 :=
+                                      theta.1 * a0 + theta.2 * (a0 ^ 2 / level ^ 2) -
+                                        Real.log (∫ (x : ℝ), Real.exp (theta.1 * x + theta.2 * x ^ 2) ∂mu);
+                                    have vCorr := -theta.2 * √D.det * √Lambda1;
+                                    have Tail := {w | 0 < w.2 ∧ level * √w.2 ≤ w.1};
+                                    0 < Lambda1 →
+                                      (∀ w ∈ Tail,
+                                          Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                (a0, a0 ^ 2 / level ^ 2) ≤
+                                              Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w ∧
+                                            (Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2)) w =
+                                                Shao.Probability.bivariateLegendreRate mu (fun x => (x, x ^ 2))
+                                                  (a0, a0 ^ 2 / level ^ 2) ↔
+                                              w = (a0, a0 ^ 2 / level ^ 2))) →
+                                        0 < vCorr ∧
+                                          ∃ C,
+                                            0 < C ∧
+                                              ∃ N,
+                                                2 ≤ N ∧
+                                                  ∀ (n : ℕ),
+                                                    N ≤ n →
+                                                      have P := MeasureTheory.Measure.pi fun x => mu;
+                                                      have T :=
+                                                        {z |
+                                                          level * √↑n ≤
+                                                            if Shao.energy z = 0 then 0
+                                                            else (∑ i, z i) / √(Shao.energy z)};
+                                                      |√(2 * Real.pi * ↑n) * Real.exp (↑n * J0) * P.real T - vCorr⁻¹| ≤
+                                                        C / √↑n
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

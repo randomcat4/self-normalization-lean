@@ -1,0 +1,18 @@
+theorem actual_exterior_exponential_bound_of_unique_minimum
+    (mu : Measure ℝ) [IsProbabilityMeasure mu]
+    (level a0 rho J0 : ℝ) (hlevel : 0 < level) (hrho : 0 < rho) :
+    let I : (ℝ × ℝ) → EReal :=
+      Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2))
+    let center : ℝ × ℝ := (a0, a0 ^ 2 / level ^ 2)
+    let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+    let U : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+      |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho}
+    I center = (J0 : EReal) →
+      (∀ w ∈ Tail, I center ≤ I w ∧ (I w = I center ↔ w = center)) →
+        ∃ delta : ℝ, 0 < delta ∧ ∃ C : ℝ, 0 < C ∧
+          ∀ n : ℕ, 1 ≤ n →
+            let P : Measure (Shao.Path n) := Measure.pi (fun _ : Fin n => mu)
+            let M : Shao.Path n → (ℝ × ℝ) := fun z =>
+              ((∑ i : Fin n, z i) / (n : ℝ), Shao.energy z / (n : ℝ))
+            P.real (M ⁻¹' (Tail \ U)) ≤
+              C * Real.exp (-(n : ℝ) * (J0 + delta))
