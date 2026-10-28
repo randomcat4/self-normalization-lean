@@ -1,0 +1,13 @@
+# Original level-dependent clipped source package
+
+This change advances two verified parts of the original normalized-kernel tail argument.
+
+Unit249 absorbs the existing additive physical-tail payments into Gaussian-relative errors while retaining the same selected cg and countably generated observation model. The fixed-rho guard is established before the eventual sample-size quantifier, and the common cPaid window is proved positive and eventually nonempty. The result keeps the complete weighted finite source cost and the external Shao–Zhou scalar input explicit. It uses the original physical statistic with its zero-denominator convention and closed tail event; the additional relative payment is R=exp(-(t0/2)*n^(1/3)).
+
+Unit251 supplies the original current-z clipping package with C0=512: measurable observables and true deleted factors, global clipping and zero-branch contracts, the physical-statistic identity under its explicit geometric window, and the same current-level weighted cost proved by unit250. The package does not move that cubic cost to the fixed clipping1 process in unit249.
+
+Validation: both exact source versions passed their designated-server native checks and import-only audits of their respective first original objects. Qualified independent complete reviews cover every source statement and proof, all actual module-owned types and each transitive axiom closure. Unit249 has 1 actual theorem/15262 TYPE lines; its unchanged type spans reuse exact qualified248 evidence and the complete new actual type branch was directly read and losslessly reconstructed. Unit251 has 1 actual theorem/627 TYPE lines. Neither module owns a required non-theorem VALUE, and both closures contain only propext, Classical.choice and Quot.sound. Actual native/audit exit codes are 0/0 in each case; warnings and strict empty-output wrapper failures remain recorded. No accepted producer was recompiled or re-audited.
+
+Full OQ56 remains OPEN. The current-level coded scalar source-law consumer, weighted-cost/error absorption through that consumer, external-result attribution and the original probability-payment chain remain explicit downstream obligations. The p54 repair is retained. Root integration is a separate exact-source acceptance step; this publication performs no merge.
+
+This document is bound to unit251 exact source ab6f36156e138a4616fa769bd7ad123b3cd0adf92be79414e6ab226598291e53 and its qualified evidence. All preserved author versions, complete independent reviews and normalized all-owner evidence are bundled under docs/audits/oq6-original-level-dependent-clipped-source-package.
