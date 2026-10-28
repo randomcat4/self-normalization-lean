@@ -273,8 +273,14 @@ import Shao.OQ3.BoundedActualQuadraticExteriorExponentialBound
 import Shao.OQ3.BoundedActualSelfNormalizedTailLaplace
 import Shao.OQ3.BoundedActualSelfNormalizedTailUniqueMinimum
 import Shao.OQ3.BoundedCanonicalActualTailScaledExpansion
+import Shao.OQ3.BoundedCenteredParabolaBoundaryTiltSign
+import Shao.OQ3.BoundedCenteredParabolaGlobalBoundaryTilt
+import Shao.OQ3.BoundedCenteredParabolaMinimumBoundary
 import Shao.OQ3.BoundedCenteredParabolaMinimumLocalization
+import Shao.OQ3.BoundedCenteredParabolaRateCurvature
+import Shao.OQ3.BoundedCenteredParabolaRegularUniqueSaddle
 import Shao.OQ3.BoundedCenteredParabolaSmallPositiveMinimum
+import Shao.OQ3.BoundedCenteredParabolaUniqueMinimum
 import Shao.OQ3.BoundedCompactPhysicalCellGaussian
 import Shao.OQ3.BoundedDensityGaussianComparison
 import Shao.OQ3.BoundedIndicatorDesmoothing
@@ -283,6 +289,7 @@ import Shao.OQ3.BoundedParabolaLegendreZeroSet
 import Shao.OQ3.BoundedParabolaMeanRateGap
 import Shao.OQ3.BoundedParabolaRectangleSeparation
 import Shao.OQ3.BoundedParabolaTailGlobalMinimum
+import Shao.OQ3.BoundedParabolaWholeTailRateGap
 import Shao.OQ3.BoundedPhysicalWindowActualGaussian
 import Shao.OQ3.BoundedPhysicalWindowContinuousRate
 import Shao.OQ3.BoundedPhysicalWindowCovarianceGaussianSum
@@ -423,6 +430,7 @@ import Shao.OQ3.IndependentSumSmoothingBounds
 import Shao.OQ3.IndependentSumTestOscillation
 import Shao.OQ3.IndependentSumThickeningBounds
 import Shao.OQ3.InverseTilt
+import Shao.OQ3.JointEnergyCurvatureNeighborhood
 import Shao.OQ3.JointNonlattice
 import Shao.OQ3.LargeIIDCountExponentialBound
 import Shao.OQ3.LocalBoundaryLowerBound
@@ -487,6 +495,7 @@ import Shao.OQ3.ParabolaCellGaussianTube
 import Shao.OQ3.ParabolaCellLogCubicOscillation
 import Shao.OQ3.ParabolaCellNcubeOscillation
 import Shao.OQ3.ParabolaCellRateAnchor
+import Shao.OQ3.ParabolaEnergyCurvatureNeighborhood
 import Shao.OQ3.ParabolaFin2IIDCharacteristic
 import Shao.OQ3.ParabolaFiniteGridCover
 import Shao.OQ3.ParabolaGridCardinality
@@ -525,6 +534,7 @@ import Shao.OQ3.ScalarCharacteristicIntegratedTaylorRemainder
 import Shao.OQ3.ScalarCharacteristicMomentRemainder
 import Shao.OQ3.ScalarCharacteristicQuadraticRemainder
 import Shao.OQ3.ScalarTaylorMomentPolynomial
+import Shao.OQ3.ScaledTangentCurvatureNeighborhood
 import Shao.OQ3.SelfNormalizedHighEnergyCount
 import Shao.OQ3.SelfNormalizedHighEnergyExponentialBound
 import Shao.OQ3.SelfNormalizedLowEnergyCount
@@ -572,11 +582,13 @@ import Shao.OQ3.StandardizedPairQuarticExponentialError
 import Shao.OQ3.StandardizedPairQuarticLogRemainder
 import Shao.OQ3.StandardizedParabolaArcs
 import Shao.OQ3.SummableAtoms
+import Shao.OQ3.SymmetricEightAtomCanonicalTailExpansion
 import Shao.OQ3.SymmetricEightAtomCompactTiltWitness
 import Shao.OQ3.SymmetricEightAtomCoordinateGaps
 import Shao.OQ3.SymmetricEightAtomDiophantine
 import Shao.OQ3.SymmetricEightAtomLaw
 import Shao.OQ3.SymmetricEightAtomPositiveEnergySupport
+import Shao.OQ3.SymmetricEightAtomRegularUniqueSaddleWitness
 import Shao.OQ3.SymmetricEightAtomSmallPositiveMinimum
 import Shao.OQ3.SymmetricEightAtomWeakCramer
 import Shao.OQ3.SymmetricEightAtomWeakCramerExistence
@@ -919,6 +931,8 @@ import Shao.OQ6.OriginalGoodEventBridge
 import Shao.OQ6.OriginalGoodEventProbability
 import Shao.OQ6.OriginalKernelObservableTransport
 import Shao.OQ6.OriginalLevelDependentClippedSourcePackage
+import Shao.OQ6.OriginalLevelDependentCorrectionEnvelope
+import Shao.OQ6.OriginalLevelDependentCountablyGeneratedModel
 import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
