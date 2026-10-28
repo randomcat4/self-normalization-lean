@@ -1,0 +1,111 @@
+from pathlib import Path
+import json,re,hashlib
+from functools import lru_cache
+
+ROOT=Path('C:/game/shao lean/drafts/oq56/unit245'); OUT=ROOT/'final-review-01'
+read=lambda p:json.loads(Path(p).read_text(encoding='utf-8'))
+write=lambda n,j:(OUT/n).write_text(json.dumps(j,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+packet=read(ROOT/'lead-final-type-packet-01/TYPE-LOSSLESS-DICTIONARY.json')
+raw=(ROOT/'normalized-owner-evidence-01/actual-owned-types.txt').read_bytes(); text=raw.decode('utf-8')
+dictionary=packet['dictionary']; seen=set()
+@lru_cache(None)
+def expand(key):
+    seen.add(key); result=[]
+    for x in dictionary[key]:
+        if isinstance(x,str): result.append(x)
+        else: result.extend(expand(x['ref']))
+    return tuple(result)
+flat=[]
+for x in packet['main']:
+    flat.extend([x]if isinstance(x,str)else expand(x['ref']))
+for key in dictionary:
+    assert len(expand(key))==packet['dictionaryEntryTokenCounts'][key]
+lexer=re.compile(packet['lexerRegex'])
+matches=[m for m in lexer.finditer(text)if not m.group().isspace()]
+assert list(flat)==[m.group()for m in matches]
+assert len(flat)==len(packet['triviaBeforeEachExpandedToken'])
+rebuilt=''.join(t+s for t,s in zip(packet['triviaBeforeEachExpandedToken'],flat))+packet['trailingTrivia']
+assert rebuilt.encode('utf-8')==raw
+pos=0; currentMain=[]
+render=lambda x:x if isinstance(x,str)else '⟪'+x['ref']+'⟫'
+for x,record in zip(packet['main'],packet['mainReadRecords']):
+    count=1 if isinstance(x,str)else len(expand(x['ref']))
+    assert record['rawTokenStart']==pos and record['rawTokenEnd']==pos+count
+    assert record['text']==render(x)
+    assert record['rawLineStart']==text[:matches[pos].start()].count('\n')+1
+    assert record['rawLineEnd']==text[:matches[pos+count-1].end()].count('\n')+1
+    if isinstance(x,dict): assert x['startToken']==pos and x['endToken']==pos+count
+    currentMain.append(record['text']); pos+=count
+assert pos==len(flat)and len(packet['main'])==len(packet['mainReadRecords'])
+maintext=(ROOT/'lead-final-type-packet-01/TYPE-MAIN-READ.txt').read_text(encoding='utf-8')
+assert ' '.join(maintext.split())==' '.join(currentMain)
+dicttext=''.join(k+' := '+' '.join(render(x)for x in v)+'\n'for k,v in dictionary.items())
+assert dicttext==(ROOT/'lead-final-type-packet-01/TYPE-DICTIONARY-READ.txt').read_text(encoding='utf-8')
+origin=read(packet['dictionaryOrigin']['path']); assert dictionary==origin['dictionary']
+metadata=read(ROOT/'normalized-owner-evidence-01/actual-owned-metadata.json')
+entries=metadata['entries']
+typeRebuilt=''.join(x['name']+' : '+x['type']for x in entries).encode()
+assert typeRebuilt==raw
+rawStdout=''.join('OQ56_OWNED_JSON '+x['rawOwnedJSON']+'\n'+'OQ56_OWNED_TYPE '+x['name']+' : '+x['type']for x in entries)+metadata['rawOwnedCountLine']
+assert len(rawStdout.encode())==metadata['rawStdoutBytes']
+assert hashlib.sha256(rawStdout.encode()).hexdigest()==metadata['rawStdoutSHA256']
+owners=[]; whitelist={'propext','Classical.choice','Quot.sound'}
+for x in entries:
+    base=json.loads(x['rawOwnedJSON'])
+    for k,v in base.items(): assert x[k]==v
+    assert x['isTheorem']and x['constantKind']=='thmInfo'and x['bodyExpressionPresent']
+    assert set(x['axioms'])<=whitelist
+    assert x['typeLines']==x['type'].count('\n')
+    owners.append({k:x[k]for k in ['name','constantKind','bodyExpressionPresent','isTheorem','levelParams','axioms','typeLines']})
+assert len(owners)==metadata['actualOwnerCount']==metadata['allTheoremCount']==3
+assert metadata['nonTheoremCount']==metadata['nonTheoremFullValueCount']==0
+assert (ROOT/'normalized-owner-evidence-01/actual-owned-values.txt').read_bytes()==b''
+summary=read(ROOT/'normalized-owner-evidence-01/native-kernel-and-all-owner-audit-summary.json'); binding=read(ROOT/'normalized-owner-evidence-01/server-metadata-binding.json')
+assert summary['source']==metadata['source']==binding['source']and summary['object']==metadata['object']==binding['object']
+source=(ROOT/'author-repair-01/OriginalSameWitnessClippedEventTransport.lean').read_bytes()
+assert hashlib.sha256(source).hexdigest()==summary['source']['sha256']and len(source)==summary['source']['bytes']
+assert summary['native02']['actualExitCode']==summary['ownedAudit01']['actualExitCode']==0
+assert summary['native02']['sourceErrors']==0 and summary['native02']['sourceWarnings']==42
+assert summary['ownedAudit01']['no_o']and summary['ownedAudit01']['own_object_import']
+assert summary['native02']['beforeAfterExact']and summary['ownedAudit01']['beforeAfterExact']and summary['allOwnedProcessesEnded']and summary['ownLean']==[]
+assert summary['native02']['receipt']==binding['nativeReceipt']and summary['ownedAudit01']['receipt']==binding['auditReceipt']==metadata['auditReceipt']
+for mode,name in [('native02','native-transport-result.json'),('ownedAudit01','audit-transport-result.json')]:
+    t=read(ROOT/'lead-execution-02'/name); inner=json.loads(t['stdout'])
+    assert t['exit_code']==1 and inner['success']is False and summary[mode]['strictWrapperSuccess']is False
+    assert inner['receipt']==summary[mode]['receipt']and inner['stdout']==summary[mode]['stdout']and inner['stderr']==summary[mode]['stderr']
+    assert inner['all_owned_group_ended']and inner['Lean_calls']==1
+for name in ['native-preparation-projection.json','owned-audit-preparation-projection.json']:
+    p=read(ROOT/'lead-execution-02'/name); assert p['source']==summary['source']
+    guard=p['actualFreshGuard']; assert guard['native_MiB']==8192 and guard['j']==4 and guard['CPU']==[52,53,54,55]and not guard['cacheMutation']
+warning=read(ROOT/'lead-execution-02/native-warning-classification.json')
+categories={}
+for w in warning['warnings']: categories[w['category']]=categories.get(w['category'],0)+1
+assert categories==warning['categories']and len(warning['warnings'])==42
+public=entries[1]['type']
+start=public.index('have unperturbedSourceCostη :'); start=public.index(';',start)+1
+def ws(i):
+    while i<len(public)and public[i].isspace(): i+=1
+    return i
+def paren(i):
+    i=ws(i); assert public[i]=='('; depth=0
+    for j in range(i,len(public)):
+        if public[j]=='(': depth+=1
+        elif public[j]==')':
+            depth-=1
+            if depth==0:return public[i+1:j],j+1
+    raise AssertionError('unbalanced')
+clauses=[]; q=public[start:].lstrip()
+while q.startswith('And '):
+    # Reuse the same parser against the exact right subtree text.
+    prior=public; public=q
+    left,e=paren(3); right,end=paren(e)
+    clauses.append(left); q=right.lstrip(); public=prior
+clauses.append(q)
+assert len(clauses)==70
+public=entries[1]['type']
+ordinary=re.findall(r'\b(?:have|let)\s+(\S+)\s*:',public)
+assert len(ordinary)==138
+summaryOut={'source':summary['source'],'object':summary['object'],'dictionaryEntriesDerived':len(dictionary),'dictionaryEntriesUsedClosure':len(seen),'dictionaryReadAll':True,'mainReadLinesDerived':len(maintext.splitlines()),'mainRecordsDerived':len(packet['main']),'expandedTokensDerived':len(flat),'rawTYPEbytes':len(raw),'rawTYPElines':raw.count(b'\n'),'fullTokenAndTriviaByteRoundtripExact':True,'allCurrentMainTokenLineCoordinatesVerified':True,'dictionaryInternalCoordinatesUsedAsCurrent':False,'dictionaryOriginExact':packet['dictionaryOrigin'],'dictionaryReadBytesExact':True,'mainReadTokenRepresentationExact':True,'metadataTYPEReconstructionExact':True,'rawAuditStdoutReconstructionExact':True,'rawAuditStdoutSHA256':metadata['rawStdoutSHA256'],'rawAuditStdoutBytes':metadata['rawStdoutBytes'],'allActualOwners':owners,'actualOwnersDerived':len(owners),'actualTheoremsDerived':len(owners),'actualNonTheoremsDerived':0,'requiredVALUEbytes':0,'requiredVALUElines':0,'sourceDeclaredPublicTheoremsDerived':len(re.findall(rb'^theorem ',source,re.M)),'publicOrdinaryDeclarationsFromActualTYPE':len(ordinary),'currentUniversalConjunctsDerived':len(clauses),'newNineClauseActualPositions':[61,69],'strictWindowSuffixActualPosition':70,'nativeActualRC':0,'auditActualRC':0,'strictWrapperNativeAudit':[False,False],'transportOuterExitCodes':[1,1],'sourceErrors':0,'sourceWarningsDerived':len(warning['warnings']),'warningCategoriesDerived':categories,'standingStderrBytes':134,'sourceObjectReceiptMetadataAllJoinExact':True,'sourceBudgetNowCompletedByActualNativeNotCausalBugClaim':True,'allProcessesEnded':True,'reviewerLeanServerCalls':0}
+write('MACHINE-TYPE-JOIN-VERIFICATION.json',summaryOut)
+write('ACTUAL-UNIVERSAL-CLAUSE-MAP.json',{'sourceTYPEsha256':hashlib.sha256(raw).hexdigest(),'countDerived':len(clauses),'clauses':[{'position':i+1,'fullActualTYPE':s,'sha256':hashlib.sha256(s.encode()).hexdigest()}for i,s in enumerate(clauses)]})
+print(json.dumps(summaryOut,ensure_ascii=False,indent=2))

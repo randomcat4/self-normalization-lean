@@ -1,0 +1,87 @@
+theorem actual_mean_chart_compact_laplace_tilt_windows
+    (mu : Measure ℝ) [IsProbabilityMeasure mu] (theta : ℝ × ℝ)
+    (htheta : theta ∈ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (hdet : 0 < (parabolaCovariance
+      (mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2))).det)
+    (level a0 : ℝ) (hlevel : 0 < level) (ha0 : 0 < a0) (hnegative : theta.2 < 0)
+    (hmean : (∫ x : ℝ, x ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2),
+      ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => theta.1 * x + theta.2 * x ^ 2)) =
+        (a0, a0 ^ 2 / level ^ 2))
+    (hsaddle : theta.1 = -2 * a0 * theta.2 / level ^ 2)
+    (e : OpenPartialHomeomorph (ℝ × ℝ) (ℝ × ℝ))
+    (he : (e : (ℝ × ℝ) → (ℝ × ℝ)) = fun p =>
+      (∫ x : ℝ, x ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2),
+        ∫ x : ℝ, x ^ 2 ∂mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)))
+    (hte : theta ∈ e.source)
+    (hsource : e.source ⊆ interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2))))
+    (rmax : ℝ) (hrmax : 0 < rmax) :
+    let Omega : Set (ℝ × ℝ) := interior
+      (Shao.Probability.bivariateMGFDomain mu (fun x : ℝ => (x, x ^ 2)))
+    let nu : (ℝ × ℝ) → Measure ℝ := fun p =>
+      mu.tilted (fun x => p.1 * x + p.2 * x ^ 2)
+    let means : (ℝ × ℝ) → (ℝ × ℝ) := fun p =>
+      (∫ x : ℝ, x ∂nu p, ∫ x : ℝ, x ^ 2 ∂nu p)
+    let K : (ℝ × ℝ) → ℝ := fun p => Real.log
+      (∫ x : ℝ, Real.exp (p.1 * x + p.2 * x ^ 2) ∂mu)
+    let D : Matrix (Fin 2) (Fin 2) ℝ := parabolaCovariance (nu theta)
+    let pr0 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+    let pr1 : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
+    let row0 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 0 • pr0 + D 0 1 • pr1
+    let row1 : (ℝ × ℝ) →L[ℝ] ℝ := D 0 1 • pr0 + D 1 1 • pr1
+    ∀ L : (ℝ × ℝ) ≃L[ℝ] (ℝ × ℝ),
+      (L : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) = row0.prod row1 →
+      let J : (ℝ × ℝ) → ℝ := fun w =>
+        (e.symm w).1 * w.1 + (e.symm w).2 * w.2 - K (e.symm w)
+      let B : (ℝ × ℝ) → ℝ := fun w =>
+        (Real.sqrt (parabolaCovariance (nu (e.symm w))).det)⁻¹
+      let v : ℝ × ℝ := (1, 2 * a0 / level ^ 2)
+      let Lambda1 : ℝ := 2 * theta.2 / level ^ 2 +
+        (L.symm v).1 + (2 * a0 / level ^ 2) * (L.symm v).2
+      let C0 : ℝ := (Real.sqrt D.det)⁻¹ * (Real.sqrt (2 * Real.pi / Lambda1) / (-theta.2))
+      let J0 : ℝ := J (a0, a0 ^ 2 / level ^ 2)
+      let m0 : Measure (ℝ × ℝ) := (volume : Measure ℝ).prod (volume : Measure ℝ)
+      0 < -theta.2 ∧ (0 < Lambda1 →
+        ∃ cap : ℝ, 0 < cap ∧ cap ≤ rmax ∧ 0 < C0 ∧
+          ∀ rho : ℝ, 0 < rho → rho ≤ cap →
+            let U : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+              |w.1 ^ 2 / level ^ 2 - w.2| ≤ rho}
+            let Tail : Set (ℝ × ℝ) := {w | 0 < w.2 ∧ level * Real.sqrt w.2 ≤ w.1}
+            let V : Set (ℝ × ℝ) := {w | |w.1 - a0| ≤ rho ∧
+              0 ≤ w.1 ^ 2 / level ^ 2 - w.2 ∧ w.1 ^ 2 / level ^ 2 - w.2 ≤ rho}
+            let Theta : Set (ℝ × ℝ) := e.symm '' V
+            IsCompact Theta ∧ theta ∈ Theta ∧ Theta ⊆ Omega ∧
+              (∀ p ∈ Theta, p ∈ e.source ∧ means p ∈ V ∧
+                0 < (parabolaCovariance (nu p)).det) ∧
+              (∀ w ∈ V, e.symm w ∈ Theta) ∧
+              V = U ∩ Tail ∧ IsCompact V ∧
+              (∀ w ∈ V, 0 < w.1 ∧ 0 < w.2 ∧ w ∈ e.target ∧ e.symm w ∈ e.source ∧
+                e.symm w ∈ Omega ∧ means (e.symm w) = w ∧
+                0 < (parabolaCovariance (nu (e.symm w))).det ∧
+                Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w =
+                  (J w : EReal)) ∧
+              (∀ w ∈ V, J0 ≤ J w) ∧
+              (∀ aL aR qL qR : ℝ,
+                let A : Set (ℝ × ℝ) := (Set.Ioc aL aR ×ˢ Set.Ioc qL qR) ∩ V
+                let Q : Set (ℝ × ℝ) := Set.Icc aL aR ×ˢ Set.Icc qL qR
+                A.Nonempty →
+                ∃ y ∈ closure A, y ∈ Q ∩ V ∧
+                  0 < y.1 ∧ 0 < y.2 ∧ y ∈ e.target ∧ e.symm y ∈ e.source ∧
+                  e.symm y ∈ Omega ∧ means (e.symm y) = y ∧
+                  0 < (parabolaCovariance (nu (e.symm y))).det ∧
+                  Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) y =
+                    (J y : EReal) ∧
+                  ∀ w ∈ closure A,
+                    Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) y ≤
+                      Shao.Probability.bivariateLegendreRate mu (fun x : ℝ => (x, x ^ 2)) w ∧
+                    J y ≤ J w) ∧
+              ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, 1 ≤ n →
+                let W : (ℝ × ℝ) → ℝ := fun w => B w * Real.exp (-(n : ℝ) * J w)
+                let T : (ℝ × ℝ) → ℝ := fun w => B w * Real.exp (-(n : ℝ) * (J w - J0))
+                let Ln : ℝ := ((n : ℝ) / (2 * Real.pi)) * ∫ w : ℝ × ℝ in V, T w ∂m0
+                let main : ℝ := 1 /
+                  (Real.sqrt (2 * Real.pi * (n : ℝ)) * (-theta.2) * Real.sqrt D.det *
+                    Real.sqrt Lambda1)
+                IntegrableOn W V m0 ∧ IntegrableOn T V m0 ∧ 0 ≤ Ln ∧ 0 < main ∧
+                  |Ln / main - 1| ≤ C / Real.sqrt (n : ℝ))

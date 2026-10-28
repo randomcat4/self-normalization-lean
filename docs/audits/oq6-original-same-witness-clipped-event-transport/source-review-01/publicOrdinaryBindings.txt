@@ -1,0 +1,318 @@
+1. g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+  SCOPE: global original mΩ/μ, before cg/m₀
+2. r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+  SCOPE: global original mΩ/μ, before cg/m₀
+3. v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+  SCOPE: global original mΩ/μ, before cg/m₀
+4. rho : ℝ := Real.sqrt v
+  SCOPE: global original mΩ/μ, before cg/m₀
+5. β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+  SCOPE: global original mΩ/μ, before cg/m₀
+6. cWindow : ℝ := Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)
+  SCOPE: global original mΩ/μ, before cg/m₀
+7. μ₀ : @Measure Ω m₀ := μ.trim hm₀
+  SCOPE: sole selected m₀ before both conjuncts
+8. mN : MeasurableSpace (Fin n → Ω) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+9. mN₀ : MeasurableSpace (Fin n → Ω) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+10. P : @Measure (Fin n → Ω) mN := @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+11. P₀ : @Measure (Fin n → Ω) mN₀ := @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+12. N : ℝ := Real.sqrt (n : ℝ)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+13. K : ℝ := 4 * Real.sqrt (n : ℝ)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+14. ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+15. ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+16. D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+17. D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+18. T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+19. A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+20. B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+21. A0delete : Fin n → (Fin n → Ω) → ℝ := fun i ζ => |residualStatisticDDeleted n r ζ i|
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+22. B0delete : Fin n → (Fin n → Ω) → ℝ := fun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+23. lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+24. mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+25. mAug : MeasurableSpace (Fin n → Ω × ℝ) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+26. νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal := fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+27. ν : @Measure (Fin n → Ω × ℝ) mAug := @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+28. q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+29. c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+30. ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+31. Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+32. ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+33. Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+34. a : ℕ → Fin n → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+35. s : ℕ → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+36. ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+37. η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+38. C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+39. W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+40. V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+41. Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+42. Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+43. b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+44. Qε : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+45. Dη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+46. Tη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+47. A : (Fin n → Ω × ℝ) → ℝ := fun x => A0 (q x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+48. B : (Fin n → Ω × ℝ) → ℝ := fun x => B0 (q x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+49. Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => A0delete i (q x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+50. Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => B0delete i (q x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+51. Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+52. H : (Fin n → Ω × ℝ) → ℝ := fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+53. Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+54. M : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => K * ε k * H x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+55. Mdelete : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => K * ε k * Hdelete i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+56. Anew : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => A x + M k x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+57. AdeleteNew : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Adelete i x + Mdelete k i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+58. Δ : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+59. ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+60. ℓη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+61. S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+62. Sη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, ℓη k i x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+63. S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+64. Sηminus : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+65. I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+66. Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+67. fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+68. fullTestη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => z * Anew k x + z ^ 2 * B x
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+69. deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+70. deletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+71. compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+72. compactDeletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+73. Lcompact0 : ℝ := ∑ i : Fin n,
+          ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+74. Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n,
+          ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+75. sourceCost0 : ℝ := ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +
+            ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+76. sourceCostη : ℕ → ℝ := fun k =>
+          ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+            ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+77. compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +
+          ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+78. compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ x, Anew k x ∂ν) +
+          z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+79. Fz : ℝ → ℝ := fun t => (z * t) ^ 2 * min |z * t| 1
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+80. δ0 : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+81. δreduced : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P₀
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+82. δν : Fin n → ℝ := fun i => ∫ x, Fz (ξ i x) ∂ν
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+83. δη : ℕ → Fin n → ℝ := fun k i => ∫ x, Fz (η k i x) ∂ν
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+84. L0 : ℝ := ∑ i : Fin n, δ0 i
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+85. Lν : ℝ := ∑ i : Fin n, δν i
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+86. Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+87. scalarBudget : ℝ := ∫ o : Ω, Fz (g o / N) ∂μ
+  SCOPE: retained234: sole m₀ / all n≥4,C0≥0,z≥0
+88. deletedTestUnperturbedη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => min |z * η k i x| 1 * (|Anew k x - Adelete i x| + z * |B x - Bdelete i x|)
+  SCOPE: SAME selected240 model; universal n≥4,C0≥0,z≥0 branch, after scalarBudget and before all analytic/coding propositions
+89. unperturbedSourceCostη : ℕ → ℝ := fun k => ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) + ∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+  SCOPE: SAME selected240 model; same universal branch, after deletedTestUnperturbedη; SAME full integrand and denominator
+90. J : Type := {j : Fin n // j ≠ i}
+  SCOPE: new coding/deleted clause inside retained238 forall n>=4,C0>=0,z>=0, SAME selected m0/mu0 and literal nu,a,s,eta; fix k:Nat and i:Fin n before J
+91. mDel : MeasurableSpace (J → Ω × ℝ) := @MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)
+  SCOPE: new coding/deleted clause inside retained238 forall n>=4,C0>=0,z>=0, SAME selected m0/mu0 and literal nu,a,s,eta; fix k:Nat and i:Fin n before J
+92. Cdel : (J → Ω × ℝ) → (J → ℝ) := fun y j => ηlocal k j.val (y j)
+  SCOPE: new coding/deleted clause inside retained238 forall n>=4,C0>=0,z>=0, SAME selected m0/mu0 and literal nu,a,s,eta; fix k:Nat and i:Fin n before J
+93. pX : (Fin n → Ω × ℝ) → (J → Ω × ℝ) := fun x j => x j.val
+  SCOPE: new coding/deleted clause inside retained238 forall n>=4,C0>=0,z>=0, SAME selected m0/mu0 and literal nu,a,s,eta; fix k:Nat and i:Fin n before J
+94. pR : (Fin n → ℝ) → (J → ℝ) := fun t j => t j.val
+  SCOPE: new coding/deleted clause inside retained238 forall n>=4,C0>=0,z>=0, SAME selected m0/mu0 and literal nu,a,s,eta; fix k:Nat and i:Fin n before J
+95. mN : MeasurableSpace (Fin n → Ω) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+96. mN₀ : MeasurableSpace (Fin n → Ω) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+97. P : @Measure (Fin n → Ω) mN := @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+98. P₀ : @Measure (Fin n → Ω) mN₀ := @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+99. N : ℝ := Real.sqrt (n : ℝ)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+100. ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+101. ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+102. D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+103. D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho 1
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+104. lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+105. mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+106. mAug : MeasurableSpace (Fin n → Ω × ℝ) := @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+107. νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal := fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+108. ν : @Measure (Fin n → Ω × ℝ) mAug := @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+109. q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+110. c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+111. ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+112. Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+113. ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+114. Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+115. a : ℕ → Fin n → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+116. s : ℕ → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+117. ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+118. η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+119. C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+120. W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+121. V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+122. Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+123. Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+124. b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+125. Qε : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+126. Dη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+127. V0 : (Fin n → Ω) → ℝ := projectionV n g
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+128. qOrder : ℝ := boundedPolylogMomentOrder t0 n
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+129. Ktail : ℝ := Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+130. Gsource : Set (Fin n → Ω) := projectionGood n g z
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+131. C2source : Set (Fin n → Ω) := {ζ : Fin n → Ω |
+            |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ζ| ≤
+              Ktail * (n : ℝ) * qOrder ∧
+            ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r ζ‖ ^ (2 : ℕ) ≤
+              Ktail * (n : ℝ) ^ (2 : ℕ) * qOrder}
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+132. Hsource : Set (Fin n → Ω) := Gsource ∩ C2source
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+133. Ssafe : Set (Fin n → Ω) := {ζ : Fin n → Ω |
+            0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧
+              z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 8 : ℝ)}
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+134. Jsafe : Set (Fin n → Ω × ℝ) := q ⁻¹' Ssafe
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+135. E : ℕ → Set (Fin n → Ω × ℝ) := fun k =>
+          {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4}
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+136. E2 : Set (Fin n → Ω × ℝ) := {x : Fin n → Ω × ℝ |
+            z ^ (2 : ℕ) * |D2 (q x)| > (1 / 4 : ℝ)}
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+137. Z : Set (Fin n → Ω × ℝ) := {x : Fin n → Ω × ℝ | V x = 0}
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
+138. payment : ℝ := (3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) +
+            (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))
+  SCOPE: newPayment: same m₀ / eventual n / w,z; C0=512;clip1
