@@ -1,0 +1,80 @@
+.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/HasFiniteIntegral.lean:101:theorem hasFiniteIntegral_iff_ofReal {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
+.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean:926:  rw [Integrable, hasFiniteIntegral_iff_ofReal hf]
+.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean:764:    ← ENNReal.not_lt_top, ← hasFiniteIntegral_iff_ofReal hf, hfi.2, not_true_eq_false, or_false]
+.lake/packages/mathlib/Mathlib/MeasureTheory/Function/L1Space/HasFiniteIntegral.lean:82:def HasFiniteIntegral {_ : MeasurableSpace α} (f : α → ε)
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+726: 
+727: variable [hE : CompleteSpace E]
+728: 
+729: theorem lintegral_coe_eq_integral (f : α → ℝ≥0) (hfi : Integrable (fun x => (f x : ℝ)) μ) :
+730:     ∫⁻ a, f a ∂μ = ENNReal.ofReal (∫ a, f a ∂μ) := by
+731:   simp_rw [integral_eq_lintegral_of_nonneg_ae (Eventually.of_forall fun x => (f x).coe_nonneg)
+732:       hfi.aestronglyMeasurable, ← ENNReal.coe_nnreal_eq]
+733:   rw [ENNReal.ofReal_toReal]
+734:   simpa [← lt_top_iff_ne_top, hasFiniteIntegral_iff_enorm, NNReal.enorm_eq] using
+735:     hfi.hasFiniteIntegral
+736: 
+737: theorem ofReal_integral_eq_lintegral_ofReal {f : α → ℝ} (hfi : Integrable f μ) (f_nn : 0 ≤ᵐ[μ] f) :
+738:     ENNReal.ofReal (∫ x, f x ∂μ) = ∫⁻ x, ENNReal.ofReal (f x) ∂μ := by
+739:   have : f =ᵐ[μ] (‖f ·‖) := f_nn.mono fun _x hx ↦ (abs_of_nonneg hx).symm
+740:   simp_rw [integral_congr_ae this, ofReal_integral_norm_eq_lintegral_enorm hfi,
+741:     ← ofReal_norm]
+742:   exact lintegral_congr_ae (this.symm.fun_comp ENNReal.ofReal)
+743: 
+744: theorem integral_toReal {f : α → ℝ≥0∞} (hfm : AEMeasurable f μ) (hf : ∀ᵐ x ∂μ, f x < ∞) :
+745:     ∫ a, (f a).toReal ∂μ = (∫⁻ a, f a ∂μ).toReal := by
+746:   rw [integral_eq_lintegral_of_nonneg_ae _ hfm.ennreal_toReal.aestronglyMeasurable,
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/ContinuousLinearMap.lean SHA256 272fbf423443f1cd4aa032396f85a19c2f4f80b9fe9df655de16b0df655a22c3
+147: theorem ContinuousMapZero.integral_apply {R : Type*} [NormedCommRing R] [Zero Y]
+148:     [NormedAlgebra ℝ R] [CompleteSpace R] {f : X → C(Y, R)₀}
+149:     (hf : MeasureTheory.Integrable f μ) (y : Y) :
+150:     (∫ (x : X), f x ∂μ) y = ∫ (x : X), (f x) y ∂μ := by
+151:   calc (∫ x, f x ∂μ) y = ContinuousMapZero.evalCLM ℝ y (∫ x, f x ∂μ) := rfl
+152:     _ = ∫ x, ContinuousMapZero.evalCLM ℝ y (f x) ∂μ :=
+153:           (ContinuousLinearMap.integral_comp_comm _ hf).symm
+154:     _ = _ := rfl
+155: 
+156: end ContinuousMap
+157: 
+158: @[norm_cast]
+159: theorem integral_ofReal {f : X → ℝ} : ∫ x, (f x : 𝕜) ∂μ = ↑(∫ x, f x ∂μ) :=
+160:   (@RCLike.ofRealLI 𝕜 _).integral_comp_comm f
+161: 
+162: @[norm_cast]
+163: theorem integral_complex_ofReal {f : X → ℝ} : ∫ x, (f x : ℂ) ∂μ = ∫ x, f x ∂μ := integral_ofReal
+164: 
+165: theorem integral_re {f : X → 𝕜} (hf : Integrable f μ) :
+FILE .lake/packages/mathlib/Mathlib/Probability/Distributions/Gaussian/Real.lean SHA256 9edebfff169cb577b6dab1a7912f2e8fec0e70a8dac39db105263e1a0f31b383
+47: def gaussianPDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ :=
+48:   (√(2 * π * v))⁻¹ * rexp (-(x - μ) ^ 2 / (2 * v))
+49: 
+50: lemma gaussianPDFReal_def (μ : ℝ) (v : ℝ≥0) :
+51:     gaussianPDFReal μ v =
+52:       fun x ↦ (√(2 * π * v))⁻¹ * rexp (-(x - μ) ^ 2 / (2 * v)) := rfl
+53: 
+54: @[simp]
+55: lemma gaussianPDFReal_zero_var (m : ℝ) : gaussianPDFReal m 0 = 0 := by
+56:   ext1 x
+57:   simp [gaussianPDFReal]
+58: 
+59: /-- The Gaussian pdf is positive when the variance is not zero. -/
+60: lemma gaussianPDFReal_pos (μ : ℝ) (v : ℝ≥0) (x : ℝ) (hv : v ≠ 0) : 0 < gaussianPDFReal μ v x := by
+61:   rw [gaussianPDFReal]
+62:   positivity
+63: 
+64: /-- The Gaussian pdf is nonnegative. -/
+65: lemma gaussianPDFReal_nonneg (μ : ℝ) (v : ℝ≥0) (x : ℝ) : 0 ≤ gaussianPDFReal μ v x := by
+66:   rw [gaussianPDFReal]
+67:   positivity
+164: def gaussianPDF (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ≥0∞ := ENNReal.ofReal (gaussianPDFReal μ v x)
+165: 
+166: lemma gaussianPDF_def (μ : ℝ) (v : ℝ≥0) :
+167:     gaussianPDF μ v = fun x ↦ ENNReal.ofReal (gaussianPDFReal μ v x) := rfl
+168: 
+169: @[simp]
+170: lemma gaussianPDF_zero_var (μ : ℝ) : gaussianPDF μ 0 = 0 := by ext; simp [gaussianPDF]
+171: 
+172: @[simp]
+173: lemma toReal_gaussianPDF {μ : ℝ} {v : ℝ≥0} (x : ℝ) :
+174:     (gaussianPDF μ v x).toReal = gaussianPDFReal μ v x := by
+175:   rw [gaussianPDF, ENNReal.toReal_ofReal (gaussianPDFReal_nonneg μ v x)]

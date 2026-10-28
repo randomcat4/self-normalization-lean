@@ -1,0 +1,20 @@
+DECL Shao.OQ3.gaussian_damped_pair_characteristic_integral
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu] (b : ℝ),
+  0 < b →
+    ∀ (x : ℝ × ℝ),
+      have Phi := fun z => ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂nu;
+      MeasureTheory.Integrable
+          (fun z =>
+            Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * Phi z * Complex.exp (-↑b * ↑(z.1 ^ 2 + z.2 ^ 2)))
+          MeasureTheory.volume ∧
+        ∫ (z : ℝ × ℝ),
+            Complex.exp (-Complex.I * ↑(x.1 * z.1 + x.2 * z.2)) * Phi z * Complex.exp (-↑b * ↑(z.1 ^ 2 + z.2 ^ 2)) =
+          ↑(Real.pi / b) * ∫ (w : ℝ × ℝ), Complex.exp (-↑(((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b))) ∂nu
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem
+DECL Shao.OQ3.pair_characteristic_measurable_norm_le_one
+TYPE ∀ (nu : MeasureTheory.Measure (ℝ × ℝ)) [MeasureTheory.IsProbabilityMeasure nu],
+  have Phi := fun z => ∫ (w : ℝ × ℝ), Complex.exp (↑(z.1 * w.1 + z.2 * w.2) * Complex.I) ∂nu;
+  MeasureTheory.StronglyMeasurable Phi ∧ ∀ (z : ℝ × ℝ), ‖Phi z‖ ≤ 1
+AXIOMS [propext, Classical.choice, Quot.sound]
+KIND theorem

@@ -1,0 +1,26 @@
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Real.lean SHA256 1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d
+64: @[simp]
+65: theorem ofReal_measureReal (h : μ s ≠ ∞ := by finiteness) : ENNReal.ofReal (μ.real s) = μ s := by
+66:   simp [measureReal_def, h]
+79: theorem map_measureReal_apply_of_aemeasurable [MeasurableSpace β] {f : α → β}
+80:     (hf : AEMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :
+81:     (μ.map f).real s = μ.real (f ⁻¹' s) := by
+82:   simp_rw [measureReal_def, map_apply_of_aemeasurable hf hs]
+83: 
+84: theorem map_measureReal_apply [MeasurableSpace β] {f : α → β} (hf : Measurable f)
+85:     {s : Set β} (hs : MeasurableSet s) : (μ.map f).real s = μ.real (f ⁻¹' s) :=
+86:   map_measureReal_apply_of_aemeasurable hf.aemeasurable hs
+87: 
+88: @[gcongr] theorem measureReal_mono (h : s₁ ⊆ s₂) (h₂ : μ s₂ ≠ ∞ := by finiteness) :
+89:     μ.real s₁ ≤ μ.real s₂ :=
+90:   ENNReal.toReal_mono h₂ (measure_mono h)
+137: theorem measureReal_union_le (s₁ s₂ : Set α) : μ.real (s₁ ∪ s₂) ≤ μ.real s₁ + μ.real s₂ := by
+138:   rcases eq_top_or_lt_top (μ (s₁ ∪ s₂)) with h | h
+139:   · simp only [Measure.real, h, ENNReal.toReal_top]
+140:     exact add_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg
+141:   · have A : μ s₁ ≠ ∞ := measure_ne_top_of_subset subset_union_left h.ne
+142:     have B : μ s₂ ≠ ∞ := measure_ne_top_of_subset subset_union_right h.ne
+143:     simp only [Measure.real, ← ENNReal.toReal_add A B]
+144:     exact ENNReal.toReal_mono (by simp [A, B]) (measure_union_le _ _)
+COMPILED True
+THICKENING_SOURCE 6429465471cb6e7121b79c0509583ea258efadd837133350e9faf7c47775a220 COMPILED True

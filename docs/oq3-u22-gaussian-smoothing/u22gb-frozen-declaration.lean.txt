@@ -1,0 +1,20 @@
+theorem pair_characteristic_measurable_norm_le_one
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] :
+    let Phi : (ℝ × ℝ) → ℂ := fun z =>
+      ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂nu
+    StronglyMeasurable Phi ∧ ∀ z : ℝ × ℝ, ‖Phi z‖ ≤ 1
+
+theorem gaussian_damped_pair_characteristic_integral
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b : ℝ) (hb : 0 < b) (x : ℝ × ℝ) :
+    let Phi : (ℝ × ℝ) → ℂ := fun z =>
+      ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂nu
+    Integrable (fun z : ℝ × ℝ =>
+      Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) * Phi z *
+        Complex.exp (-(b : ℂ) * ((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ))) ∧
+      (∫ z : ℝ × ℝ,
+        Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) * Phi z *
+          Complex.exp (-(b : ℂ) * ((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ))) =
+        ((Real.pi / b : ℝ) : ℂ) *
+          ∫ w : ℝ × ℝ,
+            Complex.exp (-((((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b) : ℝ) : ℂ)) ∂nu

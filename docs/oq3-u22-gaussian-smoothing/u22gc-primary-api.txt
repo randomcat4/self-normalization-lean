@@ -1,0 +1,172 @@
+FILE .lake/packages/mathlib/Mathlib/Probability/Distributions/Gaussian/Real.lean SHA256 9edebfff169cb577b6dab1a7912f2e8fec0e70a8dac39db105263e1a0f31b383
+35: @[expose] public section
+36: 
+37: open scoped ENNReal NNReal Real Complex
+38: 
+39: open MeasureTheory
+40: 
+41: namespace ProbabilityTheory
+42: 
+43: section GaussianPDF
+44: 
+45: /-- Probability density function of the Gaussian distribution with mean `μ` and variance `v`. -/
+46: noncomputable
+47: def gaussianPDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ :=
+48:   (√(2 * π * v))⁻¹ * rexp (-(x - μ) ^ 2 / (2 * v))
+49: 
+50: lemma gaussianPDFReal_def (μ : ℝ) (v : ℝ≥0) :
+51:     gaussianPDFReal μ v =
+52:       fun x ↦ (√(2 * π * v))⁻¹ * rexp (-(x - μ) ^ 2 / (2 * v)) := rfl
+216: 
+217: /-- A Gaussian distribution on `ℝ` with mean `μ` and variance `v`. -/
+218: @[wikidata Q133871]
+219: noncomputable
+220: def gaussianReal (μ : ℝ) (v : ℝ≥0) : Measure ℝ :=
+221:   if v = 0 then Measure.dirac μ else volume.withDensity (gaussianPDF μ v)
+222: 
+223: lemma gaussianReal_of_var_ne_zero (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) :
+224:     gaussianReal μ v = volume.withDensity (gaussianPDF μ v) := ite_eq_right hv
+225: 
+226: @[simp]
+227: lemma gaussianReal_zero_var (μ : ℝ) : gaussianReal μ 0 = Measure.dirac μ := ite_eq_left rfl
+228: 
+229: instance instIsProbabilityMeasureGaussianReal (μ : ℝ) (v : ℝ≥0) :
+230:     IsProbabilityMeasure (gaussianReal μ v) where
+231:   measure_univ := by by_cases h : v = 0 <;> simp [gaussianReal_of_var_ne_zero, h]
+431: 
+432: open Real Complex
+433: 
+434: variable {Ω : Type*} {mΩ : MeasurableSpace Ω} {p : Measure Ω} {μ : ℝ} {v : ℝ≥0} {X : Ω → ℝ}
+435: 
+436: -- see https://github.com/leanprover-community/mathlib4/issues/29041
+437: set_option linter.unusedSimpArgs false in
+438: /-- The complex moment-generating function of a Gaussian distribution with mean `μ` and variance `v`
+439: is given by `z ↦ exp (z * μ + v * z ^ 2 / 2)`. -/
+440: theorem complexMGF_id_gaussianReal (z : ℂ) :
+441:     complexMGF id (gaussianReal μ v) z = cexp (z * μ + v * z ^ 2 / 2) := by
+442:   by_cases hv : v = 0
+443:   · simp [complexMGF, hv]
+473: /-- The complex moment-generating function of a random variable with Gaussian distribution
+474: with mean `μ` and variance `v` is given by `z ↦ exp (z * μ + v * z ^ 2 / 2)`. -/
+475: theorem complexMGF_gaussianReal (hX : HasLaw X (gaussianReal μ v) p) (z : ℂ) :
+476:     complexMGF X p z = cexp (z * μ + v * z ^ 2 / 2) := by
+477:   rw [← complexMGF_id_map hX.aemeasurable, hX.map_eq, complexMGF_id_gaussianReal]
+478: 
+479: /-- The characteristic function of a Gaussian distribution with mean `μ` and variance `v`
+480: is given by `t ↦ exp (t * μ - v * t ^ 2 / 2)`. -/
+481: theorem charFun_gaussianReal (t : ℝ) :
+482:     charFun (gaussianReal μ v) t = cexp (t * μ * I - v * t ^ 2 / 2) := by
+483:   rw [← complexMGF_id_mul_I, complexMGF_id_gaussianReal]
+484:   congr
+485:   simp only [mul_pow, I_sq, mul_neg, mul_one, sub_eq_add_neg]
+486:   ring_nf
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Measure/CharacteristicFunction/Basic.lean SHA256 3f90bba2eb49b295a4dd7bb80f5434f66c31ebdd2801a0bc82e5c9476c9b54e4
+126: 
+127: variable {E : Type*} {mE : MeasurableSpace E} {μ : Measure E} {t : E}
+128: 
+129: /-- The characteristic function of a measure in an inner product space. -/
+130: noncomputable def charFun [Inner ℝ E] (μ : Measure E) (t : E) : ℂ := ∫ x, exp (⟪x, t⟫ * I) ∂μ
+131: 
+132: lemma charFun_apply [Inner ℝ E] (t : E) : charFun μ t = ∫ x, exp (⟪x, t⟫ * I) ∂μ := rfl
+133: 
+134: lemma charFun_apply_real {μ : Measure ℝ} (t : ℝ) :
+135:     charFun μ t = ∫ x, exp (t * x * I) ∂μ := by simp [charFun_apply]
+136: 
+137: variable [SeminormedAddCommGroup E] [InnerProductSpace ℝ E]
+138: 
+139: @[simp]
+140: lemma charFun_zero (μ : Measure E) : charFun μ 0 = μ.real Set.univ := by
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean SHA256 66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670
+1063:   integral_smul_measure f (c : ℝ≥0∞)
+1064: 
+1065: theorem integral_map_of_stronglyMeasurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ)
+1066:     {f : β → G} (hfm : StronglyMeasurable f) : ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ := by
+1067:   by_cases hfi : Integrable f (Measure.map φ μ); swap
+1068:   · rw [integral_undef hfi, integral_undef]
+1069:     exact fun hfφ => hfi ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).2 hfφ)
+1070:   simp only [integral_eq_setToFun]
+1071:   apply setToFun_of_le_map_of_stronglyMeasurable _ _
+1072:     ((integrable_map_measure hfm.aestronglyMeasurable hφ.aemeasurable).1 hfi) hfm hφ le_rfl
+1073:   intro s x hs
+1074:   simp [weightedSMul_apply, map_measureReal_apply, hs, hφ]
+1075: 
+1076: theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasurable φ μ) {f : β → G}
+1074:   simp [weightedSMul_apply, map_measureReal_apply, hs, hφ]
+1075: 
+1076: theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasurable φ μ) {f : β → G}
+1077:     (hfm : AEStronglyMeasurable f (Measure.map φ μ)) :
+1078:     ∫ y, f y ∂Measure.map φ μ = ∫ x, f (φ x) ∂μ :=
+1079:   let g := hfm.mk f
+1080:   calc
+1081:     ∫ y, f y ∂Measure.map φ μ = ∫ y, g y ∂Measure.map φ μ := integral_congr_ae hfm.ae_eq_mk
+1082:     _ = ∫ y, g y ∂Measure.map (hφ.mk φ) μ := by congr 1; exact Measure.map_congr hφ.ae_eq_mk
+1083:     _ = ∫ x, g (hφ.mk φ x) ∂μ :=
+1084:       (integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.stronglyMeasurable_mk)
+1085:     _ = ∫ x, g (φ x) ∂μ := integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _)
+1086:     _ = ∫ x, f (φ x) ∂μ := integral_congr_ae <| ae_eq_comp hφ hfm.ae_eq_mk.symm
+1087: 
+1098:   hφ.measurableEmbedding.integral_map _
+1099: 
+1100: theorem integral_map_equiv {β} [MeasurableSpace β] (e : α ≃ᵐ β) (f : β → G) :
+1101:     ∫ y, f y ∂Measure.map e μ = ∫ x, f (e x) ∂μ :=
+1102:   e.measurableEmbedding.integral_map f
+1103: 
+1104: omit hE in
+1105: lemma integral_domSMul {G A : Type*} [Group G] [AddCommGroup A] [DistribMulAction G A]
+1106:     [MeasurableSpace A] [MeasurableConstSMul G A] {μ : Measure A} (g : Gᵈᵐᵃ) (f : A → E) :
+1107:     ∫ x, f x ∂g • μ = ∫ x, f ((DomMulAct.mk.symm g)⁻¹ • x) ∂μ :=
+1108:   integral_map_equiv (MeasurableEquiv.smul ((DomMulAct.mk.symm g : G)⁻¹)) f
+1109: 
+1110: theorem MeasurePreserving.integral_comp {β} {_ : MeasurableSpace β} {f : α → β} {ν}
+1111:     (h₁ : MeasurePreserving f μ ν) (h₂ : MeasurableEmbedding f) (g : β → G) :
+FILE .lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Prod.lean SHA256 8ccfbcad5fffde3f8d0dfa3167b80dacfb524bc10790f1744b8b8a9b3f4c3a05
+483:   (integral_integral hf).trans (integral_prod_symm _ hf)
+484: 
+485: /-- Change the order of integration, when one of the integrals is an interval integral. -/
+486: lemma intervalIntegral_integral_swap {a b : ℝ} {f : ℝ → α → E}
+487:     (h_int : Integrable (uncurry f) ((volume.restrict (Set.uIoc a b)).prod μ)) :
+488:     ∫ x in a..b, ∫ y, f x y ∂μ = ∫ y, (∫ x in a..b, f x y) ∂μ := by
+489:   rcases le_total a b with (hab | hab)
+490:   · simp_rw [intervalIntegral.integral_of_le hab]
+491:     simp only [hab, Set.uIoc_of_le] at h_int
+492:     exact integral_integral_swap h_int
+493:   · simp_rw [intervalIntegral.integral_of_ge hab]
+494:     simp only [hab, Set.uIoc_of_ge] at h_int
+495:     rw [integral_integral_swap h_int, integral_neg]
+496: 
+497: /-- Change the order of integration for interval integrals. -/
+498: lemma intervalIntegral_intervalIntegral_swap {F : ℝ → ℝ → E} {a b c d : ℝ}
+499:     (h : IntegrableOn F.uncurry (uIoc a b ×ˢ uIoc c d)) :
+500:     ∫ x in a..b, ∫ y in c..d, F x y = ∫ y in c..d, ∫ x in a..b, F x y := by
+501:   rw [intervalIntegral.intervalIntegral_eq_integral_uIoc, ← intervalIntegral_integral_swap,
+502:     ← intervalIntegral.integral_smul]
+503:   · simp_rw [intervalIntegral.intervalIntegral_eq_integral_uIoc]
+504:   · rwa [← integrable_swap_iff, Measure.prod_restrict, ← Measure.volume_eq_prod, ← IntegrableOn]
+505: 
+506: /-- **Fubini's Theorem** for set integrals. -/
+507: theorem setIntegral_prod (f : α × β → E) {s : Set α} {t : Set β}
+508:     (hf : IntegrableOn f (s ×ˢ t) (μ.prod ν)) :
+509:     ∫ z in s ×ˢ t, f z ∂μ.prod ν = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ := by
+510:   simp only [← Measure.prod_restrict s t, IntegrableOn] at hf ⊢
+511:   exact integral_prod f hf
+512: 
+513: theorem integral_prod_bilin {E F G 𝕜 : Type*} [RCLike 𝕜]
+514:     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E]
+515:     [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedSpace 𝕜 F] [CompleteSpace F]
+516:     [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedSpace 𝕜 G] [CompleteSpace G]
+517:     (B : E →L[𝕜] F →L[𝕜] G) {f : α → E} {g : β → F}
+518:     (hf : Integrable f μ) (hg : Integrable g ν) :
+519:     ∫ z, B (f z.1) (g z.2) ∂μ.prod ν = B (∫ x, f x ∂μ) (∫ y, g y ∂ν) := by
+520:   have : Integrable (fun z ↦ B (f z.1) (g z.2)) (μ.prod ν) :=
+521:     hf.op_fst_snd (by fun_prop) ⟨‖B‖, B.le_opNorm₂⟩ hg
+522:   simp_rw [integral_prod _ this, ContinuousLinearMap.integral_comp_comm _ hg]
+523:   change ∫ x, B.flip (∫ y, g y ∂ν) (f x) ∂μ = _
+524:   rw [ContinuousLinearMap.integral_comp_comm _ hf]
+525:   simp
+526: 
+527: theorem integral_prod_smul {𝕜 : Type*} [RCLike 𝕜] [NormedSpace 𝕜 E] (f : α → 𝕜) (g : β → E) :
+528:     ∫ z, f z.1 • g z.2 ∂μ.prod ν = (∫ x, f x ∂μ) • ∫ y, g y ∂ν := by
+529:   by_cases hE : CompleteSpace E; swap; · simp [integral, hE]
+530:   by_cases h : Integrable (fun z : α × β => f z.1 • g z.2) (μ.prod ν)
+531:   · rw [integral_prod _ h]
+532:     simp_rw [integral_smul, integral_smul_const]

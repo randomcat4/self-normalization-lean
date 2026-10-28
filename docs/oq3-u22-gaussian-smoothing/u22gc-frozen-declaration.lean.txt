@@ -1,0 +1,38 @@
+theorem pair_gaussian_noise_characteristic
+    (v : ℝ≥0) :
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    IsProbabilityMeasure gamma ∧ ∀ z : ℝ × ℝ,
+      (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂gamma) =
+        Complex.exp (-((v : ℝ) : ℂ) * ((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ) / 2)
+
+theorem pair_independent_sum_characteristic
+    (nu eta : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu] [IsProbabilityMeasure eta] :
+    let rho : Measure (ℝ × ℝ) := (nu.prod eta).map (fun q => q.1 + q.2)
+    IsProbabilityMeasure rho ∧ ∀ z : ℝ × ℝ,
+      (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho) =
+        (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂nu) *
+          ∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂eta
+
+theorem gaussian_smoothed_pair_law_fourier_integral
+    (nu : Measure (ℝ × ℝ)) [IsProbabilityMeasure nu]
+    (b : ℝ) (hb : 0 < b) :
+    let v : ℝ≥0 := Real.toNNReal (2 * b)
+    let gamma : Measure (ℝ × ℝ) :=
+      (ProbabilityTheory.gaussianReal 0 v).prod (ProbabilityTheory.gaussianReal 0 v)
+    let rho : Measure (ℝ × ℝ) := (nu.prod gamma).map (fun q => q.1 + q.2)
+    IsProbabilityMeasure rho ∧
+      (∀ z : ℝ × ℝ,
+        (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho) =
+          (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂nu) *
+            Complex.exp (-(b : ℂ) * ((z.1 ^ 2 + z.2 ^ 2 : ℝ) : ℂ))) ∧
+      ∀ x : ℝ × ℝ,
+        Integrable (fun z : ℝ × ℝ =>
+          Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+            (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho)) ∧
+          (∫ z : ℝ × ℝ,
+            Complex.exp (-Complex.I * ((x.1 * z.1 + x.2 * z.2 : ℝ) : ℂ)) *
+              (∫ w : ℝ × ℝ, Complex.exp (((z.1 * w.1 + z.2 * w.2 : ℝ) : ℂ) * Complex.I) ∂rho)) =
+            ((Real.pi / b : ℝ) : ℂ) *
+              ∫ w : ℝ × ℝ,
+                Complex.exp (-((((x.1 - w.1) ^ 2 + (x.2 - w.2) ^ 2) / (4 * b) : ℝ) : ℂ)) ∂nu

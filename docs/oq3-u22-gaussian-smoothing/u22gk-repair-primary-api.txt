@@ -1,0 +1,118 @@
+FILE Mathlib/MeasureTheory/Integral/Bochner/ContinuousLinearMap.lean SHA256 272fbf423443f1cd4aa032396f85a19c2f4f80b9fe9df655de16b0df655a22c3
+158: @[norm_cast]
+159: theorem integral_ofReal {f : X → ℝ} : ∫ x, (f x : 𝕜) ∂μ = ↑(∫ x, f x ∂μ) :=
+160:   (@RCLike.ofRealLI 𝕜 _).integral_comp_comm f
+161: 
+162: @[norm_cast]
+163: theorem integral_complex_ofReal {f : X → ℝ} : ∫ x, (f x : ℂ) ∂μ = ∫ x, f x ∂μ := integral_ofReal
+164: 
+165: theorem integral_re {f : X → 𝕜} (hf : Integrable f μ) :
+166:     ∫ x, RCLike.re (f x) ∂μ = RCLike.re (∫ x, f x ∂μ) :=
+167:   (@RCLike.reCLM 𝕜 _).integral_comp_comm hf
+168: 
+169: theorem integral_im {f : X → 𝕜} (hf : Integrable f μ) :
+170:     ∫ x, RCLike.im (f x) ∂μ = RCLike.im (∫ x, f x ∂μ) :=
+185: 
+186: theorem integral_re_add_im {f : X → 𝕜} (hf : Integrable f μ) :
+187:     ((∫ x, RCLike.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x, RCLike.im (f x) ∂μ : ℝ) * RCLike.I =
+188:       ∫ x, f x ∂μ := by
+189:   rw [← integral_ofReal, ← integral_ofReal, integral_coe_re_add_coe_im hf]
+190: 
+191: theorem setIntegral_re_add_im {f : X → 𝕜} {i : Set X} (hf : IntegrableOn f i μ) :
+192:     ((∫ x in i, RCLike.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x in i, RCLike.im (f x) ∂μ : ℝ) * RCLike.I =
+193:       ∫ x in i, f x ∂μ :=
+194:   integral_re_add_im hf
+195: 
+196: variable [NormedSpace ℝ E] [NormedSpace ℝ F]
+197: 
+198: lemma swap_integral (f : X → E × F) : (∫ x, f x ∂μ).swap = ∫ x, (f x).swap ∂μ :=
+199:   .symm <| (ContinuousLinearEquiv.prodComm ℝ E F).integral_comp_comm f
+FILE Mathlib/Analysis/Complex/Basic.lean SHA256 ff16c23fbaa763a5e612e7e2760f518fd9224e18f636ac86ab64cc859940816c
+71:     let ⟨x, h⟩ := exists_between hr
+72:     ⟨x, by rwa [norm_real, Real.norm_of_nonneg (h₀.trans_lt h.1).le]⟩
+73: 
+74: instance {R : Type*} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
+75:   norm_smul_le r x := by
+76:     rw [← algebraMap_smul ℝ r x, real_smul, norm_mul, norm_real, norm_algebraMap']
+77: 
+78: variable {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℂ E]
+79: 
+80: -- see Note [lower instance priority]
+81: /-- The module structure from `Module.complexToReal` is a normed space. -/
+274: def ofRealLI : ℝ →ₗᵢ[ℝ] ℂ :=
+275:   ⟨ofRealAm.toLinearMap, norm_real⟩
+276: 
+277: @[simp]
+278: theorem ofRealLI_apply (x : ℝ) : ofRealLI x = x := rfl
+279: 
+280: theorem isometry_ofReal : Isometry ((↑) : ℝ → ℂ) :=
+446:   lift z to ℝ using hz.2.symm
+447:   rw [norm_real, Real.norm_of_nonneg (id hz.1 : 0 ≤ z)]
+448: 
+449: /-- We show that the partial order and the topology on `ℂ` are compatible.
+450: We turn this into an instance scoped to `ComplexOrder`. -/
+451: lemma orderClosedTopology : OrderClosedTopology ℂ := RCLike.instOrderClosedTopology
+452: 
+FILE Mathlib/Analysis/RCLike/Basic.lean SHA256 223c0c710382f44914434bf94df416204b69d672386665cefc72e6ddc3def082
+222: @[rclike_simps]
+223: theorem re_ofReal_mul (r : ℝ) (z : K) : re (↑r * z) = r * re z := by
+224:   simp only [mul_re, ofReal_im, zero_mul, ofReal_re, sub_zero]
+225: 
+226: @[rclike_simps]
+227: theorem re_mul_ofReal (z : K) (r : ℝ) : re (z * ↑r) = re z * r := by
+228:   rw [mul_comm, re_ofReal_mul, mul_comm]
+229: 
+230: @[rclike_simps]
+231: theorem im_ofReal_mul (r : ℝ) (z : K) : im (↑r * z) = r * im z := by
+232:   simp only [add_zero, ofReal_im, zero_mul, ofReal_re, mul_im]
+233: 
+239: theorem smul_re (r : ℝ) (z : K) : re (r • z) = r * re z := by
+240:   rw [real_smul_eq_coe_mul, re_ofReal_mul]
+241: 
+242: @[rclike_simps]
+243: theorem smul_im (r : ℝ) (z : K) : im (r • z) = r * im z := by
+244:   rw [real_smul_eq_coe_mul, im_ofReal_mul]
+245: 
+250: @[simp]
+251: theorem re_ofReal_pow (a : ℝ) (n : ℕ) : re ((a : K) ^ n) = a ^ n := by
+252:   rw [← ofReal_pow, @ofReal_re]
+253: 
+254: @[simp]
+255: theorem im_ofReal_pow (a : ℝ) (n : ℕ) : im ((a : K) ^ n) = 0 := by
+256:   rw [← @ofReal_pow, @ofReal_im_ax]
+494: theorem inv_re (z : K) : re z⁻¹ = re z / normSq z := by
+495:   rw [inv_def, normSq_eq_def', mul_comm, re_ofReal_mul, conj_re, div_eq_inv_mul]
+496: 
+497: @[simp, rclike_simps]
+498: theorem inv_im (z : K) : im z⁻¹ = -im z / normSq z := by
+499:   rw [inv_def, normSq_eq_def', mul_comm, im_ofReal_mul, conj_im, div_eq_inv_mul]
+500: 
+530: 
+531: theorem div_re_ofReal {z : K} {r : ℝ} : re (z / r) = re z / r := by
+532:   rw [div_eq_inv_mul, div_eq_inv_mul, ← ofReal_inv, re_ofReal_mul]
+533: 
+534: @[rclike_simps, norm_cast]
+535: theorem ofReal_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : K) = (r : K) ^ n :=
+536:   map_zpow₀ (algebraMap ℝ K) r n
+537: 
+598:     re (ofNat(n) * z) = ofNat(n) * re z := by
+599:   rw [← ofReal_ofNat, re_ofReal_mul]
+600: 
+601: theorem ofNat_mul_im (n : ℕ) [n.AtLeastTwo] (z : K) :
+602:     im (ofNat(n) * z) = ofNat(n) * im z := by
+603:   rw [← ofReal_ofNat, im_ofReal_mul]
+604: 
+991:     0 < x * z ↔ (x < 0 ∧ z < 0) ∨ (0 < x ∧ 0 < z) := by
+992:   simp only [pos_iff (K := K), neg_iff (K := K), re_ofReal_mul, im_ofReal_mul]
+993:   obtain hx | hx | hx := lt_trichotomy x 0
+994:   · simp only [mul_pos_iff, not_lt_of_gt hx, false_and, hx, true_and, false_or, mul_eq_zero, hx.ne,
+995:       or_false]
+996:   · simp only [hx, zero_mul, lt_self_iff_false, false_and, false_or]
+997:   · simp only [mul_pos_iff, hx, true_and, not_lt_of_gt hx, false_and, or_false, mul_eq_zero,
+1031: @[simp, rclike_simps]
+1032: theorem re_to_real {x : ℝ} : reR x = x :=
+1033:   rfl
+1034: 
+1035: @[simp, rclike_simps]
+1036: theorem im_to_real {x : ℝ} : imR x = 0 :=
+1037:   rfl
