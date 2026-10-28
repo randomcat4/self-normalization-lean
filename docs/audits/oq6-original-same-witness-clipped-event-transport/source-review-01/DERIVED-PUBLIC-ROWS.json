@@ -1,0 +1,968 @@
+[
+  {
+    "name": "g",
+    "type": "Ω → ℝ",
+    "rhs": "fun o => ∫ y, h o y ∂μ",
+    "startLine": 25,
+    "endLine": 25
+  },
+  {
+    "name": "r",
+    "type": "Ω → Ω → ℝ",
+    "rhs": "fun o y => h o y - g o - g y",
+    "startLine": 26,
+    "endLine": 26
+  },
+  {
+    "name": "v",
+    "type": "ℝ",
+    "rhs": "∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)",
+    "startLine": 27,
+    "endLine": 27
+  },
+  {
+    "name": "rho",
+    "type": "ℝ",
+    "rhs": "Real.sqrt v",
+    "startLine": 28,
+    "endLine": 28
+  },
+  {
+    "name": "β",
+    "type": "ℝ",
+    "rhs": "∫ o : Ω, Real.rpow |g o| p ∂μ",
+    "startLine": 29,
+    "endLine": 29
+  },
+  {
+    "name": "cWindow",
+    "type": "ℝ",
+    "rhs": "Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)",
+    "startLine": 30,
+    "endLine": 30
+  },
+  {
+    "name": "μ₀",
+    "type": "@Measure Ω m₀",
+    "rhs": "μ.trim hm₀",
+    "startLine": 38,
+    "endLine": 38
+  },
+  {
+    "name": "mN",
+    "type": "MeasurableSpace (Fin n → Ω)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+    "startLine": 44,
+    "endLine": 45
+  },
+  {
+    "name": "mN₀",
+    "type": "MeasurableSpace (Fin n → Ω)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+    "startLine": 46,
+    "endLine": 47
+  },
+  {
+    "name": "P",
+    "type": "@Measure (Fin n → Ω) mN",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+    "startLine": 48,
+    "endLine": 50
+  },
+  {
+    "name": "P₀",
+    "type": "@Measure (Fin n → Ω) mN₀",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+    "startLine": 51,
+    "endLine": 53
+  },
+  {
+    "name": "N",
+    "type": "ℝ",
+    "rhs": "Real.sqrt (n : ℝ)",
+    "startLine": 54,
+    "endLine": 54
+  },
+  {
+    "name": "K",
+    "type": "ℝ",
+    "rhs": "4 * Real.sqrt (n : ℝ)",
+    "startLine": 55,
+    "endLine": 55
+  },
+  {
+    "name": "ε",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))",
+    "startLine": 56,
+    "endLine": 56
+  },
+  {
+    "name": "ξ0",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => g (ζ i) / N",
+    "startLine": 57,
+    "endLine": 57
+  },
+  {
+    "name": "D1",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "residualStatisticD n r",
+    "startLine": 58,
+    "endLine": 58
+  },
+  {
+    "name": "D2",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "clippedCenteredDelta n g r C0 rho 1",
+    "startLine": 59,
+    "endLine": 59
+  },
+  {
+    "name": "T0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "clippedCenteredStatistic n g r C0 rho 1",
+    "startLine": 60,
+    "endLine": 60
+  },
+  {
+    "name": "A0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "fun ζ => |D1 ζ|",
+    "startLine": 61,
+    "endLine": 61
+  },
+  {
+    "name": "B0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "studentizerClipBudget n r C0 rho 1",
+    "startLine": 62,
+    "endLine": 62
+  },
+  {
+    "name": "A0delete",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => |residualStatisticDDeleted n r ζ i|",
+    "startLine": 63,
+    "endLine": 64
+  },
+  {
+    "name": "B0delete",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i",
+    "startLine": 65,
+    "endLine": 66
+  },
+  {
+    "name": "lambda01",
+    "type": "Measure ℝ",
+    "rhs": "(volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)",
+    "startLine": 67,
+    "endLine": 67
+  },
+  {
+    "name": "mAugLocal",
+    "type": "MeasurableSpace (Ω × ℝ)",
+    "rhs": "m₀.prod (borel ℝ)",
+    "startLine": 68,
+    "endLine": 68
+  },
+  {
+    "name": "mAug",
+    "type": "MeasurableSpace (Fin n → Ω × ℝ)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ) (fun _ : Fin n => mAugLocal)",
+    "startLine": 69,
+    "endLine": 71
+  },
+  {
+    "name": "νlocal",
+    "type": "Fin n → @Measure (Ω × ℝ) mAugLocal",
+    "rhs": "fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01",
+    "startLine": 72,
+    "endLine": 73
+  },
+  {
+    "name": "ν",
+    "type": "@Measure (Fin n → Ω × ℝ) mAug",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal",
+    "startLine": 74,
+    "endLine": 76
+  },
+  {
+    "name": "q",
+    "type": "(Fin n → Ω × ℝ) → (Fin n → Ω)",
+    "rhs": "fun x i => (x i).1",
+    "startLine": 77,
+    "endLine": 77
+  },
+  {
+    "name": "c",
+    "type": "Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun _ => Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode (MeasurableSpace.natGeneratingSequence (Ω × ℝ))",
+    "startLine": 78,
+    "endLine": 80
+  },
+  {
+    "name": "ξlocal",
+    "type": "Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun i t => g t.1 / N",
+    "startLine": 81,
+    "endLine": 81
+  },
+  {
+    "name": "Ylocal",
+    "type": "ℕ → Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun k i => Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)",
+    "startLine": 82,
+    "endLine": 83
+  },
+  {
+    "name": "ξ",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => ξlocal i (x i)",
+    "startLine": 84,
+    "endLine": 84
+  },
+  {
+    "name": "Y",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => Ylocal k i (x i)",
+    "startLine": 85,
+    "endLine": 85
+  },
+  {
+    "name": "a",
+    "type": "ℕ → Fin n → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)",
+    "startLine": 86,
+    "endLine": 87
+  },
+  {
+    "name": "s",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)",
+    "startLine": 88,
+    "endLine": 89
+  },
+  {
+    "name": "ηlocal",
+    "type": "ℕ → Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun k i => Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)",
+    "startLine": 90,
+    "endLine": 91
+  },
+  {
+    "name": "η",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)",
+    "startLine": 92,
+    "endLine": 93
+  },
+  {
+    "name": "C",
+    "type": "ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ)",
+    "rhs": "fun k x i => η k i x",
+    "startLine": 94,
+    "endLine": 94
+  },
+  {
+    "name": "W",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => ∑ i : Fin n, ξ i x",
+    "startLine": 95,
+    "endLine": 95
+  },
+  {
+    "name": "V",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)",
+    "startLine": 96,
+    "endLine": 96
+  },
+  {
+    "name": "Wη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => ∑ i : Fin n, η k i x",
+    "startLine": 97,
+    "endLine": 97
+  },
+  {
+    "name": "Vη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)",
+    "startLine": 98,
+    "endLine": 98
+  },
+  {
+    "name": "b",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => Real.sqrt (1 + D2 (q x))",
+    "startLine": 99,
+    "endLine": 99
+  },
+  {
+    "name": "Qε",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => W x - Wη k x + z * b x * (Vη k x - V x)",
+    "startLine": 100,
+    "endLine": 101
+  },
+  {
+    "name": "Dη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)",
+    "startLine": 102,
+    "endLine": 103
+  },
+  {
+    "name": "Tη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => (Wη k x + Dη k x) / (Vη k x * b x)",
+    "startLine": 104,
+    "endLine": 104
+  },
+  {
+    "name": "A",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => A0 (q x)",
+    "startLine": 105,
+    "endLine": 105
+  },
+  {
+    "name": "B",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => B0 (q x)",
+    "startLine": 106,
+    "endLine": 106
+  },
+  {
+    "name": "Adelete",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => A0delete i (q x)",
+    "startLine": 107,
+    "endLine": 107
+  },
+  {
+    "name": "Bdelete",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => B0delete i (q x)",
+    "startLine": 108,
+    "endLine": 108
+  },
+  {
+    "name": "Vdelete",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)",
+    "startLine": 109,
+    "endLine": 110
+  },
+  {
+    "name": "H",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))",
+    "startLine": 111,
+    "endLine": 112
+  },
+  {
+    "name": "Hdelete",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))",
+    "startLine": 113,
+    "endLine": 114
+  },
+  {
+    "name": "M",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => K * ε k * H x",
+    "startLine": 115,
+    "endLine": 115
+  },
+  {
+    "name": "Mdelete",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => K * ε k * Hdelete i x",
+    "startLine": 116,
+    "endLine": 116
+  },
+  {
+    "name": "Anew",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => A x + M k x",
+    "startLine": 117,
+    "endLine": 117
+  },
+  {
+    "name": "AdeleteNew",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => Adelete i x + Mdelete k i x",
+    "startLine": 118,
+    "endLine": 118
+  },
+  {
+    "name": "Δ",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)",
+    "startLine": 119,
+    "endLine": 120
+  },
+  {
+    "name": "ℓ0",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2",
+    "startLine": 121,
+    "endLine": 121
+  },
+  {
+    "name": "ℓη",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2",
+    "startLine": 122,
+    "endLine": 122
+  },
+  {
+    "name": "S0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "fun ζ => ∑ i : Fin n, ℓ0 i ζ",
+    "startLine": 123,
+    "endLine": 123
+  },
+  {
+    "name": "Sη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => ∑ i : Fin n, ℓη k i x",
+    "startLine": 124,
+    "endLine": 124
+  },
+  {
+    "name": "S0minus",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ",
+    "startLine": 125,
+    "endLine": 125
+  },
+  {
+    "name": "Sηminus",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x",
+    "startLine": 126,
+    "endLine": 126
+  },
+  {
+    "name": "I0",
+    "type": "ℝ",
+    "rhs": "∫ ζ, Real.exp (S0 ζ) ∂P",
+    "startLine": 127,
+    "endLine": 127
+  },
+  {
+    "name": "Iη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => ∫ x, Real.exp (Sη k x) ∂ν",
+    "startLine": 128,
+    "endLine": 128
+  },
+  {
+    "name": "fullTest0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "fun ζ => z * A0 ζ + z ^ 2 * B0 ζ",
+    "startLine": 129,
+    "endLine": 129
+  },
+  {
+    "name": "fullTestη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => z * Anew k x + z ^ 2 * B x",
+    "startLine": 130,
+    "endLine": 130
+  },
+  {
+    "name": "deletedTest0",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)",
+    "startLine": 131,
+    "endLine": 132
+  },
+  {
+    "name": "deletedTestη",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)",
+    "startLine": 133,
+    "endLine": 134
+  },
+  {
+    "name": "compactDeletedTest0",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)",
+    "startLine": 135,
+    "endLine": 136
+  },
+  {
+    "name": "compactDeletedTestη",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)",
+    "startLine": 137,
+    "endLine": 138
+  },
+  {
+    "name": "Lcompact0",
+    "type": "ℝ",
+    "rhs": "∑ i : Fin n, ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P",
+    "startLine": 139,
+    "endLine": 140
+  },
+  {
+    "name": "Lcompactη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => ∑ i : Fin n, ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν",
+    "startLine": 141,
+    "endLine": 142
+  },
+  {
+    "name": "sourceCost0",
+    "type": "ℝ",
+    "rhs": "((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) + ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0",
+    "startLine": 143,
+    "endLine": 145
+  },
+  {
+    "name": "sourceCostη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) + ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k",
+    "startLine": 146,
+    "endLine": 148
+  },
+  {
+    "name": "compactCost0",
+    "type": "ℝ",
+    "rhs": "Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) + ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P",
+    "startLine": 149,
+    "endLine": 150
+  },
+  {
+    "name": "compactCostη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => Lcompactη k + (∫ x, Anew k x ∂ν) + z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν",
+    "startLine": 151,
+    "endLine": 152
+  },
+  {
+    "name": "Fz",
+    "type": "ℝ → ℝ",
+    "rhs": "fun t => (z * t) ^ 2 * min |z * t| 1",
+    "startLine": 153,
+    "endLine": 153
+  },
+  {
+    "name": "δ0",
+    "type": "Fin n → ℝ",
+    "rhs": "fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P",
+    "startLine": 154,
+    "endLine": 154
+  },
+  {
+    "name": "δreduced",
+    "type": "Fin n → ℝ",
+    "rhs": "fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P₀",
+    "startLine": 155,
+    "endLine": 155
+  },
+  {
+    "name": "δν",
+    "type": "Fin n → ℝ",
+    "rhs": "fun i => ∫ x, Fz (ξ i x) ∂ν",
+    "startLine": 156,
+    "endLine": 156
+  },
+  {
+    "name": "δη",
+    "type": "ℕ → Fin n → ℝ",
+    "rhs": "fun k i => ∫ x, Fz (η k i x) ∂ν",
+    "startLine": 157,
+    "endLine": 157
+  },
+  {
+    "name": "L0",
+    "type": "ℝ",
+    "rhs": "∑ i : Fin n, δ0 i",
+    "startLine": 158,
+    "endLine": 158
+  },
+  {
+    "name": "Lν",
+    "type": "ℝ",
+    "rhs": "∑ i : Fin n, δν i",
+    "startLine": 159,
+    "endLine": 159
+  },
+  {
+    "name": "Lη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => ∑ i : Fin n, δη k i",
+    "startLine": 160,
+    "endLine": 160
+  },
+  {
+    "name": "scalarBudget",
+    "type": "ℝ",
+    "rhs": "∫ o : Ω, Fz (g o / N) ∂μ",
+    "startLine": 161,
+    "endLine": 161
+  },
+  {
+    "name": "deletedTestUnperturbedη",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => min |z * η k i x| 1 * (|Anew k x - Adelete i x| + z * |B x - Bdelete i x|)",
+    "startLine": 162,
+    "endLine": 163
+  },
+  {
+    "name": "unperturbedSourceCostη",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) + ∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k",
+    "startLine": 164,
+    "endLine": 166
+  },
+  {
+    "name": "J",
+    "type": "Type",
+    "rhs": "{j : Fin n // j ≠ i}",
+    "startLine": 179,
+    "endLine": 179
+  },
+  {
+    "name": "mDel",
+    "type": "MeasurableSpace (J → Ω × ℝ)",
+    "rhs": "@MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)",
+    "startLine": 180,
+    "endLine": 181
+  },
+  {
+    "name": "Cdel",
+    "type": "(J → Ω × ℝ) → (J → ℝ)",
+    "rhs": "fun y j => ηlocal k j.val (y j)",
+    "startLine": 182,
+    "endLine": 183
+  },
+  {
+    "name": "pX",
+    "type": "(Fin n → Ω × ℝ) → (J → Ω × ℝ)",
+    "rhs": "fun x j => x j.val",
+    "startLine": 184,
+    "endLine": 184
+  },
+  {
+    "name": "pR",
+    "type": "(Fin n → ℝ) → (J → ℝ)",
+    "rhs": "fun t j => t j.val",
+    "startLine": 185,
+    "endLine": 185
+  },
+  {
+    "name": "mN",
+    "type": "MeasurableSpace (Fin n → Ω)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)",
+    "startLine": 458,
+    "endLine": 459
+  },
+  {
+    "name": "mN₀",
+    "type": "MeasurableSpace (Fin n → Ω)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)",
+    "startLine": 460,
+    "endLine": 461
+  },
+  {
+    "name": "P",
+    "type": "@Measure (Fin n → Ω) mN",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)",
+    "startLine": 462,
+    "endLine": 464
+  },
+  {
+    "name": "P₀",
+    "type": "@Measure (Fin n → Ω) mN₀",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)",
+    "startLine": 465,
+    "endLine": 467
+  },
+  {
+    "name": "N",
+    "type": "ℝ",
+    "rhs": "Real.sqrt (n : ℝ)",
+    "startLine": 468,
+    "endLine": 468
+  },
+  {
+    "name": "ε",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))",
+    "startLine": 469,
+    "endLine": 469
+  },
+  {
+    "name": "ξ0",
+    "type": "Fin n → (Fin n → Ω) → ℝ",
+    "rhs": "fun i ζ => g (ζ i) / N",
+    "startLine": 470,
+    "endLine": 470
+  },
+  {
+    "name": "D1",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "residualStatisticD n r",
+    "startLine": 471,
+    "endLine": 471
+  },
+  {
+    "name": "D2",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "clippedCenteredDelta n g r 512 rho 1",
+    "startLine": 472,
+    "endLine": 472
+  },
+  {
+    "name": "lambda01",
+    "type": "Measure ℝ",
+    "rhs": "(volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)",
+    "startLine": 473,
+    "endLine": 473
+  },
+  {
+    "name": "mAugLocal",
+    "type": "MeasurableSpace (Ω × ℝ)",
+    "rhs": "m₀.prod (borel ℝ)",
+    "startLine": 474,
+    "endLine": 474
+  },
+  {
+    "name": "mAug",
+    "type": "MeasurableSpace (Fin n → Ω × ℝ)",
+    "rhs": "@MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ) (fun _ : Fin n => mAugLocal)",
+    "startLine": 475,
+    "endLine": 477
+  },
+  {
+    "name": "νlocal",
+    "type": "Fin n → @Measure (Ω × ℝ) mAugLocal",
+    "rhs": "fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01",
+    "startLine": 478,
+    "endLine": 479
+  },
+  {
+    "name": "ν",
+    "type": "@Measure (Fin n → Ω × ℝ) mAug",
+    "rhs": "@Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ) (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal",
+    "startLine": 480,
+    "endLine": 482
+  },
+  {
+    "name": "q",
+    "type": "(Fin n → Ω × ℝ) → (Fin n → Ω)",
+    "rhs": "fun x i => (x i).1",
+    "startLine": 483,
+    "endLine": 483
+  },
+  {
+    "name": "c",
+    "type": "Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun _ => Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode (MeasurableSpace.natGeneratingSequence (Ω × ℝ))",
+    "startLine": 484,
+    "endLine": 486
+  },
+  {
+    "name": "ξlocal",
+    "type": "Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun i t => g t.1 / N",
+    "startLine": 487,
+    "endLine": 487
+  },
+  {
+    "name": "Ylocal",
+    "type": "ℕ → Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun k i => Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)",
+    "startLine": 488,
+    "endLine": 489
+  },
+  {
+    "name": "ξ",
+    "type": "Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun i x => ξlocal i (x i)",
+    "startLine": 490,
+    "endLine": 490
+  },
+  {
+    "name": "Y",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k i x => Ylocal k i (x i)",
+    "startLine": 491,
+    "endLine": 491
+  },
+  {
+    "name": "a",
+    "type": "ℕ → Fin n → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)",
+    "startLine": 492,
+    "endLine": 493
+  },
+  {
+    "name": "s",
+    "type": "ℕ → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)",
+    "startLine": 494,
+    "endLine": 495
+  },
+  {
+    "name": "ηlocal",
+    "type": "ℕ → Fin n → (Ω × ℝ) → ℝ",
+    "rhs": "fun k i => Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)",
+    "startLine": 496,
+    "endLine": 497
+  },
+  {
+    "name": "η",
+    "type": "ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k => Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)",
+    "startLine": 498,
+    "endLine": 499
+  },
+  {
+    "name": "C",
+    "type": "ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ)",
+    "rhs": "fun k x i => η k i x",
+    "startLine": 500,
+    "endLine": 500
+  },
+  {
+    "name": "W",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => ∑ i : Fin n, ξ i x",
+    "startLine": 501,
+    "endLine": 501
+  },
+  {
+    "name": "V",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)",
+    "startLine": 502,
+    "endLine": 502
+  },
+  {
+    "name": "Wη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => ∑ i : Fin n, η k i x",
+    "startLine": 503,
+    "endLine": 503
+  },
+  {
+    "name": "Vη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)",
+    "startLine": 504,
+    "endLine": 504
+  },
+  {
+    "name": "b",
+    "type": "(Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun x => Real.sqrt (1 + D2 (q x))",
+    "startLine": 505,
+    "endLine": 505
+  },
+  {
+    "name": "Qε",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => W x - Wη k x + z * b x * (Vη k x - V x)",
+    "startLine": 506,
+    "endLine": 507
+  },
+  {
+    "name": "Dη",
+    "type": "ℕ → (Fin n → Ω × ℝ) → ℝ",
+    "rhs": "fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)",
+    "startLine": 508,
+    "endLine": 509
+  },
+  {
+    "name": "V0",
+    "type": "(Fin n → Ω) → ℝ",
+    "rhs": "projectionV n g",
+    "startLine": 510,
+    "endLine": 510
+  },
+  {
+    "name": "qOrder",
+    "type": "ℝ",
+    "rhs": "boundedPolylogMomentOrder t0 n",
+    "startLine": 511,
+    "endLine": 511
+  },
+  {
+    "name": "Ktail",
+    "type": "ℝ",
+    "rhs": "Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv",
+    "startLine": 512,
+    "endLine": 512
+  },
+  {
+    "name": "Gsource",
+    "type": "Set (Fin n → Ω)",
+    "rhs": "projectionGood n g z",
+    "startLine": 513,
+    "endLine": 513
+  },
+  {
+    "name": "C2source",
+    "type": "Set (Fin n → Ω)",
+    "rhs": "{ζ : Fin n → Ω | |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ζ| ≤ Ktail * (n : ℝ) * qOrder ∧ ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r ζ‖ ^ (2 : ℕ) ≤ Ktail * (n : ℝ) ^ (2 : ℕ) * qOrder}",
+    "startLine": 514,
+    "endLine": 519
+  },
+  {
+    "name": "Hsource",
+    "type": "Set (Fin n → Ω)",
+    "rhs": "Gsource ∩ C2source",
+    "startLine": 520,
+    "endLine": 520
+  },
+  {
+    "name": "Ssafe",
+    "type": "Set (Fin n → Ω)",
+    "rhs": "{ζ : Fin n → Ω | 0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧ z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 8 : ℝ)}",
+    "startLine": 521,
+    "endLine": 524
+  },
+  {
+    "name": "Jsafe",
+    "type": "Set (Fin n → Ω × ℝ)",
+    "rhs": "q ⁻¹' Ssafe",
+    "startLine": 525,
+    "endLine": 525
+  },
+  {
+    "name": "E",
+    "type": "ℕ → Set (Fin n → Ω × ℝ)",
+    "rhs": "fun k => {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4}",
+    "startLine": 526,
+    "endLine": 527
+  },
+  {
+    "name": "E2",
+    "type": "Set (Fin n → Ω × ℝ)",
+    "rhs": "{x : Fin n → Ω × ℝ | z ^ (2 : ℕ) * |D2 (q x)| > (1 / 4 : ℝ)}",
+    "startLine": 528,
+    "endLine": 530
+  },
+  {
+    "name": "Z",
+    "type": "Set (Fin n → Ω × ℝ)",
+    "rhs": "{x : Fin n → Ω × ℝ | V x = 0}",
+    "startLine": 531,
+    "endLine": 532
+  },
+  {
+    "name": "payment",
+    "type": "ℝ",
+    "rhs": "(3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) + (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))",
+    "startLine": 533,
+    "endLine": 535
+  }
+]

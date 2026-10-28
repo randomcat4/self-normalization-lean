@@ -1,0 +1,1115 @@
+# Unit245 complete prospective primary API and literal RHS contexts
+
+Declaration-only read. No Lean elaboration, proof implementation, server call, cache action, network request or accepted-proof re-review. Complete244 remains unqualified. The retained primary Mathlib packets are pinned to 807d3836b165983210ee2ecf3cd28f239436949c; no fresh lookup is claimed. Every block includes its ambient parameter context. Repeated inherited declaration bytes are reused losslessly.
+
+## 1. Prospective immediate244 producer: COMPLETE exact frozen head
+
+Source binding: `{"path": "C:/game/shao lean/drafts/oq56/unit244/freeze-01/FROZEN-HEAD.txt", "sha256": "10e61d37a83cd424943b91638b25bbe4c30b216e4b03c80496f7018a467c67d9", "bytes": 36852}`
+
+```lean
+import Shao.OQ6.OriginalSameWitnessScalarTailApplication
+import Shao.OQ6.NormalizedIntegrableTailAssembly
+
+set_option autoImplicit false
+universe u
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators Classical Topology MeasureTheory
+open Shao.OQ5.P51
+namespace Shao.OQ6.OriginalSameWitnessEventualTailApplication
+noncomputable section
+
+theorem actual_original_same_witness_eventual_scalar_finite_cost_tail_application
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (hgp : Integrable (fun o : Ω => Real.rpow |∫ y, h o y ∂μ| p) μ)
+    (cBudget : ℝ) (hcBudget : 0 < cBudget) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+    let rho : ℝ := Real.sqrt v
+    let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+    let cWindow : ℝ := Real.rpow (min (1 / 2 : ℝ) cBudget / 2) (1 / p)
+    Measurable[mΩ, borel ℝ] g ∧ MemLp g 2 μ ∧
+    0 ≤ β ∧ 0 < cWindow ∧
+    Real.rpow cWindow p = min (1 / 2 : ℝ) cBudget / 2 ∧
+    Real.rpow cWindow p < min (1 / 2 : ℝ) cBudget ∧
+    ∃ cg : ℝ, 0 < cg ∧
+    ∃ (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)
+        (hcg : @MeasurableSpace.CountablyGenerated Ω m₀),
+      let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+      letI : MeasurableSpace Ω := m₀
+      letI : MeasurableSpace.CountablyGenerated Ω := hcg
+      IsProbabilityMeasure μ₀ ∧
+      (∀ (n : ℕ) (hn : 4 ≤ n) (C0 : ℝ) (hC0 : 0 ≤ C0)
+          (z : ℝ) (hz : 0 ≤ z),
+        let mN : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+        let mN₀ : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+        let P : @Measure (Fin n → Ω) mN :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+        let P₀ : @Measure (Fin n → Ω) mN₀ :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+        let N : ℝ := Real.sqrt (n : ℝ)
+        let K : ℝ := 4 * Real.sqrt (n : ℝ)
+        let ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+        let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r C0 rho 1
+        let T0 : (Fin n → Ω) → ℝ := clippedCenteredStatistic n g r C0 rho 1
+        let A0 : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|
+        let B0 : (Fin n → Ω) → ℝ := studentizerClipBudget n r C0 rho 1
+        let A0delete : Fin n → (Fin n → Ω) → ℝ :=
+          fun i ζ => |residualStatisticDDeleted n r ζ i|
+        let B0delete : Fin n → (Fin n → Ω) → ℝ :=
+          fun i ζ => studentizerClipBudgetDeleted n r C0 rho 1 ζ i
+        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=
+          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+        let ν : @Measure (Fin n → Ω × ℝ) mAug :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+        let Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+        let Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+        let a : ℕ → Fin n → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+        let s : ℕ → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+        let ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+        let η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+        let C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+        let Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+        let Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+        let Qε : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+        let Dη : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+        let Tη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => (Wη k x + Dη k x) / (Vη k x * b x)
+        let A : (Fin n → Ω × ℝ) → ℝ := fun x => A0 (q x)
+        let B : (Fin n → Ω × ℝ) → ℝ := fun x => B0 (q x)
+        let Adelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => A0delete i (q x)
+        let Bdelete : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => B0delete i (q x)
+        let Vdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun i x => Real.sqrt (∑ j ∈ Finset.univ.erase i, (ξ j x) ^ 2)
+        let H : (Fin n → Ω × ℝ) → ℝ :=
+          fun x => (1 + V x) * (N + z * Real.sqrt (1 + B x))
+        let Hdelete : Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun i x => (1 + Vdelete i x) * (N + z * Real.sqrt (1 + Bdelete i x))
+        let M : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => K * ε k * H x
+        let Mdelete : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => K * ε k * Hdelete i x
+        let Anew : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => A x + M k x
+        let AdeleteNew : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Adelete i x + Mdelete k i x
+        let Δ : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ :=
+          fun k i x => (Anew k x - AdeleteNew k i x) - (A x - Adelete i x)
+        let ℓ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => z * ξ0 i ζ - (z * ξ0 i ζ) ^ 2 / 2
+        let ℓη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => z * η k i x - (z * η k i x) ^ 2 / 2
+        let S0 : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, ℓ0 i ζ
+        let Sη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, ℓη k i x
+        let S0minus : Fin n → (Fin n → Ω) → ℝ := fun i ζ => ∑ j ∈ Finset.univ.erase i, ℓ0 j ζ
+        let Sηminus : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => ∑ j ∈ Finset.univ.erase i, ℓη k j x
+        let I0 : ℝ := ∫ ζ, Real.exp (S0 ζ) ∂P
+        let Iη : ℕ → ℝ := fun k => ∫ x, Real.exp (Sη k x) ∂ν
+        let fullTest0 : (Fin n → Ω) → ℝ := fun ζ => z * A0 ζ + z ^ 2 * B0 ζ
+        let fullTestη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => z * Anew k x + z ^ 2 * B x
+        let deletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |z * ξ0 i ζ| 1 * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+        let deletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |z * η k i x| 1 * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+        let compactDeletedTest0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ =>
+          min |ξ0 i ζ| (1 + z)⁻¹ * (|A0 ζ - A0delete i ζ| + z * |B0 ζ - B0delete i ζ|)
+        let compactDeletedTestη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |η k i x| (1 + z)⁻¹ * (|Anew k x - AdeleteNew k i x| + z * |B x - Bdelete i x|)
+        let Lcompact0 : ℝ := ∑ i : Fin n,
+          ∫ ζ, ((1 + z) * ξ0 i ζ) ^ 2 * min |(1 + z) * ξ0 i ζ| 1 ∂P
+        let Lcompactη : ℕ → ℝ := fun k => ∑ i : Fin n,
+          ∫ x, ((1 + z) * η k i x) ^ 2 * min |(1 + z) * η k i x| 1 ∂ν
+        let sourceCost0 : ℝ :=
+          ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) +
+            ∑ i : Fin n, ∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0
+        let sourceCostη : ℕ → ℝ := fun k =>
+          ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+            ∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+        let compactCost0 : ℝ := Lcompact0 + (∫ ζ, A0 ζ ∂P) + z * (∫ ζ, B0 ζ ∂P) +
+          ∑ i : Fin n, ∫ ζ, compactDeletedTest0 i ζ ∂P
+        let compactCostη : ℕ → ℝ := fun k => Lcompactη k + (∫ x, Anew k x ∂ν) +
+          z * (∫ x, B x ∂ν) + ∑ i : Fin n, ∫ x, compactDeletedTestη k i x ∂ν
+        let Fz : ℝ → ℝ := fun t => (z * t) ^ 2 * min |z * t| 1
+        let δ0 : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P
+        let δreduced : Fin n → ℝ := fun i => ∫ ζ, Fz (ξ0 i ζ) ∂P₀
+        let δν : Fin n → ℝ := fun i => ∫ x, Fz (ξ i x) ∂ν
+        let δη : ℕ → Fin n → ℝ := fun k i => ∫ x, Fz (η k i x) ∂ν
+        let L0 : ℝ := ∑ i : Fin n, δ0 i
+        let Lν : ℝ := ∑ i : Fin n, δν i
+        let Lη : ℕ → ℝ := fun k => ∑ i : Fin n, δη k i
+        let scalarBudget : ℝ := ∫ o : Ω, Fz (g o / N) ∂μ
+        let deletedTestUnperturbedη : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x =>
+          min |z * η k i x| 1 * (|Anew k x - Adelete i x| + z * |B x - Bdelete i x|)
+        let unperturbedSourceCostη : ℕ → ℝ := fun k =>
+          ((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) +
+            ∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k
+        (∀ i : Fin n, Measurable[mAugLocal, borel ℝ] (ξlocal i)) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          Measurable[mAugLocal, borel ℝ] (ηlocal k i) ∧
+          MeasurableSpace.comap (ηlocal k i) (borel ℝ) = mAugLocal) ∧
+        (∀ k : ℕ,
+          Measurable[mAug, borel (Fin n → ℝ)] (C k) ∧
+          MeasurableSpace.comap (C k) (borel (Fin n → ℝ)) = mAug ∧
+          ∀ (f : (Fin n → Ω × ℝ) → ℝ), Measurable[mAug, borel ℝ] f →
+            ∃ F : (Fin n → ℝ) → ℝ,
+              Measurable[borel (Fin n → ℝ), borel ℝ] F ∧
+              ∀ x : Fin n → Ω × ℝ, f x = F (C k x)) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          let J : Type := {j : Fin n // j ≠ i}
+          let mDel : MeasurableSpace (J → Ω × ℝ) :=
+            @MeasurableSpace.pi J (fun _ : J => Ω × ℝ) (fun _ : J => mAugLocal)
+          let Cdel : (J → Ω × ℝ) → (J → ℝ) :=
+            fun y j => ηlocal k j.val (y j)
+          let pX : (Fin n → Ω × ℝ) → (J → Ω × ℝ) := fun x j => x j.val
+          let pR : (Fin n → ℝ) → (J → ℝ) := fun t j => t j.val
+          Measurable[mAug, mDel] pX ∧
+          Measurable[borel (Fin n → ℝ), borel (J → ℝ)] pR ∧
+          Measurable[mDel, borel (J → ℝ)] Cdel ∧
+          MeasurableSpace.comap Cdel (borel (J → ℝ)) = mDel ∧
+          (∀ x : Fin n → Ω × ℝ, pR (C k x) = Cdel (pX x)) ∧
+          MeasurableSpace.comap (fun x : Fin n → Ω × ℝ => pR (C k x))
+              (borel (J → ℝ)) = MeasurableSpace.comap pX mDel ∧
+          ∀ (d : (J → Ω × ℝ) → ℝ), Measurable[mDel, borel ℝ] d →
+            ∃ F : (J → ℝ) → ℝ,
+              Measurable[borel (J → ℝ), borel ℝ] F ∧
+              (∀ y : J → Ω × ℝ, d y = F (Cdel y)) ∧
+              Measurable[borel (Fin n → ℝ), borel ℝ] (fun t => F (pR t)) ∧
+              ∀ x : Fin n → Ω × ℝ, d (pX x) = F (pR (C k x))) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          ∃ FAdelete FBdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ,
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FAdelete ∧
+            Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel ℝ] FBdelete ∧
+            ∀ x : Fin n → Ω × ℝ,
+              Adelete i x = FAdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x) ∧
+              Bdelete i x = FBdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧
+        @IsProbabilityMeasure (Fin n → Ω) mN₀ P₀ ∧
+        P₀ = @Measure.map (Fin n → Ω) (Fin n → Ω) mN mN₀ id P ∧
+        IsProbabilityMeasure ν ∧ MeasurePreserving q ν P₀ ∧
+        (∀ k : ℕ, 0 < ε k ∧ ε k < 1 / (4 * Real.sqrt (n : ℝ))) ∧
+        Filter.Tendsto ε Filter.atTop (nhds (0 : ℝ)) ∧
+        (∀ i : Fin n, Measurable[mAug, borel ℝ] (ξ i) ∧ MemLp (ξ i) 2 ν ∧
+          (∫ x, ξ i x ∂ν) = 0) ∧
+        (∑ i : Fin n, ∫ x, (ξ i x) ^ 2 ∂ν) = 1 ∧
+        (∀ (k : ℕ) (i : Fin n), Measurable[mAugLocal, borel ℝ] (Ylocal k i) ∧
+          Measurable[mAug, borel ℝ] (Y k i) ∧ ∀ x : Fin n → Ω × ℝ, |Y k i x - ξ i x| ≤ ε k) ∧
+        (∀ ζ : Fin n → Ω, (1 / 2 : ℝ) ≤ 1 + D2 ζ ∧ |D2 ζ| ≤ B0 ζ) ∧
+        (∀ ζ : Fin n → Ω, projectionV n g ζ = 0 → T0 ζ = 0) ∧
+        (∀ (k : ℕ) (x : Fin n → Ω × ℝ), Vη k x = 0 → Tη k x = 0) ∧
+        (∀ k : ℕ, (1 / 2 : ℝ) < s k ∧
+          (∀ (i : Fin n) (x : Fin n → Ω × ℝ), η k i x = ηlocal k i (x i)) ∧
+          iIndepFun (η k) ν ∧
+          (∀ i : Fin n, Measurable[mAug, borel ℝ] (η k i) ∧ MemLp (η k i) 2 ν ∧
+            (∫ x, η k i x ∂ν) = 0) ∧
+          (∑ i : Fin n, ∫ x, (η k i x) ^ 2 ∂ν) = 1 ∧
+          ν {x : Fin n → Ω × ℝ | Vη k x = 0} = 0 ∧
+          (∀ᵐ x ∂ν, 0 < Vη k x ∧ 0 < b x ∧ 0 < Vη k x * b x)) ∧
+        (∀ (k : ℕ) (x : Fin n → Ω × ℝ),
+          Dη k x = D1 (q x) + Qε k x ∧
+          Wη k x + Dη k x - z * Vη k x * b x = W x + D1 (q x) - z * V x * b x ∧
+          |Qε k x| ≤ M k x ∧ |Dη k x| ≤ Anew k x) ∧
+        Measurable[mAug, borel ℝ] H ∧ Integrable[mAug] H ν ∧
+        (∀ i : Fin n, Measurable[mAug, borel ℝ] (Hdelete i) ∧ Integrable[mAug] (Hdelete i) ν) ∧
+        (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧ Integrable[mAug] (Qε k) ν ∧
+          Integrable[mAug] (fun x => |Qε k x|) ν ∧
+          (∫ x, |Qε k x| ∂ν) ≤ K * ε k * (∫ x, H x ∂ν)) ∧
+        Filter.Tendsto (fun k => ∫ x, |Qε k x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧
+        (∀ k : ℕ, Measurable[mAug, borel ℝ] (Anew k) ∧ Integrable[mAug] (Anew k) ν ∧
+          ∀ x : Fin n → Ω × ℝ, 0 ≤ Anew k x) ∧
+        (∀ (k : ℕ) (i : Fin n), Measurable[mAug, borel ℝ] (AdeleteNew k i) ∧
+          Integrable[mAug] (AdeleteNew k i) ν ∧ ∀ x : Fin n → Ω × ℝ, 0 ≤ AdeleteNew k i x) ∧
+        (∀ k : ℕ, Integrable[mAug] (fun x => |Anew k x - A x|) ν ∧
+          (∫ x, |Anew k x - A x| ∂ν) = ε k * (K * (∫ x, H x ∂ν))) ∧
+        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |AdeleteNew k i x - Adelete i x|) ν ∧
+          (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) = ε k * (K * (∫ x, Hdelete i x ∂ν))) ∧
+        Filter.Tendsto (fun k => ∫ x, |Anew k x - A x| ∂ν) Filter.atTop (nhds (0 : ℝ)) ∧
+        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, |AdeleteNew k i x - Adelete i x| ∂ν)
+          Filter.atTop (nhds (0 : ℝ))) ∧
+        (∀ (k : ℕ) (i : Fin n) (x : Fin n → Ω × ℝ),
+          Δ k i x = M k x - Mdelete k i x ∧ |Δ k i x| ≤ M k x + Mdelete k i x) ∧
+        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => |Δ k i x|) ν ∧
+          (∫ x, |Δ k i x| ∂ν) ≤ ε k * (K * ((∫ x, H x ∂ν) + (∫ x, Hdelete i x ∂ν)))) ∧
+        (∀ k : ℕ, ∃ Ffull : (Fin n → ℝ) → ℝ × ℝ × ℝ,
+          Measurable[borel (Fin n → ℝ), borel (ℝ × ℝ × ℝ)] Ffull ∧
+          ∀ x : Fin n → Ω × ℝ, (M k x, Anew k x, B x) = Ffull (C k x)) ∧
+        (∀ (k : ℕ) (i : Fin n), ∃ Fdelete : ({j : Fin n // j ≠ i} → ℝ) → ℝ × ℝ × ℝ,
+          Measurable[borel ({j : Fin n // j ≠ i} → ℝ), borel (ℝ × ℝ × ℝ)] Fdelete ∧
+          ∀ x : Fin n → Ω × ℝ,
+            (Mdelete k i x, AdeleteNew k i x, Bdelete i x) =
+              Fdelete (fun j : {j : Fin n // j ≠ i} => η k j.val x)) ∧
+        (∀ k : ℕ, ∃ G1 G2 : (Fin n → ℝ) → ℝ,
+          Measurable[borel (Fin n → ℝ), borel ℝ] G1 ∧
+          Measurable[borel (Fin n → ℝ), borel ℝ] G2 ∧
+          ∀ x : Fin n → Ω × ℝ, Dη k x = G1 (C k x) ∧ D2 (q x) = G2 (C k x)) ∧
+        Integrable[mN] (fun ζ => fullTest0 ζ * Real.exp (S0 ζ)) P ∧
+        (∀ k : ℕ, Integrable[mAug] (fun x => fullTestη k x * Real.exp (Sη k x)) ν) ∧
+        (∀ i : Fin n, Integrable[mN] (fun ζ => deletedTest0 i ζ * Real.exp (S0minus i ζ)) P) ∧
+        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (fun x => deletedTestη k i x * Real.exp (Sηminus k i x)) ν) ∧
+        (∀ i : Fin n, Integrable[mN] (compactDeletedTest0 i) P) ∧
+        (∀ (k : ℕ) (i : Fin n), Integrable[mAug] (compactDeletedTestη k i) ν) ∧
+        0 < I0 ∧ (∀ k : ℕ, 0 < Iη k) ∧
+        Filter.Tendsto Iη Filter.atTop (nhds I0) ∧
+        Filter.Tendsto (fun k => ∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν)
+          Filter.atTop (nhds (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)) ∧
+        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)
+          Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P))) ∧
+        Filter.Tendsto (fun k => (∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k)
+          Filter.atTop (nhds ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)) ∧
+        (∀ i : Fin n, Filter.Tendsto (fun k => (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)
+          Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧
+        (∀ i : Fin n, Filter.Tendsto (fun k => ∫ x, compactDeletedTestη k i x ∂ν)
+          Filter.atTop (nhds (∫ ζ, compactDeletedTest0 i ζ ∂P))) ∧
+        Filter.Tendsto sourceCostη Filter.atTop (nhds sourceCost0) ∧
+        Filter.Tendsto compactCostη Filter.atTop (nhds compactCost0) ∧
+        (∀ (k : ℕ) (x : Fin n → Ω × ℝ),
+          A x + (4 * ε k * Real.sqrt (n : ℝ)) * H x = Anew k x) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          Measurable[mAug, borel ℝ] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)) ∧
+          Integrable[mAug] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)) ν ∧
+          Integrable[mAug] (fun x =>
+            |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)|) ν ∧
+          Integrable[mAug] (fun x =>
+            deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x)) ν ∧
+          (∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+            deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν) ≤
+              |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+          |(∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+              |ε k| * (Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν)))) ∧
+        (∀ i : Fin n,
+          Filter.Tendsto (fun k : ℕ =>
+            ∫ x, |deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) -
+              deletedTestη k i x * Real.exp (Sηminus k i x)| ∂ν)
+            Filter.atTop (nhds (0 : ℝ)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+              (∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+            Filter.atTop (nhds (0 : ℝ)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν)
+            Filter.atTop (nhds (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)) ∧
+          Filter.Tendsto (fun k : ℕ =>
+            (∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k)
+            Filter.atTop (nhds ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0))) ∧
+        (∀ k : ℕ,
+          |(∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν)| ≤
+              |ε k| * ∑ i : Fin n,
+                Real.exp ((n : ℝ) / 2) * (K * (∫ x, Hdelete i x ∂ν))) ∧
+        Filter.Tendsto (fun k : ℕ =>
+          (∑ i : Fin n, ∫ x, deletedTestUnperturbedη k i x * Real.exp (Sηminus k i x) ∂ν) -
+            (∑ i : Fin n, ∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν))
+          Filter.atTop (nhds (0 : ℝ)) ∧
+        Filter.Tendsto (fun k : ℕ => unperturbedSourceCostη k - sourceCostη k)
+          Filter.atTop (nhds (0 : ℝ)) ∧
+        Filter.Tendsto unperturbedSourceCostη Filter.atTop (nhds sourceCost0) ∧
+        (∀ (cSZ C1 C2 C3 C4 : ℝ)
+            (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+              cSZ C1 C2 C3 C4)
+            (k : ℕ) (hz1 : 1 ≤ z)
+            (hδη : ∀ i : Fin n, δη k i ≤ 1)
+            (hLη : Lη k ≤ cSZ * z ^ 2),
+          Shao.standardNormalTail z * Real.exp (-C1 * Lη k) *
+              (1 - C2 * unperturbedSourceCostη k) ≤
+            ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ∧
+          ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ≤
+            Shao.standardNormalTail z * Real.exp (C3 * Lη k) *
+                (1 + C4 * unperturbedSourceCostη k) +
+              ν.real {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4} +
+              ν.real {x : Fin n → Ω × ℝ |
+                z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)}) ∧
+        (∀ (C1 C2 C3 C4 : ℝ)
+            (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+              cBudget C1 C2 C3 C4)
+            (hz1 : 1 ≤ z)
+            (hzWindow : β = 0 ∨
+              (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+                Real.rpow (n : ℝ) ((p - 2) / (2 * p))))
+            (τ : ℝ) (hτ : 0 < τ),
+          ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →
+            (∀ i : Fin n, δη k i ≤ 1) ∧
+            Lη k ≤ cBudget * z ^ 2 ∧
+            |unperturbedSourceCostη k - sourceCost0| < τ ∧
+            Shao.standardNormalTail z * Real.exp (-C1 * L0) *
+                (1 - C2 * sourceCost0) - τ ≤
+              ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ∧
+            ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} ≤
+              Shao.standardNormalTail z * Real.exp (C3 * L0) *
+                  (1 + C4 * sourceCost0) +
+                ν.real {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4} +
+                ν.real {x : Fin n → Ω × ℝ |
+                  z ^ 2 * |D2 (q x)| > (1 / 4 : ℝ)} + τ) ∧
+        (1 ≤ z →
+          Integrable[mΩ] (fun o : Ω => Fz (g o / N)) μ ∧
+          (∀ i : Fin n,
+            Measurable[mN₀, borel ℝ] (fun ζ => Fz (ξ0 i ζ)) ∧
+            Integrable[mN] (fun ζ => Fz (ξ0 i ζ)) P ∧
+            Integrable[mN₀] (fun ζ => Fz (ξ0 i ζ)) P₀ ∧
+            Integrable[mAug] (fun x => Fz (ξ i x)) ν ∧
+            δreduced i = δ0 i ∧ δν i = δ0 i ∧ δ0 i = scalarBudget) ∧
+          L0 = (n : ℝ) * scalarBudget ∧
+          (∀ i : Fin n, L0 = (n : ℝ) * δ0 i) ∧
+          (∀ i : Fin n, 0 ≤ δ0 i) ∧ 0 ≤ L0 ∧ Lν = L0 ∧
+          L0 ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) ∧
+          (β = 0 → L0 = 0 ∧ (∀ i : Fin n, δ0 i = 0)) ∧
+          ((β = 0 ∨
+              (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+                Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →
+            L0 ≤ Real.rpow cWindow p ∧
+            (∀ i : Fin n, δ0 i < (1 / 2 : ℝ)) ∧
+            L0 < cBudget * z ^ 2 ∧
+            (∀ (k : ℕ) (i : Fin n),
+              Integrable[mAug] (fun x => Fz (η k i x)) ν) ∧
+            (∀ i : Fin n,
+              Filter.Tendsto (fun k : ℕ => δη k i) Filter.atTop (nhds (δ0 i))) ∧
+            Filter.Tendsto Lη Filter.atTop (nhds L0) ∧
+            (∀ (τ : ℝ), 0 < τ →
+              ∃ k0 : ℕ, ∀ (k : ℕ), k0 ≤ k →
+                (∀ i : Fin n, δη k i < (1 / 2 : ℝ)) ∧
+                Lη k < cBudget * z ^ 2 ∧
+                (∀ i : Fin n, |δη k i - δ0 i| < τ) ∧
+                |Lη k - L0| < τ ∧
+                (∫ x, |Qε k x| ∂ν) < τ ∧
+                (∫ x, |Anew k x - A x| ∂ν) < τ ∧
+                (∀ i : Fin n, (∫ x, |AdeleteNew k i x - Adelete i x| ∂ν) < τ) ∧
+                |Iη k - I0| < τ ∧
+                |(∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) -
+                  (∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P)| < τ ∧
+                (∀ i : Fin n,
+                  |(∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) -
+                    (∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P)| < τ) ∧
+                |((∫ x, fullTestη k x * Real.exp (Sη k x) ∂ν) / Iη k) -
+                  ((∫ ζ, fullTest0 ζ * Real.exp (S0 ζ) ∂P) / I0)| < τ ∧
+                (∀ i : Fin n,
+                  |((∫ x, deletedTestη k i x * Real.exp (Sηminus k i x) ∂ν) / Iη k) -
+                    ((∫ ζ, deletedTest0 i ζ * Real.exp (S0minus i ζ) ∂P) / I0)| < τ) ∧
+                (∀ i : Fin n,
+                  |(∫ x, compactDeletedTestη k i x ∂ν) -
+                    (∫ ζ, compactDeletedTest0 i ζ ∂P)| < τ) ∧
+                |sourceCostη k - sourceCost0| < τ ∧
+                |compactCostη k - compactCost0| < τ)))) ∧
+      (∀ (Cenv aenv t0 Menv : ℝ)
+          (hCenv : 0 ≤ Cenv) (haenv : 0 ≤ aenv)
+          (ht0 : 0 < t0) (hMenv : 0 ≤ Menv),
+        ∀ᶠ n : ℕ in Filter.atTop,
+          4 ≤ n ∧
+          ∀ (w : Ω → ℝ)
+            (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+            (hWR : ∀ᵐ o : Ω ∂μ,
+              w o ≤ boundedPolylogHeight Cenv aenv n)
+            (hSq : Integrable[mΩ] (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+            (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ Menv)
+            (hEnv : ∀ᵐ t : Ω × Ω ∂(@Measure.prod Ω Ω mΩ mΩ μ μ),
+              |r t.1 t.2| ≤ w t.1 * w t.2)
+            (z : ℝ) (hz : (1 : ℝ) ≤ z)
+            (hzWindow : z ≤ remainderWindowScale
+              (Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv) t0 *
+                Real.rpow (n : ℝ) (1 / 6 : ℝ)),
+        let mN : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+        let mN₀ : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+        let P : @Measure (Fin n → Ω) mN :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+        let P₀ : @Measure (Fin n → Ω) mN₀ :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+        let N : ℝ := Real.sqrt (n : ℝ)
+        let ε : ℕ → ℝ := fun k => 1 / (8 * Real.sqrt (n : ℝ) * ((k : ℝ) + 1))
+        let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ζ => g (ζ i) / N
+        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+        let D2 : (Fin n → Ω) → ℝ := clippedCenteredDelta n g r 512 rho 1
+        let lambda01 : Measure ℝ := (volume : Measure ℝ).restrict (Set.Ioo (0 : ℝ) 1)
+        let mAugLocal : MeasurableSpace (Ω × ℝ) := m₀.prod (borel ℝ)
+        let mAug : MeasurableSpace (Fin n → Ω × ℝ) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (fun _ : Fin n => mAugLocal)
+        let νlocal : Fin n → @Measure (Ω × ℝ) mAugLocal :=
+          fun _ => @Measure.prod Ω ℝ m₀ (borel ℝ) μ₀ lambda01
+        let ν : @Measure (Fin n → Ω × ℝ) mAug :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω × ℝ)
+            (inferInstance : Fintype (Fin n)) (fun _ : Fin n => mAugLocal) νlocal
+        let q : (Fin n → Ω × ℝ) → (Fin n → Ω) := fun x i => (x i).1
+        let c : Fin n → (Ω × ℝ) → ℝ := fun _ =>
+          Shao.OQ6.ScalarObservationCoding.baseFourIndicatorCode
+            (MeasurableSpace.natGeneratingSequence (Ω × ℝ))
+        let ξlocal : Fin n → (Ω × ℝ) → ℝ := fun i t => g t.1 / N
+        let Ylocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.quantizedObservation (ε k) (ξlocal i) (c i)
+        let ξ : Fin n → (Fin n → Ω × ℝ) → ℝ := fun i x => ξlocal i (x i)
+        let Y : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k i x => Ylocal k i (x i)
+        let a : ℕ → Fin n → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualCoordinateMean ν (Y k)
+        let s : ℕ → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizationScale ν (Y k)
+        let ηlocal : ℕ → Fin n → (Ω × ℝ) → ℝ := fun k i =>
+          Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation (a k i) (s k) (Ylocal k i)
+        let η : ℕ → Fin n → (Fin n → Ω × ℝ) → ℝ := fun k =>
+          Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+        let C : ℕ → (Fin n → Ω × ℝ) → (Fin n → ℝ) := fun k x i => η k i x
+        let W : (Fin n → Ω × ℝ) → ℝ := fun x => ∑ i : Fin n, ξ i x
+        let V : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (∑ i : Fin n, (ξ i x) ^ 2)
+        let Wη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => ∑ i : Fin n, η k i x
+        let Vη : ℕ → (Fin n → Ω × ℝ) → ℝ := fun k x => Real.sqrt (∑ i : Fin n, (η k i x) ^ 2)
+        let b : (Fin n → Ω × ℝ) → ℝ := fun x => Real.sqrt (1 + D2 (q x))
+        let Qε : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => W x - Wη k x + z * b x * (Vη k x - V x)
+        let Dη : ℕ → (Fin n → Ω × ℝ) → ℝ :=
+          fun k x => D1 (q x) + W x - Wη k x + z * b x * (Vη k x - V x)
+        let V0 : (Fin n → Ω) → ℝ := projectionV n g
+        let qOrder : ℝ := boundedPolylogMomentOrder t0 n
+        let Ktail : ℝ := Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv
+        let Gsource : Set (Fin n → Ω) := projectionGood n g z
+        let C2source : Set (Fin n → Ω) :=
+          {ζ : Fin n → Ω |
+            |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r ζ| ≤
+              Ktail * (n : ℝ) * qOrder ∧
+            ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows n r ζ‖ ^ (2 : ℕ) ≤
+              Ktail * (n : ℝ) ^ (2 : ℕ) * qOrder}
+        let Hsource : Set (Fin n → Ω) := Gsource ∩ C2source
+        let Ssafe : Set (Fin n → Ω) :=
+          {ζ : Fin n → Ω |
+            0 < V0 ζ ∧ z * |D1 ζ| ≤ V0 ζ / 8 ∧
+              z ^ (2 : ℕ) * |D2 ζ| ≤ (1 / 8 : ℝ)}
+        let Jsafe : Set (Fin n → Ω × ℝ) := q ⁻¹' Ssafe
+        let E : ℕ → Set (Fin n → Ω × ℝ) := fun k =>
+          {x : Fin n → Ω × ℝ | z * |Dη k x| > Vη k x / 4}
+        let E2 : Set (Fin n → Ω × ℝ) :=
+          {x : Fin n → Ω × ℝ |
+            z ^ (2 : ℕ) * |D2 (q x)| > (1 / 4 : ℝ)}
+        let Z : Set (Fin n → Ω × ℝ) :=
+          {x : Fin n → Ω × ℝ | V x = 0}
+        let payment : ℝ :=
+          (3 : ℝ) * Real.exp (-qOrder) + Real.exp (-cg * (n : ℝ)) +
+            (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))
+        Measurable[mN₀, borel ℝ] V0 ∧
+        Measurable[mN₀, borel ℝ] D1 ∧
+        Measurable[mN₀, borel ℝ] D2 ∧
+        Measurable[mAug, borel ℝ] (fun x => D1 (q x)) ∧
+        Measurable[mAug, borel ℝ] (fun x => D2 (q x)) ∧
+        (∀ x : Fin n → Ω × ℝ,
+          W x = projectionW n g (q x) ∧ V x = V0 (q x)) ∧
+        @MeasurableSet (Fin n → Ω) mN Hsource ∧
+        @MeasurableSet (Fin n → Ω) mN₀ Ssafe ∧
+        @MeasurableSet (Fin n → Ω) mN Ssafe ∧
+        @MeasurableSet (Fin n → Ω × ℝ) mAug Jsafe ∧
+        Hsource ⊆ Ssafe ∧
+        (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+          0 < V x ∧ z * |D1 (q x)| ≤ V x / 8 ∧
+            z ^ (2 : ℕ) * |D2 (q x)| ≤ (1 / 8 : ℝ)) ∧
+        ν.real Jsafeᶜ = P₀.real Ssafeᶜ ∧
+        P₀.real Ssafeᶜ = P.real Ssafeᶜ ∧
+        P.real Ssafeᶜ ≤ P.real Hsourceᶜ ∧
+        P.real Hsourceᶜ ≤ payment ∧
+        ν.real Jsafeᶜ ≤ payment ∧
+        (({ζ : Fin n → Ω | V0 ζ = 0} ∪
+          {ζ : Fin n → Ω | Real.sqrt (centeredSq n g r ζ) = 0}) ⊆
+            Hsourceᶜ) ∧
+        (∀ (k : ℕ) (i : Fin n),
+          Measurable[mAug, borel ℝ] (η k i)) ∧
+        (∀ k : ℕ, Measurable[mAug, borel ℝ] (Qε k) ∧
+          Measurable[mAug, borel ℝ] (Dη k) ∧
+          @MeasurableSet (Fin n → Ω × ℝ) mAug (E k)) ∧
+        (@MeasurableSet (Fin n → Ω × ℝ) mAug E2 ∧
+          @MeasurableSet (Fin n → Ω × ℝ) mAug Z) ∧
+        (∀ (i : Fin n) (x : Fin n → Ω × ℝ),
+          Filter.Tendsto (fun k : ℕ => η k i x)
+            Filter.atTop (nhds (ξ i x))) ∧
+        (∀ x : Fin n → Ω × ℝ,
+          Filter.Tendsto (fun k : ℕ => Wη k x)
+            Filter.atTop (nhds (W x))) ∧
+        (∀ x : Fin n → Ω × ℝ,
+          Filter.Tendsto (fun k : ℕ => Vη k x)
+            Filter.atTop (nhds (V x))) ∧
+        (∀ x : Fin n → Ω × ℝ,
+          Filter.Tendsto (fun k : ℕ => Qε k x)
+            Filter.atTop (nhds (0 : ℝ))) ∧
+        (∀ x : Fin n → Ω × ℝ,
+          Filter.Tendsto (fun k : ℕ => Dη k x)
+            Filter.atTop (nhds (D1 (q x)))) ∧
+        (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+          (7 / 8 : ℝ) ≤ 1 + D2 (q x) ∧ 0 < b x) ∧
+        (∀ x : Fin n → Ω × ℝ, x ∈ Jsafe →
+          ∀ᶠ k : ℕ in Filter.atTop,
+            0 < Vη k x ∧ z * |Dη k x| ≤ Vη k x / 4) ∧
+        E2 ⊆ Jsafeᶜ ∧ Z ⊆ Jsafeᶜ ∧
+        ν.real E2 ≤ ν.real Jsafeᶜ ∧
+        ν.real Z ≤ ν.real Jsafeᶜ ∧
+        ν.real E2 ≤ payment ∧ ν.real Z ≤ payment ∧
+        (∀ δ : ℝ, 0 < δ →
+          ∀ᶠ k : ℕ in Filter.atTop,
+            ν.real (E k) ≤ ν.real Jsafeᶜ + δ) ∧
+        Filter.limsup (fun k : ℕ => ν.real (E k))
+          Filter.atTop ≤ ν.real Jsafeᶜ ∧
+        (∀ δ : ℝ, 0 < δ →
+          ∀ᶠ k : ℕ in Filter.atTop,
+            ν.real (E k) ≤ payment + δ) ∧
+        Filter.limsup (fun k : ℕ => ν.real (E k))
+          Filter.atTop ≤ payment)
+```
+
+## 2. Qualified generic projection-zero transport: COMPLETE head, including all15 result-local lets
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/NormalizedEventTransport.lean", "sha256": "22c7233fccb6cb6f4fa6d2216b9b9908627480fc1481a46d2a79631baf326d56", "bytes": 15531}`
+
+```lean
+import Shao.OQ6.ActualMomentNormalization
+import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity
+import Mathlib.MeasureTheory.Measure.Real
+import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+
+set_option autoImplicit false
+
+namespace Shao.OQ6.NormalizedEventTransport
+
+noncomputable section
+
+open MeasureTheory
+open scoped BigOperators Classical symmDiff
+
+theorem actual_normalized_quotient_projection_zero_transport
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) [IsProbabilityMeasure ν]
+    {n : ℕ} (ξ Y : Fin n → Ω → ℝ)
+    (hξ : ∀ i : Fin n, Measurable (ξ i))
+    (hY : ∀ i : Fin n, Measurable (Y i))
+    (D1 D2 κ : Ω → ℝ)
+    (hD1 : Measurable D1) (hD2 : Measurable D2) (hκ : Measurable κ)
+    (hD2pos : ∀ᵐ ω ∂ν, 0 < 1 + D2 ω)
+    (hηpos : ∀ᵐ ω ∂ν, 0 < Real.sqrt (∑ i : Fin n,
+      (Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y i ω) ^ 2)) :
+    let η : Fin n → Ω → ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν Y
+    let W : Ω → ℝ := fun ω => ∑ i : Fin n, ξ i ω
+    let Wη : Ω → ℝ := fun ω => ∑ i : Fin n, η i ω
+    let V : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (ξ i ω) ^ 2)
+    let Vη : Ω → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (η i ω) ^ 2)
+    let b : Ω → ℝ := fun ω => Real.sqrt (1 + D2 ω)
+    let Dη : ℝ → Ω → ℝ := fun z ω => D1 ω + W ω - Wη ω + z * b ω * (Vη ω - V ω)
+    let T : Ω → ℝ := fun ω => if V ω = 0 then κ ω else (W ω + D1 ω) / (V ω * b ω)
+    let Tη : ℝ → Ω → ℝ := fun z ω => (Wη ω + Dη z ω) / (Vη ω * b ω)
+    let Z : Set Ω := {ω : Ω | V ω = 0}
+    let p0 : ℝ := ν.real Z
+    let comparisons : Set (ℝ → ℝ → Prop) := {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨ R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨ R = (fun a b : ℝ => a = b)}
+    let F : (ℝ → ℝ → Prop) → ℝ → Set Ω := fun R z => {ω : Ω | R (W ω + D1 ω) (z * V ω * b ω)}
+    let A : (ℝ → ℝ → Prop) → ℝ → Set Ω := fun R z => {ω : Ω | R (T ω) z}
+    let E : (ℝ → ℝ → Prop) → ℝ → Set Ω := fun R z => {ω : Ω | R (Tη z ω) z}
+    (∀ i : Fin n, Measurable (η i)) ∧
+    Measurable W ∧ Measurable Wη ∧ Measurable V ∧ Measurable Vη ∧
+    Measurable b ∧ (∀ z : ℝ, Measurable (Dη z)) ∧
+    Measurable T ∧ (∀ z : ℝ, Measurable (Tη z)) ∧ MeasurableSet Z ∧
+    (∀ᵐ ω ∂ν, ∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+      (R (Tη z ω) z ↔ R (W ω + D1 ω) (z * V ω * b ω))) ∧
+    (∀ (ω : Ω), 0 < V ω → 0 < 1 + D2 ω →
+      ∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+        (R (T ω) z ↔ R (W ω + D1 ω) (z * V ω * b ω))) ∧
+    (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+      MeasurableSet (F R z) ∧ MeasurableSet (A R z) ∧ MeasurableSet (E R z) ∧
+      ν (E R z) = ν (F R z) ∧
+      (∀ᵐ ω ∂ν, ω ∈ (A R z ∆ F R z) → ω ∈ Z) ∧
+      ν (A R z ∆ F R z) ≤ ν Z ∧
+      |ν.real (A R z) - ν.real (F R z)| ≤ p0 ∧
+      ν (A R z ∆ E R z) ≤ ν Z ∧
+      |ν.real (A R z) - ν.real (E R z)| ≤ p0)
+```
+
+## 3. Literal projectionEnergy
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean", "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc", "bytes": 33066}`
+
+```lean
+universe u
+open scoped BigOperators
+namespace Shao.OQ5.P51
+noncomputable section
+open Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)
+open Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)
+
+def projectionEnergy
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=
+  (∑ i : Fin n, (g (x i)) ^ (2 : ℕ)) / (n : ℝ)
+```
+
+## 4. Literal projectionV
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean", "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc", "bytes": 33066}`
+
+```lean
+universe u
+open scoped BigOperators
+namespace Shao.OQ5.P51
+noncomputable section
+open Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)
+open Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)
+
+def projectionV
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=
+  Real.sqrt (projectionEnergy n g x)
+```
+
+## 5. Literal projectionW
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean", "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc", "bytes": 33066}`
+
+```lean
+universe u
+open scoped BigOperators
+namespace Shao.OQ5.P51
+noncomputable section
+open Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)
+open Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)
+
+def projectionW
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (x : Fin n → Ω) : ℝ :=
+  (∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ)
+```
+
+## 6. Literal residualStatisticD
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/BoundedStudentizerGeometry.lean", "sha256": "bc64d3e11a64f62ad654305ce579c1779546d4df37b5593090105af910502edc", "bytes": 33066}`
+
+```lean
+universe u
+open scoped BigOperators
+namespace Shao.OQ5.P51
+noncomputable section
+open Shao.OQ6.CanonicalDoubleGhostRowMoments (originalRows)
+open Shao.OQ6.CanonicalDoubleGhostScalarMoments (originalUpper)
+
+def residualStatisticD
+    (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=
+  originalUpper n r x / (Real.sqrt (n : ℝ) * ((n : ℝ) - 1))
+```
+
+## 7. Literal studentizerClip
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+def studentizerClip (B d : ℝ) : ℝ :=
+  max (-(min B (1 / 2 : ℝ))) (min d B)
+```
+
+## 8. Literal studentizerClipBudget
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+def studentizerClipBudget (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (C0 rho y : ℝ) (x : Fin n → Ω) : ℝ :=
+  C0 * (((1 + rho) * y) / Real.sqrt (n : ℝ) +
+    residualEnergyJ n r x / ((1 + rho) * y * Real.sqrt (n : ℝ)))
+```
+
+## 9. Literal clippedCenteredDelta
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+def clippedCenteredDelta (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)
+    (x : Fin n → Ω) : ℝ :=
+  if projectionV n g x = 0 then 0 else
+    studentizerClip (studentizerClipBudget n r C0 rho y x)
+      (centeredDelta n g r x)
+```
+
+## 10. Literal clippedCenteredStatistic
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+def clippedCenteredStatistic (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)
+    (x : Fin n → Ω) : ℝ :=
+  if projectionV n g x = 0 then 0 else
+    (projectionW n g x + residualStatisticD n r x) /
+      (projectionV n g x *
+        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))
+```
+
+## 11. Primary clippedCentered_zero
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+theorem clippedCentered_zero (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)
+    (x : Fin n → Ω) (hV : projectionV n g x = 0) :
+    centeredDelta n g r x = 0 ∧
+    clippedCenteredDelta n g r C0 rho y x = 0 ∧
+    clippedCenteredStatistic n g r C0 rho y x = 0
+```
+
+## 12. Primary clippedCenteredDelta_bounds
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ5/P51/ClippedStudentizer.lean", "sha256": "a8bffbabb649cdc788b58517a89185691f72de92776a882f3b9ffdcddc0b748b", "bytes": 11786}`
+
+```lean
+universe u
+noncomputable section
+open scoped Classical
+namespace Shao.OQ5.P51
+
+theorem clippedCenteredDelta_bounds (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (C0 rho y : ℝ)
+    (x : Fin n → Ω) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho) (hy : 0 ≤ y) :
+    (1 / 2 : ℝ) ≤ 1 + clippedCenteredDelta n g r C0 rho y x ∧
+    |clippedCenteredDelta n g r C0 rho y x| ≤
+      studentizerClipBudget n r C0 rho y x ∧
+    |clippedCenteredDelta n g r C0 rho y x| ≤ |centeredDelta n g r x| ∧
+    (0 < projectionV n g x →
+      0 < projectionV n g x *
+        Real.sqrt (1 + clippedCenteredDelta n g r C0 rho y x))
+```
+
+## 13. Literal actualCoordinateMean
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean", "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237", "bytes": 22137}`
+
+```lean
+namespace Shao.OQ6.ActualMomentNormalization
+noncomputable section
+open MeasureTheory
+open scoped BigOperators
+
+noncomputable def actualCoordinateMean
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ) (i : Fin n) : ℝ :=
+  ∫ ω, Y i ω ∂ν
+```
+
+## 14. Literal actualCenteredFamily
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean", "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237", "bytes": 22137}`
+
+```lean
+namespace Shao.OQ6.ActualMomentNormalization
+noncomputable section
+open MeasureTheory
+open scoped BigOperators
+
+noncomputable def actualCenteredFamily
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ)
+    (i : Fin n) (ω : Ω) : ℝ :=
+  Y i ω - actualCoordinateMean ν Y i
+```
+
+## 15. Literal actualNormalizationScale
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean", "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237", "bytes": 22137}`
+
+```lean
+namespace Shao.OQ6.ActualMomentNormalization
+noncomputable section
+open MeasureTheory
+open scoped BigOperators
+
+noncomputable def actualNormalizationScale
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ) : ℝ :=
+  Real.sqrt (∑ i : Fin n, ∫ ω, (actualCenteredFamily ν Y i ω) ^ 2 ∂ν)
+```
+
+## 16. Literal actualNormalizedFamily
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/ActualMomentNormalization.lean", "sha256": "7e781dc929166b43c69dd6ffe463c62e2d1508fa5283451852ea50afed18c237", "bytes": 22137}`
+
+```lean
+namespace Shao.OQ6.ActualMomentNormalization
+noncomputable section
+open MeasureTheory
+open scoped BigOperators
+
+noncomputable def actualNormalizedFamily
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) {n : ℕ} (Y : Fin n → Ω → ℝ)
+    (i : Fin n) (ω : Ω) : ℝ :=
+  Shao.OQ6.QuantizedObservationCoding.deterministicAffineObservation
+    (actualCoordinateMean ν Y i) (actualNormalizationScale ν Y) (Y i) ω
+```
+
+## 17. Original fixed-m0 observable transport: inspected but NOT called for a new model
+
+Source binding: `{"path": "C:/game/shao lean/library/Shao/OQ6/OriginalKernelObservableTransport.lean", "sha256": "616d2145fc8be92ac3d9aea92c28ab801e32b447ad62c4123838b45c95f1832f", "bytes": 13850}`
+
+```lean
+universe u v
+namespace Shao.OQ6.OriginalKernelObservableTransport
+noncomputable section
+open MeasureTheory
+open scoped MeasureTheory ENNReal
+
+theorem actual_normalized_kernel_observable_trim_transport
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    {J : Type v} [Fintype J]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (m₀ : MeasurableSpace Ω) (hm₀ : m₀ ≤ mΩ)
+    (hh₀ : Measurable[m₀.prod m₀, borel ℝ]
+      (fun t : Ω × Ω => h t.1 t.2)) :
+    let g : Ω → ℝ
+```
+
+## 18. Pinned Measurable.prodMk
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean", "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb", "bytes": 49519, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+variable {α β γ δ : Type*}
+variable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
+
+@[fun_prop]
+theorem Measurable.prodMk {β γ} {_ : MeasurableSpace β} {_ : MeasurableSpace γ} {f : α → β}
+    {g : α → γ} (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a)
+```
+
+## 19. Pinned measurable_pi_iff
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean", "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb", "bytes": 49519, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+variable {α β γ δ : Type*}
+variable {X : δ → Type*} [MeasurableSpace α]
+variable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]
+
+theorem measurable_pi_iff {g : α → ∀ a, X a} : Measurable g ↔ ∀ a, Measurable fun x => g x a
+```
+
+## 20. Pinned measurable_pi_apply
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Constructions.lean", "sha256": "03bdd1fd16c69f61acf8ae50d684f54c9b565d03c6fa880fc338fcbd3bbebadb", "bytes": 49519, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+variable {α β γ δ : Type*}
+variable {X : δ → Type*} [MeasurableSpace α]
+variable [∀ a, MeasurableSpace (X a)] [MeasurableSpace γ]
+
+@[fun_prop]
+theorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, X a => f a
+```
+
+## 21. Pinned Measurable.mono
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Basic.lean", "sha256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935", "bytes": 15859, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+variable {α β : Type*}
+
+theorem Measurable.mono {ma ma' : MeasurableSpace α} {mb mb' : MeasurableSpace β} {f : α → β}
+    (hf : @Measurable α β ma mb f) (ha : ma ≤ ma') (hb : mb' ≤ mb) : @Measurable α β ma' mb' f
+```
+
+## 22. Pinned measurable_id''
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/MeasurableSpace/Basic.lean", "sha256": "8cafe2d83ca194225b37f331c01ed08219f58541b6de0aa0d20a6866fa048935", "bytes": 15859, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+variable {α β : Type*}
+
+theorem measurable_id'' {m mα : MeasurableSpace α} (hm : m ≤ mα) : @Measurable α α mα m id
+```
+
+## 23. Pinned Measure.map_apply complete head and exact ambient
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/oq6-canonical-consumer-frontier-01/parent-api-01/map-probability-integrability-ae-pinned-api-01.json", "sha256": "e9411f724f8fbf57f74a07e8e2384d8dd2a2de2e1253b882ad856d55a1073f11", "bytes": 21850}, "primary": {"module": "Mathlib.MeasureTheory.Measure.Map", "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Map.lean", "sha256": "7bae8f174146d4ef4055f79757c2a0a3af6a9090dda3d28ea17fbd54540e9593"}}`
+
+```lean
+variable {α β γ : Type*}
+
+open Set Function ENNReal NNReal
+open Filter hiding map
+
+namespace MeasureTheory
+
+variable {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
+  {μ ν : Measure α} {s : Set α}
+
+namespace Measure
+
+variable {f : α → β}
+
+@[simp]
+theorem map_apply (hf : Measurable f) {s : Set β} (hs : MeasurableSet s) :
+    μ.map f s = μ (f ⁻¹' s)
+```
+
+## 24. Pinned MeasurePreserving structure with both exact fields
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/oq6-canonical-double-ghost-row-moments-188/author-stage1-01/primary-api-bindings.json", "sha256": "77a89f32d3c7b08d7c7c2cb8879f48c275a17dfba7eaf532db46e999fdee7097", "bytes": 63939}, "primary": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/Dynamics/Ergodic/MeasurePreserving.lean", "sha256": "c4623b5a97ea419bfa2698cc8643e1aa937a5e1fec3501bdb56e07159f0decde", "bytes": 11787, "mtime_ns": "1792382595000000000", "module": "Mathlib/Dynamics/Ergodic/MeasurePreserving.lean", "lines": [94, 96]}}`
+
+```lean
+variable {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
+
+namespace MeasureTheory
+
+variable {μa : Measure α} {μb : Measure β} {μc : Measure γ}
+
+structure MeasurePreserving (f : α → β)
+  (μa : Measure α := by volume_tac) (μb : Measure β := by volume_tac) : Prop where
+  protected measurable : Measurable f
+  protected map_eq : map f μa = μb
+```
+
+## 25. Pinned Measure.real literal definition RHS and measureReal_def
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/p53-label-law-measurable-real-api-addendum.json", "sha256": "5e455644dfc3b4a2ca5d6c009ce83f0ccb7336e38fabf4ac45621151f6cb8568", "bytes": 445371}, "primarySource": {"physical_path": "/root/rivermind-data/shao-lean-20261021/lean/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/MeasureSpaceDef.lean", "sha256": "3853c6899a36759a64c9658969fb2f1ea97f0d026598c0f0468c30fe2a5d7356", "bytes": 21465, "mtime_ns": "1792382595000000000"}}`
+
+```lean
+namespace MeasureTheory
+
+protected def Measure.real {α : Type*} {m : MeasurableSpace α} (μ : Measure α) (s : Set α) : ℝ :=
+  (μ s).toReal
+
+theorem measureReal_def {α : Type*} {m : MeasurableSpace α} (μ : Measure α) (s : Set α) :
+    μ.real s = (μ s).toReal := rfl
+
+alias Measure.real_def := measureReal_def
+```
+
+## 26. Pinned Real.sq_sqrt
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/oq6-eta-envelope-frontier-01/parent-api-01/sqrt-holder-pinned-api-02.json", "sha256": "46865070271951faf066cd5989ebcf9a6ba753398f44be972c8a4973e13461a5", "bytes": 22513}, "primary": {"module": "Mathlib.Analysis.Real.Sqrt", "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean", "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204"}}`
+
+```lean
+namespace Real
+variable {x y : ℝ}
+
+@[simp]
+theorem sq_sqrt (h : 0 ≤ x) : √x ^ 2 = x
+```
+
+## 27. Pinned Real.sqrt_nonneg
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/oq6-eta-envelope-frontier-01/parent-api-01/sqrt-holder-pinned-api-02.json", "sha256": "46865070271951faf066cd5989ebcf9a6ba753398f44be972c8a4973e13461a5", "bytes": 22513}, "primary": {"module": "Mathlib.Analysis.Real.Sqrt", "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean", "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204"}}`
+
+```lean
+namespace Real
+variable {x y : ℝ}
+
+@[simp] theorem sqrt_nonneg (x : ℝ) : 0 ≤ √x
+```
+
+## 28. Pinned Real.sqrt_pos
+
+Source binding: `{"packet": {"path": "C:/game/shao lean/drafts/oq56/next-source/oq6-eta-envelope-frontier-01/parent-api-01/sqrt-holder-pinned-api-02.json", "sha256": "46865070271951faf066cd5989ebcf9a6ba753398f44be972c8a4973e13461a5", "bytes": 22513}, "primary": {"module": "Mathlib.Analysis.Real.Sqrt", "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Analysis/Real/Sqrt.lean", "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204"}}`
+
+```lean
+namespace Real
+variable {x y : ℝ}
+
+@[simp]
+theorem sqrt_pos : 0 < √x ↔ 0 < x
+```
+
+## Exact generic specialization
+
+The COMPLETE specialized result follows. All15 lets belong to this API result scope; they are not permissions to create live proof aliases. Actual data arguments and every premise type are in INTERFACE-INVENTORY.json. Use relation `fun a b : ℝ => b ≤ a` and evaluate the generic real threshold at the fixed existing z.
+
+```lean
+    let η : Fin n → (Fin n → Ω × ℝ) → ℝ := Shao.OQ6.ActualMomentNormalization.actualNormalizedFamily ν (Y k)
+    let W : (Fin n → Ω × ℝ) → ℝ := fun ω => ∑ i : Fin n, ξ i ω
+    let Wη : (Fin n → Ω × ℝ) → ℝ := fun ω => ∑ i : Fin n, η i ω
+    let V : (Fin n → Ω × ℝ) → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (ξ i ω) ^ 2)
+    let Vη : (Fin n → Ω × ℝ) → ℝ := fun ω => Real.sqrt (∑ i : Fin n, (η i ω) ^ 2)
+    let b : (Fin n → Ω × ℝ) → ℝ := fun ω => Real.sqrt (1 + (fun x : Fin n → Ω × ℝ => D2 (q x)) ω)
+    let Dη : ℝ → (Fin n → Ω × ℝ) → ℝ := fun z ω => (fun x : Fin n → Ω × ℝ => D1 (q x)) ω + W ω - Wη ω + z * b ω * (Vη ω - V ω)
+    let T : (Fin n → Ω × ℝ) → ℝ := fun ω => if V ω = 0 then (fun _ : Fin n → Ω × ℝ => (0 : ℝ)) ω else (W ω + (fun x : Fin n → Ω × ℝ => D1 (q x)) ω) / (V ω * b ω)
+    let Tη : ℝ → (Fin n → Ω × ℝ) → ℝ := fun z ω => (Wη ω + Dη z ω) / (Vη ω * b ω)
+    let Z : Set (Fin n → Ω × ℝ) := {ω : (Fin n → Ω × ℝ) | V ω = 0}
+    let p0 : ℝ := ν.real Z
+    let comparisons : Set (ℝ → ℝ → Prop) := {R | R = (fun a b : ℝ => a ≤ b) ∨ R = (fun a b : ℝ => a < b) ∨ R = (fun a b : ℝ => b ≤ a) ∨ R = (fun a b : ℝ => b < a) ∨ R = (fun a b : ℝ => a = b)}
+    let F : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) := fun R z => {ω : (Fin n → Ω × ℝ) | R (W ω + (fun x : Fin n → Ω × ℝ => D1 (q x)) ω) (z * V ω * b ω)}
+    let A : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) := fun R z => {ω : (Fin n → Ω × ℝ) | R (T ω) z}
+    let E : (ℝ → ℝ → Prop) → ℝ → Set (Fin n → Ω × ℝ) := fun R z => {ω : (Fin n → Ω × ℝ) | R (Tη z ω) z}
+    (∀ i : Fin n, Measurable (η i)) ∧
+    Measurable W ∧ Measurable Wη ∧ Measurable V ∧ Measurable Vη ∧
+    Measurable b ∧ (∀ z : ℝ, Measurable (Dη z)) ∧
+    Measurable T ∧ (∀ z : ℝ, Measurable (Tη z)) ∧ MeasurableSet Z ∧
+    (∀ᵐ ω ∂ν, ∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+      (R (Tη z ω) z ↔ R (W ω + (fun x : Fin n → Ω × ℝ => D1 (q x)) ω) (z * V ω * b ω))) ∧
+    (∀ (ω : (Fin n → Ω × ℝ)), 0 < V ω → 0 < 1 + (fun x : Fin n → Ω × ℝ => D2 (q x)) ω →
+      ∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+        (R (T ω) z ↔ R (W ω + (fun x : Fin n → Ω × ℝ => D1 (q x)) ω) (z * V ω * b ω))) ∧
+    (∀ (z : ℝ) (R : ℝ → ℝ → Prop), R ∈ comparisons →
+      MeasurableSet (F R z) ∧ MeasurableSet (A R z) ∧ MeasurableSet (E R z) ∧
+      ν (E R z) = ν (F R z) ∧
+      (∀ᵐ ω ∂ν, ω ∈ (A R z ∆ F R z) → ω ∈ Z) ∧
+      ν (A R z ∆ F R z) ≤ ν Z ∧
+      |ν.real (A R z) - ν.real (F R z)| ≤ p0 ∧
+      ν (A R z ∆ E R z) ≤ ν Z ∧
+      |ν.real (A R z) - ν.real (E R z)| ≤ p0)
+```

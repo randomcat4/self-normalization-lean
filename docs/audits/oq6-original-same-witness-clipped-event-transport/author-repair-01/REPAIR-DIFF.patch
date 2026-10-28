@@ -1,0 +1,48 @@
+--- C:/game/shao lean/drafts/oq56/unit245/author-01/OriginalSameWitnessClippedEventTransport.lean
++++ C:/game/shao lean/drafts/oq56/unit245/author-repair-01/OriginalSameWitnessClippedEventTransport.lean
+@@ -2666,7 +2666,8 @@
+   have hIdm :
+       @Measurable (Fin n → Ω) (Fin n → Ω) mN mN₀ id :=
+     by
+-      apply measurable_pi_iff.mpr
++      apply (@measurable_pi_iff (Fin n → Ω) (Fin n)
++        (fun _ : Fin n => Ω) mN (fun _ : Fin n => m₀) id).mpr
+       intro i
+       exact (@measurable_id'' Ω m₀ mΩ hm₀).comp
+         (@measurable_pi_apply (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ) i)
+@@ -2894,13 +2895,33 @@
+       ν ({x : Fin n → Ω × ℝ | z ≤ Tη k x} ∆
+         {x : Fin n → Ω × ℝ | z ≤ T0 (q x)}) ≤ ν {x : Fin n → Ω × ℝ | V x = 0} :=
+     by
+-      simpa only [hT0Literal, symmDiff_comm] using (hGenericTransport.2.2.2.2.2.2.2.2.2.2.2.2 z (fun a b : ℝ => b ≤ a) hComparison).2.2.2.2.2.2.2.1
++      rw [show
++        {x : Fin n → Ω × ℝ | z ≤ T0 (q x)} =
++          {x : Fin n → Ω × ℝ | z ≤
++            if V x = 0 then (0 : ℝ) else
++              (W x + D1 (q x)) / (V x * Real.sqrt (1 + D2 (q x)))} from
++        congrArg
++          (fun f : (Fin n → Ω × ℝ) → ℝ => {x : Fin n → Ω × ℝ | z ≤ f x})
++          (funext hT0Literal)]
++      rw [symmDiff_comm]
++      exact (hGenericTransport.2.2.2.2.2.2.2.2.2.2.2.2 z (fun a b : ℝ => b ≤ a) hComparison).2.2.2.2.2.2.2.1
+   have hAbsAugmented :
+       |ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} -
+         ν.real {x : Fin n → Ω × ℝ | z ≤ T0 (q x)}| ≤
+         ν.real {x : Fin n → Ω × ℝ | V x = 0} :=
+     by
+-      simpa only [hT0Literal, abs_sub_comm] using (hGenericTransport.2.2.2.2.2.2.2.2.2.2.2.2 z (fun a b : ℝ => b ≤ a) hComparison).2.2.2.2.2.2.2.2
++      rw [abs_sub_comm
++        (ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x})
++        (ν.real {x : Fin n → Ω × ℝ | z ≤ T0 (q x)})]
++      rw [show
++        {x : Fin n → Ω × ℝ | z ≤ T0 (q x)} =
++          {x : Fin n → Ω × ℝ | z ≤
++            if V x = 0 then (0 : ℝ) else
++              (W x + D1 (q x)) / (V x * Real.sqrt (1 + D2 (q x)))} from
++        congrArg
++          (fun f : (Fin n → Ω × ℝ) → ℝ => {x : Fin n → Ω × ℝ | z ≤ f x})
++          (funext hT0Literal)]
++      exact (hGenericTransport.2.2.2.2.2.2.2.2.2.2.2.2 z (fun a b : ℝ => b ≤ a) hComparison).2.2.2.2.2.2.2.2
+   have hAbsOriginal :
+       |ν.real {x : Fin n → Ω × ℝ | z ≤ Tη k x} -
+         P.real {ζ : Fin n → Ω | z ≤ T0 ζ}| ≤
