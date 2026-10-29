@@ -1,0 +1,34 @@
+theorem actual_uniform_pmoment_low_energy
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (B : ℝ) (hB : 1 ≤ B) :
+    let q : ℝ := p / 2
+    let tB : ℝ := Real.rpow (1 / (4 * B)) (2 / (p - 2))
+    let cg : ℝ := tB / 4
+    1 < q ∧ q ≤ (3 / 2 : ℝ) ∧
+      0 < tB ∧ tB ≤ 1 ∧ 0 < cg ∧
+      B * Real.rpow tB (q - 1) = (1 / 4 : ℝ) ∧
+      ∀ {Ω : Type u} [mΩ : MeasurableSpace Ω]
+        (μ : Measure Ω) [IsProbabilityMeasure μ]
+        (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)
+        (hgsecond : (∫ o : Ω, g o ^ (2 : ℕ) ∂μ) = 1)
+        (hgp : Integrable (fun o : Ω => Real.rpow |g o| p) μ)
+        (hβBound : (∫ o : Ω, Real.rpow |g o| p ∂μ) ≤ B),
+        let f : Ω → ℝ := fun o => Real.exp (-tB * g o ^ (2 : ℕ))
+        let L : ℝ := ∫ o : Ω, f o ∂μ
+        Measurable f ∧ Integrable f μ ∧ 0 ≤ L ∧
+          L ≤ 1 - 3 * tB / 4 ∧ L ≤ Real.exp (-3 * tB / 4) ∧
+          ∀ n : ℕ,
+            let mN : MeasurableSpace (Fin n → Ω) :=
+              @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+            let P : @Measure (Fin n → Ω) mN :=
+              @Measure.pi (Fin n) (fun _ : Fin n => Ω) (Fin.fintype n)
+                (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+            let S : (Fin n → Ω) → ℝ := fun ζ => ∑ i : Fin n, g (ζ i) ^ (2 : ℕ)
+            let F : (Fin n → Ω) → ℝ := fun ζ => Real.exp (-tB * S ζ)
+            IsProbabilityMeasure P ∧ Measurable S ∧
+              MeasurableSet {ζ : Fin n → Ω | S ζ ≤ (n : ℝ) / 2} ∧
+              Measurable F ∧ Integrable F P ∧
+              (∫ ζ : Fin n → Ω, F ζ ∂P) = L ^ n ∧
+              (∫ ζ : Fin n → Ω, F ζ ∂P) ≤ Real.exp (-3 * tB * (n : ℝ) / 4) ∧
+              P.real {ζ : Fin n → Ω | S ζ ≤ (n : ℝ) / 2} ≤
+                Real.exp (-cg * (n : ℝ))
