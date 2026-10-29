@@ -1,0 +1,14 @@
+--- freeze-01/FROZEN-HEAD.txt
++++ declaration-repair-01/ATOM-DECIDABLE-HEAD.txt
+@@ -48,8 +48,9 @@
+             (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+         let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+         let physical : (Fin n → Ω) → ℝ := fun ζ =>
+-          if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
+-            (projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ)
++          @ite ℝ (Real.sqrt (centeredSq n g r ζ) = 0)
++            (Real.decidableEq (Real.sqrt (centeredSq n g r ζ)) 0) 0
++            ((projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ))
+         |P.real {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z - 1| ≤
+           Ktail * (β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+             (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ))
