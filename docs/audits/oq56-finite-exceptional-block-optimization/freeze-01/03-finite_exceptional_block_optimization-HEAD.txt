@@ -1,0 +1,18 @@
+theorem finite_exceptional_block_optimization
+    (n : ℕ) (b : Fin n → ℝ) (B : Finset (Fin n)) (c : ℝ)
+    (hn : 2 ≤ n) (hB : B.Nonempty)
+    (hQb : 0 < ∑ i ∈ B,
+      (b i - (∑ j ∈ B, b j) / (B.card : ℝ)) ^ (2 : ℕ)) :
+    let muB : ℝ := (∑ i ∈ B, b i) / (B.card : ℝ)
+    let Qb : ℝ := ∑ i ∈ B, (b i - muB) ^ (2 : ℕ)
+    let Q : ℝ := ∑ i : Fin n,
+      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)
+    let T : ℝ := @ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))
+      0
+      (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *
+        ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q)
+    0 < Q ∧
+      (max T 0) ^ (2 : ℕ) ≤
+        ((n : ℝ) - 1) *
+          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +
+            ((Finset.univ \ B).card : ℝ) / (B.card : ℝ))

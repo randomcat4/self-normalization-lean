@@ -1,0 +1,174 @@
+private theorem finite_physical_centered_projection_bridge
+    (n : ℕ) (hn : 4 ≤ n)
+    {Ω : Type u} (h : Ω → Ω → ℝ) (g : Ω → ℝ)
+    (hhsymm : ∀ a b : Ω, h a b = h b a) :
+    let r : Ω → Ω → ℝ := fun a b => h a b - g a - g b
+    let U : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.uStatistic (fun i j => h (ζ i) (ζ j))
+    let R2 : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.jackknifeSq (fun i j => h (ζ i) (ζ j))
+    let s : (Fin n → Ω) → ℝ := fun ζ => Real.sqrt (centeredSq n g r ζ)
+    ∀ ζ : Fin n → Ω,
+      (if 0 < R2 ζ then Real.sqrt (n : ℝ) * U ζ / Real.sqrt (R2 ζ) else 0) =
+        (if s ζ = 0 then 0 else
+          (projectionW n g ζ + residualStatisticD n r ζ) / s ζ)
+private theorem half_sample_and_mean_rate_bounds
+    (p J Kmean : ℝ) (hp : 2 < p ∧ p ≤ 3)
+    (hJ : (1 / 2 : ℝ) ≤ J) (hKmean : 0 ≤ Kmean)
+    (n m : ℕ) (hn : 1 ≤ n) (hnm : n ≤ 2 * m) :
+    let a : ℝ := (p - 2) / 2
+    Real.rpow (m : ℝ) (-a) ≤ 2 * Real.rpow (n : ℝ) (-a) ∧
+      1 / Real.sqrt (m : ℝ) ≤ 2 / Real.sqrt (n : ℝ) ∧
+      2 * Kmean * Real.rpow (n : ℝ) (-J) ≤
+        2 * Kmean / Real.sqrt (n : ℝ)
+private theorem eventual_near_window_and_exception_rate
+    (p t0 ccenter : ℝ) (hp2 : 2 < p)
+    (ht0 : 0 < t0) (hccenter : 0 < ccenter) :
+    ∃ N : ℕ, 8 ≤ N ∧
+      ∀ n : ℕ, N ≤ n →
+        (3 : ℝ) ≤ ccenter * Real.rpow (n : ℝ) ((p - 2) / (2 * p)) ∧
+          ∀ m : ℕ, n ≤ 2 * m →
+            Real.exp (-(t0 / 2) * Real.rpow (m : ℝ) (1 / 3 : ℝ)) ≤
+              2 / Real.sqrt (n : ℝ)
+private theorem near_closed_tail_sandwich_and_rate
+    {X : Type u} [MeasurableSpace X]
+    (P : Measure X) [IsProbabilityMeasure P]
+    (Tcenter Tuncenter : X → ℝ)
+    (hTcenter : Measurable Tcenter) (hTuncenter : Measurable Tuncenter)
+    (Hgood : Set X) (hHgood : MeasurableSet Hgood)
+    (δ E D Dδ : ℝ)
+    (hδ0 : 0 ≤ δ) (hδhalf : δ ≤ (1 / 2 : ℝ))
+    (hE : 0 ≤ E) (hD : 0 ≤ D) (hDδ : 0 ≤ Dδ)
+    (hδrate : δ ≤ Dδ * E)
+    (hshift : ∀ ξ : X, ξ ∈ Hgood → |Tuncenter ξ - Tcenter ξ| ≤ δ)
+    (hbad : P.real Hgoodᶜ / Shao.standardNormalTail 2 ≤ 2 * E)
+    (hcenter : ∀ v : ℝ, (1 / 2 : ℝ) ≤ v → v ≤ (5 / 2 : ℝ) →
+      |P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail v| ≤ D * E)
+    (z : ℝ) (hz1 : (1 : ℝ) ≤ z) (hz2 : z ≤ (2 : ℝ)) :
+    P.real {ξ : X | z + δ ≤ Tcenter ξ} - P.real Hgoodᶜ ≤
+        P.real {ξ : X | z ≤ Tuncenter ξ} ∧
+      P.real {ξ : X | z ≤ Tuncenter ξ} ≤
+        P.real {ξ : X | z - δ ≤ Tcenter ξ} + P.real Hgoodᶜ ∧
+      |P.real {ξ : X | z ≤ Tuncenter ξ} / Shao.standardNormalTail z - 1| ≤
+        ((D + Dδ) / Shao.standardNormalTail 2 + 2) * E
+theorem actual_original_logarithmic_conditional_full_window_uncentered_physical_tail
+    {Ω : Type u} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))
+    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (w : Ω → ℝ) (hw : Measurable w)
+    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)
+    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)
+    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)
+    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),
+      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤
+        w z.1 * w z.2)
+    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)
+    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)
+    (J : ℝ) (hJ : (1 / 2 : ℝ) ≤ J)
+    (cSZ C1 C2 C3 C4 : ℝ)
+    (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+      cSZ C1 C2 C3 C4)
+    (CCDF : ℝ)
+    (hSZC : Shao.OQ6.NormalizedIntegrableCDFAssembly.ScalarShaoZhouFiniteCostCDFInput.{u} CCDF)
+    (t0 : ℝ) (ht0 : 0 < t0) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ
+    let B : ℝ := Real.rpow β (1 / p)
+    let M2 : ℝ := ∫ o, w o ^ 2 ∂μ
+    let W2 : ℝ := Real.sqrt M2
+    let Mexp : ℝ := ∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ
+    let e : ℝ := 1 - 2 / p
+    let t : ℝ := 1 - 1 / p
+    let A : ℝ := 2 * (J + 1) / e
+    let qpow : ℝ := (p - 2) / (2 * p)
+    let Cmean : ℝ := 4 * (1 + B)
+    let Kmean : ℝ := Cmean * (Real.rpow Mexp t + W2 ^ 2 * Mexp)
+    let Cenv : ℝ := 2 * (1 + 2 * W2) ^ 2
+    let Menv : ℝ := 2 * Cenv * M2
+    let cg : ℝ := Real.rpow (1 / (4 * (2 * β))) (2 / (p - 2)) / 4
+    1 ≤ β ∧ 0 < A ∧ 0 < cg ∧
+      ∃ c K : ℝ, 0 < c ∧ 0 < K ∧
+      ∃ N : ℕ, 8 ≤ N ∧
+      ∀ n : ℕ, N ≤ n →
+      let Rn : ℝ := Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)
+      let Cn : Set Ω := {o : Ω | w o ≤ Rn}
+      let dn : ℝ := μ.real Cn
+      let νn : Measure Ω := (μ Cn)⁻¹ • μ.restrict Cn
+      let δn : ℝ := 2 * Kmean * Real.rpow (n : ℝ) (-J)
+      (2 : ℝ) ≤ c * Real.rpow (n : ℝ) qpow ∧
+        MeasurableSet Cn ∧ (1 / 2 : ℝ) ≤ dn ∧ IsProbabilityMeasure νn ∧
+        0 ≤ δn ∧ δn ≤ (1 / 2 : ℝ) ∧
+        (∀ lam : ℝ, 0 ≤ lam ∧ lam ≤ 1 →
+          let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y
+          let κ : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(νn.prod νn)
+          let G : Ω → ℝ := fun o => (∫ y, H o y ∂νn) - κ
+          let σ2 : ℝ := ∫ o, G o ^ 2 ∂νn
+          let σ : ℝ := Real.sqrt σ2
+          let Hstd : Ω → Ω → ℝ := fun o y => (H o y - κ) / σ
+          let gstd : Ω → ℝ := fun o => ∫ y, Hstd o y ∂νn
+          let rstd : Ω → Ω → ℝ := fun o y => Hstd o y - gstd o - gstd y
+          (1 / 2 : ℝ) ≤ σ ∧
+          (∀ m : ℕ, n ≤ 2 * m → m ≤ n →
+            let P : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => νn)
+            let Pμ : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => μ)
+            let allGood : Set (Fin m → Ω) := {ζ | ∀ i : Fin m, ζ i ∈ Cn}
+            let sampleH : (Fin m → Ω) → Fin m → Fin m → ℝ :=
+              fun ζ i j => H (ζ i) (ζ j)
+            let U : (Fin m → Ω) → ℝ :=
+              fun ζ => Shao.OQ6.FiniteRows.uStatistic (sampleH ζ)
+            let RH : (Fin m → Ω) → ℝ :=
+              fun ζ => Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq (sampleH ζ))
+            let sstd : (Fin m → Ω) → ℝ :=
+              fun ζ => Real.sqrt (centeredSq m gstd rstd ζ)
+            let Tcenter : (Fin m → Ω) → ℝ := fun ζ =>
+              if RH ζ = 0 then 0 else Real.sqrt (m : ℝ) * (U ζ - κ) / RH ζ
+            let Tuncenter : (Fin m → Ω) → ℝ := fun ζ =>
+              if RH ζ = 0 then 0 else Real.sqrt (m : ℝ) * U ζ / RH ζ
+            4 ≤ m ∧ IsProbabilityMeasure P ∧ IsProbabilityMeasure Pμ ∧
+              Measurable Tcenter ∧ Measurable Tuncenter ∧
+              MeasurableSet allGood ∧ Pμ.real allGood = dn ^ m ∧
+              P = (Pμ allGood)⁻¹ • Pμ.restrict allGood ∧
+              (∀ E : Set (Fin m → Ω), MeasurableSet E →
+                P.real E = Pμ.real (E ∩ allGood) / dn ^ m) ∧
+              Real.sqrt (m : ℝ) * |κ| ≤ Kmean * Real.rpow (n : ℝ) (-J) ∧
+              (∀ ζ : Fin m → Ω, RH ζ = 2 * σ * sstd ζ) ∧
+              (∀ z : ℝ, 1 ≤ z → z ≤ c * Real.rpow (n : ℝ) qpow →
+                let qm : ℝ := boundedPolylogMomentOrder t0 m
+                let Ktail : ℝ := Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv
+                let Crows : Set (Fin m → Ω) := {ζ |
+                  |Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper m rstd ζ| ≤
+                    Ktail * (m : ℝ) * qm ∧
+                  ‖Shao.OQ6.CanonicalDoubleGhostRowMoments.originalRows m rstd ζ‖ ^ 2 ≤
+                    Ktail * (m : ℝ) ^ 2 * qm}
+                let Hgood : Set (Fin m → Ω) := projectionGood m gstd (max 2 z) ∩ Crows
+                let payment : ℝ :=
+                  3 * Real.exp (-qm) + Real.exp (-cg * (m : ℝ)) +
+                    4 * Real.exp (-((max 2 z) * Real.sqrt (m : ℝ)) / 2)
+                MeasurableSet Hgood ∧
+                  (∀ ζ : Fin m → Ω, ζ ∈ Hgood →
+                    (1 / 2 : ℝ) ≤ RH ζ ∧
+                    |Real.sqrt (m : ℝ) * κ / RH ζ| ≤ δn ∧
+                    |Tuncenter ζ - Tcenter ζ| ≤ δn) ∧
+                  P.real Hgoodᶜ ≤ payment ∧
+                  P.real Hgoodᶜ / Shao.standardNormalTail z ≤
+                    Real.exp (-(t0 / 2) * Real.rpow (m : ℝ) (1 / 3 : ℝ)) ∧
+                  P.real {ζ : Fin m → Ω | z + δn ≤ Tcenter ζ} - P.real Hgoodᶜ ≤
+                    P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} ∧
+                  P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} ≤
+                    P.real {ζ : Fin m → Ω | z - δn ≤ Tcenter ζ} + P.real Hgoodᶜ ∧
+                  |P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} /
+                      Shao.standardNormalTail z - 1| ≤
+                    K * (β * Real.rpow (1 + z) p *
+                      Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+                      (1 + z) ^ 3 / Real.sqrt (n : ℝ)) ∧
+                  |(Pμ.real ({ζ : Fin m → Ω | z ≤ Tuncenter ζ} ∩ allGood) / dn ^ m) /
+                      Shao.standardNormalTail z - 1| ≤
+                    K * (β * Real.rpow (1 + z) p *
+                      Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+                      (1 + z) ^ 3 / Real.sqrt (n : ℝ)))))

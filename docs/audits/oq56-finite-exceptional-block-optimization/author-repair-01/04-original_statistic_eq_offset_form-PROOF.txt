@@ -1,0 +1,62 @@
+:= by
+  classical
+  intro b F c Q s
+  let N : ℝ := (n : ℝ)
+  have hN4 : (4 : ℝ) ≤ N := by
+    change (4 : ℝ) ≤ (n : ℝ)
+    exact_mod_cast hn
+  have hN : 0 < N := by linarith
+  have hNm : 0 < N - 1 := by linarith
+  have hN2 : N - 2 ≠ 0 := by linarith
+  have hrootN : 0 < Real.sqrt N := Real.sqrt_pos.mpr hN
+  have hrootNm : 0 < Real.sqrt (N - 1) := Real.sqrt_pos.mpr hNm
+  have hrows :
+      (∑ i : Fin n, ∑ j ∈ Finset.univ.erase i, r (x i) (x j)) = 2 * F := by
+    simpa only [F, Shao.OQ5.P35.unorderedPairSum,
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper] using
+      (Shao.OQ5.P35.offDiagonalSum_eq_two_unordered
+        (fun i j : Fin n => r (x i) (x j))
+        (fun i j => hsym (x i) (x j)))
+  have hsumU : (∑ i : Fin n, Shao.OQ5.P51.residualU n r x i) =
+      2 * F / (N - 2) := by
+    simp_rw [Shao.OQ5.P51.residualU_eq_erased_row]
+    rw [← Finset.sum_div, hrows]
+  have hsumB : (∑ i : Fin n, b i) =
+      (∑ i : Fin n, g (x i)) + 2 * F / (N - 2) := by
+    dsimp only [b]
+    rw [Finset.sum_add_distrib, hsumU]
+  have hnum : Shao.OQ5.P51.projectionW n g x +
+      Shao.OQ5.P51.residualStatisticD n r x =
+      ((∑ i : Fin n, b i) - N * c) / Real.sqrt N := by
+    unfold Shao.OQ5.P51.projectionW Shao.OQ5.P51.residualStatisticD
+    change (∑ i : Fin n, g (x i)) / Real.sqrt N +
+      F / (Real.sqrt N * (N - 1)) =
+        ((∑ i : Fin n, b i) - N * c) / Real.sqrt N
+    rw [hsumB]
+    change (∑ i : Fin n, g (x i)) / Real.sqrt N + F / (Real.sqrt N * (N - 1)) =
+      ((∑ i : Fin n, g (x i)) + 2 * F / (N - 2) -
+        N * (F / ((N - 1) * (N - 2)))) / Real.sqrt N
+    field_simp [ne_of_gt hrootN, ne_of_gt hNm, hN2] <;> ring
+  have hS2 : Shao.OQ5.P51.centeredSq n g r x = Q / (N - 1) :=
+    Shao.OQ5.P51.centeredSq_eq_center_sum n g r x hsym hn
+  have hQ0 : 0 ≤ Q := Finset.sum_nonneg (fun i _ => sq_nonneg _)
+  have hsform : s = Real.sqrt Q / Real.sqrt (N - 1) := by
+    change Real.sqrt (Shao.OQ5.P51.centeredSq n g r x) = _
+    rw [hS2, Real.sqrt_div hQ0]
+  have hscale : Real.sqrt ((N - 1) / N) =
+      Real.sqrt (N - 1) / Real.sqrt N := Real.sqrt_div hNm.le N
+  by_cases hQzero : Q = 0
+  · have hszero : s = 0 := by
+      rw [hsform, hQzero, Real.sqrt_zero, zero_div]
+    simp only [hszero, hQzero, ite_true]
+  · have hQpos : 0 < Q := by
+      by_contra hnot
+      apply hQzero
+      linarith only [hQ0, le_of_not_gt hnot]
+    have hrootQ : 0 < Real.sqrt Q := Real.sqrt_pos.mpr hQpos
+    have hspos : 0 < s := by
+      rw [hsform]
+      exact div_pos hrootQ hrootNm
+    simp only [if_neg (ne_of_gt hspos), if_neg hQzero]
+    rw [hnum, hsform, hscale]
+    field_simp [ne_of_gt hrootN, ne_of_gt hrootNm, ne_of_gt hrootQ] <;> ring

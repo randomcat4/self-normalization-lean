@@ -1,0 +1,43 @@
+:= by
+  intro a
+  have ha0 : 0 < a := by dsimp only [a]; linarith only [hp.1]
+  have haHalf : a ≤ (1 / 2 : ℝ) := by dsimp only [a]; linarith only [hp.2]
+  have hnOne : (1 : ℝ) ≤ n := by exact_mod_cast hn
+  have hnpos : 0 < (n : ℝ) := by linarith only [hnOne]
+  have hmpos : 0 < (m : ℝ) := by exact_mod_cast (by omega : 0 < m)
+  have hhalf : (n : ℝ) / 2 ≤ (m : ℝ) := by
+    have hh : (n : ℝ) ≤ 2 * (m : ℝ) := by exact_mod_cast hnm
+    linarith only [hh]
+  have hTwoA : Real.rpow 2 a ≤ (2 : ℝ) := by
+    have hh := Real.rpow_le_rpow_of_exponent_le
+      (by norm_num : (1 : ℝ) ≤ 2) (show a ≤ 1 by linarith only [haHalf])
+    simpa only [Real.rpow_one] using hh
+  have hPowerEq : Real.rpow ((n : ℝ) / 2) (-a) =
+      Real.rpow 2 a * Real.rpow (n : ℝ) (-a) := by
+    rw [Real.div_rpow hnpos.le (by norm_num : (0 : ℝ) ≤ 2),
+      Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 2), div_inv_eq_mul]
+    ring
+  have hPower : Real.rpow (m : ℝ) (-a) ≤ 2 * Real.rpow (n : ℝ) (-a) := by
+    calc
+      _ ≤ Real.rpow ((n : ℝ) / 2) (-a) :=
+        Real.rpow_le_rpow_of_nonpos (div_pos hnpos (by norm_num)) hhalf
+          (neg_nonpos.mpr ha0.le)
+      _ = _ := hPowerEq
+      _ ≤ _ := mul_le_mul_of_nonneg_right hTwoA (Real.rpow_nonneg hnpos.le _)
+  have hRoot : Real.sqrt (n : ℝ) ≤ 2 * Real.sqrt (m : ℝ) := by
+    apply (sq_le_sq₀ (Real.sqrt_nonneg (n : ℝ))
+      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (Real.sqrt_nonneg (m : ℝ)))).mp
+    rw [mul_pow, Real.sq_sqrt hnpos.le, Real.sq_sqrt hmpos.le]
+    nlinarith only [hhalf]
+  have hInverse : 1 / Real.sqrt (m : ℝ) ≤ 2 / Real.sqrt (n : ℝ) := by
+    apply (div_le_div_iff₀ (Real.sqrt_pos.mpr hmpos) (Real.sqrt_pos.mpr hnpos)).2
+    simpa only [one_mul] using hRoot
+  have hNegJ : Real.rpow (n : ℝ) (-J) ≤ Real.rpow (n : ℝ) (-(1 / 2 : ℝ)) :=
+    Real.rpow_le_rpow_of_exponent_le hnOne (by linarith only [hJ])
+  refine ⟨hPower, hInverse, ?_⟩
+  calc
+    _ ≤ 2 * Kmean * Real.rpow (n : ℝ) (-(1 / 2 : ℝ)) :=
+      mul_le_mul_of_nonneg_left hNegJ (mul_nonneg (by norm_num) hKmean)
+    _ = _ := by
+      rw [Real.rpow_neg hnpos.le, ← Real.sqrt_eq_rpow]
+      ring

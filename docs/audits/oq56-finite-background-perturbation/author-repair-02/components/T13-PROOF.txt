@@ -1,0 +1,29 @@
+:= by
+  classical
+  have hN4 : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hd : (0 : ℝ) < (n : ℝ) - 2 := by linarith
+  have habs (S : Finset (Fin n)) (f : Fin n → ℝ) :
+      |∑ a ∈ S, f a| ≤ ∑ a ∈ S, |f a| := by
+    induction S using Finset.induction_on with
+    | empty => simp
+    | @insert a S ha ih =>
+      simp only [Finset.sum_insert ha]
+      exact le_trans (abs_add_le _ _) (add_le_add (le_refl |f a|) ih)
+  rw [adjustedRow_sub_backgroundRow B g r i hi, abs_div, abs_of_pos hd]
+  apply (div_le_div_iff_of_pos_right hd).2
+  calc
+    |∑ a ∈ anomaly B, r i a| ≤ ∑ a ∈ anomaly B, |r i a| := habs _ _
+    _ ≤ ∑ a ∈ anomaly B, w i * w a := by
+      apply Finset.sum_le_sum
+      intro a ha
+      have hai : a ≠ i := by
+        intro heq
+        subst a
+        exact (Finset.mem_sdiff.mp ha).2 hi
+      exact henv i a hai.symm
+    _ = anomalyWeight B w * w i := by
+      unfold anomalyWeight
+      rw [Finset.sum_mul]
+      apply Finset.sum_congr rfl
+      intro a ha
+      ring

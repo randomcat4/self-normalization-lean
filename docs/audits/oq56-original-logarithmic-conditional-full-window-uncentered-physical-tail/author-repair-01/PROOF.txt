@@ -1,0 +1,324 @@
+:= by
+  classical
+  intro g r β B M2 W2 Mexp e t A qpow Cmean Kmean Cenv Menv cg
+  have hJ0 : 0 ≤ J := by linarith only [hJ]
+  rcases Shao.OQ6.OriginalLogarithmicConditionalUncenteredPhysicalTail.actual_original_logarithmic_conditional_uncentered_physical_tail
+      μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+      hwexp henvelope p hp hgp J hJ cSZ C1 C2 C3 C4 hSZ t0 ht0 with
+    ⟨hβ, hA, hcg, c274, K274, hc274, hK274, N274, hN274, hFar⟩
+  change 1 ≤ β at hβ
+  change 0 < A at hA
+  change 0 < cg at hcg
+  rcases Shao.OQ6.OriginalLogarithmicConditionalCenteredPhysicalTail.actual_original_logarithmic_conditional_standardized_model_and_centered_physical_tail
+      μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+      hwexp henvelope p hp hgp J hJ0 cSZ C1 C2 C3 C4 hSZ t0 ht0 with
+    ⟨_, _, _, _, _, _, ccenter, Kcenter, hccenter, hKcenter,
+      Ncenter, hNcenter, hCenterAll⟩
+  have hBudget : 1 ≤ 2 * β := by linarith only [hβ]
+  have hCDFClass :=
+    Shao.OQ6.UniformPMomentOriginalPhysicalCompactCDF.uniform_pmoment_original_physical_compact_cdf_tail_rpow_rate
+      CCDF hSZC p hp.1 hp.2 (2 * β) hBudget
+  rcases hCDFClass with ⟨_, Kcdf, hKcdf, hCDFAll⟩
+  have hp0 : 0 < p := lt_trans (by norm_num) hp.1
+  have hβ0 : 0 ≤ β := le_trans zero_le_one hβ
+  have hB0 : 0 ≤ B := Real.rpow_nonneg hβ0 _
+  have hMexp0 : 0 ≤ Mexp := by
+    change 0 ≤ ∫ o, Real.exp (τ * Real.rpow (w o) α) ∂μ
+    exact integral_nonneg (fun _ => (Real.exp_pos _).le)
+  have hKmean : 0 ≤ Kmean := by
+    change 0 ≤ 4 * (1 + B) * (Real.rpow Mexp t + W2 ^ 2 * Mexp)
+    exact mul_nonneg
+      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 4) (add_nonneg zero_le_one hB0))
+      (add_nonneg (Real.rpow_nonneg hMexp0 t) (mul_nonneg (sq_nonneg W2) hMexp0))
+  let a : ℝ := (p - 2) / 2
+  let RhoBound : ℝ := 4 * Cenv ^ 2 * M2 ^ 2
+  let S : ℝ := 1 + Real.sqrt RhoBound
+  let D : ℝ := (4 + 2 * S) * Kcdf + 64 * Kcenter
+  let Knear : ℝ := (D + 2 * Kmean) / Shao.standardNormalTail 2 + 2
+  let Kfull : ℝ := 1 + K274 + Knear
+  have hS : 0 ≤ S := by dsimp only [S]; positivity
+  have hD : 0 ≤ D := by dsimp only [D]; positivity
+  have hΨ2 : 0 < Shao.standardNormalTail 2 := (Shao.standardNormalTail_basic.2.2.1 2).1
+  have hKnear : 0 < Knear := by dsimp only [Knear]; positivity
+  have hKfull : 0 < Kfull := by dsimp only [Kfull]; positivity
+  have hKnearLe : Knear ≤ Kfull := by dsimp only [Kfull]; linarith only [hK274]
+  have hK274Le : K274 ≤ Kfull := by dsimp only [Kfull]; linarith only [hKnear]
+  obtain ⟨Nnear, hNnear8, hNearAll⟩ :=
+    eventual_near_window_and_exception_rate p t0 ccenter hp.1 ht0 hccenter
+  let N : ℕ := max N274 (max Ncenter Nnear)
+  refine ⟨hβ, hA, hcg, c274, Kfull, hc274, hKfull, N,
+    hN274.trans (le_max_left _ _), ?_⟩
+  intro n hn
+  have hnFar : N274 ≤ n := (le_max_left _ _).trans hn
+  have hnRest : max Ncenter Nnear ≤ n := (le_max_right _ _).trans hn
+  have hnCenter : Ncenter ≤ n := (le_max_left _ _).trans hnRest
+  have hnNear : Nnear ≤ n := (le_max_right _ _).trans hnRest
+  have hn8 : 8 ≤ n := hN274.trans hnFar
+  have hnpos : 0 < (n : ℝ) := by exact_mod_cast (by omega : 0 < n)
+  have hRootN : 0 < Real.sqrt (n : ℝ) := Real.sqrt_pos.mpr hnpos
+  let Rn : ℝ := Real.rpow (A * Real.log (n : ℝ) / τ) (1 / α)
+  let Cn : Set Ω := {o | w o ≤ Rn}
+  let dn : ℝ := μ.real Cn
+  let νn : Measure Ω := (μ Cn)⁻¹ • μ.restrict Cn
+  let δn : ℝ := 2 * Kmean * Real.rpow (n : ℝ) (-J)
+  rcases hFar n hnFar with ⟨hWindow, hCn, hdn, hνn, hδ0, hδHalf, hFarLam⟩
+  rcases hCenterAll n hnCenter with ⟨_, _, _, _, _, _, _, _, hCenterLam⟩
+  have hNearN := hNearAll n hnNear
+  letI : IsProbabilityMeasure νn := hνn
+  refine ⟨hWindow, hCn, hdn, hνn, hδ0, hδHalf, ?_⟩
+  intro lam hLam
+  let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y
+  let κ : ℝ := ∫ z : Ω × Ω, H z.1 z.2 ∂(νn.prod νn)
+  let G : Ω → ℝ := fun o => (∫ y, H o y ∂νn) - κ
+  let σ2 : ℝ := ∫ o, G o ^ 2 ∂νn
+  let σ : ℝ := Real.sqrt σ2
+  let Hstd : Ω → Ω → ℝ := fun o y => (H o y - κ) / σ
+  let gstd : Ω → ℝ := fun o => ∫ y, Hstd o y ∂νn
+  let rstd : Ω → Ω → ℝ := fun o y => Hstd o y - gstd o - gstd y
+  let βstd : ℝ := ∫ o, Real.rpow |gstd o| p ∂νn
+  let ρstd : ℝ := Real.sqrt (∫ z : Ω × Ω, rstd z.1 z.2 ^ 2 ∂(νn.prod νn))
+  rcases hFarLam lam hLam with ⟨hσlow, hFarSamples⟩
+  rcases hCenterLam lam hLam with
+    ⟨hσ2low, hσ2up, hσlowC, hσpos, hσsq, hVariance,
+      hHstdm, hHstd2, hHstdsym, hHstdMean, hgstdSecond,
+      hgstdm, hgstd2, hgstdMean, hgstdAE, hrstdAE, hgstdp,
+      hβstdLow, hβstdBound, hrstd2, hrstdCan, hρstd0, hρstdBound,
+      hwstdm, hwstd0, hwstdSq, hwstdSqBound, hrstdEnv, hCenterSamples⟩
+  change 1 ≤ βstd at hβstdLow
+  change βstd ≤ 2 * β at hβstdBound
+  change 0 ≤ ρstd at hρstd0
+  change ρstd ≤ Real.sqrt RhoBound at hρstdBound
+  have hCDFModel := hCDFAll νn Hstd hHstdm hHstd2 hHstdsym
+    hHstdMean hgstdSecond hgstdp hβstdBound
+  refine ⟨hσlow, ?_⟩
+  intro m hnm hmn
+  let P : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => νn)
+  let Pμ : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => μ)
+  let allGood : Set (Fin m → Ω) := {ζ | ∀ i : Fin m, ζ i ∈ Cn}
+  let sampleH : (Fin m → Ω) → Fin m → Fin m → ℝ := fun ζ i j => H (ζ i) (ζ j)
+  let U : (Fin m → Ω) → ℝ := fun ζ => Shao.OQ6.FiniteRows.uStatistic (sampleH ζ)
+  let RH : (Fin m → Ω) → ℝ := fun ζ => Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq (sampleH ζ))
+  let sstd : (Fin m → Ω) → ℝ := fun ζ => Real.sqrt (centeredSq m gstd rstd ζ)
+  let Tcenter : (Fin m → Ω) → ℝ := fun ζ =>
+    if RH ζ = 0 then 0 else Real.sqrt (m : ℝ) * (U ζ - κ) / RH ζ
+  let Tuncenter : (Fin m → Ω) → ℝ := fun ζ =>
+    if RH ζ = 0 then 0 else Real.sqrt (m : ℝ) * U ζ / RH ζ
+  let Tstd : (Fin m → Ω) → ℝ := fun ζ =>
+    if sstd ζ = 0 then 0 else (projectionW m gstd ζ + residualStatisticD m rstd ζ) / sstd ζ
+  rcases hFarSamples m hnm hmn with
+    ⟨hm4, hP, hPμ, hTcMeas, hTuMeas, hallMeas, hallMass,
+      hLaw, hLawReal, hMean, hScale, hFarZ⟩
+  rcases hCenterSamples m hnm hmn with
+    ⟨hm4C, hPC, hPμC, hallMeasC, hallMassC, hLawC, hLawRealC, hwHeight,
+      hMeanC, hTcMeasC, hTuMeasC, hTsMeas, hStats, hMap, hCentered⟩
+  letI : IsProbabilityMeasure P := hP
+  letI : IsProbabilityMeasure Pμ := hPμ
+  have hmpos : 0 < (m : ℝ) := by exact_mod_cast (by omega : 0 < m)
+  let R2std : (Fin m → Ω) → ℝ := fun ζ =>
+    Shao.OQ6.FiniteRows.jackknifeSq (fun i j => Hstd (ζ i) (ζ j))
+  let Ustd : (Fin m → Ω) → ℝ := fun ζ =>
+    Shao.OQ6.FiniteRows.uStatistic (fun i j => Hstd (ζ i) (ζ j))
+  let Tphysicalstd : (Fin m → Ω) → ℝ := fun ζ =>
+    if 0 < R2std ζ then Real.sqrt (m : ℝ) * Ustd ζ / Real.sqrt (R2std ζ) else 0
+  have hPhysicalStd : ∀ ζ : Fin m → Ω, Tphysicalstd ζ = Tstd ζ :=
+    finite_physical_centered_projection_bridge m hm4 Hstd gstd hHstdsym
+  have hPhysicalCenter : Tphysicalstd = Tcenter := by
+    funext ζ
+    exact (hPhysicalStd ζ).trans (hStats ζ).2.1.symm
+  rcases hCDFModel m (by omega : 3 ≤ m) with ⟨hTphysicalMeas, hLowCDF, hFourCDF⟩
+  have hCDFTail (v : ℝ) (hv0 : 0 ≤ v) (hv1 : v ≤ 1) :
+      |P.real {ζ : Fin m → Ω | v ≤ Tphysicalstd ζ} - (1 - Shao.OQ4.standardNormalCDF v)| ≤
+        Kcdf * (βstd / Real.rpow (m : ℝ) a + (1 + ρstd) / Real.sqrt (m : ℝ)) := by
+    exact (hFourCDF v hv0 hv1).2.2.2
+  rcases half_sample_and_mean_rate_bounds p J Kmean hp hJ hKmean n m (by omega) hnm with
+    ⟨hPower, hRoot, hDeltaRate⟩
+  change Real.rpow (m : ℝ) (-a) ≤ 2 * Real.rpow (n : ℝ) (-a) at hPower
+  change δn ≤ 2 * Kmean / Real.sqrt (n : ℝ) at hDeltaRate
+  let E : ℝ := β * Real.rpow (n : ℝ) (-a) + 1 / Real.sqrt (n : ℝ)
+  have hE : 0 ≤ E := by
+    dsimp only [E]
+    simp only [Real.rpow_eq_pow]
+    exact add_nonneg
+      (mul_nonneg hβ0 (Real.rpow_nonneg hnpos.le (-a)))
+      (div_nonneg (by norm_num : (0 : ℝ) ≤ 1) hRootN.le)
+  have hInverseE : 1 / Real.sqrt (n : ℝ) ≤ E := by
+    dsimp only [E]
+    exact le_add_of_nonneg_left (mul_nonneg hβ0 (Real.rpow_nonneg hnpos.le _))
+  have hDeltaE : δn ≤ (2 * Kmean) * E := by
+    calc
+      _ ≤ 2 * Kmean / Real.sqrt (n : ℝ) := hDeltaRate
+      _ ≤ (2 * Kmean) * E := by
+        have hCoeff : (0 : ℝ) ≤ 2 * Kmean :=
+          mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hKmean
+        have hh : (2 * Kmean) * (1 / Real.sqrt (n : ℝ)) ≤ (2 * Kmean) * E :=
+          mul_le_mul_of_nonneg_left hInverseE hCoeff
+        convert hh using 1 <;> ring
+  have hCompactError :
+      Kcdf * (βstd / Real.rpow (m : ℝ) a + (1 + ρstd) / Real.sqrt (m : ℝ)) ≤
+        (4 + 2 * S) * Kcdf * E := by
+    have hFirst : βstd / Real.rpow (m : ℝ) a ≤ 4 * β * Real.rpow (n : ℝ) (-a) := by
+      have hh := mul_le_mul hβstdBound hPower (Real.rpow_nonneg hmpos.le (-a))
+        (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hβ0)
+      simp only [Real.rpow_eq_pow] at hh ⊢
+      rw [Real.rpow_neg hmpos.le] at hh
+      convert hh using 1 <;> ring
+    have hSstd : 1 + ρstd ≤ S := by dsimp only [S]; linarith only [hρstdBound]
+    have hSecond : (1 + ρstd) / Real.sqrt (m : ℝ) ≤ 2 * S / Real.sqrt (n : ℝ) := by
+      have hh := mul_le_mul hSstd hRoot (by positivity : 0 ≤ 1 / Real.sqrt (m : ℝ)) hS
+      convert hh using 1 <;> ring
+    have hTerms : 4 * β * Real.rpow (n : ℝ) (-a) + 2 * S / Real.sqrt (n : ℝ) ≤
+        (4 + 2 * S) * E := by
+      have hcross1 := mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hS)
+        (mul_nonneg hβ0 (Real.rpow_nonneg hnpos.le (-a)))
+      have hcross2 := mul_nonneg (by norm_num : (0 : ℝ) ≤ 4)
+        (div_nonneg (by norm_num : (0 : ℝ) ≤ 1) hRootN.le)
+      dsimp only [E]
+      simp only [Real.rpow_eq_pow] at hcross1 hcross2 ⊢
+      calc
+        _ ≤ 4 * β * (n : ℝ) ^ (-a) + 2 * S / Real.sqrt (n : ℝ) +
+            (2 * S * (β * (n : ℝ) ^ (-a)) + 4 * (1 / Real.sqrt (n : ℝ))) :=
+          le_add_of_nonneg_right (add_nonneg hcross1 hcross2)
+        _ = _ := by ring
+    calc
+      _ ≤ Kcdf * (4 * β * Real.rpow (n : ℝ) (-a) + 2 * S / Real.sqrt (n : ℝ)) :=
+        mul_le_mul_of_nonneg_left (add_le_add hFirst hSecond) hKcdf.le
+      _ ≤ Kcdf * ((4 + 2 * S) * E) := mul_le_mul_of_nonneg_left hTerms hKcdf.le
+      _ = _ := by ring
+  have hCenterAbs (v : ℝ) (hvLow : (1 / 2 : ℝ) ≤ v) (hvHigh : v ≤ (5 / 2 : ℝ)) :
+      |P.real {ζ : Fin m → Ω | v ≤ Tcenter ζ} - Shao.standardNormalTail v| ≤ D * E := by
+    by_cases hv1 : v ≤ 1
+    · have hh := hCDFTail v (by linarith only [hvLow]) hv1
+      rw [hPhysicalCenter] at hh
+      have hΨv : 1 - Shao.OQ4.standardNormalCDF v = Shao.standardNormalTail v :=
+        (Shao.standardNormalTail_representation v).2.1.symm
+      rw [hΨv] at hh
+      apply hh.trans (hCompactError.trans _)
+      apply mul_le_mul_of_nonneg_right _ hE
+      dsimp only [D]
+      linarith only [hKcenter]
+    · have hvOne : 1 ≤ v := (lt_of_not_ge hv1).le
+      have hvWindow : v ≤ ccenter * Real.rpow (n : ℝ) qpow := by
+        have hh : (3 : ℝ) ≤ ccenter * Real.rpow (n : ℝ) qpow := hNearN.1
+        linarith only [hvHigh, hh]
+      have hRel := hCentered v hvOne hvWindow
+      have hBase0 : 0 ≤ 1 + v := by linarith only [hvLow]
+      have hBase1 : 1 ≤ 1 + v := by linarith only [hvLow]
+      have hBase4 : 1 + v ≤ 4 := by linarith only [hvHigh]
+      have hPoly : Real.rpow (1 + v) p ≤ 64 := by
+        calc
+          _ ≤ Real.rpow (1 + v) 3 := Real.rpow_le_rpow_of_exponent_le hBase1 hp.2
+          _ = (1 + v) ^ 3 := by norm_num
+          _ ≤ (4 : ℝ) ^ 3 := pow_le_pow_left₀ hBase0 hBase4 3
+          _ = 64 := by norm_num
+      have hCube : (1 + v) ^ 3 ≤ 64 := by
+        have hh := pow_le_pow_left₀ hBase0 hBase4 3
+        norm_num at hh ⊢
+        exact hh
+      have hError :
+          Kcenter * (β * Real.rpow (1 + v) p * Real.rpow (n : ℝ) (-a) +
+            (1 + v) ^ 3 / Real.sqrt (n : ℝ)) ≤ 64 * Kcenter * E := by
+        have hFirst := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hPoly hβ0)
+          (Real.rpow_nonneg hnpos.le (-a))
+        have hSecond := div_le_div_of_nonneg_right hCube hRootN.le
+        have hh := mul_le_mul_of_nonneg_left (add_le_add hFirst hSecond) hKcenter.le
+        dsimp only [E]
+        simp only [Real.rpow_eq_pow] at hh ⊢
+        convert hh using 1 <;> ring
+      have hRelative :
+          |P.real {ζ : Fin m → Ω | v ≤ Tcenter ζ} / Shao.standardNormalTail v - 1| ≤
+            64 * Kcenter * E := hRel.trans hError
+      have hΨv := (Shao.standardNormalTail_basic.2.2.1 v).1
+      have hΨvOne := (Shao.standardNormalTail_basic.2.2.1 v).2.le
+      calc
+        _ = Shao.standardNormalTail v *
+            |P.real {ζ : Fin m → Ω | v ≤ Tcenter ζ} / Shao.standardNormalTail v - 1| := by
+          rw [show P.real {ζ : Fin m → Ω | v ≤ Tcenter ζ} - Shao.standardNormalTail v =
+            Shao.standardNormalTail v *
+              (P.real {ζ : Fin m → Ω | v ≤ Tcenter ζ} / Shao.standardNormalTail v - 1) by
+              field_simp [ne_of_gt hΨv] <;> ring, abs_mul, abs_of_pos hΨv]
+        _ ≤ Shao.standardNormalTail v * (64 * Kcenter * E) :=
+          mul_le_mul_of_nonneg_left hRelative hΨv.le
+        _ ≤ 64 * Kcenter * E := mul_le_of_le_one_left (by positivity) hΨvOne
+        _ ≤ D * E := by
+          apply mul_le_mul_of_nonneg_right _ hE
+          dsimp only [D]
+          have hh : 0 ≤ (4 + 2 * S) * Kcdf := by positivity
+          linarith only [hh]
+  refine ⟨hm4, hP, hPμ, hTcMeas, hTuMeas, hallMeas, hallMass,
+    hLaw, hLawReal, hMean, hScale, ?_⟩
+  intro z hz hzWindow qm Ktail Crows Hgood payment
+  let y : ℝ := max 2 z
+  have hy2 : (2 : ℝ) ≤ y := le_max_left _ _
+  have hyWindow : y ≤ c274 * Real.rpow (n : ℝ) qpow := max_le hWindow hzWindow
+  rcases hFarZ y hy2 hyWindow with
+    ⟨hHmeas, hPhysical, hPayment, hBadRelativeY, hLowerY, hUpperY, hFarFinal, hFarPmu⟩
+  change MeasurableSet Hgood at hHmeas
+  change (∀ ζ : Fin m → Ω, ζ ∈ Hgood →
+    (1 / 2 : ℝ) ≤ RH ζ ∧ |Real.sqrt (m : ℝ) * κ / RH ζ| ≤ δn ∧
+      |Tuncenter ζ - Tcenter ζ| ≤ δn) at hPhysical
+  change P.real Hgoodᶜ ≤ payment at hPayment
+  change P.real Hgoodᶜ / Shao.standardNormalTail y ≤
+    Real.exp (-(t0 / 2) * Real.rpow (m : ℝ) (1 / 3 : ℝ)) at hBadRelativeY
+  change P.real {ζ : Fin m → Ω | y + δn ≤ Tcenter ζ} - P.real Hgoodᶜ ≤
+    P.real {ζ : Fin m → Ω | y ≤ Tuncenter ζ} at hLowerY
+  change P.real {ζ : Fin m → Ω | y ≤ Tuncenter ζ} ≤
+    P.real {ζ : Fin m → Ω | y - δn ≤ Tcenter ζ} + P.real Hgoodᶜ at hUpperY
+  change |P.real {ζ : Fin m → Ω | y ≤ Tuncenter ζ} / Shao.standardNormalTail y - 1| ≤
+    K274 * (β * Real.rpow (1 + y) p * Real.rpow (n : ℝ) (-a) +
+      (1 + y) ^ 3 / Real.sqrt (n : ℝ)) at hFarFinal
+  have hΨy : 0 < Shao.standardNormalTail y := (Shao.standardNormalTail_basic.2.2.1 y).1
+  have hΨOrder : Shao.standardNormalTail y ≤ Shao.standardNormalTail z :=
+    Shao.standardNormalTail_basic.1 (le_max_right 2 z)
+  have hBadRelative : P.real Hgoodᶜ / Shao.standardNormalTail z ≤
+      Real.exp (-(t0 / 2) * Real.rpow (m : ℝ) (1 / 3 : ℝ)) :=
+    (div_le_div_of_nonneg_left (by exact ENNReal.toReal_nonneg) hΨy hΨOrder).trans hBadRelativeY
+  let F : ℝ := β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-a) +
+    (1 + z) ^ 3 / Real.sqrt (n : ℝ)
+  have hBase1 : (1 : ℝ) ≤ 1 + z := by linarith only [hz]
+  have hPowerOne : 1 ≤ Real.rpow (1 + z) p := Real.one_le_rpow hBase1 hp0.le
+  have hCubeOne : (1 : ℝ) ≤ (1 + z) ^ 3 := by
+    have hh := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 1) hBase1 3
+    simpa only [one_pow] using hh
+  have hEF : E ≤ F := by
+    have hFirst := mul_le_mul_of_nonneg_right
+      (mul_le_mul_of_nonneg_left hPowerOne hβ0) (Real.rpow_nonneg hnpos.le (-a))
+    have hSecond := div_le_div_of_nonneg_right hCubeOne hRootN.le
+    dsimp only [E, F]
+    simpa only [Real.rpow_eq_pow, mul_one] using add_le_add hFirst hSecond
+  have hF : 0 ≤ F := hE.trans hEF
+  have hSandwichRate :
+      P.real {ζ : Fin m → Ω | z + δn ≤ Tcenter ζ} - P.real Hgoodᶜ ≤
+        P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} ∧
+      P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} ≤
+        P.real {ζ : Fin m → Ω | z - δn ≤ Tcenter ζ} + P.real Hgoodᶜ ∧
+      |P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} / Shao.standardNormalTail z - 1| ≤ Kfull * F := by
+    by_cases hz2 : z ≤ 2
+    · have hyEq : y = 2 := max_eq_left hz2
+      have hBad2 : P.real Hgoodᶜ / Shao.standardNormalTail 2 ≤ 2 * E := by
+        rw [hyEq] at hBadRelativeY
+        calc
+          _ ≤ _ := hBadRelativeY
+          _ ≤ 2 / Real.sqrt (n : ℝ) := hNearN.2 m hnm
+          _ ≤ 2 * E := by
+            have hh := mul_le_mul_of_nonneg_left hInverseE (by norm_num : (0 : ℝ) ≤ 2)
+            convert hh using 1 <;> ring
+      rcases near_closed_tail_sandwich_and_rate P Tcenter Tuncenter hTcMeas hTuMeas
+          Hgood hHmeas δn E D (2 * Kmean) hδ0 hδHalf hE hD
+          (mul_nonneg (by norm_num) hKmean) hDeltaE
+          (fun ζ hζ => (hPhysical ζ hζ).2.2) hBad2 hCenterAbs z hz hz2 with
+        ⟨hLower, hUpper, hNearFinal⟩
+      change |P.real {ζ : Fin m → Ω | z ≤ Tuncenter ζ} / Shao.standardNormalTail z - 1| ≤
+        Knear * E at hNearFinal
+      refine ⟨hLower, hUpper, hNearFinal.trans ?_⟩
+      exact (mul_le_mul_of_nonneg_left hEF hKnear.le).trans
+        (mul_le_mul_of_nonneg_right hKnearLe hF)
+    · have hTwoZ : 2 ≤ z := (lt_of_not_ge hz2).le
+      have hyEq : y = z := max_eq_right hTwoZ
+      rw [hyEq] at hLowerY hUpperY hFarFinal
+      exact ⟨hLowerY, hUpperY, hFarFinal.trans (mul_le_mul_of_nonneg_right hK274Le hF)⟩
+  rcases hSandwichRate with ⟨hLower, hUpper, hFinal⟩
+  refine ⟨hHmeas, hPhysical, hPayment, hBadRelative, hLower, hUpper, hFinal, ?_⟩
+  have hEvent : MeasurableSet {ζ : Fin m → Ω | z ≤ Tuncenter ζ} :=
+    hTuMeas measurableSet_Ici
+  rw [← hLawReal {ζ : Fin m → Ω | z ≤ Tuncenter ζ} hEvent]
+  exact hFinal

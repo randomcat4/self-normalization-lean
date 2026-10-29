@@ -1,0 +1,118 @@
+def anomaly {n : ℕ} (B : Finset (Fin n)) : Finset (Fin n)
+def blockPairSum {n : ℕ} (S : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) : ℝ
+def crossPairSum {n : ℕ} (B : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) : ℝ
+def adjustedRow {n : ℕ} (g : Fin n → ℝ)
+    (r : Fin n → Fin n → ℝ) (i : Fin n) : ℝ
+def backgroundRow {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (i : Fin n) : ℝ
+def blockMean {n : ℕ} (B : Finset (Fin n)) (f : Fin n → ℝ) : ℝ
+def blockCenteredEnergy {n : ℕ} (B : Finset (Fin n))
+    (f : Fin n → ℝ) : ℝ
+def backgroundScale {n : ℕ} (B : Finset (Fin n)) : ℝ
+def backgroundAnchor {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ
+def backgroundNumerator {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ
+def numeratorShift {n : ℕ} (B : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) : ℝ
+def anomalyWeight {n : ℕ} (B : Finset (Fin n)) (w : Fin n → ℝ) : ℝ
+def backgroundWeightEnergy {n : ℕ} (B : Finset (Fin n))
+    (w : Fin n → ℝ) : ℝ
+def backgroundStudentizer {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ
+theorem partition_card {n : ℕ} (B : Finset (Fin n)) :
+    (anomaly B).card + B.card = n
+theorem background_denominators_and_scale {n : ℕ} (B : Finset (Fin n))
+    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :
+    0 < (n : ℝ) - 2 ∧ 0 < (B.card : ℝ) - 2 ∧
+      0 < (B.card : ℝ) - 1 ∧ 0 < (B.card : ℝ) ∧
+      0 ≤ backgroundScale B ∧ backgroundScale B ≤ 1
+theorem block_offDiagonal_sum {n : ℕ} (S : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :
+    (∑ i ∈ S, ∑ j ∈ S.erase i, r i j) = 2 * blockPairSum S r
+theorem unorderedPairSum_partition {n : ℕ} (B : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :
+    Shao.OQ5.P35.unorderedPairSum r =
+      blockPairSum (anomaly B) r + blockPairSum B r + crossPairSum B r
+theorem background_original_row_sum {n : ℕ} (B : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :
+    (∑ i ∈ B, ∑ j ∈ Finset.univ.erase i, r i j) =
+      2 * blockPairSum B r + crossPairSum B r
+theorem adjustedRow_sub_backgroundRow {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (i : Fin n) (hi : i ∈ B) :
+    adjustedRow g r i - backgroundRow B g r i =
+      (∑ a ∈ anomaly B, r i a) / ((n : ℝ) - 2)
+theorem scaled_background_row_identity {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)
+    (hn : 4 ≤ n) (hm : 3 ≤ B.card) (i : Fin n) :
+    backgroundRow B g r i =
+      g i + (∑ j ∈ B.erase i, backgroundScale B * r i j) / ((B.card : ℝ) - 2)
+theorem backgroundAnchor_formula {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)
+    (hsym : ∀ i j : Fin n, r i j = r j i) :
+    backgroundAnchor B g r =
+      (∑ i ∈ B, g i) / (B.card : ℝ) +
+      (2 * blockPairSum B r + crossPairSum B r) /
+        ((B.card : ℝ) * ((n : ℝ) - 2)) -
+      Shao.OQ5.P35.unorderedPairSum r / (((n : ℝ) - 1) * ((n : ℝ) - 2))
+theorem backgroundNumerator_sqrt_scaling {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)
+    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :
+    Real.sqrt ((n : ℝ) / (B.card : ℝ)) * backgroundNumerator B g r =
+      Real.sqrt (n : ℝ) / (B.card : ℝ) *
+        ((∑ i ∈ B, g i) + ((B.card : ℝ) - 2) * blockPairSum B r /
+          (((n : ℝ) - 2) * ((B.card : ℝ) - 1)))
+theorem background_numerator_perturbation {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)
+    (hsym : ∀ i j : Fin n, r i j = r j i)
+    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :
+    Real.sqrt (n : ℝ) * backgroundAnchor B g r =
+      Real.sqrt ((n : ℝ) / (B.card : ℝ)) * backgroundNumerator B g r +
+        numeratorShift B r
+theorem block_pair_product_identity {n : ℕ} (S : Finset (Fin n))
+    (w : Fin n → ℝ) :
+    (∑ i ∈ S, w i) ^ (2 : ℕ) =
+      (∑ i ∈ S, (w i) ^ (2 : ℕ)) +
+        2 * blockPairSum S (fun i j : Fin n => w i * w j)
+theorem anomaly_pair_envelope_bound {n : ℕ} (B : Finset (Fin n))
+    (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)
+    (hw : ∀ i : Fin n, 0 ≤ w i)
+    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :
+    |blockPairSum (anomaly B) r| ≤ (anomalyWeight B w) ^ (2 : ℕ) / 2
+theorem adjustedRow_sub_backgroundRow_bound {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)
+    (hn : 4 ≤ n) (hw : ∀ i : Fin n, 0 ≤ w i)
+    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j)
+    (i : Fin n) (hi : i ∈ B) :
+    |adjustedRow g r i - backgroundRow B g r i| ≤
+      anomalyWeight B w * w i / ((n : ℝ) - 2)
+theorem blockCenteredEnergy_variance {n : ℕ} (B : Finset (Fin n))
+    (f : Fin n → ℝ) (hB : 0 < B.card) :
+    blockCenteredEnergy B f = (∑ i ∈ B, (f i) ^ (2 : ℕ)) -
+      (∑ i ∈ B, f i) ^ (2 : ℕ) / (B.card : ℝ)
+theorem block_centering_contraction {n : ℕ} (B : Finset (Fin n))
+    (f : Fin n → ℝ) (hB : 0 < B.card) :
+    blockCenteredEnergy B f ≤ ∑ i ∈ B, (f i) ^ (2 : ℕ)
+theorem block_centered_norm_lipschitz {n : ℕ} (B : Finset (Fin n))
+    (f h : Fin n → ℝ) (hB : 0 < B.card) :
+    |Real.sqrt (blockCenteredEnergy B f) - Real.sqrt (blockCenteredEnergy B h)| ≤
+      Real.sqrt (∑ i ∈ B, (f i - h i) ^ (2 : ℕ))
+theorem row_difference_energy_bound {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)
+    (hn : 4 ≤ n) (hw : ∀ i : Fin n, 0 ≤ w i)
+    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :
+    (∑ i ∈ B, (adjustedRow g r i - backgroundRow B g r i) ^ (2 : ℕ)) ≤
+      (anomalyWeight B w / ((n : ℝ) - 2)) ^ (2 : ℕ) * backgroundWeightEnergy B w
+theorem backgroundStudentizer_sqrt_identity {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (hm : 3 ≤ B.card) :
+    Real.sqrt ((B.card : ℝ) - 1) * backgroundStudentizer B g r =
+      Real.sqrt (blockCenteredEnergy B (backgroundRow B g r))
+theorem background_centered_norm_perturbation {n : ℕ} (B : Finset (Fin n))
+    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)
+    (hn : 4 ≤ n) (hm : 3 ≤ B.card) (hw : ∀ i : Fin n, 0 ≤ w i)
+    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :
+    |Real.sqrt (blockCenteredEnergy B (adjustedRow g r)) -
+        Real.sqrt ((B.card : ℝ) - 1) * backgroundStudentizer B g r| ≤
+      anomalyWeight B w * Real.sqrt (backgroundWeightEnergy B w) / ((n : ℝ) - 2)

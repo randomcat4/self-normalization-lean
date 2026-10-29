@@ -1,0 +1,16 @@
+:= by
+  have hb := background_denominators_and_scale B hn hm
+  have hN2 : (n : ℝ) - 2 ≠ 0 := ne_of_gt hb.1
+  have hN1 : (n : ℝ) - 1 ≠ 0 := ne_of_gt (by linarith [hb.1])
+  have hM1 : (B.card : ℝ) - 1 ≠ 0 := ne_of_gt hb.2.2.1
+  have hM : (B.card : ℝ) ≠ 0 := ne_of_gt hb.2.2.2.1
+  have hc : ((anomaly B).card : ℝ) + (B.card : ℝ) = (n : ℝ) := by
+    exact_mod_cast (partition_card B)
+  have hK : ((anomaly B).card : ℝ) = (n : ℝ) - (B.card : ℝ) := by linarith
+  rw [backgroundAnchor_formula B g r hsym,
+    backgroundNumerator_sqrt_scaling B g r hn hm,
+    unorderedPairSum_partition B r hsym]
+  unfold numeratorShift
+  rw [hK]
+  field_simp [hN2, hN1, hM1, hM]
+  <;> ring

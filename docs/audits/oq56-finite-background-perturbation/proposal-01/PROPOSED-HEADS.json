@@ -1,0 +1,225 @@
+{
+  "schema": "oq56-unit278-proposed-head-bundle-v1",
+  "status": "PROPOSED_ONLY_NOT_FROZEN",
+  "proposedModule": "Shao/OQ5/P41/FiniteBackgroundPerturbation.lean",
+  "PRE": "import Shao.OQ5.P35.RowIdentity\nimport Mathlib.Algebra.Order.BigOperators.Ring.Finset\nimport Mathlib.Analysis.Real.Sqrt\nimport Mathlib.Tactic.Linarith\nimport Mathlib.Tactic.Positivity\nimport Mathlib.Tactic.NormNum\n\nset_option autoImplicit false\n\nopen scoped BigOperators\n\nnamespace Shao.OQ5.P41.FiniteBackgroundPerturbation\n\nnoncomputable section",
+  "declarations": [
+    {
+      "id": "D01",
+      "name": "anomaly",
+      "kind": "def",
+      "head": "def anomaly {n : ℕ} (B : Finset (Fin n)) : Finset (Fin n)",
+      "definitionRhs": "  Finset.univ \\ B"
+    },
+    {
+      "id": "D02",
+      "name": "blockPairSum",
+      "kind": "def",
+      "head": "def blockPairSum {n : ℕ} (S : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ∑ i ∈ S, ∑ j ∈ S, if i < j then r i j else 0"
+    },
+    {
+      "id": "D03",
+      "name": "crossPairSum",
+      "kind": "def",
+      "head": "def crossPairSum {n : ℕ} (B : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ∑ a ∈ anomaly B, ∑ i ∈ B, r a i"
+    },
+    {
+      "id": "D04",
+      "name": "adjustedRow",
+      "kind": "def",
+      "head": "def adjustedRow {n : ℕ} (g : Fin n → ℝ)\n    (r : Fin n → Fin n → ℝ) (i : Fin n) : ℝ",
+      "definitionRhs": "  g i + (∑ j ∈ Finset.univ.erase i, r i j) / ((n : ℝ) - 2)"
+    },
+    {
+      "id": "D05",
+      "name": "backgroundRow",
+      "kind": "def",
+      "head": "def backgroundRow {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (i : Fin n) : ℝ",
+      "definitionRhs": "  g i + (∑ j ∈ B.erase i, r i j) / ((n : ℝ) - 2)"
+    },
+    {
+      "id": "D06",
+      "name": "blockMean",
+      "kind": "def",
+      "head": "def blockMean {n : ℕ} (B : Finset (Fin n)) (f : Fin n → ℝ) : ℝ",
+      "definitionRhs": "  (∑ i ∈ B, f i) / (B.card : ℝ)"
+    },
+    {
+      "id": "D07",
+      "name": "blockCenteredEnergy",
+      "kind": "def",
+      "head": "def blockCenteredEnergy {n : ℕ} (B : Finset (Fin n))\n    (f : Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ∑ i ∈ B, (f i - blockMean B f) ^ (2 : ℕ)"
+    },
+    {
+      "id": "D08",
+      "name": "backgroundScale",
+      "kind": "def",
+      "head": "def backgroundScale {n : ℕ} (B : Finset (Fin n)) : ℝ",
+      "definitionRhs": "  ((B.card : ℝ) - 2) / ((n : ℝ) - 2)"
+    },
+    {
+      "id": "D09",
+      "name": "backgroundAnchor",
+      "kind": "def",
+      "head": "def backgroundAnchor {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  blockMean B (adjustedRow g r) -\n    Shao.OQ5.P35.unorderedPairSum r / (((n : ℝ) - 1) * ((n : ℝ) - 2))"
+    },
+    {
+      "id": "D10",
+      "name": "backgroundNumerator",
+      "kind": "def",
+      "head": "def backgroundNumerator {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ((∑ i ∈ B, g i) +\n    ((B.card : ℝ) - 2) * blockPairSum B r /\n      (((n : ℝ) - 2) * ((B.card : ℝ) - 1))) / Real.sqrt (B.card : ℝ)"
+    },
+    {
+      "id": "D11",
+      "name": "numeratorShift",
+      "kind": "def",
+      "head": "def numeratorShift {n : ℕ} (B : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  Real.sqrt (n : ℝ) *\n    (((anomaly B).card : ℝ) * blockPairSum B r /\n        (((n : ℝ) - 2) * ((n : ℝ) - 1) * ((B.card : ℝ) - 1)) +\n      (((anomaly B).card : ℝ) - 1) * crossPairSum B r /\n        ((B.card : ℝ) * ((n : ℝ) - 1) * ((n : ℝ) - 2)) -\n      blockPairSum (anomaly B) r / (((n : ℝ) - 1) * ((n : ℝ) - 2)))"
+    },
+    {
+      "id": "D12",
+      "name": "anomalyWeight",
+      "kind": "def",
+      "head": "def anomalyWeight {n : ℕ} (B : Finset (Fin n)) (w : Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ∑ a ∈ anomaly B, w a"
+    },
+    {
+      "id": "D13",
+      "name": "backgroundWeightEnergy",
+      "kind": "def",
+      "head": "def backgroundWeightEnergy {n : ℕ} (B : Finset (Fin n))\n    (w : Fin n → ℝ) : ℝ",
+      "definitionRhs": "  ∑ i ∈ B, (w i) ^ (2 : ℕ)"
+    },
+    {
+      "id": "D14",
+      "name": "backgroundStudentizer",
+      "kind": "def",
+      "head": "def backgroundStudentizer {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) : ℝ",
+      "definitionRhs": "  Real.sqrt (blockCenteredEnergy B (backgroundRow B g r) / ((B.card : ℝ) - 1))"
+    },
+    {
+      "id": "T01",
+      "name": "partition_card",
+      "kind": "theorem",
+      "head": "theorem partition_card {n : ℕ} (B : Finset (Fin n)) :\n    (anomaly B).card + B.card = n"
+    },
+    {
+      "id": "T02",
+      "name": "background_denominators_and_scale",
+      "kind": "theorem",
+      "head": "theorem background_denominators_and_scale {n : ℕ} (B : Finset (Fin n))\n    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :\n    0 < (n : ℝ) - 2 ∧ 0 < (B.card : ℝ) - 2 ∧\n      0 < (B.card : ℝ) - 1 ∧ 0 < (B.card : ℝ) ∧\n      0 ≤ backgroundScale B ∧ backgroundScale B ≤ 1"
+    },
+    {
+      "id": "T03",
+      "name": "block_offDiagonal_sum",
+      "kind": "theorem",
+      "head": "theorem block_offDiagonal_sum {n : ℕ} (S : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :\n    (∑ i ∈ S, ∑ j ∈ S.erase i, r i j) = 2 * blockPairSum S r"
+    },
+    {
+      "id": "T04",
+      "name": "unorderedPairSum_partition",
+      "kind": "theorem",
+      "head": "theorem unorderedPairSum_partition {n : ℕ} (B : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :\n    Shao.OQ5.P35.unorderedPairSum r =\n      blockPairSum (anomaly B) r + blockPairSum B r + crossPairSum B r"
+    },
+    {
+      "id": "T05",
+      "name": "background_original_row_sum",
+      "kind": "theorem",
+      "head": "theorem background_original_row_sum {n : ℕ} (B : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) (hsym : ∀ i j : Fin n, r i j = r j i) :\n    (∑ i ∈ B, ∑ j ∈ Finset.univ.erase i, r i j) =\n      2 * blockPairSum B r + crossPairSum B r"
+    },
+    {
+      "id": "T06",
+      "name": "adjustedRow_sub_backgroundRow",
+      "kind": "theorem",
+      "head": "theorem adjustedRow_sub_backgroundRow {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (i : Fin n) (hi : i ∈ B) :\n    adjustedRow g r i - backgroundRow B g r i =\n      (∑ a ∈ anomaly B, r i a) / ((n : ℝ) - 2)"
+    },
+    {
+      "id": "T07",
+      "name": "scaled_background_row_identity",
+      "kind": "theorem",
+      "head": "theorem scaled_background_row_identity {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)\n    (hn : 4 ≤ n) (hm : 3 ≤ B.card) (i : Fin n) :\n    backgroundRow B g r i =\n      g i + (∑ j ∈ B.erase i, backgroundScale B * r i j) / ((B.card : ℝ) - 2)"
+    },
+    {
+      "id": "T08",
+      "name": "backgroundAnchor_formula",
+      "kind": "theorem",
+      "head": "theorem backgroundAnchor_formula {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)\n    (hsym : ∀ i j : Fin n, r i j = r j i) :\n    backgroundAnchor B g r =\n      (∑ i ∈ B, g i) / (B.card : ℝ) +\n      (2 * blockPairSum B r + crossPairSum B r) /\n        ((B.card : ℝ) * ((n : ℝ) - 2)) -\n      Shao.OQ5.P35.unorderedPairSum r / (((n : ℝ) - 1) * ((n : ℝ) - 2))"
+    },
+    {
+      "id": "T09",
+      "name": "backgroundNumerator_sqrt_scaling",
+      "kind": "theorem",
+      "head": "theorem backgroundNumerator_sqrt_scaling {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)\n    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :\n    Real.sqrt ((n : ℝ) / (B.card : ℝ)) * backgroundNumerator B g r =\n      Real.sqrt (n : ℝ) / (B.card : ℝ) *\n        ((∑ i ∈ B, g i) + ((B.card : ℝ) - 2) * blockPairSum B r /\n          (((n : ℝ) - 2) * ((B.card : ℝ) - 1)))"
+    },
+    {
+      "id": "T10",
+      "name": "background_numerator_perturbation",
+      "kind": "theorem",
+      "head": "theorem background_numerator_perturbation {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ)\n    (hsym : ∀ i j : Fin n, r i j = r j i)\n    (hn : 4 ≤ n) (hm : 3 ≤ B.card) :\n    Real.sqrt (n : ℝ) * backgroundAnchor B g r =\n      Real.sqrt ((n : ℝ) / (B.card : ℝ)) * backgroundNumerator B g r +\n        numeratorShift B r"
+    },
+    {
+      "id": "T11",
+      "name": "block_pair_product_identity",
+      "kind": "theorem",
+      "head": "theorem block_pair_product_identity {n : ℕ} (S : Finset (Fin n))\n    (w : Fin n → ℝ) :\n    (∑ i ∈ S, w i) ^ (2 : ℕ) =\n      (∑ i ∈ S, (w i) ^ (2 : ℕ)) +\n        2 * blockPairSum S (fun i j : Fin n => w i * w j)"
+    },
+    {
+      "id": "T12",
+      "name": "anomaly_pair_envelope_bound",
+      "kind": "theorem",
+      "head": "theorem anomaly_pair_envelope_bound {n : ℕ} (B : Finset (Fin n))\n    (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)\n    (hw : ∀ i : Fin n, 0 ≤ w i)\n    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :\n    |blockPairSum (anomaly B) r| ≤ (anomalyWeight B w) ^ (2 : ℕ) / 2"
+    },
+    {
+      "id": "T13",
+      "name": "adjustedRow_sub_backgroundRow_bound",
+      "kind": "theorem",
+      "head": "theorem adjustedRow_sub_backgroundRow_bound {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)\n    (hn : 4 ≤ n) (hw : ∀ i : Fin n, 0 ≤ w i)\n    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j)\n    (i : Fin n) (hi : i ∈ B) :\n    |adjustedRow g r i - backgroundRow B g r i| ≤\n      anomalyWeight B w * w i / ((n : ℝ) - 2)"
+    },
+    {
+      "id": "T14",
+      "name": "blockCenteredEnergy_variance",
+      "kind": "theorem",
+      "head": "theorem blockCenteredEnergy_variance {n : ℕ} (B : Finset (Fin n))\n    (f : Fin n → ℝ) (hB : 0 < B.card) :\n    blockCenteredEnergy B f = (∑ i ∈ B, (f i) ^ (2 : ℕ)) -\n      (∑ i ∈ B, f i) ^ (2 : ℕ) / (B.card : ℝ)"
+    },
+    {
+      "id": "T15",
+      "name": "block_centering_contraction",
+      "kind": "theorem",
+      "head": "theorem block_centering_contraction {n : ℕ} (B : Finset (Fin n))\n    (f : Fin n → ℝ) (hB : 0 < B.card) :\n    blockCenteredEnergy B f ≤ ∑ i ∈ B, (f i) ^ (2 : ℕ)"
+    },
+    {
+      "id": "T16",
+      "name": "block_centered_norm_lipschitz",
+      "kind": "theorem",
+      "head": "theorem block_centered_norm_lipschitz {n : ℕ} (B : Finset (Fin n))\n    (f h : Fin n → ℝ) (hB : 0 < B.card) :\n    |Real.sqrt (blockCenteredEnergy B f) - Real.sqrt (blockCenteredEnergy B h)| ≤\n      Real.sqrt (∑ i ∈ B, (f i - h i) ^ (2 : ℕ))"
+    },
+    {
+      "id": "T17",
+      "name": "row_difference_energy_bound",
+      "kind": "theorem",
+      "head": "theorem row_difference_energy_bound {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)\n    (hn : 4 ≤ n) (hw : ∀ i : Fin n, 0 ≤ w i)\n    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :\n    (∑ i ∈ B, (adjustedRow g r i - backgroundRow B g r i) ^ (2 : ℕ)) ≤\n      (anomalyWeight B w / ((n : ℝ) - 2)) ^ (2 : ℕ) * backgroundWeightEnergy B w"
+    },
+    {
+      "id": "T18",
+      "name": "backgroundStudentizer_sqrt_identity",
+      "kind": "theorem",
+      "head": "theorem backgroundStudentizer_sqrt_identity {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (hm : 3 ≤ B.card) :\n    Real.sqrt ((B.card : ℝ) - 1) * backgroundStudentizer B g r =\n      Real.sqrt (blockCenteredEnergy B (backgroundRow B g r))"
+    },
+    {
+      "id": "T19",
+      "name": "background_centered_norm_perturbation",
+      "kind": "theorem",
+      "head": "theorem background_centered_norm_perturbation {n : ℕ} (B : Finset (Fin n))\n    (g : Fin n → ℝ) (r : Fin n → Fin n → ℝ) (w : Fin n → ℝ)\n    (hn : 4 ≤ n) (hm : 3 ≤ B.card) (hw : ∀ i : Fin n, 0 ≤ w i)\n    (henv : ∀ i j : Fin n, i ≠ j → |r i j| ≤ w i * w j) :\n    |Real.sqrt (blockCenteredEnergy B (adjustedRow g r)) -\n        Real.sqrt ((B.card : ℝ) - 1) * backgroundStudentizer B g r| ≤\n      anomalyWeight B w * Real.sqrt (backgroundWeightEnergy B w) / ((n : ℝ) - 2)"
+    }
+  ],
+  "CLOSE": "end\n\nend Shao.OQ5.P41.FiniteBackgroundPerturbation",
+  "definitionPolicy": "Concrete RHS expressions are proposed definition equations; theorem proof bodies are absent. No Lean source module is implemented.",
+  "qualified": false,
+  "kernelChecked": false
+}
+

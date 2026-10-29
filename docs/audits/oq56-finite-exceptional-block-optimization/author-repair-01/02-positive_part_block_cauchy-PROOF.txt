@@ -1,0 +1,30 @@
+:= by
+  let ap : ℝ := max a 0
+  have hX : N * a + K * y ≤ N * ap + K * y := by
+    change N * a + K * y ≤ N * max a 0 + K * y
+    have hNa := mul_le_mul_of_nonneg_left (le_max_left a 0) hN.le
+    linarith only [hNa]
+  have hmax : (max (N * a + K * y) 0) ^ (2 : ℕ) ≤
+      (N * ap + K * y) ^ (2 : ℕ) := by
+    by_cases hZ : 0 ≤ N * ap + K * y
+    · apply (sq_le_sq₀ (le_max_right _ _) hZ).2
+      exact max_le hX hZ
+    · have hX0 : N * a + K * y ≤ 0 :=
+        le_trans hX (le_of_lt (lt_of_not_ge hZ))
+      rw [max_eq_right hX0]
+      simpa only [zero_pow] using sq_nonneg (N * ap + K * y)
+  have hid :
+      N * (N * ap ^ (2 : ℕ) / q + K / M) *
+          (q + (K * M / N) * y ^ (2 : ℕ)) -
+        (N * ap + K * y) ^ (2 : ℕ) =
+      (N * K / (M * q)) * (q - M * ap * y) ^ (2 : ℕ) := by
+    field_simp [ne_of_gt hN, ne_of_gt hM, ne_of_gt hq] <;> ring
+  have hnon : 0 ≤ (N * K / (M * q)) * (q - M * ap * y) ^ (2 : ℕ) :=
+    mul_nonneg
+      (div_nonneg (mul_nonneg hN.le hK) (mul_nonneg hM.le hq.le))
+      (sq_nonneg _)
+  have hsq : (N * ap + K * y) ^ (2 : ℕ) ≤
+      N * (N * ap ^ (2 : ℕ) / q + K / M) *
+        (q + (K * M / N) * y ^ (2 : ℕ)) := by
+    linarith only [hid, hnon]
+  exact le_trans hmax hsq

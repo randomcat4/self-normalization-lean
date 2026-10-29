@@ -1,0 +1,30 @@
+:= by
+  classical
+  intro b muB Qb F c s T
+  let Q : ℝ := ∑ i : Fin n, (Shao.OQ5.P35.center b i) ^ (2 : ℕ)
+  let Tf : ℝ := @ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))
+    0
+    (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *
+      ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q)
+  have hn2 : 2 ≤ n := le_trans (by decide : 2 ≤ 4) hn
+  have hBne : B.Nonempty :=
+    Finset.card_pos.mp (lt_of_lt_of_le (by decide : 0 < 3) hB)
+  have hcore : 0 < Q ∧
+      (max Tf 0) ^ (2 : ℕ) ≤
+        ((n : ℝ) - 1) *
+          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +
+            ((Finset.univ \ B).card : ℝ) / (B.card : ℝ)) :=
+    finite_exceptional_block_optimization n b B c hn2 hBne hQb
+  have hT : T = Tf := original_statistic_eq_offset_form n g r x hsym hn
+  have hN4 : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hNm : 0 < (n : ℝ) - 1 := by linarith
+  have hS2 : Shao.OQ5.P51.centeredSq n g r x = Q / ((n : ℝ) - 1) :=
+    Shao.OQ5.P51.centeredSq_eq_center_sum n g r x hsym hn
+  have hspos : 0 < s := by
+    change 0 < Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)
+    apply Real.sqrt_pos.mpr
+    rw [hS2]
+    exact div_pos hcore.1 hNm
+  refine ⟨hspos, ?_⟩
+  rw [hT]
+  exact hcore.2
