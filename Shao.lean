@@ -751,7 +751,9 @@ import Shao.OQ5.P35.SampleStatistics
 import Shao.OQ5.P35.TailLimits
 import Shao.OQ5.P35.TargetCancellation
 import Shao.OQ5.P35.ThresholdScales
+import Shao.OQ5.P41.AlmostSureBackgroundPerturbation
 import Shao.OQ5.P41.FiniteBackgroundPerturbation
+import Shao.OQ5.P41.FiniteBackgroundPhysicalTransport
 import Shao.OQ5.P45.BalancedBlock
 import Shao.OQ5.P50.CanonicalEdges
 import Shao.OQ5.P50.LayeredEncoding
