@@ -1,0 +1,44 @@
+--- author-01/UniformPMomentPhysicalFiniteCostTail.lean
++++ author-repair-01/UniformPMomentPhysicalFiniteCostTail.lean
+@@ -129,8 +129,8 @@
+     intro w hW hWR hSq hSqBound hEnv z hz hTiltWindow hEnvelopeWindow hGeometry
+       hgp hβBound cSZ C1 C2 C3 C4 hSZ
+     intro β cWindow hMomentWindow
+-    -- The unused public D2 let is definitionally erased, as in the original head.
++    -- Introduce the public D2 let so later names retain the frozen binder order.
+-    intro mN P ξ0 D1 A0 B0 A0delete B0delete ℓ0 S0 S0minus I0
++    intro mN P ξ0 D1 D2public A0 B0 A0delete B0delete ℓ0 S0 S0minus I0
+       fullTest0 deletedTest0 sourceCost0 δoriginal Loriginal physical payment cubicCost
+     have hn4 : 4 ≤ n := hNcommon4.trans hn
+     have hPprob : @IsProbabilityMeasure (Fin n → Ω) mN P := by
+@@ -295,7 +295,7 @@
+       @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T0 P at hT0Law
+     have hξ0m (i : Fin n) : Measurable[mN₀, borel ℝ] (ξ0 i) :=
+       ((hgcoord i).1).comp (hO i).1
+-    have hNsq : N ^ (2 : ℕ) = (n : ℝ) :=
++    have hNsq : (Real.sqrt (n : ℝ)) ^ (2 : ℕ) = (n : ℝ) :=
+       Real.sq_sqrt (Nat.cast_nonneg n)
+     have hV0Eq (ζ : Fin n → Ω) :
+         V0 ζ = Real.sqrt (∑ i : Fin n, (ξ0 i ζ) ^ (2 : ℕ)) := by
+--- author-01/PROOF.txt
++++ author-repair-01/PROOF.txt
+@@ -15,8 +15,8 @@
+     intro w hW hWR hSq hSqBound hEnv z hz hTiltWindow hEnvelopeWindow hGeometry
+       hgp hβBound cSZ C1 C2 C3 C4 hSZ
+     intro β cWindow hMomentWindow
+-    -- The unused public D2 let is definitionally erased, as in the original head.
++    -- Introduce the public D2 let so later names retain the frozen binder order.
+-    intro mN P ξ0 D1 A0 B0 A0delete B0delete ℓ0 S0 S0minus I0
++    intro mN P ξ0 D1 D2public A0 B0 A0delete B0delete ℓ0 S0 S0minus I0
+       fullTest0 deletedTest0 sourceCost0 δoriginal Loriginal physical payment cubicCost
+     have hn4 : 4 ≤ n := hNcommon4.trans hn
+     have hPprob : @IsProbabilityMeasure (Fin n → Ω) mN P := by
+@@ -181,7 +181,7 @@
+       @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T0 P at hT0Law
+     have hξ0m (i : Fin n) : Measurable[mN₀, borel ℝ] (ξ0 i) :=
+       ((hgcoord i).1).comp (hO i).1
+-    have hNsq : N ^ (2 : ℕ) = (n : ℝ) :=
++    have hNsq : (Real.sqrt (n : ℝ)) ^ (2 : ℕ) = (n : ℝ) :=
+       Real.sq_sqrt (Nat.cast_nonneg n)
+     have hV0Eq (ζ : Fin n → Ω) :
+         V0 ζ = Real.sqrt (∑ i : Fin n, (ξ0 i ζ) ^ (2 : ℕ)) := by
