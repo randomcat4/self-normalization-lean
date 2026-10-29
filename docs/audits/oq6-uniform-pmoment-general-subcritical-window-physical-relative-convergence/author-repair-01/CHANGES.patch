@@ -1,0 +1,58 @@
+--- author-01/UniformPMomentGeneralSubcriticalWindowPhysicalRelativeConvergence.lean
++++ author-repair-01/UniformPMomentGeneralSubcriticalWindowPhysicalRelativeConvergence.lean
+@@ -113,7 +113,7 @@
+     have haLimit : Filter.Tendsto a Filter.atTop (nhds (0 : ℝ)) := by
+       simpa only [← add_div, add_zero] using hinv.add hbSmall
+     have hpContinuous : Continuous (fun x : ℝ => Real.rpow x p) := by
+-      simpa only [Real.rpow_eq_pow] using
++      simpa only [Real.rpow_eq_pow, id_eq] using
+         (continuous_id.rpow_const (fun _ : ℝ => Or.inr hp0.le))
+     have hapLimit : Filter.Tendsto (fun n : ℕ => Real.rpow (a n) p)
+         Filter.atTop (nhds (0 : ℝ)) := by
+@@ -192,7 +192,7 @@
+     change 0 ≤ v ∧ v ≤ Menv ^ (2 : ℕ) ∧ 0 ≤ rho ∧ rho ≤ Menv at hRhoBound
+     rcases hRhoBound with ⟨hvNonneg, hvBound, hrho, hrhoM⟩
+     have hOnez : 0 ≤ 1 + z := by linarith only [hz]
+-    have hBaseOrder : 1 + z ≤ 1 + b n := add_le_add_left hWindow 1
++    have hBaseOrder : 1 + z ≤ 1 + b n := _root_.add_le_add (le_refl (1 : ℝ)) hWindow
+     have hMomentNumerator : β * Real.rpow (1 + z) p ≤ B * Real.rpow (1 + b n) p :=
+       mul_le_mul hβBound (Real.rpow_le_rpow hOnez hBaseOrder hp0.le)
+         (Real.rpow_nonneg hOnez _) hBpos.le
+@@ -239,7 +239,7 @@
+       rw [div_pow]
+     have hCubicNumerator : (1 + rho) * (1 + z) ^ (3 : ℕ) ≤
+         (1 + Menv) * (1 + b n) ^ (3 : ℕ) :=
+-      mul_le_mul (add_le_add_left hrhoM 1) (pow_le_pow_left₀ hOnez hBaseOrder 3)
++      mul_le_mul (_root_.add_le_add (le_refl (1 : ℝ)) hrhoM) (pow_le_pow_left₀ hOnez hBaseOrder 3)
+         (pow_nonneg hOnez 3) (by linarith only [hMenv])
+     have hCubic : (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) ≤
+         (1 + Menv) * (a n) ^ (3 : ℕ) := by
+--- author-01/PROOF.txt
++++ author-repair-01/PROOF.txt
+@@ -47,7 +47,7 @@
+     have haLimit : Filter.Tendsto a Filter.atTop (nhds (0 : ℝ)) := by
+       simpa only [← add_div, add_zero] using hinv.add hbSmall
+     have hpContinuous : Continuous (fun x : ℝ => Real.rpow x p) := by
+-      simpa only [Real.rpow_eq_pow] using
++      simpa only [Real.rpow_eq_pow, id_eq] using
+         (continuous_id.rpow_const (fun _ : ℝ => Or.inr hp0.le))
+     have hapLimit : Filter.Tendsto (fun n : ℕ => Real.rpow (a n) p)
+         Filter.atTop (nhds (0 : ℝ)) := by
+@@ -126,7 +126,7 @@
+     change 0 ≤ v ∧ v ≤ Menv ^ (2 : ℕ) ∧ 0 ≤ rho ∧ rho ≤ Menv at hRhoBound
+     rcases hRhoBound with ⟨hvNonneg, hvBound, hrho, hrhoM⟩
+     have hOnez : 0 ≤ 1 + z := by linarith only [hz]
+-    have hBaseOrder : 1 + z ≤ 1 + b n := add_le_add_left hWindow 1
++    have hBaseOrder : 1 + z ≤ 1 + b n := _root_.add_le_add (le_refl (1 : ℝ)) hWindow
+     have hMomentNumerator : β * Real.rpow (1 + z) p ≤ B * Real.rpow (1 + b n) p :=
+       mul_le_mul hβBound (Real.rpow_le_rpow hOnez hBaseOrder hp0.le)
+         (Real.rpow_nonneg hOnez _) hBpos.le
+@@ -173,7 +173,7 @@
+       rw [div_pow]
+     have hCubicNumerator : (1 + rho) * (1 + z) ^ (3 : ℕ) ≤
+         (1 + Menv) * (1 + b n) ^ (3 : ℕ) :=
+-      mul_le_mul (add_le_add_left hrhoM 1) (pow_le_pow_left₀ hOnez hBaseOrder 3)
++      mul_le_mul (_root_.add_le_add (le_refl (1 : ℝ)) hrhoM) (pow_le_pow_left₀ hOnez hBaseOrder 3)
+         (pow_nonneg hOnez 3) (by linarith only [hMenv])
+     have hCubic : (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ) ≤
+         (1 + Menv) * (a n) ^ (3 : ℕ) := by

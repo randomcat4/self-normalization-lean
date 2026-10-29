@@ -1,0 +1,68 @@
+--- a/drafts/oq56/unit271/author-01/UniformPMomentSubcriticalPowerWindowPhysicalRelativeDecay.lean
++++ b/drafts/oq56/unit271/author-repair-01/UniformPMomentSubcriticalPowerWindowPhysicalRelativeDecay.lean
+@@ -147,6 +147,7 @@
+           mul_le_mul_of_nonneg_right (hNpower n hnPower) hnsNonneg
+         _ = A * Real.rpow (n : ℝ) q := by
+           have hsum : q - s + s = q := by ring
++          simp only [Real.rpow_eq_pow]
+           rw [mul_assoc, ← Real.rpow_add hnPos, hsum]
+         _ = c * Real.rpow B (-1 / p) * Real.rpow (n : ℝ) q := rfl
+     refine ⟨hns, ?_⟩
+@@ -196,6 +197,7 @@
+             Real.rpow (2 : ℝ) p * Real.rpow (Real.rpow (n : ℝ) s) p :=
+           Real.mul_rpow (by norm_num) hnsNonneg
+         _ = Real.rpow (2 : ℝ) p * Real.rpow (n : ℝ) (s * p) := by
++          simp only [Real.rpow_eq_pow]
+           rw [← Real.rpow_mul hnPos.le]
+     have hAffineP : Real.rpow (1 + z) p ≤
+         Real.rpow (2 : ℝ) p * Real.rpow (n : ℝ) (s * p) :=
+@@ -217,6 +219,7 @@
+             (Real.rpow (n : ℝ) (s * p) * Real.rpow (n : ℝ) (-((p - 2) / 2))) := by
+           ring
+         _ = (B * Real.rpow (2 : ℝ) p) * Real.rpow (n : ℝ) (-δ) := by
++          simp only [Real.rpow_eq_pow]
+           rw [← Real.rpow_add hnPos, hMomentExponent]
+     have hCube : (1 + z) ^ (3 : ℕ) ≤ (2 * Real.rpow (n : ℝ) s) ^ (3 : ℕ) :=
+       pow_le_pow_left₀ hOneZ hAffine 3
+@@ -246,6 +249,7 @@
+           rw [mul_pow, hCubePower, Real.sqrt_eq_rpow]
+           norm_num <;> ring
+         _ = (8 * (1 + Menv)) * Real.rpow (n : ℝ) (3 * s - (1 / 2 : ℝ)) := by
++          simp only [Real.rpow_eq_pow]
+           rw [Real.rpow_sub hnPos]
+         _ ≤ (8 * (1 + Menv)) * Real.rpow (n : ℝ) (-δ) :=
+           mul_le_mul_of_nonneg_left
+--- a/drafts/oq56/unit271/author-01/PROOF.txt
++++ b/drafts/oq56/unit271/author-repair-01/PROOF.txt
+@@ -78,6 +78,7 @@
+           mul_le_mul_of_nonneg_right (hNpower n hnPower) hnsNonneg
+         _ = A * Real.rpow (n : ℝ) q := by
+           have hsum : q - s + s = q := by ring
++          simp only [Real.rpow_eq_pow]
+           rw [mul_assoc, ← Real.rpow_add hnPos, hsum]
+         _ = c * Real.rpow B (-1 / p) * Real.rpow (n : ℝ) q := rfl
+     refine ⟨hns, ?_⟩
+@@ -127,6 +128,7 @@
+             Real.rpow (2 : ℝ) p * Real.rpow (Real.rpow (n : ℝ) s) p :=
+           Real.mul_rpow (by norm_num) hnsNonneg
+         _ = Real.rpow (2 : ℝ) p * Real.rpow (n : ℝ) (s * p) := by
++          simp only [Real.rpow_eq_pow]
+           rw [← Real.rpow_mul hnPos.le]
+     have hAffineP : Real.rpow (1 + z) p ≤
+         Real.rpow (2 : ℝ) p * Real.rpow (n : ℝ) (s * p) :=
+@@ -148,6 +150,7 @@
+             (Real.rpow (n : ℝ) (s * p) * Real.rpow (n : ℝ) (-((p - 2) / 2))) := by
+           ring
+         _ = (B * Real.rpow (2 : ℝ) p) * Real.rpow (n : ℝ) (-δ) := by
++          simp only [Real.rpow_eq_pow]
+           rw [← Real.rpow_add hnPos, hMomentExponent]
+     have hCube : (1 + z) ^ (3 : ℕ) ≤ (2 * Real.rpow (n : ℝ) s) ^ (3 : ℕ) :=
+       pow_le_pow_left₀ hOneZ hAffine 3
+@@ -177,6 +180,7 @@
+           rw [mul_pow, hCubePower, Real.sqrt_eq_rpow]
+           norm_num <;> ring
+         _ = (8 * (1 + Menv)) * Real.rpow (n : ℝ) (3 * s - (1 / 2 : ℝ)) := by
++          simp only [Real.rpow_eq_pow]
+           rw [Real.rpow_sub hnPos]
+         _ ≤ (8 * (1 + Menv)) * Real.rpow (n : ℝ) (-δ) :=
+           mul_le_mul_of_nonneg_left

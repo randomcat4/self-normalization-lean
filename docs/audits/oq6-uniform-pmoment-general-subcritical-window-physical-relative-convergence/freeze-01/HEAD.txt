@@ -1,0 +1,55 @@
+theorem uniform_pmoment_actual_original_subcritical_window_physical_relative_convergence
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (B : ℝ) (hB : 1 ≤ B)
+    (cSZ C1 C2 C3 C4 : ℝ)
+    (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+      cSZ C1 C2 C3 C4) :
+    ∀ (Cenv aenv t0 Menv : ℝ)
+      (hCenv : 0 ≤ Cenv) (haenv : 0 ≤ aenv)
+      (ht0 : 0 < t0) (hMenv : 0 ≤ Menv),
+    let q : ℝ := (p - 2) / (2 * p)
+    ∀ (b : ℕ → ℝ)
+      (hbLower : ∀ᶠ n : ℕ in Filter.atTop, (1 : ℝ) ≤ b n)
+      (hbSmall : Filter.Tendsto
+        (fun n : ℕ => b n / Real.rpow (n : ℝ) q) Filter.atTop (nhds (0 : ℝ)))
+      (ε : ℝ) (hε : 0 < ε),
+      ∃ N : ℕ, 4 ≤ N ∧
+        ∀ (n : ℕ), N ≤ n →
+          (1 : ℝ) ≤ b n ∧
+          ∀ {Ω : Type u} [mΩ : MeasurableSpace Ω]
+            (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+            (h : Ω → Ω → ℝ)
+            (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+            (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+            (hhsymm : ∀ o y, h o y = h y o)
+            (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+            (hprojectionsecond :
+              (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1),
+            let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+            let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+            let v : ℝ :=
+              ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+            let rho : ℝ := Real.sqrt v
+            let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+            ∀ (hgp : Integrable[mΩ] (fun o : Ω => Real.rpow |g o| p) μ)
+              (hβBound : β ≤ B),
+              ∀ (w : Ω → ℝ)
+                (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+                (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight Cenv aenv n)
+                (hSq : Integrable[mΩ] (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+                (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ Menv)
+                (hEnv : ∀ᵐ t : Ω × Ω ∂(@Measure.prod Ω Ω mΩ mΩ μ μ),
+                  |r t.1 t.2| ≤ w t.1 * w t.2)
+                (z : ℝ) (hz : 1 ≤ z) (hWindow : z ≤ b n),
+                let mN : MeasurableSpace (Fin n → Ω) :=
+                  @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω)
+                    (fun _ : Fin n => mΩ)
+                let P : @Measure (Fin n → Ω) mN :=
+                  @Measure.pi (Fin n) (fun _ : Fin n => Ω)
+                    (inferInstance : Fintype (Fin n))
+                    (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+                let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+                let physical : (Fin n → Ω) → ℝ := fun ζ =>
+                  if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
+                    (projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ)
+                |P.real {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z - 1| ≤ ε
