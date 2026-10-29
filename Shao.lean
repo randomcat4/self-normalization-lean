@@ -928,6 +928,7 @@ import Shao.OQ6.OriginalCountablyGeneratedModel
 import Shao.OQ6.OriginalCurrentLevelGoodsetPhysicalPayment
 import Shao.OQ6.OriginalCurrentLevelPhysicalFiniteCostTail
 import Shao.OQ6.OriginalCurrentLevelPhysicalRelativePolynomialRate
+import Shao.OQ6.OriginalEnvelopeRhoBound
 import Shao.OQ6.OriginalExceptionalTailAbsorption
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
@@ -979,6 +980,9 @@ import Shao.OQ6.ScalarObservationCoding
 import Shao.OQ6.SignedCompactCDFBounds
 import Shao.OQ6.SourceAnalyticCost
 import Shao.OQ6.StretchedExponentialSumMoments
+import Shao.OQ6.UniformPMomentActualGoodsetFrontier
+import Shao.OQ6.UniformPMomentGoodsetPhysicalPayment
+import Shao.OQ6.UniformPMomentLowEnergy
 import Shao.OQ6.UnperturbedDeletedWeightedCostBridge
 import Shao.OQ6.UntiltedCompactCost
 import Shao.OQ6.UntiltedCompactCostFoundation
