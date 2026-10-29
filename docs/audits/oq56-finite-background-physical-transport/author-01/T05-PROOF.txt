@@ -1,0 +1,18 @@
+:= by
+  classical
+  have hsymE : ∀ j k : Fin B.card,
+      H ((e j).val) ((e k).val) = H ((e k).val) ((e j).val) := by
+    intro j k
+    exact hsym ((e j).val) ((e k).val)
+  have htransport :
+      (∑ j : Fin B.card,
+        ∑ k ∈ Finset.univ.erase j, H ((e j).val) ((e k).val)) =
+      ∑ i ∈ B, ∑ k ∈ B.erase i, H i k := by
+    simp_rw [erased_row_background_equiv B e H]
+    exact sum_background_equiv B e
+      (fun i : Fin n => ∑ k ∈ B.erase i, H i k)
+  have hleft := Shao.OQ5.P35.offDiagonalSum_eq_two_unordered
+    (fun j k : Fin B.card => H ((e j).val) ((e k).val)) hsymE
+  have hright := Shao.OQ5.P41.FiniteBackgroundPerturbation.block_offDiagonal_sum
+    B H hsym
+  linarith only [htransport, hleft, hright]

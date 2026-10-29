@@ -1,0 +1,7 @@
+# OQ56 unit 279: FiniteBackgroundPhysicalTransport
+
+Prove exact deterministic transport from actual retained original-n background rows to the same U/jackknife physical statistic, for any enumeration equivalence. Retain original n-2 denominators, residual scale (m-2)/(n-2), the exact factor-two row algebra, and guarded/total ratios at zero studentizer. Physical transport explicitly requires n>=4 and m>=4; zero-helper identities preserve their separately stated smaller dimensions.
+
+Exact source `98da205742e57bc796c9a235ddc8ff7466fd70a328dcb711f7e3e41f7dc8f5c2`. Designated-server successful native attempt and same-first-object all-owner audit returned actual RC0/0. Complete independent source/proof and actual TYPE review covers 46 actual owners, 1141 TYPE lines and 3 required non-theorem values. Original warnings and strict-wrapper false are retained. Recursive axioms remain within propext, Classical.choice and Quot.sound.
+
+This milestone pays only the exact deterministic physical bridge and common AE finite perturbation package. Further fixed-mask conditional transport/quantitative composition, full anomalous-value conditioning, interaction/threshold/rare-block/large-K-Q payments, unconditional PE-R/PE-L, NR/DC and full OQ56/root closure remain OPEN. The earlier qualified276 engine under distinct external hSZ/hSZC and277 finite optimization remain accepted at their exact scopes; their original full application is not inferred. Original attribution, alpha restrictions and p54 repairs stay explicit.

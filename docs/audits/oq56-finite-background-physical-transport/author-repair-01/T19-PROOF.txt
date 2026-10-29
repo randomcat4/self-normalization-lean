@@ -1,0 +1,15 @@
+:= by
+  classical
+  have hsymB : ∀ a b : Ω, scaledResidual B r a b = scaledResidual B r b a := by
+    intro a b
+    unfold scaledResidual
+    rw [hsym a b]
+  rw [physicalStatistic_eq_projection_ratio
+    B.card g (scaledResidual B r) (backgroundSample B e x) hsymB hm,
+    numerator_background B e g r x hsym hn hm,
+    sqrt_centeredSq_background B e g r x hsym hn hm]
+  dsimp only
+  by_cases hs : backgroundStudentizer B (fun i : Fin n => g (x i))
+      (fun i j : Fin n => r (x i) (x j)) = 0
+  · simp [hs]
+  · simp [hs]

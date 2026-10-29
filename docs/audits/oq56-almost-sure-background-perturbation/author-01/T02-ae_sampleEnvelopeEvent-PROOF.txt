@@ -1,0 +1,19 @@
+:= by
+  have hW (i : Fin n) :
+      ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ), 0 ≤ w (x i) :=
+    (measurePreserving_eval (fun _ : Fin n => μ) i).quasiMeasurePreserving.ae hw
+  have hR (i j : Fin n) :
+      ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+        i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j) := by
+    by_cases hij : i ≠ j
+    · exact ((coordinatePair_measurePreserving n μ i j hij).quasiMeasurePreserving.ae hr).mono
+        (fun x hx _ => hx)
+    · exact Filter.Eventually.of_forall (fun x hne => False.elim (hij hne))
+  have hWAll : ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      ∀ i : Fin n, 0 ≤ w (x i) :=
+    Filter.eventually_all.2 hW
+  have hRAll : ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      ∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j) :=
+    Filter.eventually_all.2 (fun i => Filter.eventually_all.2 (fun j => hR i j))
+  filter_upwards [hWAll, hRAll] with x hxW hxR
+  exact ⟨hxW, hxR⟩

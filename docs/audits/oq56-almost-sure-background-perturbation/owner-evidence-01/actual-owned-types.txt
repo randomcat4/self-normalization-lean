@@ -1,0 +1,148 @@
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.ae_sampleBackgroundBounds : ∀ (n : Nat) {Ω : Type u}
+  [mΩ : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω mΩ)
+  [hμ : @MeasureTheory.IsProbabilityMeasure.{u} Ω mΩ μ] (r : Ω → Ω → Real) (w : Ω → Real)
+  (hw :
+    @Filter.Eventually.{u} Ω
+      (fun (o : Ω) =>
+        @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (w o))
+      (@MeasureTheory.ae.{u, u} Ω (@MeasureTheory.Measure.{u} Ω mΩ) (@MeasureTheory.Measure.instFunLike.{u} Ω mΩ)
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} Ω mΩ) μ))
+  (hr :
+    @Filter.Eventually.{u} (Prod.{u, u} Ω Ω)
+      (fun (p : Prod.{u, u} Ω Ω) =>
+        @LE.le.{0} Real Real.instLE
+          (@abs.{0} Real Real.lattice Real.instAddGroup (r (@Prod.fst.{u, u} Ω Ω p) (@Prod.snd.{u, u} Ω Ω p)))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (w (@Prod.fst.{u, u} Ω Ω p))
+            (w (@Prod.snd.{u, u} Ω Ω p))))
+      (@MeasureTheory.ae.{u, u} (Prod.{u, u} Ω Ω)
+        (@MeasureTheory.Measure.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instFunLike.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} (Prod.{u, u} Ω Ω)
+          (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.prod.{u, u} Ω Ω mΩ mΩ μ μ))),
+  @Filter.Eventually.{u} (Fin n → Ω)
+    (fun (x : Fin n → Ω) =>
+      And
+        (@Membership.mem.{u, u} (Fin n → Ω) (Set.{u} (Fin n → Ω)) (@Set.instMembership.{u} (Fin n → Ω))
+          (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w) x)
+        (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds.{u} n Ω r w x))
+    (@MeasureTheory.ae.{u, u} (Fin n → Ω)
+      (@MeasureTheory.Measure.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.instFunLike.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.instOuterMeasureClass.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => mΩ)
+        fun (x : Fin n) => μ))
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.measurableSet_sampleEnvelopeEvent : ∀ (n : Nat)
+  {Ω : Type u} [mΩ : MeasurableSpace.{u} Ω] (r : Ω → Ω → Real) (w : Ω → Real)
+  (hr :
+    @Measurable.{u, 0} (Prod.{u, u} Ω Ω) Real (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ) Real.measurableSpace
+      (@Function.uncurry.{u, u, 1} Ω Ω Real r))
+  (hw : @Measurable.{u, 0} Ω Real mΩ Real.measurableSpace w),
+  @MeasurableSet.{u} (Fin n → Ω) (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => mΩ)
+    (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w)
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.ae_sampleEnvelopeEvent : ∀ (n : Nat) {Ω : Type u}
+  [mΩ : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω mΩ)
+  [hμ : @MeasureTheory.IsProbabilityMeasure.{u} Ω mΩ μ] (r : Ω → Ω → Real) (w : Ω → Real)
+  (hw :
+    @Filter.Eventually.{u} Ω
+      (fun (o : Ω) =>
+        @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (w o))
+      (@MeasureTheory.ae.{u, u} Ω (@MeasureTheory.Measure.{u} Ω mΩ) (@MeasureTheory.Measure.instFunLike.{u} Ω mΩ)
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} Ω mΩ) μ))
+  (hr :
+    @Filter.Eventually.{u} (Prod.{u, u} Ω Ω)
+      (fun (p : Prod.{u, u} Ω Ω) =>
+        @LE.le.{0} Real Real.instLE
+          (@abs.{0} Real Real.lattice Real.instAddGroup (r (@Prod.fst.{u, u} Ω Ω p) (@Prod.snd.{u, u} Ω Ω p)))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (w (@Prod.fst.{u, u} Ω Ω p))
+            (w (@Prod.snd.{u, u} Ω Ω p))))
+      (@MeasureTheory.ae.{u, u} (Prod.{u, u} Ω Ω)
+        (@MeasureTheory.Measure.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instFunLike.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} (Prod.{u, u} Ω Ω)
+          (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.prod.{u, u} Ω Ω mΩ mΩ μ μ))),
+  @Filter.Eventually.{u} (Fin n → Ω)
+    (fun (x : Fin n → Ω) =>
+      @Membership.mem.{u, u} (Fin n → Ω) (Set.{u} (Fin n → Ω)) (@Set.instMembership.{u} (Fin n → Ω))
+        (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w) x)
+    (@MeasureTheory.ae.{u, u} (Fin n → Ω)
+      (@MeasureTheory.Measure.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.instFunLike.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.instOuterMeasureClass.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+      (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => mΩ)
+        fun (x : Fin n) => μ))
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds._proof_1 : Nat.AtLeastTwo
+  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+    (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+    (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent : (n : Nat) →
+  {Ω : Type u} → (r : Ω → Ω → Real) → (w : Ω → Real) → Set.{u} (Fin n → Ω)
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds : (n : Nat) →
+  {Ω : Type u} → (r : Ω → Ω → Real) → (w : Ω → Real) → (x : Fin n → Ω) → Prop
+_private.Shao.OQ5.P41.AlmostSureBackgroundPerturbation.0.Shao.OQ5.P41.AlmostSureBackgroundPerturbation.coordinatePair_measurePreserving : ∀
+  (n : Nat) {Ω : Type u} [mΩ : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω mΩ)
+  [hμ : @MeasureTheory.IsProbabilityMeasure.{u} Ω mΩ μ] (i j : Fin n) (hij : @Ne.{1} (Fin n) i j),
+  @MeasureTheory.MeasurePreserving.{u, u} (Fin n → Ω) (Prod.{u, u} Ω Ω)
+    (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (i : Fin n) => mΩ)
+    (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ) (fun (x : Fin n → Ω) => @Prod.mk.{u, u} Ω Ω (x i) (x j))
+    (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => mΩ)
+      fun (x : Fin n) => μ)
+    (@MeasureTheory.Measure.prod.{u, u} Ω Ω mΩ mΩ μ μ)
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.backgroundBounds_of_mem_sampleEnvelopeEvent : ∀ (n : Nat)
+  {Ω : Type u} (r : Ω → Ω → Real) (w : Ω → Real) (x : Fin n → Ω)
+  (hx :
+    @Membership.mem.{u, u} (Fin n → Ω) (Set.{u} (Fin n → Ω)) (@Set.instMembership.{u} (Fin n → Ω))
+      (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w) x),
+  @Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds.{u} n Ω r w x
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent_probability_one : ∀ (n : Nat)
+  {Ω : Type u} [mΩ : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω mΩ)
+  [hμ : @MeasureTheory.IsProbabilityMeasure.{u} Ω mΩ μ] (r : Ω → Ω → Real) (w : Ω → Real)
+  (hmr :
+    @Measurable.{u, 0} (Prod.{u, u} Ω Ω) Real (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ) Real.measurableSpace
+      (@Function.uncurry.{u, u, 1} Ω Ω Real r))
+  (hmw : @Measurable.{u, 0} Ω Real mΩ Real.measurableSpace w)
+  (hw :
+    @Filter.Eventually.{u} Ω
+      (fun (o : Ω) =>
+        @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (w o))
+      (@MeasureTheory.ae.{u, u} Ω (@MeasureTheory.Measure.{u} Ω mΩ) (@MeasureTheory.Measure.instFunLike.{u} Ω mΩ)
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} Ω mΩ) μ))
+  (hr :
+    @Filter.Eventually.{u} (Prod.{u, u} Ω Ω)
+      (fun (p : Prod.{u, u} Ω Ω) =>
+        @LE.le.{0} Real Real.instLE
+          (@abs.{0} Real Real.lattice Real.instAddGroup (r (@Prod.fst.{u, u} Ω Ω p) (@Prod.snd.{u, u} Ω Ω p)))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (w (@Prod.fst.{u, u} Ω Ω p))
+            (w (@Prod.snd.{u, u} Ω Ω p))))
+      (@MeasureTheory.ae.{u, u} (Prod.{u, u} Ω Ω)
+        (@MeasureTheory.Measure.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instFunLike.{u} (Prod.{u, u} Ω Ω) (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.instOuterMeasureClass.{u} (Prod.{u, u} Ω Ω)
+          (@Prod.instMeasurableSpace.{u, u} Ω Ω mΩ mΩ))
+        (@MeasureTheory.Measure.prod.{u, u} Ω Ω mΩ mΩ μ μ))),
+  And
+    (@Eq.{1} ENNReal
+      (@DFunLike.coe.{u + 1, u + 1, 1}
+        (@MeasureTheory.Measure.{u} ((i : Fin n) → Ω)
+          (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+        (Set.{u} ((i : Fin n) → Ω)) (fun (x : Set.{u} ((i : Fin n) → Ω)) => ENNReal)
+        (@MeasureTheory.Measure.instFunLike.{u} ((i : Fin n) → Ω)
+          (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ))
+        (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => mΩ)
+          fun (x : Fin n) => μ)
+        (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w))
+      (@OfNat.ofNat.{0} ENNReal (nat_lit 1) (@One.toOfNat1.{0} ENNReal ENNReal.instOne)))
+    (@Eq.{1} Real
+      (@MeasureTheory.Measure.real.{u} ((i : Fin n) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => mΩ)
+        (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => mΩ)
+          fun (x : Fin n) => μ)
+        (@Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent.{u} n Ω r w))
+      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))

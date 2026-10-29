@@ -1,0 +1,102 @@
+{
+  "schema": "oq56-unit280-proposed-head-bundle-v1",
+  "status": "PROPOSED_ONLY_NOT_FROZEN_NOT_IMPLEMENTED_NOT_CHECKED",
+  "proposedModule": "Shao/OQ5/P41/AlmostSureBackgroundPerturbation.lean",
+  "PRE": "import Shao.OQ5.P41.FiniteBackgroundPerturbation\nimport Mathlib.MeasureTheory.Constructions.Pi\nimport Mathlib.Probability.Independence.Basic\nimport Mathlib.MeasureTheory.Function.SpecialFunctions.Basic\n\nset_option autoImplicit false\n\nuniverse u\n\nnamespace Shao.OQ5.P41.AlmostSureBackgroundPerturbation\n\nnoncomputable section\n\nopen MeasureTheory ProbabilityTheory\nopen Shao.OQ5.P41.FiniteBackgroundPerturbation\nopen scoped BigOperators",
+  "declarations": [
+    {
+      "id": "D01",
+      "name": "sampleEnvelopeEvent",
+      "kind": "def",
+      "visibility": "public",
+      "head": "def sampleEnvelopeEvent (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) : Set (Fin n → Ω)",
+      "definitionRhs": "  {x | (∀ i : Fin n, 0 ≤ w (x i)) ∧\n    (∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j))}",
+      "definitionAssembly": {
+        "assignmentDelimiterOwner": "assembly",
+        "assignmentDelimiter": " :=\n",
+        "assembledDeclaration": "def sampleEnvelopeEvent (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) : Set (Fin n → Ω) :=\n  {x | (∀ i : Fin n, 0 ≤ w (x i)) ∧\n    (∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j))}\n",
+        "assignmentTokenCount": 1
+      }
+    },
+    {
+      "id": "D02",
+      "name": "sampleBackgroundBounds",
+      "kind": "def",
+      "visibility": "public",
+      "head": "def sampleBackgroundBounds (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω) : Prop",
+      "definitionRhs": "  ∀ (v : Fin n → ℝ) (B : Finset (Fin n)),\n    |blockPairSum (anomaly B) (fun i j : Fin n => r (x i) (x j))| ≤\n        (anomalyWeight B (fun i : Fin n => w (x i))) ^ (2 : ℕ) / 2 ∧\n    (4 ≤ n →\n      (∀ i : Fin n, i ∈ B →\n        |adjustedRow v (fun a b : Fin n => r (x a) (x b)) i -\n          backgroundRow B v (fun a b : Fin n => r (x a) (x b)) i| ≤\n          anomalyWeight B (fun a : Fin n => w (x a)) * w (x i) /\n            ((n : ℝ) - 2)) ∧\n      (3 ≤ B.card →\n        |Real.sqrt (blockCenteredEnergy B\n            (adjustedRow v (fun a b : Fin n => r (x a) (x b)))) -\n          Real.sqrt ((B.card : ℝ) - 1) *\n            backgroundStudentizer B v (fun a b : Fin n => r (x a) (x b))| ≤\n          anomalyWeight B (fun a : Fin n => w (x a)) *\n            Real.sqrt (backgroundWeightEnergy B (fun a : Fin n => w (x a))) /\n              ((n : ℝ) - 2)))",
+      "definitionAssembly": {
+        "assignmentDelimiterOwner": "assembly",
+        "assignmentDelimiter": " :=\n",
+        "assembledDeclaration": "def sampleBackgroundBounds (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω) : Prop :=\n  ∀ (v : Fin n → ℝ) (B : Finset (Fin n)),\n    |blockPairSum (anomaly B) (fun i j : Fin n => r (x i) (x j))| ≤\n        (anomalyWeight B (fun i : Fin n => w (x i))) ^ (2 : ℕ) / 2 ∧\n    (4 ≤ n →\n      (∀ i : Fin n, i ∈ B →\n        |adjustedRow v (fun a b : Fin n => r (x a) (x b)) i -\n          backgroundRow B v (fun a b : Fin n => r (x a) (x b)) i| ≤\n          anomalyWeight B (fun a : Fin n => w (x a)) * w (x i) /\n            ((n : ℝ) - 2)) ∧\n      (3 ≤ B.card →\n        |Real.sqrt (blockCenteredEnergy B\n            (adjustedRow v (fun a b : Fin n => r (x a) (x b)))) -\n          Real.sqrt ((B.card : ℝ) - 1) *\n            backgroundStudentizer B v (fun a b : Fin n => r (x a) (x b))| ≤\n          anomalyWeight B (fun a : Fin n => w (x a)) *\n            Real.sqrt (backgroundWeightEnergy B (fun a : Fin n => w (x a))) /\n              ((n : ℝ) - 2)))\n",
+        "assignmentTokenCount": 1
+      }
+    },
+    {
+      "id": "T01",
+      "name": "coordinatePair_measurePreserving",
+      "kind": "theorem",
+      "visibility": "private",
+      "head": "private theorem coordinatePair_measurePreserving (n : ℕ) {Ω : Type u}\n    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (i j : Fin n) (hij : i ≠ j) :\n    MeasurePreserving (fun x : Fin n → Ω => (x i, x j))\n      (Measure.pi (fun _ : Fin n => μ)) (μ.prod μ)"
+    },
+    {
+      "id": "T02",
+      "name": "ae_sampleEnvelopeEvent",
+      "kind": "theorem",
+      "visibility": "public",
+      "head": "theorem ae_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}\n    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :\n    ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),\n      x ∈ sampleEnvelopeEvent n r w"
+    },
+    {
+      "id": "T03",
+      "name": "measurableSet_sampleEnvelopeEvent",
+      "kind": "theorem",
+      "visibility": "public",
+      "head": "theorem measurableSet_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}\n    [mΩ : MeasurableSpace Ω] (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (hr : Measurable (Function.uncurry r)) (hw : Measurable w) :\n    MeasurableSet (sampleEnvelopeEvent n r w)"
+    },
+    {
+      "id": "T04",
+      "name": "sampleEnvelopeEvent_probability_one",
+      "kind": "theorem",
+      "visibility": "public",
+      "head": "theorem sampleEnvelopeEvent_probability_one (n : ℕ) {Ω : Type u}\n    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (hmr : Measurable (Function.uncurry r)) (hmw : Measurable w)\n    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :\n    (Measure.pi (fun _ : Fin n => μ)) (sampleEnvelopeEvent n r w) = 1 ∧\n      (Measure.pi (fun _ : Fin n => μ)).real (sampleEnvelopeEvent n r w) = 1"
+    },
+    {
+      "id": "T05",
+      "name": "backgroundBounds_of_mem_sampleEnvelopeEvent",
+      "kind": "theorem",
+      "visibility": "public",
+      "head": "theorem backgroundBounds_of_mem_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω)\n    (hx : x ∈ sampleEnvelopeEvent n r w) :\n    sampleBackgroundBounds n r w x"
+    },
+    {
+      "id": "T06",
+      "name": "ae_sampleBackgroundBounds",
+      "kind": "theorem",
+      "visibility": "public",
+      "head": "theorem ae_sampleBackgroundBounds (n : ℕ) {Ω : Type u}\n    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)\n    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :\n    ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),\n      x ∈ sampleEnvelopeEvent n r w ∧ sampleBackgroundBounds n r w x"
+    }
+  ],
+  "CLOSE": "end\n\nend Shao.OQ5.P41.AlmostSureBackgroundPerturbation",
+  "countsDerived": {
+    "definitions": 2,
+    "theorems": 6,
+    "publicTheorems": 5,
+    "privateTheorems": 1,
+    "total": 8
+  },
+  "allHEADsFullyTypedRelativeToPRE": true,
+  "definitionsRHSFixedForProposal": true,
+  "assumptionChangesRequireParentDecision": true,
+  "optionalNumeratorIdentity": "OMITTED_NO_NEW_CONSUMER_NEED",
+  "unit279Consumed": false,
+  "qualified": false,
+  "kernelChecked": false,
+  "definitionAssembly": {
+    "schema": "typedHEAD-plus-explicit-unique-assignment-delimiter-v1",
+    "delimiterOwner": "definitionAssembly (neither typed HEAD nor bare RHS)",
+    "assignmentDelimiter": " :=\n",
+    "expression": "head + assignmentDelimiter + definitionRhs + finalLF",
+    "headContainsAssignment": false,
+    "bareRhsContainsAssignment": false,
+    "exactlyOneAssignmentPerAssembledDefinitionRequired": true
+  }
+}

@@ -1,0 +1,38 @@
+:= by
+  classical
+  have hn4 : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hn0 : (n : ℝ) ≠ 0 := by linarith
+  have hn1 : (n : ℝ) - 1 ≠ 0 := by linarith
+  have hroot0 : 0 < Real.sqrt (n : ℝ) := Real.sqrt_pos.mpr (by linarith)
+  have hroot : Real.sqrt (n : ℝ) ≠ 0 := ne_of_gt hroot0
+  have hroot2 : (Real.sqrt (n : ℝ)) ^ (2 : ℕ) = (n : ℝ) :=
+    Real.sq_sqrt (by linarith)
+  have hu := Shao.OQ5.P51.sampled_uStatistic_formula n g r x hsym hn
+  have hnum :
+      Real.sqrt (n : ℝ) *
+        Shao.OQ6.FiniteRows.uStatistic (Shao.OQ5.P51.sampledKernel n g r x) =
+      2 * (Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) := by
+    rw [hu]
+    unfold Shao.OQ5.P51.projectionW Shao.OQ5.P51.residualStatisticD
+    calc
+      _ = ((Real.sqrt (n : ℝ)) ^ (2 : ℕ) / (n : ℝ)) *
+          (2 * ((∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ) +
+            Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x /
+              (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)))) := by
+        field_simp [hn0, hn1, hroot] <;> ring
+      _ = _ := by rw [hroot2, div_self hn0, one_mul]
+  have hR := jackknife_root_eq_two_sqrt_centeredSq n g r x hn
+  dsimp only [physicalStatistic]
+  by_cases hs : Real.sqrt (Shao.OQ5.P51.centeredSq n g r x) = 0
+  · have hR0 : Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x)) = 0 := by
+      rw [hR, hs]
+      ring
+    simp [hR0, hs]
+  · have hRne : Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x)) ≠ 0 := by
+      rw [hR]
+      exact mul_ne_zero (by norm_num) hs
+    rw [if_neg hRne, hnum, hR]
+    field_simp [hs] <;> ring

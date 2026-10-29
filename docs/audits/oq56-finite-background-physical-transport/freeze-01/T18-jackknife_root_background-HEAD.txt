@@ -1,0 +1,10 @@
+theorem jackknife_root_background {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a)
+    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :
+    Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel B.card g
+          (scaledResidual B r) (backgroundSample B e x))) =
+      2 * backgroundStudentizer B (fun i : Fin n => g (x i))
+        (fun i j : Fin n => r (x i) (x j))

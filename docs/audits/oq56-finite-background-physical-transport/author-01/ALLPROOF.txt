@@ -1,0 +1,229 @@
+:= by
+  exact (e j).property
+:= by
+  intro i j hij
+  exact e.injective (Subtype.ext hij)
+:= by
+  classical
+  refine Finset.sum_bij (fun j _ => (e j).val) ?_ ?_ ?_ ?_
+  · intro j _
+    exact background_index_mem B e j
+  · intro i _ j _ hij
+    exact background_index_injective B e hij
+  · intro i hi
+    obtain ⟨j, hj⟩ := e.surjective ⟨i, hi⟩
+    exact ⟨j, Finset.mem_univ _, congrArg Subtype.val hj⟩
+  · intro j _
+    rfl
+:= by
+  classical
+  refine Finset.sum_bij (fun k _ => (e k).val) ?_ ?_ ?_ ?_
+  · intro k hk
+    refine Finset.mem_erase.mpr ⟨?_, background_index_mem B e k⟩
+    intro heq
+    exact (Finset.mem_erase.mp hk).1 (background_index_injective B e heq)
+  · intro k _ l _ hkl
+    exact background_index_injective B e hkl
+  · intro i hi
+    obtain ⟨k, hk⟩ := e.surjective ⟨i, (Finset.mem_erase.mp hi).2⟩
+    have hval : (e k).val = i := congrArg Subtype.val hk
+    refine ⟨k, Finset.mem_erase.mpr ⟨?_, Finset.mem_univ _⟩, hval⟩
+    intro hkj
+    exact (Finset.mem_erase.mp hi).1
+      (hval.symm.trans (congrArg (fun l : Fin B.card => (e l).val) hkj))
+  · intro k _
+    rfl
+:= by
+  classical
+  have hsymE : ∀ j k : Fin B.card,
+      H ((e j).val) ((e k).val) = H ((e k).val) ((e j).val) := by
+    intro j k
+    exact hsym ((e j).val) ((e k).val)
+  have htransport :
+      (∑ j : Fin B.card,
+        ∑ k ∈ Finset.univ.erase j, H ((e j).val) ((e k).val)) =
+      ∑ i ∈ B, ∑ k ∈ B.erase i, H i k := by
+    simp_rw [erased_row_background_equiv B e H]
+    exact sum_background_equiv B e
+      (fun i : Fin n => ∑ k ∈ B.erase i, H i k)
+  have hleft := Shao.OQ5.P35.offDiagonalSum_eq_two_unordered
+    (fun j k : Fin B.card => H ((e j).val) ((e k).val)) hsymE
+  have hright := Shao.OQ5.P41.FiniteBackgroundPerturbation.block_offDiagonal_sum
+    B H hsym
+  linarith only [htransport, hleft, hright]
+:= by
+  classical
+  have hpair := unorderedPairSum_background_equiv B e
+    (fun i j : Fin n => r (x i) (x j))
+    (fun i j => hsym (x i) (x j))
+  change (∑ j : Fin B.card, ∑ k : Fin B.card,
+      if j < k then backgroundScale B * r (x ((e j).val)) (x ((e k).val))
+      else 0) =
+    backgroundScale B * blockPairSum B (fun i j : Fin n => r (x i) (x j))
+  rw [← hpair]
+  simp only [Shao.OQ5.P35.unorderedPairSum, Finset.mul_sum, mul_ite, mul_zero]
+:= by
+  classical
+  have hden := Shao.OQ5.P41.FiniteBackgroundPerturbation.background_denominators_and_scale
+    B hn (le_trans (by decide : 3 ≤ 4) hm)
+  have hn2 : (n : ℝ) - 2 ≠ 0 := ne_of_gt hden.1
+  have hm2 : (B.card : ℝ) - 2 ≠ 0 := ne_of_gt hden.2.1
+  rw [Shao.OQ5.P51.residualU_eq_erased_row]
+  change (∑ k ∈ Finset.univ.erase j,
+      backgroundScale B * r (x ((e j).val)) (x ((e k).val))) /
+        ((B.card : ℝ) - 2) =
+    (∑ i ∈ B.erase ((e j).val), r (x ((e j).val)) (x i)) / ((n : ℝ) - 2)
+  rw [← Finset.mul_sum,
+    erased_row_background_equiv B e (fun i k : Fin n => r (x i) (x k)) j]
+  unfold backgroundScale
+  field_simp [hn2, hm2] <;> ring
+:= by
+  rw [residualU_background_original_denominator B e r x hn hm j]
+  rfl
+:= by
+  unfold Shao.OQ5.P35.mean blockMean
+  rw [sum_background_equiv B e f]
+  simp only [div_eq_mul_inv]
+  ring
+:= by
+  unfold Shao.OQ5.P35.center
+  rw [mean_background_equiv B e f]
+:= by
+  simp_rw [center_background_equiv B e f]
+  exact sum_background_equiv B e
+    (fun i : Fin n => (f i - blockMean B f) ^ (2 : ℕ))
+:= by
+  change (∑ j : Fin B.card, g (x ((e j).val))) / Real.sqrt (B.card : ℝ) =
+    (∑ i ∈ B, g (x i)) / Real.sqrt (B.card : ℝ)
+  rw [sum_background_equiv B e (fun i : Fin n => g (x i))]
+:= by
+  have hden := Shao.OQ5.P41.FiniteBackgroundPerturbation.background_denominators_and_scale
+    B hn (le_trans (by decide : 3 ≤ 4) hm)
+  have hn2 : (n : ℝ) - 2 ≠ 0 := ne_of_gt hden.1
+  have hm1 : (B.card : ℝ) - 1 ≠ 0 := ne_of_gt hden.2.2.1
+  have hroot : Real.sqrt (B.card : ℝ) ≠ 0 :=
+    ne_of_gt (Real.sqrt_pos.mpr hden.2.2.2.1)
+  rw [projectionW_background B e g x]
+  unfold Shao.OQ5.P51.residualStatisticD
+  rw [originalUpper_scaled_background B e r x hsym]
+  unfold backgroundNumerator backgroundScale
+  field_simp [hn2, hm1, hroot] <;> ring
+:= by
+  have hsymB : ∀ a b : Ω, scaledResidual B r a b = scaledResidual B r b a := by
+    intro a b
+    unfold scaledResidual
+    rw [hsym a b]
+  rw [Shao.OQ5.P51.centeredSq_eq_center_sum
+    B.card g (scaledResidual B r) (backgroundSample B e x) hsymB hm]
+  have hrows :
+      (fun j : Fin B.card => g (backgroundSample B e x j) +
+        Shao.OQ5.P51.residualU
+          B.card (scaledResidual B r) (backgroundSample B e x) j) =
+      (fun j : Fin B.card =>
+        backgroundRow B (fun i : Fin n => g (x i))
+          (fun i k : Fin n => r (x i) (x k)) ((e j).val)) := by
+    funext j
+    exact adjusted_row_background B e g r x hn hm j
+  rw [hrows, centered_energy_background_equiv B e
+    (backgroundRow B (fun i : Fin n => g (x i))
+      (fun i j : Fin n => r (x i) (x j)))]
+:= by
+  unfold backgroundStudentizer
+  rw [centeredSq_background B e g r x hsym hn hm]
+:= by
+  have hJ0 : 0 ≤ Shao.OQ6.FiniteRows.jackknifeSq
+      (Shao.OQ5.P51.sampledKernel n g r x) :=
+    Shao.OQ6.FiniteRows.jackknifeSq_nonneg
+      (Shao.OQ5.P51.sampledKernel n g r x) (le_trans (by decide : 3 ≤ 4) hn)
+  have hC0 : 0 ≤ Shao.OQ5.P51.centeredSq n g r x := by
+    unfold Shao.OQ5.P51.centeredSq
+    exact div_nonneg hJ0 (by norm_num)
+  have hleft : 0 ≤ Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+      (Shao.OQ5.P51.sampledKernel n g r x)) := Real.sqrt_nonneg _
+  have hright : 0 ≤ 2 * Real.sqrt (Shao.OQ5.P51.centeredSq n g r x) :=
+    mul_nonneg (by norm_num) (Real.sqrt_nonneg _)
+  have hsquares :
+      (Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x))) ^ (2 : ℕ) =
+      (2 * Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)) ^ (2 : ℕ) := by
+    rw [mul_pow, Real.sq_sqrt hJ0, Real.sq_sqrt hC0]
+    unfold Shao.OQ5.P51.centeredSq
+    ring
+  exact le_antisymm
+    ((sq_le_sq₀ hleft hright).mp hsquares.le)
+    ((sq_le_sq₀ hright hleft).mp hsquares.symm.le)
+:= by
+  classical
+  have hn4 : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hn0 : (n : ℝ) ≠ 0 := by linarith
+  have hn1 : (n : ℝ) - 1 ≠ 0 := by linarith
+  have hroot0 : 0 < Real.sqrt (n : ℝ) := Real.sqrt_pos.mpr (by linarith)
+  have hroot : Real.sqrt (n : ℝ) ≠ 0 := ne_of_gt hroot0
+  have hroot2 : (Real.sqrt (n : ℝ)) ^ (2 : ℕ) = (n : ℝ) :=
+    Real.sq_sqrt (by linarith)
+  have hu := Shao.OQ5.P51.sampled_uStatistic_formula n g r x hsym hn
+  have hnum :
+      Real.sqrt (n : ℝ) *
+        Shao.OQ6.FiniteRows.uStatistic (Shao.OQ5.P51.sampledKernel n g r x) =
+      2 * (Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) := by
+    rw [hu]
+    unfold Shao.OQ5.P51.projectionW Shao.OQ5.P51.residualStatisticD
+    calc
+      _ = ((Real.sqrt (n : ℝ)) ^ (2 : ℕ) / (n : ℝ)) *
+          (2 * ((∑ i : Fin n, g (x i)) / Real.sqrt (n : ℝ) +
+            Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x /
+              (Real.sqrt (n : ℝ) * ((n : ℝ) - 1)))) := by
+        field_simp [hn0, hn1, hroot] <;> ring
+      _ = _ := by rw [hroot2, div_self hn0, one_mul]
+  have hR := jackknife_root_eq_two_sqrt_centeredSq n g r x hn
+  dsimp only [physicalStatistic]
+  by_cases hs : Real.sqrt (Shao.OQ5.P51.centeredSq n g r x) = 0
+  · have hR0 : Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x)) = 0 := by
+      rw [hR, hs]
+      ring
+    simp [hR0, hs]
+  · have hRne : Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x)) ≠ 0 := by
+      rw [hR]
+      exact mul_ne_zero (by norm_num) hs
+    rw [if_neg hRne, hnum, hR]
+    field_simp [hs] <;> ring
+:= by
+  rw [jackknife_root_eq_two_sqrt_centeredSq
+    B.card g (scaledResidual B r) (backgroundSample B e x) hm,
+    sqrt_centeredSq_background B e g r x hsym hn hm]
+:= by
+  classical
+  have hsymB : ∀ a b : Ω, scaledResidual B r a b = scaledResidual B r b a := by
+    intro a b
+    unfold scaledResidual
+    rw [hsym a b]
+  rw [physicalStatistic_eq_projection_ratio
+    B.card g (scaledResidual B r) (backgroundSample B e x) hsymB hm,
+    numerator_background B e g r x hsym hn hm,
+    sqrt_centeredSq_background B e g r x hsym hn hm]
+  dsimp only
+  by_cases hs : backgroundStudentizer B (fun i : Fin n => g (x i))
+      (fun i j : Fin n => r (x i) (x j)) = 0
+  · simp [hs]
+  · simp [hs]
+:= by
+  classical
+  rw [physicalStatistic_background_guarded B e g r x hsym hn hm]
+  dsimp only
+  by_cases hs : backgroundStudentizer B (fun i : Fin n => g (x i))
+      (fun i j : Fin n => r (x i) (x j)) = 0
+  · simp [hs]
+  · simp [hs]
+:= by
+  rw [physicalStatistic_background_guarded B e g r x hsym hn hm]
+  dsimp only
+  simp [hs]
+:= by
+  by_contra hnot
+  have hm : B.card ≤ 3 := Nat.le_of_lt_succ (lt_of_not_ge hnot)
+  have htwo : 2 * B.card ≤ 6 := Nat.mul_le_mul_left 2 hm
+  have himpossible : (8 : ℕ) ≤ 6 := le_trans hn (le_trans hhalf htwo)
+  norm_num at himpossible
