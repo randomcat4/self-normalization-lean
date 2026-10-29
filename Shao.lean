@@ -981,10 +981,12 @@ import Shao.OQ6.SignedCompactCDFBounds
 import Shao.OQ6.SourceAnalyticCost
 import Shao.OQ6.StretchedExponentialSumMoments
 import Shao.OQ6.UniformPMomentActualGoodsetFrontier
+import Shao.OQ6.UniformPMomentGeneralSubcriticalWindowPhysicalRelativeConvergence
 import Shao.OQ6.UniformPMomentGoodsetPhysicalPayment
 import Shao.OQ6.UniformPMomentLowEnergy
 import Shao.OQ6.UniformPMomentPhysicalFiniteCostTail
 import Shao.OQ6.UniformPMomentSingleWindowPhysicalRelativePolynomialRate
+import Shao.OQ6.UniformPMomentSubcriticalPowerWindowPhysicalRelativeDecay
 import Shao.OQ6.UnperturbedDeletedWeightedCostBridge
 import Shao.OQ6.UntiltedCompactCost
 import Shao.OQ6.UntiltedCompactCostFoundation
