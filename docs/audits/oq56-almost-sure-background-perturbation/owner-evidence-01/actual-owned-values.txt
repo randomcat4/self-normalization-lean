@@ -1,0 +1,73 @@
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleEnvelopeEvent := fun (n : Nat) {Ω : Type u}
+    (r : Ω → Ω → Real) (w : Ω → Real) =>
+  @Set.ofPred.{u} (Fin n → Ω) fun (x : Fin n → Ω) =>
+    And
+      (∀ (i : Fin n),
+        @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (w (x i)))
+      (∀ (i j : Fin n),
+        @Ne.{1} (Fin n) i j →
+          @LE.le.{0} Real Real.instLE (@abs.{0} Real Real.lattice Real.instAddGroup (r (x i) (x j)))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (w (x i)) (w (x j))))
+Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds := fun (n : Nat) {Ω : Type u}
+    (r : Ω → Ω → Real) (w : Ω → Real) (x : Fin n → Ω) =>
+  ∀ (v : Fin n → Real) (B : Finset.{0} (Fin n)),
+    And
+      (@LE.le.{0} Real Real.instLE
+        (@abs.{0} Real Real.lattice Real.instAddGroup
+          (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockPairSum n
+            (@Shao.OQ5.P41.FiniteBackgroundPerturbation.anomaly n B) fun (i j : Fin n) => r (x i) (x j)))
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+            (@Shao.OQ5.P41.FiniteBackgroundPerturbation.anomalyWeight n B fun (i : Fin n) => w (x i))
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+          (@OfNat.ofNat.{0} Real (nat_lit 2)
+            (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+              Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds._proof_1))))
+      (@LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n →
+        And
+          (∀ (i : Fin n),
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i →
+              @LE.le.{0} Real Real.instLE
+                (@abs.{0} Real Real.lattice Real.instAddGroup
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.adjustedRow n v (fun (a b : Fin n) => r (x a) (x b)) i)
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundRow n B v (fun (a b : Fin n) => r (x a) (x b))
+                      i)))
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.anomalyWeight n B fun (a : Fin n) => w (x a)) (w (x i)))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@Nat.cast.{0} Real Real.instNatCast n)
+                    (@OfNat.ofNat.{0} Real (nat_lit 2)
+                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                        Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds._proof_1)))))
+          (@LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+              (@Finset.card.{0} (Fin n) B) →
+            @LE.le.{0} Real Real.instLE
+              (@abs.{0} Real Real.lattice Real.instAddGroup
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (Real.sqrt
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockCenteredEnergy n B
+                      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.adjustedRow n v fun (a b : Fin n) => r (x a) (x b))))
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                    (Real.sqrt
+                      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                        (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))
+                        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B v fun (a b : Fin n) =>
+                      r (x a) (x b)))))
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@Shao.OQ5.P41.FiniteBackgroundPerturbation.anomalyWeight n B fun (a : Fin n) => w (x a))
+                  (Real.sqrt
+                    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundWeightEnergy n B fun (a : Fin n) => w (x a))))
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (@Nat.cast.{0} Real Real.instNatCast n)
+                  (@OfNat.ofNat.{0} Real (nat_lit 2)
+                    (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                      Shao.OQ5.P41.AlmostSureBackgroundPerturbation.sampleBackgroundBounds._proof_1))))))

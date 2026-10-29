@@ -1,0 +1,19 @@
+:= by
+  have hsymB : ∀ a b : Ω, scaledResidual B r a b = scaledResidual B r b a := by
+    intro a b
+    unfold scaledResidual
+    rw [hsym a b]
+  rw [Shao.OQ5.P51.centeredSq_eq_center_sum
+    B.card g (scaledResidual B r) (backgroundSample B e x) hsymB hm]
+  have hrows :
+      (fun j : Fin B.card => g (backgroundSample B e x j) +
+        Shao.OQ5.P51.residualU
+          B.card (scaledResidual B r) (backgroundSample B e x) j) =
+      (fun j : Fin B.card =>
+        backgroundRow B (fun i : Fin n => g (x i))
+          (fun i k : Fin n => r (x i) (x k)) ((e j).val)) := by
+    funext j
+    exact adjusted_row_background B e g r x hn hm j
+  rw [hrows, centered_energy_background_equiv B e
+    (backgroundRow B (fun i : Fin n => g (x i))
+      (fun i j : Fin n => r (x i) (x j)))]

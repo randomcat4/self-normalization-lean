@@ -1,0 +1,46 @@
+D01 def sampleEnvelopeEvent (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ) : Set (Fin n → Ω) :=
+
+D02 def sampleBackgroundBounds (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω) : Prop :=
+
+T01 private theorem coordinatePair_measurePreserving (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (i j : Fin n) (hij : i ≠ j) :
+    MeasurePreserving (fun x : Fin n → Ω => (x i, x j))
+      (Measure.pi (fun _ : Fin n => μ)) (μ.prod μ)
+
+T02 theorem ae_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :
+    ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      x ∈ sampleEnvelopeEvent n r w
+
+T03 theorem measurableSet_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+    (hr : Measurable (Function.uncurry r)) (hw : Measurable w) :
+    MeasurableSet (sampleEnvelopeEvent n r w)
+
+T04 theorem sampleEnvelopeEvent_probability_one (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+    (hmr : Measurable (Function.uncurry r)) (hmw : Measurable w)
+    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :
+    (Measure.pi (fun _ : Fin n => μ)) (sampleEnvelopeEvent n r w) = 1 ∧
+      (Measure.pi (fun _ : Fin n => μ)).real (sampleEnvelopeEvent n r w) = 1
+
+T05 theorem backgroundBounds_of_mem_sampleEnvelopeEvent (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω)
+    (hx : x ∈ sampleEnvelopeEvent n r w) :
+    sampleBackgroundBounds n r w x
+
+T06 theorem ae_sampleBackgroundBounds (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :
+    ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      x ∈ sampleEnvelopeEvent n r w ∧ sampleBackgroundBounds n r w x

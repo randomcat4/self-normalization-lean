@@ -1,0 +1,70 @@
+Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer := fun {n : Nat}
+    (B : Finset.{0} (Fin n)) (g : Fin n → Real) (r : Fin n → Fin n → Real) =>
+  Real.sqrt
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockCenteredEnergy n B
+        (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundRow n B g r))
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+        (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.blockMean := fun {n : Nat} (B : Finset.{0} (Fin n))
+    (f : Fin n → Real) =>
+  @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+    (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => f i)
+    (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.anomaly := fun {n : Nat} (B : Finset.{0} (Fin n)) =>
+  @SDiff.sdiff.{0} (Finset.{0} (Fin n)) (@Finset.instSDiff.{0} (Fin n) (instDecidableEqFin n))
+    (@Finset.univ.{0} (Fin n) (Fin.fintype n)) B
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.anomalyWeight := fun {n : Nat} (B : Finset.{0} (Fin n))
+    (w : Fin n → Real) =>
+  @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Shao.OQ5.P41.FiniteBackgroundPerturbation.anomaly n B)
+    fun (a : Fin n) => w a
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundRow := fun {n : Nat} (B : Finset.{0} (Fin n))
+    (g : Fin n → Real) (r : Fin n → Fin n → Real) (i : Fin n) =>
+  @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g i)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.erase.{0} (Fin n) (instDecidableEqFin n) B i)
+        fun (j : Fin n) => r i j)
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+        (@OfNat.ofNat.{0} Real (nat_lit 2)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+            Shao.OQ5.P41.FiniteBackgroundPerturbation.adjustedRow._proof_1))))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.adjustedRow := fun {n : Nat} (g : Fin n → Real)
+    (r : Fin n → Fin n → Real) (i : Fin n) =>
+  @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g i)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid
+        (@Finset.erase.{0} (Fin n) (instDecidableEqFin n) (@Finset.univ.{0} (Fin n) (Fin.fintype n)) i)
+        fun (j : Fin n) => r i j)
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+        (@OfNat.ofNat.{0} Real (nat_lit 2)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+            Shao.OQ5.P41.FiniteBackgroundPerturbation.adjustedRow._proof_1))))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.blockCenteredEnergy := fun {n : Nat} (B : Finset.{0} (Fin n))
+    (f : Fin n → Real) =>
+  @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+    @HPow.hPow.{0, 0, 0} Real Nat Real
+      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (f i)
+        (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockMean n B f))
+      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundWeightEnergy := fun {n : Nat}
+    (B : Finset.{0} (Fin n)) (w : Fin n → Real) =>
+  @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+    @HPow.hPow.{0, 0, 0} Real Nat Real
+      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (w i)
+      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))
+
+Shao.OQ5.P41.FiniteBackgroundPerturbation.blockPairSum := fun {n : Nat} (S : Finset.{0} (Fin n))
+    (r : Fin n → Fin n → Real) =>
+  @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid S fun (i : Fin n) =>
+    @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid S fun (j : Fin n) =>
+      @ite.{1} Real (@LT.lt.{0} (Fin n) (@instLTFin n) i j) (@Fin.decLt n i j) (r i j)
+        (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))

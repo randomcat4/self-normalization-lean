@@ -1,0 +1,314 @@
+{
+  "schema": "oq56-unit279-source-bound-proposed-heads-v1",
+  "status": "PROPOSAL_ONLY_NOT_FROZEN_NOT_IMPLEMENTED",
+  "proposedModule": "Shao/OQ5/P41/FiniteBackgroundPhysicalTransport.lean",
+  "namespace": "Shao.OQ5.P41.FiniteBackgroundPhysicalTransport",
+  "PRE": "import Shao.OQ5.P51.BoundedStudentizerGeometry\nimport Shao.OQ5.P41.FiniteBackgroundPerturbation\n\nuniverse u\n\nopen scoped BigOperators\nopen Shao.OQ5.P41.FiniteBackgroundPerturbation\n  (blockPairSum backgroundRow blockMean blockCenteredEnergy backgroundScale\n    backgroundNumerator backgroundStudentizer)\n\nnamespace Shao.OQ5.P41.FiniteBackgroundPhysicalTransport\n\nnoncomputable section\n",
+  "CLOSE": "end\n\nend Shao.OQ5.P41.FiniteBackgroundPhysicalTransport\n",
+  "typeChecking": "NOT_RUN_PROPOSAL_ONLY",
+  "unit278SupplierStatus": "EXACT_FROZEN_HEAD_RHS_INPUT_ONLY_NOT_KERNELQUALIFIED",
+  "definitionAssembly": "HEAD + := newline + exact definitionRhs; theorem HEAD only, no proofbody supplied",
+  "declarations": [
+    {
+      "id": "D01",
+      "name": "backgroundSample",
+      "kind": "def",
+      "visibility": "public",
+      "HEAD": "def backgroundSample {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (x : Fin n → Ω) : Fin B.card → Ω\n",
+      "dependsOn": [],
+      "definitionRhs": "  fun j : Fin B.card => x ((e j).val)\n",
+      "independentOfUnit278": true
+    },
+    {
+      "id": "D02",
+      "name": "scaledResidual",
+      "kind": "def",
+      "visibility": "public",
+      "HEAD": "def scaledResidual {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (r : Ω → Ω → ℝ) : Ω → Ω → ℝ\n",
+      "dependsOn": [],
+      "definitionRhs": "  fun a b : Ω => backgroundScale B * r a b\n",
+      "independentOfUnit278": false
+    },
+    {
+      "id": "D03",
+      "name": "physicalStatistic",
+      "kind": "def",
+      "visibility": "public",
+      "HEAD": "def physicalStatistic (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ\n",
+      "dependsOn": [],
+      "definitionRhs": "  let R : ℝ := Real.sqrt\n    (Shao.OQ6.FiniteRows.jackknifeSq (Shao.OQ5.P51.sampledKernel n g r x));\n  @ite ℝ (R = 0) (Classical.propDecidable (R = 0)) (0 : ℝ)\n    (Real.sqrt (n : ℝ) *\n      Shao.OQ6.FiniteRows.uStatistic (Shao.OQ5.P51.sampledKernel n g r x) / R)\n",
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T01",
+      "name": "background_index_mem",
+      "kind": "theorem",
+      "visibility": "private",
+      "HEAD": "private theorem background_index_mem {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (j : Fin B.card) : (e j).val ∈ B\n",
+      "dependsOn": [],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T02",
+      "name": "background_index_injective",
+      "kind": "theorem",
+      "visibility": "private",
+      "HEAD": "private theorem background_index_injective {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B}) :\n    Function.Injective (fun j : Fin B.card => (e j).val)\n",
+      "dependsOn": [],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T03",
+      "name": "sum_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem sum_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (f : Fin n → ℝ) :\n    (∑ j : Fin B.card, f ((e j).val)) = ∑ i ∈ B, f i\n",
+      "dependsOn": [
+        "T01",
+        "T02"
+      ],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T04",
+      "name": "erased_row_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem erased_row_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (H : Fin n → Fin n → ℝ) (j : Fin B.card) :\n    (∑ k ∈ Finset.univ.erase j, H ((e j).val) ((e k).val)) =\n      ∑ i ∈ B.erase ((e j).val), H ((e j).val) i\n",
+      "dependsOn": [
+        "T01",
+        "T02",
+        "T03"
+      ],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T05",
+      "name": "unorderedPairSum_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem unorderedPairSum_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (H : Fin n → Fin n → ℝ)\n    (hsym : ∀ i j : Fin n, H i j = H j i) :\n    Shao.OQ5.P35.unorderedPairSum\n        (fun j k : Fin B.card => H ((e j).val) ((e k).val)) =\n      blockPairSum B H\n",
+      "dependsOn": [
+        "T03",
+        "T04"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T06",
+      "name": "originalUpper_scaled_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem originalUpper_scaled_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a) :\n    Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper\n        B.card (scaledResidual B r) (backgroundSample B e x) =\n      backgroundScale B * blockPairSum B\n        (fun i j : Fin n => r (x i) (x j))\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T05"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T07",
+      "name": "residualU_background_original_denominator",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem residualU_background_original_denominator {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) (j : Fin B.card) :\n    Shao.OQ5.P51.residualU\n        B.card (scaledResidual B r) (backgroundSample B e x) j =\n      (∑ i ∈ B.erase ((e j).val), r (x ((e j).val)) (x i)) /\n        ((n : ℝ) - 2)\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T04"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T08",
+      "name": "adjusted_row_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem adjusted_row_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) (j : Fin B.card) :\n    g (backgroundSample B e x j) +\n        Shao.OQ5.P51.residualU\n          B.card (scaledResidual B r) (backgroundSample B e x) j =\n      backgroundRow B (fun i : Fin n => g (x i))\n        (fun i k : Fin n => r (x i) (x k)) ((e j).val)\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T07"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T09",
+      "name": "mean_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem mean_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (f : Fin n → ℝ) :\n    Shao.OQ5.P35.mean (fun j : Fin B.card => f ((e j).val)) =\n      blockMean B f\n",
+      "dependsOn": [
+        "T03"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T10",
+      "name": "center_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem center_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (f : Fin n → ℝ) (j : Fin B.card) :\n    Shao.OQ5.P35.center (fun k : Fin B.card => f ((e k).val)) j =\n      f ((e j).val) - blockMean B f\n",
+      "dependsOn": [
+        "T09"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T11",
+      "name": "centered_energy_background_equiv",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem centered_energy_background_equiv {n : ℕ}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (f : Fin n → ℝ) :\n    (∑ j : Fin B.card,\n      (Shao.OQ5.P35.center (fun k : Fin B.card => f ((e k).val)) j) ^ (2 : ℕ)) =\n      blockCenteredEnergy B f\n",
+      "dependsOn": [
+        "T03",
+        "T10"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T12",
+      "name": "projectionW_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem projectionW_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (x : Fin n → Ω) :\n    Shao.OQ5.P51.projectionW B.card g (backgroundSample B e x) =\n      (∑ i ∈ B, g (x i)) / Real.sqrt (B.card : ℝ)\n",
+      "dependsOn": [
+        "D01",
+        "T03"
+      ],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T13",
+      "name": "numerator_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem numerator_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    Shao.OQ5.P51.projectionW B.card g (backgroundSample B e x) +\n        Shao.OQ5.P51.residualStatisticD\n          B.card (scaledResidual B r) (backgroundSample B e x) =\n      backgroundNumerator B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j))\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T06",
+        "T12"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T14",
+      "name": "centeredSq_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem centeredSq_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    Shao.OQ5.P51.centeredSq\n        B.card g (scaledResidual B r) (backgroundSample B e x) =\n      blockCenteredEnergy B\n        (backgroundRow B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j))) /\n        ((B.card : ℝ) - 1)\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T08",
+        "T11"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T15",
+      "name": "sqrt_centeredSq_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem sqrt_centeredSq_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    Real.sqrt (Shao.OQ5.P51.centeredSq\n        B.card g (scaledResidual B r) (backgroundSample B e x)) =\n      backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j))\n",
+      "dependsOn": [
+        "T14"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T16",
+      "name": "jackknife_root_eq_two_sqrt_centeredSq",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem jackknife_root_eq_two_sqrt_centeredSq (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) (hn : 4 ≤ n) :\n    Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq\n        (Shao.OQ5.P51.sampledKernel n g r x)) =\n      2 * Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)\n",
+      "dependsOn": [],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T17",
+      "name": "physicalStatistic_eq_projection_ratio",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem physicalStatistic_eq_projection_ratio (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a) (hn : 4 ≤ n) :\n    physicalStatistic n g r x =\n      (Shao.OQ5.P51.projectionW n g x +\n        Shao.OQ5.P51.residualStatisticD n r x) /\n        Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)\n",
+      "dependsOn": [
+        "D03",
+        "T16"
+      ],
+      "independentOfUnit278": true
+    },
+    {
+      "id": "T18",
+      "name": "jackknife_root_background",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem jackknife_root_background {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq\n        (Shao.OQ5.P51.sampledKernel B.card g\n          (scaledResidual B r) (backgroundSample B e x))) =\n      2 * backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j))\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "T15",
+        "T16"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T19",
+      "name": "physicalStatistic_background_guarded",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem physicalStatistic_background_guarded {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    physicalStatistic B.card g (scaledResidual B r) (backgroundSample B e x) =\n      let s : ℝ := backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j));\n      @ite ℝ (s = 0) (Classical.propDecidable (s = 0)) (0 : ℝ)\n        (backgroundNumerator B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j)) / s)\n",
+      "dependsOn": [
+        "D01",
+        "D02",
+        "D03",
+        "T13",
+        "T15",
+        "T17"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T20",
+      "name": "physicalStatistic_background_total_ratio",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem physicalStatistic_background_total_ratio {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :\n    physicalStatistic B.card g (scaledResidual B r) (backgroundSample B e x) =\n      backgroundNumerator B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j)) /\n      backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j))\n",
+      "dependsOn": [
+        "T19"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T21",
+      "name": "physicalStatistic_background_zero",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem physicalStatistic_background_zero {n : ℕ} {Ω : Type u}\n    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hm : 4 ≤ B.card)\n    (hs : backgroundStudentizer B (fun i : Fin n => g (x i))\n      (fun i j : Fin n => r (x i) (x j)) = 0) :\n    physicalStatistic B.card g (scaledResidual B r) (backgroundSample B e x) = 0\n",
+      "dependsOn": [
+        "T19"
+      ],
+      "independentOfUnit278": false
+    },
+    {
+      "id": "T22",
+      "name": "card_ge_four_of_half_sample",
+      "kind": "theorem",
+      "visibility": "public",
+      "HEAD": "theorem card_ge_four_of_half_sample {n : ℕ}\n    (B : Finset (Fin n)) (hn : 8 ≤ n) (hhalf : n ≤ 2 * B.card) :\n    4 ≤ B.card\n",
+      "dependsOn": [],
+      "independentOfUnit278": true
+    }
+  ],
+  "counts": {
+    "definitions": 3,
+    "theorems": 22,
+    "privateTheorems": 2,
+    "publicTheorems": 20,
+    "total": 25
+  },
+  "qualified": false,
+  "kernelChecked": false,
+  "sourceAccepted": false
+}

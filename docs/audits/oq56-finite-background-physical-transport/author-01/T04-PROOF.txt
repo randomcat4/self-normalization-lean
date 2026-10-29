@@ -1,0 +1,18 @@
+:= by
+  classical
+  refine Finset.sum_bij (fun k _ => (e k).val) ?_ ?_ ?_ ?_
+  · intro k hk
+    refine Finset.mem_erase.mpr ⟨?_, background_index_mem B e k⟩
+    intro heq
+    exact (Finset.mem_erase.mp hk).1 (background_index_injective B e heq)
+  · intro k _ l _ hkl
+    exact background_index_injective B e hkl
+  · intro i hi
+    obtain ⟨k, hk⟩ := e.surjective ⟨i, (Finset.mem_erase.mp hi).2⟩
+    have hval : (e k).val = i := congrArg Subtype.val hk
+    refine ⟨k, Finset.mem_erase.mpr ⟨?_, Finset.mem_univ _⟩, hval⟩
+    intro hkj
+    exact (Finset.mem_erase.mp hi).1
+      (hval.symm.trans (congrArg (fun l : Fin B.card => (e l).val) hkj))
+  · intro k _
+    rfl
