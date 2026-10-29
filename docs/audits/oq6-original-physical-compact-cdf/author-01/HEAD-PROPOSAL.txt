@@ -1,0 +1,40 @@
+theorem actual_original_physical_compact_cdf_tail_rpow_rate
+    (C : ℝ)
+    (hSZC : Shao.OQ6.NormalizedIntegrableCDFAssembly.ScalarShaoZhouFiniteCostCDFInput.{u} C)
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let s : ℝ := 1 + Real.sqrt v
+    let β : ℝ := ∫ o, Real.rpow |g o| p ∂μ
+    ∃ K : ℝ, 0 < K ∧
+      ∀ (n : ℕ), 3 ≤ n →
+        let N : ℝ := (n : ℝ)
+        let q : ℝ := Real.sqrt N
+        let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+        let U : (Fin n → Ω) → ℝ := fun ξ =>
+          Shao.OQ6.FiniteRows.uStatistic (fun i j => h (ξ i) (ξ j))
+        let R2 : (Fin n → Ω) → ℝ := fun ξ =>
+          Shao.OQ6.FiniteRows.jackknifeSq (fun i j => h (ξ i) (ξ j))
+        let T : (Fin n → Ω) → ℝ := fun ξ =>
+          if 0 < R2 ξ then q * U ξ / Real.sqrt (R2 ξ) else 0
+        Measurable T ∧
+          ∀ x : ℝ, 0 ≤ x → x ≤ 1 →
+            let error : ℝ := K *
+              (β / Real.rpow N ((p - 2) / 2) + s / q)
+            |P₀.real {ξ | T ξ ≤ x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+            |P₀.real {ξ | T ξ < x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+            |P₀.real {ξ | x < T ξ} -
+              (1 - Shao.OQ4.standardNormalCDF x)| ≤ error ∧
+            |P₀.real {ξ | x ≤ T ξ} -
+              (1 - Shao.OQ4.standardNormalCDF x)| ≤ error
