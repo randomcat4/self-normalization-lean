@@ -1,0 +1,73 @@
+--- author-01/OriginalLogarithmicConditionalUncenteredPhysicalTail.lean
++++ author-repair-01/OriginalLogarithmicConditionalUncenteredPhysicalTail.lean
+@@ -158,3 +158,6 @@ explicit-Kmean-nonnegativity
+-  have hKmean : 0 ≤ Kmean := by
+-    change 0 ≤ 4 * (1 + B) * (Real.rpow Mexp t + W2 ^ 2 * Mexp)
+-    positivity
++  have hKmean : 0 ≤ Kmean := by
++    change 0 ≤ 4 * (1 + B) * (Real.rpow Mexp t + W2 ^ 2 * Mexp)
++    exact mul_nonneg
++      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 4) (add_nonneg zero_le_one hB0))
++      (add_nonneg (Real.rpow_nonneg hMexp0 t)
++        (mul_nonneg (sq_nonneg W2) hMexp0))
+@@ -323,1 +326,2 @@ exponential-limit-real-power-normalization
+-    simp only [Function.comp_def, hPower]
++    simp only [Real.rpow_eq_pow] at hPower ⊢
++    simp only [Function.comp_def, hPower]
+@@ -358,1 +362,3 @@ explicit-delta-nonnegativity
+-  have hδ0 : 0 ≤ δn := by dsimp only [δn]; positivity
++  have hδ0 : 0 ≤ δn := by
++    exact mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hKmean)
++      (Real.rpow_nonneg hnpos.le (-J))
+@@ -363,4 +369,5 @@ power-product-normalization
+-  have hPowerProduct : Real.rpow (n : ℝ) (-(1 / 2 : ℝ)) *
+-      Real.rpow (n : ℝ) qpow ≤ Real.rpow (n : ℝ) (-(1 / 3 : ℝ)) := by
+-    rw [← Real.rpow_add hnpos]
+-    exact Real.rpow_le_rpow_of_exponent_le hnOne (by linarith only [hqSixth])
++  have hPowerProduct : Real.rpow (n : ℝ) (-(1 / 2 : ℝ)) *
++      Real.rpow (n : ℝ) qpow ≤ Real.rpow (n : ℝ) (-(1 / 3 : ℝ)) := by
++    simp only [Real.rpow_eq_pow]
++    rw [← Real.rpow_add hnpos]
++    exact Real.rpow_le_rpow_of_exponent_le hnOne (by linarith only [hqSixth])
+@@ -371,1 +378,2 @@ explicit-window-factor-nonnegativity
+-        mul_le_mul_of_nonneg_right hδHalf (by positivity)
++        mul_le_mul_of_nonneg_right hδHalf
++          (add_nonneg zero_le_one (mul_nonneg hc.le (Real.rpow_nonneg hnpos.le qpow)))
+@@ -374,3 +382,5 @@ typed-shift-budget-coefficient-and-power-normalization
+-        have hh := mul_le_mul_of_nonneg_left hPowerProduct
+-          (mul_nonneg (mul_nonneg (by norm_num) hKmean) hc.le)
+-        nlinarith only [hh]
++        have hCoeff : 0 ≤ 2 * Kmean * c :=
++          mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hKmean) hc.le
++        have hh := mul_le_mul_of_nonneg_left hPowerProduct hCoeff
++        simp only [Real.rpow_eq_pow] at hh ⊢
++        nlinarith only [hh]
+@@ -379,3 +389,4 @@ delta-small-bound-power-normalization
+-    have hh := mul_nonneg hδ0
+-      (mul_nonneg hc.le (Real.rpow_nonneg hnpos.le qpow))
+-    nlinarith only [hShiftBudget, hh]
++    have hh := mul_nonneg hδ0
++      (mul_nonneg hc.le (Real.rpow_nonneg hnpos.le qpow))
++    simp only [Real.rpow_eq_pow] at hShiftBudget hh ⊢
++    nlinarith only [hShiftBudget, hh]
+@@ -385,1 +396,4 @@ delta-inverse-sqrt-power-normalization
+-      _ = _ := by rw [Real.rpow_neg hnpos.le, ← Real.sqrt_eq_rpow]; ring
++      _ = _ := by
++        simp only [Real.rpow_eq_pow]
++        rw [Real.rpow_neg hnpos.le, ← Real.sqrt_eq_rpow]
++        ring
+@@ -408,3 +422,4 @@ compact-actual-standardized-symmetry-type
+-    dsimp only [rstd]
+-    rw [hHstdsym o y]
+-    ring
++    dsimp only [rstd]
++    have hSym : Hstd o y = Hstd y o := hHstdsym o y
++    rw [hSym]
++    ring
+@@ -461,2 +476,4 @@ typed-left-ordered-Gaussian-neighborhood
+-  have hδNeighborhood : δn * (1 + z) ≤ (1 / 4 : ℝ) :=
+-    (mul_le_mul_of_nonneg_left (add_le_add_left hzWindow 1) hδ0).trans hShiftBudget
++  have hδNeighborhood : δn * (1 + z) ≤ (1 / 4 : ℝ) := by
++    have hLevel : 1 + z ≤ 1 + c * Real.rpow (n : ℝ) qpow := by
++      linarith only [hzWindow]
++    exact (mul_le_mul_of_nonneg_left hLevel hδ0).trans hShiftBudget

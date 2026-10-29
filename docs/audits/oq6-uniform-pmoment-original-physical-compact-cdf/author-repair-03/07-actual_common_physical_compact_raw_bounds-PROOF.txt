@@ -1,0 +1,90 @@
+:= by
+  classical
+  intro g r v s N q P₀ U R2 T c_n τ
+  let J : (Fin n → Ω) → ℝ := fun ξ =>
+    Shao.OQ6.FiniteRows.uncenteredSq (fun i j => h (ξ i) (ξ j))
+  let Tstar : (Fin n → Ω) → ℝ := fun ξ =>
+    if 0 < J ξ then q * U ξ / (2 * Real.sqrt (J ξ)) else 0
+  let Z : Set (Fin n → Ω) := {ξ | R2 ξ = 0}
+  have hloc := actual_common_compact_localization
+    μ h hh hh2 hhsymm hcenter hprojectionsecond cg hLow n hn
+  rcases hloc with ⟨_, _, _, hT, hTm, _, _, _, _, _, hZfail, _, hClosedDiff, hOpenDiff⟩
+  change Measurable T at hT
+  change Measurable Tstar at hTm
+  change P₀.real Z ≤ Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16720 * s) / q at hZfail
+  change (∀ x : ℝ, |P₀.real {ξ | T ξ ≤ x} -
+    P₀.real {ξ | Tstar ξ ≤ τ x}| ≤ P₀.real Z) at hClosedDiff
+  change (∀ x : ℝ, |P₀.real {ξ | T ξ < x} -
+    P₀.real {ξ | Tstar ξ < τ x}| ≤ P₀.real Z) at hOpenDiff
+  have huncentered := actual_common_uncentered_compact_bounds
+    C hSZC μ h hh hh2 hhsymm hcenter hprojectionsecond cg hLow n hn
+  rcases huncentered with ⟨_, h169bound⟩
+  refine ⟨hT, ?_⟩
+  intro x hx hx1
+  intro y Lcompact error
+  have hfinite := Shao.OQ6.PhysicalCompact.finite_physical_studentizer_conversion
+    (fun _ _ : Fin n => (0 : ℝ)) (by intro i j; rfl) hn
+  dsimp only at hfinite
+  rcases hfinite with ⟨_, _, _, _, _, _, hτrange, hPhiMove⟩
+  change (∀ x : ℝ, 0 ≤ x → x ≤ 1 → 0 ≤ τ x ∧ τ x ≤ 1) at hτrange
+  change (∀ x : ℝ, |x| ≤ 1 →
+    |Shao.OQ4.standardNormalCDF (τ x) - Shao.OQ4.standardNormalCDF x| ≤ 12 / N) at hPhiMove
+  have hy : 0 ≤ y := (hτrange x hx hx1).1
+  have hxabs : |x| ≤ 1 := by simpa only [abs_of_nonneg hx] using hx1
+  have h169y := h169bound y hy
+  dsimp only at h169y
+  rcases h169y with ⟨hClosed169, hOpen169, _, _⟩
+  change |P₀.real {ξ | Tstar ξ ≤ y} - Shao.OQ4.standardNormalCDF y| ≤
+    C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q) +
+      Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q at hClosed169
+  change |P₀.real {ξ | Tstar ξ < y} - Shao.OQ4.standardNormalCDF y| ≤
+    C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q) +
+      Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q at hOpen169
+  have hMove : |Shao.OQ4.standardNormalCDF y - Shao.OQ4.standardNormalCDF x| ≤ 12 / N :=
+    hPhiMove x hxabs
+  have hclosed : |P₀.real {ξ | T ξ ≤ x} - Shao.OQ4.standardNormalCDF x| ≤ error := by
+    calc
+      |P₀.real {ξ | T ξ ≤ x} - Shao.OQ4.standardNormalCDF x| ≤
+          |P₀.real {ξ | T ξ ≤ x} - P₀.real {ξ | Tstar ξ ≤ y}| +
+            |P₀.real {ξ | Tstar ξ ≤ y} - Shao.OQ4.standardNormalCDF x| := abs_sub_le _ _ _
+      _ ≤ |P₀.real {ξ | T ξ ≤ x} - P₀.real {ξ | Tstar ξ ≤ y}| +
+          (|P₀.real {ξ | Tstar ξ ≤ y} - Shao.OQ4.standardNormalCDF y| +
+            |Shao.OQ4.standardNormalCDF y - Shao.OQ4.standardNormalCDF x|) :=
+        add_le_add_left (abs_sub_le _ _ _) _
+      _ ≤ (Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16720 * s) / q) +
+          ((C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q) +
+            Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q) + 12 / N) :=
+        add_le_add ((hClosedDiff x).trans hZfail) (add_le_add hClosed169 hMove)
+      _ = error := by dsimp only [error]; ring
+  have hopen : |P₀.real {ξ | T ξ < x} - Shao.OQ4.standardNormalCDF x| ≤ error := by
+    calc
+      |P₀.real {ξ | T ξ < x} - Shao.OQ4.standardNormalCDF x| ≤
+          |P₀.real {ξ | T ξ < x} - P₀.real {ξ | Tstar ξ < y}| +
+            |P₀.real {ξ | Tstar ξ < y} - Shao.OQ4.standardNormalCDF x| := abs_sub_le _ _ _
+      _ ≤ |P₀.real {ξ | T ξ < x} - P₀.real {ξ | Tstar ξ < y}| +
+          (|P₀.real {ξ | Tstar ξ < y} - Shao.OQ4.standardNormalCDF y| +
+            |Shao.OQ4.standardNormalCDF y - Shao.OQ4.standardNormalCDF x|) :=
+        add_le_add_left (abs_sub_le _ _ _) _
+      _ ≤ (Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16720 * s) / q) +
+          ((C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q) +
+            Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q) + 12 / N) :=
+        add_le_add ((hOpenDiff x).trans hZfail) (add_le_add hOpen169 hMove)
+      _ = error := by dsimp only [error]; ring
+  have hComplementError (E : Set (Fin n → Ω)) (hE : MeasurableSet E) (a : ℝ) :
+      |P₀.real Eᶜ - (1 - a)| = |P₀.real E - a| := by
+    have he : P₀.real Eᶜ = 1 - P₀.real E := by
+      simpa only [probReal_univ] using measureReal_compl (μ := P₀) hE
+    rw [he, show (1 - P₀.real E) - (1 - a) = -(P₀.real E - a) by ring, abs_neg]
+  refine ⟨hclosed, hopen, ?_, ?_⟩
+  · have he : {ξ | x < T ξ} = {ξ | T ξ ≤ x}ᶜ := by
+      ext ξ
+      simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_le]
+    rw [he, hComplementError _ (measurableSet_le hT measurable_const)
+      (Shao.OQ4.standardNormalCDF x)]
+    exact hclosed
+  · have he : {ξ | x ≤ T ξ} = {ξ | T ξ < x}ᶜ := by
+      ext ξ
+      simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
+    rw [he, hComplementError _ (measurableSet_lt hT measurable_const)
+      (Shao.OQ4.standardNormalCDF x)]
+    exact hopen

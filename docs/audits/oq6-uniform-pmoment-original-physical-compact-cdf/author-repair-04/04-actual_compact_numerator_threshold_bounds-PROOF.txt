@@ -1,0 +1,207 @@
+:= by
+  classical
+  intro g r v s N q P₀ J Vsq W D2 G D1 D2c Lcompact Ecost hscale
+  let z : ℝ := y
+  let O : Fin n → (Fin n → Ω) → Ω := fun i ξ => ξ i
+  let g0 : Fin n → Ω → ℝ := fun _ o => g o / q
+  let ξ0 : Fin n → (Fin n → Ω) → ℝ := fun i ξ => g (ξ i) / q
+  let W0 : (Fin n → Ω) → ℝ := fun ξ => ∑ i : Fin n, ξ0 i ξ
+  let V0 : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (∑ i : Fin n, (ξ0 i ξ) ^ 2)
+  let e : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ j k => r (ξ j) (ξ k)
+  let F : (Fin n → Ω) → ℝ := fun ξ => Shao.OQ5.P35.unorderedPairSum (e ξ)
+  let ψ : (Fin n → Ω) → Fin n → ℝ := fun ξ j => Shao.OQ6.ResidualDeletion.rowSum (e ξ) j
+  let Λsq : (Fin n → Ω) → ℝ := fun ξ => ∑ j : Fin n, ψ ξ j ^ 2
+  let A : (Fin n → Ω) → ℝ := fun ξ => |D1 ξ|
+  let B : (Fin n → Ω) → ℝ := fun ξ => 4096 * (s / q + Λsq ξ / (s * (N ^ 2 * q)))
+  let eDeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → Fin n → Fin n → ℝ := fun i η j k => if hj : j = i then 0 else if hk : k = i then 0 else r (η ⟨j, hj⟩) (η ⟨k, hk⟩)
+  let Adeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ := fun i η => |Shao.OQ5.P35.unorderedPairSum (eDeleted i η) / (q * (N - 1))|
+  let Bdeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ := fun i η => 4096 * (s / q + (∑ j : Fin n, Shao.OQ6.ResidualDeletion.rowSum (eDeleted i η) j ^ 2) / (s * (N ^ 2 * q)))
+  let κ0 : (Fin n → Ω) → ℝ := fun _ => 0
+  let b0 : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (1 + D2c ξ)
+  let N0 : (Fin n → Ω) → ℝ := fun ξ => W0 ξ + D1 ξ
+  let d0 : (Fin n → Ω) → ℝ := fun ξ => V0 ξ * b0 ξ
+  let cap : (Fin n → Ω) → Fin n → ℝ := fun ξ i => min (|g (ξ i)| / q) (1 / (1 + z))
+  let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>
+    cap ξ i * (|A ξ - Adeleted i (fun j => ξ j.1)| +
+      z * |B ξ - Bdeleted i (fun j => ξ j.1)|)
+  let fullTest : (Fin n → Ω) → ℝ := fun ξ => A ξ + z * B ξ
+  let δ0 : Fin n → ℝ := fun i => ∫ ξ, ((1 + z) * ξ0 i ξ) ^ 2 * min |(1 + z) * ξ0 i ξ| 1 ∂P₀
+  let K0 : ℝ := (∑ i : Fin n, δ0 i) + (∫ ξ, fullTest ξ ∂P₀) + ∑ i : Fin n, ∫ ξ, deletedTest ξ i ∂P₀
+  let Fgt : Set (Fin n → Ω) := {ξ | y * d0 ξ < N0 ξ}
+  let Fge : Set (Fin n → Ω) := {ξ | y * d0 ξ ≤ N0 ξ}
+  have hcost := actual_compact_cost_admissibility
+    μ h hh hh2 hhsymm hcenter hprojectionsecond n hn y hy
+  rcases hcost with ⟨hgm, hg2, hgmean, hgsecond, hrm, hrsymm,
+    hD1m, hAm, hBm, hAdm, hBdm, hAnonneg, hBnonneg, hAdnonneg, hBdnonneg,
+    hFullI, hDeletedI, hL0Eq, hLnonneg, hKbound⟩
+  change Measurable g at hgm
+  change MemLp g 2 μ at hg2
+  change (∫ o, g o ∂μ) = 0 at hgmean
+  change (∫ o, g o ^ 2 ∂μ) = 1 at hgsecond
+  change Measurable D1 at hD1m
+  change Measurable A at hAm
+  change Measurable B at hBm
+  change (∀ i : Fin n, Measurable (Adeleted i)) at hAdm
+  change (∀ i : Fin n, Measurable (Bdeleted i)) at hBdm
+  change (∀ ξ : Fin n → Ω, 0 ≤ A ξ) at hAnonneg
+  change (∀ ξ : Fin n → Ω, 0 ≤ B ξ) at hBnonneg
+  change (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Adeleted i η) at hAdnonneg
+  change (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Bdeleted i η) at hBdnonneg
+  change Integrable fullTest P₀ at hFullI
+  change (∀ i : Fin n, Integrable (fun ξ => deletedTest ξ i) P₀) at hDeletedI
+  change K0 ≤ Lcompact + 16 * (1 + 4096) * (1 + y) * s / q at hKbound
+  have hN3 : 3 ≤ N := by
+    dsimp only [N]
+    exact_mod_cast hn
+  have hNpos : 0 < N := by linarith only [hN3]
+  have hNne : N ≠ 0 := hNpos.ne'
+  have hqpos : 0 < q := Real.sqrt_pos.mpr hNpos
+  have hqsq : q ^ 2 = N := Real.sq_sqrt hNpos.le
+  have hs1 : 1 ≤ s := by
+    dsimp only [s]
+    linarith only [Real.sqrt_nonneg v]
+  have hCpos : 0 < C := lt_trans (by norm_num : (0 : ℝ) < 1) hSZC.1
+  have hz : 0 ≤ z := hy
+  have hO (i : Fin n) : Measurable (O i) := measurable_pi_apply i
+  have hOindep : ProbabilityTheory.iIndepFun O P₀ := by
+    simpa only [O] using
+      (ProbabilityTheory.iIndepFun_pi (μ := fun _ : Fin n => μ)
+        (X := fun _ (o : Ω) => o) (fun _ => measurable_id.aemeasurable))
+  have hcoord (i : Fin n) : MeasurePreserving (fun ξ : Fin n → Ω => ξ i) P₀ μ :=
+    measurePreserving_eval (μ := fun _ : Fin n => μ) i
+  have hpull (i : Fin n) (f : Ω → ℝ) (hf : Measurable f) :
+      (∫ ξ, f (ξ i) ∂P₀) = ∫ o, f o ∂μ := by
+    calc
+      _ = ∫ o, f o ∂P₀.map (fun ξ : Fin n → Ω => ξ i) :=
+        (integral_map (hcoord i).measurable.aemeasurable hf.aestronglyMeasurable).symm
+      _ = _ := by rw [(hcoord i).map_eq]
+  have hg0m (i : Fin n) : Measurable (g0 i) := hgm.div_const q
+  have hg0Lp (i : Fin n) : MemLp (fun ξ => g0 i (O i ξ)) 2 P₀ := by
+    simpa only [g0, O, div_eq_mul_inv, Function.comp_def] using
+      ((hg2.comp_measurePreserving (hcoord i)).mul_const q⁻¹)
+  have hg0mean (i : Fin n) : (∫ ξ, g0 i (O i ξ) ∂P₀) = 0 := by
+    change (∫ ξ, g (ξ i) / q ∂P₀) = 0
+    rw [integral_div, hpull i g hgm, hgmean, zero_div]
+  have hg0second (i : Fin n) : (∫ ξ, (g0 i (O i ξ)) ^ 2 ∂P₀) = 1 / N := by
+    change (∫ ξ, (g (ξ i) / q) ^ 2 ∂P₀) = 1 / N
+    simp_rw [div_pow]
+    rw [integral_div, hpull i (fun o => g o ^ 2) (hgm.pow_const 2), hgsecond, hqsq]
+  have hg0energy : (∑ i : Fin n, ∫ ξ, (g0 i (O i ξ)) ^ 2 ∂P₀) = 1 := by
+    simp_rw [hg0second]
+    simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    change N * (1 / N) = 1
+    field_simp [hNne]
+  have hξm (i : Fin n) : Measurable (ξ0 i) := (hgm.comp (hO i)).div_const q
+  have hW0m : Measurable W0 := Finset.measurable_sum _ (fun i _ => hξm i)
+  have hV0m : Measurable V0 :=
+    (Finset.measurable_sum _ (fun i _ => (hξm i).pow_const 2)).sqrt
+  have hJm : Measurable J := by
+    dsimp [J, Shao.OQ6.FiniteRows.uncenteredSq, Shao.OQ6.FiniteRows.rowMean]
+    fun_prop
+  have hVm : Measurable Vsq := by
+    dsimp only [Vsq]
+    exact (Finset.measurable_sum _ (fun i _ =>
+      (hgm.comp (measurable_pi_apply i)).pow_const 2)).div_const N
+  have hWm : Measurable W := by
+    dsimp only [W]
+    exact (Finset.measurable_sum _ (fun i _ =>
+      hgm.comp (measurable_pi_apply i))).div_const q
+  have hGm : MeasurableSet G :=
+    (measurableSet_le measurable_const hVm).inter
+      (measurableSet_le (continuous_abs.measurable.comp hWm)
+        (measurable_const.mul (measurable_const.add hVm.sqrt)))
+  have hD2m : Measurable D2 :=
+    Measurable.ite (measurableSet_lt measurable_const hVm)
+      ((hJm.div hVm).sub_const 1) measurable_const
+  have hD2cm : Measurable D2c :=
+    Measurable.ite hGm (hD2m.max measurable_const) measurable_const
+  have hb0m : Measurable b0 := (measurable_const.add hD2cm).sqrt
+  have hN0m : Measurable N0 := hW0m.add hD1m
+  have hd0m : Measurable d0 := hV0m.mul hb0m
+  have hFgtm : MeasurableSet Fgt := measurableSet_lt (measurable_const.mul hd0m) hN0m
+  have hFgem : MeasurableSet Fge := measurableSet_le (measurable_const.mul hd0m) hN0m
+  have hKernel (ξ : Fin n → Ω) :
+      (fun i j => g (ξ i) + g (ξ j) + e ξ i j) = (fun i j => h (ξ i) (ξ j)) := by
+    funext i j
+    dsimp only [e, r]
+    ring
+  have hEnergyPoint (ξ : Fin n → Ω) : (∑ i : Fin n, (ξ0 i ξ) ^ 2) = Vsq ξ := by
+    dsimp only [ξ0, Vsq]
+    simp only [div_pow, ← Finset.sum_div, hqsq]
+  have hW0Eq (ξ : Fin n → Ω) : W0 ξ = W ξ := by
+    dsimp only [W0, ξ0, W]
+    rw [Finset.sum_div]
+  have hEnvelope (ξ : Fin n → Ω) (hξ : ξ ∈ G) : |D2 ξ| ≤ B ξ := by
+    have hVp : 0 < Vsq ξ := by linarith [hξ.1]
+    have ht := Shao.OQ6.ActualRemainderEnvelope.actual_uncentered_remainder_envelope
+      (fun i => g (ξ i)) (e ξ) (fun i j => hrsymm (ξ i) (ξ j)) hn
+      1 (by norm_num) s hs1 (by simpa only [mul_one, N, q] using hscale)
+    dsimp only at ht
+    rw [hKernel ξ] at ht
+    have hWbound : |(∑ i : Fin n, g (ξ i)) / Real.sqrt (n : ℝ)| ≤
+        Real.sqrt (1 : ℝ) * Real.sqrt (Real.sqrt (n : ℝ)) *
+          (4 + Real.sqrt ((∑ i : Fin n, g (ξ i) ^ 2) / (n : ℝ))) := by
+      simpa only [Real.sqrt_one, one_mul, W, Vsq, N, q] using hξ.2
+    rw [show D2 ξ = J ξ / Vsq ξ - 1 by exact if_pos hVp]
+    simpa only [Real.sqrt_one, one_mul, mul_one, B, Λsq, ψ,
+      Shao.OQ6.ResidualDeletion.rowSum, J, Vsq, N, q] using ht hξ.1 hWbound
+  have hD2cBound (ξ : Fin n → Ω) : |D2c ξ| ≤ B ξ := by
+    by_cases hξ : ξ ∈ G
+    · rw [show D2c ξ = max (D2 ξ) (-(1 / 2 : ℝ)) by exact if_pos hξ]
+      by_cases hd : -(1 / 2 : ℝ) ≤ D2 ξ
+      · rw [max_eq_left hd]
+        exact hEnvelope ξ hξ
+      · have hd' : D2 ξ ≤ -(1 / 2 : ℝ) := (lt_of_not_ge hd).le
+        rw [max_eq_right hd']
+        norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+        have hnegative : -(D2 ξ) ≤ |D2 ξ| := neg_le_abs _
+        linarith [hEnvelope ξ hξ]
+    · rw [show D2c ξ = 0 by exact if_neg hξ, abs_zero]
+      exact hBnonneg ξ
+  have hD2cPos (ξ : Fin n → Ω) : 0 < 1 + D2c ξ := by
+    by_cases hξ : ξ ∈ G
+    · have ht : -(1 / 2 : ℝ) ≤ max (D2 ξ) (-(1 / 2 : ℝ)) := le_max_right _ _
+      rw [show D2c ξ = max (D2 ξ) (-(1 / 2 : ℝ)) by exact if_pos hξ]
+      linarith
+    · rw [show D2c ξ = 0 by exact if_neg hξ]
+      norm_num
+  have hCapEq (i : Fin n) (ξ : Fin n → Ω) :
+      min |g0 i (O i ξ)| (1 + y)⁻¹ = cap ξ i := by
+    simp only [g0, O, cap, z, abs_div, abs_of_pos hqpos, one_div]
+  have hEngineDeleted (i : Fin n) : Integrable
+      (fun ξ : Fin n → Ω =>
+        min |g0 i (O i ξ)| (1 + y)⁻¹ *
+          (|A (fun j => O j ξ) - Adeleted i (fun j => O j.1 ξ)| +
+            y * |B (fun j => O j ξ) - Bdeleted i (fun j => O j.1 ξ)|)) P₀ := by
+    simpa only [O, g0, cap, deletedTest, z,
+      abs_div, abs_of_pos hqpos, one_div] using hDeletedI i
+  have hEngineFull : Integrable
+      (fun ξ : Fin n → Ω => A (fun i => O i ξ) + y * B (fun i => O i ξ)) P₀ := by
+    simpa only [O, fullTest, z] using hFullI
+  have hEngine := Shao.OQ6.CompactTailBounds.ambient_weighted_ae_compact_tail_bounds
+    C hSZC P₀ n (by omega) O hO hOindep g0 hg0m hg0Lp hg0mean hg0energy
+    D1 D2c A B Adeleted Bdeleted hD1m hD2cm hAm hBm hAdm hBdm
+    (Filter.Eventually.of_forall hAnonneg)
+    (Filter.Eventually.of_forall hBnonneg)
+    (fun i => Filter.Eventually.of_forall (fun ξ => hAdnonneg i (fun j => ξ j.1)))
+    (fun i => Filter.Eventually.of_forall (fun ξ => hBdnonneg i (fun j => ξ j.1)))
+    (Filter.Eventually.of_forall (fun _ => le_refl _))
+    (Filter.Eventually.of_forall hD2cBound)
+    (Filter.Eventually.of_forall hD2cPos)
+    κ0 measurable_const y hy hEngineFull hEngineDeleted
+  dsimp only at hEngine
+  have hTailGT : |P₀.real Fgt - (1 - Shao.OQ4.standardNormalCDF y)| ≤ C * K0 := by
+    simpa only [Fgt, N0, d0, W0, V0, b0, K0, δ0, fullTest, deletedTest,
+      cap, ξ0, g0, O, z, abs_div, abs_of_pos hqpos,
+      one_div, mul_assoc] using hEngine.1
+  have hTailGE : |P₀.real Fge - (1 - Shao.OQ4.standardNormalCDF y)| ≤ C * K0 := by
+    simpa only [Fge, N0, d0, W0, V0, b0, K0, δ0, fullTest, deletedTest,
+      cap, ξ0, g0, O, z, abs_div, abs_of_pos hqpos,
+      one_div, mul_assoc] using hEngine.2.1
+  have hCostPaid : C * K0 ≤ Ecost :=
+    mul_le_mul_of_nonneg_left hKbound hCpos.le
+  constructor
+  · simpa only [Fgt, N0, d0, b0, V0, hEnergyPoint, hW0Eq, mul_assoc] using
+      hTailGT.trans hCostPaid
+  · simpa only [Fge, N0, d0, b0, V0, hEnergyPoint, hW0Eq, mul_assoc] using
+      hTailGE.trans hCostPaid

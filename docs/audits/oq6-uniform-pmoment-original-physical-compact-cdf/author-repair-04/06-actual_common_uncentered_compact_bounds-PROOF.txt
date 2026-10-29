@@ -1,0 +1,202 @@
+:= by
+  classical
+  intro g r v s N q P₀ U J Tstar
+  let Vsq : (Fin n → Ω) → ℝ := fun ξ => (∑ i : Fin n, g (ξ i) ^ 2) / N
+  let W : (Fin n → Ω) → ℝ := fun ξ => (∑ i : Fin n, g (ξ i)) / q
+  let D2 : (Fin n → Ω) → ℝ := fun ξ => if 0 < Vsq ξ then J ξ / Vsq ξ - 1 else 0
+  let G : Set (Fin n → Ω) := {ξ | (1 / 2 : ℝ) ≤ Vsq ξ ∧
+    |W ξ| ≤ Real.sqrt q * (4 + Real.sqrt (Vsq ξ))}
+  let Hcpt : Set (Fin n → Ω) := {ξ | ξ ∈ G ∧ -(1 / 2 : ℝ) ≤ D2 ξ}
+  have hloc := actual_common_compact_localization
+    μ h hh hh2 hhsymm hcenter hprojectionsecond cg hLow n hn
+  rcases hloc with ⟨_, hJm, _, _, hTm, hGm, hHm, _, _, hHfail, _, hGood, _, _⟩
+  change Measurable J at hJm
+  change Measurable Tstar at hTm
+  change MeasurableSet G at hGm
+  change MeasurableSet Hcpt at hHm
+  change P₀.real Hcptᶜ ≤ Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q at hHfail
+  change (∀ ξ ∈ Hcpt, (1 / 2 : ℝ) ≤ Vsq ξ ∧
+    (1 / 2 : ℝ) ≤ 1 + D2 ξ ∧ (1 / 4 : ℝ) ≤ J ξ) at hGood
+  have hN3 : 3 ≤ N := by
+    dsimp only [N]
+    exact_mod_cast hn
+  have hNpos : 0 < N := by linarith only [hN3]
+  have hqpos : 0 < q := Real.sqrt_pos.mpr hNpos
+  have hs1 : 1 ≤ s := by
+    dsimp only [s]
+    linarith only [Real.sqrt_nonneg v]
+  refine ⟨hTm, ?_⟩
+  intro y hy Lcompact error
+  by_cases hscale : s ≤ q
+  ·
+    let e : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ j k => r (ξ j) (ξ k)
+    let D1 : (Fin n → Ω) → ℝ := fun ξ =>
+      Shao.OQ5.P35.unorderedPairSum (e ξ) / (q * (N - 1))
+    let D2c : (Fin n → Ω) → ℝ := fun ξ =>
+      if ξ ∈ G then max (D2 ξ) (-(1 / 2 : ℝ)) else 0
+    let N0 : (Fin n → Ω) → ℝ := fun ξ => W ξ + D1 ξ
+    let d0 : (Fin n → Ω) → ℝ := fun ξ => Real.sqrt (Vsq ξ) * Real.sqrt (1 + D2c ξ)
+    let Fle : Set (Fin n → Ω) := {ξ | N0 ξ ≤ y * d0 ξ}
+    let Flt : Set (Fin n → Ω) := {ξ | N0 ξ < y * d0 ξ}
+    let Fgt : Set (Fin n → Ω) := {ξ | y * d0 ξ < N0 ξ}
+    let Fge : Set (Fin n → Ω) := {ξ | y * d0 ξ ≤ N0 ξ}
+    let Ecost : ℝ := C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q)
+    have hthreshold := actual_compact_numerator_threshold_bounds
+      C hSZC μ h hh hh2 hhsymm hcenter hprojectionsecond n hn y hy
+    have hTailPair :
+        |P₀.real Fgt - (1 - Shao.OQ4.standardNormalCDF y)| ≤ Ecost ∧
+        |P₀.real Fge - (1 - Shao.OQ4.standardNormalCDF y)| ≤ Ecost := by
+      simpa only [Fgt, Fge, N0, d0, Ecost, mul_assoc] using hthreshold hscale
+    rcases hTailPair with ⟨hTailGT, hTailGE⟩
+    have hdata := Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments
+      μ h hh hh2 hhsymm hcenter hprojectionsecond 3 (by omega) 0 (by norm_num) (by positivity)
+    rcases hdata with ⟨hgm, _, _⟩
+    change Measurable g at hgm
+    have hVm : Measurable Vsq := by
+      dsimp only [Vsq]
+      exact (Finset.measurable_sum _ (fun i _ =>
+        (hgm.comp (measurable_pi_apply i)).pow_const 2)).div_const N
+    have hWm : Measurable W := by
+      dsimp only [W]
+      exact (Finset.measurable_sum _ (fun i _ =>
+        hgm.comp (measurable_pi_apply i))).div_const q
+    have hD1m : Measurable D1 := by
+      dsimp [D1, e, r, Shao.OQ5.P35.unorderedPairSum]
+      fun_prop
+    have hD2m : Measurable D2 :=
+      Measurable.ite (measurableSet_lt measurable_const hVm)
+        ((hJm.div hVm).sub_const 1) measurable_const
+    have hD2cm : Measurable D2c :=
+      Measurable.ite hGm (hD2m.max measurable_const) measurable_const
+    have hN0m : Measurable N0 := hWm.add hD1m
+    have hd0m : Measurable d0 := hVm.sqrt.mul (measurable_const.add hD2cm).sqrt
+    have hFlem : MeasurableSet Fle := measurableSet_le hN0m (measurable_const.mul hd0m)
+    have hFltm : MeasurableSet Flt := measurableSet_lt hN0m (measurable_const.mul hd0m)
+    have hFgtm : MeasurableSet Fgt := measurableSet_lt (measurable_const.mul hd0m) hN0m
+    have hFgem : MeasurableSet Fge := measurableSet_le (measurable_const.mul hd0m) hN0m
+    have hKernel (ξ : Fin n → Ω) :
+        (fun i j => g (ξ i) + g (ξ j) + e ξ i j) = (fun i j => h (ξ i) (ξ j)) := by
+      funext i j
+      dsimp only [e, r]
+      ring
+    have hNumerator (ξ : Fin n → Ω) : N0 ξ = q * U ξ / 2 := by
+      have ht := finite_projection_residual_numerator (fun i => g (ξ i)) (e ξ) hn
+      rw [hKernel ξ] at ht
+      simpa only [N0, W, D1, U, N, q] using ht
+    have hComplementError (E : Set (Fin n → Ω)) (hE : MeasurableSet E) (a : ℝ) :
+        |P₀.real Eᶜ - (1 - a)| = |P₀.real E - a| := by
+      have he : P₀.real Eᶜ = 1 - P₀.real E := by
+        simpa only [probReal_univ] using measureReal_compl (μ := P₀) hE
+      rw [he, show (1 - P₀.real E) - (1 - a) = -(P₀.real E - a) by ring, abs_neg]
+    have hFleComp : Fle = Fgtᶜ := by
+      ext ξ
+      simp only [Fle, Fgt, Set.mem_setOf_eq, Set.mem_compl_iff, not_lt]
+    have hFltComp : Flt = Fgeᶜ := by
+      ext ξ
+      simp only [Flt, Fge, Set.mem_setOf_eq, Set.mem_compl_iff, not_le]
+    have hCDFLE : |P₀.real Fle - Shao.OQ4.standardNormalCDF y| ≤ Ecost := by
+      have ht := hComplementError Fgt hFgtm (1 - Shao.OQ4.standardNormalCDF y)
+      rw [show 1 - (1 - Shao.OQ4.standardNormalCDF y) =
+        Shao.OQ4.standardNormalCDF y by ring, ← hFleComp] at ht
+      rw [ht]
+      exact hTailGT
+    have hCDFLT : |P₀.real Flt - Shao.OQ4.standardNormalCDF y| ≤ Ecost := by
+      have ht := hComplementError Fge hFgem (1 - Shao.OQ4.standardNormalCDF y)
+      rw [show 1 - (1 - Shao.OQ4.standardNormalCDF y) =
+        Shao.OQ4.standardNormalCDF y by ring, ← hFltComp] at ht
+      rw [ht]
+      exact hTailGE
+    have hAgree (ξ : Fin n → Ω) (hξ : ξ ∈ Hcpt) :
+        (Tstar ξ ≤ y ↔ ξ ∈ Fle) ∧ (Tstar ξ < y ↔ ξ ∈ Flt) ∧
+        (y < Tstar ξ ↔ ξ ∈ Fgt) ∧ (y ≤ Tstar ξ ↔ ξ ∈ Fge) := by
+      have hgood := hGood ξ hξ
+      have hVp : 0 < Vsq ξ := by linarith only [hgood.1]
+      have hJp : 0 < J ξ := by linarith only [hgood.2.2]
+      have hclip : D2c ξ = D2 ξ := by
+        rw [show D2c ξ = max (D2 ξ) (-(1 / 2 : ℝ)) by exact if_pos hξ.1,
+          max_eq_left hξ.2]
+      have hprod : Vsq ξ * (1 + D2c ξ) = J ξ := by
+        rw [hclip, show D2 ξ = J ξ / Vsq ξ - 1 by exact if_pos hVp]
+        field_simp [hVp.ne']
+        <;> ring
+      have hden : d0 ξ = Real.sqrt (J ξ) := by
+        calc
+          d0 ξ = Real.sqrt (Vsq ξ * (1 + D2c ξ)) := (Real.sqrt_mul hVp.le _).symm
+          _ = Real.sqrt (J ξ) := by rw [hprod]
+      have hdp : 0 < d0 ξ := by rw [hden]; exact Real.sqrt_pos.mpr hJp
+      have hquot : Tstar ξ = N0 ξ / d0 ξ := by
+        rw [show Tstar ξ = q * U ξ / (2 * Real.sqrt (J ξ)) by exact if_pos hJp,
+          hNumerator ξ, hden, div_div]
+      rw [hquot]
+      exact ⟨(div_le_iff₀ hdp), (div_lt_iff₀ hdp),
+        (lt_div_iff₀ hdp), (le_div_iff₀ hdp)⟩
+    have hCompare (E Fset : Set (Fin n → Ω)) (hE : MeasurableSet E)
+        (hF : MeasurableSet Fset)
+        (hEF : ∀ ξ ∈ Hcpt, ξ ∈ E ↔ ξ ∈ Fset) :
+        |P₀.real E - P₀.real Fset| ≤ P₀.real Hcptᶜ := by
+      have hsub : ((E \ Fset) ∪ (Fset \ E)) ⊆ Hcptᶜ := by
+        intro ξ hξ
+        change ξ ∉ Hcpt
+        intro hH
+        have ht := hEF ξ hH
+        rcases Set.mem_symmDiff.mp hξ with ⟨he, hf⟩ | ⟨hf, he⟩
+        · exact hf (ht.mp he)
+        · exact he (ht.mpr hf)
+      exact (abs_measureReal_sub_le_measureReal_symmDiff
+        hE.nullMeasurableSet hF.nullMeasurableSet).trans (measureReal_mono hsub)
+    have hPaid (E Fset : Set (Fin n → Ω)) (hE : MeasurableSet E)
+        (hF : MeasurableSet Fset)
+        (hEF : ∀ ξ ∈ Hcpt, ξ ∈ E ↔ ξ ∈ Fset)
+        (a : ℝ) (hGaussian : |P₀.real Fset - a| ≤ Ecost) :
+        |P₀.real E - a| ≤ error := by
+      have hDiff := hCompare E Fset hE hF hEF
+      calc
+        |P₀.real E - a| ≤ |P₀.real E - P₀.real Fset| + |P₀.real Fset - a| :=
+          abs_sub_le _ _ _
+        _ ≤ P₀.real Hcptᶜ + Ecost := add_le_add hDiff hGaussian
+        _ ≤ error := by dsimp only [error, Ecost]; linarith only [hHfail]
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · exact hPaid _ Fle (measurableSet_le hTm measurable_const) hFlem
+        (fun ξ hξ => (hAgree ξ hξ).1) _ hCDFLE
+    · exact hPaid _ Flt (measurableSet_lt hTm measurable_const) hFltm
+        (fun ξ hξ => (hAgree ξ hξ).2.1) _ hCDFLT
+    · exact hPaid _ Fgt (measurableSet_lt measurable_const hTm) hFgtm
+        (fun ξ hξ => (hAgree ξ hξ).2.2.1) _ hTailGT
+    · exact hPaid _ Fge (measurableSet_le measurable_const hTm) hFgem
+        (fun ξ hξ => (hAgree ξ hξ).2.2.2) _ hTailGE
+  · have hslarge : q ≤ s := (lt_of_not_ge hscale).le
+    have hratio : 1 ≤ s / q := by
+      apply (le_div_iff₀ hqpos).2
+      simpa only [one_mul] using hslarge
+    have hLnonneg : 0 ≤ Lcompact :=
+      mul_nonneg hNpos.le (integral_nonneg (fun o => Shao.truncationF_nonneg _))
+    have hcoeff : (1 : ℝ) ≤ 16 * (1 + 4096) * (1 + y) := by linarith only [hy]
+    have hRate : 1 ≤ Lcompact + 16 * (1 + 4096) * (1 + y) * s / q := by
+      have ht := mul_le_mul_of_nonneg_right hcoeff
+        (le_trans (by norm_num : (0 : ℝ) ≤ 1) hratio)
+      have he : 16 * (1 + 4096) * (1 + y) * (s / q) =
+          16 * (1 + 4096) * (1 + y) * s / q := by ring
+      rw [he] at ht
+      linarith only [hLnonneg, hratio, ht]
+    have hRate0 : 0 ≤ Lcompact + 16 * (1 + 4096) * (1 + y) * s / q :=
+      le_trans (by norm_num) hRate
+    have hCRate := mul_le_mul_of_nonneg_right hSZC.1.le hRate0
+    have hBad0 : 0 ≤ ((1 / 16 : ℝ) + 16384 * s) / q := by positivity
+    have hErrorOne : 1 ≤ error := by
+      dsimp only [error]
+      linarith only [hRate, hCRate, Real.exp_pos (-cg * N), hBad0]
+    have hPhi0 : 0 ≤ Shao.OQ4.standardNormalCDF y := by
+      rw [Shao.OQ4.standardNormalCDF_eq_real]
+      exact measureReal_nonneg
+    have hPhi1 : Shao.OQ4.standardNormalCDF y ≤ 1 := by
+      rw [Shao.OQ4.standardNormalCDF_eq_real]
+      exact measureReal_le_one
+    have hUnit (E : Set (Fin n → Ω)) (a : ℝ) (ha0 : 0 ≤ a) (ha1 : a ≤ 1) :
+        |P₀.real E - a| ≤ error := by
+      have hp0 : 0 ≤ P₀.real E := measureReal_nonneg
+      have hp1 : P₀.real E ≤ 1 := measureReal_le_one
+      apply le_trans _ hErrorOne
+      apply abs_le.mpr
+      constructor <;> linarith
+    exact ⟨hUnit _ _ hPhi0 hPhi1, hUnit _ _ hPhi0 hPhi1,
+      hUnit _ _ (by linarith) (by linarith), hUnit _ _ (by linarith) (by linarith)⟩

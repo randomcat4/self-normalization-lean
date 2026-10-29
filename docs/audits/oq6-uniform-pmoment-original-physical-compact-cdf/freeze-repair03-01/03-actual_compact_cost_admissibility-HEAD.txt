@@ -1,0 +1,56 @@
+private theorem actual_compact_cost_admissibility
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 3 ≤ n) (y : ℝ) (hy : 0 ≤ y) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let s : ℝ := 1 + Real.sqrt v
+    let N : ℝ := (n : ℝ)
+    let q : ℝ := Real.sqrt N
+    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let e : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ζ j k => r (ζ j) (ζ k)
+    let F : (Fin n → Ω) → ℝ := fun ζ => Shao.OQ5.P35.unorderedPairSum (e ζ)
+    let ψ : (Fin n → Ω) → Fin n → ℝ := fun ζ j => Shao.OQ6.ResidualDeletion.rowSum (e ζ) j
+    let Λsq : (Fin n → Ω) → ℝ := fun ζ => ∑ j : Fin n, ψ ζ j ^ 2
+    let D1 : (Fin n → Ω) → ℝ := fun ζ => F ζ / (q * (N - 1))
+    let A : (Fin n → Ω) → ℝ := fun ζ => |D1 ζ|
+    let Benv : (Fin n → Ω) → ℝ := fun ζ =>
+      4096 * (s / q + Λsq ζ / (s * (N ^ 2 * q)))
+    let eDeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → Fin n → Fin n → ℝ :=
+      fun i η j k => if hj : j = i then 0 else if hk : k = i then 0 else
+        r (η ⟨j, hj⟩) (η ⟨k, hk⟩)
+    let Adeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ :=
+      fun i η => |Shao.OQ5.P35.unorderedPairSum (eDeleted i η) / (q * (N - 1))|
+    let Bdeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ :=
+      fun i η => 4096 * (s / q +
+        (∑ j : Fin n, Shao.OQ6.ResidualDeletion.rowSum (eDeleted i η) j ^ 2) /
+          (s * (N ^ 2 * q)))
+    let cap : (Fin n → Ω) → Fin n → ℝ := fun ζ i => min (|g (ζ i)| / q) (1 / (1 + y))
+    let deletedTest : (Fin n → Ω) → Fin n → ℝ := fun ζ i =>
+      cap ζ i * (|A ζ - Adeleted i (fun j => ζ j.1)| +
+        y * |Benv ζ - Bdeleted i (fun j => ζ j.1)|)
+    let fullTest : (Fin n → Ω) → ℝ := fun ζ => A ζ + y * Benv ζ
+    let δ : Fin n → ℝ := fun i =>
+      ∫ ζ, ((1 + y) * (g (ζ i) / q)) ^ 2 * min |(1 + y) * (g (ζ i) / q)| 1 ∂P₀
+    let Lcompact : ℝ := N * (∫ o, Shao.truncationF ((1 + y) * (g o / q)) ∂μ)
+    let Kcost : ℝ := (∑ i : Fin n, δ i) + (∫ ζ, fullTest ζ ∂P₀) +
+      ∑ i : Fin n, ∫ ζ, deletedTest ζ i ∂P₀
+    Measurable g ∧ MemLp g 2 μ ∧ (∫ o, g o ∂μ) = 0 ∧ (∫ o, g o ^ 2 ∂μ) = 1 ∧
+      Measurable (fun t : Ω × Ω => r t.1 t.2) ∧ (∀ o z : Ω, r o z = r z o) ∧
+      Measurable D1 ∧ Measurable A ∧ Measurable Benv ∧
+      (∀ i : Fin n, Measurable (Adeleted i)) ∧
+      (∀ i : Fin n, Measurable (Bdeleted i)) ∧
+      (∀ ζ : Fin n → Ω, 0 ≤ A ζ) ∧ (∀ ζ : Fin n → Ω, 0 ≤ Benv ζ) ∧
+      (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Adeleted i η) ∧
+      (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Bdeleted i η) ∧
+      Integrable fullTest P₀ ∧
+      (∀ i : Fin n, Integrable (fun ζ => deletedTest ζ i) P₀) ∧
+      (∑ i : Fin n, δ i) = Lcompact ∧ 0 ≤ Lcompact ∧
+      Kcost ≤ Lcompact + 16 * (1 + 4096) * (1 + y) * s / q
