@@ -1,0 +1,78 @@
+--- author-repair-01/OriginalLogarithmicConditionalCenteredPhysicalTail.lean
++++ author-repair-02/OriginalLogarithmicConditionalCenteredPhysicalTail.lean
+@@ -540,7 +540,8 @@
+       calc
+         _ ≤ Real.log (2 * (m : ℝ)) := Real.log_le_log hnpos (by exact_mod_cast hnm)
+         _ = Real.log 2 + Real.log (m : ℝ) := Real.log_mul (by norm_num) hmpos.ne'
+-        _ ≤ Real.log (m : ℝ) + Real.log (m : ℝ) := add_le_add_right hlog2m _
++        _ ≤ Real.log (m : ℝ) + Real.log (m : ℝ) :=
++          _root_.add_le_add hlog2m (le_refl (Real.log (m : ℝ)))
+         _ = _ := (two_mul _).symm
+     have hbase0 : 0 ≤ A * Real.log (n : ℝ) / τ := by
+       exact div_nonneg (mul_nonneg hA.le (Real.log_nonneg (by
+@@ -683,6 +684,11 @@
+       dsimp only [Tcenter]
+       rw [if_neg hz]
+       ring
++  have hSampleMeas (i j : Fin m) :
++      Measurable (fun ζ : Fin m → Ω => H (ζ i) (ζ j)) := by
++    have hpair : Measurable (fun ζ : Fin m → Ω => (ζ i, ζ j)) :=
++      (measurable_pi_apply i).prodMk (measurable_pi_apply j)
++    exact hHm.comp hpair
+   have hUmeas : Measurable U := by
+     unfold U Shao.OQ6.FiniteRows.uStatistic Shao.OQ5.P35.unorderedPairSum
+     apply Measurable.const_mul
+@@ -691,8 +697,7 @@
+     apply Finset.measurable_sum
+     intro j hj
+     by_cases hij : i < j
+-    · simpa only [if_pos hij] using
+-        hHm.comp ((measurable_pi_apply i).prodMk (measurable_pi_apply j))
++    · simpa only [if_pos hij] using hSampleMeas i j
+     · simpa only [if_neg hij] using (measurable_const : Measurable (fun _ : Fin m → Ω => (0 : ℝ)))
+   have hRHmeas : Measurable RH := by
+     unfold RH Shao.OQ6.FiniteRows.jackknifeSq
+@@ -706,7 +711,7 @@
+     apply Measurable.const_mul
+     apply Finset.measurable_sum
+     intro j hj
+-    exact hHm.comp ((measurable_pi_apply i).prodMk (measurable_pi_apply j))
++    exact hSampleMeas i j
+   have hTcenterMeas : Measurable Tcenter := by
+     dsimp only [Tcenter]
+     exact measurable_const.ite (hRHmeas (measurableSet_singleton 0))
+@@ -732,8 +737,9 @@
+   have hhalfPower : Real.rpow ((n : ℝ) / 2) qpow ≤ Real.rpow (m : ℝ) qpow :=
+     Real.rpow_le_rpow (div_nonneg hnpos.le (by norm_num)) hhalf hq.le
+   have hhalfPowerEq : Real.rpow ((n : ℝ) / 2) qpow =
+-      Real.rpow (n : ℝ) qpow / Real.rpow 2 qpow :=
+-    Real.div_rpow hnpos.le (by norm_num)
++      Real.rpow (n : ℝ) qpow / Real.rpow 2 qpow := by
++    simpa only [Real.rpow_eq_pow] using
++      Real.div_rpow hnpos.le (by norm_num : (0 : ℝ) ≤ 2) qpow
+   have hWindow270 : z ≤ c270 * Real.rpow βstd (-1 / p) * Real.rpow (m : ℝ) qpow := by
+     calc
+       z ≤ c * Real.rpow (n : ℝ) qpow := hzWindow
+@@ -755,9 +761,11 @@
+     calc
+       _ ≤ Real.rpow ((n : ℝ) / 2) (-a) :=
+         Real.rpow_le_rpow_of_nonpos (div_pos hnpos (by norm_num)) hhalf (neg_nonpos.mpr ha.le)
+-      _ = Real.rpow (n : ℝ) (-a) / Real.rpow 2 (-a) :=
+-        Real.div_rpow hnpos.le (by norm_num)
++      _ = Real.rpow (n : ℝ) (-a) / Real.rpow 2 (-a) := by
++        simpa only [Real.rpow_eq_pow] using
++          Real.div_rpow hnpos.le (by norm_num : (0 : ℝ) ≤ 2) (-a)
+       _ = _ := by
++        simp only [Real.rpow_eq_pow]
+         rw [Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 2), div_inv_eq_mul]
+         ring
+   have hRootComparison : Real.sqrt (n : ℝ) ≤ Real.sqrt 2 * Real.sqrt (m : ℝ) := by
+@@ -784,7 +792,7 @@
+         L2 * Real.sqrt (m : ℝ) := by
+       calc
+         _ ≤ (1 + Real.sqrt RhoBound) * (Real.sqrt 2 * Real.sqrt (m : ℝ)) :=
+-          mul_le_mul (add_le_add_left hρ 1) hRootComparison
++          mul_le_mul (_root_.add_le_add (le_refl (1 : ℝ)) hρ) hRootComparison
+             (Real.sqrt_nonneg _) (by positivity)
+         _ = _ := by dsimp only [L2]; ring
+     have hh := mul_le_mul_of_nonneg_right hρRoot hz3

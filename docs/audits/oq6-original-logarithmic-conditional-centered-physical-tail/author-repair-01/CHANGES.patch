@@ -1,0 +1,349 @@
+--- author-01/OriginalLogarithmicConditionalCenteredPhysicalTail.lean
++++ author-repair-01/OriginalLogarithmicConditionalCenteredPhysicalTail.lean
+@@ -175,25 +175,37 @@
+   rcases Shao.OQ6.ConditionalStandardizedLowEnergy.actual_conditional_standardized_low_energy
+       μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+       hwexp henvelope p hp hgp with
+-    ⟨hβ, _, _, _, _, _, _, Nlow, hNlow, hlow⟩
++    ⟨hβ, hLowQ, hLowQup, hLowT, hLowTup, hLowC, hLowExact, Nlow, hNlow, hlow⟩
++  clear hLowQ hLowQup hLowT hLowTup hLowC hLowExact
++  change 1 ≤ β at hβ
+   rcases Shao.OQ6.ConditionalUniformStandardizedResidual.actual_conditional_uniform_standardized_residual
+       μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+       hwexp henvelope p hp hgp with
+     ⟨hw2μ, hwSqμ, hM2, hW2, hW2sq, hCenv, hRhoBound, Nres, hNres, hres⟩
++  change 1 ≤ M2 at hM2
++  change 1 ≤ W2 at hW2
++  change W2 ^ 2 = M2 at hW2sq
++  change 0 < Cenv at hCenv
++  change 0 < RhoBound at hRhoBound
+   rcases Shao.OQ6.LogarithmicConditionalRates.actual_logarithmic_conditional_rates
+       μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+       hwexp henvelope p hp hgp J hJ with
+     ⟨he, heupper, het, hA, hMexpLower, hMexp, hJAe, hJAhalf,
+       hJA, hJAt, hJAmean, hrate⟩
+-  have hp0 : 0 < p := by linarith [hp.1]
+-  have hβpos : 0 < β := by linarith
++  change 0 < e at he
++  change 0 < A at hA
++  have hp0 : 0 < p := lt_trans (by norm_num) hp.1
++  have hβpos : 0 < β := lt_of_lt_of_le zero_lt_one hβ
+   have hβ0 : 0 ≤ β := hβpos.le
+-  have hM20 : 0 ≤ M2 := by linarith
+-  have hq : 0 < qpow := div_pos (sub_pos.mpr hp.1) (by positivity)
++  have hM20 : 0 ≤ M2 := le_trans zero_le_one hM2
++  have hq : 0 < qpow := div_pos (sub_pos.mpr hp.1) (mul_pos (by norm_num) hp0)
+   have hapoly : 0 < apoly := one_div_pos.mpr hα
+-  have hMenv : 0 ≤ Menv := by dsimp only [Menv]; positivity
+-  have hCpoly : 0 ≤ Cpoly := by dsimp only [Cpoly]; positivity
+-  have hBudget : 1 ≤ 2 * β := by linarith
++  have hMenv : 0 ≤ Menv := mul_nonneg (mul_nonneg (by norm_num) hCenv.le) hM20
++  have hATau : 0 ≤ 2 * A / τ :=
++    div_nonneg (mul_nonneg (by norm_num) hA.le) hτ.le
++  have hCpoly : 0 ≤ Cpoly :=
++    mul_nonneg (Real.sqrt_nonneg Cenv) (Real.rpow_nonneg hATau _)
++  have hBudget : 1 ≤ 2 * β := by linarith only [hβ]
+   have hEngine :=
+     Shao.OQ6.UniformPMomentSingleWindowPhysicalRelativePolynomialRate.uniform_pmoment_actual_original_single_window_physical_relative_polynomial_rate
+       p hp.1 hp.2 (2 * β) hBudget cSZ C1 C2 C3 C4 hSZ
+@@ -215,13 +227,15 @@
+   let L1 : ℝ := 2 * Real.rpow 2 a
+   let L2 : ℝ := Real.sqrt 2 * (1 + Real.sqrt RhoBound)
+   let K : ℝ := K270 * (L1 + L2)
+-  have ha : 0 < a := by dsimp only [a]; linarith [hp.1]
++  have ha : 0 < a := div_pos (sub_pos.mpr hp.1) (by norm_num)
+   have hc : 0 < c := by
+     dsimp only [c]
+-    exact div_pos (mul_pos hc270 (Real.rpow_pos_of_pos (by linarith) _))
++    exact div_pos (mul_pos hc270 (Real.rpow_pos_of_pos (mul_pos (by norm_num) hβpos) _))
+       (Real.rpow_pos_of_pos (by norm_num) _)
+-  have hL1 : 0 < L1 := by dsimp only [L1]; positivity
+-  have hL2 : 0 < L2 := by dsimp only [L2]; positivity
++  have hL1 : 0 < L1 :=
++    mul_pos (by norm_num) (Real.rpow_pos_of_pos (by norm_num) a)
++  have hL2 : 0 < L2 := mul_pos (Real.sqrt_pos.mpr (by norm_num))
++    (lt_of_lt_of_le zero_lt_one (le_add_of_nonneg_right (Real.sqrt_nonneg _)))
+   have hK : 0 < K := mul_pos hK270 (add_pos hL1 hL2)
+   let Nrate : ℕ := Nat.ceil (max (3 : ℝ) (Real.rpow (2 * Mexp) (1 / A)))
+   have hnat : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop :=
+@@ -269,10 +283,12 @@
+       hwPairSqMean, hresLam⟩
+   letI : IsProbabilityMeasure νn := hνn
+   rcases hlow Rn hlowN with
+-    ⟨_, _, _, _, _, hlowLam⟩
++    ⟨hLowCn, hLowDn, hLowν, hLowAc, hLowMass, hlowLam⟩
++  clear hLowCn hLowDn hLowν hLowAc hLowMass
+   rcases hrate n hnRate with
+     ⟨hn3, hRnPos, _, hlogCut, hπ0, hπBound, hπHalf, hdnIdentity,
+-      _, _, _, hbn0, hbnSq, hbnBound, hrateLam⟩
++      hRateDn, hRateν, hRateAc, hbn0, hbnSq, hbnBound, hrateLam⟩
++  clear hRateDn hRateν hRateAc
+   refine ⟨hNwin n hnWin, hCn, hdn, hνn, hνac, hνprodac, hνCn, hlogCut, ?_⟩
+   intro lam hLam
+   let H : Ω → Ω → ℝ := fun o y => g o + g y + lam * r o y
+@@ -293,9 +309,20 @@
+       hσ, hσsq, hKm, hK2, hKsym, hKstdm, hKstd2, hKstdSq,
+       hKstdsym, hKstdRows, hKstdMean, hKstdEnv, hKstdBound, hρ20, hρ2Bound⟩
+   rcases hlowLam lam hLam with
+-    ⟨_, _, _, _, _, _, _, _, hXm, hXp, hX2, hXSq, hXsecond,
++    ⟨hLowGm, hLowG2, hLowGSq, hLowGzero, hLowσ2low, hLowσ2up,
++      hLowσ, hLowσsq, hXm, hXp, hX2, hXSq, hXsecond,
+       hXpmoment, hXβBound, hLowEnergy⟩
+-  rcases hrateLam lam hLam with ⟨_, _, _, hVarianceRate, hMeanRate⟩
++  clear hLowGm hLowG2 hLowGSq hLowGzero hLowσ2low hLowσ2up hLowσ hLowσsq
++    hXm hXp hXSq hLowEnergy
++  rcases hrateLam lam hLam with ⟨hRateG2, hRateGzero, hRateσ0, hVarianceRate, hMeanRate⟩
++  clear hRateG2 hRateGzero hRateσ0 hresLam hlowLam hrateLam hres hlow hrate
++  change Measurable (fun z : Ω × Ω => H z.1 z.2) at hHm
++  change MemLp (fun z : Ω × Ω => H z.1 z.2) 2 (νn.prod νn) at hH2
++  change MemLp (fun o => G o / σ) 2 νn at hX2
++  change (∫ o, (G o / σ) ^ 2 ∂νn) = 1 at hXsecond
++  change Integrable (fun o => Real.rpow |G o / σ| p) νn at hXpmoment
++  change (∫ o, Real.rpow |G o / σ| p ∂νn) ≤ 2 * β at hXβBound
++  change (∫ o, w o ^ 2 ∂νn) ≤ 2 * M2 at hMνBound
+   have hσne : σ ≠ 0 := ne_of_gt hσ
+   have hH1 : Integrable (fun z : Ω × Ω => H z.1 z.2) (νn.prod νn) :=
+     hH2.integrable (by norm_num)
+@@ -307,8 +334,17 @@
+   have hHstdm : Measurable (fun z : Ω × Ω => Hstd z.1 z.2) :=
+     (hHm.sub measurable_const).div_const σ
+   have hHstd2 : MemLp (fun z : Ω × Ω => Hstd z.1 z.2) 2 (νn.prod νn) := by
+-    simpa only [Hstd, div_eq_mul_inv, mul_comm] using
+-      (hH2.sub (memLp_const κ)).const_mul σ⁻¹
++    have hSub2 : MemLp (fun z : Ω × Ω => H z.1 z.2 - κ) 2 (νn.prod νn) :=
++      hH2.sub (memLp_const κ)
++    have hScaled2 := hSub2.const_mul σ⁻¹
++    change MemLp (fun z : Ω × Ω => σ⁻¹ * (H z.1 z.2 - κ)) 2 (νn.prod νn) at hScaled2
++    have hScaleFun : (fun z : Ω × Ω => Hstd z.1 z.2) =
++        (fun z : Ω × Ω => σ⁻¹ * (H z.1 z.2 - κ)) := by
++      funext z
++      change (H z.1 z.2 - κ) / σ = σ⁻¹ * (H z.1 z.2 - κ)
++      exact div_eq_inv_mul _ _
++    rw [hScaleFun]
++    exact hScaled2
+   have hHstdsym : ∀ o y, Hstd o y = Hstd y o := by
+     intro o y
+     dsimp only [Hstd]
+@@ -333,10 +369,12 @@
+   have hgstdSecond : (∫ o, gstd o ^ 2 ∂νn) = 1 := by
+     calc
+       _ = ∫ o, (G o / σ) ^ 2 ∂νn := integral_congr_ae (hgstdAE.mono (by
+-        intro o ho; rw [ho]))
++        intro o ho; exact congrArg (fun x : ℝ => x ^ 2) ho))
+       _ = 1 := hXsecond
+   have hgstdpAE : (fun o => Real.rpow |gstd o| p) =ᵐ[νn]
+-      (fun o => Real.rpow |G o / σ| p) := hgstdAE.mono (by intro o ho; rw [ho])
++      (fun o => Real.rpow |G o / σ| p) := hgstdAE.mono (by
++        intro o ho
++        exact congrArg (fun x : ℝ => Real.rpow |x| p) ho)
+   have hgstdp : Integrable (fun o => Real.rpow |gstd o| p) νn :=
+     (integrable_congr hgstdpAE).2 hXpmoment
+   have hβstdBound : βstd ≤ 2 * β := by
+@@ -364,7 +402,9 @@
+     exact (integral_congr_ae ho).trans hrow.2
+   have hρSq : (∫ z : Ω × Ω, rstd z.1 z.2 ^ 2 ∂(νn.prod νn)) =
+       ∫ z : Ω × Ω, (Kcond z.1 z.2 / σ) ^ 2 ∂(νn.prod νn) :=
+-    integral_congr_ae (hrstdAE.mono (by intro z hz; rw [hz]))
++    integral_congr_ae (hrstdAE.mono (by
++      intro z hz
++      exact congrArg (fun x : ℝ => x ^ 2) hz))
+   have hρ : ρstd ≤ Real.sqrt RhoBound := by
+     dsimp only [ρstd]
+     rw [hρSq]
+@@ -372,7 +412,7 @@
+   have hwstdm : Measurable wstd := hw.const_mul _
+   have hwstd0 : ∀ᵐ o ∂νn, 0 ≤ wstd o := by
+     filter_upwards [hwCut] with o ho
+-    exact mul_nonneg (Real.sqrt_nonneg _) (by linarith [ho.1])
++    exact mul_nonneg (Real.sqrt_nonneg _) (le_trans zero_le_one ho.1)
+   have hwstdSqEq : (fun o => wstd o ^ 2) = (fun o => Cenv * w o ^ 2) := by
+     funext o
+     dsimp only [wstd]
+@@ -382,7 +422,10 @@
+     exact hwSqν.const_mul Cenv
+   have hwstdSqBound : (∫ o, wstd o ^ 2 ∂νn) ≤ Menv := by
+     rw [hwstdSqEq, integral_const_mul]
+-    exact mul_le_mul_of_nonneg_left hMνBound hCenv.le
++    calc
++      Cenv * (∫ o, w o ^ 2 ∂νn) ≤ Cenv * (2 * M2) :=
++        mul_le_mul_of_nonneg_left hMνBound hCenv.le
++      _ = Menv := by change Cenv * (2 * M2) = 2 * Cenv * M2; ring
+   have hrstdEnv : ∀ᵐ z : Ω × Ω ∂(νn.prod νn),
+       |rstd z.1 z.2| ≤ wstd z.1 * wstd z.2 := by
+     filter_upwards [hrstdAE, hKstdEnv] with z hz henv
+@@ -396,9 +439,8 @@
+     rw [hproduct]
+     exact henv
+   -- Unit270 derives the true beta lower bound from the true standardized model.
+-  have hStandardAt := (hEngine N270 le_rfl).2 νn Hstd hHstdm hHstd2
+-    hHstdsym hHstdMean hgstdSecond hgstdp hβstdBound
+-  have hβstd : 1 ≤ βstd := hStandardAt.1
++  have hβstd : 1 ≤ βstd := ((hEngine N270 le_rfl).2 νn Hstd hHstdm hHstd2
++    hHstdsym hHstdMean hgstdSecond hgstdp hβstdBound).1
+   refine ⟨hσ2low, hσ2up, hσlow, hσ, hσsq, hVarianceRate,
+     hHstdm, hHstd2, hHstdsym, hHstdMean, hgstdSecond, hgstdm, hgstd2,
+     hgstdzero, hgstdAE, hrstdAE, hgstdp, hβstd, hβstdBound, hrstd2,
+@@ -411,10 +453,10 @@
+   have hnpos : 0 < (n : ℝ) := by exact_mod_cast (by omega : 0 < n)
+   have hm1 : (m : ℝ) - 1 ≠ 0 := by
+     have hm4r : (4 : ℝ) ≤ m := by exact_mod_cast hm4
+-    linarith
++    exact ne_of_gt (sub_pos.mpr (lt_of_lt_of_le (by norm_num : (1 : ℝ) < 4) hm4r))
+   have hhalf : (n : ℝ) / 2 ≤ (m : ℝ) := by
+     have hnr : (n : ℝ) ≤ 2 * (m : ℝ) := by exact_mod_cast hnm
+-    linarith
++    exact (div_le_iff₀ (by norm_num : (0 : ℝ) < 2)).2 (by simpa only [mul_comm] using hnr)
+   let P : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => νn)
+   let Pμ : Measure (Fin m → Ω) := Measure.pi (fun _ : Fin m => μ)
+   let allGood : Set (Fin m → Ω) := {ζ | ∀ i : Fin m, ζ i ∈ Cn}
+@@ -450,8 +492,8 @@
+     rw [hallMass, ENNReal.toReal_pow]
+   have hCnNonzero : μ Cn ≠ 0 := by
+     intro hz
+-    have hd' := hdn
+-    simp only [dn, Measure.real, hz, ENNReal.toReal_zero] at hd'
++    have hd' : (1 / 2 : ℝ) ≤ (μ Cn).toReal := hdn
++    rw [hz, ENNReal.toReal_zero] at hd'
+     norm_num at hd'
+   have hallNonzero : Pμ allGood ≠ 0 := by
+     rw [hallMass]
+@@ -471,13 +513,14 @@
+         fun h => ⟨fun i => (h i).1, fun i => (h i).2⟩⟩
+     have hcoord : ∀ i : Fin m, νn (E i) = (μ Cn)⁻¹ * μ (E i ∩ Cn) := by
+       intro i
+-      rw [νn, Measure.smul_apply, Measure.restrict_apply (hE i), smul_eq_mul]
++      change (((μ Cn)⁻¹ • μ.restrict Cn) (E i)) = _
++      rw [Measure.smul_apply, Measure.restrict_apply (hE i), smul_eq_mul]
+     rw [Measure.smul_apply, Measure.restrict_apply (MeasurableSet.univ_pi hE),
+       smul_eq_mul, hrect, hallMass, Measure.pi_pi]
+     simp_rw [hcoord]
+     rw [Finset.prod_mul_distrib]
+-    simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, inv_pow]
+-    rfl
++    simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin]
++    rw [ENNReal.inv_pow]
+   have hLawReal : ∀ E : Set (Fin m → Ω), MeasurableSet E →
+       P.real E = Pμ.real (E ∩ allGood) / dn ^ m := by
+     intro E hE
+@@ -489,29 +532,33 @@
+     ring
+   have hwHeight : ∀ᵐ o ∂νn, wstd o ≤ boundedPolylogHeight Cpoly apoly m := by
+     have hm2 : (2 : ℝ) ≤ m := by exact_mod_cast (by omega : 2 ≤ m)
+-    have hlogm0 : 0 ≤ Real.log (m : ℝ) := Real.log_nonneg (by linarith)
++    have hlogm0 : 0 ≤ Real.log (m : ℝ) :=
++      Real.log_nonneg (le_trans (by norm_num : (1 : ℝ) ≤ 2) hm2)
+     have hlog2m : Real.log 2 ≤ Real.log (m : ℝ) :=
+       Real.log_le_log (by norm_num) hm2
+     have hlognm : Real.log (n : ℝ) ≤ 2 * Real.log (m : ℝ) := by
+       calc
+         _ ≤ Real.log (2 * (m : ℝ)) := Real.log_le_log hnpos (by exact_mod_cast hnm)
+         _ = Real.log 2 + Real.log (m : ℝ) := Real.log_mul (by norm_num) hmpos.ne'
+-        _ ≤ _ := by linarith
++        _ ≤ Real.log (m : ℝ) + Real.log (m : ℝ) := add_le_add_right hlog2m _
++        _ = _ := (two_mul _).symm
+     have hbase0 : 0 ≤ A * Real.log (n : ℝ) / τ := by
+       exact div_nonneg (mul_nonneg hA.le (Real.log_nonneg (by
+         exact_mod_cast (by omega : 1 ≤ n)))) hτ.le
+     have hbase : A * Real.log (n : ℝ) / τ ≤
+         (2 * A / τ) * Real.log (m : ℝ) := by
+-      have ht := mul_le_mul_of_nonneg_left hlognm hA.le
+-      have ht' := div_le_div_of_nonneg_right ht hτ.le
+-      nlinarith only [ht']
++      calc
++        A * Real.log (n : ℝ) / τ ≤ A * (2 * Real.log (m : ℝ)) / τ :=
++          div_le_div_of_nonneg_right
++            (mul_le_mul_of_nonneg_left hlognm hA.le) hτ.le
++        _ = (2 * A / τ) * Real.log (m : ℝ) := by ring
+     have hRnHeight : Rn ≤ Real.rpow (2 * A / τ) apoly *
+         Real.rpow (Real.log (m : ℝ)) apoly := by
+       change Real.rpow (A * Real.log (n : ℝ) / τ) apoly ≤ _
+       calc
+         _ ≤ Real.rpow ((2 * A / τ) * Real.log (m : ℝ)) apoly :=
+           Real.rpow_le_rpow hbase0 hbase hapoly.le
+-        _ = _ := Real.mul_rpow (by positivity) hlogm0
++        _ = _ := Real.mul_rpow hATau hlogm0
+     filter_upwards [hwCut] with o ho
+     calc
+       wstd o ≤ Real.sqrt Cenv * Rn :=
+@@ -520,8 +567,11 @@
+           Real.rpow (Real.log (m : ℝ)) apoly) :=
+         mul_le_mul_of_nonneg_left hRnHeight (Real.sqrt_nonneg _)
+       _ = boundedPolylogHeight Cpoly apoly m := by
+-        dsimp only [boundedPolylogHeight, Cpoly, apoly]
+-        ring
++        change Real.sqrt Cenv * (Real.rpow (2 * A / τ) apoly *
++            Real.rpow (Real.log (m : ℝ)) apoly) =
++          (Real.sqrt Cenv * Real.rpow (2 * A / τ) apoly) *
++            Real.rpow (Real.log (m : ℝ)) apoly
++        exact (mul_assoc _ _ _).symm
+   -- The remaining identities are pure finite algebra for every sample, even
+   -- at observations belonging to the exceptional nonintegrable-row null set.
+   have hstats : ∀ ζ : Fin m → Ω,
+@@ -675,12 +725,12 @@
+   change |P.real {ζ : Fin m → Ω | z ≤ Tcenter ζ} / Shao.standardNormalTail z - 1| ≤
+     K * (β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-a) +
+       (1 + z) ^ 3 / Real.sqrt (n : ℝ))
+-  have hβstdpos : 0 < βstd := by linarith
++  have hβstdpos : 0 < βstd := lt_of_lt_of_le zero_lt_one hβstd
+   have hβInverse : Real.rpow (2 * β) (-1 / p) ≤ Real.rpow βstd (-1 / p) :=
+     Real.rpow_le_rpow_of_nonpos hβstdpos hβstdBound
+       (div_nonpos_of_nonpos_of_nonneg (by norm_num) hp0.le)
+   have hhalfPower : Real.rpow ((n : ℝ) / 2) qpow ≤ Real.rpow (m : ℝ) qpow :=
+-    Real.rpow_le_rpow (by positivity) hhalf hq.le
++    Real.rpow_le_rpow (div_nonneg hnpos.le (by norm_num)) hhalf hq.le
+   have hhalfPowerEq : Real.rpow ((n : ℝ) / 2) qpow =
+       Real.rpow (n : ℝ) qpow / Real.rpow 2 qpow :=
+     Real.div_rpow hnpos.le (by norm_num)
+@@ -692,7 +742,8 @@
+       _ ≤ c270 * Real.rpow βstd (-1 / p) * Real.rpow (m : ℝ) qpow :=
+         mul_le_mul
+           (mul_le_mul_of_nonneg_left hβInverse hc270.le) hhalfPower
+-          (Real.rpow_nonneg (by positivity) _) (by positivity)
++          (Real.rpow_nonneg (div_nonneg hnpos.le (by norm_num)) _)
++          (mul_nonneg hc270.le (Real.rpow_nonneg hβstdpos.le _))
+   have hTail := ((hEngine m hm270).2 νn Hstd hHstdm hHstd2 hHstdsym
+     hHstdMean hgstdSecond hgstdp hβstdBound).2.2 wstd hwstd0 hwHeight
+     hwstdSq hwstdSqBound hrstdEnv z hz hWindow270
+@@ -703,7 +754,7 @@
+       Real.rpow 2 a * Real.rpow (n : ℝ) (-a) := by
+     calc
+       _ ≤ Real.rpow ((n : ℝ) / 2) (-a) :=
+-        Real.rpow_le_rpow_of_nonpos (by positivity) hhalf (by linarith)
++        Real.rpow_le_rpow_of_nonpos (div_pos hnpos (by norm_num)) hhalf (neg_nonpos.mpr ha.le)
+       _ = Real.rpow (n : ℝ) (-a) / Real.rpow 2 (-a) :=
+         Real.div_rpow hnpos.le (by norm_num)
+       _ = _ := by
+@@ -713,16 +764,19 @@
+     calc
+       _ ≤ Real.sqrt (2 * (m : ℝ)) := Real.sqrt_le_sqrt (by exact_mod_cast hnm)
+       _ = _ := Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2) _
+-  have hz0 : 0 ≤ z := by linarith
+-  have hzpp : 0 ≤ Real.rpow (1 + z) p := Real.rpow_nonneg (by linarith) _
++  have hz0 : 0 ≤ z := le_trans zero_le_one hz
++  have hzpp : 0 ≤ Real.rpow (1 + z) p := Real.rpow_nonneg (add_nonneg zero_le_one hz0) _
+   have hz3 : 0 ≤ (1 + z) ^ 3 := by positivity
+   have hnPower0 : 0 ≤ Real.rpow (n : ℝ) (-a) := Real.rpow_nonneg hnpos.le _
+   have hFirst : βstd * Real.rpow (1 + z) p * Real.rpow (m : ℝ) (-a) ≤
+       L1 * (β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-a)) := by
+     have hb := mul_le_mul_of_nonneg_right hβstdBound hzpp
+-    have ht := mul_le_mul hb hNegPower (Real.rpow_nonneg hmpos.le _) (by positivity)
+-    dsimp only [L1]
+-    nlinarith only [ht]
++    have ht := mul_le_mul hb hNegPower (Real.rpow_nonneg hmpos.le _)
++      (mul_nonneg (mul_nonneg (by norm_num) hβ0) hzpp)
++    calc
++      _ ≤ (2 * β * Real.rpow (1 + z) p) *
++          (Real.rpow 2 a * Real.rpow (n : ℝ) (-a)) := ht
++      _ = _ := by change _ = (2 * Real.rpow 2 a) * _; ring
+   have hSecond : (1 + ρstd) * (1 + z) ^ 3 / Real.sqrt (m : ℝ) ≤
+       L2 * ((1 + z) ^ 3 / Real.sqrt (n : ℝ)) := by
+     apply (div_le_iff₀ (Real.sqrt_pos.mpr hmpos)).2
+@@ -730,7 +784,7 @@
+         L2 * Real.sqrt (m : ℝ) := by
+       calc
+         _ ≤ (1 + Real.sqrt RhoBound) * (Real.sqrt 2 * Real.sqrt (m : ℝ)) :=
+-          mul_le_mul (by linarith [hρ]) hRootComparison
++          mul_le_mul (add_le_add_left hρ 1) hRootComparison
+             (Real.sqrt_nonneg _) (by positivity)
+         _ = _ := by dsimp only [L2]; ring
+     have hh := mul_le_mul_of_nonneg_right hρRoot hz3
