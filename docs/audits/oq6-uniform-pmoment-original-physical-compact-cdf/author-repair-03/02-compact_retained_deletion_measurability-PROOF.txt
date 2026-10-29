@@ -1,0 +1,64 @@
+:= by
+  classical
+  intro N q eDeleted Adeleted Bdeleted
+  have hN3 : 3 ≤ N := by
+    dsimp only [N]
+    exact_mod_cast hn
+  have hNpos : 0 < N := by linarith only [hN3]
+  have hqpos : 0 < q := Real.sqrt_pos.mpr hNpos
+  have hspos : 0 < s := lt_of_lt_of_le (by norm_num : (0 : ℝ) < 1) hs
+  have hdenpos : 0 < s * (N ^ 2 * q) := by positivity
+  have hEdm (i : Fin n) : Measurable (eDeleted i) := by
+    apply Measurable.of_eval
+    intro j
+    apply Measurable.of_eval
+    intro k
+    by_cases hj : j = i
+    · simpa only [eDeleted, dif_pos hj] using
+        (measurable_const : Measurable (fun _ : ({j : Fin n // j ≠ i} → Ω) => (0 : ℝ)))
+    · by_cases hk : k = i
+      · simpa only [eDeleted, dif_neg hj, dif_pos hk] using
+          (measurable_const : Measurable (fun _ : ({j : Fin n // j ≠ i} → Ω) => (0 : ℝ)))
+      · have hpair : Measurable
+            (fun η : ({j : Fin n // j ≠ i} → Ω) =>
+              (η (⟨j, hj⟩ : {j : Fin n // j ≠ i}),
+                η (⟨k, hk⟩ : {j : Fin n // j ≠ i}))) :=
+          (measurable_pi_apply (⟨j, hj⟩ : {j : Fin n // j ≠ i})).prodMk
+            (measurable_pi_apply (⟨k, hk⟩ : {j : Fin n // j ≠ i}))
+        simpa only [eDeleted, dif_neg hj, dif_neg hk, Function.comp_def] using
+          hr.comp hpair
+  have hEdentry (i j k : Fin n) :
+      Measurable (fun η : ({j : Fin n // j ≠ i} → Ω) => eDeleted i η j k) :=
+    (measurable_pi_apply k).comp ((measurable_pi_apply j).comp (hEdm i))
+  have hEdpair (i : Fin n) : Measurable
+      (fun η : ({j : Fin n // j ≠ i} → Ω) => Shao.OQ5.P35.unorderedPairSum (eDeleted i η)) := by
+    dsimp only [Shao.OQ5.P35.unorderedPairSum]
+    apply Finset.measurable_sum
+    intro j hj
+    apply Finset.measurable_sum
+    intro k hk
+    by_cases hjk : j < k
+    · simpa only [if_pos hjk] using hEdentry i j k
+    · simpa only [if_neg hjk] using
+        (measurable_const : Measurable (fun _ : ({j : Fin n // j ≠ i} → Ω) => (0 : ℝ)))
+  have hEdrow (i j : Fin n) : Measurable
+      (fun η : ({j : Fin n // j ≠ i} → Ω) =>
+        Shao.OQ6.ResidualDeletion.rowSum (eDeleted i η) j) := by
+    dsimp only [Shao.OQ6.ResidualDeletion.rowSum]
+    exact Finset.measurable_sum _ (fun k _ => hEdentry i j k)
+  have hEdenergy (i : Fin n) : Measurable
+      (fun η : ({j : Fin n // j ≠ i} → Ω) =>
+        ∑ j : Fin n, Shao.OQ6.ResidualDeletion.rowSum (eDeleted i η) j ^ 2) :=
+    Finset.measurable_sum _ (fun j _ => (hEdrow i j).pow_const 2)
+  have hAdm (i : Fin n) : Measurable (Adeleted i) :=
+    continuous_abs.measurable.comp ((hEdpair i).div_const (q * (N - 1)))
+  have hBdm (i : Fin n) : Measurable (Bdeleted i) :=
+    (measurable_const.add ((hEdenergy i).div_const (s * (N ^ 2 * q)))).const_mul 4096
+  have hAdnonneg (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω) : 0 ≤ Adeleted i η :=
+    abs_nonneg _
+  have hBdnonneg (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω) : 0 ≤ Bdeleted i η := by
+    dsimp only [Bdeleted]
+    exact mul_nonneg (by norm_num)
+      (add_nonneg (div_nonneg hspos.le hqpos.le)
+        (div_nonneg (Finset.sum_nonneg (fun j _ => sq_nonneg _)) hdenpos.le))
+  exact ⟨hAdm, hBdm, hAdnonneg, hBdnonneg⟩

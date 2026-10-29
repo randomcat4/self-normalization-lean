@@ -1,0 +1,74 @@
+--- author-repair-01/OriginalLogarithmicConditionalUncenteredPhysicalTail.lean
++++ author-repair-02/OriginalLogarithmicConditionalUncenteredPhysicalTail.lean
+@@ -489,1 +489,2 @@ mul-rpow-sixth-implicit-exponent
+-          Real.mul_rpow (by norm_num : (0 : ℝ) ≤ 2) hmpos.le (1 / 6 : ℝ)
++          Real.mul_rpow (x := (2 : ℝ)) (y := (m : ℝ)) (z := (1 / 6 : ℝ))
++            (by norm_num : (0 : ℝ) ≤ 2) hmpos.le
+@@ -500,2 +501,3 @@ remainder-window-normalized-power-atoms
+-        have hh := mul_le_mul_of_nonneg_right hcRBound (Real.rpow_nonneg hmpos.le (1 / 6 : ℝ))
+-        nlinarith only [hh]
++        have hh := mul_le_mul_of_nonneg_right hcRBound (Real.rpow_nonneg hmpos.le (1 / 6 : ℝ))
++        simp only [Real.rpow_eq_pow] at hh ⊢
++        nlinarith only [hh]
+@@ -508,2 +510,3 @@ absorption-window-normalized-power-atoms
+-        have hh := mul_le_mul_of_nonneg_right hcABound (Real.rpow_nonneg hmpos.le (1 / 6 : ℝ))
+-        nlinarith only [hh]
++        have hh := mul_le_mul_of_nonneg_right hcABound (Real.rpow_nonneg hmpos.le (1 / 6 : ℝ))
++        simp only [Real.rpow_eq_pow] at hh ⊢
++        nlinarith only [hh]
+@@ -546,3 +549,8 @@ typed-physical-shift-multiplication
+-          have hh := mul_le_mul_of_nonneg_left hRH
+-            (mul_nonneg (Real.sqrt_nonneg _) (abs_nonneg κ))
+-          nlinarith only [hh]
++          have hNumerator : 0 ≤ 2 * (Real.sqrt (m : ℝ) * |κ|) :=
++            mul_nonneg (by norm_num : (0 : ℝ) ≤ 2)
++              (mul_nonneg (Real.sqrt_nonneg (m : ℝ)) (abs_nonneg κ))
++          calc
++            Real.sqrt (m : ℝ) * |κ| =
++                (2 * (Real.sqrt (m : ℝ) * |κ|)) * (1 / 2 : ℝ) := by ring
++            _ ≤ (2 * (Real.sqrt (m : ℝ) * |κ|)) * RH ζ :=
++              mul_le_mul_of_nonneg_left hRH hNumerator
+@@ -552,3 +560,4 @@ physical-difference-from-local-statistic-definitions
+-    have hDifference : Tuncenter ζ - Tcenter ζ = Real.sqrt (m : ℝ) * κ / RH ζ := by
+-      rw [(hStats ζ).2.2, if_neg (ne_of_gt hRHpos), (hStats ζ).2.1]
+-      ring
++    have hDifference : Tuncenter ζ - Tcenter ζ = Real.sqrt (m : ℝ) * κ / RH ζ := by
++      dsimp only [Tuncenter, Tcenter]
++      simp only [if_neg (ne_of_gt hRHpos)]
++      ring
+@@ -611,1 +620,4 @@ explicit-polynomial-error-nonnegativity
+-  have hX0 : 0 ≤ X := by dsimp only [X]; positivity
++  have hX0 : 0 ≤ X := by
++    exact mul_nonneg
++      (mul_nonneg hβ0 (Real.rpow_nonneg (by linarith only [hz0] : 0 ≤ 1 + z) p))
++      (Real.rpow_nonneg hnpos.le (-((p - 2) / 2)))
+@@ -622,2 +634,3 @@ explicit-square-root-four
+-        rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 4)]
+-        norm_num
++        rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 4)]
++        rw [show (4 : ℝ) = (2 : ℝ) ^ 2 by norm_num,
++          Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 2)]
+@@ -635,2 +648,4 @@ explicit-doubled-relative-payment
+-        have hh := div_le_div_of_nonneg_right hCubeOne hSqrtN.le
+-        linarith only [hh]
++        have hh := mul_le_mul_of_nonneg_left
++          (div_le_div_of_nonneg_right hCubeOne hSqrtN.le)
++          (by norm_num : (0 : ℝ) ≤ 2)
++        convert hh using 1 <;> ring
+@@ -678,2 +693,3 @@ mul-rpow-polynomial-implicit-exponent
+-            Real.mul_rpow (by norm_num : (0 : ℝ) ≤ 2)
+-              (by linarith only [hz0] : 0 ≤ 1 + z) p
++            Real.mul_rpow (x := (2 : ℝ)) (y := 1 + z) (z := p)
++              (by norm_num : (0 : ℝ) ≤ 2)
++              (by linarith only [hz0] : 0 ≤ 1 + z)
+@@ -691,1 +707,3 @@ normalized-first-polynomial-error
+-      convert hh using 1 <;> dsimp only [X] <;> ring
++      dsimp only [X]
++      simp only [Real.rpow_eq_pow] at hh ⊢
++      convert hh using 1 <;> ring
+@@ -717,1 +735,1 @@ existing-absolute-triangle-lemma
+-          |Shao.standardNormalTail v / Shao.standardNormalTail z - 1| := abs_add _ _
++          |Shao.standardNormalTail v / Shao.standardNormalTail z - 1| := abs_add_le _ _
+@@ -725,1 +743,1 @@ explicit-left-summand-monotonicity
+-        add_le_add_left hGaussianPaid _
++        add_le_add (le_refl (((8 * K0) * E) * Real.exp 2)) hGaussianPaid

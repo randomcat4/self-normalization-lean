@@ -1,0 +1,38 @@
+private theorem actual_compact_numerator_threshold_bounds
+    (C : ℝ)
+    (hSZC : Shao.OQ6.NormalizedIntegrableCDFAssembly.ScalarShaoZhouFiniteCostCDFInput.{u} C)
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    [MeasurableSpace.CountablyGenerated Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (n : ℕ) (hn : 3 ≤ n) (y : ℝ) (hy : 0 ≤ y) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let s : ℝ := 1 + Real.sqrt v
+    let N : ℝ := (n : ℝ)
+    let q : ℝ := Real.sqrt N
+    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let J : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.uncenteredSq (fun i j => h (ζ i) (ζ j))
+    let Vsq : (Fin n → Ω) → ℝ := fun ζ => (∑ i : Fin n, g (ζ i) ^ 2) / N
+    let W : (Fin n → Ω) → ℝ := fun ζ => (∑ i : Fin n, g (ζ i)) / q
+    let D2 : (Fin n → Ω) → ℝ := fun ζ => if 0 < Vsq ζ then J ζ / Vsq ζ - 1 else 0
+    let G : Set (Fin n → Ω) := {ζ | (1 / 2 : ℝ) ≤ Vsq ζ ∧
+      |W ζ| ≤ Real.sqrt q * (4 + Real.sqrt (Vsq ζ))}
+    let D1 : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ5.P35.unorderedPairSum (fun i j => r (ζ i) (ζ j)) / (q * (N - 1))
+    let D2c : (Fin n → Ω) → ℝ := fun ζ =>
+      if ζ ∈ G then max (D2 ζ) (-(1 / 2 : ℝ)) else 0
+    let Lcompact : ℝ := N * (∫ o, Shao.truncationF ((1 + y) * (g o / q)) ∂μ)
+    let Ecost : ℝ := C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q)
+    s ≤ q →
+      |P₀.real {ζ | y * Real.sqrt (Vsq ζ) * Real.sqrt (1 + D2c ζ) < W ζ + D1 ζ} -
+        (1 - Shao.OQ4.standardNormalCDF y)| ≤ Ecost ∧
+      |P₀.real {ζ | y * Real.sqrt (Vsq ζ) * Real.sqrt (1 + D2c ζ) ≤ W ζ + D1 ζ} -
+        (1 - Shao.OQ4.standardNormalCDF y)| ≤ Ecost

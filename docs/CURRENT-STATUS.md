@@ -1,6 +1,6 @@
 # Current mathematical status
 
-v161 accepts unit273 for the SAME fixed original mu/h: actual logarithmic conditional law, true standardized kernel/projection/residual, pointwise centered jackknife statistic identity, and its physical closed-tail bound with supplied external hSZ. The common threshold precedes n/lambda/m/z for this fixed original model. The uncentered random-denominator mean shift, exceptional-background transfer to all original samples, external hSZ/hSZC existence and attribution, compact/CDF consumers and full OQ56 remain OPEN. Accepted v160 subcritical-window consequences and earlier same-witness costs/strict budgets/actual bad-event payments are retained.
+v162 accepts units274/275. For the SAME actual logarithmic conditional model and supplied external hSZ, the uncentered physical CLOSED tail on2<=z<=c*n^((p-2)/(2p)) now pays the true random-denominator mean shift and real good-set complement. Separately, with distinct supplied hSZC, ONE K precedes every original model with beta<=B and gives all four strict/closed CDF and tail errors on CLOSED[0,1], for all n>=3, at rate K[beta*n^-((p-2)/2)+(1+sqrt(v))/sqrt(n)]. Literal zero denominators and atoms remain covered. Unrestricted original growing-window relative-tail/NR/PE transfer, external-input existence/attribution and full OQ56 remain OPEN. Accepted v160 subcritical consequences and earlier same-witness costs/strict budgets/actual bad-event payments are retained.
 
 The current authority is coordination/REGISTRY.json/currentAuthoritativeState and library/SNAPSHOT.json. Historical component rows below are retained evidence, not the latest acceptance pointer or a completion percentage.
 
@@ -26,7 +26,7 @@ This closes this precise current changing-row extension. It does not certify eve
 
 ## OQ56
 
-OQ56 remains open. Unit273 at v161 closes the actual logarithmic conditional centered application described above. It proves the conditional product identity for every measurable event, retains zero denominators, and records the uncentered random shift exactly; that shift still requires quantitative tail payment. The earlier bounded-class same-witness fee/strict-budget/good-event chain and v160 subcritical consequences are accepted. The following older rows remain as historical component evidence:
+OQ56 remains open. Unit274 at v162 closes the actual conditional uncentered application: on its real good set RH>=1/2 and the mean shift is small, while the complementary event is quantitatively paid. The conditional product law remains exact for every measurable event; the relative tail starts at2. Unit275 at v162 gives common-model-K original physical compact CDF and four strict/closed bounds with distinct hSZC, without a residual envelope/budget or public countably-generated assumption. Its public K is existential; the private witness is not a public equality, and unbounded residual variances do not imply uniform numerical convergence. The earlier bounded-class same-witness fee/strict-budget/good-event chain and v160 subcritical consequences remain accepted. The following older rows remain as historical component evidence:
 
 | Snapshot | Components | Retained boundary |
 | --- | --- | --- |

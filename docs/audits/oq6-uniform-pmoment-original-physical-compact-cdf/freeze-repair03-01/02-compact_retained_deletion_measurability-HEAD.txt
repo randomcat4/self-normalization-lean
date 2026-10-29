@@ -1,0 +1,20 @@
+private theorem compact_retained_deletion_measurability
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (r : Ω → Ω → ℝ)
+    (hr : Measurable (fun t : Ω × Ω => r t.1 t.2))
+    (n : ℕ) (hn : 3 ≤ n) (s : ℝ) (hs : 1 ≤ s) :
+    let N : ℝ := (n : ℝ)
+    let q : ℝ := Real.sqrt N
+    let eDeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → Fin n → Fin n → ℝ :=
+      fun i η j k => if hj : j = i then 0 else if hk : k = i then 0 else
+        r (η ⟨j, hj⟩) (η ⟨k, hk⟩)
+    let Adeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ :=
+      fun i η => |Shao.OQ5.P35.unorderedPairSum (eDeleted i η) / (q * (N - 1))|
+    let Bdeleted : ∀ i : Fin n, ({j : Fin n // j ≠ i} → Ω) → ℝ :=
+      fun i η => 4096 * (s / q +
+        (∑ j : Fin n, Shao.OQ6.ResidualDeletion.rowSum (eDeleted i η) j ^ 2) /
+          (s * (N ^ 2 * q)))
+    (∀ i : Fin n, Measurable (Adeleted i)) ∧
+      (∀ i : Fin n, Measurable (Bdeleted i)) ∧
+      (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Adeleted i η) ∧
+      (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Bdeleted i η)

@@ -1,0 +1,43 @@
+private theorem actual_common_physical_compact_raw_bounds
+    (C : ℝ)
+    (hSZC : Shao.OQ6.NormalizedIntegrableCDFAssembly.ScalarShaoZhouFiniteCostCDFInput.{u} C)
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    [MeasurableSpace.CountablyGenerated Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (cg : ℝ)
+    (hLow : ∀ n : ℕ,
+      (Measure.pi (fun _ : Fin n => μ)).real
+          {ζ : Fin n → Ω | (∑ i : Fin n, (∫ y, h (ζ i) y ∂μ) ^ (2 : ℕ)) ≤ (n : ℝ) / 2} ≤
+        Real.exp (-cg * (n : ℝ)))
+    (n : ℕ) (hn : 3 ≤ n) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ := ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(μ.prod μ)
+    let s : ℝ := 1 + Real.sqrt v
+    let N : ℝ := (n : ℝ)
+    let q : ℝ := Real.sqrt N
+    let P₀ : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let U : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.uStatistic (fun i j => h (ζ i) (ζ j))
+    let R2 : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.jackknifeSq (fun i j => h (ζ i) (ζ j))
+    let T : (Fin n → Ω) → ℝ := fun ζ =>
+      if 0 < R2 ζ then q * U ζ / Real.sqrt (R2 ζ) else 0
+    let c_n : ℝ := 4 * (N - 1) / (N - 2) ^ 2
+    let τ : ℝ → ℝ := fun x => x / Real.sqrt (1 + c_n * x ^ 2)
+    Measurable T ∧
+      ∀ x : ℝ, 0 ≤ x → x ≤ 1 →
+        let y : ℝ := τ x
+        let Lcompact : ℝ := N * (∫ o, Shao.truncationF ((1 + y) * (g o / q)) ∂μ)
+        let error : ℝ := C * (Lcompact + 16 * (1 + 4096) * (1 + y) * s / q) +
+          2 * Real.exp (-cg * N) + ((1 / 8 : ℝ) + 33104 * s) / q + 12 / N
+        |P₀.real {ζ | T ζ ≤ x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+        |P₀.real {ζ | T ζ < x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+        |P₀.real {ζ | x < T ζ} - (1 - Shao.OQ4.standardNormalCDF x)| ≤ error ∧
+        |P₀.real {ζ | x ≤ T ζ} - (1 - Shao.OQ4.standardNormalCDF x)| ≤ error
