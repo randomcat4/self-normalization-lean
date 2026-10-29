@@ -927,6 +927,7 @@ import Shao.OQ6.OriginalCompactPMomentCost
 import Shao.OQ6.OriginalCountablyGeneratedModel
 import Shao.OQ6.OriginalCurrentLevelGoodsetPhysicalPayment
 import Shao.OQ6.OriginalCurrentLevelPhysicalFiniteCostTail
+import Shao.OQ6.OriginalCurrentLevelPhysicalRelativePolynomialRate
 import Shao.OQ6.OriginalExceptionalTailAbsorption
 import Shao.OQ6.OriginalGhostComparison
 import Shao.OQ6.OriginalGhostGoodEvent
