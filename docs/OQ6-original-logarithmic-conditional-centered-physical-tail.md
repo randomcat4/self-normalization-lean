@@ -1,0 +1,7 @@
+# OQ6 unit 273: OriginalLogarithmicConditionalCenteredPhysicalTail
+
+For a fixed original symmetric kernel and its logarithmic cutoff family, derive the actual normalized conditional model and centered physical closed-tail relative error with one threshold before all n/lambda/m/z. Preserve exact conditional product law for every measurable event, almost-everywhere projection/residual identities, pointwise finite-statistic identities and the zero-denominator convention.
+
+Exact source `cd87e1d785d25b29f2ac93ad1e50576883eda5b3409a1c18090cd3872b63ebe5`. Designated-server successful native attempt and same-first-object all-owner audit returned actual RC0/0. Complete independent source/proof and actual TYPE review covers 23 actual owners, 3114 TYPE lines and 0 required non-theorem values. Original warnings and strict-wrapper false are retained. Recursive axioms remain within propext, Classical.choice and Quot.sound.
+
+This conditional-centered result retains supplied external hSZ, the fixed original probability/kernel with its exponential weight and residual product envelope, the actual normalized restriction and physical zero convention, and closed-tail events. Uncentered random-denominator mean shifts, exceptional-background full original-sample tails, external Shao-Zhou existence/provenance, general unbounded L2, DC and full OQ56/root remain OPEN. The p54 qualitative p-moment repair and external attribution remain explicit.
