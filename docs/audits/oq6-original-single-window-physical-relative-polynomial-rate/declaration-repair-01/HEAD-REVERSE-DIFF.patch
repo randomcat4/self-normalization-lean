@@ -1,0 +1,20 @@
+--- declaration-repair-01/HEAD-PROPOSAL.txt
++++ freeze-01/FROZEN-HEAD.txt
+@@ -44,13 +44,12 @@
+         let mN : MeasurableSpace (Fin n → Ω) :=
+           @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+         let P : @Measure (Fin n → Ω) mN :=
+-          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (Fin.fintype n)
++          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+             (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+         let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+         let physical : (Fin n → Ω) → ℝ := fun ζ =>
+-          @ite ℝ (Real.sqrt (centeredSq n g r ζ) = 0)
+-            (Real.decidableEq (Real.sqrt (centeredSq n g r ζ)) 0) 0
+-            ((projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ))
+-        |@Measure.real (Fin n → Ω) mN P {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z - 1| ≤
++          if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
++            (projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ)
++        |P.real {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z - 1| ≤
+           Ktail * (β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+             (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ))

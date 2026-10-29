@@ -948,6 +948,7 @@ import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalPhysicalClippedTailTransfer
+import Shao.OQ6.OriginalPhysicalCompactCDF
 import Shao.OQ6.OriginalRetainedClipComparisonPayment
 import Shao.OQ6.OriginalRhoTiltedMoments
 import Shao.OQ6.OriginalSameWitnessClippedEventTransport
@@ -961,6 +962,7 @@ import Shao.OQ6.OriginalSameWitnessScalarTailApplication
 import Shao.OQ6.OriginalSameWitnessUnperturbedCostConsumer
 import Shao.OQ6.OriginalSameWitnessUpperErrorPayment
 import Shao.OQ6.OriginalSelfNormalizedTail
+import Shao.OQ6.OriginalSingleWindowPhysicalRelativePolynomialRate
 import Shao.OQ6.OriginalSingleWitnessAnalyticStrictFrontier
 import Shao.OQ6.P54ActualGoodsetFrontier
 import Shao.OQ6.PairedSelfNormalizedTail
