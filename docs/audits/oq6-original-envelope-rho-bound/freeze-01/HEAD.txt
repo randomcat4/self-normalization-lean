@@ -1,0 +1,15 @@
+theorem original_residual_rho_le_envelope_second_moment
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (r : Ω → Ω → ℝ)
+    (hr2 : MemLp (Function.uncurry r) 2 (μ.prod μ))
+    (w : Ω → ℝ)
+    (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+    (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+    (M : ℝ) (hM : 0 ≤ M)
+    (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)
+    (hEnv : ∀ᵐ o : Ω × Ω ∂μ.prod μ,
+      |r o.1 o.2| ≤ w o.1 * w o.2) :
+    let v : ℝ := ∫ o : Ω × Ω, (r o.1 o.2) ^ (2 : ℕ) ∂μ.prod μ
+    let rho : ℝ := Real.sqrt v
+    0 ≤ v ∧ v ≤ M ^ (2 : ℕ) ∧ 0 ≤ rho ∧ rho ≤ M

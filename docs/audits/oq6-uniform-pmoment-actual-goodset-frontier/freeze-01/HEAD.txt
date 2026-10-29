@@ -1,0 +1,67 @@
+theorem uniform_pmoment_original_boundedPolylog_goodset_frontier
+    (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+    (B : ℝ) (hB : 1 ≤ B) :
+    let tB : ℝ := Real.rpow (1 / (4 * B)) (2 / (p - 2))
+    let cg : ℝ := tB / 4
+    0 < cg ∧
+      ∀ (C a t0 M : ℝ)
+        (hC : 0 ≤ C) (ha : 0 ≤ a) (ht0 : 0 < t0) (hM : 0 ≤ M),
+        ∃ N : ℕ, 4 ≤ N ∧
+          ∀ (n : ℕ), N ≤ n →
+            ∀ {Ω : Type u} [mΩ : MeasurableSpace Ω]
+              (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+              (g : Ω → ℝ) (hg : Measurable g) (hg2 : MemLp g 2 μ)
+              (hgmean : (∫ o : Ω, g o ∂μ) = 0)
+              (hgsecond : (∫ o : Ω, (g o) ^ (2 : ℕ) ∂μ) = 1)
+              (hgp : Integrable (fun o : Ω => Real.rpow |g o| p) μ)
+              (hβBound : (∫ o : Ω, Real.rpow |g o| p ∂μ) ≤ B)
+              (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+              (hr : Measurable (Function.uncurry r))
+              (hr1 : Integrable (Function.uncurry r) (μ.prod μ))
+              (hcR : ∀ᵐ o : Ω ∂μ, (∫ o' : Ω, r o o' ∂μ) = 0)
+              (hcL : ∀ᵐ o' : Ω ∂μ, (∫ o : Ω, r o o' ∂μ) = 0)
+              (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+              (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight C a n)
+              (hSq : Integrable (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+              (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ M)
+              (hEnv : ∀ᵐ o : Ω × Ω ∂μ.prod μ,
+                |r o.1 o.2| ≤ w o.1 * w o.2)
+              (hsym : ∀ o o' : Ω, r o o' = r o' o)
+              (C0 rho z : ℝ) (hC0 : 0 ≤ C0) (hrho : 0 ≤ rho)
+              (hz : (1 : ℝ) ≤ z)
+              (hzWindow : z ≤ remainderWindowScale (tailScale M) t0 *
+                Real.rpow (n : ℝ) (1 / 6 : ℝ)),
+              let q : ℝ := boundedPolylogMomentOrder t0 n
+              let K : ℝ := tailScale M
+              let G : Set (Fin n → Ω) := projectionGood n g z
+              let C2 : Set (Fin n → Ω) :=
+                {x : Fin n → Ω |
+                  |originalUpper n r x| ≤ K * (n : ℝ) * q ∧
+                  ‖originalRows n r x‖ ^ (2 : ℕ) ≤
+                    K * (n : ℝ) ^ (2 : ℕ) * q}
+              let H : Set (Fin n → Ω) := G ∩ C2
+              let e1 : (Fin n → Ω) → ℝ :=
+                fun x : Fin n → Ω => clippedCenteredDelta n g r C0 rho 1 x
+              MeasurableSet H ∧
+                (∀ x : Fin n → Ω, x ∈ H →
+                  0 < projectionV n g x ∧
+                  (1 / 2 : ℝ) ≤ projectionEnergy n g x ∧
+                  z * |residualStatisticD n r x| ≤ projectionV n g x / 8 ∧
+                  z * |residualStatisticD n r x| < projectionV n g x / 4 ∧
+                  z ^ (2 : ℕ) * |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧
+                  |centeredDelta n g r x| ≤ (1 / 32 : ℝ) ∧
+                  -(1 / 8 : ℝ) < centeredDelta n g r x ∧
+                  |e1 x| ≤ |centeredDelta n g r x| ∧
+                  z ^ (2 : ℕ) * |e1 x| ≤ (1 / 32 : ℝ) ∧
+                  z ^ (2 : ℕ) * |e1 x| < (1 / 8 : ℝ) ∧
+                  |e1 x| ≤ (1 / 32 : ℝ) ∧
+                  0 < projectionV n g x * Real.sqrt (1 + e1 x) ∧
+                  0 < Real.sqrt (centeredSq n g r x) ∧
+                  Real.sqrt (centeredSq n g r x) =
+                    projectionV n g x *
+                      Real.sqrt (1 + centeredDelta n g r x)) ∧
+                (({x : Fin n → Ω | projectionV n g x = 0} ∪
+                    {x : Fin n → Ω | Real.sqrt (centeredSq n g r x) = 0}) ⊆ Hᶜ) ∧
+                (sampleLaw n μ).real Hᶜ ≤
+                  (3 : ℝ) * Real.exp (-q) + Real.exp (-cg * (n : ℝ)) +
+                    (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))

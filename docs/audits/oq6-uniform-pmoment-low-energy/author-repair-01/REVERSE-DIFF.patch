@@ -1,0 +1,18 @@
+--- b/UniformPMomentLowEnergy.lean
++++ a/UniformPMomentLowEnergy.lean
+@@ -223,12 +223,9 @@
+               simp only [probReal_univ, smul_eq_mul, one_mul]
+         _ ≤ 1 - (tB - Real.rpow tB q * B) := by
+           rw [hgsecond]
+-          have hBound :
+-              Real.rpow tB q * (∫ o : Ω, Real.rpow |g o| p ∂μ) ≤
+-                Real.rpow tB q * B :=
+-            mul_le_mul_of_nonneg_left hβBound (Real.rpow_nonneg htBPos.le q)
+-          simpa only [mul_one] using
+-            (sub_le_sub_left (sub_le_sub_left hBound tB) (1 : ℝ))
++          have hBound := mul_le_mul_of_nonneg_left hβBound
++            (Real.rpow_nonneg htBPos.le q)
++          linarith only [hBound]
+         _ = 1 - 3 * tB / 4 := by
+           rw [mul_comm (Real.rpow tB q) B, hTqQuarter]
+           ring
