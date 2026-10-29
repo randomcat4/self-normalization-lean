@@ -1,0 +1,14 @@
+:= by
+  have hMpos : (0 : ℝ) < (B.card : ℝ) := by exact_mod_cast hB
+  have hMne : (B.card : ℝ) ≠ 0 := ne_of_gt hMpos
+  have hcross :
+      (∑ i ∈ B, 2 * f i * blockMean B f) =
+        2 * (∑ i ∈ B, f i) * blockMean B f := by
+    rw [← Finset.sum_mul, ← Finset.mul_sum]
+  unfold blockCenteredEnergy
+  simp only [sub_sq, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  rw [hcross]
+  simp only [Finset.sum_const, nsmul_eq_mul]
+  unfold blockMean
+  field_simp [hMne]
+  <;> ring

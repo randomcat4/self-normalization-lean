@@ -1,0 +1,20 @@
+private theorem original_statistic_eq_offset_form
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a) (hn : 4 ≤ n) :
+    let b : Fin n → ℝ := fun i : Fin n =>
+      g (x i) + Shao.OQ5.P51.residualU n r x i
+    let F : ℝ :=
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x
+    let c : ℝ := F / (((n : ℝ) - 1) * ((n : ℝ) - 2))
+    let Q : ℝ := ∑ i : Fin n,
+      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)
+    let s : ℝ := Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)
+    (@ite ℝ (s = 0) (Classical.propDecidable (s = 0))
+      0
+      ((Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) / s)) =
+      (@ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))
+        0
+        (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *
+          ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q))

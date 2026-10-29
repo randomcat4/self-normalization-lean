@@ -1,0 +1,21 @@
+private theorem near_closed_tail_sandwich_and_rate
+    {X : Type u} [MeasurableSpace X]
+    (P : Measure X) [IsProbabilityMeasure P]
+    (Tcenter Tuncenter : X → ℝ)
+    (hTcenter : Measurable Tcenter) (hTuncenter : Measurable Tuncenter)
+    (Hgood : Set X) (hHgood : MeasurableSet Hgood)
+    (δ E D Dδ : ℝ)
+    (hδ0 : 0 ≤ δ) (hδhalf : δ ≤ (1 / 2 : ℝ))
+    (hE : 0 ≤ E) (hD : 0 ≤ D) (hDδ : 0 ≤ Dδ)
+    (hδrate : δ ≤ Dδ * E)
+    (hshift : ∀ ξ : X, ξ ∈ Hgood → |Tuncenter ξ - Tcenter ξ| ≤ δ)
+    (hbad : P.real Hgoodᶜ / Shao.standardNormalTail 2 ≤ 2 * E)
+    (hcenter : ∀ v : ℝ, (1 / 2 : ℝ) ≤ v → v ≤ (5 / 2 : ℝ) →
+      |P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail v| ≤ D * E)
+    (z : ℝ) (hz1 : (1 : ℝ) ≤ z) (hz2 : z ≤ (2 : ℝ)) :
+    P.real {ξ : X | z + δ ≤ Tcenter ξ} - P.real Hgoodᶜ ≤
+        P.real {ξ : X | z ≤ Tuncenter ξ} ∧
+      P.real {ξ : X | z ≤ Tuncenter ξ} ≤
+        P.real {ξ : X | z - δ ≤ Tcenter ξ} + P.real Hgoodᶜ ∧
+      |P.real {ξ : X | z ≤ Tuncenter ξ} / Shao.standardNormalTail z - 1| ≤
+        ((D + Dδ) / Shao.standardNormalTail 2 + 2) * E

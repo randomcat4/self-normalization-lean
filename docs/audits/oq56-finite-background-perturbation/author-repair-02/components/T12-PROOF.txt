@@ -1,0 +1,35 @@
+:= by
+  classical
+  have habs (S : Finset (Fin n)) (f : Fin n → ℝ) :
+      |∑ i ∈ S, f i| ≤ ∑ i ∈ S, |f i| := by
+    induction S using Finset.induction_on with
+    | empty => simp
+    | @insert i S hi ih =>
+      simp only [Finset.sum_insert hi]
+      exact le_trans (abs_add_le _ _) (add_le_add (le_refl |f i|) ih)
+  have hbound :
+      |blockPairSum (anomaly B) r| ≤
+        blockPairSum (anomaly B) (fun i j : Fin n => w i * w j) := by
+    unfold blockPairSum
+    calc
+      |∑ i ∈ anomaly B, ∑ j ∈ anomaly B, if i < j then r i j else 0| ≤
+          ∑ i ∈ anomaly B, |∑ j ∈ anomaly B, if i < j then r i j else 0| :=
+        habs _ _
+      _ ≤ ∑ i ∈ anomaly B, ∑ j ∈ anomaly B, |if i < j then r i j else 0| := by
+        apply Finset.sum_le_sum
+        intro i hi
+        exact habs _ _
+      _ ≤ ∑ i ∈ anomaly B, ∑ j ∈ anomaly B, if i < j then w i * w j else 0 := by
+        apply Finset.sum_le_sum
+        intro i hi
+        apply Finset.sum_le_sum
+        intro j hj
+        by_cases hij : i < j
+        · simp only [if_pos hij]
+          exact henv i j (ne_of_lt hij)
+        · simp [hij]
+  have hid := block_pair_product_identity (anomaly B) w
+  have hdiag : (0 : ℝ) ≤ ∑ i ∈ anomaly B, (w i) ^ (2 : ℕ) :=
+    Finset.sum_nonneg (fun i hi => sq_nonneg _)
+  unfold anomalyWeight
+  nlinarith only [hbound, hid, hdiag]

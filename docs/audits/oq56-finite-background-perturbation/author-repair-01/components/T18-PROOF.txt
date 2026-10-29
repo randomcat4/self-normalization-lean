@@ -1,0 +1,21 @@
+:= by
+  have hM3 : (3 : ℝ) ≤ (B.card : ℝ) := by exact_mod_cast hm
+  have hd : (0 : ℝ) < (B.card : ℝ) - 1 := by linarith
+  have hQ : 0 ≤ blockCenteredEnergy B (backgroundRow B g r) :=
+    Finset.sum_nonneg (fun i hi => sq_nonneg _)
+  have hquot :
+      0 ≤ blockCenteredEnergy B (backgroundRow B g r) / ((B.card : ℝ) - 1) :=
+    div_nonneg hQ hd.le
+  have hprod0 :
+      0 ≤ Real.sqrt ((B.card : ℝ) - 1) *
+        Real.sqrt (blockCenteredEnergy B (backgroundRow B g r) / ((B.card : ℝ) - 1)) :=
+    mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
+  have hs :
+      (Real.sqrt ((B.card : ℝ) - 1) *
+        Real.sqrt (blockCenteredEnergy B (backgroundRow B g r) / ((B.card : ℝ) - 1))) ^
+          (2 : ℕ) = (Real.sqrt (blockCenteredEnergy B (backgroundRow B g r))) ^ (2 : ℕ) := by
+    rw [mul_pow, Real.sq_sqrt hd.le, Real.sq_sqrt hquot, Real.sq_sqrt hQ]
+    field_simp [ne_of_gt hd]
+  unfold backgroundStudentizer
+  exact le_antisymm ((sq_le_sq₀ hprod0 (Real.sqrt_nonneg _)).mp hs.le)
+    ((sq_le_sq₀ (Real.sqrt_nonneg _) hprod0).mp hs.ge)

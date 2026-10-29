@@ -751,6 +751,7 @@ import Shao.OQ5.P35.SampleStatistics
 import Shao.OQ5.P35.TailLimits
 import Shao.OQ5.P35.TargetCancellation
 import Shao.OQ5.P35.ThresholdScales
+import Shao.OQ5.P41.FiniteBackgroundPerturbation
 import Shao.OQ5.P45.BalancedBlock
 import Shao.OQ5.P50.CanonicalEdges
 import Shao.OQ5.P50.LayeredEncoding
@@ -892,6 +893,7 @@ import Shao.OQ6.ConditionalVarianceMean
 import Shao.OQ6.CoordinateBorelFactorization
 import Shao.OQ6.CurrentLevelTrueDeletedConditionalTail
 import Shao.OQ6.DoubleGhostSignInvariance
+import Shao.OQ6.FiniteExceptionalBlockOptimization
 import Shao.OQ6.FiniteHilbertSignMoments
 import Shao.OQ6.FiniteMatrixSignEnergy
 import Shao.OQ6.FiniteQuadraticSignChaos
@@ -947,6 +949,7 @@ import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLogarithmicConditionalCenteredPhysicalTail
+import Shao.OQ6.OriginalLogarithmicConditionalFullWindowUncenteredPhysicalTail
 import Shao.OQ6.OriginalLogarithmicConditionalUncenteredPhysicalTail
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail

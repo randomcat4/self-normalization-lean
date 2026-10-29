@@ -1,0 +1,66 @@
+# Unit278 independent FINAL review
+
+STATUS: CORRECT_AND_QUALIFIED
+
+The complete frozen finite p41(4)-(5) packet is qualified at its exact repair02 source and first successful original object. Independent complete SOURCE evidence, complete actual-owner full TYPE and non-theorem full VALUE review, successful server native, same-original-object audit and recursive axiom coverage agree. `sourceAccepted=true`, `kernelChecked=true`, `qualified=true`. No physical-background transport, probability theorem or OQ56/root completion is inferred.
+
+## Exact identity, intake and complete reading
+
+Current source is `C:/game/shao lean/drafts/oq56/unit278/author-repair-02/FiniteBackgroundPerturbation.lean`, SHA256 `8481562684fc7a3c5455e8ab99d6f85b15f4778860fa414da93099b83b4adcb8`, 30148 bytes/694 LF. Its first successful original object is SHA256 `fbd3913b99528f0e63e8301180570ff9c7c0b95af37a4eff6509e9e52003149c`, 1519024 bytes. The source freeze is SHA256 `4b9a16afde8d790fa7fc13a87c0758719f0248d03c5927b2bdb33fa2e5a3ace2`.
+
+This is the explicitly reactivated SAME independent reviewer `/root/oq56_unit278_review`, separate from the implementation author. Activation SHA256 `d0cae0bdd53b902c31c610ff1f4bb40cc1d4c3e5b1e111fc40088267adecc636`, 83719 bytes, binds 370 inputs. All 370 SHA256/byte pairs passed independently before first write and an actual ACK370 was sent. They are rechecked before final seal. All source, shared files, machine records and old reports remain read-only; only this new final-review directory is written.
+
+I literally read every line of the complete actual-owner TYPE stream: 63 owners, 756 LF/51389 bytes, SHA256 `fd10ab6a42898ead487cabf43c2b3d7fbc6d5cbbfda1d42703e17c0d56d28ae3`. The eight indexed ranges 1-100,101-200,201-300,301-400,401-500,501-600,601-700,701-756 were read contiguously, including types crossing a range boundary. No repeated-expression dictionary or sampling was used.
+
+I also literally read every complete non-theorem VALUE: 14 owners, 165 LF/12976 bytes, SHA256 `24c832fc30760ac23488c18de2d79f7d560bf2e6983a5bb9400ea3a8e83026e5`. Both indexed ranges 1-100 and101-165 were fully read, including the definition crossing that boundary. Every binder, universe/instance argument, sum, cast, subtraction, division and RHS was available without elision. These values, rather than only their result types or source-name membership, were independently compared semantically with all fourteen frozen definition bodies.
+
+The current source proof coverage is reused exactly from the original complete SOURCE review, repair01's T08 review, and repair02's correct complete T12/T13 review. Current T12/T13 account for64 LF and the other seventeen exact proof bodies for459 LF, totaling523 proof LF; HEAD118, fixed-RHS36, PRE14 and CLOSE3 cover the complete694-LF source. The erroneous repair01 explanation of `add_le_add_left` was explicitly corrected in repair02 and is not reused to accept the two changed proofs. Old sealed reports remain preserved. No accepted old proof, supplier or producer check was replayed.
+
+## Actual-owner inventory and lossless evidence
+
+The audit's anchor is the actual public T19 theorem in the imported module. The protocol obtains its actual module index, iterates all environment constants, and selects every constant with that module index. There is no namespace or public-name filter. I read the complete audit protocol and verified its equality to the previously bound protocol except for the concrete import and anchor identifiers.
+
+The actual inventory contains63 unique owners: 49 theorems and14 non-theorems, all of the latter defnInfo with full values. The49 theorem owners comprise the19 source theorems and30 generated/support theorems. The generated group consists of25 simplifier support theorems,4 equation theorems and1 numeric-instance proof. Every generated full TYPE was literally read and its actual hypotheses examined; none adds a source endpoint premise. The equation theorems reproduce the actual complement, strict-pair, block mean and weight-square definitions. The numeric support type is Nat.AtLeastTwo(1+1). The simplifier support types are ordinary sum-multiplication distribution and nonzero numeral/product/power/cast facts with their explicit algebraic assumptions.
+
+I independently reconstructed the entire raw audit in local memory from the exact stored JSON, TYPE, VALUE and COUNT blocks. It is94446 bytes with SHA256 `0268e7c5ca1d967489b599a3bf00a70297b462b062408c1b381bea13f5e4b814`, exactly matching the saved audit stdout. The reconstructed TYPE/VALUE streams match the literal-read files byte-for-byte. Per-owner line/byte/hash index records, contiguous chunk coverage, unique owner names, constant kinds, source33 membership and all fourteen definition-value memberships are independently checked. Those membership checks support completeness; they do not replace the semantic VALUE review.
+
+Each owner's recursive `Lean.collectAxioms` result is within the required whitelist. Independently counted occurrences are propext63, Classical.choice40 and Quot.sound44. There is no sorryAx or additional axiom. This covers every actual module owner, including all thirty generated theorem owners and all fourteen definitions, without namespace filtering. Tactic-generated theorem proof terms need not be expanded: the production source proofs were reviewed completely, the kernel checked this exact source, and recursive dependencies are audited on the original successful object.
+
+## Statement and definition fidelity
+
+All33 actual source-owner full types were compared to the frozen heads, with source-facing quantifiers and hypotheses intact. The finite numerator group uses arbitrary real g and symmetric real r; n>=4/cardB>=3 are explicit only where required. The norm group uses nonnegative finite weights and abs r_ij<=w_i*w_j for distinct sample indices, without unnecessary symmetry or positive-energy assumptions. The unrestricted helpers retain total-division semantics and their original weaker premises.
+
+All fourteen full VALUEs match the intended concrete objects. A is exactly univ\\B; block pairs use strict i<j once; the cross sum is A-to-B; full and background rows both divide residual sums by the original n-2. Mean and centered energy use the actual B and its cardinal cast. Lambda is (M-2)/(N-2). The anchor uses the original full unordered F/[(N-1)(N-2)]. NB retains (M-2)FB/[(N-2)(M-1)] and sqrt M. Delta has the outer sqrt N, real K-1 rather than natural truncated subtraction, and all three original coefficients. Ell and Qw are the actual finite sums; sB is sqrt(Q0/(M-1)). The full Nat.AtLeastTwo support reference only elaborates the numeral2 and does not alter its value.
+
+The final MFT records each definition VALUE's exact line span and each source theorem's semantic comparison. The exact half and coefficient-one norm conclusions appear unchanged in actual types. Zero ell/Qw/Qb/Q0/sB, empty anomaly blocks, K=0 and K=1 remain covered without energy division; diagonals remain unrestricted and distinct indices may carry identical observations. Finite m=3 remains separate from existing physical sample-size-at-least-four wrappers.
+
+## Successful native and same FIRST object audit
+
+Actual native attempt03, label `author-kernel-03`, ended RC0 in5.048098918 seconds, source errors0/warnings16. Native receipt SHA256 is `659f6a07f97e3ceab6ed260c964a5667ebe1e8e241f863ff032da206ab242f87`, 37857142 bytes. Its source fingerprint is exactly current repair02, and its output is the first object bound above. AUTHOR-STOP SHA256 `19b3a7b282481d28e9b283e8da538fda27b342d9dddabbe65ccca4f65f0a43da`, 1517 bytes, freezes further author compilation before the audit. The summary's legacy key `native01` explicitly means actual attempt03 and is not confused with the original failed attempt01.
+
+The same-FIRST-object `owned-object-audit-01` ended RC0 in4.586034458 seconds; receipt SHA256 `30e2b51ca48aee1334aaa82f2d41a3c3b183cfc0cf46722015db80b0910c249a`, 37863307 bytes. It imports the produced module object, has `no_o=true` and no audit output object, and records the identical source/object before and after. It does not re-elaborate source theorem proofs or recompile the producer. Protected-artifact equalities cover36417 records for native and36427 for audit; source/object fingerprints and Git expectations remain exact. Both owned process groups ended with no live members, timeout, cleanup or ownership issue.
+
+The saved strict wrapper flags are false and the original outer transport status1 is preserved separately from the two inner Lean RC0 results. Native's require-empty-stdout guard encountered16 source warnings; the audit intentionally emits its metadata stream. Both retain the complete identical134-byte stderr:
+
+    warning: mathlib: repository has local changes:
+      /root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib
+
+This warning is neither hidden nor called a Lean error. The bound warning classification covers all16 source warnings:2 deprecated if_pos uses,2 unused hw binders, and12 unused/unexecuted tactic or tactic-style linter messages. Actual full types retain the hw assumptions. These warnings do not expose a proof hole or altered statement and do not justify changing accepted source or replaying a kernel gate. Raw complete messages/receipts remain on the server at their saved hashes.
+
+Old attempt01 remains RC1/three API-name errors/no object; old attempt02 remains RC1/two addition-order type errors/no object. The static001 preseal candidate and failed text-guard evidence also remain unchanged. None is retroactively converted to success.
+
+## Execution pins, resources, lock and protocol provenance
+
+The existing receipt extract binds both concrete command arrays. Native uses taskset52-55, lake env lean, -M8192 -j4 and the explicit original output path; audit uses the same limits and no -o. Both have300-second bounded timeouts and finished naturally. The resource phase40 explicitly permits keeping the old4-CPU subset and the unchanged phase39 memory formula/helper label. The phase40 policy pins Lean4.36.0-rc1/mathlib807d3836b165983210ee2ecf3cd28f239436949c/shared-v34. Actual Git expectations before/after remain identical: HEAD e6f44698ebb35ae628fdaefc81bb4af3f08978a0, branch refs/heads/feat/oq56-original-studentizer-payments-v186, tree086764f1f3c313428cc6a2643c12d81fd99bd79f, and the same Mathlib HEAD.
+
+The exact established runner acquires the existing exclusive OQ56 HEAVY.lock before its execution critical section. The extract preserves those exact runner source lines and completed receipts; it does not invent a separate held-lock timestamp. Archived fresh-admission measurements record the authorized CPU subset,8GiB request,140GiB project process budget,180GiB aggregate guard,200GiB hard limit and60GiB other/system reserve. Only bounded clean inactive file cache is discounted, with no active-file/slab discount or cache mutation. The projected admission figures remain below the180GiB guard and raw usage below200GiB. These are historical measurements at the actual execution, not new resource or lock probes.
+
+The accepted unit262 normalizer template is directly bound at SHA256 `9764dc9667af289abbdb3cf8b04d2c8860d8bf46655032e80bcd94dad00cbb7b`, 9509 bytes. I read it and the complete four-hunk adaptation diff and independently applied the diff in memory: adapted SHA256 `00eb5b9ab145371bdcc743f2550a2f1585cc9b513778e34bf545d39a0dc60a87`, 10058 bytes, exactly matches. The concrete need is the current nineteen source theorems/fourteen definitions: the old no-definition assertion becomes a33-source inventory and strong fourteen actual non-theorem full-VALUE membership checks, with concrete paths/bindings and no-o guards. The marker parser, full TYPE/VALUE checks, recursive axiom whitelist and raw roundtrip core are unchanged. No normalization code or gate was executed by this reviewer. The audit protocol body is independently byte-identical to its bound accepted template except for import and public-anchor identifiers.
+
+## Qualified mathematical scope and release
+
+Qualification covers the complete finite deterministic p41(4)-(5) declarations and their frozen helpers at the exact source/object above. It does not assert an actual B-to-Fin-m physical statistic transport, product-a.e.-to-simultaneous sample-pair lift, conditional projection/canonical-residual/mean/variance transfer, p41(3), interaction concentration, quantitative tail shift, rareblock payments, unconditional PE-R/PE-L, full OQ56 or root closure. Original source attribution and these open consumer obligations remain intact.
+
+I performed no new Lean/AX/compiler/toolchain/prefix check, SSH/network/upload/Git/API/publication/child/Goal/schedule/resource action or source edit. Only local reads, lossless in-memory integrity reconstruction and final-report writing were used. Requested model/effort are gpt-6.1-sol/xhigh; actual backend/model/effort and input/cached-input/output/reasoning-subset counts are not exposed and remain null. No subscription allocation is inferred.
+
+The unique final seal releases ALL assigned active authority and the dormant FINAL-review identity. Sixzero, queued work0 and active waitfalse are recorded. No future FINAL identity is retained by this unit.

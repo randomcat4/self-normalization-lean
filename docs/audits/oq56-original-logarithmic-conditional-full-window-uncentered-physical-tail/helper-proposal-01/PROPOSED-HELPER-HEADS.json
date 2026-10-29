@@ -1,0 +1,105 @@
+{
+  "schema": "oq56-unit276-exact-closed-private-helper-HEAD-PROPOSAL-v1",
+  "atUTC": "2026-10-29T16:03:48.8565414Z",
+  "status": "PROPOSED_NOT_FROZEN_NO_IMPLEMENTATION_AUTHORITY",
+  "mainFrozenHEAD": {
+    "path": "C:/game/shao lean/drafts/oq56/unit276/freeze-01/HEAD.txt",
+    "sha256": "3c5d8ae17cfe31959ce0e5dbc03cd36655ac022b2850adce1e07868c68de085d",
+    "bytes": 7086,
+    "LF": 121
+  },
+  "soleScope": "C:/game/shao lean/drafts/oq56/unit276/helper-proposal-01",
+  "additionalHelperCount": 3,
+  "heads": [
+    {
+      "id": "H1",
+      "name": "half_sample_and_mean_rate_bounds",
+      "universes": [],
+      "typeParameters": [],
+      "purpose": "Shared deterministic m-to-n and mean-shift scales",
+      "inputProvenance": "p/hp/J/hJ from frozen276; actual Kmean nonnegative derived from its fixed expression; n/m original half-sample relation",
+      "outputUse": "PUBLIC275 and273 errors and original delta, with broad factors2",
+      "privateCertificatePremise": false,
+      "headText": "private theorem half_sample_and_mean_rate_bounds\n    (p J Kmean : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hJ : (1 / 2 : ℝ) ≤ J) (hKmean : 0 ≤ Kmean)\n    (n m : ℕ) (hn : 1 ≤ n) (hnm : n ≤ 2 * m) :\n    let a : ℝ := (p - 2) / 2\n    Real.rpow (m : ℝ) (-a) ≤ 2 * Real.rpow (n : ℝ) (-a) ∧\n      1 / Real.sqrt (m : ℝ) ≤ 2 / Real.sqrt (n : ℝ) ∧\n      2 * Kmean * Real.rpow (n : ℝ) (-J) ≤\n        2 * Kmean / Real.sqrt (n : ℝ)\n",
+      "headSHA256": "dd2be13af6b0f11717eee863a6db219457b227a901311790a326a33bf2c668d8",
+      "headBytes": 449,
+      "headLF": 9,
+      "closedAllBindersExplicit": true,
+      "proposalOnly": true,
+      "body": null
+    },
+    {
+      "id": "H2",
+      "name": "eventual_near_window_and_exception_rate",
+      "universes": [],
+      "typeParameters": [],
+      "purpose": "One threshold before all n/lambda/m/z",
+      "inputProvenance": "p>2 and t0>0 from frozen276; ccenter>0 from qualified273 existential",
+      "outputUse": "All shifted levels <=5/2 are inside centered window and bad relative payment <=2/sqrt(n) uniformly in m>=n/2",
+      "privateCertificatePremise": false,
+      "headText": "private theorem eventual_near_window_and_exception_rate\n    (p t0 ccenter : ℝ) (hp2 : 2 < p)\n    (ht0 : 0 < t0) (hccenter : 0 < ccenter) :\n    ∃ N : ℕ, 8 ≤ N ∧\n      ∀ n : ℕ, N ≤ n →\n        (3 : ℝ) ≤ ccenter * Real.rpow (n : ℝ) ((p - 2) / (2 * p)) ∧\n          ∀ m : ℕ, n ≤ 2 * m →\n            Real.exp (-(t0 / 2) * Real.rpow (m : ℝ) (1 / 3 : ℝ)) ≤\n              2 / Real.sqrt (n : ℝ)\n",
+      "headSHA256": "fe4bcb9b1426c37b172c715b9adea4a1e95eca3f1a1abe2fa800fc678d47a59b",
+      "headBytes": 427,
+      "headLF": 9,
+      "closedAllBindersExplicit": true,
+      "proposalOnly": true,
+      "body": null
+    },
+    {
+      "id": "H3",
+      "name": "near_closed_tail_sandwich_and_rate",
+      "universes": [
+        "u"
+      ],
+      "typeParameters": [
+        "X : Type u",
+        "MeasurableSpace X"
+      ],
+      "purpose": "Closed-event perturbation, both sandwiches and relative near error, retaining atoms and exact good-set exception",
+      "inputProvenance": "Actual P/Tcenter/Tuncenter/Hgood/delta from274 at level2; E/D/Ddelta are fixed original-model constants; hcenter is a LOCAL proved closed-tail certificate from public275 FOURTH plus273, never a public or external CDF assumption",
+      "outputUse": "Near z in[1,2] part of frozen276, including two newly needed z-level sandwiches",
+      "privateCertificatePremise": true,
+      "headText": "private theorem near_closed_tail_sandwich_and_rate\n    {X : Type u} [MeasurableSpace X]\n    (P : Measure X) [IsProbabilityMeasure P]\n    (Tcenter Tuncenter : X → ℝ)\n    (hTcenter : Measurable Tcenter) (hTuncenter : Measurable Tuncenter)\n    (Hgood : Set X) (hHgood : MeasurableSet Hgood)\n    (δ E D Dδ : ℝ)\n    (hδ0 : 0 ≤ δ) (hδhalf : δ ≤ (1 / 2 : ℝ))\n    (hE : 0 ≤ E) (hD : 0 ≤ D) (hDδ : 0 ≤ Dδ)\n    (hδrate : δ ≤ Dδ * E)\n    (hshift : ∀ ξ : X, ξ ∈ Hgood → |Tuncenter ξ - Tcenter ξ| ≤ δ)\n    (hbad : P.real Hgoodᶜ / Shao.standardNormalTail 2 ≤ 2 * E)\n    (hcenter : ∀ v : ℝ, (1 / 2 : ℝ) ≤ v → v ≤ (5 / 2 : ℝ) →\n      |P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail v| ≤ D * E)\n    (z : ℝ) (hz1 : (1 : ℝ) ≤ z) (hz2 : z ≤ (2 : ℝ)) :\n    P.real {ξ : X | z + δ ≤ Tcenter ξ} - P.real Hgoodᶜ ≤\n        P.real {ξ : X | z ≤ Tuncenter ξ} ∧\n      P.real {ξ : X | z ≤ Tuncenter ξ} ≤\n        P.real {ξ : X | z - δ ≤ Tcenter ξ} + P.real Hgoodᶜ ∧\n      |P.real {ξ : X | z ≤ Tuncenter ξ} / Shao.standardNormalTail z - 1| ≤\n        ((D + Dδ) / Shao.standardNormalTail 2 + 2) * E\n",
+      "headSHA256": "49cac5d0a8f372a1ac0ab2ab28bd2ab8c4ee01bc0dc8f5134152a1d94970006e",
+      "headBytes": 1191,
+      "headLF": 21,
+      "closedAllBindersExplicit": true,
+      "proposalOnly": true,
+      "body": null
+    }
+  ],
+  "noHelperBody": true,
+  "noMainProofBody": true,
+  "noPublicStatementChange": true,
+  "noNewExternalCDFOrVariancePremise": true,
+  "privateH3CenterCertificateMustBeConstructed": "PUBLIC275 fourth component at Hstd, actual rho bound from273, finite bridge+273 pointwise Tcenter=Tstd for v<=1; public273 centered tail and Gaussian tail<1 for v>=1",
+  "fixedInstantiation": {
+    "a": "(p-2)/2",
+    "Bclass": "2*beta",
+    "RhoBound": "4*Cenv^2*M2^2",
+    "S": "1+sqrt(RhoBound)",
+    "E": "beta*rpow(n,-a)+1/sqrt(n)",
+    "D": "(4+2*S)*Kcdf+64*Kcenter",
+    "Ddelta": "2*Kmean",
+    "Knear": "(D+2*Kmean)/standardNormalTail(2)+2",
+    "Kfull": "1+K274+Knear",
+    "cfull": "c274"
+  },
+  "finiteBridgeFutureCopyProposal": {
+    "originalHEADSHA256": "ef857d3c6621f1b2b5416e0a043764f9e09a0320a6cea5222e3dc02c738d9606",
+    "originalProofSHA256": "d901dc648b5aeeba9c50fa163095ceb0a386fc5736c40fd23c8f8d9ecb177ed0",
+    "originalProofBytes": 3008,
+    "originalProofLF": 75,
+    "onlyProposedRemovalLine": 2,
+    "exactRemovedText": "  -- FINITE_ONLY_SCRATCH_NOT_CHECKED_NOT_MAIN276\n",
+    "futureCopySHA256": "b91f24e6f03eb91a0e767baf9be317672027a7b72dc7073049eb83a6692b0c09",
+    "futureCopyBytes": 2959,
+    "futureCopyLF": 74,
+    "allOtherProofBytesPreserved": true,
+    "applied": false,
+    "oldSealsUntouched": true,
+    "requiresSeparateParentImplementationACT": true
+  },
+  "qualified": false,
+  "kernelChecked": false
+}

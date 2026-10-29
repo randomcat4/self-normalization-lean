@@ -1,0 +1,83 @@
+private theorem centered_energy_partition
+    (n : ℕ) (b : Fin n → ℝ) (B : Finset (Fin n))
+    (hn : 0 < n) (hB : B.Nonempty) :
+    let A : Finset (Fin n) := Finset.univ \ B
+    let M : ℝ := (B.card : ℝ)
+    let K : ℝ := (A.card : ℝ)
+    let muB : ℝ := (∑ i ∈ B, b i) / M
+    let muA : ℝ := (∑ i ∈ A, b i) / K
+    (∑ i : Fin n, (Shao.OQ5.P35.center b i) ^ (2 : ℕ)) =
+      (∑ i ∈ B, (b i - muB) ^ (2 : ℕ)) +
+      (∑ i ∈ A, (b i - muA) ^ (2 : ℕ)) +
+      (M * K / (n : ℝ)) * (muA - muB) ^ (2 : ℕ)
+private theorem positive_part_block_cauchy
+    (N M K q a y : ℝ)
+    (hN : 0 < N) (hM : 0 < M) (hK : 0 ≤ K) (hq : 0 < q) :
+    (max (N * a + K * y) 0) ^ (2 : ℕ) ≤
+      N * (N * (max a 0) ^ (2 : ℕ) / q + K / M) *
+        (q + (K * M / N) * y ^ (2 : ℕ))
+theorem finite_exceptional_block_optimization
+    (n : ℕ) (b : Fin n → ℝ) (B : Finset (Fin n)) (c : ℝ)
+    (hn : 2 ≤ n) (hB : B.Nonempty)
+    (hQb : 0 < ∑ i ∈ B,
+      (b i - (∑ j ∈ B, b j) / (B.card : ℝ)) ^ (2 : ℕ)) :
+    let muB : ℝ := (∑ i ∈ B, b i) / (B.card : ℝ)
+    let Qb : ℝ := ∑ i ∈ B, (b i - muB) ^ (2 : ℕ)
+    let Q : ℝ := ∑ i : Fin n,
+      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)
+    let T : ℝ := @ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))
+      0
+      (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *
+        ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q)
+    0 < Q ∧
+      (max T 0) ^ (2 : ℕ) ≤
+        ((n : ℝ) - 1) *
+          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +
+            ((Finset.univ \ B).card : ℝ) / (B.card : ℝ))
+private theorem original_statistic_eq_offset_form
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a) (hn : 4 ≤ n) :
+    let b : Fin n → ℝ := fun i : Fin n =>
+      g (x i) + Shao.OQ5.P51.residualU n r x i
+    let F : ℝ :=
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x
+    let c : ℝ := F / (((n : ℝ) - 1) * ((n : ℝ) - 2))
+    let Q : ℝ := ∑ i : Fin n,
+      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)
+    let s : ℝ := Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)
+    (@ite ℝ (s = 0) (Classical.propDecidable (s = 0))
+      0
+      ((Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) / s)) =
+      (@ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))
+        0
+        (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *
+          ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q))
+theorem original_finite_exceptional_block_optimization
+    (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (B : Finset (Fin n))
+    (hsym : ∀ a b : Ω, r a b = r b a)
+    (hn : 4 ≤ n) (hB : 3 ≤ B.card)
+    (hQb : 0 < ∑ i ∈ B,
+      ((g (x i) + Shao.OQ5.P51.residualU n r x i) -
+        (∑ j ∈ B, (g (x j) + Shao.OQ5.P51.residualU n r x j)) /
+          (B.card : ℝ)) ^ (2 : ℕ)) :
+    let b : Fin n → ℝ := fun i : Fin n =>
+      g (x i) + Shao.OQ5.P51.residualU n r x i
+    let muB : ℝ := (∑ i ∈ B, b i) / (B.card : ℝ)
+    let Qb : ℝ := ∑ i ∈ B, (b i - muB) ^ (2 : ℕ)
+    let F : ℝ :=
+      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x
+    let c : ℝ := F / (((n : ℝ) - 1) * ((n : ℝ) - 2))
+    let s : ℝ := Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)
+    let T : ℝ := @ite ℝ (s = 0) (Classical.propDecidable (s = 0))
+      0
+      ((Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) / s)
+    0 < s ∧
+      (max T 0) ^ (2 : ℕ) ≤
+        ((n : ℝ) - 1) *
+          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +
+            ((Finset.univ \ B).card : ℝ) / (B.card : ℝ))

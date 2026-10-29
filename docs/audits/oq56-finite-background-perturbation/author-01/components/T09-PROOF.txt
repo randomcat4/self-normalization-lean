@@ -1,0 +1,37 @@
+:= by
+  have hb := background_denominators_and_scale B hn hm
+  have hMpos : (0 : ℝ) < (B.card : ℝ) := hb.2.2.2.1
+  have hNpos : (0 : ℝ) < (n : ℝ) := by linarith [hb.1]
+  have hMne : (B.card : ℝ) ≠ 0 := ne_of_gt hMpos
+  have hsMpos : (0 : ℝ) < Real.sqrt (B.card : ℝ) := Real.sqrt_pos.2 hMpos
+  have hsMne : Real.sqrt (B.card : ℝ) ≠ 0 := ne_of_gt hsMpos
+  have hratio : (0 : ℝ) ≤ (n : ℝ) / (B.card : ℝ) :=
+    div_nonneg hNpos.le hMpos.le
+  have hrootSq :
+      (Real.sqrt ((n : ℝ) / (B.card : ℝ)) * Real.sqrt (B.card : ℝ)) ^ (2 : ℕ) =
+        (Real.sqrt (n : ℝ)) ^ (2 : ℕ) := by
+    rw [mul_pow, Real.sq_sqrt hratio, Real.sq_sqrt hMpos.le,
+      Real.sq_sqrt hNpos.le]
+    field_simp [hMne]
+  have hroot0 :
+      (0 : ℝ) ≤ Real.sqrt ((n : ℝ) / (B.card : ℝ)) * Real.sqrt (B.card : ℝ) :=
+    mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
+  have hroot :
+      Real.sqrt ((n : ℝ) / (B.card : ℝ)) * Real.sqrt (B.card : ℝ) =
+        Real.sqrt (n : ℝ) :=
+    le_antisymm ((sq_le_sq₀ hroot0 (Real.sqrt_nonneg _)).mp hrootSq.le)
+      ((sq_le_sq₀ (Real.sqrt_nonneg _) hroot0).mp hrootSq.ge)
+  have hscale (v : ℝ) :
+      Real.sqrt ((n : ℝ) / (B.card : ℝ)) * (v / Real.sqrt (B.card : ℝ)) =
+        Real.sqrt (n : ℝ) / (B.card : ℝ) * v := by
+    calc
+      Real.sqrt ((n : ℝ) / (B.card : ℝ)) * (v / Real.sqrt (B.card : ℝ)) =
+          (Real.sqrt ((n : ℝ) / (B.card : ℝ)) * Real.sqrt (B.card : ℝ)) *
+            v / (Real.sqrt (B.card : ℝ)) ^ (2 : ℕ) := by
+        field_simp [hsMne]
+        <;> ring
+      _ = Real.sqrt (n : ℝ) / (B.card : ℝ) * v := by
+        rw [hroot, Real.sq_sqrt hMpos.le]
+        ring
+  unfold backgroundNumerator
+  exact hscale _
