@@ -1,0 +1,146 @@
+:= by
+  classical
+  intro tB cg
+  let K : ℝ := 131112 * C + 33117 + 2 / cg
+  have hClass := countably_generated_uniform_compact_rate C hSZC p hp2 hp3 B hB
+  rcases hClass with ⟨hcg, hK, hCountable⟩
+  change 0 < cg at hcg
+  change 0 < K at hK
+  refine ⟨hcg, K, hK, ?_⟩
+  intro Ω mΩ μ hμ h hh hh2 hhsymm hcenter hprojectionsecond hgp hβBound g r v s β
+  have hdataOriginal := Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments
+    μ h hh hh2 hhsymm hcenter hprojectionsecond 3 (by norm_num) 0
+      (by norm_num) (by positivity)
+  dsimp only at hdataOriginal
+  rcases hdataOriginal with ⟨hgOriginalData, hg2OriginalData, _, hgsecondOriginalData, _⟩
+  change Measurable g at hgOriginalData
+  change MemLp g 2 μ at hg2OriginalData
+  change (∫ o, g o ^ 2 ∂μ) = 1 at hgsecondOriginalData
+  change Integrable (fun o => Real.rpow |g o| p) μ at hgp
+  change (∫ o, Real.rpow |g o| p ∂μ) ≤ B at hβBound
+  have hLowOriginal : ∀ n : ℕ,
+      (Measure.pi (fun _ : Fin n => μ)).real
+        {ξ : Fin n → Ω | (∑ i : Fin n, g (ξ i) ^ (2 : ℕ)) ≤ (n : ℝ) / 2} ≤
+          Real.exp (-cg * (n : ℝ)) := by
+    have hUniform := Shao.OQ6.UniformPMomentLowEnergy.actual_uniform_pmoment_low_energy.{u}
+      p hp2 hp3 B hB
+    dsimp only at hUniform
+    rcases hUniform with ⟨_, _, _, _, _, _, hLow⟩
+    have hLowModel := hLow μ g hgOriginalData hg2OriginalData
+      hgsecondOriginalData hgp hβBound
+    intro n
+    have hLowN := hLowModel.2.2.2.2.2 n
+    exact hLowN.2.2.2.2.2.2.2
+  have hmodel :=
+    Shao.OQ6.OriginalCountablyGeneratedModel.actual_normalized_original_countably_generated_model.{u, 0, 0}
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+  dsimp only at hmodel
+  obtain ⟨m₀, hm₀, hcg₀, hh₀, _, hmodel₀⟩ := hmodel
+  rcases hmodel₀ with
+    ⟨hprob₀, _, hgeq, _, hv, _, _, hh₂₀, hcenter₀, hg₀, _, _,
+      hgsecond₀, _, _, _, _, hglaw, _, _, hfinite, _⟩
+  let μ₀ : @Measure Ω m₀ := μ.trim hm₀
+  have hid : Measurable[mΩ, m₀] (id : Ω → Ω) := measurable_id'' hm₀
+  letI : MeasurableSpace Ω := m₀
+  letI : MeasurableSpace.CountablyGenerated Ω := hcg₀
+  letI : IsProbabilityMeasure μ₀ := hprob₀
+  let g₀ : Ω → ℝ := fun o => ∫ y, h o y ∂μ₀
+  let r₀ : Ω → Ω → ℝ := fun o y => h o y - g₀ o - g₀ y
+  let v₀ : ℝ := ∫ t : Ω × Ω, r₀ t.1 t.2 ^ 2 ∂(μ₀.prod μ₀)
+  let ν : Measure ℝ := @Measure.map Ω ℝ mΩ (borel ℝ) g μ
+  change g₀ = g at hgeq
+  change v₀ = v at hv
+  change Measurable g₀ at hg₀
+  change (∫ o, g₀ o ^ 2 ∂μ₀) = 1 at hgsecond₀
+  change μ₀.map g₀ = ν at hglaw
+  have hgOriginal : Measurable[mΩ, borel ℝ] g := by
+    rw [← hgeq]
+    exact hg₀.comp hid
+  let F : ℝ → ℝ := fun z => Real.rpow |z| p
+  have hFcont : Continuous F := by
+    dsimp only [F]
+    simpa only [Real.rpow_eq_pow, Function.comp_def] using
+      (Real.continuous_rpow_const
+        (show 0 ≤ p by linarith only [hp2])).comp continuous_abs
+  have hFν : Integrable F ν := by
+    letI : MeasurableSpace Ω := mΩ
+    change Integrable F (μ.map g)
+    exact (integrable_map_measure hFcont.aestronglyMeasurable
+      hgOriginal.aemeasurable).2 hgp
+  have hFν₀ : Integrable F (μ₀.map g₀) := by
+    rw [hglaw]
+    exact hFν
+  have hgp₀ : Integrable (fun o => Real.rpow |g₀ o| p) μ₀ :=
+    (integrable_map_measure hFν₀.aestronglyMeasurable hg₀.aemeasurable).1 hFν₀
+  have hβ₀ : (∫ o, Real.rpow |g₀ o| p ∂μ₀) = β := by
+    calc
+      (∫ o, Real.rpow |g₀ o| p ∂μ₀) = ∫ z, F z ∂(μ₀.map g₀) :=
+        (integral_map hg₀.aemeasurable hFν₀.aestronglyMeasurable).symm
+      _ = ∫ z, F z ∂ν := by rw [hglaw]
+      _ = β := by
+        letI : MeasurableSpace Ω := mΩ
+        change (∫ z, F z ∂(μ.map g)) = β
+        rw [integral_map hgOriginal.aemeasurable hFν.aestronglyMeasurable]
+  have hβBound₀ : (∫ o, Real.rpow |g₀ o| p ∂μ₀) ≤ B := by
+    rw [hβ₀]
+    exact hβBound
+  have hphysical := @hCountable Ω m₀ hcg₀ μ₀ hprob₀ h hh₀ hh₂₀ hhsymm
+    hcenter₀ hgsecond₀ hgp₀ hβBound₀
+  dsimp only at hphysical
+  dsimp only [v₀, r₀, g₀] at hv
+  rw [hβ₀, hv] at hphysical
+  intro n hn N q P U R2 T
+  let mN : MeasurableSpace (Fin n → Ω) :=
+    @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+  let mN₀ : MeasurableSpace (Fin n → Ω) :=
+    @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => m₀)
+  let Pc : @Measure (Fin n → Ω) mN₀ :=
+    @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+      (fun _ : Fin n => m₀) (fun _ : Fin n => μ₀)
+  have hbound := hphysical n hn
+  rcases hbound with ⟨hT₀, _, hbounds⟩
+  change Measurable[mN₀, borel ℝ] T at hT₀
+  have hprod := hfinite (Fin n) (inferInstance : Fintype (Fin n))
+  rcases hprod with ⟨_, hidN, _, hTarget⟩
+  change Measurable[mN, mN₀] (id : (Fin n → Ω) → Fin n → Ω) at hidN
+  have hT : Measurable[mN, borel ℝ] T := hT₀.comp hidN
+  have hTlaw := hTarget ℝ (borel ℝ) T hT₀
+  change
+    @Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) T Pc =
+      @Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T P at hTlaw
+  have hEvent (B : Set ℝ) (hB : MeasurableSet B) :
+      Pc (T ⁻¹' B) = P (T ⁻¹' B) := by
+    calc
+      Pc (T ⁻¹' B) =
+          (@Measure.map (Fin n → Ω) ℝ mN₀ (borel ℝ) T Pc) B :=
+        (Measure.map_apply (μ := Pc) hT₀ hB).symm
+      _ = (@Measure.map (Fin n → Ω) ℝ mN (borel ℝ) T P) B :=
+        congrArg (fun L : Measure ℝ => L B) hTlaw
+      _ = P (T ⁻¹' B) := by
+        letI : MeasurableSpace (Fin n → Ω) := mN
+        exact Measure.map_apply (μ := P) hT hB
+  have hrealEvent (B : Set ℝ) (hB : MeasurableSet B) :
+      Pc.real (T ⁻¹' B) = P.real (T ⁻¹' B) := by
+    simpa only [Measure.real_def] using
+      congrArg ENNReal.toReal (hEvent B hB)
+  have hClosedLowOriginal := hLowOriginal n
+  change P.real {ξ | (∑ i : Fin n, g (ξ i) ^ (2 : ℕ)) ≤ N / 2} ≤
+    Real.exp (-cg * N) at hClosedLowOriginal
+  refine ⟨hT, hClosedLowOriginal, ?_⟩
+  intro x hx hx1 error
+  have hle : Pc.real {ξ | T ξ ≤ x} = P.real {ξ | T ξ ≤ x} :=
+    hrealEvent (Set.Iic x) measurableSet_Iic
+  have hlt : Pc.real {ξ | T ξ < x} = P.real {ξ | T ξ < x} :=
+    hrealEvent (Set.Iio x) measurableSet_Iio
+  have hgt : Pc.real {ξ | x < T ξ} = P.real {ξ | x < T ξ} :=
+    hrealEvent (Set.Ioi x) measurableSet_Ioi
+  have hge : Pc.real {ξ | x ≤ T ξ} = P.real {ξ | x ≤ T ξ} :=
+    hrealEvent (Set.Ici x) measurableSet_Ici
+  have hfour := hbounds x hx hx1
+  change
+    |Pc.real {ξ | T ξ ≤ x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+    |Pc.real {ξ | T ξ < x} - Shao.OQ4.standardNormalCDF x| ≤ error ∧
+    |Pc.real {ξ | x < T ξ} - (1 - Shao.OQ4.standardNormalCDF x)| ≤ error ∧
+    |Pc.real {ξ | x ≤ T ξ} - (1 - Shao.OQ4.standardNormalCDF x)| ≤ error at hfour
+  rw [hle, hlt, hgt, hge] at hfour
+  exact hfour

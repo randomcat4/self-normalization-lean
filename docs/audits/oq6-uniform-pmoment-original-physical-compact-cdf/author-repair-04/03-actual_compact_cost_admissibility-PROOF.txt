@@ -1,0 +1,126 @@
+:= by
+  classical
+  intro g r v s N q P₀ e F ψ Λsq D1 A Benv eDeleted Adeleted Bdeleted cap deletedTest fullTest δ Lcompact Kcost
+  have hdata := Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments
+    μ h hh hh2 hhsymm hcenter hprojectionsecond 3 (by omega) 0 (by norm_num) (by positivity)
+  dsimp only at hdata
+  rcases hdata with ⟨hgm, hg2, hgmean, hgsecond, hrm, _, hrsymm, _, _, hs1, _, _⟩
+  change Measurable g at hgm
+  change MemLp g 2 μ at hg2
+  change (∫ o, g o ∂μ) = 0 at hgmean
+  change (∫ o, g o ^ 2 ∂μ) = 1 at hgsecond
+  change Measurable (fun t : Ω × Ω => r t.1 t.2) at hrm
+  change (∀ o t, r o t = r t o) at hrsymm
+  change 1 ≤ s at hs1
+  have hN3 : 3 ≤ N := by
+    dsimp only [N]
+    exact_mod_cast hn
+  have hNpos : 0 < N := by linarith only [hN3]
+  have hNne : N ≠ 0 := hNpos.ne'
+  have hqpos : 0 < q := Real.sqrt_pos.mpr hNpos
+  have hqsq : q ^ 2 = N := Real.sq_sqrt hNpos.le
+  have hN1pos : 0 < N - 1 := by linarith only [hN3]
+  have hspos : 0 < s := by linarith only [hs1]
+  have hdenpos : 0 < s * (N ^ 2 * q) := by positivity
+  let Fdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>
+    Shao.OQ5.P35.unorderedPairSum (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i)
+  let ψdel : (Fin n → Ω) → Fin n → Fin n → ℝ := fun ξ i j =>
+    Shao.OQ6.ResidualDeletion.rowSum (Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i) j
+  let Λdelsq : (Fin n → Ω) → Fin n → ℝ := fun ξ i => ∑ j : Fin n, ψdel ξ i j ^ 2
+  let D1del : (Fin n → Ω) → Fin n → ℝ := fun ξ i => Fdel ξ i / (q * (N - 1))
+  let Adel : (Fin n → Ω) → Fin n → ℝ := fun ξ i => |D1del ξ i|
+  let Bdel : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>
+    4096 * (s / q + Λdelsq ξ i / (s * (N ^ 2 * q)))
+  let projectionTest : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>
+    Shao.truncationF ((1 + y) * (g (ξ i) / q))
+  let deletedOriginal : (Fin n → Ω) → Fin n → ℝ := fun ξ i =>
+    cap ξ i * (|A ξ - Adel ξ i| + y * |Benv ξ - Bdel ξ i|)
+  have hem (j k : Fin n) : Measurable (fun ξ => e ξ j k) := by
+    have hpair : Measurable (fun ξ : Fin n → Ω => (ξ j, ξ k)) :=
+      (measurable_pi_apply j).prodMk (measurable_pi_apply k)
+    exact hrm.comp hpair
+  have hFm : Measurable F := by
+    dsimp only [F, Shao.OQ5.P35.unorderedPairSum]
+    apply Finset.measurable_sum
+    intro j hj
+    apply Finset.measurable_sum
+    intro k hk
+    by_cases hjk : j < k
+    · simpa only [if_pos hjk] using hem j k
+    · simpa only [if_neg hjk] using
+        (measurable_const : Measurable (fun _ : Fin n → Ω => (0 : ℝ)))
+  have hψm (j : Fin n) : Measurable (fun ξ => ψ ξ j) := by
+    dsimp only [ψ, Shao.OQ6.ResidualDeletion.rowSum]
+    exact Finset.measurable_sum _ (fun k _ => hem j k)
+  have hΛm : Measurable Λsq :=
+    Finset.measurable_sum _ (fun j _ => (hψm j).pow_const 2)
+  have hD1m : Measurable D1 := hFm.div_const (q * (N - 1))
+  have hAm : Measurable A := continuous_abs.measurable.comp hD1m
+  have hBm : Measurable Benv :=
+    (measurable_const.add (hΛm.div_const (s * (N ^ 2 * q)))).const_mul 4096
+  have hAnonneg (ξ : Fin n → Ω) : 0 ≤ A ξ := abs_nonneg _
+  have hΛnonneg (ξ : Fin n → Ω) : 0 ≤ Λsq ξ :=
+    Finset.sum_nonneg (fun j _ => sq_nonneg _)
+  have hBnonneg (ξ : Fin n → Ω) : 0 ≤ Benv ξ := by
+    dsimp only [Benv]
+    exact mul_nonneg (by norm_num)
+      (add_nonneg (div_nonneg hspos.le hqpos.le)
+        (div_nonneg (hΛnonneg ξ) hdenpos.le))
+  have hDeletedData := compact_retained_deletion_measurability r hrm n hn s hs1
+  change (∀ i : Fin n, Measurable (Adeleted i)) ∧
+    (∀ i : Fin n, Measurable (Bdeleted i)) ∧
+    (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Adeleted i η) ∧
+    (∀ (i : Fin n) (η : {j : Fin n // j ≠ i} → Ω), 0 ≤ Bdeleted i η) at hDeletedData
+  rcases hDeletedData with ⟨hAdm, hBdm, hAdnonneg, hBdnonneg⟩
+  have hEdpull (i : Fin n) (ξ : Fin n → Ω) :
+      eDeleted i (fun j => ξ j.1) = Shao.OQ6.ResidualDeletion.eraseIncident (e ξ) i := by
+    funext j k
+    by_cases hj : j = i
+    · simp [eDeleted, Shao.OQ6.ResidualDeletion.eraseIncident, e, hj]
+    · by_cases hk : k = i
+      · simp [eDeleted, Shao.OQ6.ResidualDeletion.eraseIncident, e, hj, hk]
+      · simp [eDeleted, Shao.OQ6.ResidualDeletion.eraseIncident, e, hj, hk]
+  have hAdpull (i : Fin n) (ξ : Fin n → Ω) :
+      Adeleted i (fun j => ξ j.1) = Adel ξ i := by
+    dsimp only [Adeleted, Adel, D1del, Fdel]
+    rw [hEdpull]
+  have hBdpull (i : Fin n) (ξ : Fin n → Ω) :
+      Bdeleted i (fun j => ξ j.1) = Bdel ξ i := by
+    dsimp only [Bdeleted, Bdel, Λdelsq, ψdel]
+    rw [hEdpull]
+  have hDeletedSame : deletedTest = deletedOriginal := by
+    funext ξ i
+    dsimp only [deletedTest, deletedOriginal]
+    rw [hAdpull, hBdpull]
+  have hcost := Shao.OQ6.UntiltedCompactCost.actual_quadratic_compact_source_cost
+    μ h hh hh2 hhsymm hcenter hprojectionsecond n hn y hy 4096 (by norm_num)
+  dsimp only at hcost
+  rcases hcost with ⟨hProjI, hLeq, hLnonneg, hLupper, hAi, hAdeli, hBi, hBdeli,
+    hAdiffi, hBdiffi, hDeletedI, hResidualBound, hSourceBound⟩
+  change (∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀) = Lcompact at hLeq
+  change 0 ≤ (∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀) at hLnonneg
+  rw [hLeq] at hLnonneg
+  change Integrable A P₀ at hAi
+  change Integrable Benv P₀ at hBi
+  change (∀ i : Fin n, Integrable (fun ξ => deletedOriginal ξ i) P₀) at hDeletedI
+  change (∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀) +
+    ((∫ ξ, A ξ ∂P₀) + y * (∫ ξ, Benv ξ ∂P₀) +
+      ∑ i : Fin n, ∫ ξ, deletedOriginal ξ i ∂P₀) ≤
+    (∑ i : Fin n, ∫ ξ, projectionTest ξ i ∂P₀) +
+      16 * (1 + 4096) * (1 + y) * s / q at hSourceBound
+  rw [← hDeletedSame] at hDeletedI hSourceBound
+  rw [hLeq] at hSourceBound
+  have hFullI : Integrable fullTest P₀ := hAi.add (hBi.const_mul y)
+  have hFullEq : (∫ ξ, fullTest ξ ∂P₀) =
+      (∫ ξ, A ξ ∂P₀) + y * (∫ ξ, Benv ξ ∂P₀) := by
+    dsimp only [fullTest]
+    rw [integral_add hAi (hBi.const_mul y), integral_const_mul]
+  have hDeltaEq (i : Fin n) : δ i = ∫ ξ, projectionTest ξ i ∂P₀ := rfl
+  have hL0Eq : (∑ i : Fin n, δ i) = Lcompact := by
+    simpa only [hDeltaEq] using hLeq
+  have hKbound : Kcost ≤ Lcompact + 16 * (1 + 4096) * (1 + y) * s / q := by
+    dsimp only [Kcost]
+    rw [hL0Eq, hFullEq]
+    linarith only [hSourceBound]
+  exact ⟨hgm, hg2, hgmean, hgsecond, hrm, hrsymm, hD1m, hAm, hBm, hAdm, hBdm,
+    hAnonneg, hBnonneg, hAdnonneg, hBdnonneg, hFullI, hDeletedI, hL0Eq, hLnonneg, hKbound⟩

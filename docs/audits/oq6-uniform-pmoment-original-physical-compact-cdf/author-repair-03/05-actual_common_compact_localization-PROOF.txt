@@ -1,0 +1,143 @@
+:= by
+  classical
+  intro g r v s N q P₀ U J R2 T Tstar Vsq W D2 G Hcpt Z c_n τ
+  have hdata := Shao.OQ6.ActualQuadraticTiltMoments.actual_quadratic_source_moments
+    μ h hh hh2 hhsymm hcenter hprojectionsecond 3 (by omega) 0 (by norm_num) (by positivity)
+  dsimp only at hdata
+  rcases hdata with ⟨hgm, hg2, hgmean, hgsecond, _⟩
+  change Measurable g at hgm
+  change MemLp g 2 μ at hg2
+  change (∫ o, g o ∂μ) = 0 at hgmean
+  change (∫ o, g o ^ 2 ∂μ) = 1 at hgsecond
+  obtain ⟨oldProjectionClock, _, hProjection⟩ :=
+    Shao.OQ6.CompactGoodEvent.original_projection_compact_good_event
+      μ g hgm hg2 hgmean hgsecond
+  obtain ⟨oldLocalizationClock, _, hLocalization⟩ :=
+    Shao.OQ6.CompactGoodEvent.actual_uncentered_compact_localization_events
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+  obtain ⟨oldPhysicalClock, _, hPhysical⟩ :=
+    Shao.OQ6.PhysicalCompact.actual_physical_zero_probability_and_compact_transport
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+  have hN3 : 3 ≤ N := by
+    dsimp only [N]
+    exact_mod_cast hn
+  have hNpos : 0 < N := by linarith only [hN3]
+  have hqpos : 0 < q := Real.sqrt_pos.mpr hNpos
+  have h147n := hPhysical n hn
+  dsimp only at h147n
+  rcases h147n with ⟨hUm, hJm, hRm, hT, hTm, _, hZm, _, _, _, _, _,
+    hHZ, _, hClosedIdentity, hOpenIdentity, hClosedTailIdentity, hOpenTailIdentity,
+    hClosedDiff, hOpenDiff, _, _⟩
+  change Measurable U at hUm
+  change Measurable J at hJm
+  change Measurable R2 at hRm
+  change Measurable T at hT
+  change Measurable Tstar at hTm
+  change MeasurableSet Z at hZm
+  change P₀.real (Hcpt ∩ Z) ≤ 336 * s / q at hHZ
+  change (∀ x : ℝ, |P₀.real {ξ | T ξ ≤ x} -
+    P₀.real {ξ | Tstar ξ ≤ τ x}| ≤ P₀.real Z) at hClosedDiff
+  change (∀ x : ℝ, |P₀.real {ξ | T ξ < x} -
+    P₀.real {ξ | Tstar ξ < τ x}| ≤ P₀.real Z) at hOpenDiff
+  have hloc := hLocalization n hn
+  dsimp only at hloc
+  rcases hloc with ⟨hGm, hHm, _, _, _, _, hDfail, _, hGood⟩
+  change MeasurableSet G at hGm
+  change MeasurableSet Hcpt at hHm
+  change P₀.real {ξ | ξ ∈ G ∧ D2 ξ < -(1 / 2 : ℝ)} ≤ 16384 * s / q at hDfail
+  change (∀ ξ ∈ Hcpt, (1 / 2 : ℝ) ≤ Vsq ξ ∧
+    (1 / 2 : ℝ) ≤ 1 + D2 ξ ∧ (1 / 4 : ℝ) ≤ J ξ) at hGood
+  have hproj := hProjection n (by omega)
+  dsimp only at hproj
+  rcases hproj with ⟨_, hWi, hWsecond, _, _⟩
+  change Integrable (fun ξ => W ξ ^ 2) P₀ at hWi
+  change (∫ ξ, W ξ ^ 2 ∂P₀) = 1 at hWsecond
+  have hClosedLow := hLow n
+  change P₀.real {ξ | (∑ i : Fin n, g (ξ i) ^ 2) ≤ N / 2} ≤
+    Real.exp (-cg * N) at hClosedLow
+  have hLowInclusion :
+      {ξ : Fin n → Ω | Vsq ξ ≤ (1 / 2 : ℝ)} ⊆
+        {ξ : Fin n → Ω | (∑ i : Fin n, g (ξ i) ^ 2) ≤ N / 2} := by
+    intro ξ hξ
+    change (∑ i : Fin n, g (ξ i) ^ 2) / N ≤ (1 / 2 : ℝ) at hξ
+    have ht : (∑ i : Fin n, g (ξ i) ^ 2) ≤ (1 / 2 : ℝ) * N :=
+      (div_le_iff₀ hNpos).mp hξ
+    calc
+      (∑ i : Fin n, g (ξ i) ^ 2) ≤ (1 / 2 : ℝ) * N := ht
+      _ = N / 2 := by ring
+  have hLowVsq : P₀.real {ξ | Vsq ξ ≤ (1 / 2 : ℝ)} ≤ Real.exp (-cg * N) :=
+    (measureReal_mono hLowInclusion).trans hClosedLow
+  have hWm : Measurable W := by
+    dsimp only [W]
+    exact (Finset.measurable_sum _ (fun i _ =>
+      hgm.comp (measurable_pi_apply i))).div_const q
+  let Abad : Set (Fin n → Ω) := {ξ | 16 * q < W ξ ^ 2}
+  have hAbadm : MeasurableSet Abad := measurableSet_lt measurable_const (hWm.pow_const 2)
+  have hmark : (16 * q) * P₀.real Abad ≤ 1 := by
+    calc
+      (16 * q) * P₀.real Abad = ∫ ξ, Abad.indicator (fun _ => 16 * q) ξ ∂P₀ := by
+        rw [integral_indicator_const _ hAbadm, smul_eq_mul, mul_comm]
+      _ ≤ ∫ ξ, W ξ ^ 2 ∂P₀ := by
+        apply integral_mono ((integrable_const _).indicator hAbadm) hWi
+        intro ξ
+        by_cases hξ : ξ ∈ Abad
+        · rw [Set.indicator_of_mem hξ]
+          exact le_of_lt hξ
+        · rw [Set.indicator_of_notMem hξ]
+          exact sq_nonneg _
+      _ = 1 := hWsecond
+  have hAbadprob : P₀.real Abad ≤ 1 / (16 * q) :=
+    (le_div_iff₀ (by positivity : 0 < 16 * q)).2
+      (by simpa only [mul_comm] using hmark)
+  have hGsub : Gᶜ ⊆ {ξ | Vsq ξ ≤ (1 / 2 : ℝ)} ∪ Abad := by
+    intro ξ hξ
+    by_cases hV : (1 / 2 : ℝ) ≤ Vsq ξ
+    · right
+      have hbad : ¬ |W ξ| ≤ Real.sqrt q * (4 + Real.sqrt (Vsq ξ)) := by
+        intro hh'
+        exact hξ ⟨hV, hh'⟩
+      have hlarge : 4 * Real.sqrt q < |W ξ| := by
+        have hbase : 4 * Real.sqrt q ≤ Real.sqrt q * (4 + Real.sqrt (Vsq ξ)) := by
+          nlinarith only [mul_nonneg (Real.sqrt_nonneg q) (Real.sqrt_nonneg (Vsq ξ))]
+        exact hbase.trans_lt (lt_of_not_ge hbad)
+      change 16 * q < W ξ ^ 2
+      have hmul : 0 < (|W ξ| - 4 * Real.sqrt q) * (|W ξ| + 4 * Real.sqrt q) :=
+        mul_pos (by linarith only [hlarge])
+          (by linarith only [hlarge, Real.sqrt_nonneg q])
+      nlinarith only [hmul, sq_abs (W ξ), Real.sq_sqrt hqpos.le]
+    · exact Or.inl (le_of_lt (lt_of_not_ge hV))
+  have hGfail : P₀.real Gᶜ ≤ Real.exp (-cg * N) + 1 / (16 * q) := by
+    calc
+      P₀.real Gᶜ ≤ P₀.real ({ξ | Vsq ξ ≤ (1 / 2 : ℝ)} ∪ Abad) := measureReal_mono hGsub
+      _ ≤ P₀.real {ξ | Vsq ξ ≤ (1 / 2 : ℝ)} + P₀.real Abad := measureReal_union_le _ _
+      _ ≤ Real.exp (-cg * N) + 1 / (16 * q) := add_le_add hLowVsq hAbadprob
+  have hHsub : Hcptᶜ ⊆ Gᶜ ∪ {ξ | ξ ∈ G ∧ D2 ξ < -(1 / 2 : ℝ)} := by
+    intro ξ hξ
+    by_cases hG : ξ ∈ G
+    · exact Or.inr ⟨hG, lt_of_not_ge (fun hd => hξ ⟨hG, hd⟩)⟩
+    · exact Or.inl hG
+  have hHfail : P₀.real Hcptᶜ ≤
+      Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q := by
+    calc
+      P₀.real Hcptᶜ ≤ P₀.real (Gᶜ ∪ {ξ | ξ ∈ G ∧ D2 ξ < -(1 / 2 : ℝ)}) :=
+        measureReal_mono hHsub
+      _ ≤ P₀.real Gᶜ + P₀.real {ξ | ξ ∈ G ∧ D2 ξ < -(1 / 2 : ℝ)} :=
+        measureReal_union_le _ _
+      _ ≤ (Real.exp (-cg * N) + 1 / (16 * q)) + 16384 * s / q :=
+        add_le_add hGfail hDfail
+      _ = Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q := by ring
+  have hZsub : Z ⊆ Hcptᶜ ∪ (Hcpt ∩ Z) := by
+    intro ξ hξ
+    by_cases hH : ξ ∈ Hcpt
+    · exact Or.inr ⟨hH, hξ⟩
+    · exact Or.inl hH
+  have hZfail : P₀.real Z ≤
+      Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16720 * s) / q := by
+    calc
+      P₀.real Z ≤ P₀.real (Hcptᶜ ∪ (Hcpt ∩ Z)) := measureReal_mono hZsub
+      _ ≤ P₀.real Hcptᶜ + P₀.real (Hcpt ∩ Z) := measureReal_union_le _ _
+      _ ≤ (Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16384 * s) / q) + 336 * s / q :=
+        add_le_add hHfail hHZ
+      _ = Real.exp (-cg * N) + ((1 / 16 : ℝ) + 16720 * s) / q := by ring
+  exact ⟨hUm, hJm, hRm, hT, hTm, hGm, hHm, hZm, hGfail, hHfail, hZfail,
+    hGood, hClosedDiff, hOpenDiff⟩
