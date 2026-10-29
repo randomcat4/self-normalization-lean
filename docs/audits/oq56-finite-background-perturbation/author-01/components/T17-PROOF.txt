@@ -1,0 +1,23 @@
+:= by
+  have hN4 : (4 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hd : (0 : ℝ) < (n : ℝ) - 2 := by linarith
+  have hell : 0 ≤ anomalyWeight B w :=
+    Finset.sum_nonneg (fun a ha => hw a)
+  have hbound (i : Fin n) (hi : i ∈ B) :
+      (adjustedRow g r i - backgroundRow B g r i) ^ (2 : ℕ) ≤
+        (anomalyWeight B w / ((n : ℝ) - 2)) ^ (2 : ℕ) * (w i) ^ (2 : ℕ) := by
+    have hh := adjustedRow_sub_backgroundRow_bound B g r w hn hw henv i hi
+    have hright : 0 ≤ anomalyWeight B w * w i / ((n : ℝ) - 2) :=
+      div_nonneg (mul_nonneg hell (hw i)) hd.le
+    have hs := (sq_le_sq₀
+      (abs_nonneg (adjustedRow g r i - backgroundRow B g r i)) hright).2 hh
+    rw [sq_abs] at hs
+    convert hs using 1 <;> ring
+  calc
+    (∑ i ∈ B, (adjustedRow g r i - backgroundRow B g r i) ^ (2 : ℕ)) ≤
+        ∑ i ∈ B,
+          (anomalyWeight B w / ((n : ℝ) - 2)) ^ (2 : ℕ) * (w i) ^ (2 : ℕ) :=
+      Finset.sum_le_sum hbound
+    _ = (anomalyWeight B w / ((n : ℝ) - 2)) ^ (2 : ℕ) *
+        backgroundWeightEnergy B w := by
+      rw [backgroundWeightEnergy, Finset.mul_sum]

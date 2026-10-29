@@ -1,0 +1,67 @@
+:= by
+  let a : Fin n → ℝ := fun i => f i - blockMean B f
+  let b : Fin n → ℝ := fun i => h i - blockMean B h
+  let A2 : ℝ := ∑ i ∈ B, (a i) ^ (2 : ℕ)
+  let B2 : ℝ := ∑ i ∈ B, (b i) ^ (2 : ℕ)
+  let C : ℝ := ∑ i ∈ B, a i * b i
+  have hA : 0 ≤ A2 := Finset.sum_nonneg (fun i hi => sq_nonneg _)
+  have hB2 : 0 ≤ B2 := Finset.sum_nonneg (fun i hi => sq_nonneg _)
+  have hpoint (i j : Fin n) :
+      (a i * b j - a j * b i) ^ (2 : ℕ) =
+        (a i) ^ (2 : ℕ) * (b j) ^ (2 : ℕ) +
+          (a j) ^ (2 : ℕ) * (b i) ^ (2 : ℕ) -
+            2 * (a i * b i) * (a j * b j) := by ring
+  have hid :
+      (∑ i ∈ B, ∑ j ∈ B, (a i * b j - a j * b i) ^ (2 : ℕ)) =
+        2 * (A2 * B2) - 2 * C ^ (2 : ℕ) := by
+    dsimp [A2, B2, C]
+    simp_rw [hpoint]
+    simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib,
+      ← Finset.mul_sum, ← Finset.sum_mul]
+    ring
+  have hnon :
+      (0 : ℝ) ≤ ∑ i ∈ B, ∑ j ∈ B, (a i * b j - a j * b i) ^ (2 : ℕ) :=
+    Finset.sum_nonneg (fun i hi => Finset.sum_nonneg (fun j hj => sq_nonneg _))
+  have hCS : C ^ (2 : ℕ) ≤ A2 * B2 := by linarith only [hid, hnon]
+  have hroot0 : 0 ≤ Real.sqrt A2 * Real.sqrt B2 :=
+    mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
+  have hroot2 :
+      (Real.sqrt A2 * Real.sqrt B2) ^ (2 : ℕ) = A2 * B2 := by
+    rw [mul_pow, Real.sq_sqrt hA, Real.sq_sqrt hB2]
+  have hCab : |C| ≤ Real.sqrt A2 * Real.sqrt B2 := by
+    apply (sq_le_sq₀ (abs_nonneg C) hroot0).mp
+    rw [sq_abs, hroot2]
+    exact hCS
+  have hC : C ≤ Real.sqrt A2 * Real.sqrt B2 :=
+    le_trans (le_abs_self C) hCab
+  have hmean :
+      blockMean B (fun i : Fin n => f i - h i) = blockMean B f - blockMean B h := by
+    simp only [blockMean, Finset.sum_sub_distrib, sub_div]
+  have hdiff (i : Fin n) :
+      f i - h i - blockMean B (fun j : Fin n => f j - h j) = a i - b i := by
+    rw [hmean]
+    dsimp [a, b]
+    ring
+  have hdiffSq (i : Fin n) :
+      (a i - b i) ^ (2 : ℕ) =
+        (a i) ^ (2 : ℕ) + (b i) ^ (2 : ℕ) - 2 * (a i * b i) := by ring
+  have henergy :
+      blockCenteredEnergy B (fun i : Fin n => f i - h i) = A2 + B2 - 2 * C := by
+    unfold blockCenteredEnergy
+    simp_rw [hdiff, hdiffSq]
+    simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, ← Finset.mul_sum]
+    rfl
+  have hcontr := block_centering_contraction B (fun i : Fin n => f i - h i) hB
+  rw [henergy] at hcontr
+  have hsq :
+      (Real.sqrt A2 - Real.sqrt B2) ^ (2 : ℕ) ≤
+        ∑ i ∈ B, (f i - h i) ^ (2 : ℕ) := by
+    nlinarith only [Real.sq_sqrt hA, Real.sq_sqrt hB2, hC, hcontr]
+  have hraw :
+      (0 : ℝ) ≤ ∑ i ∈ B, (f i - h i) ^ (2 : ℕ) :=
+    Finset.sum_nonneg (fun i hi => sq_nonneg _)
+  change |Real.sqrt A2 - Real.sqrt B2| ≤
+    Real.sqrt (∑ i ∈ B, (f i - h i) ^ (2 : ℕ))
+  apply (sq_le_sq₀ (abs_nonneg _) (Real.sqrt_nonneg _)).mp
+  rw [sq_abs, Real.sq_sqrt hraw]
+  exact hsq

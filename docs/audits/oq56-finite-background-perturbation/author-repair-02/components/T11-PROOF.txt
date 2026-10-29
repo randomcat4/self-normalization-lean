@@ -1,0 +1,21 @@
+:= by
+  classical
+  have hrow (i : Fin n) (hi : i ∈ S) :
+      (∑ j ∈ S, w i * w j) =
+        (w i) ^ (2 : ℕ) + ∑ j ∈ S.erase i, w i * w j := by
+    rw [Finset.sum_erase_eq_sub hi]
+    ring
+  calc
+    (∑ i ∈ S, w i) ^ (2 : ℕ) = ∑ i ∈ S, ∑ j ∈ S, w i * w j := by
+      simp only [← Finset.mul_sum, ← Finset.sum_mul]
+      ring
+    _ = ∑ i ∈ S, ((w i) ^ (2 : ℕ) + ∑ j ∈ S.erase i, w i * w j) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact hrow i hi
+    _ = (∑ i ∈ S, (w i) ^ (2 : ℕ)) +
+        2 * blockPairSum S (fun i j : Fin n => w i * w j) := by
+      rw [Finset.sum_add_distrib,
+        block_offDiagonal_sum S (fun i j : Fin n => w i * w j) (by
+          intro i j
+          ring)]

@@ -1,0 +1,14 @@
+private theorem finite_physical_centered_projection_bridge
+    (n : ℕ) (hn : 4 ≤ n)
+    {Ω : Type u} (h : Ω → Ω → ℝ) (g : Ω → ℝ)
+    (hhsymm : ∀ a b : Ω, h a b = h b a) :
+    let r : Ω → Ω → ℝ := fun a b => h a b - g a - g b
+    let U : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.uStatistic (fun i j => h (ζ i) (ζ j))
+    let R2 : (Fin n → Ω) → ℝ := fun ζ =>
+      Shao.OQ6.FiniteRows.jackknifeSq (fun i j => h (ζ i) (ζ j))
+    let s : (Fin n → Ω) → ℝ := fun ζ => Real.sqrt (centeredSq n g r ζ)
+    ∀ ζ : Fin n → Ω,
+      (if 0 < R2 ζ then Real.sqrt (n : ℝ) * U ζ / Real.sqrt (R2 ζ) else 0) =
+        (if s ζ = 0 then 0 else
+          (projectionW n g ζ + residualStatisticD n r ζ) / s ζ)

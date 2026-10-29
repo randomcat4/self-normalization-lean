@@ -1,0 +1,48 @@
+:= by
+  classical
+  intro A M K muB muA
+  have hN : (n : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hn)
+  have hBfilter : (Finset.univ.filter (fun i : Fin n => i ∈ B)) = B := by
+    ext i
+    simp
+  have hAfilter : (Finset.univ.filter (fun i : Fin n => i ∉ B)) = A := by
+    ext i
+    simp [A]
+  have hsplit (f : Fin n → ℝ) :
+      (∑ i ∈ B, f i) + (∑ i ∈ A, f i) = ∑ i : Fin n, f i := by
+    simpa only [hBfilter, hAfilter] using
+      (Finset.sum_filter_add_sum_filter_not Finset.univ
+        (fun i : Fin n => i ∈ B) f)
+  have hcard : M + K = (n : ℝ) := by
+    simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, mul_one] using hsplit (fun _ => (1 : ℝ))
+  have hMK : M + K ≠ 0 := by rw [hcard]; exact hN
+  have hweighted (s : Finset (Fin n)) :
+      (s.card : ℝ) * ((∑ i ∈ s, b i) / (s.card : ℝ)) = ∑ i ∈ s, b i := by
+    by_cases hs : s = ∅
+    · simp [hs]
+    · have hspos : 0 < s.card :=
+        Finset.card_pos.mpr (Finset.nonempty_iff_ne_empty.mpr hs)
+      have hs0 : (s.card : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hspos)
+      field_simp [hs0]
+  have hWB : M * muB = ∑ i ∈ B, b i := hweighted B
+  have hWA : K * muA = ∑ i ∈ A, b i := hweighted A
+  have hmean : Shao.OQ5.P35.mean b =
+      (M * muB + K * muA) / (n : ℝ) := by
+    unfold Shao.OQ5.P35.mean
+    rw [← hsplit b, ← hWB, ← hWA]
+    field_simp [hN]
+  have hsquare (s : Finset (Fin n)) (t : ℝ) :
+      (∑ i ∈ s, (b i - t) ^ (2 : ℕ)) =
+        (∑ i ∈ s, (b i) ^ (2 : ℕ)) -
+          2 * t * (∑ i ∈ s, b i) + (s.card : ℝ) * t ^ (2 : ℕ) := by
+    simp only [sub_sq, Finset.sum_add_distrib, Finset.sum_sub_distrib,
+      Finset.sum_const, nsmul_eq_mul, ← Finset.sum_mul, ← Finset.mul_sum]
+    ring
+  simp only [Shao.OQ5.P35.center]
+  rw [hsquare Finset.univ (Shao.OQ5.P35.mean b),
+    hsquare B muB, hsquare A muA]
+  simp only [Finset.card_univ, Fintype.card_fin]
+  rw [hmean, ← hsplit (fun i => (b i) ^ (2 : ℕ)),
+    ← hsplit b, ← hWB, ← hWA, ← hcard]
+  field_simp [hMK] <;> ring

@@ -1,0 +1,15 @@
+# unit278 SAME-author repair02 report
+
+The complete candidate changes only the two finite triangle-composition terms identified by native02. Original native02 ended naturally RC1 in 5.148428468 seconds with two complete type mismatches, fourteen warnings, no object and no AX result. All owned processes ended, protected-artifact equality was recorded, and no timeout/cap/heartbeat or uncertain operation was reported. These are preserved prior-attempt observations, not new author checks.
+
+T12 line430 now composes the two-term triangle inequality with add_le_add (le_refl |f i|) ih. T13 line474 uses the corresponding a-index term. The reflexive comparison fixes the first addend; the induction hypothesis is the second addend. This produces exactly the inequality expected by le_trans. No new hypothesis or helper is supplied. Both full diagnostics and exact before/after expressions/proof hashes are in DIAGNOSTIC-COVERAGE.json.
+
+The current complete source has SHA256 8481562684fc7a3c5455e8ab99d6f85b15f4778860fa414da93099b83b4adcb8, 30148 bytes and 694 LF. Counts derived from bytes remain33 declarations/14fixed definitions/19complete proofs, HEAD118LF/PROOF523LF/fixedDefinitionBody36LF. The two changed complete proofs total64LF. Other17 proof bodies total459LF and remain byte-identical to repair01, including T08. All33 frozen HEADs/14fixedRHS/PRE/CLOSE are exact.
+
+DECLARATION-ASSEMBLY.json maps every current component into the complete source. ALLHEAD.txt, ALLPROOF.txt and FIXED-DEFINITION-BODIES.txt are exact concatenated streams. MFT.md contains the complete original mathematical fidelity account with a current repair02 addendum. The source p41(4)-(5) scope, original same-n coefficients/lambda, realKminus1, finite offdiagonal envelope, sharpFAhalf, coefficient1 norm and zero cases are unchanged. No B-to-Fin-m physical transport, productAE lift, conditional mean/variance payment, interaction concentration, rareblock integration or original probability/root closure is claimed.
+
+The prior independently accepted SOURCE/affected evidence is reused only for byte-identical scope. The same separate reviewer must cover the two complete changed proofs and their current uses before the parent runs the new complete server native. Only an actual successful original object may then supply all-owner TYPE/14-definition FULLVALUE/transitive AX. No module pass or API pass is claimed here; sourceAccepted=false/kernelChecked=false/qualified=false for the new candidate.
+
+All258 input bindings and activation identity were checked before first write and are rechecked before seal. Only author-repair-02 has been written; old sources, failures, reports, frozen files, suppliers and shared files are read-only. No Lean/AX/compiler/toolchain probe/SSH/network/prefix/upload/Git/API/child/Goal/schedule action or resource/option/import change was performed. Requested gpt-6.1-sol/xhigh remains separate from unexposed actual backend/model/effort and usage, recorded null.
+
+The unique final write releases all assigned active authority with sixzero and no active wait. Same-author identity is retained only for future explicit diagnostic-bound repair.

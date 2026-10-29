@@ -1,0 +1,38 @@
+:= by
+  classical
+  have hdisj : Disjoint (anomaly B) B := by
+    apply Finset.disjoint_left.mpr
+    intro i hiA hiB
+    exact (Finset.mem_sdiff.mp hiA).2 hiB
+  have hunion : anomaly B ∪ B = (Finset.univ : Finset (Fin n)) := by
+    ext i
+    by_cases hi : i ∈ B <;> simp [anomaly, hi]
+  have hsplit (f : Fin n → ℝ) :
+      (∑ i : Fin n, f i) = (∑ i ∈ anomaly B, f i) + ∑ i ∈ B, f i := by
+    calc
+      (∑ i : Fin n, f i) = ∑ i ∈ anomaly B ∪ B, f i := by rw [hunion]
+      _ = (∑ i ∈ anomaly B, f i) + ∑ i ∈ B, f i := Finset.sum_union hdisj
+  have hcross :
+      (∑ i ∈ B, ∑ a ∈ anomaly B, r i a) = crossPairSum B r := by
+    unfold crossPairSum
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro a ha
+    apply Finset.sum_congr rfl
+    intro i hi
+    exact hsym i a
+  have hrow (i : Fin n) (hi : i ∈ B) :
+      (∑ j ∈ Finset.univ.erase i, r i j) =
+        (∑ a ∈ anomaly B, r i a) + ∑ j ∈ B.erase i, r i j := by
+    rw [Finset.sum_erase_eq_sub (by simp), hsplit,
+      Finset.sum_erase_eq_sub hi]
+    ring
+  calc
+    (∑ i ∈ B, ∑ j ∈ Finset.univ.erase i, r i j) =
+        ∑ i ∈ B, ((∑ a ∈ anomaly B, r i a) + ∑ j ∈ B.erase i, r i j) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact hrow i hi
+    _ = 2 * blockPairSum B r + crossPairSum B r := by
+      rw [Finset.sum_add_distrib, hcross, block_offDiagonal_sum B r hsym]
+      ring

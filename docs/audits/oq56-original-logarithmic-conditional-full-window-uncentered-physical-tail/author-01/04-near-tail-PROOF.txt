@@ -1,0 +1,87 @@
+:= by
+  classical
+  have hLowerInclusion : {ξ : X | z + δ ≤ Tcenter ξ} ⊆
+      {ξ : X | z ≤ Tuncenter ξ} ∪ Hgoodᶜ := by
+    intro ξ hξ
+    by_cases hgood : ξ ∈ Hgood
+    · left
+      have hh := (abs_le.mp (hshift ξ hgood)).1
+      change z + δ ≤ Tcenter ξ at hξ
+      change z ≤ Tuncenter ξ
+      linarith only [hh, hξ]
+    · exact Or.inr hgood
+  have hUpperInclusion : {ξ : X | z ≤ Tuncenter ξ} ⊆
+      {ξ : X | z - δ ≤ Tcenter ξ} ∪ Hgoodᶜ := by
+    intro ξ hξ
+    by_cases hgood : ξ ∈ Hgood
+    · left
+      have hh := (abs_le.mp (hshift ξ hgood)).2
+      change z ≤ Tuncenter ξ at hξ
+      change z - δ ≤ Tcenter ξ
+      linarith only [hh, hξ]
+    · exact Or.inr hgood
+  have hLowerPay : P.real {ξ : X | z + δ ≤ Tcenter ξ} ≤
+      P.real {ξ : X | z ≤ Tuncenter ξ} + P.real Hgoodᶜ :=
+    (measureReal_mono hLowerInclusion).trans (measureReal_union_le _ _)
+  have hLower : P.real {ξ : X | z + δ ≤ Tcenter ξ} - P.real Hgoodᶜ ≤
+      P.real {ξ : X | z ≤ Tuncenter ξ} := by linarith only [hLowerPay]
+  have hUpper : P.real {ξ : X | z ≤ Tuncenter ξ} ≤
+      P.real {ξ : X | z - δ ≤ Tcenter ξ} + P.real Hgoodᶜ :=
+    (measureReal_mono hUpperInclusion).trans (measureReal_union_le _ _)
+  have hΨ : 0 < Shao.standardNormalTail z := (Shao.standardNormalTail_basic.2.2.1 z).1
+  have hΨ2 : 0 < Shao.standardNormalTail 2 := (Shao.standardNormalTail_basic.2.2.1 2).1
+  have hΨOrder : Shao.standardNormalTail 2 ≤ Shao.standardNormalTail z :=
+    Shao.standardNormalTail_basic.1 hz2
+  have hBad0 : 0 ≤ P.real Hgoodᶜ := ENNReal.toReal_nonneg
+  have hBadZ : P.real Hgoodᶜ / Shao.standardNormalTail z ≤ 2 * E :=
+    (div_le_div_of_nonneg_left hBad0 hΨ2 hΨOrder).trans hbad
+  have hLip (v : ℝ) : |Shao.standardNormalTail v - Shao.standardNormalTail z| ≤ |v - z| := by
+    rw [(Shao.standardNormalTail_representation v).2.1,
+      (Shao.standardNormalTail_representation z).2.1]
+    change |(1 - Shao.OQ4.standardNormalCDF v) - (1 - Shao.OQ4.standardNormalCDF z)| ≤ _
+    rw [show (1 - Shao.OQ4.standardNormalCDF v) - (1 - Shao.OQ4.standardNormalCDF z) =
+      -(Shao.OQ4.standardNormalCDF v - Shao.OQ4.standardNormalCDF z) by ring, abs_neg]
+    exact Shao.OQ4.standardNormalCDF_lipschitz v z
+  have hShifted (v : ℝ) (hvLow : (1 / 2 : ℝ) ≤ v) (hvHigh : v ≤ (5 / 2 : ℝ))
+      (hvDist : |v - z| ≤ δ) :
+      |P.real {ξ : X | v ≤ Tcenter ξ} / Shao.standardNormalTail z - 1| ≤
+        ((D + Dδ) / Shao.standardNormalTail 2) * E := by
+    have hAbs : |P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail z| ≤
+        (D + Dδ) * E := by
+      calc
+        _ = |(P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail v) +
+            (Shao.standardNormalTail v - Shao.standardNormalTail z)| := by congr 1; ring
+        _ ≤ _ := abs_add_le _ _
+        _ ≤ D * E + δ := add_le_add (hcenter v hvLow hvHigh) ((hLip v).trans hvDist)
+        _ ≤ _ := by nlinarith only [hδrate]
+    calc
+      _ = |P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail z| /
+          Shao.standardNormalTail z := by
+        rw [show P.real {ξ : X | v ≤ Tcenter ξ} / Shao.standardNormalTail z - 1 =
+          (P.real {ξ : X | v ≤ Tcenter ξ} - Shao.standardNormalTail z) /
+            Shao.standardNormalTail z by field_simp [ne_of_gt hΨ] <;> ring,
+          abs_div, abs_of_pos hΨ]
+      _ ≤ ((D + Dδ) * E) / Shao.standardNormalTail z :=
+        div_le_div_of_nonneg_right hAbs hΨ.le
+      _ ≤ ((D + Dδ) * E) / Shao.standardNormalTail 2 :=
+        div_le_div_of_nonneg_left (mul_nonneg (add_nonneg hD hDδ) hE) hΨ2 hΨOrder
+      _ = _ := by ring
+  have hPlus := hShifted (z + δ) (by linarith only [hz1, hδ0])
+    (by linarith only [hz2, hδhalf]) (by rw [add_sub_cancel_left, abs_of_nonneg hδ0])
+  have hMinus := hShifted (z - δ) (by linarith only [hz1, hδhalf])
+    (by linarith only [hz2, hδ0]) (by
+      rw [show z - δ - z = -δ by ring, abs_neg, abs_of_nonneg hδ0])
+  have hLowerDiv := div_le_div_of_nonneg_right hLower hΨ.le
+  have hUpperDiv := div_le_div_of_nonneg_right hUpper hΨ.le
+  rw [sub_div] at hLowerDiv
+  rw [add_div] at hUpperDiv
+  refine ⟨hLower, hUpper, ?_⟩
+  have hBound : |P.real {ξ : X | z ≤ Tuncenter ξ} / Shao.standardNormalTail z - 1| ≤
+      ((D + Dδ) / Shao.standardNormalTail 2) * E + 2 * E := by
+    apply abs_le.mpr
+    constructor
+    · have hh := (abs_le.mp hPlus).1
+      linarith only [hLowerDiv, hh, hBadZ]
+    · have hh := (abs_le.mp hMinus).2
+      linarith only [hUpperDiv, hh, hBadZ]
+  convert hBound using 1 <;> ring

@@ -1,0 +1,104 @@
+:= by
+  classical
+  intro muB Qb Q T
+  let A : Finset (Fin n) := Finset.univ \ B
+  let N : ℝ := (n : ℝ)
+  let M : ℝ := (B.card : ℝ)
+  let K : ℝ := (A.card : ℝ)
+  let muA : ℝ := (∑ i ∈ A, b i) / K
+  let QA : ℝ := ∑ i ∈ A, (b i - muA) ^ (2 : ℕ)
+  let y : ℝ := muA - muB
+  let a : ℝ := muB - c
+  let X : ℝ := (∑ i : Fin n, b i) - N * c
+  let C : ℝ := N * (max a 0) ^ (2 : ℕ) / Qb + K / M
+  let D : ℝ := Qb + (K * M / N) * y ^ (2 : ℕ)
+  have hN2 : (2 : ℝ) ≤ N := by exact_mod_cast hn
+  have hN : 0 < N := by linarith
+  have hNm : 0 < N - 1 := by linarith
+  have hM : 0 < M := by exact_mod_cast (Finset.card_pos.mpr hB)
+  have hK : 0 ≤ K := by exact_mod_cast (Nat.zero_le A.card)
+  have hq : 0 < Qb := hQb
+  have hBfilter : (Finset.univ.filter (fun i : Fin n => i ∈ B)) = B := by
+    ext i
+    simp
+  have hAfilter : (Finset.univ.filter (fun i : Fin n => i ∉ B)) = A := by
+    ext i
+    simp [A]
+  have hsplit (f : Fin n → ℝ) :
+      (∑ i ∈ B, f i) + (∑ i ∈ A, f i) = ∑ i : Fin n, f i := by
+    simpa only [hBfilter, hAfilter] using
+      (Finset.sum_filter_add_sum_filter_not Finset.univ
+        (fun i : Fin n => i ∈ B) f)
+  have hcard : M + K = N := by
+    simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, mul_one] using hsplit (fun _ => (1 : ℝ))
+  have hweighted (s : Finset (Fin n)) :
+      (s.card : ℝ) * ((∑ i ∈ s, b i) / (s.card : ℝ)) = ∑ i ∈ s, b i := by
+    by_cases hs : s = ∅
+    · simp [hs]
+    · have hspos : 0 < s.card :=
+        Finset.card_pos.mpr (Finset.nonempty_iff_ne_empty.mpr hs)
+      have hs0 : (s.card : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hspos)
+      field_simp [hs0]
+  have hWB : M * muB = ∑ i ∈ B, b i := hweighted B
+  have hWA : K * muA = ∑ i ∈ A, b i := hweighted A
+  have hX : X = N * a + K * y := by
+    dsimp only [X, a, y]
+    rw [← hsplit b, ← hWB, ← hWA, ← hcard]
+    ring
+  have hdecomp := centered_energy_partition n b B
+    (lt_of_lt_of_le (by decide : 0 < 2) hn) hB
+  change Q = Qb + QA + (M * K / N) * y ^ (2 : ℕ) at hdecomp
+  rw [mul_comm M K] at hdecomp
+  have hQA : 0 ≤ QA := Finset.sum_nonneg (fun i _ => sq_nonneg _)
+  have hterm : 0 ≤ (K * M / N) * y ^ (2 : ℕ) :=
+    mul_nonneg (div_nonneg (mul_nonneg hK hM.le) hN.le) (sq_nonneg y)
+  have hqD : Qb ≤ D := by
+    change Qb ≤ Qb + (K * M / N) * y ^ (2 : ℕ)
+    exact le_add_of_nonneg_right hterm
+  have hDQ : D ≤ Q := by
+    dsimp only [D]
+    rw [hdecomp]
+    linarith only [hQA]
+  have hQpos : 0 < Q := lt_of_lt_of_le hq (le_trans hqD hDQ)
+  have hC0 : 0 ≤ C :=
+    add_nonneg
+      (div_nonneg (mul_nonneg hN.le (sq_nonneg _)) hq.le)
+      (div_nonneg hK hM.le)
+  have hopt := positive_part_block_cauchy N M K Qb a y hN hM hK hq
+  have hnum : (max X 0) ^ (2 : ℕ) ≤ N * C * Q := by
+    rw [hX]
+    calc
+      (max (N * a + K * y) 0) ^ (2 : ℕ) ≤ N * C * D := hopt
+      _ ≤ N * C * Q :=
+        mul_le_mul_of_nonneg_left hDQ (mul_nonneg hN.le hC0)
+  have hT : T = Real.sqrt ((N - 1) / N) * X / Real.sqrt Q := by
+    simp only [T, if_neg (ne_of_gt hQpos)]
+  have hTsq : T ^ (2 : ℕ) = ((N - 1) / N) * X ^ (2 : ℕ) / Q := by
+    rw [hT, div_pow, mul_pow,
+      Real.sq_sqrt (div_nonneg hNm.le hN.le), Real.sq_sqrt hQpos.le]
+  refine ⟨hQpos, ?_⟩
+  change (max T 0) ^ (2 : ℕ) ≤ (N - 1) * C
+  by_cases hX0 : X ≤ 0
+  · have hT0 : T ≤ 0 := by
+      rw [hT]
+      exact div_nonpos_of_nonpos_of_nonneg
+        (mul_nonpos_of_nonneg_of_nonpos (Real.sqrt_nonneg _) hX0)
+        (Real.sqrt_nonneg _)
+    rw [max_eq_right hT0]
+    simpa only [zero_pow] using mul_nonneg hNm.le hC0
+  · have hXpos : 0 < X := lt_of_not_ge hX0
+    have hT0 : 0 ≤ T := by
+      rw [hT]
+      exact div_nonneg
+        (mul_nonneg (Real.sqrt_nonneg _) hXpos.le) (Real.sqrt_nonneg _)
+    have hnumpos : X ^ (2 : ℕ) ≤ N * C * Q := by
+      simpa only [max_eq_left hXpos.le] using hnum
+    rw [max_eq_left hT0]
+    calc
+      T ^ (2 : ℕ) = ((N - 1) / N) * X ^ (2 : ℕ) / Q := hTsq
+      _ ≤ ((N - 1) / N) * (N * C * Q) / Q :=
+        (div_le_div_iff_of_pos_right hQpos).2
+          (mul_le_mul_of_nonneg_left hnumpos (div_nonneg hNm.le hN.le))
+      _ = (N - 1) * C := by
+        field_simp [ne_of_gt hN, ne_of_gt hQpos] <;> ring

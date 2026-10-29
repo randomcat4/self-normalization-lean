@@ -1,0 +1,487 @@
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization : ∀ (n : Nat)
+  (b : Fin n → Real) (B : Finset.{0} (Fin n)) (c : Real)
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) n)
+  (hB : @Finset.Nonempty.{0} (Fin n) B)
+  (hQb :
+    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+        @HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (b i)
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (j : Fin n) => b j)
+              (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))))
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))),
+  have muB : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => b i)
+      (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B));
+  have Qb : Real :=
+    @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (b i) muB)
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)));
+  have Q : Real :=
+    @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin n) (Fin.fintype n)) fun (i : Fin n) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Shao.OQ5.P35.center n b i) (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)));
+  have T : Real :=
+    @ite.{1} Real (@Eq.{1} Real Q (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (Classical.propDecidable
+        (@Eq.{1} Real Q (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (Real.sqrt
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                (@Nat.cast.{0} Real Real.instNatCast n)
+                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+              (@Nat.cast.{0} Real Real.instNatCast n)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin n) (Fin.fintype n))
+              fun (i : Fin n) => b i)
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@Nat.cast.{0} Real Real.instNatCast n) c)))
+        (Real.sqrt Q));
+  And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) Q)
+    (@LE.le.{0} Real Real.instLE
+      (@HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Max.max.{0} Real Real.instMax T (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@Nat.cast.{0} Real Real.instNatCast n)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                (@Max.max.{0} Real Real.instMax
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) muB c)
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+            Qb)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@Nat.cast.{0} Real Real.instNatCast
+              (@Finset.card.{0} (Fin n)
+                (@SDiff.sdiff.{0} (Finset.{0} (Fin n)) (@Finset.instSDiff.{0} (Fin n) (instDecidableEqFin n))
+                  (@Finset.univ.{0} (Fin n) (Fin.fintype n)) B)))
+            (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))))))
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_4 : ∀
+  {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_7 : ∀
+  {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_6 : ∀
+  {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_2 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_5 : ∀
+  {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition : ∀
+  (n : Nat) (b : Fin n → Real) (B : Finset.{0} (Fin n))
+  (hn : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) n)
+  (hB : @Finset.Nonempty.{0} (Fin n) B),
+  have A : Finset.{0} (Fin n) :=
+    @SDiff.sdiff.{0} (Finset.{0} (Fin n)) (@Finset.instSDiff.{0} (Fin n) (instDecidableEqFin n))
+      (@Finset.univ.{0} (Fin n) (Fin.fintype n)) B;
+  have M : Real := @Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B);
+  have K : Real := @Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) A);
+  have muB : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => b i) M;
+  have muA : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid A fun (i : Fin n) => b i) K;
+  @Eq.{1} Real
+    (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin n) (Fin.fintype n))
+      fun (i : Fin n) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Shao.OQ5.P35.center n b i) (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+          @HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+            (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (b i) muB)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+        (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid A fun (i : Fin n) =>
+          @HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+            (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (b i) muA)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) M K)
+          (@Nat.cast.{0} Real Real.instNatCast n))
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) muA muB)
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_6 : ∀
+  {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_9 : ∀
+  {ι : Type u_1} {R : Type u_4} [inst : NonUnitalNonAssocSemiring.{u_4} R] (s : Finset.{u_1} ι) (f : ι → R) (a : R),
+  @Eq.{u_4 + 1} R
+    (@Finset.sum.{u_1, u_4} ι R (@NonUnitalNonAssocSemiring.toAddCommMonoid.{u_4} R inst) s fun (i : ι) =>
+      @HMul.hMul.{u_4, u_4, u_4} R R R
+        (@instHMul.{u_4} R (@Distrib.toMul.{u_4} R (@NonUnitalNonAssocSemiring.toDistrib.{u_4} R inst))) a (f i))
+    (@HMul.hMul.{u_4, u_4, u_4} R R R
+      (@instHMul.{u_4} R (@Distrib.toMul.{u_4} R (@NonUnitalNonAssocSemiring.toDistrib.{u_4} R inst))) a
+      (@Finset.sum.{u_1, u_4} ι R (@NonUnitalNonAssocSemiring.toAddCommMonoid.{u_4} R inst) s fun (i : ι) => f i))
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_8 : ∀
+  {ι : Type u_1} {R : Type u_4} [inst : NonUnitalNonAssocSemiring.{u_4} R] (s : Finset.{u_1} ι) (f : ι → R) (a : R),
+  @Eq.{u_4 + 1} R
+    (@Finset.sum.{u_1, u_4} ι R (@NonUnitalNonAssocSemiring.toAddCommMonoid.{u_4} R inst) s fun (i : ι) =>
+      @HMul.hMul.{u_4, u_4, u_4} R R R
+        (@instHMul.{u_4} R (@Distrib.toMul.{u_4} R (@NonUnitalNonAssocSemiring.toDistrib.{u_4} R inst))) (f i) a)
+    (@HMul.hMul.{u_4, u_4, u_4} R R R
+      (@instHMul.{u_4} R (@Distrib.toMul.{u_4} R (@NonUnitalNonAssocSemiring.toDistrib.{u_4} R inst)))
+      (@Finset.sum.{u_1, u_4} ι R (@NonUnitalNonAssocSemiring.toAddCommMonoid.{u_4} R inst) s fun (i : ι) => f i) a)
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_5 : ∀
+  {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_3 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_7 : ∀
+  {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_1 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.positive_part_block_cauchy : ∀
+  (N M K q a y : Real)
+  (hN : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) N)
+  (hM : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) M)
+  (hK : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) K)
+  (hq : @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) q),
+  @LE.le.{0} Real Real.instLE
+    (@HPow.hPow.{0, 0, 0} Real Nat Real
+      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+      (@Max.max.{0} Real Real.instMax
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) N a)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) K y))
+        (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) N
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) N
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                (@Max.max.{0} Real Real.instMax a
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+            q)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            K M)))
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) q
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) K M) N)
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))))
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_3 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_4 : ∀
+  {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+Shao.OQ6.FiniteExceptionalBlockOptimization.finite_exceptional_block_optimization._simp_1_2 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.centered_energy_partition._simp_1_1 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+_private.Shao.OQ6.FiniteExceptionalBlockOptimization.0.Shao.OQ6.FiniteExceptionalBlockOptimization.original_statistic_eq_offset_form : ∀
+  (n : Nat) {Ω : Type u} (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω)
+  (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n),
+  have b : Fin n → Real := fun (i : Fin n) =>
+    @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g (x i))
+      (@Shao.OQ5.P51.residualU.{u} n Ω r x i);
+  have F : Real := @Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper.{u} n Ω r x;
+  have c : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) F
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 2)
+            (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))));
+  have Q : Real :=
+    @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin n) (Fin.fintype n)) fun (i : Fin n) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Shao.OQ5.P35.center n b i) (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)));
+  have s : Real := Real.sqrt (@Shao.OQ5.P51.centeredSq.{u} n Ω g r x);
+  @Eq.{1} Real
+    (@ite.{1} Real (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (Classical.propDecidable
+        (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (@Shao.OQ5.P51.projectionW.{u} n Ω g x)
+          (@Shao.OQ5.P51.residualStatisticD.{u} n Ω r x))
+        s))
+    (@ite.{1} Real (@Eq.{1} Real Q (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (Classical.propDecidable
+        (@Eq.{1} Real Q (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (Real.sqrt
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                (@Nat.cast.{0} Real Real.instNatCast n)
+                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+              (@Nat.cast.{0} Real Real.instNatCast n)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid (@Finset.univ.{0} (Fin n) (Fin.fintype n))
+              fun (i : Fin n) => b i)
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@Nat.cast.{0} Real Real.instNatCast n) c)))
+        (Real.sqrt Q)))
+Shao.OQ6.FiniteExceptionalBlockOptimization.original_finite_exceptional_block_optimization : ∀ (n : Nat)
+  {Ω : Type u} (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (B : Finset.{0} (Fin n))
+  (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hB :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3))) (@Finset.card.{0} (Fin n) B))
+  (hQb :
+    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+        @HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g (x i))
+              (@Shao.OQ5.P51.residualU.{u} n Ω r x i))
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (j : Fin n) =>
+                @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g (x j))
+                  (@Shao.OQ5.P51.residualU.{u} n Ω r x j))
+              (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))))
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))),
+  have b : Fin n → Real := fun (i : Fin n) =>
+    @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (g (x i))
+      (@Shao.OQ5.P51.residualU.{u} n Ω r x i);
+  have muB : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => b i)
+      (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B));
+  have Qb : Real :=
+    @Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (b i) muB)
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)));
+  have F : Real := @Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper.{u} n Ω r x;
+  have c : Real :=
+    @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) F
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 2)
+            (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+              (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))));
+  have s : Real := Real.sqrt (@Shao.OQ5.P51.centeredSq.{u} n Ω g r x);
+  have T : Real :=
+    @ite.{1} Real (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (Classical.propDecidable
+        (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (@Shao.OQ5.P51.projectionW.{u} n Ω g x)
+          (@Shao.OQ5.P51.residualStatisticD.{u} n Ω r x))
+        s);
+  And (@LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) s)
+    (@LE.le.{0} Real Real.instLE
+      (@HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Max.max.{0} Real Real.instMax T (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+        (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@Nat.cast.{0} Real Real.instNatCast n)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                (@Max.max.{0} Real Real.instMax
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) muB c)
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+            Qb)
+          (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+            (@Nat.cast.{0} Real Real.instNatCast
+              (@Finset.card.{0} (Fin n)
+                (@SDiff.sdiff.{0} (Finset.{0} (Fin n)) (@Finset.instSDiff.{0} (Fin n) (instDecidableEqFin n))
+                  (@Finset.univ.{0} (Fin n) (Fin.fintype n)) B)))
+            (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))))))

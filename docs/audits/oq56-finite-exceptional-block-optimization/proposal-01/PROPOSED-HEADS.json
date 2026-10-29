@@ -1,0 +1,93 @@
+{
+  "schema": "oq56-unit277-exact-head-proposal-v1",
+  "atUTC": "2026-10-29T16:45:24.488Z",
+  "status": "PROPOSAL_ONLY_PARENT_FREEZE_REQUIRED",
+  "implementationAuthorized": false,
+  "qualified": false,
+  "kernelChecked": false,
+  "proposedModule": "Shao/OQ6/FiniteExceptionalBlockOptimization.lean",
+  "proposedPreamble": [
+    "import Shao.OQ5.P51.BoundedStudentizerGeometry",
+    "set_option autoImplicit false",
+    "universe u",
+    "open scoped BigOperators",
+    "namespace Shao.OQ6.FiniteExceptionalBlockOptimization",
+    "noncomputable section"
+  ],
+  "proposedClosing": [
+    "end",
+    "end Shao.OQ6.FiniteExceptionalBlockOptimization"
+  ],
+  "noDefinitionsIntroduced": true,
+  "publicTheorems": 2,
+  "privateHelpers": 3,
+  "ordinaryMeaning": "Every head is an exact candidate statement without a proof body; let bindings are part of the target type.",
+  "heads": [
+    {
+      "id": "H01",
+      "visibility": "private",
+      "name": "centered_energy_partition",
+      "kind": "theorem",
+      "status": "PROPOSED_NOT_FROZEN",
+      "sourceRole": "Finite algebra supporting p41(3); no probabilistic premises.",
+      "head": "private theorem centered_energy_partition\n    (n : ℕ) (b : Fin n → ℝ) (B : Finset (Fin n))\n    (hn : 0 < n) (hB : B.Nonempty) :\n    let A : Finset (Fin n) := Finset.univ \\ B\n    let M : ℝ := (B.card : ℝ)\n    let K : ℝ := (A.card : ℝ)\n    let muB : ℝ := (∑ i ∈ B, b i) / M\n    let muA : ℝ := (∑ i ∈ A, b i) / K\n    (∑ i : Fin n, (Shao.OQ5.P35.center b i) ^ (2 : ℕ)) =\n      (∑ i ∈ B, (b i - muB) ^ (2 : ℕ)) +\n      (∑ i ∈ A, (b i - muA) ^ (2 : ℕ)) +\n      (M * K / (n : ℝ)) * (muA - muB) ^ (2 : ℕ)",
+      "dependencies": []
+    },
+    {
+      "id": "H02",
+      "visibility": "private",
+      "name": "positive_part_block_cauchy",
+      "kind": "theorem",
+      "status": "PROPOSED_NOT_FROZEN",
+      "sourceRole": "Weighted completion of a square; covers a<=0, K=0, and all y.",
+      "head": "private theorem positive_part_block_cauchy\n    (N M K q a y : ℝ)\n    (hN : 0 < N) (hM : 0 < M) (hK : 0 ≤ K) (hq : 0 < q) :\n    (max (N * a + K * y) 0) ^ (2 : ℕ) ≤\n      N * (N * (max a 0) ^ (2 : ℕ) / q + K / M) *\n        (q + (K * M / N) * y ^ (2 : ℕ))",
+      "dependencies": []
+    },
+    {
+      "id": "H03",
+      "visibility": "public",
+      "name": "finite_exceptional_block_optimization",
+      "kind": "theorem",
+      "status": "PROPOSED_NOT_FROZEN",
+      "sourceRole": "Abstract deterministic p41(3), with actual finite energy rather than an assumed bound.",
+      "head": "theorem finite_exceptional_block_optimization\n    (n : ℕ) (b : Fin n → ℝ) (B : Finset (Fin n)) (c : ℝ)\n    (hn : 2 ≤ n) (hB : B.Nonempty)\n    (hQb : 0 < ∑ i ∈ B,\n      (b i - (∑ j ∈ B, b j) / (B.card : ℝ)) ^ (2 : ℕ)) :\n    let muB : ℝ := (∑ i ∈ B, b i) / (B.card : ℝ)\n    let Qb : ℝ := ∑ i ∈ B, (b i - muB) ^ (2 : ℕ)\n    let Q : ℝ := ∑ i : Fin n,\n      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)\n    let T : ℝ := @ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))\n      0\n      (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *\n        ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q)\n    0 < Q ∧\n      (max T 0) ^ (2 : ℕ) ≤\n        ((n : ℝ) - 1) *\n          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +\n            ((Finset.univ \\ B).card : ℝ) / (B.card : ℝ))",
+      "dependencies": [
+        "H01",
+        "H02"
+      ]
+    },
+    {
+      "id": "H04",
+      "visibility": "private",
+      "name": "original_statistic_eq_offset_form",
+      "kind": "theorem",
+      "status": "PROPOSED_NOT_FROZEN",
+      "sourceRole": "Exact algebraic bridge to original centered-row T=(W+D)/s, including zero convention.",
+      "head": "private theorem original_statistic_eq_offset_form\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (hsym : ∀ a b : Ω, r a b = r b a) (hn : 4 ≤ n) :\n    let b : Fin n → ℝ := fun i : Fin n =>\n      g (x i) + Shao.OQ5.P51.residualU n r x i\n    let F : ℝ :=\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x\n    let c : ℝ := F / (((n : ℝ) - 1) * ((n : ℝ) - 2))\n    let Q : ℝ := ∑ i : Fin n,\n      (Shao.OQ5.P35.center b i) ^ (2 : ℕ)\n    let s : ℝ := Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)\n    (@ite ℝ (s = 0) (Classical.propDecidable (s = 0))\n      0\n      ((Shao.OQ5.P51.projectionW n g x +\n        Shao.OQ5.P51.residualStatisticD n r x) / s)) =\n      (@ite ℝ (Q = 0) (Classical.propDecidable (Q = 0))\n        0\n        (Real.sqrt (((n : ℝ) - 1) / (n : ℝ)) *\n          ((∑ i : Fin n, b i) - (n : ℝ) * c) / Real.sqrt Q))",
+      "dependencies": [
+        "Shao.OQ5.P51.residualU_eq_erased_row",
+        "Shao.OQ5.P35.offDiagonalSum_eq_two_unordered",
+        "Shao.OQ5.P51.centeredSq_eq_center_sum"
+      ]
+    },
+    {
+      "id": "H05",
+      "visibility": "public",
+      "name": "original_finite_exceptional_block_optimization",
+      "kind": "theorem",
+      "status": "PROPOSED_NOT_FROZEN",
+      "sourceRole": "Literal original statistic p41(3), with source guards n>=4 and m>=3.",
+      "head": "theorem original_finite_exceptional_block_optimization\n    (n : ℕ) {Ω : Type u}\n    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)\n    (B : Finset (Fin n))\n    (hsym : ∀ a b : Ω, r a b = r b a)\n    (hn : 4 ≤ n) (hB : 3 ≤ B.card)\n    (hQb : 0 < ∑ i ∈ B,\n      ((g (x i) + Shao.OQ5.P51.residualU n r x i) -\n        (∑ j ∈ B, (g (x j) + Shao.OQ5.P51.residualU n r x j)) /\n          (B.card : ℝ)) ^ (2 : ℕ)) :\n    let b : Fin n → ℝ := fun i : Fin n =>\n      g (x i) + Shao.OQ5.P51.residualU n r x i\n    let muB : ℝ := (∑ i ∈ B, b i) / (B.card : ℝ)\n    let Qb : ℝ := ∑ i ∈ B, (b i - muB) ^ (2 : ℕ)\n    let F : ℝ :=\n      Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper n r x\n    let c : ℝ := F / (((n : ℝ) - 1) * ((n : ℝ) - 2))\n    let s : ℝ := Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)\n    let T : ℝ := @ite ℝ (s = 0) (Classical.propDecidable (s = 0))\n      0\n      ((Shao.OQ5.P51.projectionW n g x +\n        Shao.OQ5.P51.residualStatisticD n r x) / s)\n    0 < s ∧\n      (max T 0) ^ (2 : ℕ) ≤\n        ((n : ℝ) - 1) *\n          ((n : ℝ) * (max (muB - c) 0) ^ (2 : ℕ) / Qb +\n            ((Finset.univ \\ B).card : ℝ) / (B.card : ℝ))",
+      "dependencies": [
+        "H03",
+        "H04",
+        "Shao.OQ5.P51.centeredSq_eq_center_sum"
+      ]
+    }
+  ],
+  "nextScopeExcluded": [
+    "p41(4) background numerator identity",
+    "p41(5) internal-block product-envelope and centered-norm estimates",
+    "unconditional rare-block integration"
+  ]
+}
