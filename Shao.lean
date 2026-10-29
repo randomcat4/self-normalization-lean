@@ -946,6 +946,7 @@ import Shao.OQ6.OriginalLevelDependentUpperPhysicalFrontier
 import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
+import Shao.OQ6.OriginalLogarithmicConditionalCenteredPhysicalTail
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalPhysicalClippedTailTransfer

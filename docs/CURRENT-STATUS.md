@@ -1,8 +1,8 @@
 # Current mathematical status
 
-v128 accepts unit226 original-model literal full/deleted envelopes with genuine unweighted L1, pointwise retained-coordinate factors and epsilon-independent fixed payments; its all-real theta limits remain inside each current coding-epsilon packet. Unit227 separately proves generic fixed-model signed full/deleted weighted and compact integral/ratio/finite-cost convergence with one common full normalizer. Original-model sequence instantiation, Qepsilon coefficient control, strict source budgets, CDF/ShaoZhou and full OQ56 remain open.
+v161 accepts unit273 for the SAME fixed original mu/h: actual logarithmic conditional law, true standardized kernel/projection/residual, pointwise centered jackknife statistic identity, and its physical closed-tail bound with supplied external hSZ. The common threshold precedes n/lambda/m/z for this fixed original model. The uncentered random-denominator mean shift, exceptional-background transfer to all original samples, external hSZ/hSZC existence and attribution, compact/CDF consumers and full OQ56 remain OPEN. Accepted v160 subcritical-window consequences and earlier same-witness costs/strict budgets/actual bad-event payments are retained.
 
-As of 2026-10-27 (Asia/Singapore), the accepted mathematical snapshot is v128. The [machine-readable scope ledger](original-scope-status.json) and [evidence index](EVIDENCE.md) distinguish original accepted conclusions, active work and unproved extensions. Later documentation-only commits do not change proof credit.
+The current authority is coordination/REGISTRY.json/currentAuthoritativeState and library/SNAPSHOT.json. Historical component rows below are retained evidence, not the latest acceptance pointer or a completion percentage.
 
 ## C1 and C2
 
@@ -12,7 +12,7 @@ C2's original g:double, g:absolute, m:B, m:A and m:C conclusions are all accepte
 
 ## OQ3
 
-OQ3 remains separately paused by the human. The fixed jointly nonlattice saddle-remainder counterexample is retained in [SourceCounterexampleRoot](../Shao/OQ3/SourceCounterexampleRoot.lean). A general restart or coordinator replacement does not reactivate OQ3, and the paused B/D roots are not claimed complete.
+OQ3's assigned original A-D scope is complete at v150/PR537 and its owner is naturally idle. A retains the accepted counterexample. B/C are the fixed-law, fixed-positive-parameter conditional repairs. D uses the same actual strictness witness and actual saddle for the corrected tail expansion at all sufficiently small fixed positive parameters, with actual exterior probability payment. Changing-window uniformity, endpoints, all broader historical fullOQ3 claims and novelty are not certified. No new OQ3 assignment is active.
 
 ## OQ4
 
@@ -26,7 +26,7 @@ This closes this precise current changing-row extension. It does not certify eve
 
 ## OQ56
 
-OQ56 remains open. The following are accepted components, rather than a full-root completion claim:
+OQ56 remains open. Unit273 at v161 closes the actual logarithmic conditional centered application described above. It proves the conditional product identity for every measurable event, retains zero denominators, and records the uncentered random shift exactly; that shift still requires quantitative tail payment. The earlier bounded-class same-witness fee/strict-budget/good-event chain and v160 subcritical consequences are accepted. The following older rows remain as historical component evidence:
 
 | Snapshot | Components | Retained boundary |
 | --- | --- | --- |
