@@ -947,6 +947,7 @@ import Shao.OQ6.OriginalLevelDependentWeightedSourceCost
 import Shao.OQ6.OriginalLiteralRemainderEnvelope
 import Shao.OQ6.OriginalLiteralWeightedConsumer
 import Shao.OQ6.OriginalLogarithmicConditionalCenteredPhysicalTail
+import Shao.OQ6.OriginalLogarithmicConditionalUncenteredPhysicalTail
 import Shao.OQ6.OriginalLowEnergyTail
 import Shao.OQ6.OriginalNormalizedUpperTail
 import Shao.OQ6.OriginalPhysicalClippedTailTransfer
@@ -985,6 +986,7 @@ import Shao.OQ6.UniformPMomentActualGoodsetFrontier
 import Shao.OQ6.UniformPMomentGeneralSubcriticalWindowPhysicalRelativeConvergence
 import Shao.OQ6.UniformPMomentGoodsetPhysicalPayment
 import Shao.OQ6.UniformPMomentLowEnergy
+import Shao.OQ6.UniformPMomentOriginalPhysicalCompactCDF
 import Shao.OQ6.UniformPMomentPhysicalFiniteCostTail
 import Shao.OQ6.UniformPMomentSingleWindowPhysicalRelativePolynomialRate
 import Shao.OQ6.UniformPMomentSubcriticalPowerWindowPhysicalRelativeDecay
