@@ -1,0 +1,24 @@
+:= by
+  classical
+  have hpair (i j : Fin n) :
+      Measurable (fun x : Fin n → Ω => (x i, x j)) :=
+    (measurable_pi_apply i).prodMk (measurable_pi_apply j)
+  have hrx (i j : Fin n) :
+      Measurable (fun x : Fin n → Ω => r (x i) (x j)) := by
+    exact Measurable.comp (g := Function.uncurry r)
+      (f := fun x : Fin n → Ω => (x i, x j)) hr (hpair i j)
+  have hwx (i : Fin n) :
+      Measurable (fun x : Fin n → Ω => w (x i)) :=
+    hw.comp (measurable_pi_apply i)
+  change MeasurableSet
+    ({x : Fin n → Ω | ∀ i : Fin n, 0 ≤ w (x i)} ∩
+      {x : Fin n → Ω | ∀ i j : Fin n,
+        i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j)})
+  apply MeasurableSet.inter
+  · simp only [Set.ofPred_forall]
+    exact MeasurableSet.iInter fun i =>
+      measurableSet_le measurable_const (hwx i)
+  · simp only [Set.ofPred_forall]
+    exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
+      MeasurableSet.iInter fun _ =>
+        measurableSet_le (hrx i j).abs ((hwx i).mul (hwx j))

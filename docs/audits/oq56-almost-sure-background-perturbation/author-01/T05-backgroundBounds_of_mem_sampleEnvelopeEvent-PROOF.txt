@@ -1,0 +1,19 @@
+:= by
+  change (∀ i : Fin n, 0 ≤ w (x i)) ∧
+    (∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j)) at hx
+  rcases hx with ⟨hxW, hxR⟩
+  unfold sampleBackgroundBounds
+  intro v B
+  constructor
+  · exact anomaly_pair_envelope_bound B
+      (fun i j : Fin n => r (x i) (x j)) (fun i : Fin n => w (x i)) hxW hxR
+  · intro hn
+    constructor
+    · intro i hi
+      exact adjustedRow_sub_backgroundRow_bound B v
+        (fun a b : Fin n => r (x a) (x b)) (fun a : Fin n => w (x a))
+        hn hxW hxR i hi
+    · intro hm
+      exact background_centered_norm_perturbation B v
+        (fun a b : Fin n => r (x a) (x b)) (fun a : Fin n => w (x a))
+        hn hm hxW hxR

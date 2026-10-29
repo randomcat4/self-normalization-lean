@@ -1,0 +1,58 @@
+ProbabilityTheory.iIndepFun_pi
+CONTEXT
+{ι : Type*} [Fintype ι] {Ω : ι → Type*} {mΩ : ∀ i, MeasurableSpace (Ω i)}
+{μ : (i : ι) → Measure (Ω i)} [∀ i, IsProbabilityMeasure (μ i)]
+{𝓧 : ι → Type*} [∀ i, MeasurableSpace (𝓧 i)] {X : (i : ι) → Ω i → 𝓧 i}
+SOURCE HEAD
+lemma iIndepFun_pi (mX : ∀ i, AEMeasurable (X i) (μ i)) :
+    iIndepFun (fun i ω ↦ X i (ω i)) (Measure.pi μ)
+
+ProbabilityTheory.iIndepFun.indepFun
+CONTEXT
+{Ω ι : Type*} {_mΩ : MeasurableSpace Ω} {μ : Measure Ω}
+SOURCE HEAD
+theorem iIndepFun.indepFun {β : ι → Type*}
+    {m : ∀ x, MeasurableSpace (β x)} {f : ∀ i, Ω → β i} (hf_Indep : iIndepFun f μ) {i j : ι}
+    (hij : i ≠ j) :
+    f i ⟂ᵢ[μ] f j
+
+ProbabilityTheory.IndepFun.map_prod_eq_prod_map_map
+CONTEXT
+{Ω β β' : Type*} {_mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f : Ω → β} {g : Ω → β'}
+SOURCE HEAD
+theorem indepFun_iff_map_prod_eq_prod_map_map {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'}
+    [IsFiniteMeasure μ] (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) :
+    f ⟂ᵢ[μ] g ↔ μ.map (fun ω ↦ (f ω, g ω)) = (μ.map f).prod (μ.map g)
+alias ⟨IndepFun.map_prod_eq_prod_map_map, _⟩ := indepFun_iff_map_prod_eq_prod_map_map
+
+MeasureTheory.MeasurePreserving.quasiMeasurePreserving
+CONTEXT
+{α β : Type*} [MeasurableSpace α] [MeasurableSpace β] {μa : Measure α} {μb : Measure β}
+SOURCE HEAD
+protected theorem quasiMeasurePreserving {f : α → β} (hf : MeasurePreserving f μa μb) :
+    QuasiMeasurePreserving f μa μb
+
+MeasureTheory.QuasiMeasurePreserving.ae
+CONTEXT
+{α β : Type*} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
+{μa : Measure α} {μb : Measure β} {f : α → β}
+SOURCE HEAD
+theorem ae (h : QuasiMeasurePreserving f μa μb) {p : β → Prop} (hg : ∀ᵐ x ∂μb, p x) :
+    ∀ᵐ x ∂μa, p (f x)
+
+MeasureTheory.measurePreserving_eval
+CONTEXT
+{ι : Type*} [Fintype ι] {α : ι → Type*} [∀ i, MeasurableSpace (α i)] (μ : (i : ι) → Measure (α i))
+No SigmaFinite typeclass remains in this lemma: the source says omit [∀ i, SigmaFinite (μ i)] in.
+SOURCE HEAD
+lemma _root_.MeasureTheory.measurePreserving_eval [∀ i, IsProbabilityMeasure (μ i)] (i : ι) :
+    MeasurePreserving (Function.eval i) (Measure.pi μ) (μ i)
+
+MeasureTheory.MeasurePreserving.map_eq
+CONTEXT
+{α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
+SOURCE HEAD
+structure MeasurePreserving (f : α → β)
+  (μa : Measure α := by volume_tac) (μb : Measure β := by volume_tac) : Prop where
+  protected measurable : Measurable f
+  protected map_eq : map f μa = μb

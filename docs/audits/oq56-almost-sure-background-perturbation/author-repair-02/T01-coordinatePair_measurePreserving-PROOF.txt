@@ -1,0 +1,12 @@
+:= by
+  have hind : iIndepFun
+      (fun (k : Fin n) (x : Fin n → Ω) => x k)
+      (Measure.pi (fun _ : Fin n => μ)) :=
+    iIndepFun_pi (μ := fun _ : Fin n => μ)
+      (X := fun _ (o : Ω) => o) (fun _ => measurable_id.aemeasurable)
+  refine ⟨(measurable_pi_apply i).prodMk (measurable_pi_apply j), ?_⟩
+  have hmap := (hind.indepFun hij).map_prod_eq_prod_map_map
+    (measurable_pi_apply i).aemeasurable (measurable_pi_apply j).aemeasurable
+  rw [(measurePreserving_eval (fun _ : Fin n => μ) i).map_eq,
+    (measurePreserving_eval (fun _ : Fin n => μ) j).map_eq] at hmap
+  exact hmap

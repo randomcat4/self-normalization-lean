@@ -1,0 +1,24 @@
+def sampleEnvelopeEvent (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ) : Set (Fin n → Ω) :=
+  {x | (∀ i : Fin n, 0 ≤ w (x i)) ∧
+    (∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j))}
+
+def sampleBackgroundBounds (n : ℕ) {Ω : Type u}
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω) : Prop :=
+  ∀ (v : Fin n → ℝ) (B : Finset (Fin n)),
+    |blockPairSum (anomaly B) (fun i j : Fin n => r (x i) (x j))| ≤
+        (anomalyWeight B (fun i : Fin n => w (x i))) ^ (2 : ℕ) / 2 ∧
+    (4 ≤ n →
+      (∀ i : Fin n, i ∈ B →
+        |adjustedRow v (fun a b : Fin n => r (x a) (x b)) i -
+          backgroundRow B v (fun a b : Fin n => r (x a) (x b)) i| ≤
+          anomalyWeight B (fun a : Fin n => w (x a)) * w (x i) /
+            ((n : ℝ) - 2)) ∧
+      (3 ≤ B.card →
+        |Real.sqrt (blockCenteredEnergy B
+            (adjustedRow v (fun a b : Fin n => r (x a) (x b)))) -
+          Real.sqrt ((B.card : ℝ) - 1) *
+            backgroundStudentizer B v (fun a b : Fin n => r (x a) (x b))| ≤
+          anomalyWeight B (fun a : Fin n => w (x a)) *
+            Real.sqrt (backgroundWeightEnergy B (fun a : Fin n => w (x a))) /
+              ((n : ℝ) - 2)))

@@ -1,0 +1,1141 @@
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.sum_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (f : Fin n → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{0, 0} (Fin (@Finset.card.{0} (Fin n) B)) Real Real.instAddCommMonoid
+      (@Finset.univ.{0} (Fin (@Finset.card.{0} (Fin n) B)) (Fin.fintype (@Finset.card.{0} (Fin n) B)))
+      fun (j : Fin (@Finset.card.{0} (Fin n) B)) =>
+      f
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j)))
+    (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => f i)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_background_zero : ∀ {n : Nat}
+  {Ω : Type u} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B))
+  (hs :
+    @Eq.{1} Real
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+        fun (i j : Fin n) => r (x i) (x j))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))),
+  @Eq.{1} Real
+    (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic.{u} (@Finset.card.{0} (Fin n) B) Ω g
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_3 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.centeredSq_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P51.centeredSq.{u} (@Finset.card.{0} (Fin n) B) Ω g
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockCenteredEnergy n B
+        (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundRow n B (fun (i : Fin n) => g (x i)) fun (i j : Fin n) =>
+          r (x i) (x j)))
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+        (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+_private.Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.0.Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.background_index_injective : ∀
+  {n : Nat} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)),
+  @Function.Injective.{1, 1} (Fin (@Finset.card.{0} (Fin n) B)) (Fin n) fun (j : Fin (@Finset.card.{0} (Fin n) B)) =>
+    @Subtype.val.{1} (Fin n)
+      (fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+      (@DFunLike.coe.{1, 1, 1}
+        (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+          (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+        (Fin (@Finset.card.{0} (Fin n) B))
+        (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+          @Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+        (@EquivLike.toFunLike.{1, 1, 1}
+          (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+          (Fin (@Finset.card.{0} (Fin n) B))
+          (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)))
+        e j)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_3 : ∀ {α : Type u_2}
+  [inst : Zero.{u_2} α] [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.projectionW_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (x : Fin n → Ω),
+  @Eq.{1} Real
+    (@Shao.OQ5.P51.projectionW.{u} (@Finset.card.{0} (Fin n) B) Ω g
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid B fun (i : Fin n) => g (x i))
+      (Real.sqrt (@Nat.cast.{0} Real Real.instNatCast (@Finset.card.{0} (Fin n) B))))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_5 : ∀
+  {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.adjusted_row_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω)
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B))
+  (j : Fin (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (g (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x j))
+      (@Shao.OQ5.P51.residualU.{u} (@Finset.card.{0} (Fin n) B) Ω
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x) j))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundRow n B (fun (i : Fin n) => g (x i))
+      (fun (i k : Fin n) => r (x i) (x k))
+      (@Subtype.val.{1} (Fin n)
+        (fun (i : Fin n) =>
+          @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+            (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+        (@DFunLike.coe.{1, 1, 1}
+          (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+          (Fin (@Finset.card.{0} (Fin n) B))
+          (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+            @Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@EquivLike.toFunLike.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)))
+          e j)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_5 : ∀
+  {M₀ : Type u_1} [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.card_ge_four_of_half_sample : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 8) (instOfNatNat (nat_lit 8))) n)
+  (hhalf :
+    @LE.le.{0} Nat instLENat n
+      (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) (@Finset.card.{0} (Fin n) B))),
+  @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.centered_energy_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (f : Fin n → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{0, 0} (Fin (@Finset.card.{0} (Fin n) B)) Real Real.instAddCommMonoid
+      (@Finset.univ.{0} (Fin (@Finset.card.{0} (Fin n) B)) (Fin.fintype (@Finset.card.{0} (Fin n) B)))
+      fun (j : Fin (@Finset.card.{0} (Fin n) B)) =>
+      @HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@Shao.OQ5.P35.center (@Finset.card.{0} (Fin n) B)
+          (fun (k : Fin (@Finset.card.{0} (Fin n) B)) =>
+            f
+              (@Subtype.val.{1} (Fin n)
+                (fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+                (@DFunLike.coe.{1, 1, 1}
+                  (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                    (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                      @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                        (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n)))
+                        B i))
+                  (Fin (@Finset.card.{0} (Fin n) B))
+                  (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+                    @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                      @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                        (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n)))
+                        B i)
+                  (@EquivLike.toFunLike.{1, 1, 1}
+                    (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n)
+                            (@Finset.instSetLike.{0} (Fin n)))
+                          B i))
+                    (Fin (@Finset.card.{0} (Fin n) B))
+                    (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                      @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                        (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n)))
+                        B i)
+                    (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n)
+                            (@Finset.instSetLike.{0} (Fin n)))
+                          B i)))
+                  e k)))
+          j)
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockCenteredEnergy n B f)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_4 : ∀ {M₀ : Type u_1}
+  [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.sqrt_centeredSq_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (Real.sqrt
+      (@Shao.OQ5.P51.centeredSq.{u} (@Finset.card.{0} (Fin n) B) Ω g
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x)))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+      fun (i j : Fin n) => r (x i) (x j))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual : {n : Nat} →
+  {Ω : Type u} → (B : Finset.{0} (Fin n)) → (r : Ω → Ω → Real) → Ω → Ω → Real
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.erased_row_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (H : Fin n → Fin n → Real) (j : Fin (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Finset.sum.{0, 0} (Fin (@Finset.card.{0} (Fin n) B)) Real Real.instAddCommMonoid
+      (@Finset.erase.{0} (Fin (@Finset.card.{0} (Fin n) B)) (instDecidableEqFin (@Finset.card.{0} (Fin n) B))
+        (@Finset.univ.{0} (Fin (@Finset.card.{0} (Fin n) B)) (Fin.fintype (@Finset.card.{0} (Fin n) B))) j)
+      fun (k : Fin (@Finset.card.{0} (Fin n) B)) =>
+      H
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j))
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e k)))
+    (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid
+      (@Finset.erase.{0} (Fin n) (instDecidableEqFin n) B
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j)))
+      fun (i : Fin n) =>
+      H
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j))
+        i)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_6 : ∀
+  {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_7 : ∀
+  {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_7 : ∀
+  {R : Type u_1} [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.jackknife_root_eq_two_sqrt_centeredSq : ∀ (n : Nat)
+  {Ω : Type u} (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω)
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n),
+  @Eq.{1} Real (Real.sqrt (@Shao.OQ6.FiniteRows.jackknifeSq n (@Shao.OQ5.P51.sampledKernel.{u} n Ω g r x)))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@OfNat.ofNat.{0} Real (nat_lit 2)
+        (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+      (Real.sqrt (@Shao.OQ5.P51.centeredSq.{u} n Ω g r x)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator : ∀ {n : Nat}
+  {Ω : Type u} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (r : Ω → Ω → Real) (x : Fin n → Ω)
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B))
+  (j : Fin (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P51.residualU.{u} (@Finset.card.{0} (Fin n) B) Ω
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x) j)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Finset.sum.{0, 0} (Fin n) Real Real.instAddCommMonoid
+        (@Finset.erase.{0} (Fin n) (instDecidableEqFin n) B
+          (@Subtype.val.{1} (Fin n)
+            (fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@DFunLike.coe.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+                @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@EquivLike.toFunLike.{1, 1, 1}
+                (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i))
+                (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+                (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i)))
+              e j)))
+        fun (i : Fin n) =>
+        r
+          (x
+            (@Subtype.val.{1} (Fin n)
+              (fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@DFunLike.coe.{1, 1, 1}
+                (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i))
+                (Fin (@Finset.card.{0} (Fin n) B))
+                (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+                  @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i)
+                (@EquivLike.toFunLike.{1, 1, 1}
+                  (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                    (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                      @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                        (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n)))
+                        B i))
+                  (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i)
+                  (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                    (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                      @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                        (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n)))
+                        B i)))
+                e j)))
+          (x i))
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub) (@Nat.cast.{0} Real Real.instNatCast n)
+        (@OfNat.ofNat.{0} Real (nat_lit 2)
+          (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+            (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+              (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_3 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 4) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic : (n : Nat) →
+  {Ω : Type u} → (g : Ω → Real) → (r : Ω → Ω → Real) → (x : Fin n → Ω) → Real
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.unorderedPairSum_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (H : Fin n → Fin n → Real) (hsym : ∀ (i j : Fin n), @Eq.{1} Real (H i j) (H j i)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P35.unorderedPairSum (@Finset.card.{0} (Fin n) B) fun (j k : Fin (@Finset.card.{0} (Fin n) B)) =>
+      H
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j))
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e k)))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockPairSum n B H)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_6 : ∀
+  {G₀ : Type u_3} [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_background_guarded : ∀ {n : Nat}
+  {Ω : Type u} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic.{u} (@Finset.card.{0} (Fin n) B) Ω g
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (have s : Real :=
+      @Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+        fun (i j : Fin n) => r (x i) (x j);
+    @ite.{1} Real (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+      (Classical.propDecidable
+        (@Eq.{1} Real s (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundNumerator n B (fun (i : Fin n) => g (x i))
+          fun (i j : Fin n) => r (x i) (x j))
+        s))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.jackknife_root_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (Real.sqrt
+      (@Shao.OQ6.FiniteRows.jackknifeSq (@Finset.card.{0} (Fin n) B)
+        (@Shao.OQ5.P51.sampledKernel.{u} (@Finset.card.{0} (Fin n) B) Ω g
+          (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+          (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@OfNat.ofNat.{0} Real (nat_lit 2)
+        (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+          (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+            (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+        fun (i j : Fin n) => r (x i) (x j)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_4 : ∀
+  {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.mean_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (f : Fin n → Real),
+  @Eq.{1} Real
+    (@Shao.OQ5.P35.mean (@Finset.card.{0} (Fin n) B) fun (j : Fin (@Finset.card.{0} (Fin n) B)) =>
+      f
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j)))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockMean n B f)
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_1 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_2 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_7 : ∀ {R : Type u_1}
+  [inst : AddMonoidWithOne.{u_1} R] [@CharZero.{u_1} R inst] (n : Nat),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} R
+      (@HAdd.hAdd.{u_1, u_1, u_1} R R R
+        (@instHAdd.{u_1} R
+          (@AddSemigroup.toAdd.{u_1} R
+            (@AddMonoid.toAddSemigroup.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst))))
+        (@Nat.cast.{u_1} R (@AddMonoidWithOne.toNatCast.{u_1} R inst) n)
+        (@OfNat.ofNat.{u_1} R (nat_lit 1) (@One.toOfNat1.{u_1} R (@AddMonoidWithOne.toOne.{u_1} R inst))))
+      (@OfNat.ofNat.{u_1} R (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} R
+          (@AddZero.toZero.{u_1} R
+            (@AddZeroClass.toAddZero.{u_1} R
+              (@AddMonoid.toAddZeroClass.{u_1} R (@AddMonoidWithOne.toAddMonoid.{u_1} R inst)))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_6 : ∀ {G₀ : Type u_3}
+  [inst : GroupWithZero.{u_3} G₀] {a : G₀} (n : Int),
+  @Ne.{u_3 + 1} G₀ a
+      (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_3} G₀
+          (@MulZeroClass.toZero.{u_3} G₀
+            (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+              (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))) →
+    @Eq.{1} Prop
+      (@Eq.{u_3 + 1} G₀
+        (@HPow.hPow.{u_3, 0, u_3} G₀ Int G₀
+          (@instHPow.{u_3, 0} G₀ Int
+            (@ZPow.toPow.{u_3} G₀ (@DivInvMonoid.toZPow.{u_3} G₀ (@GroupWithZero.toDivInvMonoid.{u_3} G₀ inst))))
+          a n)
+        (@OfNat.ofNat.{u_3} G₀ (nat_lit 0)
+          (@Zero.toOfNat0.{u_3} G₀
+            (@MulZeroClass.toZero.{u_3} G₀
+              (@MulZeroOneClass.toMulZeroClass.{u_3} G₀
+                (@MonoidWithZero.toMulZeroOneClass.{u_3} G₀ (@GroupWithZero.toMonoidWithZero.{u_3} G₀ inst)))))))
+      False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_5 : ∀ {M₀ : Type u_1}
+  [inst : MonoidWithZero.{u_1} M₀] {a : M₀}
+  [@IsReduced.{u_1} M₀
+      (@MulZeroClass.toZero.{u_1} M₀
+        (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))
+      (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst)))]
+  (n : Nat)
+  (h :
+    @Ne.{u_1 + 1} M₀ a
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst)))))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀
+      (@HPow.hPow.{u_1, 0, u_1} M₀ Nat M₀
+        (@instHPow.{u_1, 0} M₀ Nat
+          (@NPow.toPow.{u_1} M₀ (@Monoid.toNPow.{u_1} M₀ (@MonoidWithZero.toMonoid.{u_1} M₀ inst))))
+        a n)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} M₀
+          (@MulZeroClass.toZero.{u_1} M₀
+            (@MulZeroOneClass.toMulZeroClass.{u_1} M₀ (@MonoidWithZero.toMulZeroOneClass.{u_1} M₀ inst))))))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio._simp_1_4 : ∀
+  {M₀ : Type u_1} [inst : Mul.{u_1} M₀] [inst_1 : Zero.{u_1} M₀] [@NoZeroDivisors.{u_1} M₀ inst inst_1] {a b : M₀}
+  (ha : @Ne.{u_1 + 1} M₀ a (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+  (hb : @Ne.{u_1 + 1} M₀ b (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1))),
+  @Eq.{1} Prop
+    (@Eq.{u_1 + 1} M₀ (@HMul.hMul.{u_1, u_1, u_1} M₀ M₀ M₀ (@instHMul.{u_1} M₀ inst) a b)
+      (@OfNat.ofNat.{u_1} M₀ (nat_lit 0) (@Zero.toOfNat0.{u_1} M₀ inst_1)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_background_total_ratio : ∀ {n : Nat}
+  {Ω : Type u} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic.{u} (@Finset.card.{0} (Fin n) B) Ω g
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundNumerator n B (fun (i : Fin n) => g (x i))
+        fun (i j : Fin n) => r (x i) (x j))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+        fun (i j : Fin n) => r (x i) (x j)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background : ∀ {n : Nat} {Ω : Type u}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n)
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4)))
+      (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@Shao.OQ5.P51.projectionW.{u} (@Finset.card.{0} (Fin n) B) Ω g
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+      (@Shao.OQ5.P51.residualStatisticD.{u} (@Finset.card.{0} (Fin n) B) Ω
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x)))
+    (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundNumerator n B (fun (i : Fin n) => g (x i))
+      fun (i j : Fin n) => r (x i) (x j))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_2 : ∀ {α : Type u_2}
+  [inst : Zero.{u_2} α] [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.originalUpper_scaled_background : ∀ {n : Nat}
+  {Ω : Type u} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a)),
+  @Eq.{1} Real
+    (@Shao.OQ6.CanonicalDoubleGhostScalarMoments.originalUpper.{u} (@Finset.card.{0} (Fin n) B) Ω
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r)
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e x))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundScale n B)
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockPairSum n B fun (i j : Fin n) => r (x i) (x j)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio : ∀ (n : Nat)
+  {Ω : Type u} (g : Ω → Real) (r : Ω → Ω → Real) (x : Fin n → Ω) (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hn : @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) n),
+  @Eq.{1} Real (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic.{u} n Ω g r x)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (@Shao.OQ5.P51.projectionW.{u} n Ω g x)
+        (@Shao.OQ5.P51.residualStatisticD.{u} n Ω r x))
+      (Real.sqrt (@Shao.OQ5.P51.centeredSq.{u} n Ω g r x)))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.numerator_background._simp_1_1 : ∀ {α : Type u_2}
+  [inst : Zero.{u_2} α] [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.center_background_equiv : ∀ {n : Nat}
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (f : Fin n → Real) (j : Fin (@Finset.card.{0} (Fin n) B)),
+  @Eq.{1} Real
+    (@Shao.OQ5.P35.center (@Finset.card.{0} (Fin n) B)
+      (fun (k : Fin (@Finset.card.{0} (Fin n) B)) =>
+        f
+          (@Subtype.val.{1} (Fin n)
+            (fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@DFunLike.coe.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+                @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@EquivLike.toFunLike.{1, 1, 1}
+                (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i))
+                (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+                (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                  (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                    @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                      (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                      i)))
+              e k)))
+      j)
+    (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+      (f
+        (@Subtype.val.{1} (Fin n)
+          (fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@DFunLike.coe.{1, 1, 1}
+            (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+            (Fin (@Finset.card.{0} (Fin n) B))
+            (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+              @Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+            (@EquivLike.toFunLike.{1, 1, 1}
+              (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i))
+              (Fin (@Finset.card.{0} (Fin n) B))
+              (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                  (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+              (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+                (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+                  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+                    i)))
+            e j)))
+      (@Shao.OQ5.P41.FiniteBackgroundPerturbation.blockMean n B f))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample : {n : Nat} →
+  {Ω : Type u} →
+    (B : Finset.{0} (Fin n)) →
+      (e :
+          Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)) →
+        (x : Fin n → Ω) → Fin (@Finset.card.{0} (Fin n) B) → Ω
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_2 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 3) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False
+_private.Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.0.Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.background_index_mem : ∀
+  {n : Nat} (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (j : Fin (@Finset.card.{0} (Fin n) B)),
+  @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+    (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B
+    (@Subtype.val.{1} (Fin n)
+      (fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+      (@DFunLike.coe.{1, 1, 1}
+        (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+          (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+        (Fin (@Finset.card.{0} (Fin n) B))
+        (fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+          @Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+        (@EquivLike.toFunLike.{1, 1, 1}
+          (Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+          (Fin (@Finset.card.{0} (Fin n) B))
+          (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+            @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+              (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+          (@Equiv.instEquivLike.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+            (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+              @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+                (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)))
+        e j))
+Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.residualU_background_original_denominator._simp_1_1 : ∀
+  {α : Type u_2} [inst : Zero.{u_2} α]
+  [inst_1 : OfNat.{u_2} α (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))]
+  [@NeZero.{u_2} α inst (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)],
+  @Eq.{1} Prop
+    (@Eq.{u_2 + 1} α (@OfNat.ofNat.{u_2} α (nat_lit 2) inst_1)
+      (@OfNat.ofNat.{u_2} α (nat_lit 0) (@Zero.toOfNat0.{u_2} α inst)))
+    False

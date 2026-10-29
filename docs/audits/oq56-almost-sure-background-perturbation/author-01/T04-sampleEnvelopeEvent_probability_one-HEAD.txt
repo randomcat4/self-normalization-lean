@@ -1,0 +1,8 @@
+theorem sampleEnvelopeEvent_probability_one (n : ℕ) {Ω : Type u}
+    [mΩ : MeasurableSpace Ω] (μ : Measure Ω) [hμ : IsProbabilityMeasure μ]
+    (r : Ω → Ω → ℝ) (w : Ω → ℝ)
+    (hmr : Measurable (Function.uncurry r)) (hmw : Measurable w)
+    (hw : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+    (hr : ∀ᵐ p : Ω × Ω ∂μ.prod μ, |r p.1 p.2| ≤ w p.1 * w p.2) :
+    (Measure.pi (fun _ : Fin n => μ)) (sampleEnvelopeEvent n r w) = 1 ∧
+      (Measure.pi (fun _ : Fin n => μ)).real (sampleEnvelopeEvent n r w) = 1

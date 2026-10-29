@@ -1,0 +1,81 @@
+:= by
+  have hind : iIndepFun
+      (fun (k : Fin n) (x : Fin n → Ω) => x k)
+      (Measure.pi (fun _ : Fin n => μ)) :=
+    iIndepFun_pi (μ := fun _ : Fin n => μ)
+      (X := fun _ (o : Ω) => o) (fun _ => measurable_id.aemeasurable)
+  refine ⟨(measurable_pi_apply i).prodMk (measurable_pi_apply j), ?_⟩
+  have hmap := (hind.indepFun hij).map_prod_eq_prod_map_map
+    (measurable_pi_apply i).aemeasurable (measurable_pi_apply j).aemeasurable
+  rw [(measurePreserving_eval (fun _ : Fin n => μ) i).map_eq,
+    (measurePreserving_eval (fun _ : Fin n => μ) j).map_eq] at hmap
+  exact hmap
+
+:= by
+  have hW (i : Fin n) :
+      ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ), 0 ≤ w (x i) :=
+    (measurePreserving_eval (fun _ : Fin n => μ) i).quasiMeasurePreserving.ae hw
+  have hR (i j : Fin n) :
+      ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+        i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j) := by
+    by_cases hij : i ≠ j
+    · exact ((coordinatePair_measurePreserving n μ i j hij).quasiMeasurePreserving.ae hr).mono
+        (fun x hx _ => hx)
+    · exact Filter.Eventually.of_forall (fun x hne => False.elim (hij hne))
+  have hWAll : ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      ∀ i : Fin n, 0 ≤ w (x i) :=
+    Filter.eventually_all.2 hW
+  have hRAll : ∀ᵐ x : Fin n → Ω ∂Measure.pi (fun _ : Fin n => μ),
+      ∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j) :=
+    Filter.eventually_all.2 (fun i => Filter.eventually_all.2 (fun j => hR i j))
+  filter_upwards [hWAll, hRAll] with x hxW hxR
+  exact ⟨hxW, hxR⟩
+
+:= by
+  classical
+  change MeasurableSet
+    ({x : Fin n → Ω | ∀ i : Fin n, 0 ≤ w (x i)} ∩
+      {x : Fin n → Ω | ∀ i j : Fin n,
+        i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j)})
+  apply MeasurableSet.inter
+  · simp only [Set.ofPred_forall]
+    exact MeasurableSet.iInter fun i =>
+      measurableSet_le measurable_const (hw.comp (measurable_pi_apply i))
+  · simp only [Set.ofPred_forall]
+    exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
+      MeasurableSet.iInter fun _ =>
+        measurableSet_le
+          ((hr.comp ((measurable_pi_apply i).prodMk (measurable_pi_apply j))).abs)
+          ((hw.comp (measurable_pi_apply i)).mul (hw.comp (measurable_pi_apply j)))
+
+:= by
+  have hE : (Measure.pi (fun _ : Fin n => μ)) (sampleEnvelopeEvent n r w) = 1 :=
+    (mem_ae_iff_prob_eq_one
+      (measurableSet_sampleEnvelopeEvent n r w hmr hmw)).mp
+        (ae_sampleEnvelopeEvent n μ r w hw hr)
+  refine ⟨hE, ?_⟩
+  simp only [Measure.real, hE, ENNReal.toReal_one]
+
+:= by
+  change (∀ i : Fin n, 0 ≤ w (x i)) ∧
+    (∀ i j : Fin n, i ≠ j → |r (x i) (x j)| ≤ w (x i) * w (x j)) at hx
+  rcases hx with ⟨hxW, hxR⟩
+  unfold sampleBackgroundBounds
+  intro v B
+  constructor
+  · exact anomaly_pair_envelope_bound B
+      (fun i j : Fin n => r (x i) (x j)) (fun i : Fin n => w (x i)) hxW hxR
+  · intro hn
+    constructor
+    · intro i hi
+      exact adjustedRow_sub_backgroundRow_bound B v
+        (fun a b : Fin n => r (x a) (x b)) (fun a : Fin n => w (x a))
+        hn hxW hxR i hi
+    · intro hm
+      exact background_centered_norm_perturbation B v
+        (fun a b : Fin n => r (x a) (x b)) (fun a : Fin n => w (x a))
+        hn hm hxW hxR
+
+:= by
+  filter_upwards [ae_sampleEnvelopeEvent n μ r w hw hr] with x hx
+  exact ⟨hx, backgroundBounds_of_mem_sampleEnvelopeEvent n r w x hx⟩

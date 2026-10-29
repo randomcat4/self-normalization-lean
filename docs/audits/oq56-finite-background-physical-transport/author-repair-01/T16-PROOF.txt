@@ -1,0 +1,22 @@
+:= by
+  have hJ0 : 0 ≤ Shao.OQ6.FiniteRows.jackknifeSq
+      (Shao.OQ5.P51.sampledKernel n g r x) :=
+    Shao.OQ6.FiniteRows.jackknifeSq_nonneg
+      (Shao.OQ5.P51.sampledKernel n g r x) (le_trans (by decide : 3 ≤ 4) hn)
+  have hC0 : 0 ≤ Shao.OQ5.P51.centeredSq n g r x := by
+    unfold Shao.OQ5.P51.centeredSq
+    exact div_nonneg hJ0 (by norm_num)
+  have hleft : 0 ≤ Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+      (Shao.OQ5.P51.sampledKernel n g r x)) := Real.sqrt_nonneg _
+  have hright : 0 ≤ 2 * Real.sqrt (Shao.OQ5.P51.centeredSq n g r x) :=
+    mul_nonneg (by norm_num) (Real.sqrt_nonneg _)
+  have hsquares :
+      (Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq
+        (Shao.OQ5.P51.sampledKernel n g r x))) ^ (2 : ℕ) =
+      (2 * Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)) ^ (2 : ℕ) := by
+    rw [mul_pow, Real.sq_sqrt hJ0, Real.sq_sqrt hC0]
+    unfold Shao.OQ5.P51.centeredSq
+    ring
+  exact le_antisymm
+    ((sq_le_sq₀ hleft hright).mp hsquares.le)
+    ((sq_le_sq₀ hright hleft).mp hsquares.symm.le)

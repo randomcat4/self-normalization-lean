@@ -1,0 +1,15 @@
+:= by
+  classical
+  have hden := Shao.OQ5.P41.FiniteBackgroundPerturbation.background_denominators_and_scale
+    B hn (le_trans (by decide : 3 ≤ 4) hm)
+  have hn2 : (n : ℝ) - 2 ≠ 0 := ne_of_gt hden.1
+  have hm2 : (B.card : ℝ) - 2 ≠ 0 := ne_of_gt hden.2.1
+  rw [Shao.OQ5.P51.residualU_eq_erased_row]
+  change (∑ k ∈ Finset.univ.erase j,
+      backgroundScale B * r (x ((e j).val)) (x ((e k).val))) /
+        ((B.card : ℝ) - 2) =
+    (∑ i ∈ B.erase ((e j).val), r (x ((e j).val)) (x i)) / ((n : ℝ) - 2)
+  rw [← Finset.mul_sum,
+    erased_row_background_equiv B e (fun i k : Fin n => r (x i) (x k)) j]
+  unfold backgroundScale
+  field_simp [hn2, hm2] <;> ring
