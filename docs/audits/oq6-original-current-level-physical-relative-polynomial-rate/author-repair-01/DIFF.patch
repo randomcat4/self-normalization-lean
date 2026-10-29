@@ -1,0 +1,21 @@
+--- author-01/OriginalCurrentLevelPhysicalRelativePolynomialRate.lean
++++ author-repair-01/OriginalCurrentLevelPhysicalRelativePolynomialRate.lean
+@@ -116,8 +116,10 @@
+       filter_upwards [] with n
+       have hpower : Real.rpow (Real.rpow (n : ℝ) (1 / 3 : ℝ)) (3 / 2 : ℝ) =
+           Real.sqrt (n : ℝ) := by
++        simp only [Real.rpow_eq_pow]
+         rw [← Real.rpow_mul (Nat.cast_nonneg n)]
+         convert (Real.sqrt_eq_rpow (n : ℝ)).symm using 1 <;> norm_num
++      simp only [Real.rpow_eq_pow] at hpower ⊢
+       simp only [Function.comp_def, hpower]
+     have hRsmall : ∀ᶠ n : ℕ in Filter.atTop,
+         Real.sqrt (n : ℝ) *
+@@ -179,7 +181,6 @@
+     dsimp only at hMoment
+     rcases hMoment with ⟨hBeta, hcPositive, hcPower, hcSmall, hMomentAll⟩
+     have hMomentN := hMomentAll n hn1 z hz
+-    dsimp only at hMomentN
+     rcases hMomentN with
+       ⟨hPprob, hScalarInt, hDeltaInt, hDeltaScalar, hLScalar, hLi,
+         hDeltaNonneg, hLNonneg, hRate, hZero, hStrictWindow⟩

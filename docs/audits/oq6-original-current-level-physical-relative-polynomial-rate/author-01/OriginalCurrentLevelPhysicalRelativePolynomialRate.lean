@@ -1,0 +1,357 @@
+import Shao.OQ6.OriginalCurrentLevelPhysicalFiniteCostTail
+import Shao.OQ6.OriginalExceptionalTailAbsorption
+import Shao.OQ6.IIDSourceStrictMomentBudgets
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+
+set_option autoImplicit false
+universe u
+open MeasureTheory ProbabilityTheory
+open scoped BigOperators Classical Topology MeasureTheory symmDiff
+open Shao.OQ5.P51
+
+namespace Shao.OQ6.OriginalCurrentLevelPhysicalRelativePolynomialRate
+noncomputable section
+theorem actual_original_current_level_physical_relative_polynomial_rate
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun t : Ω × Ω => h t.1 t.2))
+    (hh2 : MemLp (fun t : Ω × Ω => h t.1 t.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ t : Ω × Ω, h t.1 t.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond :
+      (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let v : ℝ :=
+      ∫ t : Ω × Ω, r t.1 t.2 ^ 2 ∂(@Measure.prod Ω Ω mΩ mΩ μ μ)
+    let rho : ℝ := Real.sqrt v
+    ∃ cg : ℝ, 0 < cg ∧
+    ∀ (Cenv aenv t0 Menv : ℝ)
+      (hCenv : 0 ≤ Cenv) (haenv : 0 ≤ aenv)
+      (ht0 : 0 < t0) (hMenv : 0 ≤ Menv),
+      ∀ᶠ n : ℕ in Filter.atTop,
+        4 ≤ n ∧
+        ∀ (w : Ω → ℝ)
+          (hW : ∀ᵐ o : Ω ∂μ, 0 ≤ w o)
+          (hWR : ∀ᵐ o : Ω ∂μ, w o ≤ boundedPolylogHeight Cenv aenv n)
+          (hSq : Integrable[mΩ] (fun o : Ω => (w o) ^ (2 : ℕ)) μ)
+          (hSqBound : (∫ o : Ω, (w o) ^ (2 : ℕ) ∂μ) ≤ Menv)
+          (hEnv : ∀ᵐ t : Ω × Ω ∂(@Measure.prod Ω Ω mΩ mΩ μ μ),
+            |r t.1 t.2| ≤ w t.1 * w t.2)
+          (z : ℝ) (hz : 1 ≤ z)
+          (hTiltWindow : z ≤ Real.sqrt (n : ℝ) / (2 * Real.exp (1 / 2 : ℝ)))
+          (hEnvelopeWindow : z ≤ remainderWindowScale
+            (Shao.OQ6.BoundedProductEnvelopeTails.tailScale Menv) t0 *
+              Real.rpow (n : ℝ) (1 / 6 : ℝ))
+          (hGeometry : (1 + rho) * z ≤ Real.sqrt (n : ℝ))
+          (hAbsorptionWindow : z ≤ min (1 : ℝ) (Real.sqrt t0 / (2 : ℝ)) *
+            Real.rpow (n : ℝ) (1 / 6 : ℝ))
+          (p : ℝ) (hp2 : 2 < p) (hp3 : p ≤ 3)
+          (hgp : Integrable[mΩ] (fun o : Ω => Real.rpow |g o| p) μ)
+          (cSZ C1 C2 C3 C4 : ℝ)
+          (hSZ : Shao.OQ6.NormalizedIntegrableTailAssembly.ScalarShaoZhouFiniteCostTailInput.{u}
+            cSZ C1 C2 C3 C4),
+        let β : ℝ := ∫ o : Ω, Real.rpow |g o| p ∂μ
+        let cWindow : ℝ := Real.rpow (min (1 / 2 : ℝ) cSZ / 2) (1 / p)
+        (β = 0 ∨ (0 < β ∧ z ≤ cWindow * Real.rpow β (-1 / p) *
+          Real.rpow (n : ℝ) ((p - 2) / (2 * p)))) →
+        let mN : MeasurableSpace (Fin n → Ω) :=
+          @MeasurableSpace.pi (Fin n) (fun _ : Fin n => Ω) (fun _ : Fin n => mΩ)
+        let P : @Measure (Fin n → Ω) mN :=
+          @Measure.pi (Fin n) (fun _ : Fin n => Ω) (inferInstance : Fintype (Fin n))
+            (fun _ : Fin n => mΩ) (fun _ : Fin n => μ)
+        let D1 : (Fin n → Ω) → ℝ := residualStatisticD n r
+        let physical : (Fin n → Ω) → ℝ := fun ζ =>
+          if Real.sqrt (centeredSq n g r ζ) = 0 then 0 else
+            (projectionW n g ζ + D1 ζ) / Real.sqrt (centeredSq n g r ζ)
+        let K0 : ℝ :=
+          64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ))
+        let Ktail : ℝ :=
+          8 * (1 + C1 + C2 + C3 + C4) * Real.exp C3 * (1 + K0)
+        0 < Ktail ∧
+        |P.real {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z - 1| ≤
+          Ktail * (β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+            (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ))
+:= by
+  set_option maxHeartbeats 800000 in
+    classical
+    intro g r v rho
+    have hg : Measurable[mΩ, borel ℝ] g :=
+      hh.stronglyMeasurable.integral_prod_right'.measurable
+    have hgSecond : (∫ o, g o ^ 2 ∂μ) = 1 := hprojectionsecond
+    have hgSquare : Integrable[mΩ] (fun o => g o ^ 2) μ := by
+      by_contra hnot
+      have hzero : (∫ o, g o ^ 2 ∂μ) = 0 := integral_undef hnot
+      exact one_ne_zero (hgSecond.symm.trans hzero)
+    have hg2 : MemLp g 2 μ :=
+      (memLp_two_iff_integrable_sq hg.aestronglyMeasurable).2 hgSquare
+    have hFinite :=
+      Shao.OQ6.OriginalCurrentLevelPhysicalFiniteCostTail.actual_original_current_level_physical_finite_cost_tail
+        μ h hh hh2 hhsymm hcenter hprojectionsecond
+    dsimp only at hFinite
+    rcases hFinite with ⟨cg, hcg, hAll⟩
+    refine ⟨cg, hcg, ?_⟩
+    intro Cenv aenv t0 Menv hCenv haenv ht0 hMenv
+    have hAbs :=
+      Shao.OQ6.OriginalExceptionalTailAbsorption.eventually_original_exceptional_payment_absorbed
+        t0 cg ht0 hcg
+    dsimp only at hAbs
+    rcases hAbs with ⟨hAbsWindowPositive, hAbs⟩
+    -- This extra eventual threshold depends only on t0, before p and all SZ constants.
+    have hnat : Filter.Tendsto (fun n : ℕ => (n : ℝ))
+        Filter.atTop Filter.atTop := tendsto_natCast_atTop_atTop
+    have hthird : Filter.Tendsto
+        (fun n : ℕ => Real.rpow (n : ℝ) (1 / 3 : ℝ))
+        Filter.atTop Filter.atTop :=
+      (tendsto_rpow_atTop (by norm_num : (0 : ℝ) < 1 / 3)).comp hnat
+    have hRlimit : Filter.Tendsto
+        (fun n : ℕ => Real.sqrt (n : ℝ) *
+          Real.exp (-(t0 / 2) * Real.rpow (n : ℝ) (1 / 3 : ℝ)))
+        Filter.atTop (nhds (0 : ℝ)) := by
+      have hlim :=
+        (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero
+          (3 / 2 : ℝ) (t0 / 2) (by positivity)).comp hthird
+      apply hlim.congr'
+      filter_upwards [] with n
+      have hpower : Real.rpow (Real.rpow (n : ℝ) (1 / 3 : ℝ)) (3 / 2 : ℝ) =
+          Real.sqrt (n : ℝ) := by
+        rw [← Real.rpow_mul (Nat.cast_nonneg n)]
+        convert (Real.sqrt_eq_rpow (n : ℝ)).symm using 1 <;> norm_num
+      simp only [Function.comp_def, hpower]
+    have hRsmall : ∀ᶠ n : ℕ in Filter.atTop,
+        Real.sqrt (n : ℝ) *
+          Real.exp (-(t0 / 2) * Real.rpow (n : ℝ) (1 / 3 : ℝ)) ≤ 1 :=
+      (hRlimit.eventually (gt_mem_nhds (by norm_num : (0 : ℝ) < 1))).mono
+        (fun _ hn => hn.le)
+    filter_upwards [hAll Cenv aenv t0 Menv hCenv haenv ht0 hMenv, hAbs, hRsmall]
+      with n hn hAbsN hRsmallN
+    refine ⟨hn.1, ?_⟩
+    intro w hW hWR hSq hSqBound hEnv z hz hTiltWindow hEnvelopeWindow hGeometry
+      hAbsorptionWindow p hp2 hp3 hgp cSZ C1 C2 C3 C4 hSZ
+    intro β cWindow hMomentWindow mN P D1 physical K0 Ktail
+    have hn1 : 1 ≤ n := by omega
+    have hnPos : 0 < (n : ℝ) := by exact_mod_cast (show 0 < n by omega)
+    have hsqrt : 0 < Real.sqrt (n : ℝ) := Real.sqrt_pos.mpr hnPos
+    have hz0 : 0 ≤ z := le_trans (by norm_num : (0 : ℝ) ≤ 1) hz
+    have hp0 : 0 < p := lt_trans (by norm_num : (0 : ℝ) < 2) hp2
+    have hrho : 0 ≤ rho := Real.sqrt_nonneg v
+    have hcSZ : 0 < cSZ := hSZ.1
+    have hC1 : 0 < C1 := hSZ.2.1
+    have hC2 : 0 < C2 := hSZ.2.2.1
+    have hC3 : 0 < C3 := hSZ.2.2.2.1
+    have hC4 : 0 < C4 := hSZ.2.2.2.2.1
+    let ξ : Fin n → (Fin n → Ω) → ℝ :=
+      fun i ζ => g (ζ i) / Real.sqrt (n : ℝ)
+    let δ : Fin n → ℝ := fun i =>
+      ∫ ζ, (z * ξ i ζ) ^ 2 * min |z * ξ i ζ| 1 ∂P
+    let L : ℝ := ∑ i : Fin n, δ i
+    let A : ℝ := β * Real.rpow (1 + z) p * Real.rpow (n : ℝ) (-((p - 2) / 2))
+    let E : ℝ := (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ)
+    let R : ℝ := Real.exp (-(t0 / 2) * Real.rpow (n : ℝ) (1 / 3 : ℝ))
+    let payment : ℝ :=
+      (3 : ℝ) * Real.exp (-boundedPolylogMomentOrder t0 n) +
+        Real.exp (-cg * (n : ℝ)) +
+        (4 : ℝ) * Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ))
+    let cubic : ℝ :=
+      64 * (Real.exp (1 / 2 : ℝ)) ^ 4 * (1 + 4 * (512 : ℝ)) *
+        (1 + rho) * (1 + z) ^ 3 / Real.sqrt (n : ℝ)
+    let Q : ℝ := P.real {ζ : Fin n → Ω | z ≤ physical ζ} / Shao.standardNormalTail z
+    have hK0 : 0 < K0 := by dsimp only [K0]; positivity
+    have hE : 0 ≤ E := by dsimp only [E]; positivity
+    have hRinv : R ≤ 1 / Real.sqrt (n : ℝ) := by
+      apply (le_div_iff₀ hsqrt).2
+      change Real.sqrt (n : ℝ) * R ≤ 1 at hRsmallN
+      nlinarith only [hRsmallN]
+    have hEinv : 1 / Real.sqrt (n : ℝ) ≤ E := by
+      apply div_le_div_of_nonneg_right _ hsqrt.le
+      have hzOne : 1 ≤ 1 + z := by linarith only [hz]
+      have hcube : (1 : ℝ) ≤ (1 + z) ^ 3 := one_le_pow₀ hzOne
+      have hrhoOne : 1 ≤ 1 + rho := by linarith only [hrho]
+      exact (by simpa only [one_mul] using
+        mul_le_mul hrhoOne hcube (by norm_num : (0 : ℝ) ≤ 1) (by linarith only [hrho]))
+    have hRE : R ≤ E := hRinv.trans hEinv
+    -- Use the original product-law moment producer, without a second coding witness.
+    have hMoment :=
+      @Shao.OQ6.IIDSourceStrictMomentBudgets.actual_iid_source_z_strict_moment_budgets
+        Ω mΩ μ (inferInstance : @IsProbabilityMeasure Ω mΩ μ)
+        g hg hg2 p hp2 hp3 hgp cSZ hcSZ
+    dsimp only at hMoment
+    rcases hMoment with ⟨hBeta, hcPositive, hcPower, hcSmall, hMomentAll⟩
+    have hMomentN := hMomentAll n hn1 z hz
+    dsimp only at hMomentN
+    rcases hMomentN with
+      ⟨hPprob, hScalarInt, hDeltaInt, hDeltaScalar, hLScalar, hLi,
+        hDeltaNonneg, hLNonneg, hRate, hZero, hStrictWindow⟩
+    change 0 ≤ β at hBeta
+    change 0 ≤ L at hLNonneg
+    change L ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) at hRate
+    have hLc : L ≤ Real.rpow cWindow p := (hStrictWindow hMomentWindow).1
+    change Real.rpow cWindow p = min (1 / 2 : ℝ) cSZ / 2 at hcPower
+    have hLquarter : L ≤ (1 / 4 : ℝ) := by
+      rw [hcPower] at hLc
+      have hmin := min_le_left (1 / 2 : ℝ) cSZ
+      linarith only [hLc, hmin]
+    have hA : 0 ≤ A := by dsimp only [A]; positivity
+    have hLA : L ≤ A := by
+      calc
+        L ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) := hRate
+        _ ≤ β * Real.rpow (1 + z) p / Real.rpow (n : ℝ) ((p - 2) / 2) :=
+          div_le_div_of_nonneg_right
+            (mul_le_mul_of_nonneg_left
+              (Real.rpow_le_rpow hz0 (by linarith : z ≤ 1 + z) hp0.le) hBeta)
+            (Real.rpow_nonneg hnPos.le _)
+        _ = A := by
+          dsimp only [A]
+          rw [Real.rpow_neg hnPos.le]
+          ring
+    have hFiniteN := hn.2 w hW hWR hSq hSqBound hEnv z hz
+      hTiltWindow hEnvelopeWindow hGeometry p hp2 hp3 hgp cSZ C1 C2 C3 C4 hSZ
+    dsimp only at hFiniteN
+    rcases hFiniteN hMomentWindow with
+      ⟨hCostNonneg, hCostCubic, hLowerSource, hUpperSource, hLower, hUpper⟩
+    change Shao.standardNormalTail z * Real.exp (-C1 * L) *
+        (1 - C2 * cubic) - 2 * payment ≤
+      P.real {ζ : Fin n → Ω | z ≤ physical ζ} at hLower
+    change P.real {ζ : Fin n → Ω | z ≤ physical ζ} ≤
+      Shao.standardNormalTail z * Real.exp (C3 * L) *
+        (1 + C4 * cubic) + 4 * payment at hUpper
+    have hcubic : cubic = K0 * E := by dsimp only [cubic, K0, E]; ring
+    rw [hcubic] at hLower hUpper
+    have hPsi : 0 < Shao.standardNormalTail z :=
+      (Shao.standardNormalTail_basic.2.2.1 z).1
+    -- Keep the lower2 and upper4 physical fees distinct throughout absorption.
+    have hExpZ : Real.exp (-(z * Real.sqrt (n : ℝ)) / (2 : ℝ)) ≤
+        Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) := by
+      apply Real.exp_le_exp.mpr
+      have hm := mul_le_mul_of_nonneg_right hz hsqrt.le
+      nlinarith only [hm]
+    have hAbsZ := hAbsN.2.2 z hz hAbsorptionWindow
+    change (6 : ℝ) * Real.exp (-boundedPolylogMomentOrder t0 n) +
+        (2 : ℝ) * Real.exp (-cg * (n : ℝ)) +
+        (8 : ℝ) * Real.exp (-(Real.sqrt (n : ℝ)) / (2 : ℝ)) ≤
+      R * Shao.standardNormalTail z at hAbsZ
+    have hPay2 : 2 * payment ≤ R * Shao.standardNormalTail z := by
+      dsimp only [payment]
+      linarith only [hAbsZ, hExpZ]
+    have hPay4 : 4 * payment ≤ 2 * R * Shao.standardNormalTail z := by
+      nlinarith only [hPay2]
+    have hLowerPaid :
+        Shao.standardNormalTail z * (Real.exp (-C1 * L) * (1 - C2 * (K0 * E)) - R) ≤
+          P.real {ζ : Fin n → Ω | z ≤ physical ζ} := by
+      nlinarith only [hLower, hPay2]
+    have hUpperPaid : P.real {ζ : Fin n → Ω | z ≤ physical ζ} ≤
+        Shao.standardNormalTail z * (Real.exp (C3 * L) * (1 + C4 * (K0 * E)) + 2 * R) := by
+      nlinarith only [hUpper, hPay4]
+    have hLowerRatio : Real.exp (-C1 * L) * (1 - C2 * (K0 * E)) - R ≤ Q := by
+      apply (le_div_iff₀ hPsi).2
+      nlinarith only [hLowerPaid]
+    have hUpperRatio : Q ≤ Real.exp (C3 * L) * (1 + C4 * (K0 * E)) + 2 * R := by
+      apply (div_le_iff₀ hPsi).2
+      nlinarith only [hUpperPaid]
+    -- Expand the lower expression before estimating; its factor need not be positive.
+    have hExpLower : Real.exp (-C1 * L) ≤ 1 :=
+      Real.exp_le_one_iff.mpr (by nlinarith only [mul_nonneg hC1.le hLNonneg])
+    have hLowerLinear : 1 - Real.exp (-C1 * L) ≤ C1 * L := by
+      linarith only [Real.add_one_le_exp (-C1 * L)]
+    have hLowerCost : Real.exp (-C1 * L) * (C2 * (K0 * E)) ≤ C2 * (K0 * E) := by
+      simpa only [one_mul] using
+        mul_le_mul_of_nonneg_right hExpLower (mul_nonneg hC2.le (mul_nonneg hK0.le hE))
+    have hC1Rate : C1 * L ≤ C1 * A := mul_le_mul_of_nonneg_left hLA hC1.le
+    have hLowerDeviation : 1 - Q ≤ C1 * A + (C2 * K0 + 1) * E := by
+      nlinarith only [hLowerRatio, hLowerLinear, hLowerCost, hC1Rate, hRE]
+    have hQuarterExp : Real.exp (C3 * L) ≤ Real.exp (C3 / 4) := by
+      apply Real.exp_le_exp.mpr
+      have ht := mul_le_mul_of_nonneg_left hLquarter hC3.le
+      nlinarith only [ht]
+    have hQuarterFull : Real.exp (C3 / 4) ≤ Real.exp C3 :=
+      Real.exp_le_exp.mpr (by linarith only [hC3])
+    have hUpperLinear : Real.exp (C3 * L) - 1 ≤ C3 * Real.exp (C3 / 4) * L := by
+      have htangent := mul_le_mul_of_nonneg_right
+        (Real.add_one_le_exp (-(C3 * L))) (Real.exp_pos (C3 * L)).le
+      have hcancel : Real.exp (-(C3 * L)) * Real.exp (C3 * L) = 1 := by
+        rw [← Real.exp_add]
+        convert Real.exp_zero using 1 <;> ring
+      rw [hcancel] at htangent
+      have hproduct := mul_le_mul_of_nonneg_left hQuarterExp
+        (mul_nonneg hC3.le hLNonneg)
+      nlinarith only [htangent, hproduct]
+    have hUpperCost : Real.exp (C3 * L) * (C4 * (K0 * E)) ≤
+        Real.exp (C3 / 4) * (C4 * (K0 * E)) :=
+      mul_le_mul_of_nonneg_right hQuarterExp (mul_nonneg hC4.le (mul_nonneg hK0.le hE))
+    have hC3Rate : C3 * Real.exp (C3 / 4) * L ≤ C3 * Real.exp (C3 / 4) * A :=
+      mul_le_mul_of_nonneg_left hLA (mul_nonneg hC3.le (Real.exp_pos _).le)
+    have hUpperDeviation : Q - 1 ≤
+        C3 * Real.exp (C3 / 4) * A + (C4 * K0 * Real.exp (C3 / 4) + 2) * E := by
+      nlinarith only [hUpperRatio, hUpperLinear, hUpperCost, hC3Rate, hRE]
+    -- Compare every coefficient with one fixed explicit Ktail.
+    let S : ℝ := 1 + C1 + C2 + C3 + C4
+    let H : ℝ := S * Real.exp C3 * (1 + K0)
+    have hSone : 1 ≤ S := by dsimp only [S]; linarith only [hC1, hC2, hC3, hC4]
+    have hSpos : 0 < S := lt_of_lt_of_le zero_lt_one hSone
+    have hC1S : C1 ≤ S := by dsimp only [S]; linarith only [hC2, hC3, hC4]
+    have hC2S : C2 ≤ S := by dsimp only [S]; linarith only [hC1, hC3, hC4]
+    have hC3S : C3 ≤ S := by dsimp only [S]; linarith only [hC1, hC2, hC4]
+    have hC4S : C4 ≤ S := by dsimp only [S]; linarith only [hC1, hC2, hC3]
+    have hExpOne : 1 ≤ Real.exp C3 := by linarith only [Real.add_one_le_exp C3, hC3]
+    have hT : 1 ≤ 1 + K0 := by linarith only [hK0]
+    have hK0T : K0 ≤ 1 + K0 := by linarith
+    have hST : 0 ≤ S * (1 + K0) := mul_nonneg hSpos.le (by linarith only [hT])
+    have hHpos : 0 < H := by dsimp only [H]; positivity
+    have hHE : S * Real.exp C3 ≤ H := by
+      dsimp only [H]
+      simpa only [mul_one] using
+        mul_le_mul_of_nonneg_left hT (mul_nonneg hSpos.le (Real.exp_pos _).le)
+    have hSexp : S ≤ S * Real.exp C3 := by
+      simpa only [mul_one] using mul_le_mul_of_nonneg_left hExpOne hSpos.le
+    have hHS : S ≤ H := hSexp.trans hHE
+    have hHone : 1 ≤ H := hSone.trans hHS
+    have hHST : S * (1 + K0) ≤ H := by
+      have ht := mul_le_mul_of_nonneg_left hExpOne hST
+      dsimp only [H]
+      nlinarith only [ht]
+    have hC1H : C1 ≤ H := hC1S.trans hHS
+    have hC2H : C2 * K0 ≤ H :=
+      (mul_le_mul hC2S hK0T hK0.le hSpos.le).trans hHST
+    have hC3H : C3 * Real.exp (C3 / 4) ≤ H :=
+      (mul_le_mul hC3S hQuarterFull (Real.exp_pos _).le hSpos.le).trans hHE
+    have hC4K : C4 * K0 ≤ S * (1 + K0) :=
+      mul_le_mul hC4S hK0T hK0.le hSpos.le
+    have hC4H : C4 * K0 * Real.exp (C3 / 4) ≤ H := by
+      have ht := mul_le_mul hC4K hQuarterFull (Real.exp_pos _).le hST
+      dsimp only [H]
+      nlinarith only [ht]
+    have hKtailEq : Ktail = 8 * H := by dsimp only [Ktail, H, S]; ring
+    have hKtail : 0 < Ktail := by rw [hKtailEq]; positivity
+    have hC1K : C1 ≤ Ktail := by rw [hKtailEq]; linarith only [hC1H, hHpos]
+    have hC2K : C2 * K0 + 1 ≤ Ktail := by
+      rw [hKtailEq]
+      linarith only [hC2H, hHone, hHpos]
+    have hC3K : C3 * Real.exp (C3 / 4) ≤ Ktail := by
+      rw [hKtailEq]
+      linarith only [hC3H, hHpos]
+    have hC4Ktail : C4 * K0 * Real.exp (C3 / 4) + 2 ≤ Ktail := by
+      rw [hKtailEq]
+      linarith only [hC4H, hHone, hHpos]
+    have hLowerFinal : 1 - Q ≤ Ktail * (A + E) := by
+      calc
+        1 - Q ≤ C1 * A + (C2 * K0 + 1) * E := hLowerDeviation
+        _ ≤ Ktail * A + Ktail * E :=
+          _root_.add_le_add (mul_le_mul_of_nonneg_right hC1K hA)
+            (mul_le_mul_of_nonneg_right hC2K hE)
+        _ = Ktail * (A + E) := by ring
+    have hUpperFinal : Q - 1 ≤ Ktail * (A + E) := by
+      calc
+        Q - 1 ≤ C3 * Real.exp (C3 / 4) * A +
+            (C4 * K0 * Real.exp (C3 / 4) + 2) * E := hUpperDeviation
+        _ ≤ Ktail * A + Ktail * E :=
+          _root_.add_le_add (mul_le_mul_of_nonneg_right hC3K hA)
+            (mul_le_mul_of_nonneg_right hC4Ktail hE)
+        _ = Ktail * (A + E) := by ring
+    refine ⟨hKtail, ?_⟩
+    change |Q - 1| ≤ Ktail * (A + E)
+    apply abs_le.mpr
+    exact ⟨by linarith only [hLowerFinal], hUpperFinal⟩
+
+end
+end Shao.OQ6.OriginalCurrentLevelPhysicalRelativePolynomialRate

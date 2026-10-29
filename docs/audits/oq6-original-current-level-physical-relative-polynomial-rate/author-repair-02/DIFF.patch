@@ -1,0 +1,28 @@
+--- author-repair-01/OriginalCurrentLevelPhysicalRelativePolynomialRate.lean
++++ author-repair-02/OriginalCurrentLevelPhysicalRelativePolynomialRate.lean
+@@ -193,7 +193,11 @@
+       rw [hcPower] at hLc
+       have hmin := min_le_left (1 / 2 : ℝ) cSZ
+       linarith only [hLc, hmin]
+-    have hA : 0 ≤ A := by dsimp only [A]; positivity
++    have hA : 0 ≤ A := by
++      dsimp only [A]
++      exact mul_nonneg
++        (mul_nonneg hBeta (Real.rpow_nonneg (by linarith only [hz0]) _))
++        (Real.rpow_nonneg hnPos.le _)
+     have hLA : L ≤ A := by
+       calc
+         L ≤ β * Real.rpow z p / Real.rpow (n : ℝ) ((p - 2) / 2) := hRate
+@@ -204,11 +208,11 @@
+             (Real.rpow_nonneg hnPos.le _)
+         _ = A := by
+           dsimp only [A]
++          simp only [Real.rpow_eq_pow]
+           rw [Real.rpow_neg hnPos.le]
+           ring
+     have hFiniteN := hn.2 w hW hWR hSq hSqBound hEnv z hz
+       hTiltWindow hEnvelopeWindow hGeometry p hp2 hp3 hgp cSZ C1 C2 C3 C4 hSZ
+-    dsimp only at hFiniteN
+     rcases hFiniteN hMomentWindow with
+       ⟨hCostNonneg, hCostCubic, hLowerSource, hUpperSource, hLower, hUpper⟩
+     change Shao.standardNormalTail z * Real.exp (-C1 * L) *
