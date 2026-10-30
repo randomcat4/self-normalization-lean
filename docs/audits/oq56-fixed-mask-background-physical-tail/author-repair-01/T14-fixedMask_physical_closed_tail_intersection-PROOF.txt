@@ -1,0 +1,21 @@
+:= by
+  have hMap := fixedMask_backgroundSample_restrict_map μ C hC B e
+  have hTail : MeasurableSet (backgroundClosedTail B g r z) :=
+    measurableSet_backgroundClosedTail B g r hg hr hsym hm z
+  have hOriginal : MeasurableSet (originalBackgroundClosedTail B g r z) :=
+    measurableSet_originalBackgroundClosedTail B e g r hg hr hsym hm z
+  have hEval := congrArg
+    (fun M : Measure (Fin B.card → Ω) => M (backgroundClosedTail B g r z)) hMap
+  rw [Measure.map_apply (measurable_backgroundSample (Ω := Ω) B e) hTail,
+    ← originalBackgroundClosedTail_eq_preimage B e g r hsym hm z,
+    Measure.restrict_apply hOriginal, Measure.smul_apply, smul_eq_mul] at hEval
+  have hReal :
+      (Measure.pi (fun _ : Fin n => μ)).real
+          (originalBackgroundClosedTail B g r z ∩ fixedMaskEvent C B) =
+        (Measure.pi (fun _ : Fin n => μ)).real (fixedMaskEvent C B) *
+          (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).real
+            (backgroundClosedTail B g r z) := by
+    simpa only [Measure.real_def, ENNReal.toReal_mul] using
+      congrArg ENNReal.toReal hEval
+  rw [fixedMask_real μ C hC B] at hReal
+  exact hReal

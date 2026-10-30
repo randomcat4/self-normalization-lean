@@ -1,0 +1,16 @@
+theorem background_physicalStatistic_eq_Tuncenter
+    {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (g : Ω → ℝ) (r : Ω → Ω → ℝ) :
+    let m : ℕ := B.card
+    let H : Ω → Ω → ℝ :=
+      fun o y => g o + g y + backgroundScale B * r o y
+    let sampleH : (Fin m → Ω) → Fin m → Fin m → ℝ :=
+      fun ζ i j => H (ζ i) (ζ j)
+    let U : (Fin m → Ω) → ℝ :=
+      fun ζ => Shao.OQ6.FiniteRows.uStatistic (sampleH ζ)
+    let RH : (Fin m → Ω) → ℝ :=
+      fun ζ => Real.sqrt (Shao.OQ6.FiniteRows.jackknifeSq (sampleH ζ))
+    let Tuncenter : (Fin m → Ω) → ℝ := fun ζ =>
+      if RH ζ = 0 then 0 else Real.sqrt (m : ℝ) * U ζ / RH ζ
+    ∀ ζ : Fin m → Ω,
+      physicalStatistic m g (scaledResidual B r) ζ = Tuncenter ζ

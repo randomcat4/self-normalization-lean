@@ -1,0 +1,220 @@
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMaskEvent
+{n : Nat} →
+  {Ω : Type u} → (C : Set.{u} Ω) → (B : Finset.{0} (Fin n)) → Set.{u} (Fin n → Ω)
+
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.backgroundClosedTail
+{n : Nat} →
+  {Ω : Type u} →
+    (B : Finset.{0} (Fin n)) →
+      (g : Ω → Real) → (r : Ω → Ω → Real) → (z : Real) → Set.{u} (Fin (@Finset.card.{0} (Fin n) B) → Ω)
+
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.originalBackgroundClosedTail
+{n : Nat} →
+  {Ω : Type u} → (B : Finset.{0} (Fin n)) → (g : Ω → Real) → (r : Ω → Ω → Real) → (z : Real) → Set.{u} (Fin n → Ω)
+
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMask_real
+∀ {n : Nat} {Ω : Type u}
+  [inst : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω inst)
+  [@MeasureTheory.IsProbabilityMeasure.{u} Ω inst μ] (C : Set.{u} Ω) (hC : @MeasurableSet.{u} Ω inst C)
+  (B : Finset.{0} (Fin n)),
+  @Eq.{1} Real
+    (@MeasureTheory.Measure.real.{u} ((i : Fin n) → Ω)
+      (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => inst)
+      (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => inst)
+        fun (x : Fin n) => μ)
+      (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMaskEvent.{u} n Ω C B))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@MeasureTheory.Measure.real.{u} Ω inst μ C) (@Finset.card.{0} (Fin n) B))
+      (@HPow.hPow.{0, 0, 0} Real Nat Real
+        (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+        (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+          (@MeasureTheory.Measure.real.{u} Ω inst μ C))
+        (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Finset.card.{0} (Fin n) B))))
+
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMask_physical_closed_tail_intersection
+∀
+  {n : Nat} {Ω : Type u} [inst : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω inst)
+  [@MeasureTheory.IsProbabilityMeasure.{u} Ω inst μ] (C : Set.{u} Ω) (hC : @MeasurableSet.{u} Ω inst C)
+  (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (hg : @Measurable.{u, 0} Ω Real inst Real.measurableSpace g)
+  (hr :
+    @Measurable.{u, 0} (Prod.{u, u} Ω Ω) Real (@Prod.instMeasurableSpace.{u, u} Ω Ω inst inst) Real.measurableSpace
+      (@Function.uncurry.{u, u, 1} Ω Ω Real r))
+  (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B))
+  (z : Real),
+  @Eq.{1} Real
+    (@MeasureTheory.Measure.real.{u} ((i : Fin n) → Ω)
+      (@MeasurableSpace.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) fun (i : Fin n) => inst)
+      (@MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (x : Fin n) => Ω) (Fin.fintype n) (fun (i : Fin n) => inst)
+        fun (x : Fin n) => μ)
+      (@Inter.inter.{u} (Set.{u} ((i : Fin n) → Ω)) (@Set.instInter.{u} ((i : Fin n) → Ω))
+        (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.originalBackgroundClosedTail.{u} n Ω B g r z)
+        (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMaskEvent.{u} n Ω C B)))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+          (@MeasureTheory.Measure.real.{u} Ω inst μ C) (@Finset.card.{0} (Fin n) B))
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+            (@MeasureTheory.Measure.real.{u} Ω inst μ C))
+          (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Finset.card.{0} (Fin n) B))))
+      (@MeasureTheory.Measure.real.{u} ((i : Fin (@Finset.card.{0} (Fin n) B)) → Ω)
+        (@MeasurableSpace.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B)) (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω)
+          fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst)
+        (@MeasureTheory.Measure.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+          (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) (Fin.fintype (@Finset.card.{0} (Fin n) B))
+          (fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst) fun (x : Fin (@Finset.card.{0} (Fin n) B)) =>
+          @HSMul.hSMul.{0, u, u} ENNReal (@MeasureTheory.Measure.{u} Ω inst) (@MeasureTheory.Measure.{u} Ω inst)
+            (@instHSMul.{0, u} ENNReal (@MeasureTheory.Measure.{u} Ω inst)
+              (@MeasureTheory.Measure.instSMul.{u, 0} Ω ENNReal inst
+                (@instSMulOfMul.{0} ENNReal
+                  (@Distrib.toMul.{0} ENNReal
+                    (@instDistribOfSemiring.{0} ENNReal
+                      (@CommSemiring.toSemiring.{0} ENNReal ENNReal.instCommSemiring))))
+                (@IsScalarTower.right.{0, 0} ENNReal ENNReal ENNReal.instCommSemiring
+                  (@CommSemiring.toSemiring.{0} ENNReal ENNReal.instCommSemiring)
+                  (@Algebra.id.{0} ENNReal ENNReal.instCommSemiring))))
+            (@Inv.inv.{0} ENNReal ENNReal.instInv
+              (@DFunLike.coe.{u + 1, u + 1, 1} (@MeasureTheory.Measure.{u} Ω inst) (Set.{u} Ω)
+                (fun (x : Set.{u} Ω) => ENNReal) (@MeasureTheory.Measure.instFunLike.{u} Ω inst) μ C))
+            (@MeasureTheory.Measure.restrict.{u} Ω inst μ C))
+        (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.backgroundClosedTail.{u} n Ω B g r z)))
+
+NAME Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.cutoff_fixedMask_physical_closed_tail_transport
+∀
+  {n : Nat} {Ω : Type u} [inst : MeasurableSpace.{u} Ω] (μ : @MeasureTheory.Measure.{u} Ω inst)
+  [@MeasureTheory.IsProbabilityMeasure.{u} Ω inst μ] (w : Ω → Real)
+  (hw : @Measurable.{u, 0} Ω Real inst Real.measurableSpace w) (R : Real) (B : Finset.{0} (Fin n))
+  (e :
+    Equiv.{1, 1} (Fin (@Finset.card.{0} (Fin n) B))
+      (@Subtype.{1} (Fin n) fun (i : Fin n) =>
+        @Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+  (g : Ω → Real) (r : Ω → Ω → Real) (hg : @Measurable.{u, 0} Ω Real inst Real.measurableSpace g)
+  (hr :
+    @Measurable.{u, 0} (Prod.{u, u} Ω Ω) Real (@Prod.instMeasurableSpace.{u, u} Ω Ω inst inst) Real.measurableSpace
+      (@Function.uncurry.{u, u, 1} Ω Ω Real r))
+  (hsym : ∀ (a b : Ω), @Eq.{1} Real (r a b) (r b a))
+  (hm :
+    @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) (@Finset.card.{0} (Fin n) B))
+  (z : Real),
+  have C : Set.{u} Ω := @Set.ofPred.{u} Ω fun (o : Ω) => @LE.le.{0} Real Real.instLE (w o) R;
+  have d : Real := @MeasureTheory.Measure.real.{u} Ω inst μ C;
+  have E : Set.{u} (Fin n → Ω) := @Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMaskEvent.{u} n Ω C B;
+  have P :
+    @MeasureTheory.Measure.{u} (Fin n → Ω)
+      (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst) :=
+    @MeasureTheory.Measure.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) (Fin.fintype n) (fun (a : Fin n) => inst)
+      fun (x : Fin n) => μ;
+  have ν : @MeasureTheory.Measure.{u} Ω inst :=
+    @HSMul.hSMul.{0, u, u} ENNReal (@MeasureTheory.Measure.{u} Ω inst) (@MeasureTheory.Measure.{u} Ω inst)
+      (@instHSMul.{0, u} ENNReal (@MeasureTheory.Measure.{u} Ω inst)
+        (@MeasureTheory.Measure.instSMul.{u, 0} Ω ENNReal inst
+          (@instSMulOfMul.{0} ENNReal
+            (@Distrib.toMul.{0} ENNReal
+              (@instDistribOfSemiring.{0} ENNReal (@CommSemiring.toSemiring.{0} ENNReal ENNReal.instCommSemiring))))
+          (@IsScalarTower.right.{0, 0} ENNReal ENNReal ENNReal.instCommSemiring
+            (@CommSemiring.toSemiring.{0} ENNReal ENNReal.instCommSemiring)
+            (@Algebra.id.{0} ENNReal ENNReal.instCommSemiring))))
+      (@Inv.inv.{0} ENNReal ENNReal.instInv
+        (@DFunLike.coe.{u + 1, u + 1, 1} (@MeasureTheory.Measure.{u} Ω inst) (Set.{u} Ω)
+          (fun (x : Set.{u} Ω) => ENNReal) (@MeasureTheory.Measure.instFunLike.{u} Ω inst) μ C))
+      (@MeasureTheory.Measure.restrict.{u} Ω inst μ C);
+  And (@MeasurableSet.{u} Ω inst C)
+    (And
+      (@Eq.{1} Real
+        (@MeasureTheory.Measure.real.{u} (Fin n → Ω)
+          (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst) P E)
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) d
+            (@Finset.card.{0} (Fin n) B))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+            (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) d)
+            (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Finset.card.{0} (Fin n) B)))))
+      (And
+        (@Ne.{1} ENNReal
+            (@DFunLike.coe.{u + 1, u + 1, 1}
+              (@MeasureTheory.Measure.{u} (Fin n → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst))
+              (Set.{u} (Fin n → Ω)) (fun (x : Set.{u} (Fin n → Ω)) => ENNReal)
+              (@MeasureTheory.Measure.instFunLike.{u} (Fin n → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst))
+              P E)
+            (@OfNat.ofNat.{0} ENNReal (nat_lit 0) (@Zero.toOfNat0.{0} ENNReal ENNReal.instZero)) →
+          @Eq.{u + 1}
+            (@MeasureTheory.Measure.{u} (Fin (@Finset.card.{0} (Fin n) B) → Ω)
+              (@MeasurableSpace.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                (fun (a : Fin (@Finset.card.{0} (Fin n) B)) => Ω) fun (a : Fin (@Finset.card.{0} (Fin n) B)) => inst))
+            (@MeasureTheory.Measure.map.{u, u} (Fin n → Ω) (Fin (@Finset.card.{0} (Fin n) B) → Ω)
+              (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst)
+              (@MeasurableSpace.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                (fun (a : Fin (@Finset.card.{0} (Fin n) B)) => Ω) fun (a : Fin (@Finset.card.{0} (Fin n) B)) => inst)
+              (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.backgroundSample.{u} n Ω B e)
+              (@ProbabilityTheory.cond.{u} (Fin n → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst) P E))
+            (@MeasureTheory.Measure.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+              (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) (Fin.fintype (@Finset.card.{0} (Fin n) B))
+              (fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst) fun (x : Fin (@Finset.card.{0} (Fin n) B)) => ν))
+        (And
+          (@Ne.{1} ENNReal
+              (@DFunLike.coe.{u + 1, u + 1, 1}
+                (@MeasureTheory.Measure.{u} (Fin n → Ω)
+                  (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst))
+                (Set.{u} (Fin n → Ω)) (fun (x : Set.{u} (Fin n → Ω)) => ENNReal)
+                (@MeasureTheory.Measure.instFunLike.{u} (Fin n → Ω)
+                  (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst))
+                P E)
+              (@OfNat.ofNat.{0} ENNReal (nat_lit 0) (@Zero.toOfNat0.{0} ENNReal ENNReal.instZero)) →
+            @Eq.{1} Real
+              (@MeasureTheory.Measure.real.{u} (Fin n → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst)
+                (@ProbabilityTheory.cond.{u} (Fin n → Ω)
+                  (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst) P E)
+                (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.originalBackgroundClosedTail.{u} n Ω B g r z))
+              (@MeasureTheory.Measure.real.{u} ((i : Fin (@Finset.card.{0} (Fin n) B)) → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                  (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst)
+                (@MeasureTheory.Measure.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                  (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) (Fin.fintype (@Finset.card.{0} (Fin n) B))
+                  (fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst) fun (x : Fin (@Finset.card.{0} (Fin n) B)) => ν)
+                (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.backgroundClosedTail.{u} n Ω B g r z)))
+          (@Eq.{1} Real
+            (@MeasureTheory.Measure.real.{u} (Fin n → Ω)
+              (@MeasurableSpace.pi.{0, u} (Fin n) (fun (a : Fin n) => Ω) fun (a : Fin n) => inst) P
+              (@Inter.inter.{u} (Set.{u} (Fin n → Ω)) (@Set.instInter.{u} ((i : Fin n) → Ω))
+                (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.originalBackgroundClosedTail.{u} n Ω B g r z)
+                E))
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) d
+                  (@Finset.card.{0} (Fin n) B))
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) d)
+                  (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) n (@Finset.card.{0} (Fin n) B))))
+              (@MeasureTheory.Measure.real.{u} ((i : Fin (@Finset.card.{0} (Fin n) B)) → Ω)
+                (@MeasurableSpace.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                  (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst)
+                (@MeasureTheory.Measure.pi.{0, u} (Fin (@Finset.card.{0} (Fin n) B))
+                  (fun (x : Fin (@Finset.card.{0} (Fin n) B)) => Ω) (Fin.fintype (@Finset.card.{0} (Fin n) B))
+                  (fun (i : Fin (@Finset.card.{0} (Fin n) B)) => inst) fun (x : Fin (@Finset.card.{0} (Fin n) B)) => ν)
+                (@Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.backgroundClosedTail.{u} n Ω B g r z)))))))
+

@@ -1,0 +1,18 @@
+:= by
+  classical
+  let f : (Fin m → Ω) → ℝ := fun x : Fin m → Ω =>
+    if Real.sqrt (Shao.OQ5.P51.centeredSq m g r x) = 0 then 0 else
+      (Shao.OQ5.P51.projectionW m g x + Shao.OQ5.P51.residualStatisticD m r x) /
+        Real.sqrt (Shao.OQ5.P51.centeredSq m g r x)
+  have hf : Measurable f :=
+    (Shao.OQ6.OriginalPhysicalClippedTailTransfer.physical_clipped_globally_measurable
+      m g r hg hr 0 0 0).1
+  have hEq : physicalStatistic m g r = f := by
+    funext x
+    rw [Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic_eq_projection_ratio
+      m g r x hsym hm]
+    by_cases hs : Real.sqrt (Shao.OQ5.P51.centeredSq m g r x) = 0
+    · simp [f, hs]
+    · simp only [f, if_neg hs]
+  rw [hEq]
+  exact hf

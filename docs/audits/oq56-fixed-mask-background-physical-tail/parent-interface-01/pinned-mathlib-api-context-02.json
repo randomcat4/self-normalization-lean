@@ -1,0 +1,53 @@
+{
+  "schema": "oq56-unit281-readonly-pinned-primary-API-context-supplement-v1",
+  "Mathlib_HEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "fragments": [
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Probability/Independence/Basic.lean",
+        "sha256": "93990423a0c169d9e45b19ae98f3f3ada7605d8541577daf815311aa43567769",
+        "bytes": 55448
+      },
+      "completeRanges": [
+        {
+          "startLine1": 111,
+          "endLine1": 165,
+          "text": "    Prop :=\n  Kernel.iIndep m (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\n/-- Two measurable space structures (or σ-algebras) `m₁, m₂` are independent with respect to a\nmeasure `μ` (defined on a third σ-algebra) if for any sets `t₁ ∈ m₁, t₂ ∈ m₂`,\n`μ (t₁ ∩ t₂) = μ (t₁) * μ (t₂)` -/\ndef Indep (m₁ m₂ : MeasurableSpace Ω)\n    {_mΩ : MeasurableSpace Ω} (μ : Measure Ω := by volume_tac) : Prop :=\n  Kernel.Indep m₁ m₂ (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\n/-- A family of sets is independent if the family of measurable space structures they generate is\nindependent. For a set `s`, the generated measurable space has measurable sets `∅, s, sᶜ, univ`. -/\ndef iIndepSet {_mΩ : MeasurableSpace Ω} (s : ι → Set Ω) (μ : Measure Ω := by volume_tac) : Prop :=\n  Kernel.iIndepSet s (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\n/-- Two sets are independent if the two measurable space structures they generate are independent.\nFor a set `s`, the generated measurable space structure has measurable sets `∅, s, sᶜ, univ`. -/\ndef IndepSet {_mΩ : MeasurableSpace Ω} (s t : Set Ω) (μ : Measure Ω := by volume_tac) : Prop :=\n  Kernel.IndepSet s t (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\n/-- A family of functions defined on the same space `Ω` and taking values in possibly different\nspaces, each with a measurable space structure, is independent if the family of measurable space\nstructures they generate on `Ω` is independent. For a function `g` with codomain having measurable\nspace structure `m`, the generated measurable space structure is `MeasurableSpace.comap g m`. -/\ndef iIndepFun {_mΩ : MeasurableSpace Ω} {β : ι → Type*} [m : ∀ x : ι, MeasurableSpace (β x)]\n    (f : ∀ x : ι, Ω → β x) (μ : Measure Ω := by volume_tac) : Prop :=\n  Kernel.iIndepFun f (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\n/-- Two functions are independent if the two measurable space structures they generate are\nindependent. For a function `f` with codomain having measurable space structure `m`, the generated\nmeasurable space structure is `MeasurableSpace.comap f m`.\nWe use the notation `f ⟂ᵢ[μ] g` for `IndepFun f g μ` (scoped in `ProbabilityTheory`). -/\ndef IndepFun {β γ} {_mΩ : MeasurableSpace Ω} [MeasurableSpace β] [MeasurableSpace γ]\n    (f : Ω → β) (g : Ω → γ) (μ : Measure Ω := by volume_tac) : Prop :=\n  Kernel.IndepFun f g (Kernel.const Unit μ) (Measure.dirac () : Measure Unit)\n\nend Definitions\n\n@[inherit_doc ProbabilityTheory.IndepFun]\nscoped[ProbabilityTheory] notation3 X:50 \" ⟂ᵢ[\" μ \"] \" Y:50 => ProbabilityTheory.IndepFun X Y μ\n\n@[inherit_doc ProbabilityTheory.IndepFun]\nscoped[ProbabilityTheory] notation3 X:50 \" ⟂ᵢ \" Y:50 => ProbabilityTheory.IndepFun X Y volume\n\nsection Definition_lemmas\nvariable {π : ι → Set (Set Ω)} {m : ι → MeasurableSpace Ω} {_ : MeasurableSpace Ω} {μ : Measure Ω}\n  {S : Finset ι} {s : ι → Set Ω} {ι' : Type*} {g : ι' → ι}\n\nlemma iIndepSets_iff (π : ι → Set (Set Ω)) (μ : Measure Ω) :\n    iIndepSets π μ ↔ ∀ (s : Finset ι) {f : ι → Set Ω} (_H : ∀ i, i ∈ s → f i ∈ π i),\n      μ (⋂ i ∈ s, f i) = ∏ i ∈ s, μ (f i) := by\n  simp only [iIndepSets, Kernel.iIndepSets, ae_dirac_eq, Filter.eventually_pure, Kernel.const_apply]\n\nlemma iIndepSets.meas_biInter (h : iIndepSets π μ) (s : Finset ι) {f : ι → Set Ω}\n    (hf : ∀ i, i ∈ s → f i ∈ π i) : μ (⋂ i ∈ s, f i) = ∏ i ∈ s, μ (f i) :=\n"
+        },
+        {
+          "startLine1": 634,
+          "endLine1": 645,
+          "text": "section IndepFun\n\n/-! ### Independence of random variables\n\n-/\n\n\nvariable {β β' γ γ' : Type*} {_mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f : Ω → β} {g : Ω → β'}\n\ntheorem indepFun_iff_measure_inter_preimage_eq_mul {mβ : MeasurableSpace β}\n    {mβ' : MeasurableSpace β'} :\n    f ⟂ᵢ[μ] g ↔\n"
+        }
+      ]
+    },
+    {
+      "source": {
+        "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/MeasureTheory/Measure/Map.lean",
+        "sha256": "7bae8f174146d4ef4055f79757c2a0a3af6a9090dda3d28ea17fbd54540e9593",
+        "bytes": 14164
+      },
+      "completeRanges": [
+        {
+          "startLine1": 63,
+          "endLine1": 132,
+          "text": "theorem liftLinear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} (hf) {s : Set β}\n    (hs : MeasurableSet s) : liftLinear f hf μ s = f μ.toOuterMeasure s :=\n  toMeasure_apply _ (hf μ) hs\n\ntheorem le_liftLinear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasure β} (hf) (s : Set β) :\n    f μ.toOuterMeasure s ≤ liftLinear f hf μ s :=\n  le_toMeasure_apply _ (hf μ) s\n\nopen scoped Classical in\n/-- The pushforward of a measure as a linear map. It is defined to be `0` if `f` is not\na measurable function. -/\nnoncomputable\ndef mapₗ [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Measure α →ₗ[ℝ≥0∞] Measure β :=\n  if hf : Measurable f then\n    liftLinear (OuterMeasure.map f) fun μ _s hs t =>\n      le_toOuterMeasure_caratheodory μ _ (hf hs) (f ⁻¹' t)\n  else 0\n\nset_option backward.isDefEq.respectTransparency false in\ntheorem mapₗ_congr {f g : α → β} (hf : Measurable f) (hg : Measurable g) (h : f =ᵐ[μ] g) :\n    mapₗ f μ = mapₗ g μ := by\n  ext1 s hs\n  simpa only [mapₗ, hf, hg, hs, dite_eq_left, liftLinear_apply, OuterMeasure.map_apply]\n    using! measure_congr (h.preimage s)\n\nprivate lemma nonempty_of_not_aemeasurable {f : α → β} (hf : ¬AEMeasurable f μ) :\n    Nonempty β := by\n  contrapose! hf\n  exact (measurable_of_empty_codomain f).aemeasurable\n\nopen scoped Classical in\n/-- The pushforward of a measure. If `f` is not an almost everywhere measurable function,\nwe define it to be `0` if `μ = 0`, and to be an arbitrary Dirac mass otherwise. That way\nwe always have `map f 0 = 0`, and the push-forward of a probability measure is always a\nprobability measure. -/\nnoncomputable\nirreducible_def map [MeasurableSpace α] [MeasurableSpace β] (f : α → β) (μ : Measure α) :\n    Measure β :=\n  if hf : AEMeasurable f μ\n    then mapₗ (hf.mk f) μ\n    else if μ = 0 then 0\n    else\n      haveI : Nonempty β := by exact nonempty_of_not_aemeasurable hf\n      dirac Classical.ofNonempty\n\ntheorem mapₗ_mk_apply_of_aemeasurable {f : α → β} (hf : AEMeasurable f μ) :\n    mapₗ (hf.mk f) μ = map f μ := by simp [map, hf]\n\ntheorem mapₗ_apply_of_measurable {f : α → β} (hf : Measurable f) (μ : Measure α) :\n    mapₗ f μ = map f μ := by\n  simp only [← mapₗ_mk_apply_of_aemeasurable hf.aemeasurable]\n  exact mapₗ_congr hf hf.aemeasurable.measurable_mk hf.aemeasurable.ae_eq_mk\n\n@[simp]\nprotected theorem map_add (μ ν : Measure α) {f : α → β} (hf : Measurable f) :\n    (μ + ν).map f = μ.map f + ν.map f := by simp [← mapₗ_apply_of_measurable hf]\n\n@[simp]\nprotected theorem map_zero (f : α → β) : (0 : Measure α).map f = 0 := by\n  by_cases hf : AEMeasurable f (0 : Measure α) <;> simp [map, hf]\n\n@[simp]\ntheorem map_of_not_aemeasurable_of_ne_zero {f : α → β} {μ : Measure α} (hf : ¬AEMeasurable f μ)\n    (hμ : μ ≠ 0) :\n    haveI : Nonempty β := by exact nonempty_of_not_aemeasurable hf\n    μ.map f = dirac Classical.ofNonempty := by simp [map, hf, hμ]\n\ntheorem map_congr {f g : α → β} (h : f =ᵐ[μ] g) : Measure.map f μ = Measure.map g μ := by\n  by_cases hf : AEMeasurable f μ\n  · have hg : AEMeasurable g μ := hf.congr h\n"
+        },
+        {
+          "startLine1": 153,
+          "endLine1": 195,
+          "text": "  exact .trans ((ae_ennreal_smul_measure_iff hc).1 hfc.ae_eq_mk.symm) hf.ae_eq_mk\n\nvariable {f : α → β}\n\nlemma map_apply₀ {f : α → β} (hf : AEMeasurable f μ) {s : Set β}\n    (hs : NullMeasurableSet s (map f μ)) : μ.map f s = μ (f ⁻¹' s) := by\n  rw [map, dite_eq_left hf, mapₗ, dite_eq_left hf.measurable_mk] at hs ⊢\n  rw [liftLinear_apply₀ _ hs, measure_congr (hf.ae_eq_mk.preimage s)]\n  rfl\n\n/-- We can evaluate the pushforward on measurable sets. For non-measurable sets, see\n  `MeasureTheory.Measure.le_map_apply` and `MeasurableEquiv.map_apply`. -/\n@[simp]\ntheorem map_apply_of_aemeasurable (hf : AEMeasurable f μ) {s : Set β} (hs : MeasurableSet s) :\n    μ.map f s = μ (f ⁻¹' s) := map_apply₀ hf hs.nullMeasurableSet\n\n@[simp]\ntheorem map_apply (hf : Measurable f) {s : Set β} (hs : MeasurableSet s) :\n    μ.map f s = μ (f ⁻¹' s) :=\n  map_apply_of_aemeasurable hf.aemeasurable hs\n\ntheorem map_toOuterMeasure (hf : AEMeasurable f μ) :\n    (μ.map f).toOuterMeasure = (OuterMeasure.map f μ.toOuterMeasure).trim := by\n  rw [← trimmed, OuterMeasure.trim_eq_trim_iff]\n  intro s hs\n  simp [hf, hs]\n\n@[simp] lemma map_eq_zero_iff (hf : AEMeasurable f μ) : μ.map f = 0 ↔ μ = 0 := by\n  simp_rw [← measure_univ_eq_zero, map_apply_of_aemeasurable hf .univ, preimage_univ]\n\n@[simp] lemma mapₗ_eq_zero_iff (hf : Measurable f) : Measure.mapₗ f μ = 0 ↔ μ = 0 := by\n  rw [mapₗ_apply_of_measurable hf, map_eq_zero_iff hf.aemeasurable]\n\n/-- If `map f μ = μ`, then the measure of the preimage of any null measurable set `s`\nis equal to the measure of `s`.\nNote that this lemma does not assume (a.e.) measurability of `f`. -/\nlemma measure_preimage_of_map_eq_self {f : α → α} (hf : map f μ = μ) (hfm : AEMeasurable f μ)\n    {s : Set α} (hs : NullMeasurableSet s μ) : μ (f ⁻¹' s) = μ s := by\n  rw [← map_apply₀ hfm, hf]\n  rwa [hf]\n\nlemma map_ne_zero_iff (hf : AEMeasurable f μ) : μ.map f ≠ 0 ↔ μ ≠ 0 := (map_eq_zero_iff hf).not\nlemma mapₗ_ne_zero_iff (hf : Measurable f) : Measure.mapₗ f μ ≠ 0 ↔ μ ≠ 0 :=\n"
+        }
+      ]
+    }
+  ],
+  "LeanAX": 0,
+  "readonly": true,
+  "actualLeanTYPEPrint": false,
+  "sourceOrCacheMutation": false,
+  "transport": {
+    "outerRC": 0,
+    "stderr": "",
+    "UTC": "2026-10-29T21:24:09.555837+00:00"
+  }
+}

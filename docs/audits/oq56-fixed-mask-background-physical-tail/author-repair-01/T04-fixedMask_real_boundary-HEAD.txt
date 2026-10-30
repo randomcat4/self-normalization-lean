@@ -1,0 +1,11 @@
+theorem fixedMask_real_boundary {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C) (B : Finset (Fin n)) :
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let d : ℝ := μ.real C
+    (B = Finset.univ → P.real (fixedMaskEvent C B) = d ^ n) ∧
+      (B = ∅ → P.real (fixedMaskEvent C B) = (1 - d) ^ n) ∧
+      (d = 0 → P.real (fixedMaskEvent C B) =
+        (if B = ∅ then (1 : ℝ) else 0)) ∧
+      (d = 1 → P.real (fixedMaskEvent C B) =
+        (if B = Finset.univ then (1 : ℝ) else 0))

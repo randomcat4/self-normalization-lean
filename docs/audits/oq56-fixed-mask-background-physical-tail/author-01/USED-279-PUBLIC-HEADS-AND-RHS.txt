@@ -1,0 +1,80 @@
+NAME backgroundSample
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-repair01/D01-backgroundSample-HEAD.txt
+HEAD-SHA256 4e24f31f98af9d6641c3ae21c3badc66d4c58182cc454759eb37e42d22758504
+HEAD-BYTES 160
+def backgroundSample {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (x : Fin n → Ω) : Fin B.card → Ω :=
+BARE-RHS C:/game/shao lean/drafts/oq56/unit279/freeze-01/D01-backgroundSample-RHS.txt
+RHS-SHA256 35fd6b391ff0fed3a2578b9dd97271beec22900ba76c20896e0434d7098a4bba
+RHS-BYTES 38
+  fun j : Fin B.card => x ((e j).val)
+
+NAME scaledResidual
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-repair01/D02-scaledResidual-HEAD.txt
+HEAD-SHA256 a4b3f9abb636724ea98f4766ecbd0852aebf5355cc68b9a8690eb749f4d7eeed
+HEAD-BYTES 115
+def scaledResidual {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (r : Ω → Ω → ℝ) : Ω → Ω → ℝ :=
+BARE-RHS C:/game/shao lean/drafts/oq56/unit279/freeze-01/D02-scaledResidual-RHS.txt
+RHS-SHA256 24e550cf3a3d09584eb0c64e1a28040aacc30ebe241dff452b11719e35343437
+RHS-BYTES 44
+  fun a b : Ω => backgroundScale B * r a b
+
+NAME physicalStatistic
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-repair01/D03-physicalStatistic-HEAD.txt
+HEAD-SHA256 6387205ae402537b3414d8b8392989d80b3d77450777b771ce09ce973be983bc
+HEAD-BYTES 119
+def physicalStatistic (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω) : ℝ :=
+BARE-RHS C:/game/shao lean/drafts/oq56/unit279/freeze-01/D03-physicalStatistic-RHS.txt
+RHS-SHA256 a5130de2a56209711a43029f12b2fc0c817d236f14d93cce114f145cd6763735
+RHS-BYTES 272
+  let R : ℝ := Real.sqrt
+    (Shao.OQ6.FiniteRows.jackknifeSq (Shao.OQ5.P51.sampledKernel n g r x));
+  @ite ℝ (R = 0) (Classical.propDecidable (R = 0)) (0 : ℝ)
+    (Real.sqrt (n : ℝ) *
+      Shao.OQ6.FiniteRows.uStatistic (Shao.OQ5.P51.sampledKernel n g r x) / R)
+
+NAME physicalStatistic_eq_projection_ratio
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-01/T17-physicalStatistic_eq_projection_ratio-HEAD.txt
+HEAD-SHA256 6ae2862185fc8adb813d3ff307cc8d26d34b0fbc8c3252ab056f886b6a93416d
+HEAD-BYTES 365
+theorem physicalStatistic_eq_projection_ratio (n : ℕ) {Ω : Type u}
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a) (hn : 4 ≤ n) :
+    physicalStatistic n g r x =
+      (Shao.OQ5.P51.projectionW n g x +
+        Shao.OQ5.P51.residualStatisticD n r x) /
+        Real.sqrt (Shao.OQ5.P51.centeredSq n g r x)
+
+NAME physicalStatistic_background_guarded
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-01/T19-physicalStatistic_background_guarded-HEAD.txt
+HEAD-SHA256 310b368bd4019d18291624c3584a4e9534e210b765f616df73de97a16c12c643
+HEAD-BYTES 654
+theorem physicalStatistic_background_guarded {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a)
+    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :
+    physicalStatistic B.card g (scaledResidual B r) (backgroundSample B e x) =
+      let s : ℝ := backgroundStudentizer B (fun i : Fin n => g (x i))
+        (fun i j : Fin n => r (x i) (x j));
+      @ite ℝ (s = 0) (Classical.propDecidable (s = 0)) (0 : ℝ)
+        (backgroundNumerator B (fun i : Fin n => g (x i))
+          (fun i j : Fin n => r (x i) (x j)) / s)
+
+NAME physicalStatistic_background_total_ratio
+HEAD C:/game/shao lean/drafts/oq56/unit279/freeze-01/T20-physicalStatistic_background_total_ratio-HEAD.txt
+HEAD-SHA256 f18a7c4cea3d542055ca69ce6eb02c5bbe76899da6c53e9f252d3a5802b6c32a
+HEAD-BYTES 567
+theorem physicalStatistic_background_total_ratio {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ) (x : Fin n → Ω)
+    (hsym : ∀ a b : Ω, r a b = r b a)
+    (hn : 4 ≤ n) (hm : 4 ≤ B.card) :
+    physicalStatistic B.card g (scaledResidual B r) (backgroundSample B e x) =
+      backgroundNumerator B (fun i : Fin n => g (x i))
+        (fun i j : Fin n => r (x i) (x j)) /
+      backgroundStudentizer B (fun i : Fin n => g (x i))
+        (fun i j : Fin n => r (x i) (x j))

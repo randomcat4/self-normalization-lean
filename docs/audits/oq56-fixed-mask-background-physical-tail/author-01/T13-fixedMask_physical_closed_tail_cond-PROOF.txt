@@ -1,0 +1,9 @@
+:= by
+  have hMap := fixedMask_backgroundSample_cond_map μ C hC B e hMask
+  have hTail : MeasurableSet (backgroundClosedTail B g r z) :=
+    measurableSet_backgroundClosedTail B g r hg hr hsym hm z
+  have hEval := congrArg
+    (fun M : Measure (Fin B.card → Ω) => M (backgroundClosedTail B g r z)) hMap
+  rw [Measure.map_apply (measurable_backgroundSample (Ω := Ω) B e) hTail,
+    ← originalBackgroundClosedTail_eq_preimage B e g r hsym hm z] at hEval
+  exact congrArg ENNReal.toReal hEval

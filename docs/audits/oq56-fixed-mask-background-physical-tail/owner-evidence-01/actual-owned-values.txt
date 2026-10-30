@@ -1,0 +1,37 @@
+Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMaskEvent := fun {n : Nat} {Ω : Type u}
+    (C : Set.{u} Ω) (B : Finset.{0} (Fin n)) =>
+  @Set.iInter.{u, 1} (Fin n → Ω) (Fin n) fun (i : Fin n) =>
+    @Set.preimage.{u, u} (Fin n → Ω) Ω (fun (x : Fin n → Ω) => x i)
+      (@ite.{u + 1} (Set.{u} Ω)
+        (@Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+          (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i)
+        (Classical.propDecidable
+          (@Membership.mem.{0, 0} (Fin n) (Finset.{0} (Fin n))
+            (@SetLike.instMembership.{0, 0} (Finset.{0} (Fin n)) (Fin n) (@Finset.instSetLike.{0} (Fin n))) B i))
+        C (@Compl.compl.{u} (Set.{u} Ω) (@Set.instCompl.{u} Ω) C))
+Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.backgroundClosedTail := fun {n : Nat}
+    {Ω : Type u} (B : Finset.{0} (Fin n)) (g : Ω → Real) (r : Ω → Ω → Real) (z : Real) =>
+  @Set.ofPred.{u} (Fin (@Finset.card.{0} (Fin n) B) → Ω) fun (y : Fin (@Finset.card.{0} (Fin n) B) → Ω) =>
+    @LE.le.{0} Real Real.instLE z
+      (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.physicalStatistic.{u} (@Finset.card.{0} (Fin n) B) Ω g
+        (@Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.scaledResidual.{u} n Ω B r) y)
+Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.originalBackgroundClosedTail := fun {n : Nat}
+    {Ω : Type u} (B : Finset.{0} (Fin n)) (g : Ω → Real) (r : Ω → Ω → Real) (z : Real) =>
+  @Set.ofPred.{u} (Fin n → Ω) fun (x : Fin n → Ω) =>
+    @LE.le.{0} Real Real.instLE z
+      (@ite.{1} Real
+        (@Eq.{1} Real
+          (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+            fun (i j : Fin n) => r (x i) (x j))
+          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+        (Classical.propDecidable
+          (@Eq.{1} Real
+            (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+              fun (i j : Fin n) => r (x i) (x j))
+            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+        (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundNumerator n B (fun (i : Fin n) => g (x i))
+            fun (i j : Fin n) => r (x i) (x j))
+          (@Shao.OQ5.P41.FiniteBackgroundPerturbation.backgroundStudentizer n B (fun (i : Fin n) => g (x i))
+            fun (i j : Fin n) => r (x i) (x j))))

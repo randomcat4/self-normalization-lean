@@ -1,0 +1,70 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  let A : Fin n → Set Ω := fun i : Fin n =>
+    @ite (Set Ω) (i ∈ B) (Classical.propDecidable (i ∈ B)) C Cᶜ
+  let ρ : Fin n → Measure Ω := fun i : Fin n => cond μ (A i)
+  letI : IsProbabilityMeasure P := by
+    dsimp only [P]
+    infer_instance
+  have hA : ∀ i : Fin n, MeasurableSet (A i) := by
+    intro i
+    dsimp only [A]
+    by_cases hi : i ∈ B
+    · simpa only [if_pos hi] using hC
+    · simpa only [if_neg hi] using hC.compl
+  have hX (i : Fin n) : Measurable (Function.eval i : (Fin n → Ω) → Ω) :=
+    measurable_pi_apply i
+  have hEval (i : Fin n) : Measure.map (Function.eval i) P = μ :=
+    (measurePreserving_eval (fun _ : Fin n => μ) i).map_eq
+  have hInd : iIndepFun (fun i : Fin n => Function.eval i) P :=
+    iIndepFun_pi (μ := fun _ : Fin n => μ)
+      (X := fun _ : Fin n => (id : Ω → Ω))
+      (fun _ : Fin n => measurable_id.aemeasurable)
+  have hFull : cond P (fixedMaskEvent C B) = Measure.pi ρ := by
+    have hJoint := Shao.Probability.indep_cond_joint_map_eq_pi
+      (μ := P) (X := fun i : Fin n => Function.eval i)
+      hX hInd A hA hMask
+    change Measure.map (id : (Fin n → Ω) → (Fin n → Ω))
+      (cond P (fixedMaskEvent C B)) =
+      Measure.pi (fun i : Fin n => cond (Measure.map (Function.eval i) P) (A i))
+      at hJoint
+    simpa only [Measure.map_id, hEval, ρ] using hJoint
+  have hMass (i : Fin n) : μ (A i) ≠ 0 := by
+    have hSub : fixedMaskEvent C B ⊆ (Function.eval i) ⁻¹' A i :=
+      Set.iInter_subset
+        (fun j : Fin n => (Function.eval j) ⁻¹' A j) i
+    have hBound : P (fixedMaskEvent C B) ≤ μ (A i) := by
+      calc
+        P (fixedMaskEvent C B) ≤ P ((Function.eval i) ⁻¹' A i) :=
+          measure_mono hSub
+        _ = μ (A i) := by
+          rw [← Measure.map_apply (hX i) (hA i), hEval i]
+    intro hz
+    exact hMask (le_antisymm (hBound.trans_eq hz) bot_le)
+  letI : ∀ i : Fin n, IsProbabilityMeasure (ρ i) :=
+    fun i : Fin n => cond_isProbabilityMeasure (hMass i)
+  have hProduct : iIndepFun (fun i : Fin n => Function.eval i) (Measure.pi ρ) :=
+    iIndepFun_pi (μ := ρ) (X := fun _ : Fin n => (id : Ω → Ω))
+      (fun _ : Fin n => measurable_id.aemeasurable)
+  have hSelect :
+      iIndepFun (fun j : Fin B.card => Function.eval ((e j).val)) (Measure.pi ρ) :=
+    hProduct.precomp (Subtype.val_injective.comp e.injective)
+  have hSelectedMap :
+      Measure.map (backgroundSample B e) (Measure.pi ρ) =
+        Measure.pi (fun j : Fin B.card => ρ ((e j).val)) := by
+    change Measure.map (fun x : Fin n → Ω =>
+      fun j : Fin B.card => x ((e j).val)) (Measure.pi ρ) = _
+    rw [hSelect.map_fun_eq_pi_map
+      (fun j : Fin B.card => (hX ((e j).val)).aemeasurable)]
+    congr 1
+    funext j
+    exact (measurePreserving_eval ρ ((e j).val)).map_eq
+  change Measure.map (backgroundSample B e)
+    (cond P (fixedMaskEvent C B)) = _
+  rw [hFull, hSelectedMap]
+  congr 1
+  funext j
+  dsimp only [ρ, A]
+  rw [if_pos (e j).property]
+  rfl

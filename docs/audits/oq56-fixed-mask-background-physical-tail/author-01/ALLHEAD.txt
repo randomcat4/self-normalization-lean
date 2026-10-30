@@ -1,0 +1,131 @@
+def fixedMaskEvent {n : ℕ} {Ω : Type u}
+    (C : Set Ω) (B : Finset (Fin n)) : Set (Fin n → Ω) :=
+def backgroundClosedTail {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (z : ℝ) : Set (Fin B.card → Ω) :=
+def originalBackgroundClosedTail {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (z : ℝ) : Set (Fin n → Ω) :=
+theorem measurableSet_fixedMaskEvent {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) :
+    MeasurableSet (fixedMaskEvent C B)
+theorem fixedMask_measure {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C) (B : Finset (Fin n)) :
+    (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) =
+      (μ C) ^ B.card * (μ Cᶜ) ^ (n - B.card)
+theorem fixedMask_real {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C) (B : Finset (Fin n)) :
+    (Measure.pi (fun _ : Fin n => μ)).real (fixedMaskEvent C B) =
+      (μ.real C) ^ B.card * (1 - μ.real C) ^ (n - B.card)
+theorem fixedMask_real_boundary {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C) (B : Finset (Fin n)) :
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let d : ℝ := μ.real C
+    (B = Finset.univ → P.real (fixedMaskEvent C B) = d ^ n) ∧
+      (B = ∅ → P.real (fixedMaskEvent C B) = (1 - d) ^ n) ∧
+      (d = 0 → P.real (fixedMaskEvent C B) =
+        (if B = ∅ then (1 : ℝ) else 0)) ∧
+      (d = 1 → P.real (fixedMaskEvent C B) =
+        (if B = Finset.univ then (1 : ℝ) else 0))
+theorem measurable_backgroundSample {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (e : Fin B.card ≃ {i : Fin n // i ∈ B}) :
+    Measurable (backgroundSample (Ω := Ω) B e)
+theorem fixedMask_backgroundSample_cond_map {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0) :
+    Measure.map (backgroundSample B e)
+      (cond (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) =
+      Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)
+theorem fixedMask_backgroundSample_restrict_map {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B}) :
+    Measure.map (backgroundSample B e)
+      ((Measure.pi (fun _ : Fin n => μ)).restrict (fixedMaskEvent C B)) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) •
+        Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)
+theorem measurable_scaledResidual {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n)) (r : Ω → Ω → ℝ)
+    (hr : Measurable (Function.uncurry r)) :
+    Measurable (Function.uncurry (scaledResidual B r))
+theorem measurable_physicalStatistic {Ω : Type u}
+    [MeasurableSpace Ω] (m : ℕ) (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ m) :
+    Measurable (physicalStatistic m g r)
+theorem measurableSet_backgroundClosedTail {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    MeasurableSet (backgroundClosedTail B g r z)
+theorem originalBackgroundClosedTail_eq_preimage {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    originalBackgroundClosedTail B g r z =
+      backgroundSample B e ⁻¹' backgroundClosedTail B g r z
+theorem measurableSet_originalBackgroundClosedTail {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    MeasurableSet (originalBackgroundClosedTail B g r z)
+theorem fixedMask_physical_closed_tail_cond {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card)
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0)
+    (z : ℝ) :
+    (cond (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)).real
+      (originalBackgroundClosedTail B g r z) =
+      (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).real
+        (backgroundClosedTail B g r z)
+theorem fixedMask_physical_closed_tail_intersection {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    (Measure.pi (fun _ : Fin n => μ)).real
+      (originalBackgroundClosedTail B g r z ∩ fixedMaskEvent C B) =
+      ((μ.real C) ^ B.card * (1 - μ.real C) ^ (n - B.card)) *
+        (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).real
+          (backgroundClosedTail B g r z)
+theorem cutoff_fixedMask_physical_closed_tail_transport {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (w : Ω → ℝ) (hw : Measurable w) (R : ℝ)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    let C : Set Ω := {o : Ω | w o ≤ R}
+    let d : ℝ := μ.real C
+    let E : Set (Fin n → Ω) := fixedMaskEvent C B
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C
+    MeasurableSet C ∧
+      P.real E = d ^ B.card * (1 - d) ^ (n - B.card) ∧
+      (P E ≠ 0 →
+        Measure.map (backgroundSample B e) (cond P E) =
+          Measure.pi (fun _ : Fin B.card => ν)) ∧
+      (P E ≠ 0 →
+        (cond P E).real (originalBackgroundClosedTail B g r z) =
+          (Measure.pi (fun _ : Fin B.card => ν)).real
+            (backgroundClosedTail B g r z)) ∧
+      P.real (originalBackgroundClosedTail B g r z ∩ E) =
+        (d ^ B.card * (1 - d) ^ (n - B.card)) *
+          (Measure.pi (fun _ : Fin B.card => ν)).real
+            (backgroundClosedTail B g r z)
