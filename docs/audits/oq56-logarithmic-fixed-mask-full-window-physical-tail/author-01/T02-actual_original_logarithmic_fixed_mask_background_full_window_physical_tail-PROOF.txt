@@ -1,0 +1,80 @@
+  classical
+  intro g r β A qpow
+  have hg : Measurable g :=
+    hh.stronglyMeasurable.integral_prod_right'.measurable
+  have hr : Measurable (Function.uncurry r) := by
+    change Measurable (fun z : Ω × Ω => h z.1 z.2 - g z.1 - g z.2)
+    exact (hh.sub (hg.comp measurable_fst)).sub (hg.comp measurable_snd)
+  have hrsym : ∀ a b : Ω, r a b = r b a := by
+    intro a b
+    dsimp only [r]
+    rw [hhsymm a b]
+    ring
+  rcases Shao.OQ6.OriginalLogarithmicConditionalFullWindowUncenteredPhysicalTail.actual_original_logarithmic_conditional_full_window_uncentered_physical_tail
+      μ h hh hh2 hhsymm hcenter hprojectionsecond w hw hwone α τ hα hτ
+      hwexp henvelope p hp hgp J hJ cSZ C1 C2 C3 C4 hSZ CCDF hSZC t0 ht0 with
+    ⟨_, _, _, c, K, hc, hK, N, hN8, hAll⟩
+  refine ⟨c, K, hc, hK, N, hN8, ?_⟩
+  intro n hn Rn Cn dn νn Pn
+  rcases hAll n hn with ⟨hWindow, hCn, hdn, hνn, _, _, hLams⟩
+  have hn8 : 8 ≤ n := hN8.trans hn
+  refine ⟨hWindow, hCn, hdn, hνn, ?_⟩
+  intro B e hhalf hcard E P
+  have hm4 : 4 ≤ B.card :=
+    Shao.OQ5.P41.FiniteBackgroundPhysicalTransport.card_ge_four_of_half_sample
+      B hn8 hhalf
+  have hnR8 : (8 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn8
+  have hmR4 : (4 : ℝ) ≤ (B.card : ℝ) := by exact_mod_cast hm4
+  have hmnR : (B.card : ℝ) ≤ (n : ℝ) := by exact_mod_cast hcard
+  have hden : 0 < (n : ℝ) - 2 := by linarith only [hnR8]
+  have hnum : 0 ≤ (B.card : ℝ) - 2 := by linarith only [hmR4]
+  have hλ : 0 ≤ backgroundScale B ∧ backgroundScale B ≤ 1 := by
+    dsimp only [backgroundScale]
+    constructor
+    · exact div_nonneg hnum hden.le
+    · apply (div_le_iff₀ hden).2
+      linarith only [hmnR]
+  have hMass : Pn.real E = dn ^ B.card * (1 - dn) ^ (n - B.card) :=
+    Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMask_real
+      μ Cn hCn B
+  rcases hLams (backgroundScale B) hλ with ⟨_, hSamples⟩
+  rcases hSamples B.card hhalf hcard with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, hLevels⟩
+  refine ⟨hm4, hλ.1, hλ.2, hMass, ?_⟩
+  intro z hz hzw
+  rcases hLevels z hz hzw with ⟨_, _, _, _, _, _, hTail, _⟩
+  have hPhysicalTail :
+      |P.real (backgroundClosedTail B g r z) /
+          Shao.standardNormalTail z - 1| ≤
+        K * (β * Real.rpow (1 + z) p *
+          Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+          (1 + z) ^ 3 / Real.sqrt (n : ℝ)) := by
+    simpa only [backgroundClosedTail, background_physicalStatistic_eq_Tuncenter]
+      using hTail
+  have hInter :
+      Pn.real (originalBackgroundClosedTail B g r z ∩ E) =
+        Pn.real E * P.real (backgroundClosedTail B g r z) := by
+    rw [hMass]
+    exact
+      Shao.OQ5.P41.FixedMaskConditionalBackgroundPhysicalTail.fixedMask_physical_closed_tail_intersection
+        μ Cn hCn B e g r hg hr hrsym hm4 z
+  refine ⟨hInter, ?_⟩
+  have hWeight : 0 ≤ Pn.real E := measureReal_nonneg
+  have hFactor :
+      Pn.real E * P.real (backgroundClosedTail B g r z) /
+          Shao.standardNormalTail z - Pn.real E =
+        Pn.real E * (P.real (backgroundClosedTail B g r z) /
+          Shao.standardNormalTail z - 1) := by
+    ring
+  rw [hInter, hFactor, abs_mul, abs_of_nonneg hWeight]
+  calc
+    Pn.real E * |P.real (backgroundClosedTail B g r z) /
+        Shao.standardNormalTail z - 1| ≤
+      Pn.real E * (K * (β * Real.rpow (1 + z) p *
+        Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+        (1 + z) ^ 3 / Real.sqrt (n : ℝ))) :=
+      mul_le_mul_of_nonneg_left hPhysicalTail hWeight
+    _ = Pn.real E * K * (β * Real.rpow (1 + z) p *
+        Real.rpow (n : ℝ) (-((p - 2) / 2)) +
+        (1 + z) ^ 3 / Real.sqrt (n : ℝ)) :=
+      (mul_assoc _ _ _).symm

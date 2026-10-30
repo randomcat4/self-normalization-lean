@@ -1,0 +1,36 @@
+:= by
+  classical
+  intro P d
+  have hMass : P.real (fixedMaskEvent C B) =
+      d ^ B.card * (1 - d) ^ (n - B.card) :=
+    fixedMask_real μ C hC B
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro hB
+    simpa [hB] using hMass
+  · intro hB
+    simpa [hB] using hMass
+  · intro hd
+    rw [hMass, hd]
+    by_cases hB : B = ∅
+    · subst B
+      simp
+    · have hm : B.card ≠ 0 := by
+        intro hz
+        exact hB (Finset.card_eq_zero.mp hz)
+      simp [hB, hm]
+  · intro hd
+    rw [hMass, hd]
+    by_cases hB : B = Finset.univ
+    · subst B
+      simp
+    · have hComplement : (Bᶜ : Finset (Fin n)) ≠ ∅ := by
+        intro hEmpty
+        apply hB
+        have hDouble := congrArg (fun S : Finset (Fin n) => Sᶜ) hEmpty
+        simpa using hDouble
+      have hCard : (Bᶜ : Finset (Fin n)).card ≠ 0 := by
+        intro hz
+        exact hComplement (Finset.card_eq_zero.mp hz)
+      have hK : n - B.card ≠ 0 := by
+        simpa only [Finset.card_compl, Fintype.card_fin] using hCard
+      simp [hB, hK]

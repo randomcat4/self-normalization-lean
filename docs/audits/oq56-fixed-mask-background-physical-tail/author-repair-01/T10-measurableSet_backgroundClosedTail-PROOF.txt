@@ -1,0 +1,12 @@
+:= by
+  have hScaled : ∀ a b : Ω, scaledResidual B r a b = scaledResidual B r b a := by
+    intro a b
+    dsimp only [scaledResidual]
+    rw [hsym a b]
+  have hPhysical : Measurable (physicalStatistic B.card g (scaledResidual B r)) :=
+    measurable_physicalStatistic B.card g (scaledResidual B r)
+      hg (measurable_scaledResidual B r hr) hScaled hm
+  change MeasurableSet {y : Fin B.card → Ω |
+    z ≤ physicalStatistic B.card g (scaledResidual B r) y}
+  exact measurableSet_le
+    (measurable_const : Measurable (fun _y : Fin B.card → Ω => z)) hPhysical

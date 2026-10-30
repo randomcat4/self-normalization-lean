@@ -1,0 +1,31 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  change Measure.map (backgroundSample B e) (P.restrict (fixedMaskEvent C B)) =
+    (P (fixedMaskEvent C B)) •
+      Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)
+  by_cases hMask : P (fixedMaskEvent C B) = 0
+  · have hRestrict : P.restrict (fixedMaskEvent C B) = 0 := by
+      apply Measure.ext
+      intro A hA
+      have hZero : P (A ∩ fixedMaskEvent C B) = 0 :=
+        measure_mono_null Set.inter_subset_right hMask
+      rw [Measure.restrict_apply hA]
+      simpa using hZero
+    rw [hRestrict, hMask]
+    simp
+  · have hFinite : P (fixedMaskEvent C B) ≠ ⊤ := by
+      exact measure_ne_top (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)
+    have hCancel :
+        P (fixedMaskEvent C B) * (P (fixedMaskEvent C B))⁻¹ = 1 := by
+      rw [mul_comm, ENNReal.inv_mul_cancel hMask hFinite]
+    have hRestrict :
+        P.restrict (fixedMaskEvent C B) =
+          (P (fixedMaskEvent C B)) • cond P (fixedMaskEvent C B) := by
+      change P.restrict (fixedMaskEvent C B) =
+        (P (fixedMaskEvent C B)) •
+          ((P (fixedMaskEvent C B))⁻¹ • P.restrict (fixedMaskEvent C B))
+      rw [smul_smul, hCancel, one_smul]
+    rw [hRestrict,
+      Measure.map_smul _ (measurable_backgroundSample (Ω := Ω) B e).aemeasurable,
+      fixedMask_backgroundSample_cond_map μ C hC B e hMask]

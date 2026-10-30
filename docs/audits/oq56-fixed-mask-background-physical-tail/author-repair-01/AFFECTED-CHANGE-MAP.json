@@ -1,0 +1,323 @@
+{
+  "schema": "oq56-unit281-repair01-precise-affected-RHS-proof-provenance-v1",
+  "atUTC": "2026-10-29T21:48:09.241Z",
+  "activation": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/repair01-ACTIVATION.json",
+    "sha256": "4a6344ba7b401c92202536bb705ccce16787e29eec17d3795e67b9b0fd1e0cf0",
+    "bytes": 45434
+  },
+  "oldFreeze": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/freeze-01/frozen-declarations.json",
+    "sha256": "6cda9b8cd087cd9b29b8b4275a8f385d7c6dfaab1feb1aa7a4249e18c0a72712",
+    "bytes": 13617
+  },
+  "newFreeze": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/freeze-02/frozen-declarations.json",
+    "sha256": "0c2b3d175c31b97f751386c92fed23f17ab6e824c0f9481f2a072791c353e958",
+    "bytes": 14433
+  },
+  "parentSyntaxDecision": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/parent-freeze02-syntax-decision.json",
+    "sha256": "71aee32dac2d3ac87e62d343a1c83dd7a9d455628b559ac3049e40363d151dfa",
+    "bytes": 2951
+  },
+  "oldSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/FixedMaskConditionalBackgroundPhysicalTail.lean",
+    "sha256": "51f92079570ad8e7f2d084a6c7e5bea74d0a8636c5261aa8a9a6cf38cfdddf26",
+    "bytes": 20112
+  },
+  "newSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/FixedMaskConditionalBackgroundPhysicalTail.lean",
+    "sha256": "f0bde942852bde3957d479d03c23500b5d8c1ea677fac9e9abf9bf431f899354",
+    "bytes": 20543
+  },
+  "changedComponents": [
+    {
+      "id": "D03",
+      "name": "originalBackgroundClosedTail",
+      "component": "fixedRHS",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/D03-originalBackgroundClosedTail-RHS.txt",
+        "sha256": "705465346725d5a4058092992c888cace99d861c25893fa61fd5816b32d77cec",
+        "bytes": 326
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/D03-originalBackgroundClosedTail-RHS.txt",
+        "sha256": "eca4c70d3e6598c81534241bb8784bfbdbd5bcb7c12e66e0fa3ec72cd026f9b5",
+        "bytes": 514
+      },
+      "oldLiteral": "  {x : Fin n → Ω |\n    z ≤ (let s : ℝ :=\n      backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j));\n      @ite ℝ (s = 0) (Classical.propDecidable (s = 0)) (0 : ℝ)\n        (backgroundNumerator B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j)) / s))}\n",
+      "newLiteral": "  {x : Fin n → Ω |\n    z ≤ @ite ℝ\n      (backgroundStudentizer B (fun i : Fin n => g (x i))\n        (fun i j : Fin n => r (x i) (x j)) = 0)\n      (Classical.propDecidable\n        (backgroundStudentizer B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j)) = 0))\n      (0 : ℝ)\n      (backgroundNumerator B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j)) /\n        backgroundStudentizer B (fun i : Fin n => g (x i))\n          (fun i j : Fin n => r (x i) (x j)))}\n",
+      "HEADUnchanged": true,
+      "reason": "Parent freeze02 expands the intended sB binding into identical original backgroundStudentizer occurrences after native01 parse failure. Old source did not elaborate; no checked old/new defeq claim."
+    },
+    {
+      "id": "T02",
+      "name": "fixedMask_measure",
+      "component": "completePROOF",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T02-fixedMask_measure-PROOF.txt",
+        "sha256": "56ccb78ef89e0fe430184c8608484e665909edcd0c79e7959dc769d79920cda1",
+        "bytes": 634
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T02-fixedMask_measure-PROOF.txt",
+        "sha256": "6b8ba0dc9746914491045e78befca28855316ccf6423597f83ae698c583e03ab",
+        "bytes": 877
+      },
+      "oldLiteral": ":= by\n  classical\n  have hSet : fixedMaskEvent C B =\n      Set.pi Set.univ (fun i : Fin n =>\n        @ite (Set Ω) (i ∈ B) (Classical.propDecidable (i ∈ B)) C Cᶜ) := by\n    ext x\n    simp only [fixedMaskEvent, Set.mem_iInter, Set.mem_preimage,\n      Set.mem_pi, Set.mem_univ, true_implies]\n  rw [hSet, Measure.pi_pi]\n  simp only [apply_ite]\n  rw [Finset.prod_ite]\n  have hGood : Finset.univ.filter (fun i : Fin n => i ∈ B) = B := by\n    ext i\n    simp\n  have hBad : Finset.univ.filter (fun i : Fin n => i ∉ B) = Bᶜ := by\n    ext i\n    simp\n  simp only [hGood, hBad, Finset.prod_const, Finset.card_compl, Fintype.card_fin]\n",
+      "newLiteral": ":= by\n  classical\n  letI : DecidablePred (fun i : Fin n => i ∈ B) :=\n    fun i : Fin n => Classical.propDecidable (i ∈ B)\n  have hSet : fixedMaskEvent C B =\n      Set.pi Set.univ (fun i : Fin n =>\n        @ite (Set Ω) (i ∈ B) (Classical.propDecidable (i ∈ B)) C Cᶜ) := by\n    ext x\n    simp only [fixedMaskEvent, Set.mem_iInter, Set.mem_preimage,\n      Set.mem_pi, Set.mem_univ, true_implies]\n  rw [hSet, Measure.pi_pi]\n  simp only [apply_ite]\n  rw [Finset.prod_ite\n    (s := (Finset.univ : Finset (Fin n)))\n    (p := fun i : Fin n => i ∈ B)\n    (fun _i : Fin n => μ C) (fun _i : Fin n => μ Cᶜ)]\n  have hGood : Finset.univ.filter (fun i : Fin n => i ∈ B) = B := by\n    ext i\n    simp\n  have hBad : Finset.univ.filter (fun i : Fin n => i ∉ B) = Bᶜ := by\n    ext i\n    simp\n  simp only [hGood, hBad, Finset.prod_const, Finset.card_compl, Fintype.card_fin]\n",
+      "HEADUnchanged": true,
+      "reason": "Instantiate exact pinned Finset.prod_ite with s,p,f,g and an explicit matching DecidablePred instead of an open-argument rewrite."
+    }
+  ],
+  "onlyChangedBodyIDs": [
+    "D03",
+    "T02"
+  ],
+  "all18HEADPRECloseUnchanged": true,
+  "otherTwoRHSUnchanged": true,
+  "unchanged14ProofsExact": true,
+  "unchangedProofBindings": [
+    {
+      "id": "T01",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T01-measurableSet_fixedMaskEvent-PROOF.txt",
+        "sha256": "c14b26c3010652aa61b953781cf8e66f49da4defe17601849f291f53b157a566",
+        "bytes": 282
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T01-measurableSet_fixedMaskEvent-PROOF.txt",
+        "sha256": "c14b26c3010652aa61b953781cf8e66f49da4defe17601849f291f53b157a566",
+        "bytes": 282
+      },
+      "exact": true
+    },
+    {
+      "id": "T03",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T03-fixedMask_real-PROOF.txt",
+        "sha256": "883676c1c79eb2f05bb53bd1bb9edf9aeef4a1bc465ec6956639b8ee21c35610",
+        "bytes": 406
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T03-fixedMask_real-PROOF.txt",
+        "sha256": "883676c1c79eb2f05bb53bd1bb9edf9aeef4a1bc465ec6956639b8ee21c35610",
+        "bytes": 406
+      },
+      "exact": true
+    },
+    {
+      "id": "T04",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T04-fixedMask_real_boundary-PROOF.txt",
+        "sha256": "d146824c8d139e43a117ae9130c55e0a59687995d979fc1518b81400d4acc53d",
+        "bytes": 1019
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T04-fixedMask_real_boundary-PROOF.txt",
+        "sha256": "d146824c8d139e43a117ae9130c55e0a59687995d979fc1518b81400d4acc53d",
+        "bytes": 1019
+      },
+      "exact": true
+    },
+    {
+      "id": "T05",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T05-measurable_backgroundSample-PROOF.txt",
+        "sha256": "2712ee166bb6fce103865e5f253ff1c185f67b069f55b73d411e0b6520a8ca3d",
+        "bytes": 228
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T05-measurable_backgroundSample-PROOF.txt",
+        "sha256": "2712ee166bb6fce103865e5f253ff1c185f67b069f55b73d411e0b6520a8ca3d",
+        "bytes": 228
+      },
+      "exact": true
+    },
+    {
+      "id": "T06",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T06-fixedMask_backgroundSample_cond_map-PROOF.txt",
+        "sha256": "ae101758ea0949a1d3f3b1ccc421c459b809373d3b41b80b8e02b7054adec4ec",
+        "bytes": 3073
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T06-fixedMask_backgroundSample_cond_map-PROOF.txt",
+        "sha256": "ae101758ea0949a1d3f3b1ccc421c459b809373d3b41b80b8e02b7054adec4ec",
+        "bytes": 3073
+      },
+      "exact": true
+    },
+    {
+      "id": "T07",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T07-fixedMask_backgroundSample_restrict_map-PROOF.txt",
+        "sha256": "201d1aaf4270acfd290dc33e5396fdf0a3d972d9d928403ada0b5e00515dc446",
+        "bytes": 1420
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T07-fixedMask_backgroundSample_restrict_map-PROOF.txt",
+        "sha256": "201d1aaf4270acfd290dc33e5396fdf0a3d972d9d928403ada0b5e00515dc446",
+        "bytes": 1420
+      },
+      "exact": true
+    },
+    {
+      "id": "T08",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T08-measurable_scaledResidual-PROOF.txt",
+        "sha256": "f83a3436ffeaca0afe0a4e4ad2c45b7f5d38ec33bc25ccf7462ff301a4a450c4",
+        "bytes": 292
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T08-measurable_scaledResidual-PROOF.txt",
+        "sha256": "f83a3436ffeaca0afe0a4e4ad2c45b7f5d38ec33bc25ccf7462ff301a4a450c4",
+        "bytes": 292
+      },
+      "exact": true
+    },
+    {
+      "id": "T09",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T09-measurable_physicalStatistic-PROOF.txt",
+        "sha256": "3fe47d307ed43c5d15cfe7bdf3dad17557001e832b65c56d8afb2e2f7ae01ebf",
+        "bytes": 736
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T09-measurable_physicalStatistic-PROOF.txt",
+        "sha256": "3fe47d307ed43c5d15cfe7bdf3dad17557001e832b65c56d8afb2e2f7ae01ebf",
+        "bytes": 736
+      },
+      "exact": true
+    },
+    {
+      "id": "T10",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T10-measurableSet_backgroundClosedTail-PROOF.txt",
+        "sha256": "b4c8704c3bbc634a53e5859618f6f488681282c3a31ab5c9011a2ad2269800f7",
+        "bytes": 570
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T10-measurableSet_backgroundClosedTail-PROOF.txt",
+        "sha256": "b4c8704c3bbc634a53e5859618f6f488681282c3a31ab5c9011a2ad2269800f7",
+        "bytes": 570
+      },
+      "exact": true
+    },
+    {
+      "id": "T11",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T11-originalBackgroundClosedTail_eq_preimage-PROOF.txt",
+        "sha256": "2c8cbc3747311b64e6eb37cfff16c70a16acc8854869a4f355fc2f51302e4b07",
+        "bytes": 431
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T11-originalBackgroundClosedTail_eq_preimage-PROOF.txt",
+        "sha256": "2c8cbc3747311b64e6eb37cfff16c70a16acc8854869a4f355fc2f51302e4b07",
+        "bytes": 431
+      },
+      "exact": true
+    },
+    {
+      "id": "T12",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T12-measurableSet_originalBackgroundClosedTail-PROOF.txt",
+        "sha256": "0ecca9626cc33aea2cc94d0a3bd5d165268491df988e08a4e70d02adfc4ea0de",
+        "bytes": 188
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T12-measurableSet_originalBackgroundClosedTail-PROOF.txt",
+        "sha256": "0ecca9626cc33aea2cc94d0a3bd5d165268491df988e08a4e70d02adfc4ea0de",
+        "bytes": 188
+      },
+      "exact": true
+    },
+    {
+      "id": "T13",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T13-fixedMask_physical_closed_tail_cond-PROOF.txt",
+        "sha256": "5456c9f2d35929177d67f37bc4c0f59fcbb825c3516db9be01033479cf19099f",
+        "bytes": 498
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T13-fixedMask_physical_closed_tail_cond-PROOF.txt",
+        "sha256": "5456c9f2d35929177d67f37bc4c0f59fcbb825c3516db9be01033479cf19099f",
+        "bytes": 498
+      },
+      "exact": true
+    },
+    {
+      "id": "T14",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T14-fixedMask_physical_closed_tail_intersection-PROOF.txt",
+        "sha256": "db7355f1602c0ea21f8470abb24ad9cf77d1df207ba5c393fe316734d40bcd86",
+        "bytes": 1163
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T14-fixedMask_physical_closed_tail_intersection-PROOF.txt",
+        "sha256": "db7355f1602c0ea21f8470abb24ad9cf77d1df207ba5c393fe316734d40bcd86",
+        "bytes": 1163
+      },
+      "exact": true
+    },
+    {
+      "id": "T15",
+      "old": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-01/T15-cutoff_fixedMask_physical_closed_tail_transport-PROOF.txt",
+        "sha256": "4f2ef20318033fcc34a0b224c12459d7a9475ae9c14521e5bcf49eefffe6b1ed",
+        "bytes": 482
+      },
+      "new": {
+        "path": "C:/game/shao lean/drafts/oq56/unit281/author-repair-01/T15-cutoff_fixedMask_physical_closed_tail_transport-PROOF.txt",
+        "sha256": "4f2ef20318033fcc34a0b224c12459d7a9475ae9c14521e5bcf49eefffe6b1ed",
+        "bytes": 482
+      },
+      "exact": true
+    }
+  ],
+  "D03SemanticReview": "The new explicit condition, its Classical.propDecidable argument and the ratio denominator all contain the exact same original backgroundStudentizer B g(x) r(x,x). The numerator is unchanged backgroundNumerator. Thus the intended closed event remains z≤if sB=0 then0 else NB/sB. It keeps original n−2/m−1/λ/guard/all-z/atomic semantics. The old malformed source has no elaborated definition VALUE, so this is source/intention analysis pending new SOURCE/kernel/VALUE evidence.",
+  "T11Effect": "Exact old T11 proof retained; after the qualified279 guarded bridge rewrites its physical expression, the imported let-bound sB reduces by zeta to the new explicit D03 guard. The native01 T11 recovery placeholder is downstream of invalid D03, not a passed proof. Independent SOURCE must cover this new value-to-event interaction.",
+  "dependencyEffects": {
+    "D03": [
+      "T11",
+      "T12",
+      "T13",
+      "T14",
+      "T15"
+    ],
+    "T02": [
+      "T03",
+      "T04",
+      "T14",
+      "T15"
+    ]
+  },
+  "priorIndependentSOURCE": {
+    "path": "C:/game/shao lean/drafts/oq56/unit281/parent-SOURCE-intake.json",
+    "sha256": "c4d41b3fe782c457d5362d8a99bc9df6b609cb73703c6a46b11c86e0805f6c7a",
+    "bytes": 2347
+  },
+  "priorSOURCEReuse": "Parent old complete SOURCE intake applies only to unchanged exact coverage. New D03 value/T02 proof and affected event/T11 interaction require fresh delta SOURCE. Native01 was RC1/noO, so no successful unit281 kernel/AX evidence exists to reuse.",
+  "oldFailure": {
+    "nativeReceipt": {
+      "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit281-01/FixedMaskConditionalBackgroundPhysicalTail/author-kernel-01/receipt.json",
+      "sha256": "cca2077b281ee1de8f36280723b5a6a2a513d7ace03ee7e6b9343cf44d9f1592",
+      "bytes": 40000540,
+      "mtime_ns": "1793309780507836818"
+    },
+    "inspection": {
+      "path": "C:/game/shao lean/drafts/oq56/unit281/lead-execution-01/native01-terminal-inspection.json",
+      "sha256": "9f264461d0be5702a7d8aed491415216264867121864f44ab6dffec646cc9872",
+      "bytes": 9839
+    },
+    "actualRC": 1,
+    "objectAbsent": true,
+    "errors": 3,
+    "warnings": 10,
+    "preserved": true
+  },
+  "sourceAccepted": false,
+  "kernelChecked": false,
+  "qualified": false
+}

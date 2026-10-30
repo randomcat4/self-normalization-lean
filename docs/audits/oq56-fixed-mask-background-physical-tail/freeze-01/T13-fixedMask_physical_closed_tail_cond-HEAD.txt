@@ -1,0 +1,13 @@
+theorem fixedMask_physical_closed_tail_cond {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card)
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0)
+    (z : ℝ) :
+    (cond (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)).real
+      (originalBackgroundClosedTail B g r z) =
+      (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).real
+        (backgroundClosedTail B g r z)

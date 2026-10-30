@@ -1,0 +1,30 @@
+SOURCE library/Shao/Probability/ConditionalIID.lean
+NAME indep_cond_joint_map_eq_pi
+theorem indep_cond_joint_map_eq_pi
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {X : ι → Ω → α}
+    (hX : ∀ i, Measurable (X i)) (hIndep : iIndepFun X μ)
+    (B : ι → Set α) (hB : ∀ i, MeasurableSet (B i))
+    (hA : μ (⋂ i, X i ⁻¹' B i) ≠ 0) :
+    Measure.map (fun ω i => X i ω) (cond μ (⋂ i, X i ⁻¹' B i)) =
+      Measure.pi (fun i => cond (Measure.map (X i) μ) (B i))
+
+SOURCE library/Shao/OQ6/OriginalPhysicalClippedTailTransfer.lean
+NAME physical_clipped_globally_measurable
+theorem physical_clipped_globally_measurable
+    {Ω : Type u} [mΩ : MeasurableSpace Ω]
+    (n : ℕ) (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (C0 rho y : ℝ) :
+    let physical : (Fin n → Ω) → ℝ := fun x : Fin n → Ω =>
+      if Real.sqrt (centeredSq n g r x) = 0 then 0 else
+        (projectionW n g x + residualStatisticD n r x) /
+          Real.sqrt (centeredSq n g r x)
+    let clipped : (Fin n → Ω) → ℝ :=
+      clippedCenteredStatistic n g r C0 rho y
+    let Eclip : Set (Fin n → Ω) := {x : Fin n → Ω | clipped x ≠ physical x}
+    Measurable physical ∧ Measurable clipped ∧ MeasurableSet Eclip
+
+SOURCE coordination/pinned-api-20261026/Mathlib/MeasureTheory/Constructions/Pi.lean
+NAME pi_pi
+theorem pi_pi [∀ i, SigmaFinite (μ i)] (s : (i : ι) → Set (α i)) :
+    Measure.pi μ (pi univ s) = ∏ i, μ i (s i)

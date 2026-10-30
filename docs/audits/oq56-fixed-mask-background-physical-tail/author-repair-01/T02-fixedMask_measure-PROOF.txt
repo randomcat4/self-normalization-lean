@@ -1,0 +1,23 @@
+:= by
+  classical
+  letI : DecidablePred (fun i : Fin n => i ∈ B) :=
+    fun i : Fin n => Classical.propDecidable (i ∈ B)
+  have hSet : fixedMaskEvent C B =
+      Set.pi Set.univ (fun i : Fin n =>
+        @ite (Set Ω) (i ∈ B) (Classical.propDecidable (i ∈ B)) C Cᶜ) := by
+    ext x
+    simp only [fixedMaskEvent, Set.mem_iInter, Set.mem_preimage,
+      Set.mem_pi, Set.mem_univ, true_implies]
+  rw [hSet, Measure.pi_pi]
+  simp only [apply_ite]
+  rw [Finset.prod_ite
+    (s := (Finset.univ : Finset (Fin n)))
+    (p := fun i : Fin n => i ∈ B)
+    (fun _i : Fin n => μ C) (fun _i : Fin n => μ Cᶜ)]
+  have hGood : Finset.univ.filter (fun i : Fin n => i ∈ B) = B := by
+    ext i
+    simp
+  have hBad : Finset.univ.filter (fun i : Fin n => i ∉ B) = Bᶜ := by
+    ext i
+    simp
+  simp only [hGood, hBad, Finset.prod_const, Finset.card_compl, Fintype.card_fin]

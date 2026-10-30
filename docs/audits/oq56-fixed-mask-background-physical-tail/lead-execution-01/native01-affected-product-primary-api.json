@@ -1,0 +1,69 @@
+{
+  "schema": "oq56-unit281-native01-affected-product-primary-API-v1",
+  "source": {
+    "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/.lake/packages/mathlib/Mathlib/Algebra/BigOperators/Group/Finset/Piecewise.lean",
+    "sha256": "ff5fbaab50a679c4533d56c668c7906a1356f78d140cb92f117c987b3e5f8b31",
+    "bytes": 14238
+  },
+  "Mathlib_HEAD": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "scopeDeclarationIndex": [
+    {
+      "line1": 19,
+      "text": "variable {ι M γ : Type*} {s : Finset ι}"
+    },
+    {
+      "line1": 21,
+      "text": "namespace Finset"
+    },
+    {
+      "line1": 23,
+      "text": "section CommMonoid"
+    },
+    {
+      "line1": 25,
+      "text": "variable [CommMonoid M]"
+    },
+    {
+      "line1": 276,
+      "text": "end CommMonoid"
+    },
+    {
+      "line1": 281,
+      "text": "end Finset"
+    },
+    {
+      "line1": 283,
+      "text": "namespace Fintype"
+    },
+    {
+      "line1": 287,
+      "text": "variable [CommMonoid M] [Fintype ι]"
+    },
+    {
+      "line1": 294,
+      "text": "variable [DecidableEq ι]"
+    },
+    {
+      "line1": 331,
+      "text": "end Fintype"
+    }
+  ],
+  "completeRanges": [
+    {
+      "startLine1": 1,
+      "endLine1": 107,
+      "text": "/-\nCopyright (c) 2017 Johannes Hölzl. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Johannes Hölzl\n-/\nmodule\n\npublic import Mathlib.Algebra.BigOperators.Group.Finset.Basic\npublic import Mathlib.Data.Finset.Piecewise\n\n/-!\n# Interaction of big operators with piecewise functions\n\nThis file proves lemmas on the sum and product of piecewise functions, including `ite` and `dite`.\n-/\n\npublic section\n\nvariable {ι M γ : Type*} {s : Finset ι}\n\nnamespace Finset\n\nsection CommMonoid\n\nvariable [CommMonoid M]\n\n@[to_additive]\ntheorem prod_apply_dite {p : ι → Prop} [DecidablePred p]\n    [DecidablePred fun x => ¬p x] (f : ∀ x : ι, p x → γ) (g : ∀ x : ι, ¬p x → γ) (h : γ → M) :\n    (∏ x ∈ s, h (if hx : p x then f x hx else g x hx)) =\n      (∏ x : {x ∈ s | p x}, h (f x.1 <| by simpa using (mem_filter.mp x.2).2)) *\n        ∏ x : {x ∈ s | ¬p x}, h (g x.1 <| by simpa using (mem_filter.mp x.2).2) :=\n  calc\n    (∏ x ∈ s, h (if hx : p x then f x hx else g x hx)) =\n        (∏ x ∈ s with p x, h (if hx : p x then f x hx else g x hx)) *\n          ∏ x ∈ s with ¬p x, h (if hx : p x then f x hx else g x hx) :=\n      (prod_filter_mul_prod_filter_not s p _).symm\n    _ = (∏ x : {x ∈ s | p x}, h (if hx : p x.1 then f x.1 hx else g x.1 hx)) *\n          ∏ x : {x ∈ s | ¬p x}, h (if hx : p x.1 then f x.1 hx else g x.1 hx) :=\n      congr_arg₂ _ (prod_attach _ _).symm (prod_attach _ _).symm\n    _ = (∏ x : {x ∈ s | p x}, h (f x.1 <| by simpa using (mem_filter.mp x.2).2)) *\n          ∏ x : {x ∈ s | ¬p x}, h (g x.1 <| by simpa using (mem_filter.mp x.2).2) :=\n      congr_arg₂ _ (prod_congr rfl fun x _hx ↦\n        congr(h $(dite_eq_left <| by simpa using (mem_filter.mp x.2).2)))\n        (prod_congr rfl fun x _hx =>\n          congr(h $(dite_eq_right <| by simpa using (mem_filter.mp x.2).2)))\n\n@[to_additive]\ntheorem prod_apply_ite {s : Finset ι} {p : ι → Prop} [DecidablePred p] (f g : ι → γ)\n    (h : γ → M) :\n    (∏ x ∈ s, h (if p x then f x else g x)) =\n      (∏ x ∈ s with p x, h (f x)) * ∏ x ∈ s with ¬p x, h (g x) :=\n  (prod_apply_dite _ _ _).trans <| congr_arg₂ _ (prod_attach _ (h ∘ f)) (prod_attach _ (h ∘ g))\n\n@[to_additive]\ntheorem prod_dite {s : Finset ι} {p : ι → Prop} [DecidablePred p] (f : ∀ x : ι, p x → M)\n    (g : ∀ x : ι, ¬p x → M) :\n    ∏ x ∈ s, (if hx : p x then f x hx else g x hx) =\n      (∏ x : {x ∈ s | p x}, f x.1 (by simpa using (mem_filter.mp x.2).2)) *\n        ∏ x : {x ∈ s | ¬p x}, g x.1 (by simpa using (mem_filter.mp x.2).2) := by\n  simp [prod_apply_dite _ _ fun x => x]\n\n@[to_additive]\ntheorem prod_ite {s : Finset ι} {p : ι → Prop} [DecidablePred p] (f g : ι → M) :\n    ∏ x ∈ s, (if p x then f x else g x) = (∏ x ∈ s with p x, f x) * ∏ x ∈ s with ¬p x, g x := by\n  simp [prod_apply_ite _ _ fun x => x]\n\n@[to_additive]\nlemma prod_dite_of_false {p : ι → Prop} [DecidablePred p] (h : ∀ i ∈ s, ¬ p i)\n    (f : ∀ i, p i → M) (g : ∀ i, ¬ p i → M) :\n    ∏ i ∈ s, (if hi : p i then f i hi else g i hi) = ∏ i : s, g i.1 (h _ i.2) := by\n  refine prod_bij' (fun x hx => ⟨x, hx⟩) (fun x _ ↦ x) ?_ ?_ ?_ ?_ ?_ <;> aesop\n\n@[to_additive]\nlemma prod_ite_of_false {p : ι → Prop} [DecidablePred p] (h : ∀ x ∈ s, ¬p x) (f g : ι → M) :\n    ∏ x ∈ s, (if p x then f x else g x) = ∏ x ∈ s, g x :=\n  (prod_dite_of_false h _ _).trans (prod_attach _ _)\n\n@[to_additive]\nlemma prod_dite_of_true {p : ι → Prop} [DecidablePred p] (h : ∀ i ∈ s, p i) (f : ∀ i, p i → M)\n    (g : ∀ i, ¬ p i → M) :\n    ∏ i ∈ s, (if hi : p i then f i hi else g i hi) = ∏ i : s, f i.1 (h _ i.2) := by\n  refine prod_bij' (fun x hx => ⟨x, hx⟩) (fun x _ ↦ x) ?_ ?_ ?_ ?_ ?_ <;> grind\n\n@[to_additive]\nlemma prod_ite_of_true {p : ι → Prop} [DecidablePred p] (h : ∀ x ∈ s, p x) (f g : ι → M) :\n    ∏ x ∈ s, (if p x then f x else g x) = ∏ x ∈ s, f x :=\n  (prod_dite_of_true h _ _).trans (prod_attach _ _)\n\n@[to_additive]\ntheorem prod_apply_ite_of_false {p : ι → Prop} [DecidablePred p] (f g : ι → γ) (k : γ → M)\n    (h : ∀ x ∈ s, ¬p x) : (∏ x ∈ s, k (if p x then f x else g x)) = ∏ x ∈ s, k (g x) := by\n  simp_rw [apply_ite k]\n  exact prod_ite_of_false h _ _\n\n@[to_additive]\ntheorem prod_apply_ite_of_true {p : ι → Prop} [DecidablePred p] (f g : ι → γ) (k : γ → M)\n    (h : ∀ x ∈ s, p x) : (∏ x ∈ s, k (if p x then f x else g x)) = ∏ x ∈ s, k (f x) := by\n  simp_rw [apply_ite k]\n  exact prod_ite_of_true h _ _\n\n@[to_additive (attr := simp)]\ntheorem prod_ite_mem [DecidableEq ι] (s t : Finset ι) (f : ι → M) :\n    ∏ i ∈ s, (if i ∈ t then f i else 1) = ∏ i ∈ s ∩ t, f i := by\n  rw [← Finset.prod_filter, Finset.filter_mem_eq_inter]\n\n@[to_additive]\n"
+    },
+    {
+      "startLine1": 270,
+      "endLine1": 309,
+      "text": "lemma prod_eq_prod_iff_single [IsRightCancelMul M] {f g : ι → M} {i : ι} (hi : i ∈ s)\n    (hfg : ∀ j ∈ s, j ≠ i → f j = g j) : ∏ j ∈ s, f j = ∏ j ∈ s, g j ↔ f i = g i := by\n  classical\n  rw [prod_eq_mul_prod_sdiff_singleton_of_mem hi, prod_eq_mul_prod_sdiff_singleton_of_mem hi,\n    prod_congr rfl (by simpa), mul_left_inj]\n\nend CommMonoid\n\nlemma card_filter (p) [DecidablePred p] (s : Finset ι) :\n    #{i ∈ s | p i} = ∑ i ∈ s, ite (p i) 1 0 := by simp [sum_ite]\n\nend Finset\n\nnamespace Fintype\n\nopen Finset\n\nvariable [CommMonoid M] [Fintype ι]\n\n@[to_additive]\nlemma prod_ite_eq_ite_exists (p : ι → Prop) [DecidablePred p] (h : ∀ i j, p i → p j → i = j)\n    (a : M) : ∏ i, ite (p i) a 1 = ite (∃ i, p i) a 1 := by\n  simp [prod_ite_one univ p (by simpa using h)]\n\nvariable [DecidableEq ι]\n\n@[to_additive]\nlemma prod_ite_mem (s : Finset ι) (f : ι → M) : ∏ i, (if i ∈ s then f i else 1) = ∏ i ∈ s, f i := by\n  simp\n\n/-- See also `Finset.prod_dite_eq`. -/\n@[to_additive /-- See also `Finset.sum_dite_eq`. -/]\nlemma prod_dite_eq (i : ι) (f : ∀ j, i = j → M) :\n    ∏ j, (if h : i = j then f j h else 1) = f i rfl := by\n  rw [Finset.prod_dite_eq, ite_eq_left (mem_univ _)]\n\n/-- See also `Finset.prod_dite_eq'`. -/\n@[to_additive /-- See also `Finset.sum_dite_eq'`. -/]\nlemma prod_dite_eq' (i : ι) (f : ∀ j, j = i → M) :\n    ∏ j, (if h : j = i then f j h else 1) = f i rfl := by\n"
+    }
+  ],
+  "LeanAX": 0,
+  "readonly": true,
+  "actualTYPEprint": false,
+  "outerRC": 0,
+  "stderr": "",
+  "UTC": "2026-10-29T21:38:17.513618+00:00"
+}

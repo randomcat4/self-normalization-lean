@@ -1,0 +1,25 @@
+theorem cutoff_fixedMask_physical_closed_tail_transport {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (w : Ω → ℝ) (hw : Measurable w) (R : ℝ)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    let C : Set Ω := {o : Ω | w o ≤ R}
+    let d : ℝ := μ.real C
+    let E : Set (Fin n → Ω) := fixedMaskEvent C B
+    let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+    let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C
+    MeasurableSet C ∧
+      P.real E = d ^ B.card * (1 - d) ^ (n - B.card) ∧
+      (P E ≠ 0 →
+        Measure.map (backgroundSample B e) (cond P E) =
+          Measure.pi (fun _ : Fin B.card => ν)) ∧
+      (P E ≠ 0 →
+        (cond P E).real (originalBackgroundClosedTail B g r z) =
+          (Measure.pi (fun _ : Fin B.card => ν)).real
+            (backgroundClosedTail B g r z)) ∧
+      P.real (originalBackgroundClosedTail B g r z ∩ E) =
+        (d ^ B.card * (1 - d) ^ (n - B.card)) *
+          (Measure.pi (fun _ : Fin B.card => ν)).real
+            (backgroundClosedTail B g r z)

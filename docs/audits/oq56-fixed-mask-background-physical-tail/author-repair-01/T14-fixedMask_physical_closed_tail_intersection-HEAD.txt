@@ -1,0 +1,12 @@
+theorem fixedMask_physical_closed_tail_intersection {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n)) (e : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (g : Ω → ℝ) (r : Ω → Ω → ℝ)
+    (hg : Measurable g) (hr : Measurable (Function.uncurry r))
+    (hsym : ∀ a b : Ω, r a b = r b a) (hm : 4 ≤ B.card) (z : ℝ) :
+    (Measure.pi (fun _ : Fin n => μ)).real
+      (originalBackgroundClosedTail B g r z ∩ fixedMaskEvent C B) =
+      ((μ.real C) ^ B.card * (1 - μ.real C) ^ (n - B.card)) *
+        (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).real
+          (backgroundClosedTail B g r z)
