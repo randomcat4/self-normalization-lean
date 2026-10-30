@@ -1,0 +1,1043 @@
+{
+  "schema": "unit285-independent-complete-used-primary-HEAD-body-ambient-v1",
+  "pin": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "provenance": "Local hashes/bytes independently checked against exact ACT; pinned origin comes from bound read-only parent records. No new Git/server/network check by reviewer.",
+  "namedPrimaryAPIRecords": 39,
+  "uniquePrimaryFiles": 11,
+  "records": [
+    {
+      "name": "Complex.exp_bound_sq",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-02/Mathlib/Analysis/SpecialFunctions/Exp.lean",
+        "sha256": "1dcb27b9ea4dbfea015fd97196f0cb6ac294633be79590dba8af8685d11b03e8",
+        "bytes": 22187,
+        "LF": 531
+      },
+      "candidateUse": "41-46",
+      "conditionsIndependentlyChecked": "x=0 and real-cast z=u; norm bound from abs u<=1.",
+      "completeDeclarationAndBody": {
+        "firstLine": 38,
+        "lastLine": 47,
+        "text": "theorem exp_bound_sq (x z : ℂ) (hz : ‖z‖ ≤ 1) :\n    ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=\n  calc\n    ‖exp (x + z) - exp x - z * exp x‖ = ‖exp x * (exp z - 1 - z)‖ := by\n      congr\n      rw [exp_add]\n      ring\n    _ = ‖exp x‖ * ‖exp z - 1 - z‖ := norm_mul _ _\n    _ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=\n      mul_le_mul_of_nonneg_left (norm_exp_sub_one_sub_id_le hz) (norm_nonneg _)\n"
+      },
+      "ambientContext": {
+        "firstLine": 26,
+        "lastLine": 36,
+        "text": "@[expose] public section\n\nnoncomputable section\n\nopen Asymptotics Bornology Finset Filter Function Metric Set Topology\n\nopen scoped Nat\n\nnamespace Complex\n\nvariable {z y x : ℝ}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Complex.re_le_norm",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Norm.lean",
+        "sha256": "7f719d7b3ba3ba8b4667a8f79e7efd5d8fb4da2b82dcca011e64129113a63eba",
+        "bytes": 15444,
+        "LF": 392
+      },
+      "candidateUse": "42-46",
+      "conditionsIndependentlyChecked": "Arbitrary complex remainder; its real part<=its norm.",
+      "completeDeclarationAndBody": {
+        "firstLine": 40,
+        "lastLine": 46,
+        "text": "theorem abs_re_le_norm (z : ℂ) : |z.re| ≤ ‖z‖ := by\n  rw [mul_self_le_mul_self_iff (abs_nonneg z.re) (Complex.norm_nonneg _), abs_mul_abs_self,\n    norm_mul_self_eq_normSq]\n  apply re_sq_le_normSq\n\ntheorem re_le_norm (z : ℂ) : z.re ≤ ‖z‖ :=\n  (abs_le.1 (abs_re_le_norm _)).2\n"
+      },
+      "ambientContext": {
+        "firstLine": 16,
+        "lastLine": 25,
+        "text": "@[expose] public section\n\nnoncomputable section\n\nopen Set\n\nopen scoped ComplexConjugate\n\nnamespace Complex\nvariable {z : ℂ}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Complex.norm_real",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Norm.lean",
+        "sha256": "7f719d7b3ba3ba8b4667a8f79e7efd5d8fb4da2b82dcca011e64129113a63eba",
+        "bytes": 15444,
+        "LF": 392
+      },
+      "candidateUse": "41-46",
+      "conditionsIndependentlyChecked": "Real cast norm is real norm=absolute value.",
+      "completeDeclarationAndBody": {
+        "firstLine": 104,
+        "lastLine": 106,
+        "text": "@[simp 1100, norm_cast]\nlemma norm_real (r : ℝ) : ‖(r : ℂ)‖ = ‖r‖ := by\n  simp [norm_def, Real.sqrt_mul_self_eq_abs]\n"
+      },
+      "ambientContext": {
+        "firstLine": 16,
+        "lastLine": 25,
+        "text": "@[expose] public section\n\nnoncomputable section\n\nopen Set\n\nopen scoped ComplexConjugate\n\nnamespace Complex\nvariable {z : ℂ}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Complex.exp_ofReal_re",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "44-46",
+      "conditionsIndependentlyChecked": "Real part of exp real-cast is actual real exp; no extra premise.",
+      "completeDeclarationAndBody": {
+        "firstLine": 187,
+        "lastLine": 199,
+        "text": "@[simp]\ntheorem ofReal_exp_ofReal_re (x : ℝ) : ((exp x).re : ℂ) = exp x :=\n  conj_eq_iff_re.1 <| by rw [← exp_conj, conj_ofReal]\n\n@[simp, norm_cast]\ntheorem ofReal_exp (x : ℝ) : (Real.exp x : ℂ) = exp x :=\n  ofReal_exp_ofReal_re _\n\n@[simp]\ntheorem exp_ofReal_im (x : ℝ) : (exp x).im = 0 := by rw [← ofReal_exp_ofReal_re, ofReal_im]\n\ntheorem exp_ofReal_re (x : ℝ) : (exp x).re = Real.exp x :=\n  rfl\n"
+      },
+      "ambientContext": {
+        "firstLine": 91,
+        "lastLine": 94,
+        "text": "namespace Complex\n\nvariable (x y : ℂ)\n\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Complex.exp_zero",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "41-46",
+      "conditionsIndependentlyChecked": "Simplifies original remainder and norm coefficient at x=0.",
+      "completeDeclarationAndBody": {
+        "firstLine": 95,
+        "lastLine": 109,
+        "text": "set_option backward.isDefEq.respectTransparency false in\n@[simp]\ntheorem exp_zero : exp 0 = 1 := by\n  rw [exp]\n  refine lim_eq_of_equiv_const fun ε ε0 => ⟨1, fun j hj => ?_⟩\n  convert ε0.lt\n  rcases j with - | j\n  · exact absurd hj (not_le_of_gt zero_lt_one)\n  · dsimp [exp']\n    induction j with\n    | zero => simp\n    | succ j ih =>\n      rw [← ih (by simp)]\n      simp only [sum_range_succ, pow_succ]\n      simp\n"
+      },
+      "ambientContext": {
+        "firstLine": 91,
+        "lastLine": 94,
+        "text": "namespace Complex\n\nvariable (x y : ℂ)\n\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.exp_zero",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "118",
+      "conditionsIndependentlyChecked": "Actual exp0=1 used by q0 simplification.",
+      "completeDeclarationAndBody": {
+        "firstLine": 209,
+        "lastLine": 210,
+        "text": "@[simp]\ntheorem exp_zero : exp 0 = 1 := by simp [Real.exp]\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.exp_add",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "227,236",
+      "conditionsIndependentlyChecked": "Unconditional exponent product equality.",
+      "completeDeclarationAndBody": {
+        "firstLine": 212,
+        "lastLine": 212,
+        "text": "nonrec theorem exp_add : exp (x + y) = exp x * exp y := by simp [exp_add, exp]\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.exp_nat_mul",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "186-190",
+      "conditionsIndependentlyChecked": "Arbitrary real exponent and natural m including zero.",
+      "completeDeclarationAndBody": {
+        "firstLine": 234,
+        "lastLine": 235,
+        "text": "nonrec theorem exp_nat_mul (x : ℝ) (n : ℕ) : exp (n * x) = exp x ^ n :=\n  ofReal_injective (by simp [exp_nat_mul])\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.exp_pos",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "226,235",
+      "conditionsIndependentlyChecked": "All real exponents have strictly positive exponential.",
+      "completeDeclarationAndBody": {
+        "firstLine": 273,
+        "lastLine": 287,
+        "text": "private theorem add_one_lt_exp_of_pos {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=\n  (by nlinarith : x + 1 < 1 + x + x ^ 2 / 2).trans_le (quadratic_le_exp_of_nonneg hx.le)\n\nprivate theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x := by\n  rcases eq_or_lt_of_le hx with (rfl | h)\n  · simp\n  exact (add_one_lt_exp_of_pos h).le\n\ntheorem one_le_exp {x : ℝ} (hx : 0 ≤ x) : 1 ≤ exp x := by linarith [add_one_le_exp_of_nonneg hx]\n\n@[bound]\ntheorem exp_pos (x : ℝ) : 0 < exp x :=\n  (le_total 0 x).elim (lt_of_lt_of_le zero_lt_one ∘ one_le_exp) fun h => by\n    rw [← neg_neg x, Real.exp_neg]\n    exact inv_pos.2 (lt_of_lt_of_le zero_lt_one (one_le_exp (neg_nonneg.2 h)))\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.exp_le_exp",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "228,237",
+      "conditionsIndependentlyChecked": "Strict monotonicity gives equivalent scalar exponent inequality.",
+      "completeDeclarationAndBody": {
+        "firstLine": 299,
+        "lastLine": 318,
+        "text": "@[mono, gcongr]\ntheorem exp_strictMono : StrictMono exp := fun x y h => by\n  rw [← sub_add_cancel y x, Real.exp_add]\n  exact (lt_mul_iff_one_lt_left (exp_pos _)).2\n      (lt_of_lt_of_le (by linarith) (add_one_le_exp_of_nonneg (by linarith)))\n\n@[gcongr, mono]\ntheorem exp_monotone : Monotone exp :=\n  exp_strictMono.monotone\n\n@[bound] -- temporary lemma for the `bound` tactic\ntheorem exp_le_exp_of_le {x y : ℝ} (h : x ≤ y) : exp x ≤ exp y := exp_monotone h\n\n@[simp]\ntheorem exp_lt_exp {x y : ℝ} : exp x < exp y ↔ x < y :=\n  exp_strictMono.lt_iff_lt\n\n@[simp]\ntheorem exp_le_exp {x y : ℝ} : exp x ≤ exp y ↔ x ≤ y :=\n  exp_strictMono.le_iff_le\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.add_one_le_exp",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-04/Mathlib/Analysis/Complex/Exponential.lean",
+        "sha256": "35d9f9e6abaf24d09a25cb1eeefbfc4180c3fe18de4d47362704c2f9f6601146",
+        "bytes": 28484,
+        "LF": 713
+      },
+      "candidateUse": "74-75",
+      "conditionsIndependentlyChecked": "Unconditional real scalar bound, applied to t^2*v.",
+      "completeDeclarationAndBody": {
+        "firstLine": 624,
+        "lastLine": 636,
+        "text": "theorem add_one_lt_exp {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x := by\n  obtain hx | hx := hx.symm.lt_or_gt\n  · exact add_one_lt_exp_of_pos hx\n  obtain h' | h' := le_or_gt 1 (-x)\n  · linarith [x.exp_pos]\n  have hx' : 0 < x + 1 := by linarith\n  simpa [add_comm, exp_neg, inv_lt_inv₀ (exp_pos _) hx']\n    using exp_bound_div_one_sub_of_interval' (neg_pos.2 hx) h'\n\ntheorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x := by\n  obtain rfl | hx := eq_or_ne x 0\n  · simp\n  · exact (add_one_lt_exp hx).le\n"
+      },
+      "ambientContext": {
+        "firstLine": 203,
+        "lastLine": 207,
+        "text": "namespace Real\n\nopen Complex\n\nvariable (x y : ℝ)\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Integrable.of_mem_Icc",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-01/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "LF": 1250
+      },
+      "candidateUse": "25-36",
+      "conditionsIndependentlyChecked": "Real AE finite interval, AEMeasurable and finite probability measure.",
+      "completeDeclarationAndBody": {
+        "firstLine": 149,
+        "lastLine": 158,
+        "text": "theorem Integrable.of_mem_Icc_enorm [IsFiniteMeasure μ]\n    {a b : ℝ≥0∞} (ha : a ≠ ∞) (hb : b ≠ ∞) {X : α → ℝ≥0∞} (hX : AEMeasurable X μ)\n    (h : ∀ᵐ ω ∂μ, X ω ∈ Set.Icc a b) :\n    Integrable X μ :=\n  ⟨hX.aestronglyMeasurable, .of_mem_Icc_of_ne_top ha hb h⟩\n\ntheorem Integrable.of_mem_Icc [IsFiniteMeasure μ] (a b : ℝ) {X : α → ℝ} (hX : AEMeasurable X μ)\n    (h : ∀ᵐ ω ∂μ, X ω ∈ Set.Icc a b) :\n    Integrable X μ :=\n  ⟨hX.aestronglyMeasurable, .of_mem_Icc a b h⟩\n"
+      },
+      "ambientContext": {
+        "firstLine": 41,
+        "lastLine": 60,
+        "text": "noncomputable section\n\nopen ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n\nopen scoped Topology\n\nvariable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\nvariable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n\nnamespace MeasureTheory\n\n/-! ### The predicate `Integrable` -/\n\n/-- `Integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.\n  `Integrable f` means `Integrable f volume`. -/\n@[fun_prop, wikidata Q3153745]\ndef Integrable {α} {_ : MeasurableSpace α} (f : α → ε)\n    (μ : Measure α := by volume_tac) : Prop :=\n  AEStronglyMeasurable f μ ∧ HasFiniteIntegral f μ\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "integrable_const",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-01/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "LF": 1250
+      },
+      "candidateUse": "48-65",
+      "conditionsIndependentlyChecked": "Probability implies finite measure; constant1.",
+      "completeDeclarationAndBody": [
+        {
+          "firstLine": 132,
+          "lastLine": 147,
+          "text": "theorem integrable_const_iff_enorm {c : ε} (hc : ‖c‖ₑ ≠ ∞) :\n    Integrable (fun _ : α => c) μ ↔ ‖c‖ₑ = 0 ∨ IsFiniteMeasure μ := by\n  have : AEStronglyMeasurable (fun _ : α => c) μ := aestronglyMeasurable_const\n  rw [Integrable, and_iff_right this, hasFiniteIntegral_const_iff_enorm hc]\n\nlemma integrable_const_iff {c : β} : Integrable (fun _ : α => c) μ ↔ c = 0 ∨ IsFiniteMeasure μ := by\n  rw [integrable_const_iff_enorm enorm_ne_top]\n  simp\n\nlemma integrable_const_iff_isFiniteMeasure_enorm {c : ε} (hc : ‖c‖ₑ ≠ 0) (hc' : ‖c‖ₑ ≠ ∞) :\n    Integrable (fun _ ↦ c) μ ↔ IsFiniteMeasure μ := by\n  simp [integrable_const_iff_enorm hc', hc, isFiniteMeasure_iff]\n\nlemma integrable_const_iff_isFiniteMeasure {c : β} (hc : c ≠ 0) :\n    Integrable (fun _ ↦ c) μ ↔ IsFiniteMeasure μ := by\n  simp [integrable_const_iff, hc, isFiniteMeasure_iff]\n"
+        },
+        {
+          "firstLine": 165,
+          "lastLine": 167,
+          "text": "@[fun_prop]\ntheorem integrable_const [IsFiniteMeasure μ] (c : β) : Integrable (fun _ : α => c) μ :=\n  integrable_const_iff.2 <| .inr ‹_›\n"
+        }
+      ],
+      "ambientContext": {
+        "firstLine": 41,
+        "lastLine": 60,
+        "text": "noncomputable section\n\nopen ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n\nopen scoped Topology\n\nvariable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\nvariable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n\nnamespace MeasureTheory\n\n/-! ### The predicate `Integrable` -/\n\n/-- `Integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.\n  `Integrable f` means `Integrable f volume`. -/\n@[fun_prop, wikidata Q3153745]\ndef Integrable {α} {_ : MeasurableSpace α} (f : α → ε)\n    (μ : Measure α := by volume_tac) : Prop :=\n  AEStronglyMeasurable f μ ∧ HasFiniteIntegral f μ\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Integrable.add",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-01/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "LF": 1250
+      },
+      "candidateUse": "48-49,61-64",
+      "conditionsIndependentlyChecked": "Actual summand integrability and continuous real addition.",
+      "completeDeclarationAndBody": {
+        "firstLine": 403,
+        "lastLine": 423,
+        "text": "section ESeminormedAddMonoid\n\nvariable {ε' : Type*} [TopologicalSpace ε'] [ESeminormedAddMonoid ε']\n\nvariable (α ε') in\n@[to_fun (attr := fun_prop, simp) integrable_fun_zero]\ntheorem integrable_zero (μ : Measure α) : Integrable (0 : α → ε') μ := by\n  simp [Integrable, aestronglyMeasurable_zero]\n\ntheorem Integrable.add' {f g : α → ε'} (hf : Integrable f μ) (hg : Integrable g μ) :\n    HasFiniteIntegral (f + g) μ :=\n  calc\n    ∫⁻ a, ‖f a + g a‖ₑ ∂μ ≤ ∫⁻ a, ‖f a‖ₑ + ‖g a‖ₑ ∂μ := lintegral_mono fun _ ↦ enorm_add_le _ _\n    _ = _ := lintegral_enorm_add_left hf.aestronglyMeasurable _\n    _ < ∞ := add_lt_top.2 ⟨hf.hasFiniteIntegral, hg.hasFiniteIntegral⟩\n\n@[to_fun (attr := fun_prop)]\ntheorem Integrable.add [ContinuousAdd ε']\n    {f g : α → ε'} (hf : Integrable f μ) (hg : Integrable g μ) :\n    Integrable (f + g) μ :=\n  ⟨hf.aestronglyMeasurable.add hg.aestronglyMeasurable, hf.add' hg⟩\n"
+      },
+      "ambientContext": {
+        "firstLine": 41,
+        "lastLine": 60,
+        "text": "noncomputable section\n\nopen ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n\nopen scoped Topology\n\nvariable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\nvariable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n\nnamespace MeasureTheory\n\n/-! ### The predicate `Integrable` -/\n\n/-- `Integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.\n  `Integrable f` means `Integrable f volume`. -/\n@[fun_prop, wikidata Q3153745]\ndef Integrable {α} {_ : MeasurableSpace α} (f : α → ε)\n    (μ : Measure α := by volume_tac) : Prop :=\n  AEStronglyMeasurable f μ ∧ HasFiniteIntegral f μ\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Integrable.const_mul",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-01/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "LF": 1250
+      },
+      "candidateUse": "48-49,61-64",
+      "conditionsIndependentlyChecked": "Real normed ring and actual f/f2 integrability.",
+      "completeDeclarationAndBody": {
+        "firstLine": 1023,
+        "lastLine": 1030,
+        "text": "section NormedRing\n\nvariable {𝕜 : Type*} [NormedRing 𝕜] {f : α → 𝕜}\n\n@[fun_prop]\ntheorem Integrable.const_mul {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :\n    Integrable (fun x => c * f x) μ :=\n  h.smul c\n"
+      },
+      "ambientContext": {
+        "firstLine": 41,
+        "lastLine": 60,
+        "text": "noncomputable section\n\nopen ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n\nopen scoped Topology\n\nvariable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\nvariable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n\nnamespace MeasureTheory\n\n/-! ### The predicate `Integrable` -/\n\n/-- `Integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.\n  `Integrable f` means `Integrable f volume`. -/\n@[fun_prop, wikidata Q3153745]\ndef Integrable {α} {_ : MeasurableSpace α} (f : α → ε)\n    (μ : Measure α := by volume_tac) : Prop :=\n  AEStronglyMeasurable f μ ∧ HasFiniteIntegral f μ\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "integral_add",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-02/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547,
+        "LF": 1420
+      },
+      "candidateUse": "59-65",
+      "conditionsIndependentlyChecked": "Both additions carry actual Integrable witnesses.",
+      "completeDeclarationAndBody": {
+        "firstLine": 239,
+        "lastLine": 242,
+        "text": "theorem integral_add {f g : α → G} (hf : Integrable f μ) (hg : Integrable g μ) :\n    ∫ a, f a + g a ∂μ = ∫ a, f a ∂μ + ∫ a, g a ∂μ := by\n  simp only [integral_eq_setToFun]\n  exact setToFun_add (dominatedFinMeasAdditive_weightedSMul μ) hf hg\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 132,
+          "lastLine": 184,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Filter ENNReal EMetric Set TopologicalSpace Topology\nopen scoped NNReal ENNReal MeasureTheory\n\nnamespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n\nopen scoped Classical in\n/-- The Bochner integral -/\nirreducible_def integral {_ : MeasurableSpace α} (μ : Measure α) (f : α → G) : G :=\n  if _ : CompleteSpace G then\n    if hf : Integrable f μ then L1.integral (hf.toL1 f) else 0\n  else 0\n\n/-! In the notation for integrals, an expression like `∫ x, g ‖x‖ ∂μ` will not be parsed correctly,\n  and needs parentheses. We do not set the binding power of `r` to `0`, because then\n  `∫ x, f x = 0` will be parsed incorrectly. -/\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral μ r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => integral volume f) => r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral (Measure.restrict μ s) r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => integral (Measure.restrict volume s) f) => r\n\nsection Properties\n\nopen ContinuousLinearMap MeasureTheory.SimpleFunc\n\nvariable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+        },
+        {
+          "firstLine": 219,
+          "lastLine": 234,
+          "text": "variable (α G)\n\n@[simp]\ntheorem integral_zero : ∫ _ : α, (0 : G) ∂μ = 0 := by\n  simp only [integral_eq_setToFun]\n  apply setToFun_zero\n\n@[simp]\ntheorem integral_zero' : integral μ (0 : α → G) = 0 :=\n  integral_zero α G\n\nlemma integral_indicator₂ {β : Type*} (f : β → α → G) (s : Set β) (b : β) :\n    ∫ y, s.indicator (f · y) b ∂μ = s.indicator (fun x ↦ ∫ y, f x y ∂μ) b := by\n  by_cases hb : b ∈ s <;> simp [hb]\n\nvariable {α G}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "integral_const_mul",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-02/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547,
+        "LF": 1420
+      },
+      "candidateUse": "61-65",
+      "conditionsIndependentlyChecked": "RCLike real scalar identity.",
+      "completeDeclarationAndBody": {
+        "firstLine": 270,
+        "lastLine": 290,
+        "text": "/-- The Bochner integral is linear. Note this requires `𝕜` to be a normed division ring, in order\nto ensure that for `c ≠ 0`, the function `c • f` is integrable iff `f` is. For an analogous\nstatement for more general rings with an *a priori* integrability assumption on `f`, see\n`MeasureTheory.Integrable.integral_smul`. -/\n@[integral_simps]\ntheorem integral_smul [Module 𝕜 G] [NormSMulClass 𝕜 G] [SMulCommClass ℝ 𝕜 G] (c : 𝕜) (f : α → G) :\n    ∫ a, c • f a ∂μ = c • ∫ a, f a ∂μ := by\n  simp only [integral_eq_setToFun]\n  exact setToFun_smul (dominatedFinMeasAdditive_weightedSMul μ) weightedSMul_smul c f\n\ntheorem Integrable.integral_smul {R : Type*} [NormedRing R] [Module R G] [IsBoundedSMul R G]\n    [SMulCommClass ℝ R G] (c : R)\n    {f : α → G} (hf : Integrable f μ) :\n    ∫ a, c • f a ∂μ = c • ∫ a, f a ∂μ := by\n  by_cases hG : CompleteSpace G\n  · simpa only [integral, hG, hf, hf.fun_smul c] using! L1.integral_smul c (toL1 f hf)\n  · simp [integral, hG]\n\ntheorem integral_const_mul {L : Type*} [RCLike L] (r : L) (f : α → L) :\n    ∫ a, r * f a ∂μ = r * ∫ a, f a ∂μ :=\n  integral_smul r f\n"
+      },
+      "ambientContext": {
+        "firstLine": 132,
+        "lastLine": 184,
+        "text": "@[expose] public section\n\nnoncomputable section\n\nopen Filter ENNReal EMetric Set TopologicalSpace Topology\nopen scoped NNReal ENNReal MeasureTheory\n\nnamespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n\nopen scoped Classical in\n/-- The Bochner integral -/\nirreducible_def integral {_ : MeasurableSpace α} (μ : Measure α) (f : α → G) : G :=\n  if _ : CompleteSpace G then\n    if hf : Integrable f μ then L1.integral (hf.toL1 f) else 0\n  else 0\n\n/-! In the notation for integrals, an expression like `∫ x, g ‖x‖ ∂μ` will not be parsed correctly,\n  and needs parentheses. We do not set the binding power of `r` to `0`, because then\n  `∫ x, f x = 0` will be parsed incorrectly. -/\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral μ r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => integral volume f) => r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral (Measure.restrict μ s) r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => integral (Measure.restrict volume s) f) => r\n\nsection Properties\n\nopen ContinuousLinearMap MeasureTheory.SimpleFunc\n\nvariable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "integral_const",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-02/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547,
+        "LF": 1420
+      },
+      "candidateUse": "65",
+      "conditionsIndependentlyChecked": "Real constant integral is nu.real(univ)*constant; probability mass1.",
+      "completeDeclarationAndBody": {
+        "firstLine": 989,
+        "lastLine": 997,
+        "text": "@[simp]\ntheorem integral_const (c : E) : ∫ _ : α, c ∂μ = μ.real univ • c := by\n  by_cases hμ : IsFiniteMeasure μ\n  · simp only [integral_eq_setToFun]\n    exact setToFun_const (dominatedFinMeasAdditive_weightedSMul _) _\n  by_cases hc : c = 0\n  · simp [hc, integral_zero]\n  · simp [measureReal_def, (integrable_const_iff_isFiniteMeasure hc).not.2 hμ,\n      integral_undef, MeasureTheory.not_isFiniteMeasure_iff.mp hμ]\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 132,
+          "lastLine": 184,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Filter ENNReal EMetric Set TopologicalSpace Topology\nopen scoped NNReal ENNReal MeasureTheory\n\nnamespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n\nopen scoped Classical in\n/-- The Bochner integral -/\nirreducible_def integral {_ : MeasurableSpace α} (μ : Measure α) (f : α → G) : G :=\n  if _ : CompleteSpace G then\n    if hf : Integrable f μ then L1.integral (hf.toL1 f) else 0\n  else 0\n\n/-! In the notation for integrals, an expression like `∫ x, g ‖x‖ ∂μ` will not be parsed correctly,\n  and needs parentheses. We do not set the binding power of `r` to `0`, because then\n  `∫ x, f x = 0` will be parsed incorrectly. -/\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral μ r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => integral volume f) => r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral (Measure.restrict μ s) r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => integral (Measure.restrict volume s) f) => r\n\nsection Properties\n\nopen ContinuousLinearMap MeasureTheory.SimpleFunc\n\nvariable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+        },
+        {
+          "firstLine": 727,
+          "lastLine": 727,
+          "text": "variable [hE : CompleteSpace E]\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "integral_mono_ae",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-02/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547,
+        "LF": 1420
+      },
+      "candidateUse": "69-70",
+      "conditionsIndependentlyChecked": "Both real functions integrable and actual AE inequality.",
+      "completeDeclarationAndBody": {
+        "firstLine": 662,
+        "lastLine": 667,
+        "text": "lemma integral_mono_ae {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ)\n    (h : f ≤ᵐ[μ] g) : ∫ x, f x ∂μ ≤ ∫ x, g x ∂μ := by\n  rw [← sub_nonneg, ← integral_sub hg hf]\n  refine integral_nonneg_of_ae ?_\n  filter_upwards [h] with x hx\n  simpa\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 132,
+          "lastLine": 184,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Filter ENNReal EMetric Set TopologicalSpace Topology\nopen scoped NNReal ENNReal MeasureTheory\n\nnamespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n\nopen scoped Classical in\n/-- The Bochner integral -/\nirreducible_def integral {_ : MeasurableSpace α} (μ : Measure α) (f : α → G) : G :=\n  if _ : CompleteSpace G then\n    if hf : Integrable f μ then L1.integral (hf.toL1 f) else 0\n  else 0\n\n/-! In the notation for integrals, an expression like `∫ x, g ‖x‖ ∂μ` will not be parsed correctly,\n  and needs parentheses. We do not set the binding power of `r` to `0`, because then\n  `∫ x, f x = 0` will be parsed incorrectly. -/\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral μ r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => integral volume f) => r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral (Measure.restrict μ s) r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => integral (Measure.restrict volume s) f) => r\n\nsection Properties\n\nopen ContinuousLinearMap MeasureTheory.SimpleFunc\n\nvariable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+        },
+        {
+          "firstLine": 614,
+          "lastLine": 618,
+          "text": "end Basic\n\nsection Order\n\nvariable [PartialOrder E] [IsOrderedAddMonoid E] [IsOrderedModule ℝ E]\n"
+        },
+        {
+          "firstLine": 639,
+          "lastLine": 639,
+          "text": "variable [ClosedIciTopology E]\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "ProbabilityTheory.mgf",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "68,147-190",
+      "conditionsIndependentlyChecked": "Definition is actual exponential Bochner integral.",
+      "completeDeclarationAndBody": {
+        "firstLine": 121,
+        "lastLine": 123,
+        "text": "/-- Moment-generating function of a real random variable `X`: `fun t => μ[exp(t*X)]`. -/\ndef mgf (X : Ω → ℝ) (μ : Measure Ω) (t : ℝ) : ℝ :=\n  μ[fun ω => exp (t * X ω)]\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "mgf_nonneg",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "185",
+      "conditionsIndependentlyChecked": "Actual MGF integral nonnegative, no integrability loophole used.",
+      "completeDeclarationAndBody": {
+        "firstLine": 181,
+        "lastLine": 182,
+        "text": "theorem mgf_nonneg : 0 ≤ mgf X μ t := by\n  unfold mgf; positivity\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "mgf_map",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "160-171",
+      "conditionsIndependentlyChecked": "AEMeasurable evaluation and AEStronglyMeasurable exp(z*f) under map.",
+      "completeDeclarationAndBody": {
+        "firstLine": 215,
+        "lastLine": 218,
+        "text": "lemma mgf_map {Ω' : Type*} {mΩ' : MeasurableSpace Ω'} {μ : Measure Ω'} {Y : Ω' → Ω} {X : Ω → ℝ}\n    (hY : AEMeasurable Y μ) {t : ℝ} (hX : AEStronglyMeasurable (fun ω ↦ exp (t * X ω)) (μ.map Y)) :\n    mgf X (μ.map Y) t = mgf (X ∘ Y) μ t := by\n  simp_rw [mgf, integral_map hY hX, Function.comp_apply]\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "integrable_exp_mul_of_mem_Icc",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "37-38,152-157",
+      "conditionsIndependentlyChecked": "Finite measure, AE measurable real variable, AE interval; arbitrary real parameter.",
+      "completeDeclarationAndBody": {
+        "firstLine": 500,
+        "lastLine": 509,
+        "text": "lemma integrable_exp_mul_of_mem_Icc [IsFiniteMeasure μ] {X : Ω → ℝ} {a b t : ℝ}\n    (hm : AEMeasurable X μ) (hb : ∀ᵐ ω ∂μ, X ω ∈ Set.Icc a b) :\n    Integrable (fun ω ↦ exp (t * X ω)) μ := by\n  apply Integrable.of_mem_Icc (exp (min (a * t) (b * t))) (exp (max (a * t) (b * t)))\n  · exact (measurable_exp.comp_aemeasurable (hm.const_mul t))\n  filter_upwards [hb] with ω ⟨hl, hr⟩\n  simp only [Set.mem_Icc, exp_le_exp, inf_le_iff, le_sup_iff]\n  by_cases ht : 0 ≤ t\n  · exact ⟨Or.inl (by nlinarith), Or.inr (by nlinarith)⟩\n  · exact ⟨Or.inr (by nlinarith), Or.inl (by nlinarith)⟩\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 487,
+          "lastLine": 487,
+          "text": "end MomentGeneratingFunction\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "iIndepFun.integrable_exp_mul_sum",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "158-159",
+      "conditionsIndependentlyChecked": "Finite P, true independence, all coordinates measurable and each exponential integrable.",
+      "completeDeclarationAndBody": {
+        "firstLine": 340,
+        "lastLine": 362,
+        "text": "theorem IndepFun.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : X ⟂ᵢ[μ] Y)\n    (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)\n    (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) :\n    Integrable (fun ω => exp (t * (X + Y) ω)) μ := by\n  simp_rw [Pi.add_apply, mul_add, exp_add]\n  exact (h_indep.exp_mul t t).integrable_mul h_int_X h_int_Y\n\ntheorem iIndepFun.integrable_exp_mul_sum [IsFiniteMeasure μ] {X : ι → Ω → ℝ}\n    (h_indep : iIndepFun X μ) (h_meas : ∀ i, Measurable (X i))\n    {s : Finset ι} (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) :\n    Integrable (fun ω => exp (t * (∑ i ∈ s, X i) ω)) μ := by\n  classical\n  induction s using Finset.induction_on with\n  | empty =>\n    simp only [Finset.sum_apply, sum_empty, mul_zero, exp_zero]\n    exact integrable_const _\n  | insert i s hi_notin_s h_rec =>\n    have : ∀ i : ι, i ∈ s → Integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>\n      h_int i (mem_insert_of_mem hi)\n    specialize h_rec this\n    rw [sum_insert hi_notin_s]\n    refine IndepFun.integrable_exp_mul_add ?_ (h_int i (mem_insert_self _ _)) h_rec\n    exact (h_indep.indepFun_finsetSum_of_notMem h_meas hi_notin_s).symm\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        },
+        {
+          "firstLine": 284,
+          "lastLine": 284,
+          "text": "section IndepFun\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "iIndepFun.mgf_sum",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "172-179",
+      "conditionsIndependentlyChecked": "True independent measurable coordinates; full base/induction proof includes empty sum/product.",
+      "completeDeclarationAndBody": {
+        "firstLine": 364,
+        "lastLine": 382,
+        "text": "theorem iIndepFun.mgf_sum₀ {X : ι → Ω → ℝ}\n    (h_indep : iIndepFun X μ) (h_meas : ∀ i, AEMeasurable (X i) μ)\n    (s : Finset ι) : mgf (∑ i ∈ s, X i) μ t = ∏ i ∈ s, mgf (X i) μ t := by\n  have : IsProbabilityMeasure μ := h_indep.isProbabilityMeasure\n  classical\n  induction s using Finset.induction_on with\n  | empty => simp\n  | insert i s hi_notin_s h_rec =>\n    have h_int' : ∀ i : ι, AEStronglyMeasurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>\n      ((h_meas i).const_mul t).exp.aestronglyMeasurable\n    rw [sum_insert hi_notin_s,\n      IndepFun.mgf_add (h_indep.indepFun_finsetSum_of_notMem₀ h_meas hi_notin_s).symm (h_int' i)\n        (aestronglyMeasurable_exp_mul_sum fun i _ => h_int' i),\n      h_rec, prod_insert hi_notin_s]\n\ntheorem iIndepFun.mgf_sum {X : ι → Ω → ℝ}\n    (h_indep : iIndepFun X μ) (h_meas : ∀ i, Measurable (X i))\n    (s : Finset ι) : mgf (∑ i ∈ s, X i) μ t = ∏ i ∈ s, mgf (X i) μ t :=\n  h_indep.mgf_sum₀ (by fun_prop) s\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        },
+        {
+          "firstLine": 284,
+          "lastLine": 284,
+          "text": "section IndepFun\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "measure_ge_le_exp_mul_mgf",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "220-228",
+      "conditionsIndependentlyChecked": "Finite P,t>=0,actual exp(t*S) integrable,threshold2d.",
+      "completeDeclarationAndBody": {
+        "firstLine": 427,
+        "lastLine": 449,
+        "text": "section Chernoff\n\n/-- **Chernoff bound** on the upper tail of a real random variable. -/\ntheorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)\n    (h_int : Integrable (fun ω => exp (t * X ω)) μ) :\n    μ.real {ω | ε ≤ X ω} ≤ exp (-t * ε) * mgf X μ t := by\n  rcases ht.eq_or_lt with ht_zero_eq | ht_pos\n  · rw [ht_zero_eq.symm]\n    simp only [neg_zero, zero_mul, exp_zero, mgf_zero', one_mul]\n    gcongr\n    exacts [measure_ne_top _ _, Set.subset_univ _]\n  calc\n    μ.real {ω | ε ≤ X ω} = μ.real {ω | exp (t * ε) ≤ exp (t * X ω)} := by\n      congr 1 with ω\n      simp only [Set.mem_ofPred_eq, exp_le_exp]\n      exact ⟨fun h => mul_le_mul_of_nonneg_left h ht_pos.le,\n        fun h => le_of_mul_le_mul_left h ht_pos⟩\n    _ ≤ (exp (t * ε))⁻¹ * μ[fun ω => exp (t * X ω)] := by\n      have : exp (t * ε) * μ.real {ω | exp (t * ε) ≤ exp (t * X ω)} ≤\n          μ[fun ω => exp (t * X ω)] :=\n        mul_meas_ge_le_integral_of_nonneg (ae_of_all _ fun x => (exp_pos _).le) h_int _\n      rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff₀' (exp_pos _)]\n    _ = exp (-t * ε) * mgf X μ t := by rw [neg_mul, exp_neg]; rfl\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "measure_le_le_exp_mul_mgf",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/next285-parent-api-01/Mathlib/Probability/Moments/Basic.lean",
+        "sha256": "73264d34c22038347bc73821a45442346ce12756475359325ebb9340a89af8fa",
+        "bytes": 24699,
+        "LF": 560
+      },
+      "candidateUse": "229-237",
+      "conditionsIndependentlyChecked": "Finite P,-t<=0,actual exp(-t*S) integrable,threshold-2d.",
+      "completeDeclarationAndBody": {
+        "firstLine": 451,
+        "lastLine": 459,
+        "text": "/-- **Chernoff bound** on the lower tail of a real random variable. -/\ntheorem measure_le_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : t ≤ 0)\n    (h_int : Integrable (fun ω => exp (t * X ω)) μ) :\n    μ.real {ω | X ω ≤ ε} ≤ exp (-t * ε) * mgf X μ t := by\n  rw [← neg_neg t, ← mgf_neg, neg_neg, ← neg_mul_neg (-t)]\n  refine Eq.trans_le ?_ (measure_ge_le_exp_mul_mgf (-ε) (neg_nonneg.mpr ht) ?_)\n  · simp only [Pi.neg_apply, neg_le_neg_iff]\n  · simp_rw [Pi.neg_apply, neg_mul_neg]\n    exact h_int\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 42,
+          "lastLine": 53,
+          "text": "@[expose] public section\n\n\nopen MeasureTheory Filter Finset Real\n\nnoncomputable section\n\nopen scoped MeasureTheory ProbabilityTheory ENNReal NNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι : Type*} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}\n"
+        },
+        {
+          "firstLine": 117,
+          "lastLine": 119,
+          "text": "section MomentGeneratingFunction\n\nvariable {t : ℝ}\n"
+        },
+        {
+          "firstLine": 427,
+          "lastLine": 427,
+          "text": "section Chernoff\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "Measure.pi",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-02/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "LF": 952
+      },
+      "candidateUse": "85,92",
+      "conditionsIndependentlyChecked": "Genuine finite product on arbitrary measurable factors.",
+      "completeDeclarationAndBody": {
+        "firstLine": 209,
+        "lastLine": 212,
+        "text": "/-- `Measure.pi μ` is the finite product of the measures `{μ i | i : ι}`.\n  It is defined to be measure corresponding to `MeasureTheory.OuterMeasure.pi`. -/\nprotected irreducible_def pi : Measure (∀ i, α i) :=\n  toMeasure (OuterMeasure.pi fun i => (μ i).toOuterMeasure) (pi_caratheodory μ)\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 56,
+          "lastLine": 70,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "firstLine": 125,
+          "lastLine": 127,
+          "text": "namespace Measure\n\nvariable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "Measure.pi.instIsProbabilityMeasure",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-02/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "LF": 952
+      },
+      "candidateUse": "97-99",
+      "conditionsIndependentlyChecked": "Every factor nu probability; no Nonempty index premise.",
+      "completeDeclarationAndBody": {
+        "firstLine": 303,
+        "lastLine": 313,
+        "text": "instance pi.instIsFiniteMeasure [∀ i, IsFiniteMeasure (μ i)] :\n    IsFiniteMeasure (Measure.pi μ) :=\n  ⟨Measure.pi_univ μ ▸ ENNReal.prod_lt_top (fun i _ ↦ measure_lt_top (μ i) _)⟩\n\ninstance {α : ι → Type*} [∀ i, MeasureSpace (α i)] [∀ i, IsFiniteMeasure (volume : Measure (α i))] :\n    IsFiniteMeasure (volume : Measure (∀ i, α i)) :=\n  pi.instIsFiniteMeasure _\n\ninstance pi.instIsProbabilityMeasure [∀ i, IsProbabilityMeasure (μ i)] :\n    IsProbabilityMeasure (Measure.pi μ) :=\n  ⟨by simp only [Measure.pi_univ, measure_univ, Finset.prod_const_one]⟩\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 56,
+          "lastLine": 70,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "firstLine": 125,
+          "lastLine": 127,
+          "text": "namespace Measure\n\nvariable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "Measure.pi_of_empty",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-02/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "LF": 952
+      },
+      "candidateUse": "boundary audit",
+      "conditionsIndependentlyChecked": "Actual empty Pi is a Dirac probability; candidate need not branch.",
+      "completeDeclarationAndBody": {
+        "firstLine": 341,
+        "lastLine": 358,
+        "text": "theorem pi_of_empty {α : Type*} [Fintype α] [IsEmpty α] {β : α → Type*}\n    {m : ∀ a, MeasurableSpace (β a)} (μ : ∀ a : α, Measure (β a)) (x : ∀ a, β a := isEmptyElim) :\n    Measure.pi μ = dirac x := by\n  have : ∀ a, SigmaFinite (μ a) := isEmptyElim\n  refine pi_eq fun s _ => ?_\n  rw [Fintype.prod_empty, dirac_apply_of_mem]\n  exact isEmptyElim (α := α)\n\nlemma volume_pi_eq_dirac {ι : Type*} [Fintype ι] [IsEmpty ι]\n    {α : ι → Type*} [∀ i, MeasureSpace (α i)] (x : ∀ a, α a := isEmptyElim) :\n    (volume : Measure (∀ i, α i)) = Measure.dirac x :=\n  Measure.pi_of_empty _ _\n\n@[simp]\ntheorem pi_empty_univ {α : Type*} [Fintype α] [IsEmpty α] {β : α → Type*}\n    {m : ∀ α, MeasurableSpace (β α)} (μ : ∀ a : α, Measure (β a)) :\n    Measure.pi μ (Set.univ) = 1 := by\n  rw [pi_of_empty, measure_univ]\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 56,
+          "lastLine": 70,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "firstLine": 125,
+          "lastLine": 127,
+          "text": "namespace Measure\n\nvariable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        },
+        {
+          "firstLine": 325,
+          "lastLine": 325,
+          "text": "variable [∀ i, SigmaFinite (μ i)]\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "measurePreserving_eval",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-02/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "LF": 952
+      },
+      "candidateUse": "163-164",
+      "conditionsIndependentlyChecked": "Every factor probability; eval measurable and map exactly nu.",
+      "completeDeclarationAndBody": {
+        "firstLine": 376,
+        "lastLine": 407,
+        "text": "lemma pi_map_eval [DecidableEq ι] (i : ι) :\n     (Measure.pi μ).map (Function.eval i) = (∏ j ∈ Finset.univ.erase i, μ j Set.univ) • (μ i) := by\n  ext s hs\n  rw [Measure.map_apply (measurable_pi_apply i) hs, ← Set.univ_pi_update_univ, Measure.pi_pi,\n    Measure.smul_apply, smul_eq_mul, ← Finset.prod_erase_mul _ _ (a := i) (by simp)]\n  congrm ?_ * ?_\n  swap; · simp\n  refine Finset.prod_congr rfl fun j hj ↦ ?_\n  simp [Function.update, Finset.ne_of_mem_erase hj]\n\nlemma pi_map_pi {X Y : ι → Type*} {mX : ∀ i, MeasurableSpace (X i)} {μ : (i : ι) → Measure (X i)}\n    [∀ i, MeasurableSpace (Y i)] {f : (i : ι) → X i → Y i} [hμ : ∀ i, SigmaFinite ((μ i).map (f i))]\n    (hf : ∀ i, AEMeasurable (f i) (μ i)) :\n    (Measure.pi μ).map (fun x i ↦ (f i (x i))) = Measure.pi (fun i ↦ (μ i).map (f i)) := by\n  have (i : ι) := (hμ i).of_map _ (hf i)\n  refine (pi_eq fun s hs ↦ ?_).symm\n  rw [map_apply_of_aemeasurable _ (.univ_pi hs)]\n  swap\n  · exact .of_eval fun i ↦ (hf i).comp_quasiMeasurePreserving (quasiMeasurePreserving_eval _ i)\n  have : (fun (x : Π i, X i) i ↦ f i (x i)) ⁻¹' (Set.univ.pi s) =\n      Set.univ.pi (fun i ↦ (f i) ⁻¹' (s i)) := by ext x; simp\n  rw [this, pi_pi]\n  congr with i\n  rw [map_apply_of_aemeasurable (hf i) (hs i)]\n\nomit [∀ i, SigmaFinite (μ i)] in\nlemma _root_.MeasureTheory.measurePreserving_eval [∀ i, IsProbabilityMeasure (μ i)] (i : ι) :\n    MeasurePreserving (Function.eval i) (Measure.pi μ) (μ i) := by\n  refine ⟨measurable_pi_apply i, ?_⟩\n  classical\n  rw [Measure.pi_map_eval, Finset.prod_eq_one, one_smul]\n  exact fun _ _ ↦ measure_univ\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 56,
+          "lastLine": 70,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "firstLine": 125,
+          "lastLine": 127,
+          "text": "namespace Measure\n\nvariable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        },
+        {
+          "firstLine": 325,
+          "lastLine": 325,
+          "text": "variable [∀ i, SigmaFinite (μ i)]\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "Measure.tendsto_eval_ae_ae",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-02/Mathlib/MeasureTheory/Constructions/Pi.lean",
+        "sha256": "bb89dee63d412cd1cc1f7f9fd7a81d64074139571960b2f0fcb66d8b763cd6ef",
+        "bytes": 47126,
+        "LF": 952
+      },
+      "candidateUse": "124-126,144-146",
+      "conditionsIndependentlyChecked": "Sigma-finite factors inferred from probability; transports AE statements only.",
+      "completeDeclarationAndBody": [
+        {
+          "firstLine": 360,
+          "lastLine": 374,
+          "text": "theorem pi_eval_preimage_null {i : ι} {s : Set (α i)} (hs : μ i s = 0) :\n    Measure.pi μ (eval i ⁻¹' s) = 0 := by\n  classical\n  -- WLOG, `s` is measurable\n  rcases exists_measurable_superset_of_null hs with ⟨t, hst, _, hμt⟩\n  suffices Measure.pi μ (eval i ⁻¹' t) = 0 from measure_mono_null (preimage_mono hst) this\n  -- Now rewrite it as `Set.pi`, and apply `pi_pi`\n  rw [← univ_pi_update_univ, pi_pi]\n  apply Finset.prod_eq_zero (Finset.mem_univ i)\n  simp [hμt]\n\ntheorem quasiMeasurePreserving_eval (i : ι) :\n    QuasiMeasurePreserving (Function.eval i) (Measure.pi μ) (μ i) := by\n  refine ⟨by fun_prop, AbsolutelyContinuous.mk fun s hs h2s => ?_⟩\n  rw [map_apply (by fun_prop) hs, pi_eval_preimage_null μ h2s]\n"
+        },
+        {
+          "firstLine": 423,
+          "lastLine": 426,
+          "text": "variable {μ}\n\ntheorem tendsto_eval_ae_ae {i : ι} : Tendsto (eval i) (ae (Measure.pi μ)) (ae (μ i)) := fun _ hs =>\n  pi_eval_preimage_null μ hs\n"
+        }
+      ],
+      "ambientContext": [
+        {
+          "firstLine": 56,
+          "lastLine": 70,
+          "text": "@[expose] public section\n\nnoncomputable section\n\nopen Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable\n\nopen scoped Topology ENNReal\n\nuniverse u v\n\nvariable {ι ι' : Type*} {α : ι → Type*}\n\nnamespace MeasureTheory\n\nvariable [Fintype ι] {m : ∀ i, OuterMeasure (α i)}\n"
+        },
+        {
+          "firstLine": 125,
+          "lastLine": 127,
+          "text": "namespace Measure\n\nvariable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measure (α i))\n"
+        },
+        {
+          "firstLine": 325,
+          "lastLine": 325,
+          "text": "variable [∀ i, SigmaFinite (μ i)]\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "iIndepFun_pi",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit283/parent-api-06/Mathlib/Probability/Independence/Basic.lean",
+        "sha256": "93990423a0c169d9e45b19ae98f3f3ada7605d8541577daf815311aa43567769",
+        "bytes": 55448,
+        "LF": 1130
+      },
+      "candidateUse": "142-143",
+      "conditionsIndependentlyChecked": "Finite index and probability factors, same measurable f on every coordinate.",
+      "completeDeclarationAndBody": {
+        "firstLine": 889,
+        "lastLine": 906,
+        "text": "variable {ι : Type*} [Fintype ι] {Ω : ι → Type*} {mΩ : ∀ i, MeasurableSpace (Ω i)}\n    {μ : (i : ι) → Measure (Ω i)} [∀ i, IsProbabilityMeasure (μ i)]\n    {𝓧 : ι → Type*} [∀ i, MeasurableSpace (𝓧 i)] {X : (i : ι) → Ω i → 𝓧 i}\n\n/-- Given random variables `X i : Ω i → 𝓧 i`, they are independent when viewed as random\nvariables defined on the product space `Π i, Ω i`. -/\nlemma iIndepFun_pi (mX : ∀ i, AEMeasurable (X i) (μ i)) :\n    iIndepFun (fun i ω ↦ X i (ω i)) (Measure.pi μ) := by\n  refine iIndepFun_iff_map_fun_eq_pi_map ?_ |>.2 ?_\n  · exact fun i ↦ (mX i).comp_quasiMeasurePreserving (Measure.quasiMeasurePreserving_eval _ i)\n  rw [Measure.pi_map_pi mX]\n  congr\n  ext i : 1\n  rw [← (measurePreserving_eval μ i).map_eq, AEMeasurable.map_map_of_aemeasurable,\n    Function.comp_def]\n  · rw [(measurePreserving_eval μ i).map_eq]\n    exact mX i\n  · exact (measurable_pi_apply i).aemeasurable\n"
+      },
+      "ambientContext": {
+        "firstLine": 77,
+        "lastLine": 87,
+        "text": "@[expose] public section\n\nassert_not_exists MeasureTheory.Integrable\n\nopen MeasureTheory MeasurableSpace Set\n\nopen scoped MeasureTheory ENNReal\n\nnamespace ProbabilityTheory\n\nvariable {Ω ι β γ : Type*} {κ : ι → Type*}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "pow_le_pow_left₀",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-05/Mathlib/Algebra/Order/GroupWithZero/Basic.lean",
+        "sha256": "28c0432242f3766a643689abd852cbf92fee391d314f76815e6977e64854103c",
+        "bytes": 64203,
+        "LF": 1473
+      },
+      "candidateUse": "184-185",
+      "conditionsIndependentlyChecked": "Nonnegative lower base and base bound, natural exponent including0.",
+      "completeDeclarationAndBody": {
+        "firstLine": 512,
+        "lastLine": 518,
+        "text": "@[mono, gcongr, bound]\ntheorem pow_le_pow_left₀ [PosMulMono M₀] [MulPosMono M₀]\n    (ha : 0 ≤ a) (hab : a ≤ b) : ∀ n, a ^ n ≤ b ^ n\n  | 0 => by simp\n  | 1 => by simpa using hab\n  | n + 2 => by simpa only [pow_succ']\n      using mul_le_mul hab (pow_le_pow_left₀ ha hab _) (pow_succ_nonneg ha _) (ha.trans hab)\n"
+      },
+      "ambientContext": [
+        {
+          "firstLine": 24,
+          "lastLine": 28,
+          "text": "public section\n\nopen Function\n\nvariable {α M₀ G₀ : Type*}\n"
+        },
+        {
+          "firstLine": 403,
+          "lastLine": 407,
+          "text": "section MonoidWithZero\nvariable [MonoidWithZero M₀]\n\nsection Preorder\nvariable [Preorder M₀] {a b : M₀} {m n : ℕ}\n"
+        }
+      ],
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.sqrt_nonneg",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-05/Mathlib/Analysis/Real/Sqrt.lean",
+        "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204",
+        "bytes": 18522,
+        "LF": 509
+      },
+      "candidateUse": "192",
+      "conditionsIndependentlyChecked": "Every real argument; no strict a>0 needed.",
+      "completeDeclarationAndBody": {
+        "firstLine": 141,
+        "lastLine": 145,
+        "text": "theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : √x = 0 := by simp [sqrt, Real.toNNReal_eq_zero.2 h]\n\n@[simp] theorem sqrt_nonneg (x : ℝ) : 0 ≤ √x := by\n  unfold sqrt\n  exact NNReal.coe_nonneg _\n"
+      },
+      "ambientContext": {
+        "firstLine": 106,
+        "lastLine": 118,
+        "text": "namespace Real\n\n/-- The square root of a real number. This returns 0 for negative inputs.\n\nThis has notation `√x`. Note that `√x⁻¹` is parsed as `√(x⁻¹)`. -/\n@[irreducible] noncomputable def sqrt (x : ℝ) : ℝ :=\n  NNReal.sqrt (Real.toNNReal x)\n\n-- TODO: replace this with a typeclass\n@[inherit_doc]\nprefix:max \"√\" => Real.sqrt\n\nvariable {x y : ℝ}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "Real.sq_sqrt",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-05/Mathlib/Analysis/Real/Sqrt.lean",
+        "sha256": "1f19e1d6722b2f51c2cd676d0b28ede856c7915ac815b597cef4b3919040c204",
+        "bytes": 18522,
+        "LF": 509
+      },
+      "candidateUse": "193-194",
+      "conditionsIndependentlyChecked": "a*q>=0 from a>=0,q>=0.",
+      "completeDeclarationAndBody": [
+        {
+          "firstLine": 147,
+          "lastLine": 149,
+          "text": "@[simp]\ntheorem mul_self_sqrt (h : 0 ≤ x) : √x * √x = x := by\n  rw [Real.sqrt, ← NNReal.coe_mul, NNReal.mul_self_sqrt, Real.coe_toNNReal _ h]\n"
+        },
+        {
+          "firstLine": 176,
+          "lastLine": 177,
+          "text": "@[simp]\ntheorem sq_sqrt (h : 0 ≤ x) : √x ^ 2 = x := by rw [sq, mul_self_sqrt h]\n"
+        }
+      ],
+      "ambientContext": {
+        "firstLine": 106,
+        "lastLine": 118,
+        "text": "namespace Real\n\n/-- The square root of a real number. This returns 0 for negative inputs.\n\nThis has notation `√x`. Note that `√x⁻¹` is parsed as `√(x⁻¹)`. -/\n@[irreducible] noncomputable def sqrt (x : ℝ) : ℝ :=\n  NNReal.sqrt (Real.toNNReal x)\n\n-- TODO: replace this with a typeclass\n@[inherit_doc]\nprefix:max \"√\" => Real.sqrt\n\nvariable {x y : ℝ}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "measureReal_eq_zero_iff",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-03/Mathlib/MeasureTheory/Measure/Real.lean",
+        "sha256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+        "bytes": 24359,
+        "LF": 500
+      },
+      "candidateUse": "137-138",
+      "conditionsIndependentlyChecked": "Relevant P set finite because P probability.",
+      "completeDeclarationAndBody": {
+        "firstLine": 40,
+        "lastLine": 43,
+        "text": "theorem measureReal_eq_zero_iff (h : μ s ≠ ∞ := by finiteness) :\n    μ.real s = 0 ↔ μ s = 0 := by\n  rw [Measure.real, ENNReal.toReal_eq_zero_iff]\n  exact or_iff_left h\n"
+      },
+      "ambientContext": {
+        "firstLine": 31,
+        "lastLine": 38,
+        "text": "public section\n\nopen MeasureTheory Measure Set\nopen scoped ENNReal NNReal Function symmDiff\n\nnamespace MeasureTheory\n\nvariable {α β ι : Type*} {_ : MeasurableSpace α} {μ : Measure α} {s s₁ s₂ s₃ t t₁ t₂ u : Set α}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "measureReal_mono",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-03/Mathlib/MeasureTheory/Measure/Real.lean",
+        "sha256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+        "bytes": 24359,
+        "LF": 500
+      },
+      "candidateUse": "116,250-251",
+      "conditionsIndependentlyChecked": "Containing set finite because P probability.",
+      "completeDeclarationAndBody": {
+        "firstLine": 88,
+        "lastLine": 90,
+        "text": "@[gcongr] theorem measureReal_mono (h : s₁ ⊆ s₂) (h₂ : μ s₂ ≠ ∞ := by finiteness) :\n    μ.real s₁ ≤ μ.real s₂ :=\n  ENNReal.toReal_mono h₂ (measure_mono h)\n"
+      },
+      "ambientContext": {
+        "firstLine": 31,
+        "lastLine": 38,
+        "text": "public section\n\nopen MeasureTheory Measure Set\nopen scoped ENNReal NNReal Function symmDiff\n\nnamespace MeasureTheory\n\nvariable {α β ι : Type*} {_ : MeasurableSpace α} {μ : Measure α} {s s₁ s₂ s₃ t t₁ t₂ u : Set α}\n"
+      },
+      "semanticallyRead": true
+    },
+    {
+      "name": "measureReal_union_le",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-03/Mathlib/MeasureTheory/Measure/Real.lean",
+        "sha256": "1b9d1490fa5acbffc570eac67f465d3d6ab0520aa3e54464f7520d60d6619b8d",
+        "bytes": 24359,
+        "LF": 500
+      },
+      "candidateUse": "252-253",
+      "conditionsIndependentlyChecked": "All actual events; finite P additionally available.",
+      "completeDeclarationAndBody": {
+        "firstLine": 137,
+        "lastLine": 144,
+        "text": "theorem measureReal_union_le (s₁ s₂ : Set α) : μ.real (s₁ ∪ s₂) ≤ μ.real s₁ + μ.real s₂ := by\n  rcases eq_top_or_lt_top (μ (s₁ ∪ s₂)) with h | h\n  · simp only [Measure.real, h, ENNReal.toReal_top]\n    exact add_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg\n  · have A : μ s₁ ≠ ∞ := measure_ne_top_of_subset subset_union_left h.ne\n    have B : μ s₂ ≠ ∞ := measure_ne_top_of_subset subset_union_right h.ne\n    simp only [Measure.real, ← ENNReal.toReal_add A B]\n    exact ENNReal.toReal_mono (by simp [A, B]) (measure_union_le _ _)\n"
+      },
+      "ambientContext": {
+        "firstLine": 31,
+        "lastLine": 38,
+        "text": "public section\n\nopen MeasureTheory Measure Set\nopen scoped ENNReal NNReal Function symmDiff\n\nnamespace MeasureTheory\n\nvariable {α β ι : Type*} {_ : MeasurableSpace α} {μ : Measure α} {s s₁ s₂ s₃ t t₁ t₂ u : Set α}\n"
+      },
+      "semanticallyRead": true
+    }
+  ],
+  "standardStructuralInfrastructure": "Ordinary real scalar arithmetic/abs/ring rewrites, finite sum/product congruence, finite eventually_all, ae_iff, measurable composition/sum/abs/event, and tactics come from frozen imports. No claim to recursively reread all transitive Mathlib definitions or audit axioms."
+}

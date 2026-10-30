@@ -1,0 +1,44 @@
+theorem actual_interaction_section_moments
+    {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (h : Ω → Ω → ℝ)
+    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))
+    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))
+    (hhsymm : ∀ o y, h o y = h y o)
+    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)
+    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)
+    (w : Ω → ℝ) (hw : Measurable w)
+    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)
+    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)
+    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)
+    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),
+      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤
+        w z.1 * w z.2)
+    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)
+    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)
+    (R : ℝ) (hcutoff : (1 / 2 : ℝ) ≤ μ.real {o : Ω | w o ≤ R}) :
+    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+    let C : Set Ω := {o : Ω | w o ≤ R}
+    let d : ℝ := μ.real C
+    let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C
+    let η : Measure Ω := anomalyLaw μ w R
+    let b : ℝ := ∫ o in Cᶜ, w o ∂μ
+    let c : ℝ := b / d
+    let W2 : ℝ := Real.sqrt (∫ o, w o ^ 2 ∂μ)
+    let M : ℝ := W2 ^ 2 / d
+    Measurable g ∧ Measurable (fun z : Ω × Ω => r z.1 z.2) ∧
+      MeasurableSet C ∧ 0 < d ∧ 0 ≤ b ∧ 0 ≤ c ∧ 1 ≤ R ∧ 0 ≤ R ∧
+      IsProbabilityMeasure ν ∧ ν ≪ μ ∧
+      (∀ᵐ o ∂ν, 1 ≤ w o ∧ w o ≤ R) ∧
+      MemLp w 2 μ ∧ MemLp w 2 ν ∧ (∫ o, w o ^ 2 ∂ν) ≤ M ∧ 0 ≤ M ∧
+      η ≪ μ ∧ IsFiniteMeasure η ∧
+      (μ Cᶜ = 0 → η = 0) ∧ (μ Cᶜ ≠ 0 → IsProbabilityMeasure η) ∧
+      (∀ᵐ a : ι → Ω ∂Measure.pi (fun _ : ι => η),
+        (∀ i : ι, R < w (a i) ∧ 1 ≤ w (a i) ∧
+          Integrable (r (a i)) μ ∧
+          (∫ o, r (a i) o ∂ν) = -(∫ o in Cᶜ, r (a i) o ∂μ) / d) ∧
+        validAnomalyVector ν r w c a ∧
+        interactionMomentBounds ν r w c R M a ∧
+        (∫ o, interactionSum r a o ∂ν) =
+          -(∑ i : ι, ∫ o in Cᶜ, r (a i) o ∂μ) / d)

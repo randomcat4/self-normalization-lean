@@ -1,0 +1,50 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  let E : Set (Fin n → Ω) := fixedMaskEvent C B
+  let PB : Measure (Fin B.card → Ω) :=
+    Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)
+  let PA : Measure (Fin (Bᶜ : Finset (Fin n)).card → Ω) :=
+    Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+      (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)
+  have hFiniteCond (V : Set Ω) :
+      IsFiniteMeasure ((μ V)⁻¹ • μ.restrict V) := by
+    by_cases hV : μ V = 0
+    · have hRestrict : μ.restrict V = 0 := by
+        apply Measure.ext
+        intro W hW
+        rw [Measure.restrict_apply hW]
+        exact measure_mono_null Set.inter_subset_right hV
+      rw [hRestrict, smul_zero]
+      infer_instance
+    · change IsFiniteMeasure (cond μ V)
+      letI : IsProbabilityMeasure (cond μ V) := cond_isProbabilityMeasure hV
+      infer_instance
+  letI : IsFiniteMeasure ((μ C)⁻¹ • μ.restrict C) := hFiniteCond C
+  letI : IsFiniteMeasure ((μ Cᶜ)⁻¹ • μ.restrict Cᶜ) := hFiniteCond Cᶜ
+  letI : IsFiniteMeasure PB := by dsimp only [PB]; infer_instance
+  letI : IsFiniteMeasure PA := by dsimp only [PA]; infer_instance
+  have hCondAE : ∀ᵐ x ∂cond P E, Q x := by
+    change ∀ᵐ x ∂((P E)⁻¹ • P.restrict E), Q x
+    exact Measure.ae_smul_measure hAE (P E)⁻¹
+  have hQjoin : MeasurableSet
+      {z : (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω) |
+        Q (joinSample B eB eA z)} :=
+    (measurable_joinSample (Ω := Ω) B eB eA) hQ
+  have hAEcomp : ∀ᵐ x ∂cond P E,
+      Q (joinSample B eB eA (splitSample B eB eA x)) := by
+    filter_upwards [hCondAE] with x hx
+    simpa only [join_splitSample B eB eA x] using hx
+  have hMapped : ∀ᵐ z ∂Measure.map (splitSample B eB eA) (cond P E),
+      Q (joinSample B eB eA z) :=
+    (ae_map_iff (measurable_splitSample (Ω := Ω) B eB eA).aemeasurable hQjoin).2 hAEcomp
+  rw [fixedMask_splitSample_cond_map μ C hC B eB eA hMask] at hMapped
+  change ∀ᵐ z ∂PB.prod PA, Q (joinSample B eB eA z) at hMapped
+  have hByBackground : ∀ᵐ b ∂PB, ∀ᵐ a ∂PA,
+      Q (joinSample B eB eA (b, a)) :=
+    Measure.ae_ae_of_ae_prod hMapped
+  have hByAnomaly : ∀ᵐ a ∂PA, ∀ᵐ b ∂PB,
+      Q (joinSample B eB eA (b, a)) :=
+    (Measure.ae_ae_comm (μ := PB) (ν := PA)
+      (p := fun b a => Q (joinSample B eB eA (b, a))) hQjoin).mp hByBackground
+  exact hByAnomaly

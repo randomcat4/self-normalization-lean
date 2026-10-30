@@ -1,0 +1,54 @@
+--- C:/game/shao lean/drafts/oq56/unit284/author-01/components/T01-PROOF.txt
++++ C:/game/shao lean/drafts/oq56/unit284/author-repair-01/components/T01-PROOF.txt
+@@ -9,13 +9,23 @@
+   have hell : 0 ≤ ell := by
+     exact Finset.sum_nonneg (fun i _ => (ha i).1)
+   have hcm : Measurable cA := by
+-    simpa only [cA, interactionSum] using
+-      (Finset.measurable_fun_sum (Finset.univ : Finset ι)
+-        (fun i _ => (ha i).2.1))
+-  have hci : Integrable cA ν := by
+-    simpa only [cA, interactionSum] using
+-      (integrable_finsetSum (Finset.univ : Finset ι)
+-        (fun i _ => (ha i).2.2.1))
++    change Measurable (fun o : Ω => ∑ i : ι, r (a i) o)
++    exact Finset.measurable_fun_sum (Finset.univ : Finset ι)
++      (fun i _ => (ha i).2.1)
++  have hci : Integrable cA ν := by
++    change Integrable (fun o : Ω => ∑ i : ι, r (a i) o) ν
++    have hs : ∀ s : Finset ι,
++        Integrable (fun o : Ω => ∑ i ∈ s, r (a i) o) ν := by
++      intro s
++      induction s using Finset.induction_on with
++      | empty =>
++          simpa only [Finset.sum_empty] using (integrable_zero Ω ℝ ν)
++      | @insert i s hi ih =>
++          have hadd : Integrable
++              (fun o : Ω => r (a i) o + ∑ j ∈ s, r (a j) o) ν :=
++            ((ha i).2.2.1).add ih
++          simpa only [Finset.sum_insert hi] using hadd
++    exact hs Finset.univ
+   have hrow : ∀ᵐ o ∂ν, ∀ i : ι,
+       |r (a i) o| ≤ w (a i) * w o :=
+     Filter.eventually_all.2 (fun i => (ha i).2.2.2.2)
+--- C:/game/shao lean/drafts/oq56/unit284/author-01/components/T02-PROOF.txt
++++ C:/game/shao lean/drafts/oq56/unit284/author-repair-01/components/T02-PROOF.txt
+@@ -17,7 +17,6 @@
+   dsimp only at hsource
+   rcases hsource with ⟨hβ, hB, hW2, hCvar, hCmean, hsource⟩
+   have hdata := hsource R hcutoff 0 (by constructor <;> norm_num)
+-  dsimp only at hdata
+   rcases hdata with
+     ⟨hC, hdpi, hd, hπ0, hπlt, hb0, hνprob, hνac, hνprodac,
+       hgm, hg2, hgν2, hgmean, hgsecond, hw2, hwν2, hwSecond,
+--- C:/game/shao lean/drafts/oq56/unit284/author-01/components/T04-PROOF.txt
++++ C:/game/shao lean/drafts/oq56/unit284/author-repair-01/components/T04-PROOF.txt
+@@ -6,7 +6,7 @@
+     exact smul_zero _
+   refine ⟨hη, ?_⟩
+   rw [hη]
+-  apply measure_univ_eq_zero.mp
++  apply (MeasureTheory.Measure.measure_univ_eq_zero).mp
+   rw [Measure.pi_univ]
+   exact Finset.prod_eq_zero
+     (Finset.mem_univ (Classical.choice (inferInstance : Nonempty ι))) (by simp)

@@ -1,0 +1,134 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  letI : IsProbabilityMeasure P := by dsimp only [P]; infer_instance
+  let D : Fin n → Set Ω := fun i : Fin n =>
+    @ite (Set Ω) (i ∈ B) (Classical.propDecidable (i ∈ B)) C Cᶜ
+  let ρ : Fin n → Measure Ω := fun i : Fin n => cond μ (D i)
+  let νG : Measure Ω := (μ C)⁻¹ • μ.restrict C
+  let νH : Measure Ω := (μ Cᶜ)⁻¹ • μ.restrict Cᶜ
+  have hFiniteCond (V : Set Ω) :
+      IsFiniteMeasure ((μ V)⁻¹ • μ.restrict V) := by
+    by_cases hV : μ V = 0
+    · have hRestrict : μ.restrict V = 0 := by
+        apply Measure.ext
+        intro W hW
+        rw [Measure.restrict_apply hW]
+        exact measure_mono_null Set.inter_subset_right hV
+      rw [hRestrict, smul_zero]
+      infer_instance
+    · change IsFiniteMeasure (cond μ V)
+      letI : IsProbabilityMeasure (cond μ V) := cond_isProbabilityMeasure hV
+      infer_instance
+  letI : IsFiniteMeasure νG := hFiniteCond C
+  letI : IsFiniteMeasure νH := hFiniteCond Cᶜ
+  letI : ∀ i : Fin n, IsFiniteMeasure (ρ i) :=
+    fun i : Fin n => hFiniteCond (D i)
+  have hD : ∀ i : Fin n, MeasurableSet (D i) := by
+    intro i
+    dsimp only [D]
+    by_cases hi : i ∈ B
+    · simpa only [if_pos hi] using hC
+    · simpa only [if_neg hi] using hC.compl
+  have hX (i : Fin n) : Measurable (Function.eval i : (Fin n → Ω) → Ω) :=
+    measurable_pi_apply i
+  have hEval (i : Fin n) : Measure.map (Function.eval i) P = μ :=
+    (measurePreserving_eval (fun _ : Fin n => μ) i).map_eq
+  have hInd : iIndepFun (fun i : Fin n => Function.eval i) P :=
+    iIndepFun_pi (μ := fun _ : Fin n => μ)
+      (X := fun _ : Fin n => (id : Ω → Ω))
+      (fun _ : Fin n => measurable_id.aemeasurable)
+  have hFull : cond P (fixedMaskEvent C B) = Measure.pi ρ := by
+    have hJoint := Shao.Probability.indep_cond_joint_map_eq_pi
+      (μ := P) (X := fun i : Fin n => Function.eval i)
+      hX hInd D hD hMask
+    change Measure.map (id : (Fin n → Ω) → (Fin n → Ω))
+      (cond P (fixedMaskEvent C B)) =
+      Measure.pi (fun i : Fin n => cond (Measure.map (Function.eval i) P) (D i))
+      at hJoint
+    simpa only [Measure.map_id, hEval, ρ] using hJoint
+  let eNotA : Fin (Bᶜ : Finset (Fin n)).card ≃ {i : Fin n // i ∉ B} :=
+    { toFun := fun j => ⟨(eA j).val, Finset.mem_compl.mp (eA j).property⟩
+      invFun := fun i => eA.symm ⟨i.val, Finset.mem_compl.mpr i.property⟩
+      left_inv := by
+        intro j
+        change eA.symm (eA j) = j
+        exact eA.symm_apply_apply j
+      right_inv := by
+        intro i
+        apply Subtype.ext
+        change (eA (eA.symm ⟨i.val, Finset.mem_compl.mpr i.property⟩)).val = i.val
+        rw [eA.apply_symm_apply] }
+  let uB : ({i : Fin n // i ∈ B} → Ω) ≃ᵐ (Fin B.card → Ω) :=
+    MeasurableEquiv.piCongrLeft (fun _ : Fin B.card => Ω) eB.symm
+  let uA : ({i : Fin n // i ∉ B} → Ω) ≃ᵐ
+      (Fin (Bᶜ : Finset (Fin n)).card → Ω) :=
+    MeasurableEquiv.piCongrLeft
+      (fun _ : Fin (Bᶜ : Finset (Fin n)).card => Ω) eNotA.symm
+  let uS : (Fin n → Ω) ≃ᵐ
+      (({i : Fin n // i ∈ B} → Ω) × ({i : Fin n // i ∉ B} → Ω)) :=
+    MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin n => Ω) (fun i => i ∈ B)
+  have hρB : (fun i : {i : Fin n // i ∈ B} => ρ i.val) =
+      (fun _ : {i : Fin n // i ∈ B} => νG) := by
+    funext i
+    change cond μ (D i.val) = νG
+    dsimp only [D]
+    rw [if_pos i.property]
+    rfl
+  have hρA : (fun i : {i : Fin n // i ∉ B} => ρ i.val) =
+      (fun _ : {i : Fin n // i ∉ B} => νH) := by
+    funext i
+    change cond μ (D i.val) = νH
+    dsimp only [D]
+    rw [if_neg i.property]
+    rfl
+  have hPS : MeasurePreserving uS (Measure.pi ρ)
+      ((Measure.pi (fun _ : {i : Fin n // i ∈ B} => νG)).prod
+        (Measure.pi (fun _ : {i : Fin n // i ∉ B} => νH))) := by
+    have h := measurePreserving_piEquivPiSubtypeProd
+      (α := fun _ : Fin n => Ω) ρ (fun i => i ∈ B)
+    simpa only [hρB, hρA] using h
+  have hPB : MeasurePreserving uB
+      (Measure.pi (fun _ : {i : Fin n // i ∈ B} => νG))
+      (Measure.pi (fun _ : Fin B.card => νG)) :=
+    measurePreserving_piCongrLeft
+      (α := fun _ : Fin B.card => Ω) (fun _ : Fin B.card => νG) eB.symm
+  have hPA : MeasurePreserving uA
+      (Measure.pi (fun _ : {i : Fin n // i ∉ B} => νH))
+      (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card => νH)) :=
+    measurePreserving_piCongrLeft
+      (α := fun _ : Fin (Bᶜ : Finset (Fin n)).card => Ω)
+      (fun _ : Fin (Bᶜ : Finset (Fin n)).card => νH) eNotA.symm
+  have hComposite := (hPB.prod hPA).comp hPS
+  have hFun : (Prod.map uB uA ∘ uS : (Fin n → Ω) →
+      ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω))) =
+      splitSample B eB eA := by
+    funext x
+    apply Prod.ext
+    · funext j
+      change uB (uS x).1 j = x ((eB j).val)
+      have hj := MeasurableEquiv.piCongrLeft_apply_apply eB.symm
+        (β := fun _ : Fin B.card => Ω) (uS x).1 (eB j)
+      have hApply : uB (uS x).1 j = (uS x).1 (eB j) := by
+        simpa only [eB.symm_apply_apply] using hj
+      rw [hApply]
+      rfl
+    · funext j
+      change uA (uS x).2 j = x ((eA j).val)
+      have hj := MeasurableEquiv.piCongrLeft_apply_apply eNotA.symm
+        (β := fun _ : Fin (Bᶜ : Finset (Fin n)).card => Ω)
+        (uS x).2 (eNotA j)
+      have hApply : uA (uS x).2 j = (uS x).2 (eNotA j) := by
+        simpa only [eNotA.symm_apply_apply] using hj
+      rw [hApply]
+      rfl
+  have hSplitPi : Measure.map (splitSample B eB eA) (Measure.pi ρ) =
+      (Measure.pi (fun _ : Fin B.card => νG)).prod
+        (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card => νH)) := by
+    have h := hComposite.map_eq
+    change Measure.map (Prod.map uB uA ∘ uS) (Measure.pi ρ) = _ at h
+    rw [hFun] at h
+    exact h
+  change Measure.map (splitSample B eB eA) (cond P (fixedMaskEvent C B)) = _
+  rw [hFull]
+  exact hSplitPi

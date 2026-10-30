@@ -1,0 +1,119 @@
+:= by
+  classical
+  dsimp only [validAnomalyVector] at ha
+  let ell : ℝ := anomalyEnvelope w a
+  let cA : Ω → ℝ := interactionSum r a
+  let mA : ℝ := ∫ o, cA o ∂ν
+  let S2 : ℝ := ∫ o, cA o ^ 2 ∂ν
+  let V2 : ℝ := ∫ o, (cA o - mA) ^ 2 ∂ν
+  have hell : 0 ≤ ell := by
+    exact Finset.sum_nonneg (fun i _ => (ha i).1)
+  have hcm : Measurable cA := by
+    simpa only [cA, interactionSum] using
+      (Finset.measurable_fun_sum (Finset.univ : Finset ι)
+        (fun i _ => (ha i).2.1))
+  have hci : Integrable cA ν := by
+    simpa only [cA, interactionSum] using
+      (integrable_finsetSum (Finset.univ : Finset ι)
+        (fun i _ => (ha i).2.2.1))
+  have hrow : ∀ᵐ o ∂ν, ∀ i : ι,
+      |r (a i) o| ≤ w (a i) * w o :=
+    Filter.eventually_all.2 (fun i => (ha i).2.2.2.2)
+  have henv : ∀ᵐ o ∂ν, |cA o| ≤ ell * w o := by
+    filter_upwards [hrow] with o ho
+    calc
+      |cA o| ≤ ∑ i : ι, |r (a i) o| :=
+        Finset.abs_sum_le_sum_abs (fun i : ι => r (a i) o) Finset.univ
+      _ ≤ ∑ i : ι, w (a i) * w o := Finset.sum_le_sum (fun i _ => ho i)
+      _ = ell * w o := by
+        dsimp only [ell, anomalyEnvelope]
+        rw [Finset.sum_mul]
+  have hmean : mA = ∑ i : ι, ∫ o, r (a i) o ∂ν := by
+    exact integral_finsetSum Finset.univ (fun i _ => (ha i).2.2.1)
+  have hmeanB : |mA| ≤ c * ell := by
+    calc
+      |mA| = |∑ i : ι, ∫ o, r (a i) o ∂ν| := congrArg abs hmean
+      _ ≤ ∑ i : ι, |∫ o, r (a i) o ∂ν| :=
+        Finset.abs_sum_le_sum_abs (fun i : ι => ∫ o, r (a i) o ∂ν) Finset.univ
+      _ ≤ ∑ i : ι, c * w (a i) :=
+        Finset.sum_le_sum (fun i _ => (ha i).2.2.2.1)
+      _ = c * ell := by
+        dsimp only [ell, anomalyEnvelope]
+        rw [Finset.mul_sum]
+  have hsup : ∀ᵐ o ∂ν, |cA o| ≤ ell * R := by
+    filter_upwards [henv, hw] with o ho hwo
+    exact ho.trans (mul_le_mul_of_nonneg_left hwo.2 hell)
+  have hmeanR : |mA| ≤ ell * R := by
+    have hn : ∀ᵐ o ∂ν, ‖cA o‖ ≤ ell * R := by
+      simpa only [Real.norm_eq_abs] using hsup
+    simpa only [mA, Real.norm_eq_abs, probReal_univ, mul_one] using
+      (norm_integral_le_of_norm_le_const (μ := ν) (f := cA) hn)
+  have hsqAE : ∀ᵐ o ∂ν, cA o ^ 2 ≤ ell ^ 2 * w o ^ 2 := by
+    filter_upwards [henv, hw] with o ho hwo
+    have hs := (sq_le_sq₀ (abs_nonneg (cA o)) (mul_nonneg hell hwo.1)).2 ho
+    simpa only [sq_abs, mul_pow] using hs
+  have hsq : Integrable (fun o => cA o ^ 2) ν := by
+    apply (hw2.integrable_sq.const_mul (ell ^ 2)).mono'
+      (hcm.pow_const 2).aestronglyMeasurable
+    filter_upwards [hsqAE] with o ho
+    simpa only [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg (cA o))] using ho
+  have hcl2 : MemLp cA 2 ν :=
+    (memLp_two_iff_integrable_sq hcm.aestronglyMeasurable).2 hsq
+  have hS0 : 0 ≤ S2 := integral_nonneg (fun o => sq_nonneg (cA o))
+  have hSbound : S2 ≤ ell ^ 2 * M := by
+    calc
+      S2 ≤ ∫ o, ell ^ 2 * w o ^ 2 ∂ν :=
+        integral_mono_ae hsq (hw2.integrable_sq.const_mul (ell ^ 2)) hsqAE
+      _ = ell ^ 2 * (∫ o, w o ^ 2 ∂ν) := integral_const_mul _ _
+      _ ≤ ell ^ 2 * M := mul_le_mul_of_nonneg_left hM (sq_nonneg ell)
+  have hcentm : Measurable (fun o => cA o - mA) := hcm.sub measurable_const
+  have hcenti : Integrable (fun o => cA o - mA) ν :=
+    hci.sub (integrable_const mA)
+  have hcentSq : Integrable (fun o => (cA o - mA) ^ 2) ν := by
+    have hp := (hsq.sub (hci.const_mul (2 * mA))).add (integrable_const (mA ^ 2))
+    apply hp.congr
+    exact Filter.Eventually.of_forall (fun o => by
+      change cA o ^ 2 - (2 * mA) * cA o + mA ^ 2 = (cA o - mA) ^ 2
+      ring)
+  have hcent2 : MemLp (fun o => cA o - mA) 2 ν :=
+    (memLp_two_iff_integrable_sq hcentm.aestronglyMeasurable).2 hcentSq
+  have hcent0 : (∫ o, cA o - mA ∂ν) = 0 := by
+    rw [integral_sub hci (integrable_const mA), integral_const,
+      probReal_univ, one_smul]
+    change mA - mA = 0
+    ring
+  have hvar : V2 = S2 - mA ^ 2 := by
+    calc
+      V2 = ∫ o, cA o ^ 2 - (2 * mA) * cA o + mA ^ 2 ∂ν := by
+        apply integral_congr_ae
+        exact Filter.Eventually.of_forall (fun o => by ring)
+      _ = S2 - (2 * mA) * (∫ o, cA o ∂ν) + mA ^ 2 := by
+        rw [integral_add (f := fun o => cA o ^ 2 - (2 * mA) * cA o)
+            (g := fun _ : Ω => mA ^ 2)
+            (hsq.sub (hci.const_mul (2 * mA))) (integrable_const (mA ^ 2)),
+          integral_sub (f := fun o => cA o ^ 2)
+            (g := fun o => (2 * mA) * cA o)
+            hsq (hci.const_mul (2 * mA)),
+          integral_const_mul, integral_const, probReal_univ, one_smul]
+      _ = S2 - mA ^ 2 := by
+        change S2 - (2 * mA) * mA + mA ^ 2 = S2 - mA ^ 2
+        ring
+  have hV0 : 0 ≤ V2 := integral_nonneg (fun o => sq_nonneg (cA o - mA))
+  have hmeanSq : mA ^ 2 ≤ S2 := by linarith only [hvar, hV0]
+  have hVS : V2 ≤ S2 := by linarith only [hvar, sq_nonneg mA]
+  have hVbound : V2 ≤ ell ^ 2 * M := hVS.trans hSbound
+  have hbounded : ∀ᵐ o ∂ν, |cA o| ≤ ell * R ∧
+      |cA o - mA| ≤ ell * (R + c) ∧ |cA o - mA| ≤ 2 * ell * R := by
+    filter_upwards [hsup] with o ho
+    refine ⟨ho, ?_, ?_⟩
+    · calc
+        |cA o - mA| ≤ |cA o| + |mA| := abs_sub _ _
+        _ ≤ ell * R + c * ell := add_le_add ho hmeanB
+        _ = ell * (R + c) := by ring
+    · calc
+        |cA o - mA| ≤ |cA o| + |mA| := abs_sub _ _
+        _ ≤ ell * R + ell * R := add_le_add ho hmeanR
+        _ = 2 * ell * R := by ring
+  exact ⟨hell, hcm, hci, hcl2, hsq, henv, hmean, hmeanB, hmeanR,
+    hS0, hSbound, hmeanSq, hcentm, hcenti, hcent2, hcent0, hcentSq,
+    hvar, hV0, hVS, hVbound, hbounded⟩

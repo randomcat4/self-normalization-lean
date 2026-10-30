@@ -1,0 +1,16 @@
+:= by
+  classical
+  apply Measurable.of_eval
+  intro i
+  by_cases hi : i ∈ B
+  · simpa only [joinSample, dif_pos hi] using
+      ((measurable_pi_apply (eB.symm ⟨i, hi⟩)).comp measurable_fst :
+        Measurable (fun y :
+          (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω) =>
+          y.1 (eB.symm ⟨i, hi⟩)))
+  · simpa only [joinSample, dif_neg hi] using
+      ((measurable_pi_apply
+        (eA.symm ⟨i, Finset.mem_compl.mpr hi⟩)).comp measurable_snd :
+        Measurable (fun y :
+          (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω) =>
+          y.2 (eA.symm ⟨i, Finset.mem_compl.mpr hi⟩)))

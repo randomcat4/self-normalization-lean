@@ -1,0 +1,13 @@
+theorem fixedMask_splitSample_restrict_map {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))}) :
+    Measure.map (splitSample B eB eA)
+      ((Measure.pi (fun _ : Fin n => μ)).restrict (fixedMaskEvent C B)) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) •
+        ((Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).prod
+          (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+            (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)))

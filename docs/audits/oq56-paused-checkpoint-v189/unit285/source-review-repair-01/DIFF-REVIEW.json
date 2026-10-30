@@ -1,0 +1,204 @@
+{
+  "schema": "unit285-repair01-independent-exact-seven-interval-review-v1",
+  "oldSource": {
+    "path": "C:/game/shao lean/drafts/oq56/unit285/author-01/VarianceSensitiveIIDBernstein.lean",
+    "sha256": "4fdb9530538a0e55b1875d1de08d1f94d9981878298346d951daac2a2439c134",
+    "bytes": 11295,
+    "LF": 256
+  },
+  "source": {
+    "path": "C:/game/shao lean/drafts/oq56/unit285/author-repair-01/VarianceSensitiveIIDBernstein.lean",
+    "sha256": "f58b931d398a392a1780ffe613d9b03cf0c8fcf4cef1834d018deda7558403f9",
+    "bytes": 11642,
+    "LF": 265
+  },
+  "changes": [
+    {
+      "id": "E01",
+      "oldStartLine": 61,
+      "oldLineCount": 1,
+      "newStartLine": 61,
+      "newLineCount": 3,
+      "oldByteRange": [
+        2620,
+        2686
+      ],
+      "newByteRange": [
+        2620,
+        2764
+      ],
+      "oldSHA256": "7615c0b35e1f181539ba3486301d85b9062aee6122e73899863565829d356066",
+      "newSHA256": "9848f049bbe9a07072619458b8c4e16468e9095ab6491950e7b32b8b52dfda0f",
+      "oldText": "    rw [integral_add ((integrable_const 1).add (hfi.const_mul t))\n",
+      "newText": "    rw [integral_add (f := fun o => 1 + t * f o)\n        (g := fun o => t ^ 2 * (f o) ^ 2)\n        ((integrable_const 1).add (hfi.const_mul t))\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "Explicit first integral_add f/g lambdas equal actual polynomial subfunctions; no premise change",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E02",
+      "oldStartLine": 63,
+      "oldLineCount": 1,
+      "newStartLine": 65,
+      "newLineCount": 2,
+      "oldByteRange": [
+        2719,
+        2778
+      ],
+      "newByteRange": [
+        2797,
+        2919
+      ],
+      "oldSHA256": "7c0edf83f9b7de1f6aa865df2becb79efe3654aa9b3bfd8512db3f991670c00e",
+      "newSHA256": "a462869e588321abd1c2e884a2f820c0fa79a676fbb78a4e2592d4014e34f26c",
+      "oldText": "      integral_add (integrable_const 1) (hfi.const_mul t),\n",
+      "newText": "      integral_add (f := fun _ : Ω => (1 : ℝ)) (g := fun o => t * f o)\n        (integrable_const 1) (hfi.const_mul t),\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "Explicit second integral_add lambdas equal constant1 and tf; same integrability",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E03",
+      "oldStartLine": 72,
+      "oldLineCount": 2,
+      "newStartLine": 75,
+      "newLineCount": 3,
+      "oldByteRange": [
+        3100,
+        3201
+      ],
+      "newByteRange": [
+        3241,
+        3383
+      ],
+      "oldSHA256": "0d825fb25f3fe3bb69b57d88d09bf5f186321711df37340f6fc1d6f4200f4e00",
+      "newSHA256": "9aac0e8c638bd218fdf3fabc2b915b3e520ab49fc972508482d8917e1c466676",
+      "oldText": "    _ ≤ 1 + t ^ 2 * v :=\n      add_le_add_left (mul_le_mul_of_nonneg_left hsecond (sq_nonneg t)) 1\n",
+      "newText": "    _ ≤ 1 + t ^ 2 * v := by\n      simpa only [add_comm] using\n        (add_le_add_left (mul_le_mul_of_nonneg_left hsecond (sq_nonneg t)) 1)\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "add_comm only reorders exact already elaborated additive inequality",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E04",
+      "oldStartLine": 109,
+      "oldLineCount": 0,
+      "newStartLine": 113,
+      "newLineCount": 2,
+      "oldByteRange": [
+        4639,
+        4639
+      ],
+      "newByteRange": [
+        4821,
+        4938
+      ],
+      "oldSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "newSHA256": "ea3bb6f4bdeeb8f9118e263177df30e66de3a4e9507c3430403b54d272f254cf",
+      "oldText": "",
+      "newText": "  have hAbsmeas : Measurable (fun x => |S x|) := by\n    simpa only [Real.norm_eq_abs] using (Measurable.norm hSmeas)\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "New hAbsmeas uses public Measurable.norm and real norm=abs; only codomainReal structures",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E05",
+      "oldStartLine": 110,
+      "oldLineCount": 1,
+      "newStartLine": 116,
+      "newLineCount": 1,
+      "oldByteRange": [
+        4674,
+        4723
+      ],
+      "newByteRange": [
+        4973,
+        5020
+      ],
+      "oldSHA256": "4e1dfa2b63b46aea50eb50367beb54409ef3dd8dd08611798387a854117d9864",
+      "newSHA256": "368985c5f263886e2d661db3381e8f8775627fd7490cb00722e1003f20445d95",
+      "oldText": "    measurableSet_lt measurable_const hSmeas.abs\n",
+      "newText": "    measurableSet_lt measurable_const hAbsmeas\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "Use hAbsmeas for same strict-event measurability",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E06",
+      "oldStartLine": 245,
+      "oldLineCount": 1,
+      "newStartLine": 251,
+      "newLineCount": 3,
+      "oldByteRange": [
+        10780,
+        10851
+      ],
+      "newByteRange": [
+        11077,
+        11168
+      ],
+      "oldSHA256": "e7e182198bd1edc6a53a6a87cba8185974b32fe3b97f622839e166bf3da073ef",
+      "newSHA256": "1f65083be68edf2e5f45461eeca11d54ca60d0c20229aa9cf7f88fd5802dbbbe",
+      "oldText": "    · exact Or.inl (by simpa only [abs_of_nonneg hsign] using hx'.le)\n",
+      "newText": "    · left\n      change 2 * d ≤ S x\n      simpa only [abs_of_nonneg hsign] using hx'.le\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "Expose first union-member predicate exactly by change before positive abs rewrite",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    },
+    {
+      "id": "E07",
+      "oldStartLine": 247,
+      "oldLineCount": 0,
+      "newStartLine": 255,
+      "newLineCount": 1,
+      "oldByteRange": [
+        10864,
+        10864
+      ],
+      "newByteRange": [
+        11181,
+        11211
+      ],
+      "oldSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "newSHA256": "514b7890f85769e476e8e32a136b7007170e888cb8a183c2959cc8a8153b1e7b",
+      "oldText": "",
+      "newText": "      change S x ≤ -(2 * d)\n",
+      "precedingUnchangedBytesEqual": true,
+      "independentAssessment": "Expose second union-member predicate exactly by change before negative abs arithmetic",
+      "verdict": "CORRECT_SOURCE_ONLY"
+    }
+  ],
+  "changeCount": 7,
+  "allUnchangedByteGapsAndTailEqual": true,
+  "fullUnifiedDiff": {
+    "path": "C:/game/shao lean/drafts/oq56/unit285/author-repair-01/FULL-UNIFIED-DIFF.patch",
+    "sha256": "8c51a717f4e7dfe93001b3301fd247ec37d8746f843675f0878c3675c0869877",
+    "bytes": 12384,
+    "LF": 274
+  },
+  "fullPatchReadAndBothSourcesReconstructedExact": true,
+  "unchangedLines": 250,
+  "deletedLines": 6,
+  "insertedLines": 15,
+  "allChangesInsideTwoProofBodies": true,
+  "frozenPartsExact": true,
+  "oldNativeInspection": {
+    "path": "C:/game/shao lean/drafts/oq56/unit285/lead-execution-01/native01-terminal-inspection.json",
+    "sha256": "b1d2d76fe6a34eebd351e5363d345c7b61e4af05c2938d82cc882cf496000483",
+    "bytes": 7445,
+    "LF": 108
+  },
+  "oldNativeReceipt": {
+    "physical_path": "/root/rivermind-data/shao-lean-20261021/workspaces/lead-oq56/work/oq56/successor-unit285-01/VarianceSensitiveIIDBernstein/author-kernel-01/receipt.json",
+    "sha256": "5ffb62c77472ddd2d77d69b966a168ac85b84e56e7abc5b56772e6ede9a93887",
+    "bytes": 43012684,
+    "mtime_ns": "1793323675953378953"
+  },
+  "oldRC": 1,
+  "oldErrors": 5,
+  "oldWarnings": 1,
+  "oldObjectAbsent": true,
+  "oldResultIsNotNewResult": true,
+  "styleLetIUnchanged": true,
+  "newMachineResult": null
+}

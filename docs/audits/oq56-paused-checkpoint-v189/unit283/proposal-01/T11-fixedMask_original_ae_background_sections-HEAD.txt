@@ -1,0 +1,15 @@
+theorem fixedMask_original_ae_background_sections {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0)
+    (Q : (Fin n → Ω) → Prop) (hQ : MeasurableSet {x : Fin n → Ω | Q x})
+    (hAE : ∀ᵐ x ∂((Measure.pi (fun _ : Fin n => μ)).restrict
+      (fixedMaskEvent C B)), Q x) :
+    ∀ᵐ a ∂(Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+      (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)),
+      ∀ᵐ b ∂(Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)),
+        Q (joinSample B eB eA (b, a))

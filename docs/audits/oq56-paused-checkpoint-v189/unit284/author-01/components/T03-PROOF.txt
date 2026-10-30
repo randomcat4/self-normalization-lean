@@ -1,0 +1,20 @@
+:= by
+  classical
+  have hsum : interactionSum r a = (fun _ : Ω => 0) := by
+    funext o
+    simp [interactionSum]
+  have hell : anomalyEnvelope w a = 0 := by simp [anomalyEnvelope]
+  have hvalid : validAnomalyVector ν r w c a := by
+    intro i
+    exact Fin.elim0 i
+  have hzeroM : Measurable (fun _ : Ω => (0 : ℝ)) := measurable_const
+  have hzeroI : Integrable (fun _ : Ω => (0 : ℝ)) ν := integrable_zero _ _ _
+  have hzero2 : MemLp (fun _ : Ω => (0 : ℝ)) 2 ν :=
+    (memLp_two_iff_integrable_sq hzeroM.aestronglyMeasurable).2 (by simpa using hzeroI)
+  have hbounds : interactionMomentBounds ν r w c R M a := by
+    simp [interactionMomentBounds, hsum, hell, hzeroM, hzeroI, hzero2]
+  refine ⟨hsum, hell, hvalid, hbounds, ?_, ?_, ?_, ?_⟩
+  · simp [hsum]
+  · simp [hsum]
+  · simp [hsum]
+  · exact Measure.pi_of_empty (fun _ : Fin 0 => η) a

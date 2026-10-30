@@ -1,0 +1,166 @@
+:= by
+  classical
+  let P : Measure (ι → Ω) := Measure.pi (fun _ : ι => ν)
+  let X : ι → (ι → Ω) → ℝ := fun i x => f (x i)
+  let S : (ι → Ω) → ℝ := fun x => ∑ i : ι, X i x
+  let a : ℝ := (Fintype.card ι : ℝ) * v
+  let H : Set (ι → Ω) := {x | 2 * Real.sqrt (a * q) + 2 * B * q < |S x|}
+  letI : IsProbabilityMeasure P := by
+    dsimp [P]
+    infer_instance
+  have ha : 0 ≤ a := mul_nonneg (Nat.cast_nonneg _) hv
+  have hXmeas : ∀ i, Measurable (X i) :=
+    fun i => hf.comp (measurable_pi_apply i)
+  have hSmeas : Measurable S := by
+    dsimp [S]
+    fun_prop
+  have hSsum : S = ∑ i : ι, X i := by
+    funext x
+    simp only [S, Finset.sum_apply]
+  have hHmeas : MeasurableSet H :=
+    measurableSet_lt measurable_const hSmeas.abs
+  change MeasurableSet H ∧ P.real H ≤ 2 * Real.exp (-q)
+  refine ⟨hHmeas, ?_⟩
+  by_cases hqzero : q = 0
+  · have hprob : P.real H ≤ 1 := by
+      calc
+        P.real H ≤ P.real Set.univ := measureReal_mono (Set.subset_univ H)
+        _ = 1 := by simp
+    simpa [hqzero] using hprob.trans (by norm_num : (1 : ℝ) ≤ 2)
+  have hqpos : 0 < q := lt_of_le_of_ne hq (Ne.symm hqzero)
+  by_cases hBzero : B = 0
+  · have hfzero : ∀ᵐ o ∂ν, f o = 0 := by
+      filter_upwards [hbound] with o ho
+      exact abs_nonpos_iff.mp (by simpa [hBzero] using ho)
+    have hcoordzero : ∀ i : ι, ∀ᵐ x ∂P, X i x = 0 := by
+      intro i
+      exact (Measure.tendsto_eval_ae_ae (μ := fun _ : ι => ν) (i := i)).eventually hfzero
+    have hSzero : ∀ᵐ x ∂P, S x = 0 := by
+      filter_upwards [Filter.eventually_all.2 hcoordzero] with x hx
+      exact Finset.sum_eq_zero fun i _ => hx i
+    have hnull : P {x | S x ≠ 0} = 0 := ae_iff.mp hSzero
+    have hsub : H ⊆ {x | S x ≠ 0} := by
+      intro x hx hzero
+      change 2 * Real.sqrt (a * q) + 2 * B * q < |S x| at hx
+      rw [hzero, abs_zero] at hx
+      have hnonneg : 0 ≤ 2 * Real.sqrt (a * q) + 2 * B * q := by positivity
+      exact (not_lt_of_ge hnonneg) hx
+    have hHzero : P.real H = 0 :=
+      (measureReal_eq_zero_iff).2 (measure_mono_null hsub hnull)
+    rw [hHzero]
+    positivity
+  have hBpos : 0 < B := lt_of_le_of_ne hB (Ne.symm hBzero)
+  have hind : iIndepFun X P :=
+    iIndepFun_pi (fun _ : ι => hf.aemeasurable)
+  have hcoordbound : ∀ i : ι, ∀ᵐ x ∂P, |X i x| ≤ B := by
+    intro i
+    exact (Measure.tendsto_eval_ae_ae (μ := fun _ : ι => ν) (i := i)).eventually hbound
+  have hsum_mgf : ∀ z : ℝ, |z| * B ≤ 1 →
+      Integrable (fun x => Real.exp (z * S x)) P ∧
+        ProbabilityTheory.mgf S P z ≤ Real.exp (z ^ 2 * a) := by
+    intro z hz
+    obtain ⟨_, hsingle⟩ := centered_bounded_mgf ν f hf B v hB hv hbound hmean hsecond z hz
+    have hXint : ∀ i ∈ (Finset.univ : Finset ι),
+        Integrable (fun x => Real.exp (z * X i x)) P := by
+      intro i _
+      apply integrable_exp_mul_of_mem_Icc (hXmeas i).aemeasurable
+      filter_upwards [hcoordbound i] with x hx
+      exact abs_le.mp hx
+    have hSint : Integrable (fun x => Real.exp (z * S x)) P := by
+      simpa only [S, Finset.sum_apply] using hind.integrable_exp_mul_sum hXmeas hXint
+    have hcoordmgf : ∀ i : ι,
+        ProbabilityTheory.mgf (X i) P z = ProbabilityTheory.mgf f ν z := by
+      intro i
+      have hmap : P.map (Function.eval i) = ν :=
+        (measurePreserving_eval (fun _ : ι => ν) i).map_eq
+      calc
+        ProbabilityTheory.mgf (X i) P z =
+            ProbabilityTheory.mgf f (P.map (Function.eval i)) z := by
+          symm
+          exact mgf_map (measurable_pi_apply i).aemeasurable
+            ((hf.const_mul z).exp.aestronglyMeasurable)
+        _ = ProbabilityTheory.mgf f ν z := by rw [hmap]
+    have hprod : ProbabilityTheory.mgf S P z =
+        ∏ i : ι, ProbabilityTheory.mgf f ν z := by
+      calc
+        ProbabilityTheory.mgf S P z = ∏ i : ι, ProbabilityTheory.mgf (X i) P z := by
+          rw [hSsum]
+          exact hind.mgf_sum hXmeas Finset.univ
+        _ = ∏ i : ι, ProbabilityTheory.mgf f ν z :=
+          Finset.prod_congr rfl fun i _ => hcoordmgf i
+    refine ⟨hSint, ?_⟩
+    calc
+      ProbabilityTheory.mgf S P z =
+          (ProbabilityTheory.mgf f ν z) ^ Fintype.card ι := by rw [hprod]; simp
+      _ ≤ (Real.exp (z ^ 2 * v)) ^ Fintype.card ι :=
+        pow_le_pow_left₀ mgf_nonneg hsingle _
+      _ = Real.exp (z ^ 2 * a) := by
+        rw [← Real.exp_nat_mul]
+        congr 1
+        dsimp [a]
+        ring
+  let d : ℝ := Real.sqrt (a * q) + B * q
+  have hsqrt : 0 ≤ Real.sqrt (a * q) := Real.sqrt_nonneg _
+  have hsq : (Real.sqrt (a * q)) ^ 2 = a * q :=
+    Real.sq_sqrt (mul_nonneg ha hq)
+  have hdpos : 0 < d := by
+    dsimp [d]
+    linarith [mul_pos hBpos hqpos]
+  have hd2 : a * q ≤ d ^ 2 := by
+    dsimp [d]
+    nlinarith [sq_nonneg (B * q), mul_nonneg hsqrt (mul_nonneg hB hq)]
+  let t : ℝ := q / d
+  have htpos : 0 < t := div_pos hqpos hdpos
+  have htB : |t| * B ≤ 1 := by
+    rw [abs_of_pos htpos]
+    dsimp [t]
+    rw [div_mul_eq_mul_div, div_le_iff₀ hdpos]
+    dsimp [d]
+    nlinarith
+  have htd : t * d = q := by
+    dsimp [t]
+    exact div_mul_cancel₀ q hdpos.ne'
+  have htquad : t ^ 2 * a ≤ q := by
+    have hmul : q * (a * q) ≤ q * d ^ 2 :=
+      mul_le_mul_of_nonneg_left hd2 hq
+    dsimp [t]
+    rw [div_pow, div_mul_eq_mul_div, div_le_iff₀ (pow_pos hdpos 2)]
+    nlinarith [hmul]
+  obtain ⟨hposint, hposmgf⟩ := hsum_mgf t htB
+  obtain ⟨hnegint, hnegmgf⟩ := hsum_mgf (-t) (by simpa only [abs_neg] using htB)
+  have hupper : P.real {x | 2 * d ≤ S x} ≤ Real.exp (-q) := by
+    calc
+      P.real {x | 2 * d ≤ S x} ≤
+          Real.exp (-t * (2 * d)) * ProbabilityTheory.mgf S P t :=
+        measure_ge_le_exp_mul_mgf (2 * d) htpos.le hposint
+      _ ≤ Real.exp (-t * (2 * d)) * Real.exp (t ^ 2 * a) :=
+        mul_le_mul_of_nonneg_left hposmgf (Real.exp_pos _).le
+      _ = Real.exp (-t * (2 * d) + t ^ 2 * a) := (Real.exp_add _ _).symm
+      _ ≤ Real.exp (-q) := Real.exp_le_exp.mpr (by nlinarith [htd, htquad])
+  have hlower : P.real {x | S x ≤ -(2 * d)} ≤ Real.exp (-q) := by
+    calc
+      P.real {x | S x ≤ -(2 * d)} ≤
+          Real.exp (-(-t) * (-(2 * d))) * ProbabilityTheory.mgf S P (-t) :=
+        measure_le_le_exp_mul_mgf (-(2 * d)) (by linarith : -t ≤ 0) hnegint
+      _ ≤ Real.exp (-(-t) * (-(2 * d))) * Real.exp ((-t) ^ 2 * a) :=
+        mul_le_mul_of_nonneg_left hnegmgf (Real.exp_pos _).le
+      _ = Real.exp (-(-t) * (-(2 * d)) + (-t) ^ 2 * a) := (Real.exp_add _ _).symm
+      _ ≤ Real.exp (-q) := Real.exp_le_exp.mpr (by nlinarith [htd, htquad])
+  have hsub : H ⊆ {x | 2 * d ≤ S x} ∪ {x | S x ≤ -(2 * d)} := by
+    intro x hx
+    have hx' : 2 * d < |S x| := by
+      change 2 * Real.sqrt (a * q) + 2 * B * q < |S x| at hx
+      dsimp [d]
+      nlinarith [hx]
+    by_cases hsign : 0 ≤ S x
+    · exact Or.inl (by simpa only [abs_of_nonneg hsign] using hx'.le)
+    · right
+      rw [abs_of_neg (lt_of_not_ge hsign)] at hx'
+      linarith
+  calc
+    P.real H ≤ P.real ({x | 2 * d ≤ S x} ∪ {x | S x ≤ -(2 * d)}) :=
+      measureReal_mono hsub
+    _ ≤ P.real {x | 2 * d ≤ S x} + P.real {x | S x ≤ -(2 * d)} :=
+      measureReal_union_le _ _
+    _ ≤ Real.exp (-q) + Real.exp (-q) := add_le_add hupper hlower
+    _ = 2 * Real.exp (-q) := by ring

@@ -1,0 +1,139 @@
+{
+  "schema": "unit285-repair01-independent-complete-affected-primary-context-v1",
+  "pin": "807d3836b165983210ee2ecf3cd28f239436949c",
+  "records": [
+    {
+      "name": "MeasureTheory.integral_add",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-02/Mathlib/MeasureTheory/Integral/Bochner/Basic.lean",
+        "sha256": "66837a733a5514a0fd824591ac10d43063c5a5cd94c9bdbbf80025686c16c670",
+        "bytes": 72547,
+        "LF": 1420
+      },
+      "completeHEADBody": {
+        "firstLine": 239,
+        "lastLine": 242,
+        "text": "theorem integral_add {f g : α → G} (hf : Integrable f μ) (hg : Integrable g μ) :\n    ∫ a, f a + g a ∂μ = ∫ a, f a ∂μ + ∫ a, g a ∂μ := by\n  simp only [integral_eq_setToFun]\n  exact setToFun_add (dominatedFinMeasAdditive_weightedSMul μ) hf hg\n"
+      },
+      "ambient": {
+        "firstLine": 132,
+        "lastLine": 184,
+        "text": "@[expose] public section\n\nnoncomputable section\n\nopen Filter ENNReal EMetric Set TopologicalSpace Topology\nopen scoped NNReal ENNReal MeasureTheory\n\nnamespace MeasureTheory\n\nvariable {α E F 𝕜 : Type*}\n\nlocal infixr:25 \" →ₛ \" => SimpleFunc\n\n/-!\n## The Bochner integral on functions\n\nDefine the Bochner integral on functions generally to be the `L1` Bochner integral, for integrable\nfunctions, and 0 otherwise; prove its basic properties.\n-/\n\nvariable [NormedAddCommGroup E] [NormedDivisionRing 𝕜]\n  [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]\n  {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]\n\nopen scoped Classical in\n/-- The Bochner integral -/\nirreducible_def integral {_ : MeasurableSpace α} (μ : Measure α) (f : α → G) : G :=\n  if _ : CompleteSpace G then\n    if hf : Integrable f μ then L1.integral (hf.toL1 f) else 0\n  else 0\n\n/-! In the notation for integrals, an expression like `∫ x, g ‖x‖ ∂μ` will not be parsed correctly,\n  and needs parentheses. We do not set the binding power of `r` to `0`, because then\n  `∫ x, f x = 0` will be parsed incorrectly. -/\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral μ r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\", \"r:60:(scoped f => integral volume f) => r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => f)\" ∂\"μ:70 => integral (Measure.restrict μ s) r\n\n@[inherit_doc MeasureTheory.integral]\nnotation3 \"∫ \"(...)\" in \"s\", \"r:60:(scoped f => integral (Measure.restrict volume s) f) => r\n\nsection Properties\n\nopen ContinuousLinearMap MeasureTheory.SimpleFunc\n\nvariable [NormedSpace ℝ E]\nvariable {f : α → E} {m : MeasurableSpace α} {μ : Measure α}\n"
+      },
+      "currentUse": [
+        "61-64",
+        "65-67"
+      ],
+      "assessment": "Explicit f/g lambdas equal1+tf andt^2f^2, thenconstant1 andtf. Integrability witnesses reduce to the same functions."
+    },
+    {
+      "name": "MeasureTheory.Integrable.add",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit284/parent-api-01/Mathlib/MeasureTheory/Function/L1Space/Integrable.lean",
+        "sha256": "d80e3495465030c1accca450935e4bfafcfe31d9b695e17f23ee9cfcea537759",
+        "bytes": 57371,
+        "LF": 1250
+      },
+      "completeHEADBody": {
+        "firstLine": 403,
+        "lastLine": 423,
+        "text": "section ESeminormedAddMonoid\n\nvariable {ε' : Type*} [TopologicalSpace ε'] [ESeminormedAddMonoid ε']\n\nvariable (α ε') in\n@[to_fun (attr := fun_prop, simp) integrable_fun_zero]\ntheorem integrable_zero (μ : Measure α) : Integrable (0 : α → ε') μ := by\n  simp [Integrable, aestronglyMeasurable_zero]\n\ntheorem Integrable.add' {f g : α → ε'} (hf : Integrable f μ) (hg : Integrable g μ) :\n    HasFiniteIntegral (f + g) μ :=\n  calc\n    ∫⁻ a, ‖f a + g a‖ₑ ∂μ ≤ ∫⁻ a, ‖f a‖ₑ + ‖g a‖ₑ ∂μ := lintegral_mono fun _ ↦ enorm_add_le _ _\n    _ = _ := lintegral_enorm_add_left hf.aestronglyMeasurable _\n    _ < ∞ := add_lt_top.2 ⟨hf.hasFiniteIntegral, hg.hasFiniteIntegral⟩\n\n@[to_fun (attr := fun_prop)]\ntheorem Integrable.add [ContinuousAdd ε']\n    {f g : α → ε'} (hf : Integrable f μ) (hg : Integrable g μ) :\n    Integrable (f + g) μ :=\n  ⟨hf.aestronglyMeasurable.add hg.aestronglyMeasurable, hf.add' hg⟩\n"
+      },
+      "ambient": {
+        "firstLine": 41,
+        "lastLine": 60,
+        "text": "noncomputable section\n\nopen ENNReal Filter MeasureTheory NNReal Set TopologicalSpace\n\nopen scoped Topology\n\nvariable {α β γ δ ε ε' : Type*} {m : MeasurableSpace α} {μ ν : Measure α} [MeasurableSpace δ]\nvariable [NormedAddCommGroup β] [NormedAddCommGroup γ]\n  [TopologicalSpace ε] [ContinuousENorm ε] [TopologicalSpace ε'] [ContinuousENorm ε']\n\nnamespace MeasureTheory\n\n/-! ### The predicate `Integrable` -/\n\n/-- `Integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ‖f a‖ ∂μ` is finite.\n  `Integrable f` means `Integrable f volume`. -/\n@[fun_prop, wikidata Q3153745]\ndef Integrable {α} {_ : MeasurableSpace α} (f : α → ε)\n    (μ : Measure α := by volume_tac) : Prop :=\n  AEStronglyMeasurable f μ ∧ HasFiniteIntegral f μ\n"
+      },
+      "currentUse": [
+        "63",
+        "66"
+      ],
+      "assessment": "Integrable(function addition) is definitionally the explicit pointwise lambda. Real continuous addition conditions hold."
+    },
+    {
+      "name": "Measurable.norm",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-06/Mathlib/MeasureTheory/Constructions/BorelSpace/Metric.lean",
+        "sha256": "66e4b70ad7283f621495ad96d0329ba095bb71081a1c72a9bd25bee8f73e361e",
+        "bytes": 10439,
+        "LF": 262
+      },
+      "completeHEADBody": {
+        "firstLine": 233,
+        "lastLine": 243,
+        "text": "section NormedAddCommGroup\n\nvariable [MeasurableSpace α] [NormedAddCommGroup α] [OpensMeasurableSpace α] [MeasurableSpace β]\n\n@[fun_prop]\ntheorem measurable_norm : Measurable (norm : α → ℝ) :=\n  continuous_norm.measurable\n\n@[fun_prop]\ntheorem Measurable.norm {f : β → α} (hf : Measurable f) : Measurable fun a => norm (f a) :=\n  measurable_norm.comp hf\n"
+      },
+      "ambient": {
+        "firstLine": 28,
+        "lastLine": 41,
+        "text": "public section\n\nopen Set Filter MeasureTheory MeasurableSpace TopologicalSpace\n\nopen scoped Topology NNReal ENNReal MeasureTheory\n\nuniverse u v w x y\n\nvariable {α β : Type*} {s : Set α}\n\nsection PseudoMetricSpace\n\nvariable [PseudoMetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]\nvariable [MeasurableSpace β] {x : α} {ε : ℝ}\n"
+      },
+      "currentUse": [
+        "113-116"
+      ],
+      "assessment": "alpha=Real,beta=iota->Omega,f=S. Domain needs only MeasurableSpace; existing real codomain structures pay all other conditions. No topology/StandardBorel onOmega."
+    },
+    {
+      "name": "Real.norm_eq_abs",
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-07/Mathlib/Analysis/Normed/Group/Real.lean",
+        "sha256": "235dd178401b9964e081ab97d238fd440807adc0f82e8d2cf46015278a13bd51",
+        "bytes": 4373,
+        "LF": 143
+      },
+      "completeHEADBody": {
+        "firstLine": 50,
+        "lastLine": 62,
+        "text": "namespace Real\n\nvariable {r : ℝ}\n\ninstance norm : Norm ℝ where\n  norm r := |r|\n\n@[simp]\ntheorem norm_eq_abs (r : ℝ) : ‖r‖ = |r| :=\n  rfl\n\ninstance normedAddCommGroup : NormedAddCommGroup ℝ :=\n  ⟨fun _r _y => by rw [Real.dist_eq, ← abs_neg, neg_sub, add_comm, sub_eq_add_neg, norm_eq_abs]⟩\n"
+      },
+      "ambient": {
+        "firstLine": 20,
+        "lastLine": 26,
+        "text": "public section\n\n\nvariable {E : Type*}\n\nopen Filter\nopen ENNReal Filter NNReal\n"
+      },
+      "currentUse": [
+        "114"
+      ],
+      "assessment": "Real norm defined as abs, equality rfl. Precisely converts norm(Sx) measurability to abs(Sx) measurability."
+    }
+  ],
+  "recordCount": 4,
+  "twoNewPrimaryFilesReadComplete": [
+    {
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-06/Mathlib/MeasureTheory/Constructions/BorelSpace/Metric.lean",
+        "sha256": "66e4b70ad7283f621495ad96d0329ba095bb71081a1c72a9bd25bee8f73e361e",
+        "bytes": 10439,
+        "LF": 262
+      },
+      "lines": [
+        1,
+        262
+      ]
+    },
+    {
+      "source": {
+        "path": "C:/game/shao lean/drafts/oq56/unit285/parent-api-07/Mathlib/Analysis/Normed/Group/Real.lean",
+        "sha256": "235dd178401b9964e081ab97d238fd440807adc0f82e8d2cf46015278a13bd51",
+        "bytes": 4373,
+        "LF": 143
+      },
+      "lines": [
+        1,
+        143
+      ]
+    }
+  ],
+  "unchanged39PrimaryEvidence": {
+    "path": "C:/game/shao lean/drafts/oq56/unit285/source-review-01/PRIMARY-API-CONTEXTS.json",
+    "sha256": "5e7524c4ec5b37dbf47e5e082dd9583227430578d3730f5ce09c983a57be053b",
+    "bytes": 71497,
+    "LF": 1043
+  },
+  "originEvidence": "Exact parent pinned bindings; independent local hash/byte checks; no new Git/server/network reads",
+  "additiveOrder": "Old native typed diagnostic u+1<=v+1 converts exactly by add_comm to1+u<=1+v",
+  "setMembership": "Both change goals definitionally equal the original union-member predicates",
+  "totalReusedAndNewNamedPrimaryRecords": 41,
+  "totalPrimaryFiles": 13,
+  "newNativeResult": null
+}

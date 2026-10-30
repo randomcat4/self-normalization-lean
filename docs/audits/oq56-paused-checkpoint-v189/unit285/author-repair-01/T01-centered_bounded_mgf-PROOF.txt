@@ -1,0 +1,56 @@
+:= by
+  have hIcc : ∀ᵐ o ∂ν, f o ∈ Set.Icc (-B) B := by
+    filter_upwards [hbound] with o ho
+    exact abs_le.mp ho
+  have hfi : Integrable f ν :=
+    Integrable.of_mem_Icc (-B) B hf.aemeasurable hIcc
+  have hf2 : Integrable (fun o => (f o) ^ 2) ν := by
+    apply Integrable.of_mem_Icc 0 (B ^ 2) (by fun_prop)
+    filter_upwards [hIcc] with o ho
+    refine ⟨sq_nonneg _, ?_⟩
+    have hp : 0 ≤ (B - f o) * (B + f o) :=
+      mul_nonneg (sub_nonneg.mpr ho.2) (by linarith [ho.1])
+    nlinarith
+  have heint : Integrable (fun o => Real.exp (t * f o)) ν :=
+    integrable_exp_mul_of_mem_Icc hf.aemeasurable hIcc
+  have hquadratic : ∀ u : ℝ, |u| ≤ 1 → Real.exp u ≤ 1 + u + u ^ 2 := by
+    intro u hu
+    have hc := Complex.exp_bound_sq (0 : ℂ) (u : ℂ) (by simpa using hu)
+    have hr := (Complex.re_le_norm
+      (Complex.exp (0 + (u : ℂ)) - Complex.exp 0 - (u : ℂ) • Complex.exp 0)).trans hc
+    have hrem : Real.exp u - 1 - u ≤ u ^ 2 := by
+      simpa [Complex.exp_ofReal_re, smul_eq_mul, Complex.norm_real,
+        Real.norm_eq_abs, sq_abs] using hr
+    linarith
+  have hpint : Integrable (fun o => 1 + t * f o + t ^ 2 * (f o) ^ 2) ν :=
+    ((integrable_const 1).add (hfi.const_mul t)).add (hf2.const_mul (t ^ 2))
+  have hpoint : (fun o => Real.exp (t * f o)) ≤ᵐ[ν]
+      (fun o => 1 + t * f o + t ^ 2 * (f o) ^ 2) := by
+    filter_upwards [hbound] with o ho
+    have htf : |t * f o| ≤ 1 := by
+      rw [abs_mul]
+      exact (mul_le_mul_of_nonneg_left ho (abs_nonneg t)).trans ht
+    calc
+      Real.exp (t * f o) ≤ 1 + t * f o + (t * f o) ^ 2 := hquadratic _ htf
+      _ = 1 + t * f o + t ^ 2 * (f o) ^ 2 := by ring
+  have hpoly : (∫ o, 1 + t * f o + t ^ 2 * (f o) ^ 2 ∂ν) =
+      1 + t ^ 2 * (∫ o, (f o) ^ 2 ∂ν) := by
+    rw [integral_add (f := fun o => 1 + t * f o)
+        (g := fun o => t ^ 2 * (f o) ^ 2)
+        ((integrable_const 1).add (hfi.const_mul t))
+        (hf2.const_mul (t ^ 2)),
+      integral_add (f := fun _ : Ω => (1 : ℝ)) (g := fun o => t * f o)
+        (integrable_const 1) (hfi.const_mul t),
+      integral_const_mul, integral_const_mul, hmean]
+    simp
+  refine ⟨heint, ?_⟩
+  calc
+    ProbabilityTheory.mgf f ν t = ∫ o, Real.exp (t * f o) ∂ν := rfl
+    _ ≤ ∫ o, 1 + t * f o + t ^ 2 * (f o) ^ 2 ∂ν :=
+      integral_mono_ae heint hpint hpoint
+    _ = 1 + t ^ 2 * (∫ o, (f o) ^ 2 ∂ν) := hpoly
+    _ ≤ 1 + t ^ 2 * v := by
+      simpa only [add_comm] using
+        (add_le_add_left (mul_le_mul_of_nonneg_left hsecond (sq_nonneg t)) 1)
+    _ ≤ Real.exp (t ^ 2 * v) := by
+      simpa only [add_comm] using Real.add_one_le_exp (t ^ 2 * v)

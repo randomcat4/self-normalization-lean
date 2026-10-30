@@ -1,0 +1,17 @@
+theorem fixedMask_splitSample_event_section_integral {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)))
+    (hS : MeasurableSet S) :
+    (Measure.pi (fun _ : Fin n => μ))
+        (fixedMaskEvent C B ∩ splitSample B eB eA ⁻¹' S) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) *
+        ∫⁻ a : Fin (Bᶜ : Finset (Fin n)).card → Ω,
+          (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C))
+            (backgroundSection B S a)
+          ∂(Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+            (μ Cᶜ)⁻¹ • μ.restrict Cᶜ))

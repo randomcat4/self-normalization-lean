@@ -1,0 +1,11 @@
+theorem centered_bounded_mgf
+    {Ω : Type*} [MeasurableSpace Ω]
+    (ν : Measure Ω) [IsProbabilityMeasure ν]
+    (f : Ω → ℝ) (hf : Measurable f)
+    (B v : ℝ) (hB : 0 ≤ B) (hv : 0 ≤ v)
+    (hbound : ∀ᵐ o ∂ν, |f o| ≤ B)
+    (hmean : (∫ o, f o ∂ν) = 0)
+    (hsecond : (∫ o, (f o) ^ 2 ∂ν) ≤ v)
+    (t : ℝ) (ht : |t| * B ≤ 1) :
+    Integrable (fun o => Real.exp (t * f o)) ν ∧
+      ProbabilityTheory.mgf f ν t ≤ Real.exp (t ^ 2 * v)
