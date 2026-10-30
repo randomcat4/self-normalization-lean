@@ -1,0 +1,11 @@
+:= by
+  let S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)) :=
+    joinSample B eB eA ⁻¹' T
+  have hS : MeasurableSet S := (measurable_joinSample (Ω := Ω) B eB eA) hT
+  have hPre : splitSample B eB eA ⁻¹' S = T := by
+    ext x
+    change joinSample B eB eA (splitSample B eB eA x) ∈ T ↔ x ∈ T
+    rw [join_splitSample B eB eA x]
+  have h := fixedMask_splitSample_event_section_integral μ C hC B eB eA S hS
+  rw [hPre] at h
+  simpa only [backgroundSection, S, Set.mem_preimage] using h

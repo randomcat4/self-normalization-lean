@@ -1,0 +1,120 @@
+:= by
+  classical
+  let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ
+  let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y
+  let C : Set Ω := {o : Ω | w o ≤ R}
+  let d : ℝ := μ.real C
+  let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C
+  let η : Measure Ω := anomalyLaw μ w R
+  let b : ℝ := ∫ o in Cᶜ, w o ∂μ
+  let c : ℝ := b / d
+  let W2 : ℝ := Real.sqrt (∫ o, w o ^ 2 ∂μ)
+  let M : ℝ := W2 ^ 2 / d
+  have hsource :=
+    Shao.OQ6.ConditionalVarianceMean.actual_conditional_variance_mean
+      μ h hh hh2 hhsymm hcenter hprojectionsecond
+      w hw hwone α τ hα hτ hwexp henvelope p hp hgp
+  dsimp only at hsource
+  rcases hsource with ⟨hβ, hB, hW2, hCvar, hCmean, hsource⟩
+  have hdata := hsource R hcutoff 0 (by constructor <;> norm_num)
+  dsimp only at hdata
+  rcases hdata with
+    ⟨hC, hdpi, hd, hπ0, hπlt, hb0, hνprob, hνac, hνprodac,
+      hgm, hg2, hgν2, hgmean, hgsecond, hw2, hwν2, hwSecond,
+      ham, haν2, hrows, hunused⟩
+  clear hsource hβ hB hW2 hCvar hCmean hdpi hπ0 hπlt hνprodac
+    hg2 hgν2 hgmean hgsecond ham haν2 hunused
+  change MeasurableSet C at hC
+  change 0 < d at hd
+  change 0 ≤ b at hb0
+  change IsProbabilityMeasure ν at hνprob
+  change ν ≪ μ at hνac
+  change Measurable g at hgm
+  change MemLp w 2 μ at hw2
+  change MemLp w 2 ν at hwν2
+  change (∫ o, w o ^ 2 ∂ν) ≤ M at hwSecond
+  change (∀ᵐ o ∂μ, Integrable (r o) μ ∧ Integrable (r o) ν ∧
+    (∫ y, r o y ∂ν) = -(∫ y in Cᶜ, r o y ∂μ) / d ∧
+    |∫ y, r o y ∂ν| ≤ c * w o) at hrows
+  haveI : IsProbabilityMeasure ν := hνprob
+  have hc0 : 0 ≤ c := div_nonneg hb0 hd.le
+  have hM0 : 0 ≤ M := div_nonneg (sq_nonneg W2) hd.le
+  have hrm : Measurable (fun z : Ω × Ω => r z.1 z.2) :=
+    (hh.sub (hgm.comp measurable_fst)).sub (hgm.comp measurable_snd)
+  have hrowm (o : Ω) : Measurable (r o) :=
+    hrm.comp (measurable_const.prodMk measurable_id)
+  have henv : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),
+      |r z.1 z.2| ≤ w z.1 * w z.2 := henvelope
+  have hsections : ∀ᵐ o ∂μ, ∀ᵐ y ∂μ, |r o y| ≤ w o * w y :=
+    Measure.ae_ae_of_ae_prod henv
+  have hνmem : ∀ᵐ o ∂ν, o ∈ C :=
+    Measure.ae_smul_measure (ae_restrict_mem hC) (μ C)⁻¹
+  have hνW : ∀ᵐ o ∂ν, 1 ≤ w o ∧ w o ≤ R := by
+    filter_upwards [hνac.ae_le hwone, hνmem] with o ho hCo
+    exact ⟨ho, hCo⟩
+  have hR1 : 1 ≤ R := by
+    obtain ⟨o, ho⟩ := hνW.exists
+    exact ho.1.trans ho.2
+  have hR0 : 0 ≤ R := zero_le_one.trans hR1
+  have hηac : η ≪ μ := by
+    change ProbabilityTheory.cond μ Cᶜ ≪ μ
+    exact ProbabilityTheory.cond_absolutelyContinuous
+  have hηzero : μ Cᶜ = 0 → η = 0 := by
+    intro hz
+    change (μ Cᶜ)⁻¹ • μ.restrict Cᶜ = 0
+    rw [Measure.restrict_eq_zero.2 hz]
+    exact smul_zero _
+  have hηprob : μ Cᶜ ≠ 0 → IsProbabilityMeasure η := by
+    intro hz
+    change IsProbabilityMeasure (ProbabilityTheory.cond μ Cᶜ)
+    exact ProbabilityTheory.cond_isProbabilityMeasure hz
+  have hηfinite : IsFiniteMeasure η := by
+    by_cases hz : μ Cᶜ = 0
+    · rw [hηzero hz]
+      infer_instance
+    · haveI : IsProbabilityMeasure η := hηprob hz
+      infer_instance
+  haveI : IsFiniteMeasure η := hηfinite
+  have hηmem : ∀ᵐ o ∂η, o ∈ Cᶜ := by
+    change ∀ᵐ o ∂((μ Cᶜ)⁻¹ • μ.restrict Cᶜ), o ∈ Cᶜ
+    exact Measure.ae_smul_measure (ae_restrict_mem hC.compl) (μ Cᶜ)⁻¹
+  have hηsupport : ∀ᵐ o ∂η, R < w o := by
+    filter_upwards [hηmem] with o ho
+    change ¬w o ≤ R at ho
+    exact lt_of_not_ge ho
+  let Good : Ω → Prop := fun o =>
+    (R < w o ∧ 1 ≤ w o ∧ Integrable (r o) μ ∧
+      (∫ y, r o y ∂ν) = -(∫ y in Cᶜ, r o y ∂μ) / d) ∧
+    (0 ≤ w o ∧ Measurable (r o) ∧ Integrable (r o) ν ∧
+      |∫ y, r o y ∂ν| ≤ c * w o ∧
+      (∀ᵐ y ∂ν, |r o y| ≤ w o * w y))
+  have hGood : ∀ᵐ o ∂η, Good o := by
+    filter_upwards [hηac.ae_le hrows, hηac.ae_le hwone,
+      hηac.ae_le hsections, hηsupport] with o ho hwo henvrow hsupport
+    exact ⟨⟨hsupport, hwo, ho.1, ho.2.2.1⟩,
+      ⟨zero_le_one.trans hwo, hrowm o, ho.2.1, ho.2.2.2,
+        hνac.ae_le henvrow⟩⟩
+  have hAll : ∀ᵐ a : ι → Ω ∂Measure.pi (fun _ : ι => η),
+      ∀ i : ι, Good (a i) :=
+    Filter.eventually_all.2 (fun i =>
+      (Measure.quasiMeasurePreserving_eval (fun _ : ι => η) i).ae hGood)
+  refine ⟨hgm, hrm, hC, hd, hb0, hc0, hR1, hR0, hνprob, hνac,
+    hνW, hw2, hwν2, hwSecond, hM0, hηac, hηfinite, hηzero, hηprob, ?_⟩
+  filter_upwards [hAll] with a ha
+  have hA : ∀ i : ι, R < w (a i) ∧ 1 ≤ w (a i) ∧
+      Integrable (r (a i)) μ ∧
+      (∫ o, r (a i) o ∂ν) = -(∫ o in Cᶜ, r (a i) o ∂μ) / d :=
+    fun i => (ha i).1
+  have hvalid : validAnomalyVector ν r w c a := fun i => (ha i).2
+  have hmom : interactionMomentBounds ν r w c R M a :=
+    interaction_moments_of_valid ν r w c R M hc0 hR0 hwν2
+      (hνW.mono (fun _ ho => ⟨zero_le_one.trans ho.1, ho.2⟩))
+      hwSecond a hvalid
+  refine ⟨hA, hvalid, hmom, ?_⟩
+  calc
+    (∫ o, interactionSum r a o ∂ν) = ∑ i : ι, ∫ o, r (a i) o ∂ν :=
+      integral_finsetSum Finset.univ (fun i _ => (ha i).2.2.2.1)
+    _ = ∑ i : ι, -(∫ o in Cᶜ, r (a i) o ∂μ) / d :=
+      Finset.sum_congr rfl (fun i _ => (hA i).2.2.2)
+    _ = -(∑ i : ι, ∫ o in Cᶜ, r (a i) o ∂μ) / d := by
+      simp only [div_eq_mul_inv, ← Finset.sum_mul, Finset.sum_neg_distrib]

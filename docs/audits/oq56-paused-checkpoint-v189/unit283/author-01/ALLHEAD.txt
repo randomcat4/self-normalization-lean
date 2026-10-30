@@ -1,0 +1,130 @@
+def splitSample {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (x : Fin n → Ω) :
+    (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω) :=
+def joinSample {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (y : (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)) :
+    Fin n → Ω :=
+def backgroundSection {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n))
+    (S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)))
+    (a : Fin (Bᶜ : Finset (Fin n)).card → Ω) : Set (Fin B.card → Ω) :=
+theorem join_splitSample {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (x : Fin n → Ω) :
+    joinSample B eB eA (splitSample B eB eA x) = x
+theorem split_joinSample {n : ℕ} {Ω : Type u}
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (y : (Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)) :
+    splitSample B eB eA (joinSample B eB eA y) = y
+theorem measurable_splitSample {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))}) :
+    Measurable (splitSample (Ω := Ω) B eB eA)
+theorem measurable_joinSample {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))}) :
+    Measurable (joinSample (Ω := Ω) B eB eA)
+theorem measurableSet_backgroundSection {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)))
+    (hS : MeasurableSet S)
+    (a : Fin (Bᶜ : Finset (Fin n)).card → Ω) :
+    MeasurableSet (backgroundSection B S a)
+theorem measurable_backgroundSection_mass {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (B : Finset (Fin n))
+    (ν : Measure (Fin B.card → Ω)) [SFinite ν]
+    (S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)))
+    (hS : MeasurableSet S) :
+    Measurable (fun a : Fin (Bᶜ : Finset (Fin n)).card → Ω =>
+      ν (backgroundSection B S a))
+theorem fixedMask_splitSample_cond_map {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0) :
+    Measure.map (splitSample B eB eA)
+      (cond (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) =
+      (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).prod
+        (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+          (μ Cᶜ)⁻¹ • μ.restrict Cᶜ))
+theorem fixedMask_splitSample_restrict_map {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))}) :
+    Measure.map (splitSample B eB eA)
+      ((Measure.pi (fun _ : Fin n => μ)).restrict (fixedMaskEvent C B)) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) •
+        ((Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).prod
+          (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+            (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)))
+theorem fixedMask_splitSample_event_section_integral {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (S : Set ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)))
+    (hS : MeasurableSet S) :
+    (Measure.pi (fun _ : Fin n => μ))
+        (fixedMaskEvent C B ∩ splitSample B eB eA ⁻¹' S) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) *
+        ∫⁻ a : Fin (Bᶜ : Finset (Fin n)).card → Ω,
+          (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C))
+            (backgroundSection B S a)
+          ∂(Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+            (μ Cᶜ)⁻¹ • μ.restrict Cᶜ))
+theorem fixedMask_original_event_section_integral {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (T : Set (Fin n → Ω)) (hT : MeasurableSet T) :
+    (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B ∩ T) =
+      ((Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B)) *
+        ∫⁻ a : Fin (Bᶜ : Finset (Fin n)).card → Ω,
+          (Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C))
+            {b : Fin B.card → Ω | joinSample B eB eA (b, a) ∈ T}
+          ∂(Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+            (μ Cᶜ)⁻¹ • μ.restrict Cᶜ))
+theorem fixedMask_original_ae_background_sections {n : ℕ} {Ω : Type u}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (C : Set Ω) (hC : MeasurableSet C)
+    (B : Finset (Fin n))
+    (eB : Fin B.card ≃ {i : Fin n // i ∈ B})
+    (eA : Fin (Bᶜ : Finset (Fin n)).card ≃
+      {i : Fin n // i ∈ (Bᶜ : Finset (Fin n))})
+    (hMask : (Measure.pi (fun _ : Fin n => μ)) (fixedMaskEvent C B) ≠ 0)
+    (Q : (Fin n → Ω) → Prop) (hQ : MeasurableSet {x : Fin n → Ω | Q x})
+    (hAE : ∀ᵐ x ∂((Measure.pi (fun _ : Fin n => μ)).restrict
+      (fixedMaskEvent C B)), Q x) :
+    ∀ᵐ a ∂(Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+      (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)),
+      ∀ᵐ b ∂(Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)),
+        Q (joinSample B eB eA (b, a))

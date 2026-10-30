@@ -1,0 +1,40 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  let PB : Measure (Fin B.card → Ω) :=
+    Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)
+  let PA : Measure (Fin (Bᶜ : Finset (Fin n)).card → Ω) :=
+    Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+      (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)
+  have hFiniteCond (V : Set Ω) :
+      IsFiniteMeasure ((μ V)⁻¹ • μ.restrict V) := by
+    by_cases hV : μ V = 0
+    · have hRestrict : μ.restrict V = 0 := by
+        apply Measure.ext
+        intro W hW
+        rw [Measure.restrict_apply hW]
+        exact measure_mono_null Set.inter_subset_right hV
+      rw [hRestrict, smul_zero]
+      infer_instance
+    · change IsFiniteMeasure (cond μ V)
+      letI : IsProbabilityMeasure (cond μ V) := cond_isProbabilityMeasure hV
+      infer_instance
+  letI : IsFiniteMeasure ((μ C)⁻¹ • μ.restrict C) := hFiniteCond C
+  letI : IsFiniteMeasure ((μ Cᶜ)⁻¹ • μ.restrict Cᶜ) := hFiniteCond Cᶜ
+  letI : IsFiniteMeasure PB := by dsimp only [PB]; infer_instance
+  letI : IsFiniteMeasure PA := by dsimp only [PA]; infer_instance
+  have hProd : (PB.prod PA) S = ∫⁻ a, PB (backgroundSection B S a) ∂PA := by
+    change (PB.prod PA) S =
+      ∫⁻ a, PB ((fun b : Fin B.card → Ω => (b, a)) ⁻¹' S) ∂PA
+    exact Measure.prod_apply_symm hS
+  have hMap := fixedMask_splitSample_restrict_map μ C hC B eB eA
+  have hEval := congrArg
+    (fun M : Measure ((Fin B.card → Ω) × (Fin (Bᶜ : Finset (Fin n)).card → Ω)) => M S)
+    hMap
+  rw [Measure.map_apply (measurable_splitSample (Ω := Ω) B eB eA) hS,
+    Measure.restrict_apply ((measurable_splitSample (Ω := Ω) B eB eA) hS),
+    Measure.smul_apply, smul_eq_mul] at hEval
+  change P (splitSample B eB eA ⁻¹' S ∩ fixedMaskEvent C B) =
+    P (fixedMaskEvent C B) * ((PB.prod PA) S) at hEval
+  rw [hProd] at hEval
+  simpa only [P, PB, PA, Set.inter_comm] using hEval

@@ -1,0 +1,126 @@
+{
+  "schema": "oq56-unit284-exact-proposed-declaration-fragments-v1",
+  "module": "Shao.OQ5.P41.InteractionSectionMoments",
+  "namespace": "Shao.OQ5.P41.InteractionSectionMoments",
+  "qualified": false,
+  "frozen": false,
+  "implementationAuthorized": false,
+  "encoding": "UTF-8 without BOM",
+  "lineEndings": "LF",
+  "order": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05"
+  ],
+  "definitions": 5,
+  "theorems": 5,
+  "declarations": [
+    {
+      "order": 1,
+      "id": "D01",
+      "kind": "def",
+      "name": "interactionSum",
+      "head": "def interactionSum {ι Ω : Type*} [Fintype ι]\n    (r : Ω → Ω → ℝ) (a : ι → Ω) : Ω → ℝ\n",
+      "headSHA256": "031acd00cde16629d75716d8868be0a2d748c88e7d59f414b9134c4f86365817",
+      "proofBodyPresent": false,
+      "rhs": "fun o => ∑ i : ι, r (a i) o\n",
+      "rhsSHA256": "a79a47d45606f5d9498a3e744c18fd508353c2cc42f821a04a9869b502ca1450"
+    },
+    {
+      "order": 2,
+      "id": "D02",
+      "kind": "def",
+      "name": "anomalyEnvelope",
+      "head": "def anomalyEnvelope {ι Ω : Type*} [Fintype ι]\n    (w : Ω → ℝ) (a : ι → Ω) : ℝ\n",
+      "headSHA256": "19c192c21ea5227cf2c557f0502f972eb2176ebd2388e0e954affcf11feef446",
+      "proofBodyPresent": false,
+      "rhs": "∑ i : ι, w (a i)\n",
+      "rhsSHA256": "e671e8dbb279f8e746733b307a110eff74ec2aa2d07f7ec9844072a115901e03"
+    },
+    {
+      "order": 3,
+      "id": "D03",
+      "kind": "def",
+      "name": "anomalyLaw",
+      "head": "def anomalyLaw {Ω : Type*} [MeasurableSpace Ω]\n    (μ : Measure Ω) (w : Ω → ℝ) (R : ℝ) : Measure Ω\n",
+      "headSHA256": "c45fc51ce7fcffa9f3b59015722fd82d70c7273c136d7599d19f0dcfd24aa351",
+      "proofBodyPresent": false,
+      "rhs": "(μ {o : Ω | w o ≤ R}ᶜ)⁻¹ • μ.restrict {o : Ω | w o ≤ R}ᶜ\n",
+      "rhsSHA256": "5b97caaca1ba911fd8605195f405f68fab080cfe9a05595b060de03b0b92348c"
+    },
+    {
+      "order": 4,
+      "id": "D04",
+      "kind": "def",
+      "name": "validAnomalyVector",
+      "head": "def validAnomalyVector {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]\n    (ν : Measure Ω) (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (c : ℝ) (a : ι → Ω) : Prop\n",
+      "headSHA256": "6a85b80e1ec9ede4a3111ff680034e37c051f4d863e2f2730a90f01532e92a34",
+      "proofBodyPresent": false,
+      "rhs": "∀ i : ι, 0 ≤ w (a i) ∧ Measurable (r (a i)) ∧ Integrable (r (a i)) ν ∧\n  |∫ o, r (a i) o ∂ν| ≤ c * w (a i) ∧\n  (∀ᵐ o ∂ν, |r (a i) o| ≤ w (a i) * w o)\n",
+      "rhsSHA256": "16d895cba765c4534fbf17272d71b406fced0c840d6d2ec9cda6b91f83e23788"
+    },
+    {
+      "order": 5,
+      "id": "D05",
+      "kind": "def",
+      "name": "interactionMomentBounds",
+      "head": "def interactionMomentBounds {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]\n    (ν : Measure Ω) (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (c R M : ℝ) (a : ι → Ω) : Prop\n",
+      "headSHA256": "c6a40a5db770edf65f123eb61b5b8523416434efe0f4aef3e2d8d885ddc1dca4",
+      "proofBodyPresent": false,
+      "rhs": "let ell : ℝ := anomalyEnvelope w a\nlet cA : Ω → ℝ := interactionSum r a\nlet mA : ℝ := ∫ o, cA o ∂ν\nlet S2 : ℝ := ∫ o, cA o ^ 2 ∂ν\nlet V2 : ℝ := ∫ o, (cA o - mA) ^ 2 ∂ν\n0 ≤ ell ∧ Measurable cA ∧ Integrable cA ν ∧ MemLp cA 2 ν ∧\n  Integrable (fun o => cA o ^ 2) ν ∧\n  (∀ᵐ o ∂ν, |cA o| ≤ ell * w o) ∧\n  mA = (∑ i : ι, ∫ o, r (a i) o ∂ν) ∧\n  |mA| ≤ c * ell ∧ |mA| ≤ ell * R ∧\n  0 ≤ S2 ∧ S2 ≤ ell ^ 2 * M ∧ mA ^ 2 ≤ S2 ∧\n  Measurable (fun o => cA o - mA) ∧\n  Integrable (fun o => cA o - mA) ν ∧\n  MemLp (fun o => cA o - mA) 2 ν ∧\n  (∫ o, cA o - mA ∂ν) = 0 ∧\n  Integrable (fun o => (cA o - mA) ^ 2) ν ∧\n  V2 = S2 - mA ^ 2 ∧ 0 ≤ V2 ∧ V2 ≤ S2 ∧ V2 ≤ ell ^ 2 * M ∧\n  (∀ᵐ o ∂ν, |cA o| ≤ ell * R ∧\n    |cA o - mA| ≤ ell * (R + c) ∧ |cA o - mA| ≤ 2 * ell * R)\n",
+      "rhsSHA256": "60a6bc87c38d66cf39c75500e078784be30553540deea1dd76214dcbbac48bef"
+    },
+    {
+      "order": 6,
+      "id": "T01",
+      "kind": "theorem",
+      "name": "interaction_moments_of_valid",
+      "head": "theorem interaction_moments_of_valid\n    {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]\n    (ν : Measure Ω) [IsProbabilityMeasure ν]\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (c R M : ℝ) (hc : 0 ≤ c) (hR : 0 ≤ R)\n    (hw2 : MemLp w 2 ν)\n    (hw : ∀ᵐ o ∂ν, 0 ≤ w o ∧ w o ≤ R)\n    (hM : (∫ o, w o ^ 2 ∂ν) ≤ M)\n    (a : ι → Ω) (ha : validAnomalyVector ν r w c a) :\n    interactionMomentBounds ν r w c R M a\n",
+      "headSHA256": "93ee3a73863594f91f9f77978e13584926985ffbf9571ca95f63034374c6a6a5",
+      "proofBodyPresent": false
+    },
+    {
+      "order": 7,
+      "id": "T02",
+      "kind": "theorem",
+      "name": "actual_interaction_section_moments",
+      "head": "theorem actual_interaction_section_moments\n    {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ]\n    (h : Ω → Ω → ℝ)\n    (hh : Measurable (fun z : Ω × Ω => h z.1 z.2))\n    (hh2 : MemLp (fun z : Ω × Ω => h z.1 z.2) 2 (μ.prod μ))\n    (hhsymm : ∀ o y, h o y = h y o)\n    (hcenter : (∫ z : Ω × Ω, h z.1 z.2 ∂(μ.prod μ)) = 0)\n    (hprojectionsecond : (∫ o, (∫ y, h o y ∂μ) ^ 2 ∂μ) = 1)\n    (w : Ω → ℝ) (hw : Measurable w)\n    (hwone : ∀ᵐ o ∂μ, 1 ≤ w o)\n    (α τ : ℝ) (hα : 0 < α) (hτ : 0 < τ)\n    (hwexp : Integrable (fun o => Real.exp (τ * Real.rpow (w o) α)) μ)\n    (henvelope : ∀ᵐ z : Ω × Ω ∂(μ.prod μ),\n      |h z.1 z.2 - (∫ y, h z.1 y ∂μ) - (∫ y, h z.2 y ∂μ)| ≤\n        w z.1 * w z.2)\n    (p : ℝ) (hp : 2 < p ∧ p ≤ 3)\n    (hgp : Integrable (fun o => Real.rpow |∫ y, h o y ∂μ| p) μ)\n    (R : ℝ) (hcutoff : (1 / 2 : ℝ) ≤ μ.real {o : Ω | w o ≤ R}) :\n    let g : Ω → ℝ := fun o => ∫ y, h o y ∂μ\n    let r : Ω → Ω → ℝ := fun o y => h o y - g o - g y\n    let C : Set Ω := {o : Ω | w o ≤ R}\n    let d : ℝ := μ.real C\n    let ν : Measure Ω := (μ C)⁻¹ • μ.restrict C\n    let η : Measure Ω := anomalyLaw μ w R\n    let b : ℝ := ∫ o in Cᶜ, w o ∂μ\n    let c : ℝ := b / d\n    let W2 : ℝ := Real.sqrt (∫ o, w o ^ 2 ∂μ)\n    let M : ℝ := W2 ^ 2 / d\n    Measurable g ∧ Measurable (fun z : Ω × Ω => r z.1 z.2) ∧\n      MeasurableSet C ∧ 0 < d ∧ 0 ≤ b ∧ 0 ≤ c ∧ 1 ≤ R ∧ 0 ≤ R ∧\n      IsProbabilityMeasure ν ∧ ν ≪ μ ∧\n      (∀ᵐ o ∂ν, 1 ≤ w o ∧ w o ≤ R) ∧\n      MemLp w 2 μ ∧ MemLp w 2 ν ∧ (∫ o, w o ^ 2 ∂ν) ≤ M ∧ 0 ≤ M ∧\n      η ≪ μ ∧ IsFiniteMeasure η ∧\n      (μ Cᶜ = 0 → η = 0) ∧ (μ Cᶜ ≠ 0 → IsProbabilityMeasure η) ∧\n      (∀ᵐ a : ι → Ω ∂Measure.pi (fun _ : ι => η),\n        (∀ i : ι, R < w (a i) ∧ 1 ≤ w (a i) ∧\n          Integrable (r (a i)) μ ∧\n          (∫ o, r (a i) o ∂ν) = -(∫ o in Cᶜ, r (a i) o ∂μ) / d) ∧\n        validAnomalyVector ν r w c a ∧\n        interactionMomentBounds ν r w c R M a ∧\n        (∫ o, interactionSum r a o ∂ν) =\n          -(∑ i : ι, ∫ o in Cᶜ, r (a i) o ∂μ) / d)\n",
+      "headSHA256": "b640957ae7a8509d6be3e20421f2fc18e9d3fbada3c5780806aa97aee5d25d1e",
+      "proofBodyPresent": false
+    },
+    {
+      "order": 8,
+      "id": "T03",
+      "kind": "theorem",
+      "name": "empty_interaction",
+      "head": "theorem empty_interaction\n    {Ω : Type*} [MeasurableSpace Ω]\n    (ν η : Measure Ω) (r : Ω → Ω → ℝ) (w : Ω → ℝ)\n    (c R M : ℝ) (a : Fin 0 → Ω) :\n    interactionSum r a = (fun _ : Ω => 0) ∧\n      anomalyEnvelope w a = 0 ∧ validAnomalyVector ν r w c a ∧\n      interactionMomentBounds ν r w c R M a ∧\n      (∫ o, interactionSum r a o ∂ν) = 0 ∧\n      (∫ o, (interactionSum r a o) ^ 2 ∂ν) = 0 ∧\n      (∫ o, (interactionSum r a o - (∫ y, interactionSum r a y ∂ν)) ^ 2 ∂ν) = 0 ∧\n      Measure.pi (fun _ : Fin 0 => η) = Measure.dirac a\n",
+      "headSHA256": "c67243d5f1f86af847eee6b35e630d54d21698cad9944074cc74eeef5b27d905",
+      "proofBodyPresent": false
+    },
+    {
+      "order": 9,
+      "id": "T04",
+      "kind": "theorem",
+      "name": "anomaly_product_zero_of_null",
+      "head": "theorem anomaly_product_zero_of_null\n    {ι Ω : Type*} [Fintype ι] [Nonempty ι] [MeasurableSpace Ω]\n    (μ : Measure Ω) [IsProbabilityMeasure μ] (w : Ω → ℝ) (R : ℝ)\n    (hzero : μ {o : Ω | w o ≤ R}ᶜ = 0) :\n    anomalyLaw μ w R = 0 ∧\n      Measure.pi (fun _ : ι => anomalyLaw μ w R) = 0\n",
+      "headSHA256": "92ef7f4c83eec7da567e96f327772f1e5a87d6d76b154028377ad2757c4de289",
+      "proofBodyPresent": false
+    },
+    {
+      "order": 10,
+      "id": "T05",
+      "kind": "theorem",
+      "name": "interaction_crossPairSum",
+      "head": "theorem interaction_crossPairSum\n    {n : ℕ} {Ω : Type*} (B : Finset (Fin n))\n    (r : Ω → Ω → ℝ) (w : Ω → ℝ) (x : Fin n → Ω) :\n    (∑ i ∈ B,\n      interactionSum r (fun a : {a : Fin n // a ∈ anomaly B} => x a.1) (x i)) =\n        crossPairSum B (fun a i : Fin n => r (x a) (x i)) ∧\n      anomalyEnvelope w (fun a : {a : Fin n // a ∈ anomaly B} => x a.1) =\n        anomalyWeight B (fun a : Fin n => w (x a))\n",
+      "headSHA256": "02c62da955639ea78cbdf9da1698a1ffead2436477416ae66d27b99fb0788641",
+      "proofBodyPresent": false
+    }
+  ]
+}

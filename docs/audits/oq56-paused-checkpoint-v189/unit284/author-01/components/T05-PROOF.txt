@@ -1,0 +1,16 @@
+:= by
+  classical
+  constructor
+  · change (∑ i ∈ B,
+      ∑ a : {a : Fin n // a ∈ anomaly B}, r (x a.1) (x i)) =
+        crossPairSum B (fun a i : Fin n => r (x a) (x i))
+    calc
+      (∑ i ∈ B, ∑ a : {a : Fin n // a ∈ anomaly B}, r (x a.1) (x i)) =
+          ∑ i ∈ B, ∑ a ∈ anomaly B, r (x a) (x i) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        exact Finset.sum_coe_sort (anomaly B) (fun a : Fin n => r (x a) (x i))
+      _ = crossPairSum B (fun a i : Fin n => r (x a) (x i)) := by
+        unfold crossPairSum
+        rw [Finset.sum_comm]
+  · exact Finset.sum_coe_sort (anomaly B) (fun a : Fin n => w (x a))

@@ -1,0 +1,14 @@
+theorem finite_iid_variance_sensitive_tail
+    {ι Ω : Type*} [Fintype ι] [MeasurableSpace Ω]
+    (ν : Measure Ω) [IsProbabilityMeasure ν]
+    (f : Ω → ℝ) (hf : Measurable f)
+    (B v : ℝ) (hB : 0 ≤ B) (hv : 0 ≤ v)
+    (hbound : ∀ᵐ o ∂ν, |f o| ≤ B)
+    (hmean : (∫ o, f o ∂ν) = 0)
+    (hsecond : (∫ o, (f o) ^ 2 ∂ν) ≤ v)
+    (q : ℝ) (hq : 0 ≤ q) :
+    let P : Measure (ι → Ω) := Measure.pi (fun _ : ι => ν)
+    let H : Set (ι → Ω) := {x |
+      2 * Real.sqrt ((Fintype.card ι : ℝ) * v * q) + 2 * B * q <
+        |∑ i : ι, f (x i)|}
+    MeasurableSet H ∧ P.real H ≤ 2 * Real.exp (-q)

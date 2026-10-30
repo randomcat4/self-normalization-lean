@@ -1,0 +1,13 @@
+--- author-repair-01/components/T01-PROOF.txt
++++ author-repair-02/components/T01-PROOF.txt
+@@ -19,7 +19,9 @@
+       intro s
+       induction s using Finset.induction_on with
+       | empty =>
+-          simpa only [Finset.sum_empty] using (integrable_zero Ω ℝ ν)
++          simpa only [Finset.sum_empty] using
++            (integrable_const (μ := ν) (0 : ℝ) :
++              Integrable (fun _ : Ω => (0 : ℝ)) ν)
+       | @insert i s hi ih =>
+           have hadd : Integrable
+               (fun o : Ω => r (a i) o + ∑ j ∈ s, r (a j) o) ν :=

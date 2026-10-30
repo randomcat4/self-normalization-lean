@@ -1,0 +1,29 @@
+:= by
+  classical
+  let P : Measure (Fin n → Ω) := Measure.pi (fun _ : Fin n => μ)
+  letI : IsProbabilityMeasure P := by dsimp only [P]; infer_instance
+  change Measure.map (splitSample B eB eA) (P.restrict (fixedMaskEvent C B)) =
+    (P (fixedMaskEvent C B)) •
+      ((Measure.pi (fun _ : Fin B.card => (μ C)⁻¹ • μ.restrict C)).prod
+        (Measure.pi (fun _ : Fin (Bᶜ : Finset (Fin n)).card =>
+          (μ Cᶜ)⁻¹ • μ.restrict Cᶜ)))
+  by_cases hMask : P (fixedMaskEvent C B) = 0
+  · have hRestrict : P.restrict (fixedMaskEvent C B) = 0 := by
+      apply Measure.ext
+      intro V hV
+      rw [Measure.restrict_apply hV]
+      exact measure_mono_null Set.inter_subset_right hMask
+    rw [hRestrict, hMask]
+    simp
+  · have hFinite : P (fixedMaskEvent C B) ≠ ⊤ :=
+      measure_ne_top P (fixedMaskEvent C B)
+    have hCancel : P (fixedMaskEvent C B) * (P (fixedMaskEvent C B))⁻¹ = 1 := by
+      rw [mul_comm, ENNReal.inv_mul_cancel hMask hFinite]
+    have hRestrict : P.restrict (fixedMaskEvent C B) =
+        (P (fixedMaskEvent C B)) • cond P (fixedMaskEvent C B) := by
+      change P.restrict (fixedMaskEvent C B) =
+        (P (fixedMaskEvent C B)) •
+          ((P (fixedMaskEvent C B))⁻¹ • P.restrict (fixedMaskEvent C B))
+      rw [smul_smul, hCancel, one_smul]
+    rw [hRestrict, Measure.map_smul _ (measurable_splitSample (Ω := Ω) B eB eA).aemeasurable,
+      fixedMask_splitSample_cond_map μ C hC B eB eA hMask]
